@@ -20,8 +20,19 @@ import { Table,
     // Row, 
     // Pagination 
 } from "react-bootstrap";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Slide
+} from '@material-ui/core';
 import Select2 from 'react-select2-wrapper';
 import 'react-select2-wrapper/css/select2.css';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function ItemContractSummary(props) {
     const [data] = useState(
@@ -36,6 +47,8 @@ function ItemContractSummary(props) {
         ]
     );
 
+    const [openModalEmail, setopenModalEmail] = useState(false);
+
     useEffect(() => {
         window.$('#kt_daterangepicker_1').daterangepicker({
             buttonClasses: ' btn',
@@ -48,12 +61,88 @@ function ItemContractSummary(props) {
             startDate: new Date(),
             endDate: new Date()
            });
-        window.$('#kt_select2_3').select2({
-            placeholder: "Pilih PIC",
-        })
     });
     return (
         <React.Fragment>
+            <Dialog
+                open={openModalEmail}
+                TransitionComponent={Transition}
+                keepMounted
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+                maxWidth="sm"
+                fullWidth={true}
+            >
+                <DialogTitle id="alert-dialog-slide-title">Daftar Email PIC</DialogTitle>
+                <DialogContent>
+                <div>
+                    <div className="form-group row">
+                        <label className="col-sm-2 col-form-label">Email</label>
+                        <div className="input-group col-sm-10">
+                        <input type="text" className="form-control" placeholder="Email" />
+                        <div className="input-group-append">
+                            <span className="input-group-text bg-primary text-white pointer">
+                            Simpan
+                            </span>
+                        </div>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label>Register:</label>
+                        <ul className="list-group">
+                            <li className="list-group-item">
+                                <div className="row">
+                                    <span className="col-md">Jeffry@gmail.com</span>
+                                    <div className="col-md text-right-md">
+                                        <span>Status: <span className="font-weight-bold text-primary">Terverifikasi</span></span>
+                                        <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li className="list-group-item">
+                                <div className="row">
+                                    <span className="col-md">JeffryAR@gmail.com</span>
+                                    <div className="col-md text-right-md">
+                                        <span>Status: <span className="font-weight-bold text-danger">Belum Verifikasi</span></span>
+                                        <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li className="list-group-item">
+                                <div className="row">
+                                    <span className="col-md">Rosman@gmail.com</span>
+                                    <div className="col-md text-right-md">
+                                        <span>Status: <span className="font-weight-bold text-danger">Belum Verifikasi</span></span>
+                                        <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li className="list-group-item">
+                                <div className="row">
+                                    <span className="col-md">Udin@gmail.com</span>
+                                    <div className="col-md text-right-md">
+                                        <span>Status: <span className="font-weight-bold text-primary">Terverifikasi</span></span>
+                                        <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li className="list-group-item">
+                                <div className="row">
+                                    <span className="col-md">Adin@gmail.com</span>
+                                    <div className="col-md text-right-md">
+                                        <span>Status: <span className="font-weight-bold text-danger">Belum Verifikasi</span></span>
+                                        <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                </DialogContent>
+                <DialogActions>
+                <button type="button" className="btn btn-primary" onClick={() => {setopenModalEmail(false)}}>OK</button>
+                </DialogActions>
+            </Dialog>
             <Card>
                 <CardBody>
                     <div className="row">
@@ -139,7 +228,7 @@ function ItemContractSummary(props) {
                                     className="form-control"
                                     />
                                     <div className="input-group-prepend">
-                                        <span className="input-group-text pointer"><i className="fas fa-pencil-alt"></i></span>
+                                        <span className="input-group-text pointer" onClick={() => {setopenModalEmail(true)}}><i className="fas fa-pencil-alt"></i></span>
                                     </div>
                                 </div>
                                 <div className="col-sm-8">
