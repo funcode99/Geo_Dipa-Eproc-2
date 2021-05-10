@@ -1,11 +1,11 @@
-import React, { Suspense, lazy } from "react";
-import { Redirect, Switch, Route } from "react-router-dom";
-import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
+import React, { Suspense, lazy } from 'react';
+import { Redirect, Switch, Route } from 'react-router-dom';
+import { LayoutSplashScreen, ContentRoute } from '../_metronic/layout';
 // Page Guide Metronic
 // import { BuilderPage } from "./pages/BuilderPage";
 // import { MyPage } from "./pages/MyPage";
 // Page Guide Metronic
-import { DashboardPage } from "./pages/DashboardPage";
+import { DashboardPage } from './pages/DashboardPage';
 
 // Page Guide Metronic
 // const GoogleMaterialPage = lazy(() =>
@@ -20,12 +20,14 @@ import { DashboardPage } from "./pages/DashboardPage";
 // Page Guide Metronic
 
 const UserProfilepage = lazy(() =>
-  import("./modules/UserProfile/UserProfilePage")
+  import('./modules/UserProfile/UserProfilePage')
 );
 
 const RootClientInvoiceMonitoring = lazy(() =>
-  import("./modules/InvoiceMonitoring/Client/RootClientInvoiceMonitoring")
+  import('./modules/InvoiceMonitoring/Client/RootClientInvoiceMonitoring')
 );
+
+const MasterData = lazy(() => import('./modules/Master/RootMasterData'));
 
 export default function BasePage() {
   // useEffect(() => {
@@ -38,7 +40,11 @@ export default function BasePage() {
       <Switch>
         {
           /* Redirect from root URL to /dashboard. */
-          <Redirect exact from="/" to={ true ? "/client/dashboard":"/vendor/dashboard"} />
+          <Redirect
+            exact
+            from="/"
+            to={true ? '/client/dashboard' : '/vendor/dashboard'}
+          />
         }
         <ContentRoute path="/client/dashboard" component={DashboardPage} />
 
@@ -51,7 +57,13 @@ export default function BasePage() {
         {/* Page Guide Metronic */}
 
         <Route path="/user-profile" component={UserProfilepage} />
-        <Route path="/client/invoice_monitoring" component={RootClientInvoiceMonitoring} />
+        <Route
+          path="/client/invoice_monitoring"
+          component={RootClientInvoiceMonitoring}
+        />
+
+        <Route path="/master" component={MasterData} />
+
         <Redirect to="/error" />
       </Switch>
     </Suspense>
