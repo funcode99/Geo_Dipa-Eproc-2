@@ -101,7 +101,7 @@ export function AsideMenuList({ layoutProps }) {
         </li>
         {/* end: Delivery Monitoring */}
 
-        {/* begin: Invoice Monitoring */}
+        {/* begin: Invoice Monitoring || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com */}
         <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
             "/client/invoice_monitoring",
@@ -185,7 +185,7 @@ export function AsideMenuList({ layoutProps }) {
             </ul>
           </div>
         </li>
-        {/* end: Invoice Monitoring */}
+        {/* end: Invoice Monitoring || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com */}
 
         {/* begin: User Management */}
         <li

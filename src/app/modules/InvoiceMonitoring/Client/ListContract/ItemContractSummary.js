@@ -96,6 +96,7 @@ function ItemContractSummary(props) {
                                     <div className="col-md text-right-md">
                                         <span>Status: <span className="font-weight-bold text-primary">Terverifikasi</span></span>
                                         <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                        <span className="ml-2"><i className="far fa-trash-alt text-danger pointer"></i></span>
                                     </div>
                                 </div>
                             </li>
@@ -105,6 +106,7 @@ function ItemContractSummary(props) {
                                     <div className="col-md text-right-md">
                                         <span>Status: <span className="font-weight-bold text-danger">Belum Verifikasi</span></span>
                                         <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                        <span className="ml-2"><i className="far fa-trash-alt text-danger pointer"></i></span>
                                     </div>
                                 </div>
                             </li>
@@ -114,6 +116,7 @@ function ItemContractSummary(props) {
                                     <div className="col-md text-right-md">
                                         <span>Status: <span className="font-weight-bold text-danger">Belum Verifikasi</span></span>
                                         <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                        <span className="ml-2"><i className="far fa-trash-alt text-danger pointer"></i></span>
                                     </div>
                                 </div>
                             </li>
@@ -123,6 +126,7 @@ function ItemContractSummary(props) {
                                     <div className="col-md text-right-md">
                                         <span>Status: <span className="font-weight-bold text-primary">Terverifikasi</span></span>
                                         <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                        <span className="ml-2"><i className="far fa-trash-alt text-danger pointer"></i></span>
                                     </div>
                                 </div>
                             </li>
@@ -132,6 +136,7 @@ function ItemContractSummary(props) {
                                     <div className="col-md text-right-md">
                                         <span>Status: <span className="font-weight-bold text-danger">Belum Verifikasi</span></span>
                                         <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
+                                        <span className="ml-2"><i className="far fa-trash-alt text-danger pointer"></i></span>
                                     </div>
                                 </div>
                             </li>
@@ -244,7 +249,7 @@ function ItemContractSummary(props) {
             <Card className="mt-5">
                 <CardBody>
                     <div className="my-5 text-center">
-                        <h6>Dokumen Tagihan (Didapat dari Delivery Monitoring yang Mandatori)</h6>
+                        <h6>Dokumen Tagihan</h6>
                     </div>
                     <div className="table-wrapper-scroll-y my-custom-scrollbar">
                         <div className="segment-table">
