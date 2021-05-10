@@ -16,6 +16,7 @@ import {
 import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from './ItemContractSummary';
 import ItemContractInvoice from './ItemContractInvoice';
+import ItemContractBKB from './ItemContractBKB';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -59,7 +60,7 @@ function ItemContract(props) {
                 <ItemContractInvoice />
             </TabPanel>
             <TabPanel value={valueTab} index={2}>
-                Item Three
+                <ItemContractBKB />
             </TabPanel>
         </React.Fragment>
     );
