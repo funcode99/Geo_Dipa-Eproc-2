@@ -64,10 +64,10 @@ export function AsideMenuList({ layoutProps }) {
                 </span>
               </li>
               <li
-                className={`menu-item ${getMenuItemActive("/delivery_monitoring/error-v1")}`}
+                className={`menu-item ${getMenuItemActive("/user/delivery_monitoring")}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/delivery_monitoring/error-v1">
+                <NavLink className="menu-link" to="/user/delivery_monitoring">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>

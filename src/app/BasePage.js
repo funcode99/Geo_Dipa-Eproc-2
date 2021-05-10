@@ -18,7 +18,7 @@ const UserProfilepage = lazy(() =>
   import("./modules/UserProfile/UserProfilePage")
 );
 const DeliveryMonitoringRoutes = lazy(() =>
-  import("./modules/DeliveryMonitoring/DeliveryMonitoringRoutes")
+  import("./modules/DeliveryMonitoring/routes/DeliveryMonitoringRoutes")
 );
 const DeliverableDocumentRoutes = lazy(() =>
   import("./modules/DeliverableDocument/DeliverableDocumentRoutes")
