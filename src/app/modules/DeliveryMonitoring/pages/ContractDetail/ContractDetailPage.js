@@ -23,8 +23,10 @@ import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { Link, useParams } from 'react-router-dom';
 // import http from '../libs/http';
 // import { rupiah } from '../libs/currency';
-import { useSelector, useDispatch } from 'react-redux'
-import { setDataContracts } from '../../_redux/deliveryMonitoringCrud';
+// import { useSelector, useDispatch } from 'react-redux'
+// import { setDataContracts } from '../../_redux/deliveryMonitoringCrud';
+
+import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,63 +75,58 @@ const detailContractRows = createDetailContract(
   'Selesai'
 );
 
-function createTermin(
-  termin_id,
-  scope_of_work,
-  due_date,
-  bobot,
-  harga_pekerjaan,
-  project_progress,
-  document_progress,
-  status
-) {
-  return {
-    termin_id,
-    scope_of_work,
-    due_date,
-    bobot,
-    harga_pekerjaan,
-    project_progress,
-    document_progress,
-    status,
-  };
-}
+// function createTermin(
+//   termin_id,
+//   scope_of_work,
+//   due_date,
+//   bobot,
+//   harga_pekerjaan,
+//   project_progress,
+//   document_progress,
+//   status
+// ) {
+//   return {
+//     termin_id,
+//     scope_of_work,
+//     due_date,
+//     bobot,
+//     harga_pekerjaan,
+//     project_progress,
+//     document_progress,
+//     status,
+//   };
+// }
 
-const terminRows = [
-  createTermin(1, '', '', 20, '', '', '', ''),
-  createTermin(2, '', '', 20, '', '', '', ''),
-  createTermin(3, '', '', 30, '', '', '', ''),
-  createTermin(4, '', '', 30, '', '', '', ''),
-];
+// const terminRows = [
+//   createTermin(1, '', '', 20, '', '', '', ''),
+//   createTermin(2, '', '', 20, '', '', '', ''),
+//   createTermin(3, '', '', 30, '', '', '', ''),
+//   createTermin(4, '', '', 30, '', '', '', ''),
+// ];
 
 export const ContractDetailPage = () => {
   const classes = useStyles();
-  const { contract_id } = useParams();
-  const [contract, setContract] = React.useState();
+  const { id } = useParams();
+  const [dataContract, setDataContract] = React.useState([]);
 
-  const { dataContracts } = useSelector(state => state.deliveryMonitoring);
-  const dispatch = useDispatch();
+  const getContractById = async (id) => {
+    try {
+      const {
+        data: { data },
+      } = await deliveryMonitoring.getContractById(id);
+      setDataContract(data);
+    } catch (error) {
+      window.console.error(error);
+    }
+  };
 
   React.useEffect(() => {
-    dispatch(setDataContracts())
-  }, [dispatch]);
-  
-  // React.useEffect(() => {
-  //   const getContracts = async () => {
-  //     try {
-  //       const { data } = await http.get(`/contracts/${contract_id}`);
-  //       setContract(data);
-  //       // console.log(data);
-  //     } catch (error) {
-  //       window.console.error(error);
-  //     }
-  //   };
-  //   getContracts();
-  // }, [contract_id]);
+    getContractById(id);
+  });
 
   return (
     <>
-      {dataContracts[0] && (
+      {dataContract[0] && (
         <div className="d-flex align-items-center flex-wrap mr-1">
           <div className="mr-2 iconWrap">
             <span className="svg-icon menu-icon">
@@ -138,12 +135,12 @@ export const ContractDetailPage = () => {
           </div>
           <div className="d-flex align-items-baseline mr-5">
             <h2 className="text-dark font-weight-bold my-2 mr-5">
-              {contract && contract.contract_no}
+              {dataContract[0] && `${dataContract[0].id} - ${dataContract[0].name}`}
             </h2>
           </div>
         </div>
       )}
-      {dataContracts[0] && (
+      {dataContract[0] && (
         <Paper className={classes.root}>
           <Navbar bg="white" expand="lg">
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -184,7 +181,7 @@ export const ContractDetailPage = () => {
                         required
                         type="text"
                         placeholder="Nomor Kontrak"
-                        defaultValue={dataContracts[0].id}
+                        defaultValue={dataContract[0].id}
                       />
                     </Col>
                   </Form.Group>
@@ -197,7 +194,7 @@ export const ContractDetailPage = () => {
                         required
                         type="text"
                         placeholder="Judul Pengadaan"
-                        defaultValue={dataContracts[0].name}
+                        defaultValue={dataContract[0].name}
                       />
                     </Col>
                   </Form.Group>
@@ -292,7 +289,7 @@ export const ContractDetailPage = () => {
               <TableHead>
                 <TableRow>
                   <TableCell className="text-white bg-primary">No</TableCell>
-                  <TableCell className="text-white bg-primary" align="center">
+                  <TableCell className="text-white bg-primary" align="left">
                     Scope of Work
                   </TableCell>
                   <TableCell className="text-white bg-primary" align="center">
@@ -322,35 +319,34 @@ export const ContractDetailPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {terminRows.map((row, index) => (
-                  <TableRow key={row.termin_id}>
+                {dataContract[0].tasks.map((item, index) => (
+                  <TableRow key={item.id}>
                     <TableCell scope="row">
                       {(index += 1)}
                     </TableCell>
-                    <TableCell align="center">{row.scope_of_work}</TableCell>
-                    <TableCell align="left">{row.due_date}</TableCell>
-                    <TableCell align="center">{row.bobot}</TableCell>
-                    <TableCell align="center">{row.harga_pekerjaan}</TableCell>
-                    <TableCell align="center">{row.project_progress}</TableCell>
+                    <TableCell align="center"></TableCell>
+                    <TableCell align="left">{item.due_date}</TableCell>
+                    <TableCell align="center"></TableCell>
+                    <TableCell align="center"></TableCell>
+                    <TableCell align="center">{item.progress}</TableCell>
                     <TableCell align="center">
-                      {row.document_progress}
+                      {item.document_progress}
                     </TableCell>
                     <TableCell align="center">
                       <Link
-                        // to={`/delivery_monitoring/${dataContracts[0].id}/item`}
-                        to={`/delivery_monitoring/contract/${dataContracts[0].id}/item`}
+                        to={`/delivery_monitoring/contract/${item.id}/item`}
                       >
                         <span>Document</span>
                       </Link>
                     </TableCell>
-                    <TableCell align="center">{row.status}</TableCell>
+                    <TableCell align="center"></TableCell>
                     <TableCell align="center">
                       <div className="d-flex justify-content-between flex-row">
                         <button className="btn btn-sm p-1">
-                          <i className="fas fa-edit text-primary"></i>
+                          <Icon className="fas fa-edit text-primary" />
                         </button>
                         <button className="btn btn-sm p-1 mr-2">
-                          <i className="fas fa-trash text-danger"></i>
+                          <Icon className="fas fa-trash text-danger" />
                         </button>
                       </div>
                     </TableCell>

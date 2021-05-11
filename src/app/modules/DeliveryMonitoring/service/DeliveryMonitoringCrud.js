@@ -7,3 +7,7 @@ const TEMP_URL = `http://geo.abdmandhan.com`;
 export function getDataContracts() {
   return axios.get(`${TEMP_URL}/delivery/contract`);
 };
+
+export function getContractById(id) {
+  return axios.get(`${TEMP_URL}/delivery/contract?id=${id}`);
+};
