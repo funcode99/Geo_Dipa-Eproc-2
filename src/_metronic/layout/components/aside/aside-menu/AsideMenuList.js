@@ -76,10 +76,7 @@ export function AsideMenuList({ layoutProps }) {
                 )}`}
                 aria-haspopup="true"
               >
-                <NavLink
-                  className="menu-link"
-                  to="/delivery_monitoring"
-                >
+                <NavLink className="menu-link" to="/delivery_monitoring">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -328,19 +325,14 @@ export function AsideMenuList({ layoutProps }) {
                 </NavLink>
               </li>
               <li
-                className={`menu-item ${getMenuItemActive('/master/error-v2')}`}
+                className={`menu-item ${getMenuItemActive('/master/periode')}`}
                 aria-haspopup="true"
               >
-                <NavLink
-                  className="menu-link"
-                  to="/delivery_monitoring/error-v2"
-                >
+                <NavLink className="menu-link" to="/master/periode">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
-                  <span className="menu-text">
-                    <FormattedMessage id="MENU.DELIVERY_MONITORING.GOOD_RECEIPT" />
-                  </span>
+                  <span className="menu-text">Periode</span>
                 </NavLink>
               </li>
             </ul>
