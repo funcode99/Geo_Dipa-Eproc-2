@@ -21,8 +21,8 @@ export default function setupAxios(axios, store) {
     // console.log("respons:", response );
     return response;
   }, function (error) {
-    console.log("error.response", error.response);
-    if(error.response.status === 401 && error.response.data.error.message === "You have to login first."){
+    console.log("error", error);
+    if(error.response?.status === 401 && error.response?.data.error.message === "You have to login first."){
       var title = "";
       var message = "";
       var button = "";
