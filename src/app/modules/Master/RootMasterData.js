@@ -1,24 +1,22 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { useSubheader } from '../../../_metronic/layout';
-import DocTypes from './DocumentType';
+import DocTypes from './pages/DocumentType';
+import Periode from './pages/Periode';
 // import ItemContract from "./ListContract/ItemContract";
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-function RootMasterData(props) {
-  const suhbeader = useSubheader();
-  const { intl } = props;
-  suhbeader.setTitle(
-    intl.formatMessage({
-      id: 'MENU.MASTER_DATA.DOCUMENT_TYPES',
-    })
-  );
+function RootMasterData() {
+  const subheader = useSubheader();
+  // const { intl } = props;
+  subheader.setTitle('MASTER DATA');
   return (
     <Switch>
       <Redirect exact from="/master" to="/master/document_types" />
 
       <Route path="/master/document_types" component={DocTypes} />
+      <Route path="/master/periode" component={Periode} />
     </Switch>
   );
 }
