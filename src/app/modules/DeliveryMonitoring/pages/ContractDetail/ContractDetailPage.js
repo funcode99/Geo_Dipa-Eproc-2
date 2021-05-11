@@ -338,7 +338,7 @@ export const ContractDetailPage = () => {
                     <TableCell align="center">
                       <Link
                         // to={`/delivery_monitoring/${dataContracts[0].id}/item`}
-                        to={`/delivery_monitoring/${dataContracts[0].id}/item`}
+                        to={`/delivery_monitoring/contract/${dataContracts[0].id}/item`}
                       >
                         <span>Document</span>
                       </Link>

@@ -28,7 +28,7 @@ import {
   StyledHead,
   SubWrap,
 } from './style';
-import { StyledModal } from '../../components/Modals';
+import { StyledModal } from '../../components/modals';
 import useToast from '../../components/toast';
 // import DocumentsTable from './Document';
 

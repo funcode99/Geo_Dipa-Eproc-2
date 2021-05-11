@@ -40,7 +40,7 @@ function DeliveryMonitoringRoutes(props) {
           />
         
           <Route
-            path="/delivery_monitoring/:id/item"
+            path="/delivery_monitoring/contract/:id/item"
             component={TerminPage}
           />
 

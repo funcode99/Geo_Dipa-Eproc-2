@@ -21,7 +21,7 @@ import {
   Nav,
   Table,
 } from 'react-bootstrap';
-import { StyledModal } from '../../../../components/Modals'
+import { StyledModal } from '../../../../components/modals'
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 
