@@ -56,9 +56,9 @@ function ItemContractBKB(props) {
         <React.Fragment>
             {/* <iframe id="ifmcontentstoprint" style={{height: 0, width: 0, position: 'absolute'}}></iframe> */}
             <Card>
-                <CardHeader title="BKB">
+                <CardHeader title="">
                     <CardHeaderToolbar>
-                    <button type="button" onClick={print} className="btn btn-sm btn-primary"><i className="fas fa-print"></i>Print BKB</button>
+                    <button type="button" onClick={print} className="btn btn-sm btn-primary"><i className="fas fa-print"></i>Cetak BKB</button>
                     </CardHeaderToolbar>
                 </CardHeader>
                 <CardBody>
@@ -175,7 +175,7 @@ function ItemContractBKB(props) {
                         </div>
                         <div className="row">
                             <div className="col-md-4" style={{paddingTop: 10}}>
-                                <span className="font-weight-bold">Cara Pembayaran (berikan tanda Tick Mark)</span>
+                                <span className="font-weight-bold">Cara Pembayaran (Pilih metode dibawah ini)</span>
                             </div>
                             <div className="col-md-8">
                                 <div className="row">
@@ -234,77 +234,77 @@ function ItemContractBKB(props) {
                             </div>
                         </div>
                         <div className="mt-3">
-                        <table className="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td className="td-15 text-center">No. Invoice / PO</td>
-                                    <td className="td-15 text-center">Tanggal Invoice</td>
-                                    <td className="td-50 text-center">Keterangan</td>
-                                    <td className="td-20 text-center">Jumlah Invoice</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>249714 / 8000005793</td>
-                                    <td className="text-center">12 Mei 2020</td>
-                                    <td className="text-justify">Jasa Pengolahan Sistem Air Pendingin Cooling Tower PLTP Patuha Unit 1 Periode April 2020</td>
-                                    <td>
-                                        <div className="d-flex justify-content-between">
-                                        <span>Rp</span>
-                                        <span>171.666.000</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="3" className="text-right">PPN(10%)</td>
-                                    <td>
-                                        <div className="d-flex justify-content-between">
-                                        <span>Rp</span>
-                                        <span>(15.606.000)</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="3" className="text-right">Kurang:</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="3" className="text-right">PPh23 (2%)</td>
-                                    <td>
-                                        <div className="d-flex justify-content-between">
-                                        <span>Rp</span>
-                                        <span>(3.121.200)</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="3" className="text-right">PPh22 (1.5%)</td>
-                                    <td>
-                                        <div className="d-flex justify-content-between">
-                                        <span>Rp</span>
-                                        <span>-</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="3" className="text-right">Denda / Lainnya</td>
-                                    <td>
-                                        <div className="d-flex justify-content-between">
-                                        <span>Rp</span>
-                                        <span>-</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="3" className="text-right font-weight-bold">Jumlah bersih yang harus dibayar</td>
-                                    <td>
-                                        <div className="d-flex justify-content-between">
-                                        <span>Rp</span>
-                                        <span>152.938.800</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <table className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td className="td-15 text-center">No. Invoice / PO</td>
+                                        <td className="td-15 text-center">Tanggal Invoice</td>
+                                        <td className="td-50 text-center">Keterangan</td>
+                                        <td className="td-20 text-center">Jumlah Invoice</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>249714 / 8000005793</td>
+                                        <td className="text-center">12 Mei 2020</td>
+                                        <td className="text-justify">Jasa Pengolahan Sistem Air Pendingin Cooling Tower PLTP Patuha Unit 1 Periode April 2020</td>
+                                        <td>
+                                            <div className="d-flex justify-content-between">
+                                            <span>Rp</span>
+                                            <span>171.666.000</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="3" className="text-right">PPN(10%)</td>
+                                        <td>
+                                            <div className="d-flex justify-content-between">
+                                            <span>Rp</span>
+                                            <span>(15.606.000)</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="3" className="text-right">Kurang:</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="3" className="text-right">PPh23 (2%)</td>
+                                        <td>
+                                            <div className="d-flex justify-content-between">
+                                            <span>Rp</span>
+                                            <span>(3.121.200)</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="3" className="text-right">PPh22 (1.5%)</td>
+                                        <td>
+                                            <div className="d-flex justify-content-between">
+                                            <span>Rp</span>
+                                            <span>-</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="3" className="text-right">Denda / Lainnya</td>
+                                        <td>
+                                            <div className="d-flex justify-content-between">
+                                            <span>Rp</span>
+                                            <span>-</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="3" className="text-right font-weight-bold">Jumlah bersih yang harus dibayar</td>
+                                        <td>
+                                            <div className="d-flex justify-content-between">
+                                            <span>Rp</span>
+                                            <span>152.938.800</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                         <div className="row">
@@ -392,6 +392,7 @@ function ItemContractBKB(props) {
                                                 <span style={{fontSize: 8}}>Tanggal</span>
                                             </div>
                                             <div className="col-md border-right d-flex align-items-end" style={{minHeight: 60}}>
+                                                <span style={{fontSize: 8}}>Tanggal</span>
                                             </div>
                                         </div>
                                     </div>
