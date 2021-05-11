@@ -20,7 +20,10 @@ import { DashboardPage } from './pages/DashboardPage';
 // Page Guide Metronic
 
 const UserProfilepage = lazy(() =>
-  import('./modules/UserProfile/UserProfilePage')
+  import("./modules/UserProfile/UserProfilePage")
+);
+const DeliveryMonitoringRoutes = lazy(() =>
+  import('./modules/DeliveryMonitoring/RootDeliveryMonitoring')
 );
 
 const RootClientInvoiceMonitoring = lazy(() =>
@@ -63,7 +66,7 @@ export default function BasePage() {
         />
 
         <Route path="/master" component={MasterData} />
-
+        <Route path="/delivery_monitoring" component={DeliveryMonitoringRoutes} />
         <Redirect to="/error" />
       </Switch>
     </Suspense>

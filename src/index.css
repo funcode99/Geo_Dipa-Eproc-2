@@ -15,7 +15,7 @@
 
 .my-custom-scrollbar {
     position: relative;
-    height: 300px;
+    height: 35vh;
     /* touch-action: none; */
     border: 1px solid #EBEDF3;
     border-radius: 5px;

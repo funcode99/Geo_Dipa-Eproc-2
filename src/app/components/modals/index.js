@@ -9,6 +9,7 @@ export const StyledModal = ({
   disableBackdrop = false,
   align = '',
   children,
+  minWidth,
 }) => {
   return (
     <CustomModal
@@ -16,7 +17,7 @@ export const StyledModal = ({
       onClose={onClose}
       disableBackdropClick={disableBackdrop}
     >
-      <Container align={align}>
+      <Container align={align} minWidth={minWidth}>
         {hideCloseIcon ? null : (
           <StyledIcon className="fas fa-times" onClick={onClose} />
         )}
@@ -25,5 +26,3 @@ export const StyledModal = ({
     </CustomModal>
   );
 };
-
-export default StyledModal;
