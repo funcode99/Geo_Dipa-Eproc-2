@@ -43,18 +43,18 @@ function ItemContractBKB(props) {
     });
 
     const print = () => {
-        var content = document.getElementById("bkb");
-        var pri = document.getElementById("ifmcontentstoprint").contentWindow;
-        pri.document.open();
-        pri.document.write(content.innerHTML);
-        pri.document.close();
-        pri.focus();
-        pri.print();
+        // var content = document.getElementById("bkb");
+        // var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+        // pri.document.open();
+        // pri.document.write(content.innerHTML);
+        // pri.document.close();
+        // pri.focus();
+        // pri.print();
     };
 
     return (
         <React.Fragment>
-            <iframe id="ifmcontentstoprint" style={{height: 0, width: 0, position: 'absolute'}}></iframe>
+            {/* <iframe id="ifmcontentstoprint" style={{height: 0, width: 0, position: 'absolute'}}></iframe> */}
             <Card>
                 <CardHeader title="BKB">
                     <CardHeaderToolbar>
