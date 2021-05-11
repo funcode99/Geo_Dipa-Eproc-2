@@ -14,10 +14,10 @@ import {
 } from '@material-ui/core';
 import SVG from 'react-inlinesvg';
 import { useFormik } from 'formik';
-import { toAbsoluteUrl } from '../../../_metronic/_helpers';
+import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
-import * as master from './service/MasterCrud';
+import * as master from '../service/MasterCrud';
 // import http from '../../libs/http';
 import {
   Flex,
@@ -28,9 +28,9 @@ import {
   StyledHead,
   SubWrap,
 } from './style';
-import { StyledModal } from '../../components/Modals';
-import useToast from '../../components/toast';
-// import DocumentsTable from './Document';
+import { StyledModal } from '../../../components/modals';
+import useToast from '../../../components/toast';
+import DocumentsTable from './Document';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,7 +48,7 @@ export const DocumentTypes = () => {
   const [Toast, setToast] = useToast();
   const [docType, setDocType] = React.useState();
   const [modals, setModals] = React.useState(false);
-  // const [docId, setType] = React.useState();
+  const [docId, setType] = React.useState();
   const [confirm, setConfirm] = React.useState({ show: false, id: '' });
   const [update, setUpdate] = React.useState({ id: '', update: false });
   const [loading, setLoading] = React.useState(false);
@@ -73,10 +73,17 @@ export const DocumentTypes = () => {
   };
 
   const getList = async () => {
-    const {
-      data: { data },
-    } = await master.getList();
-    setDocType(data);
+    try {
+      setLoading(true);
+      const {
+        data: { data },
+      } = await master.getList();
+      setDocType(data);
+    } catch (error) {
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
+    }
   };
 
   React.useEffect(() => {
@@ -349,12 +356,20 @@ export const DocumentTypes = () => {
             </StyledTableHead>
             <TableBody>
               {/* TODO: create open document table  */}
-              {/* <StyledTableRow hover onClick={() => setType(' ')}> */}
-              <StyledTableRow hover>
+              <StyledTableRow hover onClick={() => setType(' ')}>
+                {/* <StyledTableRow hover> */}
                 <TableCell colSpan={4} align="center">
                   <Button variant="contained">See all document type</Button>
                 </TableCell>
               </StyledTableRow>
+
+              {loading ? (
+                <StyledTableRow hover>
+                  <TableCell colSpan={4} align="center">
+                    <CircularProgress />
+                  </TableCell>
+                </StyledTableRow>
+              ) : null}
 
               {docType?.map((row, i) => (
                 <StyledTableRow key={row.id} hover>
@@ -370,11 +385,11 @@ export const DocumentTypes = () => {
                   <TableCell align="center">
                     <IconWrapper>
                       {/* TODO: select document row for open doc table  */}
-                      {/* <Icon
+                      <Icon
                         style={{ marginInline: 5 }}
                         className="fas fa-search"
                         onClick={() => setType(row.id)}
-                      /> */}
+                      />
                       <Icon
                         style={{ marginInline: 5 }}
                         className="fas fa-edit"
@@ -393,7 +408,7 @@ export const DocumentTypes = () => {
             </TableBody>
           </Table>
         </Paper>
-        {/* {docId ? <DocumentsTable doctype={docId} /> : null} */}
+        {docId ? <DocumentsTable typeId={docId} /> : null}
       </div>
     </Container>
   );
