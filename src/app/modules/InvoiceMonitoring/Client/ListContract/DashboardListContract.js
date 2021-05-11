@@ -138,35 +138,35 @@ class DashboardListContract extends React.Component {
 
                         <div className="table-wrapper-scroll-y my-custom-scrollbar">
                             <div className="segment-table">
-                                <div className="hecto-10">
+                                <div className="hecto-8">
                                     <Table className="overflow-auto">
                                 <thead>
                                     <tr>
-                                        <th className="text-primary align-middle">
+                                        <th className="text-primary align-middle td-25">
                                             <span className="svg-icon svg-icon-sm svg-icon-primary ml-1">
                                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Navigation/Down-2.svg")}/>
                                             </span>
                                             Nomor Kontrak
-                                            <span className="svg-icon svg-icon-sm svg-icon-primary ml-1">
+                                            {/* <span className="svg-icon svg-icon-sm svg-icon-primary ml-1">
                                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Navigation/Up-2.svg")}/>
-                                            </span>
+                                            </span> */}
                                         </th>
-                                        <th className="text-muted align-middle">
+                                        <th className="text-muted align-middle td-20">
                                             Judul Pengadaan
                                         </th>
-                                        <th className="text-muted align-middle">
+                                        <th className="text-muted align-middle td-10">
                                             Nomor PO
                                         </th>
-                                        <th className="text-muted align-middle">
+                                        <th className="text-muted align-middle td-10">
                                             Termin
                                         </th>
-                                        <th className="text-muted align-middle">
+                                        <th className="text-muted align-middle td-15">
                                             Nomor SA
                                         </th>
-                                        <th className="text-muted align-middle">
+                                        <th className="text-muted align-middle td-17">
                                             Nomor Invoice
                                         </th>
-                                        <th className="text-muted align-middle">
+                                        <th className="text-muted align-middle td-3">
                                             Status
                                         </th>
                                     </tr>
@@ -201,18 +201,18 @@ class DashboardListContract extends React.Component {
                                                         <td>
                                                             {
                                                                 index === 1 ?
-                                                                <label className="font-weight-bold font-italic text-white bg-info rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Waiting SA</label>
+                                                                <label className="font-weight-bold font-italic text-white bg-info rounded px-1 py-1 text-center text-uppercase" style={{width: 150}}>Waiting SA</label>
                                                                 :
                                                                 index === 2 ?
-                                                                <label className="font-weight-bold font-italic text-white bg-warning rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Waiting Invoice</label>
+                                                                <label className="font-weight-bold font-italic text-white bg-warning rounded px-1 py-1 text-center text-uppercase" style={{width: 150}}>Waiting Invoice</label>
                                                                 :
                                                                 index === 3 ?
-                                                                <label className="font-weight-bold font-italic text-white bg-primary rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Waiting Document</label>
+                                                                <label className="font-weight-bold font-italic text-white bg-primary rounded px-1 py-1 text-center text-uppercase" style={{width: 150}}>Waiting Document</label>
                                                                 :
                                                                 index === 4 ?
-                                                                <label className="font-weight-bold font-italic text-white bg-danger rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Document Rejected</label>
+                                                                <label className="font-weight-bold font-italic text-white bg-danger rounded px-1 py-1 text-center text-uppercase" style={{width: 150}}>Document Rejected</label>
                                                                 :
-                                                                <label className="font-weight-bold font-italic text-white bg-success rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Paid</label>
+                                                                <label className="font-weight-bold font-italic text-white bg-success rounded px-1 py-1 text-center text-uppercase" style={{width: 150}}>Paid</label>
                                                             }
                                                         </td>
                                                     </tr>
