@@ -17,6 +17,8 @@ import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from './ItemContractSummary';
 import ItemContractInvoice from './ItemContractInvoice';
 import ItemContractBKB from './ItemContractBKB';
+import ItemContractRoutingSlip from './ItemContractRoutingSlip';
+import ItemContractFormVerification from './ItemContractFormVerification';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -42,7 +44,7 @@ function ItemContract(props) {
     const suhbeader = useSubheader();
     // const { intl } = props;
     suhbeader.setTitle("012.PJ/PST.30-GDE/IX/2020-1000014263");
-    const [valueTab, setvalueTab] = useState(0);
+    const [valueTab, setvalueTab] = useState(4);
 
     return (
         <React.Fragment>
@@ -51,6 +53,8 @@ function ItemContract(props) {
                     <Tab label={<><div><i className="fas fa-file-invoice" style={{color: 'inherit'}}></i><span className="mx-2">Summary</span></div></>} />
                     <Tab label={<><div><i className="fas fa-receipt" style={{color: 'inherit'}}></i><span className="mx-2">Invoice</span></div></>} />
                     <Tab label={<><div><i className="fas fa-copy" style={{color: 'inherit'}}></i><span className="mx-2">BKB</span></div></>} />
+                    <Tab label={<><div><i className="fas fa-tasks" style={{color: 'inherit'}}></i><span className="mx-2">Form Verifikasi</span></div></>} />
+                    <Tab label={<><div><i className="fas fa-sticky-note" style={{color: 'inherit'}}></i><span className="mx-2">Routing Slip</span></div></>} />
                 </Tabs>
             </AppBar>
             <TabPanel value={valueTab} index={0}>
@@ -61,6 +65,12 @@ function ItemContract(props) {
             </TabPanel>
             <TabPanel value={valueTab} index={2}>
                 <ItemContractBKB />
+            </TabPanel>
+            <TabPanel value={valueTab} index={3}>
+                <ItemContractFormVerification />
+            </TabPanel>
+            <TabPanel value={valueTab} index={4}>
+                <ItemContractRoutingSlip />
             </TabPanel>
         </React.Fragment>
     );
