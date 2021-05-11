@@ -135,7 +135,7 @@ export const ContractsPage = () => {
                     <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell>
-                      <Link to={`/user/delivery_monitoring/${item.id}`}>
+                      <Link to={`/delivery_monitoring/contract/${item.id}`}>
                         <Icon className="fas fa-search pointer text-primary" />
                       </Link>
                     </TableCell>

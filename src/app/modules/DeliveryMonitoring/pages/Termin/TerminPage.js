@@ -426,18 +426,18 @@ export const TerminPage = () => {
           {
             showChild.data.child.map((item) => (
               <tr>
-                <td>
+                <td className="align-middle">
                   <div className="d-flex justify-content-center">
                     <i className="fa fa-file"></i>
                   </div>
                 </td>
-                <td>{item.nama}</td>
-                <td>{item.due_date}</td>
-                <td>{item.mo}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td className="align-middle">{item.nama}</td>
+                <td className="align-middle">{item.due_date}</td>
+                <td className="align-middle">{item.mo}</td>
+                <td className="align-middle"></td>
+                <td className="align-middle"></td>
+                <td className="align-middle"></td>
+                <td className="align-middle"></td>
                 <td>
                   <div className="d-flex justify-content-between flex-row">
                     <button className="btn btn-sm p-1" onClick={handleShowEditDoc}>
@@ -618,81 +618,49 @@ export const TerminPage = () => {
             <div className="table-wrapper-scroll-y my-custom-scrollbar">
               <div className="segment-table">
                 <div className="hecto-10">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white align-middle">No</th>
-                      <th className="bg-primary text-white align-middle">Scope of Work(Term)</th>
-                      <th className="bg-primary text-white align-middle">Delivery Date</th>
-                      <th className="bg-primary text-white align-middle">Bobot(%)</th>
-                      <th className="bg-primary text-white align-middle">Harga Pekerjaan</th>
-                      <th className="bg-primary text-white align-middle">Project Progress(%)</th>
-                      <th className="bg-primary text-white align-middle">Dokumen Progress</th>
-                      <th className="bg-primary text-white align-middle">Deliverable Dokumen</th>
-                      <th className="bg-primary text-white align-middle">Aksi</th>
-                    </tr>
-                  </thead>
-                  {/* <tbody> */}
-                  {rowDoc.map((item, index) => {
-                    return (
-                      <>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <button className="btn btn-sm d-flex justify-content-center p-1" onClick={() => handleChildDoc(item.id)}>
-                              <i className="fa fa-folder-plus text-primary"></i>
-                            </button>
-                          </td>
-                          <td>{item.type}</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </tbody>
-                      {childTables(item.id)}
-                    </>
+                  <Table className="table-bordered overflow-auto">
+                    <thead>
+                      <tr>
+                        <th className="bg-primary text-white align-middle">No</th>
+                        <th className="bg-primary text-white align-middle">Scope of Work(Term)</th>
+                        <th className="bg-primary text-white align-middle">Delivery Date</th>
+                        <th className="bg-primary text-white align-middle">Bobot(%)</th>
+                        <th className="bg-primary text-white align-middle">Harga Pekerjaan</th>
+                        <th className="bg-primary text-white align-middle">Project Progress(%)</th>
+                        <th className="bg-primary text-white align-middle">Dokumen Progress</th>
+                        <th className="bg-primary text-white align-middle">Deliverable Dokumen</th>
+                        <th className="bg-primary text-white align-middle">Aksi</th>
+                      </tr>
+                    </thead>
+                    {rowDoc.map((item, index) => {
+                      return (
+                        <>
+                        <tbody>
+                          <tr>
+                            <td className="align-middle">
+                              <button className="btn btn-sm d-flex justify-content-center p-1" onClick={() => handleChildDoc(item.id)}>
+                                <i className="fa fa-folder-plus text-primary"></i>
+                              </button>
+                            </td>
+                            <td className="align-middle">{item.type}</td>
+                            <td className="align-middle"></td>
+                            <td className="align-middle"></td>
+                            <td className="align-middle"></td>
+                            <td className="align-middle"></td>
+                            <td className="align-middle"></td>
+                            <td className="align-middle"></td>
+                            <td className="align-middle"></td>
+                          </tr>
+                        </tbody>
+                        {childTables(item.id)}
+                      </>
                     )})}
-                  {/* </tbody> */}
+                  </Table>
                 </div>
               </div>
             </div>
-            
-            {/* <Table className="table table-hover table-bordered">
-              <TableHeadStyled rows={dlvDocHeads} />
-              {rowDoc.map((item) => {
-                return (
-                  <>
-                    <TableBody>
-                      <TableRow>
-                        <TableCellStyled>
-                          <button className="btn btn-sm d-flex justify-content-center p-1" onClick={() => handleChildDoc(item.id)}>
-                            <i className="fa fa-folder-plus text-primary"></i>
-                          </button>
-                        </TableCellStyled>
-                        <TableCellStyled>{item.type}</TableCellStyled>
-                        <TableCellStyled></TableCellStyled>
-                        <TableCellStyled></TableCellStyled>
-                        <TableCellStyled></TableCellStyled>
-                        <TableCellStyled></TableCellStyled>
-                        <TableCellStyled></TableCellStyled>
-                        <TableCellStyled></TableCellStyled>
-                        <TableCellStyled></TableCellStyled>
-                        <TableCellStyled>
-                        </TableCellStyled>
-                      </TableRow>
-                    </TableBody>
-                    {childTables(item.id)}
-                  </>
-                )
-              })}
-
-            </Table> */}
           </div>
         </Container>
-
       </Paper >
     </Container>
   );

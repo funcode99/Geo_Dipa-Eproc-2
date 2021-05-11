@@ -4,7 +4,7 @@ import {
     Route, 
     Switch 
 } from "react-router-dom";
-import { useSubheader } from "../../../../_metronic/layout";
+import { useSubheader } from "../../../_metronic/layout";
 // import DeliveryMonitoring from "./DeliveryMonitoring";
 // import ItemDeliveryMonitoring from "./ItemDeliveryMonitoring";
 
@@ -24,7 +24,7 @@ import {
   ContractsPage,
   ContractDetailPage,
   TerminPage,
-} from '../pages';
+} from './pages';
 
 function DeliveryMonitoringRoutes(props) {
   // const { user } = useSelector((state) => state.auth);
@@ -34,25 +34,27 @@ function DeliveryMonitoringRoutes(props) {
   return (
         <Switch>
           <Redirect
-            from="/user/delivery_monitoring"
+            from="/delivery_monitoring"
             exact={true}
-            to="/user/delivery_monitoring/dashboard"
+            to="/delivery_monitoring/contract"
           />
+        
           <Route
-            path="/user/delivery_monitoring/dashboard"
-            component={ContractsPage}
-          />
-
-          <Route
-            path="/user/delivery_monitoring/item"
+            path="/delivery_monitoring/:id/item"
             component={TerminPage}
           />
 
           <Route
-            path="/user/delivery_monitoring/:id"
+            path="/delivery_monitoring/contract/:id"
             component={ContractDetailPage}
+            exact={true}
           />
-          
+
+          <Route
+            path="/delivery_monitoring/contract"
+            component={ContractsPage}
+          />
+
         </Switch>
   );
 }
