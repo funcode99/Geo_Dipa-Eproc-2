@@ -19,7 +19,7 @@ function CreateNewAccountHome(props) {
             .then(response => {
                 if (response.status == 200) {
                     setValidToken(true)
-                    setData(response.data.data.items)
+                    setData(response.data.data)
                 }
             });
     }, []);
