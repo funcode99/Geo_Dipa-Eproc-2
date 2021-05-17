@@ -115,11 +115,11 @@ function CreateNewAccount(props) {
                 })),
     });
 
-    const check_username = (username) => {
-        if (username.length > 3) {
-            checkUsername(username)
+    const check_username = () => {
+        if (formik.values.username.length > 3) {
+            checkUsername(formik.values.username)
                 .then(({ data: { data } }) => {
-                    setUsernameAvailability(data.items.check)
+                    setUsernameAvailability(data.check)
                 })
                 .catch((error) => {
                 });
@@ -175,7 +175,7 @@ function CreateNewAccount(props) {
         initialValues,
         validationSchema: CreateSchema,
         onSubmit: (values, { setStatus, setSubmitting }) => {
-            // createUser(values, setStatus, setSubmitting);
+            createUser(values, setStatus, setSubmitting);
             MODAL.showCreate(modal_title, modal_body, modal_button)
         },
         onReset: (values, { resetForm }) => {
@@ -236,7 +236,7 @@ function CreateNewAccount(props) {
                                             )}`}
                                             name="username"
                                             readOnly={loading}
-                                            onKeyPress={check_username(formik.values.username)}
+                                            onKeyUp={check_username}
                                             {...formik.getFieldProps("username")}
                                         />
                                     </div>
