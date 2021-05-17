@@ -6,8 +6,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import './ModalSession.css';
-import { FormattedMessage, injectIntl } from "react-intl";
-import { Hidden } from '@material-ui/core';
 import { MODAL } from './ModalService';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
