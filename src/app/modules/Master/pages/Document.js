@@ -394,7 +394,7 @@ export const Documents = ({ typeId }) => {
               <StyledHead>
                 <TableCell>No</TableCell>
                 <TableCell>Document Name</TableCell>
-                <TableCell align="center">Periodic</TableCell>
+                <TableCell align="center">Periode Value</TableCell>
 
                 <TableCell align="center" className="MuiTableCell-sizeSmall">
                   Action
@@ -410,13 +410,21 @@ export const Documents = ({ typeId }) => {
                 </StyledTableRow>
               ) : null}
 
+              {dataList?.length < 1 ? (
+                <StyledTableRow hover>
+                  <TableCell colSpan={4} align="center">
+                    Empty Data
+                  </TableCell>
+                </StyledTableRow>
+              ) : null}
+
               {dataList?.map((row, i) => (
                 <StyledTableRow key={row.id} hover>
                   <TableCell scope="row">{i + 1}</TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell align="center">
                     {row.periode_id !== null ? (
-                      <Icon className="fas fa-check-circle" color="primary" />
+                      `${row.periode.value} Hari`
                     ) : (
                       <Icon className="fas fa-times-circle" color="error" />
                     )}
