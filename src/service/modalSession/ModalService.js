@@ -11,8 +11,8 @@ export const MODAL = {
     hide() {
         ReactDOM.unmountComponentAtNode(document.getElementById('modal-react'));
     },
-    showCreate(title, body, button){
-        const data = {title:title, body:body, button:button}
+    showCreate(title, body, button, status){
+        const data = {title:title, body:body, button:button, status:status}
         ReactDOM.render(<ModalCreate data={data} />, document.getElementById('modal-react'));
-    }
+    },
 };

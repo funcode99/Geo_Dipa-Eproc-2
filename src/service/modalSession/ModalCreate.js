@@ -7,6 +7,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import './ModalSession.css';
 import { FormattedMessage, injectIntl } from "react-intl";
+import { Hidden } from '@material-ui/core';
+import { MODAL } from './ModalService';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -22,7 +24,11 @@ class ModalCreate extends React.Component {
     }
 
     loginPage() {
-        window.location.replace(window.location.origin);
+        if (this.props.data?.status) {
+            window.location.replace(window.location.origin)
+        } else {
+            MODAL.hide()
+        }
     }
 
     render() {
@@ -36,14 +42,14 @@ class ModalCreate extends React.Component {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{this.props.data?.title}</DialogTitle>
+                <DialogTitle id="alert-dialog-title" className={`${!this.props.data?.status ? "text-danger" : null}`}>{this.props.data?.title}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {this.props.data?.body}
+                        <h4>{this.props.data?.body}</h4>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <button onClick={this.loginPage.bind(this)} className="btn btn-sm btn-primary">
+                    <button onClick={this.loginPage.bind(this)} className={`btn btn-sm ${this.props.data?.status ? "btn-primary" : "btn-secondary"}`}>
                         {this.props.data?.button}
                     </button>
                 </DialogActions>
