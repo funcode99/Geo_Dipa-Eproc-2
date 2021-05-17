@@ -8,16 +8,17 @@ import {
   Icon,
   Button,
   Container,
-  FormControlLabel,
-  Checkbox,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
 } from '@material-ui/core';
 import SVG from 'react-inlinesvg';
 import { useFormik } from 'formik';
-import { toAbsoluteUrl } from '../../../_metronic/_helpers';
+import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
-import * as master from './service/MasterCrud';
+import * as master from '../service/MasterCrud';
 // import http from '../../libs/http';
 import {
   Flex,
@@ -27,9 +28,12 @@ import {
   StyledTableRow,
   StyledHead,
   SubWrap,
+  InputWrapper,
+  SelectStyled,
+  FormContent,
 } from './style';
-import { StyledModal } from '../../components/modals';
-import useToast from '../../components/toast';
+import { StyledModal } from '../../../components/modals';
+import useToast from '../../../components/toast';
 // import DocumentsTable from './Document';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,16 +47,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const DocumentTypes = () => {
+export const Documents = ({ typeId }) => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [docType, setDocType] = React.useState();
+  const [dataList, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
-  // const [docId, setType] = React.useState();
   const [confirm, setConfirm] = React.useState({ show: false, id: '' });
   const [update, setUpdate] = React.useState({ id: '', update: false });
   const [loading, setLoading] = React.useState(false);
-  // const [form, setForm] = React.useState({ name: '', checked: false });
+  const [periodic, setPeriodic] = React.useState(false);
+  const [options, setOptions] = React.useState();
 
   const FormSchema = Yup.object().shape({
     document_name: Yup.string()
@@ -69,20 +73,72 @@ export const DocumentTypes = () => {
   };
   const initialValues = {
     document_name: '',
-    check_periodic: false,
+    document_type: 709,
+    document_periode: 0,
   };
 
-  const getList = async () => {
-    const {
-      data: { data },
-    } = await master.getList();
-    setDocType(data);
+  // const getList = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const {
+  //       data: { data },
+  //     } = await master.getDocList();
+  //     setData(data.data);
+  //   } catch (error) {
+  //     setToast('Error API, please contact developer!');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const getOptions = async () => {
+    try {
+      setLoading(true);
+      const {
+        data: { data },
+      } = await master.getDocList();
+      const { options } = data;
+      // console.log(options);
+      const value = options.document_types.filter((item) => {
+        return item.id === typeId;
+      });
+      if (value.length > 0) {
+        setPeriodic(value[0].periode !== null);
+      }
+      setOptions(options);
+      // setData(data.data);
+    } catch (error) {
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getListID = async () => {
+    try {
+      setLoading(true);
+      const {
+        data: { data },
+      } = await master.getDocumentByType(typeId);
+      if (typeId !== ' ') {
+        console.log('x');
+        formik.setValues({ document_type: typeId });
+      }
+      setData(data.data);
+    } catch (error) {
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
+    }
   };
 
   React.useEffect(() => {
-    getList();
+    // console.log(typeId);
+    getListID();
+    getOptions();
+
     // eslint-disable-next-line
-  }, []);
+  }, [typeId]);
 
   const formik = useFormik({
     initialValues,
@@ -90,20 +146,26 @@ export const DocumentTypes = () => {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       try {
         enableLoading();
-        console.log(values);
-        const requestData = {
-          name: values.document_name,
-          is_periodic: values.check_periodic,
-        };
+        // console.log(values);
+        const requestData = periodic
+          ? {
+              name: values.document_name,
+              document_type_id: values.document_type,
+              periode_id: values.document_type,
+            }
+          : {
+              name: values.document_name,
+              document_type_id: values.document_type,
+            };
 
         const {
           data: { status },
         } = update.update
-          ? await master.submitDoctypes(requestData, update)
-          : await master.submitDoctypes(requestData);
+          ? await master.submitDocument(requestData, update)
+          : await master.submitDocument(requestData);
 
         if (status) {
-          getList();
+          getListID();
           setModals(false);
         }
       } catch (error) {
@@ -116,91 +178,37 @@ export const DocumentTypes = () => {
     },
   });
 
-  // const getInputClasses = (fieldname) => {
-  //   if (formik.touched[fieldname] && formik.errors[fieldname]) {
-  //     return 'is-invalid';
-  //   }
-
-  //   if (formik.touched[fieldname] && !formik.errors[fieldname]) {
-  //     return 'is-valid';
-  //   }
-
-  //   return '';
-  // };
-
-  // const {
-  //   // register,
-  //   handleSubmit,
-  //   setValue,
-  //   formState: { errors },
-  // } = useForm({
-  //   resolver: yupResolver(FormSchema),
-  // });
-
-  // const getDocType = async () => {
-  //   try {
-  //     const { data } = await http.get(`/document-type`);
-  //     // console.log(data);
-  //     setDocType(data);
-  //   } catch (error) {
-  //     setToast('Error with API, please contact Developer!');
-  //     window.console.error(error);
-  //   }
-  // };
-
   const handleClose = () => {
     setModals(false);
   };
+
   const handleModal = async (type, id) => {
     if (type === 'update') {
       const {
-        data: { data },
-      } = await master.getByID(id);
+        data: {
+          data: { data },
+        },
+      } = await master.getDocumentID(id);
       // console.log(data[0].is_periodic);
       setUpdate({ id, update: true });
       // formik.setFieldValue('document_name', data[0].name);
       formik.setValues({
         document_name: data[0].name,
-        check_periodic: data[0].is_periodic,
+        document_type: data[0].document_type_id,
+        document_periode: data[0].periode_id,
       });
     } else {
-      formik.setValues(initialValues);
+      // formik.setValues(initialValues);
     }
     setModals(true);
   };
 
-  // TODO : delete unused code
-  // const formSubmit = async (values) => {
-  //   try {
-  //     setLoading(true);
-
-  //     const requestData = {
-  //       name: values.document_name,
-  //       is_periodic: values.check_periodic === 'true',
-  //     };
-  //     console.log(requestData);
-  //     // const { status } = update.update
-  //     //   ? await http.put(`/document-type/${update.id}`, requestData)
-  //     //   : await http.post(`/document-type`, requestData);
-  //     // if (status) {
-  //     //   getDocType();
-  //     //   setModals(false);
-  //     //   setForm({ checked: false, name: '' });
-  //     // }
-  //   } catch (error) {
-  //     setToast('Error with API, please contact Developer!');
-  //     console.error(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleDelete = async () => {
     try {
       setLoading(true);
-      await master.deleteDoctypes(confirm.id);
+      await master.deleteDocument(confirm.id);
       setConfirm({ ...confirm, show: false });
-      getList();
+      getListID();
     } catch (error) {
       setToast('Error with API, please contact Developer!');
       console.error(error);
@@ -219,19 +227,14 @@ export const DocumentTypes = () => {
         disableBackdrop
       >
         <Flex style={{ justifyContent: 'center' }}>
-          <form
-            noValidate
-            autoComplete="off"
-            // onSubmit={handleSubmit(formSubmit)}
-            onSubmit={formik.handleSubmit}
-          >
+          <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
             <div style={{ justifyContent: 'center', display: 'flex' }}>
               <h3>Input Form</h3>
             </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
-              <div style={{ width: '70%', alignSelf: 'center' }}>
+            <FormContent>
+              <InputWrapper>
                 <Input
-                  label="Nama Dokumen"
+                  label="Nama Document"
                   variant="outlined"
                   name="document_name"
                   {...formik.getFieldProps('document_name')}
@@ -241,23 +244,74 @@ export const DocumentTypes = () => {
                     ? formik.errors.document_name
                     : null}
                 </p>
-              </div>
-              <div style={{ alignSelf: 'center' }}>
-                <FormControlLabel
-                  style={{ alignSelf: 'center' }}
-                  control={
-                    <Checkbox
-                      name="check_periodic"
-                      color="primary"
-                      size="medium"
-                      checked={formik.values.check_periodic}
-                      {...formik.getFieldProps('check_periodic')}
-                    />
-                  }
-                  label="Periodik"
-                />
-              </div>
-            </div>
+              </InputWrapper>
+              <InputWrapper>
+                <FormControl
+                  variant="outlined"
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <InputLabel
+                    id="demo-simple-select-label"
+                    style={{ marginTop: '1%', marginLeft: '5%' }}
+                  >
+                    Document Type
+                  </InputLabel>
+                  <SelectStyled
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    labelWidth={150}
+                    name="document_type"
+                    {...formik.getFieldProps('document_type')}
+                  >
+                    <MenuItem value={709}>Select Item</MenuItem>
+                    {options &&
+                      options.document_types.map((val) => (
+                        <MenuItem key={val.id} value={val.id}>
+                          {val.name}
+                        </MenuItem>
+                      ))}
+                  </SelectStyled>
+                </FormControl>
+              </InputWrapper>
+
+              {periodic ? (
+                <InputWrapper>
+                  <FormControl
+                    variant="outlined"
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <InputLabel
+                      id="demo-simple-select-label"
+                      style={{ marginTop: '1%', marginLeft: '5%' }}
+                    >
+                      Periode
+                    </InputLabel>
+                    <SelectStyled
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      labelWidth={150}
+                      {...formik.getFieldProps('document_periode')}
+                    >
+                      {/* <MenuItem value="">Select Item</MenuItem> */}
+                      {options &&
+                        options.periodes.map((val) => (
+                          <MenuItem key={val.id} value={val.id}>
+                            {val.name}
+                          </MenuItem>
+                        ))}
+                    </SelectStyled>
+                  </FormControl>
+                </InputWrapper>
+              ) : null}
+            </FormContent>
             <div style={{ justifyContent: 'center', display: 'flex' }}>
               <Button
                 disabled={loading}
@@ -318,7 +372,7 @@ export const DocumentTypes = () => {
           </SubWrap>
           <div className="d-flex align-items-baseline mr-5">
             <h2 className="text-dark font-weight-bold my-2 mr-5">
-              Master Document Type
+              Master Document
             </h2>
           </div>
         </div>
@@ -340,7 +394,7 @@ export const DocumentTypes = () => {
               <StyledHead>
                 <TableCell>No</TableCell>
                 <TableCell>Document Name</TableCell>
-                <TableCell align="center">Periodic</TableCell>
+                <TableCell align="center">Periode Value</TableCell>
 
                 <TableCell align="center" className="MuiTableCell-sizeSmall">
                   Action
@@ -348,21 +402,29 @@ export const DocumentTypes = () => {
               </StyledHead>
             </StyledTableHead>
             <TableBody>
-              {/* TODO: create open document table  */}
-              {/* <StyledTableRow hover onClick={() => setType(' ')}> */}
-              <StyledTableRow hover>
-                <TableCell colSpan={4} align="center">
-                  <Button variant="contained">See all document type</Button>
-                </TableCell>
-              </StyledTableRow>
+              {loading ? (
+                <StyledTableRow hover>
+                  <TableCell colSpan={4} align="center">
+                    <CircularProgress />
+                  </TableCell>
+                </StyledTableRow>
+              ) : null}
 
-              {docType?.map((row, i) => (
+              {dataList?.length < 1 ? (
+                <StyledTableRow hover>
+                  <TableCell colSpan={4} align="center">
+                    Empty Data
+                  </TableCell>
+                </StyledTableRow>
+              ) : null}
+
+              {dataList?.map((row, i) => (
                 <StyledTableRow key={row.id} hover>
                   <TableCell scope="row">{i + 1}</TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell align="center">
-                    {row.is_periodic ? (
-                      <Icon className="fas fa-check-circle" color="primary" />
+                    {row.periode_id !== null ? (
+                      `${row.periode.value} Hari`
                     ) : (
                       <Icon className="fas fa-times-circle" color="error" />
                     )}
@@ -393,11 +455,11 @@ export const DocumentTypes = () => {
             </TableBody>
           </Table>
         </Paper>
-        {/* {docId ? <DocumentsTable doctype={docId} /> : null} */}
+        {/* {docId ? <DocumentsTable dataList={docId} /> : null} */}
       </div>
     </Container>
   );
 };
 
-export default DocumentTypes;
+export default Documents;
 // export default injectIntl(connect(null, null)(DashboardListContract));
