@@ -77,19 +77,19 @@ export const Documents = ({ typeId }) => {
     document_periode: 0,
   };
 
-  const getList = async () => {
-    try {
-      setLoading(true);
-      const {
-        data: { data },
-      } = await master.getDocList();
-      setData(data.data);
-    } catch (error) {
-      setToast('Error API, please contact developer!');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const getList = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const {
+  //       data: { data },
+  //     } = await master.getDocList();
+  //     setData(data.data);
+  //   } catch (error) {
+  //     setToast('Error API, please contact developer!');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const getOptions = async () => {
     try {
@@ -165,7 +165,7 @@ export const Documents = ({ typeId }) => {
           : await master.submitDocument(requestData);
 
         if (status) {
-          getList();
+          getListID();
           setModals(false);
         }
       } catch (error) {
@@ -208,7 +208,7 @@ export const Documents = ({ typeId }) => {
       setLoading(true);
       await master.deleteDocument(confirm.id);
       setConfirm({ ...confirm, show: false });
-      getList();
+      getListID();
     } catch (error) {
       setToast('Error with API, please contact Developer!');
       console.error(error);
