@@ -372,7 +372,11 @@ export const DocumentTypes = () => {
               ) : null}
 
               {docType?.map((row, i) => (
-                <StyledTableRow key={row.id} hover>
+                <StyledTableRow
+                  key={row.id}
+                  hover
+                  className={`${row.id === docId ? 'Mui-selected' : ''}`}
+                >
                   <TableCell scope="row">{i + 1}</TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell align="center">
