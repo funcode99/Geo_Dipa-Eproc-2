@@ -6,6 +6,7 @@ import {
   // Table,
   TableBody,
   TableRow,
+  Checkbox,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import {
@@ -48,7 +49,7 @@ const rowJasa = [
     'jasa',
     '04/05/2021',
     '7',
-    'Jasa data jasa berupa string yang panjang 10101',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101'
@@ -59,7 +60,7 @@ const rowJasa = [
     'jasa',
     '04/06/2021',
     '9',
-    'Jasa data jasa berupa string yang panjang 10101',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101'
@@ -70,7 +71,7 @@ const rowJasa = [
     'jasa',
     '04/07/2021',
     '3',
-    'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj '
@@ -88,7 +89,7 @@ const rowBarang = [
     'Barang',
     '04/05/2021',
     '7',
-    'BarangdataBarangberupastringyangpanjang10101',
+    'pcs',
     'BarangdataBarangberupastringyangpanjang10101',
     'BarangdataBarangberupastringyangpanjang10101',
     'BarangdataBarangberupastringyangpanjang10101'
@@ -99,7 +100,7 @@ const rowBarang = [
     'Barang',
     '04/06/2021',
     '9',
-    'Barang data Barang berupa string yang panjang 10101',
+    'pcs',
     'Barang data Barang berupa string yang panjang 10101',
     'Barang data Barang berupa string yang panjang 10101',
     'Barang data Barang berupa string yang panjang 10101'
@@ -110,7 +111,7 @@ const rowBarang = [
     'Barang',
     '04/07/2021',
     '3',
-    'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
+    'pcs',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj '
@@ -258,6 +259,7 @@ export const TerminPage = () => {
   const handleShowEditDoc = () => setShowEditDoc(true);
   const handleShowAddDelivModal = () => setShowAddDelivModal(true);
 
+  let tabStyle = 'nav-link';
 
   const handleChange = (event) => {
     const item = rowJasa.find((row) => +event.target.value === row.id)
@@ -303,61 +305,94 @@ export const TerminPage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {navName === 'Barang' ? (
-                        rowBarang.map((item) => {
-                          return (
-                            <tr>
-                              <td className="align-middle">{item.id}</td>
-                              <td className="align-middle">{item.name}</td>
-                              <td className="align-middle">
-                                <div className="d-flex justify-content-between flex-row">
-                                  <button className="btn btn-sm p-1" onClick={handleShow}>
-                                    <i className="fas fa-edit text-primary"></i>
-                                  </button>
-                                  <button className="btn btn-sm p-1 mr-2" onClick={handleShowModalDelete}>
-                                    <i className="fas fa-trash text-danger"></i>
-                                  </button>
-                                </div>
-                              </td>
-                              <td className="align-middle">{item.due_date}</td>
-                              <td className="align-middle">{item.qty}</td>
-                              <td className="align-middle">{item.uom}</td>
-                              <td className="align-middle">{item.grossPrice}</td>
-                              <td className="align-middle">{item.costCenter}</td>
-                              <td className="align-middle">{item.wbs}</td>
-                            </tr>
-                          )
-                        })
-                      )
-                        : (
-                          selectedItems.length > 0 && (
-                            selectedItems.map((item) => {
-                              return (
-                                <tr>
-                                  <td className="align-middle">{item.id}</td>
-                                  <td className="align-middle">{item.name}</td>
-                                  <td className="align-middle">
-                                    <div className="d-flex justify-content-between flex-row">
-                                      <button className="btn btn-sm p-1" onClick={handleShow}>
-                                        <i className="fas fa-edit text-primary"></i>
-                                      </button>
-                                      <button className="btn btn-sm p-1 mr-2" onClick={handleShowModalDelete}>
-                                        <i className="fas fa-trash text-danger"></i>
-                                      </button>
-                                    </div>
-                                  </td>
-                                  <td className="align-middle">{item.due_date}</td>
-                                  <td className="align-middle">{item.qty}</td>
-                                  <td className="align-middle">{item.uom}</td>
-                                  <td className="align-middle">{item.grossPrice}</td>
-                                  <td className="align-middle">{item.costCenter}</td>
-                                  <td className="align-middle">{item.wbs}</td>
-                                </tr>
-                              )
-                            })
-                          )
-                        )
-                      }
+                      {navName === 'Barang'
+                        ? rowBarang.map((item) => {
+                            return (
+                              <tr>
+                                <td className="align-middle">{item.id}</td>
+                                <td className="align-middle">{item.name}</td>
+                                {/* <td className="align-middle">
+                                  <div className="d-flex justify-content-between flex-row">
+                                    <button
+                                      className="btn btn-sm p-1"
+                                      onClick={handleShow}
+                                    >
+                                      <i className="fas fa-edit text-primary"></i>
+                                    </button>
+                                    <button
+                                      className="btn btn-sm p-1 mr-2"
+                                      onClick={handleShowModalDelete}
+                                    >
+                                      <i className="fas fa-trash text-danger"></i>
+                                    </button>
+                                  </div>
+                                </td> */}
+                                <td className="align-middle">
+                                  {item.due_date}
+                                </td>
+                                <td className="align-middle">{item.qty}</td>
+                                <td className="align-middle">{item.uom}</td>
+                                <td className="align-middle">
+                                  {item.grossPrice}
+                                </td>
+                                <td className="align-middle">
+                                  {item.costCenter}
+                                </td>
+                                <td className="align-middle">{item.wbs}</td>
+                                <td>
+                                  <Checkbox
+                                    name={`checkbox-${item.id}`}
+                                    color="secondary"
+                                    onChange={(e) => console.log(e.target)}
+                                  />
+                                </td>
+                              </tr>
+                            );
+                          })
+                        : selectedItems.length > 0 &&
+                          selectedItems.map((item) => {
+                            return (
+                              <tr>
+                                <td className="align-middle">{item.id}</td>
+                                <td className="align-middle">{item.name}</td>
+                                {/* <td className="align-middle">
+                                  <div className="d-flex justify-content-between flex-row">
+                                    <button
+                                      className="btn btn-sm p-1"
+                                      onClick={handleShow}
+                                    >
+                                      <i className="fas fa-edit text-primary"></i>
+                                    </button>
+                                    <button
+                                      className="btn btn-sm p-1 mr-2"
+                                      onClick={handleShowModalDelete}
+                                    >
+                                      <i className="fas fa-trash text-danger"></i>
+                                    </button>
+                                  </div>
+                                </td> */}
+                                <td className="align-middle">
+                                  {item.due_date}
+                                </td>
+                                <td className="align-middle">{item.qty}</td>
+                                <td className="align-middle">{item.uom}</td>
+                                <td className="align-middle">
+                                  {item.grossPrice}
+                                </td>
+                                <td className="align-middle">
+                                  {item.costCenter}
+                                </td>
+                                <td className="align-middle">{item.wbs}</td>
+                                <td>
+                                  <Checkbox
+                                    name={`checkbox-${item.id}`}
+                                    color="primary"
+                                    onChange={(e) => console.log(e.target)}
+                                  />
+                                </td>
+                              </tr>
+                            );
+                          })}
                     </tbody>
                   </Table>
                 </div>
@@ -366,48 +401,68 @@ export const TerminPage = () => {
           </div>
         </div>
       </div>
-    )
+    );
   };
 
   const showTabBody = (tabName) => {
-    if (tabName === 'summary') return (
-      <div className="card-body">
-        <div className="tab-content">
-          <div className="tab-pane fade show active" id="summary" role="tabpanel">
-            <Nav variant="pills" defaultActiveKey="link-1">
-              <Nav.Item onClick={() => setNavActive('Jasa')}>
-                <Nav.Link className="border-primary" eventKey="link-1">Jasa</Nav.Link>
-              </Nav.Item>
-              <Nav.Item onClick={() => setNavActive('Barang')}>
-                <Nav.Link className="border-primary" eventKey="link-2">Barang</Nav.Link>
-              </Nav.Item>
-            </Nav>
-            {showNavBody(navActive)}
+    if (tabName === 'summary')
+      return (
+        <div className="card-body">
+          <div className="tab-content">
+            <div
+              className="tab-pane fade show active"
+              id="summary"
+              role="tabpanel"
+            >
+              <Nav variant="pills" defaultActiveKey="link-1">
+                <Nav.Item onClick={() => setNavActive('Jasa')}>
+                  <Nav.Link className="border-primary" eventKey="link-1">
+                    Jasa
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item onClick={() => setNavActive('Barang')}>
+                  <Nav.Link className="border-primary" eventKey="link-2">
+                    Barang
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+              {showNavBody(navActive)}
+            </div>
           </div>
         </div>
-      </div>
-    )
+      );
 
-    if (tabName === 'berita acara') return (
-      <div className="card-body">
-        <div className="tab-content">
-          <div className="tab-pane fade show active" id="berita_acara" role="tabpanel" aria-labelledby="kt_tab_pane_1_4">
-            Body Berita acara
+    if (tabName === 'berita acara')
+      return (
+        <div className="card-body">
+          <div className="tab-content">
+            <div
+              className="tab-pane fade show active"
+              id="berita_acara"
+              role="tabpanel"
+              aria-labelledby="kt_tab_pane_1_4"
+            >
+              Body Berita acara
+            </div>
           </div>
         </div>
-      </div>
-    )
+      );
 
-    if (tabName === 'sa/gr') return (
-      <div className="card-body">
-        <div className="tab-content">
-          <div className="tab-pane fade show active" id="sa_gr" role="tabpanel" aria-labelledby="kt_tab_pane_1_4">
-            SA/GR
+    if (tabName === 'sa/gr')
+      return (
+        <div className="card-body">
+          <div className="tab-content">
+            <div
+              className="tab-pane fade show active"
+              id="sa_gr"
+              role="tabpanel"
+              aria-labelledby="kt_tab_pane_1_4"
+            >
+              SA/GR
+            </div>
           </div>
         </div>
-      </div>
-    )
-
+      );
   };
 
   const handleChildDoc = (id) => {

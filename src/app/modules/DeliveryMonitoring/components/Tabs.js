@@ -5,8 +5,8 @@ const useStyles = makeStyles((theme) => ({
   tabRoot: {
     minWidth: 'max-content',
     minHeight: 'max-content',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1.5),
+    marginBottom: theme.spacing(1.5),
   },
   tabWrapper: {
     flexDirection: 'row',
@@ -24,8 +24,8 @@ export default function Tabs(props) {
     <MuiTabs
       value={tabActive}
       onChange={handleChange}
-      indicatorColor="primary"
-      textColor="primary"
+      indicatorColor="secondary"
+      textColor="secondary"
       variant="standard"
     >
       {tabLists.map((item) => (
