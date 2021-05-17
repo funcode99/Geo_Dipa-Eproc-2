@@ -47,9 +47,12 @@ function CreateNewAccount(props) {
     const { intl } = props;
     const [loading, setloading] = useState(false);
     const [alert, setAlert] = useState({ status: false, message: "", variant: "primary" });
-    const modal_title = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.TITLE" })
-    const modal_body = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.BODY" })
-    const modal_button = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.BUTTON" })
+    const modal_title_success = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.TITLE_SUCCESS" })
+    const modal_body_success = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.BODY_SUCCESS" })
+    const modal_button_success = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.BUTTON_SUCCESS" })
+    const modal_title_failed = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.TITLE_FAILED" })
+    const modal_body_failed = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.BODY_FAILED" })
+    const modal_button_failed = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.BUTTON_FAILED" })
     const CreateSchema = Yup.object().shape({
         username: Yup.string()
             .min(3, intl.formatMessage({
@@ -65,12 +68,12 @@ function CreateNewAccount(props) {
             .matches(
                 /^((?!admin).)*$/,
                 intl.formatMessage({
-                    id: "TITLE.CREATE_ACCOUNT.VALIDATION.USERNAME_PROHIBITED",
+                    id: "TITLE.CREATE_ACCOUNT.VALIDATION.USERNAME_NOT_AVAILABLE",
                 })
             )
             .checkAvailability(
                 intl.formatMessage({
-                    id: "TITLE.CREATE_ACCOUNT.VALIDATION.USERNAME",
+                    id: "TITLE.CREATE_ACCOUNT.VALIDATION.USERNAME_NOT_AVAILABLE",
                 }))
         ,
         password: Yup.string()
@@ -115,11 +118,11 @@ function CreateNewAccount(props) {
                 })),
     });
 
-    const check_username = (username) => {
-        if (username.length > 3) {
-            checkUsername(username)
+    const check_username = () => {
+        if (formik.values.username.length > 3) {
+            checkUsername(formik.values.username)
                 .then(({ data: { data } }) => {
-                    setUsernameAvailability(data.items.check)
+                    setUsernameAvailability(data.check)
                 })
                 .catch((error) => {
                 });
@@ -153,20 +156,12 @@ function CreateNewAccount(props) {
                 .then(({ data: { data } }) => {
                     setloading(false)
                     setSubmitting(false)
-                    setAlert({ status: true, message: "REQ.UPDATE", variant: "primary" })
-                    setTimeout(() => {
-                        setAlert({ status: false, message: "REQ.UPDATE", variant: "primary" })
-                    }, 3000);
-                    MODAL.showCreate(modal_title, modal_body, modal_button)
+                    MODAL.showCreate(modal_title_success, modal_body_success, modal_button_success, true)
                 })
                 .catch((error) => {
                     setloading(false);
                     setSubmitting(false);
-                    setStatus(error);
-                    setAlert({ status: true, message: "REQ.FAILED", variant: "danger" });
-                    setTimeout(() => {
-                        setAlert({ status: false, message: "REQ.FAILED", variant: "danger" })
-                    }, 3000);
+                    MODAL.showCreate(modal_title_failed, modal_body_failed, modal_button_failed, false)
                 });
         }, 1000);
     };
@@ -175,8 +170,7 @@ function CreateNewAccount(props) {
         initialValues,
         validationSchema: CreateSchema,
         onSubmit: (values, { setStatus, setSubmitting }) => {
-            // createUser(values, setStatus, setSubmitting);
-            MODAL.showCreate(modal_title, modal_body, modal_button)
+            createUser(values, setStatus, setSubmitting)
         },
         onReset: (values, { resetForm }) => {
             resetForm();
@@ -236,7 +230,7 @@ function CreateNewAccount(props) {
                                             )}`}
                                             name="username"
                                             readOnly={loading}
-                                            onKeyPress={check_username(formik.values.username)}
+                                            onKeyUp={check_username}
                                             {...formik.getFieldProps("username")}
                                         />
                                     </div>

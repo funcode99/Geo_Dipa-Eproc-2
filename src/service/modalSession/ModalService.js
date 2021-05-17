@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ModalSession from './ModalSession';
+import ModalCreate from './ModalCreate';
 
 export const MODAL = {
     showSession(title, message, button) {
@@ -9,5 +10,9 @@ export const MODAL = {
     },
     hide() {
         ReactDOM.unmountComponentAtNode(document.getElementById('modal-react'));
+    },
+    showCreate(title, body, button, status){
+        const data = {title:title, body:body, button:button, status:status}
+        ReactDOM.render(<ModalCreate data={data} />, document.getElementById('modal-react'));
     },
 };
