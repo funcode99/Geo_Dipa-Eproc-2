@@ -7,12 +7,16 @@ import {
     injectIntl 
 } from "react-intl";
 import {
-    AppBar,
-    Tabs,
-    Tab,
     Typography,
-    Box 
+    Box,
+    Container,
+    makeStyles,
+    Paper
 } from '@material-ui/core';
+import {
+  useParams
+} from "react-router-dom";
+import { PageTitle, Tabs } from '../../../DeliveryMonitoring/components';
 import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from './ItemContractSummary';
 import ItemContractInvoice from './ItemContractInvoice';
@@ -40,39 +44,74 @@ function TabPanel(props) {
     );
   }
 
-function ItemContract(props) {
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        marginTop: theme.spacing(2),
+    },
+}));
+
+const TabLists = [
+  {
+    id: 'summary',
+    label: 'Summary',
+    icon: <i className="fas fa-file-invoice mb-0 mr-2" style={{color: 'inherit'}}></i>,
+  },
+  {
+    id: 'invoice',
+    label: 'Invoice',
+    icon: <i className="fas fa-receipt mb-0 mr-2" style={{color: 'inherit'}}></i>,
+  },
+  {
+    id: 'bkb',
+    label: 'BKB',
+    icon: <i className="fas fa-copy mb-0 mr-2" style={{color: 'inherit'}}></i>,
+  },
+  {
+    id: 'form-verifikasi',
+    label: 'Form Verifikasi',
+    icon: <i className="fas fa-tasks mb-0 mr-2" style={{color: 'inherit'}}></i>,
+  },
+  {
+    id: 'routing-slip',
+    label: 'Routing Slip',
+    icon: <i className="fas fa-sticky-note mb-0 mr-2" style={{color: 'inherit'}}></i>,
+  },
+];
+
+const ItemContract = (props) => {
     const suhbeader = useSubheader();
-    // const { intl } = props;
-    suhbeader.setTitle("012.PJ/PST.30-GDE/IX/2020-1000014263");
-    const [valueTab, setvalueTab] = useState(4);
+    const { intl } = props;
+    suhbeader.setTitle(intl.formatMessage({
+      id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT",
+    }) + " Term " + useParams().id);
+    const classes = useStyles();
+    const [tabActive, setTabActive] = React.useState(0);
+
+    function handleChangeTab(event, newTabActive) {
+      setTabActive(newTabActive);
+    }
 
     return (
-        <React.Fragment>
-            <AppBar position="static" style={{background: 'white'}}>
-                <Tabs value={valueTab} onChange={(event, id) => { setvalueTab(id)}} indicatorColor="secondary" textColor="secondary" variant="scrollable" scrollButtons="auto" aria-label="tabs example">
-                    <Tab label={<><div><i className="fas fa-file-invoice" style={{color: 'inherit'}}></i><span className="mx-2">Summary</span></div></>} />
-                    <Tab label={<><div><i className="fas fa-receipt" style={{color: 'inherit'}}></i><span className="mx-2">Invoice</span></div></>} />
-                    <Tab label={<><div><i className="fas fa-copy" style={{color: 'inherit'}}></i><span className="mx-2">BKB</span></div></>} />
-                    <Tab label={<><div><i className="fas fa-tasks" style={{color: 'inherit'}}></i><span className="mx-2">Form Verifikasi</span></div></>} />
-                    <Tab label={<><div><i className="fas fa-sticky-note" style={{color: 'inherit'}}></i><span className="mx-2">Routing Slip</span></div></>} />
-                </Tabs>
-            </AppBar>
-            <TabPanel value={valueTab} index={0}>
-                <ItemContractSummary />
-            </TabPanel>
-            <TabPanel value={valueTab} index={1}>
-                <ItemContractInvoice />
-            </TabPanel>
-            <TabPanel value={valueTab} index={2}>
-                <ItemContractBKB />
-            </TabPanel>
-            <TabPanel value={valueTab} index={3}>
-                <ItemContractFormVerification />
-            </TabPanel>
-            <TabPanel value={valueTab} index={4}>
-                <ItemContractRoutingSlip />
-            </TabPanel>
-        </React.Fragment>
+            <Container>
+                <PageTitle title="012.PJ/PST.30-GDE/IX/2020-1000014263" icon={<i class="fas fa-file-invoice-dollar text-light mx-1"></i>} />
+                <Paper className={classes.paper}>
+                    <Container>
+                    <Tabs
+                        tabActive={tabActive}
+                        handleChange={handleChangeTab}
+                        tabLists={TabLists}
+                    />
+                    </Container>
+                    <hr className="p-0 m-0" />
+                    <Container>
+                    {tabActive === 0 && <ItemContractSummary />}
+                    {tabActive === 1 && <ItemContractInvoice />}
+                    {tabActive === 2 && <ItemContractBKB />}
+                    {tabActive === 3 && <ItemContractFormVerification />}
+                    {tabActive === 4 && <ItemContractRoutingSlip />}
+                    </Container>
+                </Paper>
+                </Container>
     );
 }
 

@@ -89,10 +89,10 @@ function ItemContractBKB(props) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-md-1 border">
+                            <div className="col-md-2 border text-center">
                                 <h2 className="mb-0" style={{marginTop: 5}}>BKB</h2>
                             </div>
-                            <div className="col-md-10 border text-center">
+                            <div className="col-md-8 border text-center">
                                 <div>
                                     <span className="font-weight-bold">PT GEO DIPA ENERGI</span>
                                 </div>
@@ -100,7 +100,7 @@ function ItemContractBKB(props) {
                                     <span className="font-weight-bold">BUKTI PEMBAYARAN BANK</span>
                                 </div>
                             </div>
-                            <div className="col-md-1 border">
+                            <div className="col-md-2 border text-center">
                                 <h2 className="mb-0" style={{marginTop: 5}}>PST</h2>
                             </div>
                         </div>
