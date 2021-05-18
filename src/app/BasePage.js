@@ -31,9 +31,6 @@ const RootClientInvoiceMonitoring = lazy(() =>
 );
 
 const MasterData = lazy(() => import('./modules/Master/RootMasterData'));
-const ServiceAcceptance = lazy(() =>
-  import('./modules/ServiceAcceptance/RootSA')
-);
 
 export default function BasePage() {
   // useEffect(() => {
@@ -69,7 +66,6 @@ export default function BasePage() {
         />
 
         <Route path="/master" component={MasterData} />
-        <Route path="/test" component={ServiceAcceptance} />
         <Route
           path="/delivery_monitoring"
           component={DeliveryMonitoringRoutes}

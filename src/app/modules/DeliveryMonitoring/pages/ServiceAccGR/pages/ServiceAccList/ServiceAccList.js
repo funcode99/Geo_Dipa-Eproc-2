@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 export const ServiceAcceptance = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [data, setData] = React.useState();
+  // const [data, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
   const [confirm, setConfirm] = React.useState({ show: false, id: '' });
   const [update, setUpdate] = React.useState({ id: '', update: false });
