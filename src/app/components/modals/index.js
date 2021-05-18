@@ -26,3 +26,5 @@ export const StyledModal = ({
     </CustomModal>
   );
 };
+
+export default StyledModal;
