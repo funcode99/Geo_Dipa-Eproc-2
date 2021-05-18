@@ -8,6 +8,7 @@ import {
   Paper,
   makeStyles,
   Icon,
+  CircularProgress,
 } from '@material-ui/core';
 import { Form, Row, Col, Container } from 'react-bootstrap';
 import SVG from 'react-inlinesvg';
@@ -20,6 +21,7 @@ import { Tabs } from '../../components';
 // import { setDataContracts } from '../../_redux/deliveryMonitoringCrud';
 
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
+import useToast from '../../../../components/toast';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -135,21 +137,27 @@ export const ContractDetailPage = () => {
   const { id } = useParams();
   const [dataContract, setDataContract] = React.useState([]);
   const [tabActive, setTabActive] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
+  const [Toast, setToast] = useToast();
 
   const getContractById = async (id) => {
     try {
+      setLoading(true);
       const {
         data: { data },
       } = await deliveryMonitoring.getContractById(id);
       setDataContract(data);
     } catch (error) {
-      window.console.error(error);
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
     }
   };
 
   React.useEffect(() => {
     getContractById(id);
-  });
+    // eslint-disable-next-line
+  }, []);
 
   function handleChangeTab(event, newTabActive) {
     setTabActive(newTabActive);
@@ -157,21 +165,27 @@ export const ContractDetailPage = () => {
 
   return (
     <>
-      {dataContract[0] && (
-        <div className="d-flex align-items-center flex-wrap mr-1">
-          <div className="mr-2 iconWrap">
-            <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
-            </span>
-          </div>
-          <div className="d-flex align-items-baseline mr-5">
-            <h2 className="text-dark font-weight-bold my-2 mr-5">
-              {dataContract[0] &&
-                `${dataContract[0].id} - ${dataContract[0].name}`}
-            </h2>
-          </div>
+      <Toast />
+
+      <div className="d-flex align-items-center flex-wrap mr-1">
+        <div className="mr-2 iconWrap">
+          <span className="svg-icon menu-icon">
+            <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
+          </span>
         </div>
-      )}
+        <div className="d-flex align-items-baseline mr-5">
+          <h2 className="text-dark font-weight-bold my-2 mr-5">
+            {dataContract[0]
+              ? `${dataContract[0].id} - ${dataContract[0].name}`
+              : null}
+          </h2>
+        </div>
+      </div>
+      {loading ? (
+        <div className="d-flex align-items-center m-5">
+          <CircularProgress />
+        </div>
+      ) : null}
       {dataContract[0] && (
         <Paper className={classes.root}>
           <Container>
