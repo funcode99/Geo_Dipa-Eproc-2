@@ -1,10 +1,10 @@
 import axios from "axios";
-import { DEV_NODE, DEV_NEW_NODE } from '../../../../redux/BaseHost' 
+import { DEV_NODE } from '../../../../redux/BaseHost' 
 export const GET_ALL_CONTRACT_VENDOR = `${DEV_NODE}/api/getAllContractVendor/e0d36fd1-aeb6-4d3d-ac07-0fa09dc18089`;
-export const GET_ALL_USER = `${DEV_NEW_NODE}/regist/get_users/`;
-export const CREATE_NEW_USER = `${DEV_NEW_NODE}/regist/create_users/`;
-export const CHECK_USERNAME = `${DEV_NEW_NODE}/regist/check_username?username=`;
-export const CHECK_TOKEN = `${DEV_NEW_NODE}/regist/get_token_value/`;
+export const GET_ALL_USER = `${DEV_NODE}/regist/get_users/`;
+export const CREATE_NEW_USER = `${DEV_NODE}/regist/create_users/`;
+export const CHECK_USERNAME = `${DEV_NODE}/regist/check_username?username=`;
+export const CHECK_TOKEN = `${DEV_NODE}/regist/get_token_value/`;
 
 export async function getContract() {
   return axios.get(GET_ALL_CONTRACT_VENDOR);
