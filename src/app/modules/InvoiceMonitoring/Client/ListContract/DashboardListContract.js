@@ -92,11 +92,11 @@ class DashboardListContract extends React.Component {
                             <div className="d-block">
                                 <div className="float-left">
                                     {
-                                        [...Array(5)].map((item, index) => {
+                                        [...Array(1)].map((item, index) => {
                                             return (
                                                 <div key={index.toString()} className="btn-group hover-filter-table" status="closed" id={"filter-" + index}>
                                                     <div className="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" onClick={this.openFilterTable.bind(this, index)}>
-                                                        <span>Nomor PO: </span>
+                                                        <span>Nomor Kontrak: </span>
                                                         <strong style={{paddingRight: 1, paddingLeft: 1}}>
                                                             <span className="filter-label" id={"filter-span-" + index}>{filterTable["loop-value-" + index]}</span>
                                                         </strong>
@@ -111,7 +111,7 @@ class DashboardListContract extends React.Component {
                                                         
                                                     </div>
                                                     <ul role="menu" className="dropdown-menu" style={{zIndex: 90}}>
-                                                        <li style={{width: 350, padding: 5}}>
+                                                        <li style={{width: 360, padding: 5}}>
                                                             <form className="clearfix">
                                                                 <div className="float-left">
                                                                     <input type="text" className="form-control form-control-sm" name={"loop-value-" + index} id={"loop-value-" + index} defaultValue={filterTable["loop-value-" + index] || ""} placeholder="semua" />
@@ -176,9 +176,9 @@ class DashboardListContract extends React.Component {
                                             [...Array(100)].map((item, index) => {
                                                 return (
                                                     <tr key={index.toString()}>
-                                                        <td><Link to={`/client/invoice_monitoring/` + index}>249710</Link></td>
-                                                        <td><Link to={`/client/invoice_monitoring/` + index}>234.PJ/PST-001/I/2021</Link></td>
-                                                        <td><Link to={`/client/invoice_monitoring/` + index}>Pengadaan Test 1</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>SPK/07-04-2021/000</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>Pengadaan TEST Perjanjian_1339</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>8000003542</Link></td>
                                                         <td><Link to={`/client/invoice_monitoring/` + index}>
                                                         {
                                                                 index === 0 ?
@@ -196,8 +196,8 @@ class DashboardListContract extends React.Component {
                                                                 5
                                                         }
                                                         </Link></td>
-                                                        <td><Link to={`/client/invoice_monitoring/` + index}>04/01/2020</Link></td>
-                                                        <td><Link to={`/client/invoice_monitoring/` + index}>PT. JayaJaya</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>80000035434</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>INV0352345</Link></td>
                                                         <td>
                                                             {
                                                                 index === 1 ?
