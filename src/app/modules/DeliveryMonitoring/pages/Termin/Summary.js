@@ -4,12 +4,9 @@ import { Nav } from 'react-bootstrap';
 import { ExpandLessOutlined, ExpandMoreOutlined } from '@material-ui/icons';
 import { StyledModal } from '../../../../components/modals';
 import { SelectStyled, CheckBoxStyled } from './style';
-
 import { Checkbox } from '@material-ui/core';
-
 import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
-
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 
