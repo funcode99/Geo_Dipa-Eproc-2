@@ -43,13 +43,12 @@ function ItemContractRoutingSlip(props) {
     });
 
     const print = () => {
-        // var content = document.getElementById("bkb");
-        // var pri = document.getElementById("ifmcontentstoprint").contentWindow;
-        // pri.document.open();
-        // pri.document.write(content.innerHTML);
-        // pri.document.close();
-        // pri.focus();
-        // pri.print();
+        var printContents = document.getElementById("printRoutingSlip").innerHTML;
+        document.getElementById("root").style.display = "none";
+        document.getElementById("print-content").innerHTML = printContents;
+        window.print();
+        document.getElementById("root").removeAttribute("style");
+        document.getElementById("print-content").innerHTML = "";
     };
 
     return (
@@ -60,7 +59,7 @@ function ItemContractRoutingSlip(props) {
                     <button type="button" onClick={print} className="btn btn-sm btn-primary"><i className="fas fa-print"></i>Cetak Routing Slip</button>
                     </CardHeaderToolbar>
                 </CardHeader>
-                <CardBody>
+                <CardBody id="printRoutingSlip">
                 <div>
                     <div className="row">
                         <div className="col-md-12">
