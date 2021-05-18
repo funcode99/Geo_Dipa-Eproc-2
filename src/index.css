@@ -1019,3 +1019,7 @@ width: 1%; }
 .select2-container{
     width: 200.325px !important;
 }
+
+@page {
+    size: A3 portrait;
+}
