@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { 
+  // useState 
+} from 'react';
 import {
     connect 
 } from "react-redux";
@@ -23,26 +25,6 @@ import ItemContractInvoice from './ItemContractInvoice';
 import ItemContractBKB from './ItemContractBKB';
 import ItemContractRoutingSlip from './ItemContractRoutingSlip';
 import ItemContractFormVerification from './ItemContractFormVerification';
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box pt={3} px={0}>
-            <Typography component={'div'}>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
 
 const useStyles = makeStyles((theme) => ({
     paper: {

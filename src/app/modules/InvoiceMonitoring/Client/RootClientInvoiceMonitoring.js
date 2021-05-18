@@ -4,7 +4,7 @@ import {
     Switch,
     // Redirect
 } from "react-router-dom";
-import { useSubheader } from "../../../../_metronic/layout";
+// import { useSubheader } from "../../../../_metronic/layout";
 import DashboardListContract from "./ListContract/DashboardListContract";
 import ItemContract from "./ListContract/ItemContract";
 import {
