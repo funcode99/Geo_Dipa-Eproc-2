@@ -176,10 +176,10 @@ class DashboardListContract extends React.Component {
                                             [...Array(100)].map((item, index) => {
                                                 return (
                                                     <tr key={index.toString()}>
-                                                        <td><Link to="/client/invoice_monitoring/item">249710</Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">234.PJ/PST-001/I/2021</Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">Pengadaan Test 1</Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>249710</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>234.PJ/PST-001/I/2021</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>Pengadaan Test 1</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>
                                                         {
                                                                 index === 0 ?
                                                                 1
@@ -196,8 +196,8 @@ class DashboardListContract extends React.Component {
                                                                 5
                                                         }
                                                         </Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">04/01/2020</Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">PT. JayaJaya</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>04/01/2020</Link></td>
+                                                        <td><Link to={`/client/invoice_monitoring/` + index}>PT. JayaJaya</Link></td>
                                                         <td>
                                                             {
                                                                 index === 1 ?

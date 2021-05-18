@@ -169,7 +169,7 @@ export function AsideMenuList({ layoutProps }) {
               >
                 <NavLink
                   className="menu-link"
-                  to="/client/invoice_monitoring/list"
+                  to="/client/invoice_monitoring"
                 >
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
