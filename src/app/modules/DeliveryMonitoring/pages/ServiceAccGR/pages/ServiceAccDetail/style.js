@@ -126,3 +126,7 @@ export const Reject = styled.div`
   color: #fff;
   border-radius: 10px;
 `;
+
+export const TabsWrapper = styled.section`
+  margin: 1rem 0;
+`;

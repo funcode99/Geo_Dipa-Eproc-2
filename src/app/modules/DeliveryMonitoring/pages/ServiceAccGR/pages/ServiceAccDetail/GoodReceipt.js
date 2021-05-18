@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
   Paper,
   makeStyles,
   // Icon,
@@ -11,32 +8,25 @@ import {
   Container,
   CircularProgress,
 } from '@material-ui/core';
-import SVG from 'react-inlinesvg';
+// import SVG from 'react-inlinesvg';
 import { useFormik } from 'formik';
-import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
+// import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 // import * as master from '../service/MasterCrud';
 // import http from '../../libs/http';
 import {
   Flex,
-  StyledHead,
-  StyledTableHead,
   Input,
-  // Reject,
-  StyledTableRow,
-  // WaitingSA,
-  // PendingTerbit,
   Wrapper,
   InputWrapper,
   InputSeparator,
   FlexCol,
 } from './style';
 
-import { StyledModal } from '../../../../components/modals';
-import useToast from '../../../../components/toast';
-import { SubWrap } from '../../../Master/pages/style';
-// import DocumentsTable from './Document';
+import { StyledModal } from '../../../../../../components/modals';
+import useToast from '../../../../../../components/toast';
+import CustomTable from '../../../../../../components/tables';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,10 +39,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ServiceAccDetail = () => {
+export const GoodReceipt = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [data, setData] = React.useState();
+  // const [data, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
   const [confirm, setConfirm] = React.useState({ show: false, id: '' });
   const [update, setUpdate] = React.useState({ id: '', update: false });
@@ -80,6 +70,7 @@ export const ServiceAccDetail = () => {
   const getList = async () => {
     try {
       setLoading(true);
+      console.log('tes');
       // const {
       //   data: { data },
       // } = await master.getPeriodeList();
@@ -107,7 +98,7 @@ export const ServiceAccDetail = () => {
           name: values.periode_name,
           value: values.periode_value,
         };
-
+        console.log(requestData);
         // const {
         //   data: { status },
         // } = update.update
@@ -263,8 +254,9 @@ export const ServiceAccDetail = () => {
         </FlexCol>
       </StyledModal>
 
+      {/* Service Acceptance Wrapper  */}
       <div>
-        <div className="d-flex align-items-center flex-wrap mr-1">
+        {/* <div className="d-flex align-items-center flex-wrap mr-1">
           <SubWrap className="mr-2 iconWrap">
             <span className="svg-icon menu-icon">
               <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
@@ -275,7 +267,7 @@ export const ServiceAccDetail = () => {
               012.PJ/PST.30-GDE/IX/2020 - 1000014264
             </h2>
           </div>
-        </div>
+        </div> */}
 
         <Paper className={classes.root}>
           <Flex>
@@ -489,47 +481,55 @@ export const ServiceAccDetail = () => {
           </Flex>
         </Paper>
 
-        <Paper className={classes.root}>
-          <Table className={classes.table}>
-            <StyledTableHead>
-              <StyledHead>
-                <TableCell>No</TableCell>
-                <TableCell>Service</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>UoM</TableCell>
-                <TableCell>Unit Price</TableCell>
-                <TableCell>Net Value</TableCell>
-              </StyledHead>
-            </StyledTableHead>
-            <TableBody>
-              <StyledTableRow hover>
-                <TableCell>0001</TableCell>
-                <TableCell>Mobilisasi & Demobilisasi</TableCell>
-                <TableCell>1</TableCell>
-                <TableCell>AU</TableCell>
-                <TableCell>Rp. 20.000.000</TableCell>
-                <TableCell>Rp. 20.000.000</TableCell>
-              </StyledTableRow>
-              <StyledTableRow>
-                <TableCell rowSpan={3} colSpan={3} />
-                <TableCell colSpan={2}>Sub Total</TableCell>
-                <TableCell>Rp. 20.000.00</TableCell>
-              </StyledTableRow>
-              <StyledTableRow>
-                <TableCell colSpan={2}>PPN</TableCell>
-                <TableCell>10%</TableCell>
-              </StyledTableRow>
-              <StyledTableRow>
-                <TableCell colSpan={2}>Total</TableCell>
-                <TableCell>Rp. 21.000.000</TableCell>
-              </StyledTableRow>
-            </TableBody>
-          </Table>
-        </Paper>
+        <CustomTable
+          tableHeader={[
+            'Line',
+            'Material Number',
+            'Description',
+            'Order Qty',
+            'Received Qty',
+            'UoM',
+            'Sloc',
+            'Stor Bin',
+          ]}
+          tableContent={[
+            [
+              { content: '0001' },
+              { content: '2101021' },
+              { content: 'Leapfrog Geothermal', width: '20%' },
+              { content: '1' },
+              { content: '1' },
+              { content: 'AU' },
+              { content: '' },
+              { content: '' },
+            ],
+          ]}
+        />
+
+        <CustomTable
+          tableHeader={[
+            'Nama',
+            'Posisi',
+            'Aktifitas',
+            'Tanggal Mulai',
+            'Tanggal Selesai',
+            'Komentar',
+          ]}
+          tableContent={[
+            [
+              { content: 'Dian PS' },
+              { content: 'IT Asman' },
+              { content: 'Create GR', props: { width: '20%' } },
+              { content: '30 Jan 2021' },
+              { content: '29 Feb 2021' },
+              { content: 'Sesuai ketentuan' },
+            ],
+          ]}
+        />
       </div>
     </Container>
   );
 };
 
-export default ServiceAccDetail;
+export default GoodReceipt;
 // export default injectIntl(connect(null, null)(DashboardListContract));
