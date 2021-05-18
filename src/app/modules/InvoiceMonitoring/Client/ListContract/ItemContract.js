@@ -9,8 +9,6 @@ import {
     injectIntl 
 } from "react-intl";
 import {
-    Typography,
-    Box,
     Container,
     makeStyles,
     Paper
