@@ -142,6 +142,7 @@ export const ContractDetailPage = () => {
         data: { data },
       } = await deliveryMonitoring.getContractById(id);
       setDataContract(data);
+      console.log(data);
     } catch (error) {
       window.console.error(error);
     }
@@ -149,7 +150,8 @@ export const ContractDetailPage = () => {
 
   React.useEffect(() => {
     getContractById(id);
-  });
+    // eslint-disable-next-line
+  }, []);
 
   function handleChangeTab(event, newTabActive) {
     setTabActive(newTabActive);

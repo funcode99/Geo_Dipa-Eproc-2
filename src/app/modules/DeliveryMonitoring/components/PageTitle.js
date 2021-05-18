@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   iconWrapper: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: '#3699FF',
     marginRight: theme.spacing(1.5),
     borderRadius: theme.spacing(0.5),
     padding: theme.spacing(0.5),

@@ -1,16 +1,17 @@
-import { Container } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import React, { useState, useEffect } from 'react';
+import { makeStyles, CircularProgress } from '@material-ui/core';
+import React from 'react';
 import { Nav } from 'react-bootstrap';
-import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
-import ExpandLessOutlinedIcon from '@material-ui/icons/ExpandLessOutlined';
-import ExpandMoreOutlinedIcon from '@material-ui/icons/ExpandMoreOutlined';
-import Jasa from './Jasa';
-import Barang from './Barang';
-
-import { Table as BsTable } from 'react-bootstrap';
+import { ExpandLessOutlined, ExpandMoreOutlined } from '@material-ui/icons';
 import { StyledModal } from '../../../../components/modals';
 import { SelectStyled, CheckBoxStyled } from './style';
+
+import { Checkbox } from '@material-ui/core';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { actionTypes } from '../../_redux/deliveryMonitoringAction';
+
+import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
+import useToast from '../../../../components/toast';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -119,12 +120,79 @@ const rowDoc = [
   },
 ];
 
+const theadItems = [
+  { id: 'action', label: '' },
+  { id: 'keterangan', label: 'Keterangan' },
+  { id: 'due-date', label: 'Due Date' },
+  { id: 'qty', label: 'Qty' },
+  { id: 'uom', label: 'Uom' },
+  { id: 'cost-center', label: 'Cost Center' },
+  { id: 'wbs', label: 'WBS' },
+];
+
+const theadDocuments = [
+  { id: 'action', label: '' },
+  { id: 'scope-of-work', label: 'Scope of Work' },
+  { id: 'delivery-date', label: 'Delivery Date' },
+  { id: 'bobot', label: 'Bobot(%)' },
+  { id: 'harga-pekerjaan', label: 'Harga Pekerjaan' },
+  { id: 'progress', label: 'Project Progress(%)' },
+  { id: 'dokumen-progress', label: 'Dokumen Progress' },
+  { id: 'deliv-dokumen', label: 'Deliverable Dokumen' },
+  { id: 'aksi', label: 'aksi' },
+];
+
 export default function Summary(props) {
+  const classes = useStyles();
+
   const [showChild, setShowChild] = React.useState({ show: false, data: {} });
   const [showModalDelete, setShowModalDelete] = React.useState(false);
   const [showEditDoc, setShowEditDoc] = React.useState(false);
   const [showAddDelivModal, setShowAddDelivModal] = React.useState(false);
   const [docId, setDocId] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
+  const [Toast, setToast] = useToast();
+
+  const [navActive, setNavActive] = React.useState('Jasa');
+  const { dataJasa, dataBarang } = useSelector(
+    (state) => state.deliveryMonitoring
+  );
+  const dispatch = useDispatch();
+
+  const getAllItems = async (isService) => {
+    try {
+      setLoading(true);
+      const {
+        data: { data },
+      } = await deliveryMonitoring.getAllItems(isService);
+
+      if (isService) {
+        data.forEach((item) => {
+          item.show = false;
+        });
+
+        dispatch({
+          type: actionTypes.SetDataJasa,
+          payload: data,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.SetDataBarang,
+          payload: data,
+        });
+      }
+    } catch (error) {
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    getAllItems(true);
+    getAllItems(false);
+    // eslint-disable-next-line
+  }, []);
 
   const handleShowAddDelivModal = () => setShowAddDelivModal(true);
   const handleShowModalDelete = () => setShowModalDelete(true);
@@ -173,7 +241,7 @@ export default function Summary(props) {
       return (
         <tbody>
           {showChild.data.child.map((item) => (
-            <tr>
+            <tr key={item.id}>
               <td className="align-middle">
                 <div className="d-flex justify-content-center">
                   <i className="fa fa-file"></i>
@@ -209,63 +277,172 @@ export default function Summary(props) {
     }
   };
 
-  const { item } = props;
-  const classes = useStyles();
-  const [navActive, setNavActive] = useState('Jasa');
-  const [dataJasa, setDataJasa] = useState();
-  const [dataBarang, setDataBarang] = useState();
-
-  const addShowField = (data) => {
-    if (data) {
-      data.map((item) => {
-        item.show = false;
-      });
-    }
-  };
-
-  const getItem = async (isService) => {
-    try {
-      const {
-        data: { data },
-      } = await deliveryMonitoring.getItem(isService);
-      addShowField(data);
-
-      // setDataJasa(data);
-      if (isService) {
-        setDataJasa(data);
-      } else {
-        setDataBarang(data);
-      }
-    } catch (error) {
-      window.console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    getItem(true);
-  }, []);
-
-  const handleNavClick = (type, isService) => {
+  const handleNavClick = (type) => {
     setNavActive(type);
-    getItem(isService);
+  };
+
+  const handleExpand = (event, itemId) => {
+    let tempJasa = dataJasa;
+
+    tempJasa.forEach((item) => {
+      if (item.id === parseInt(itemId)) {
+        item.show = !item.show;
+      }
+    });
+
+    dispatch({
+      type: actionTypes.SetDataJasa,
+      payload: tempJasa,
+    });
   };
 
   return (
     <div className={classes.root}>
+      <Toast />
+
       <Nav variant="pills" defaultActiveKey="link-jasa">
-        <Nav.Item onClick={() => handleNavClick('Jasa', true)}>
+        <Nav.Item onClick={() => handleNavClick('Jasa')}>
           <Nav.Link eventKey="link-jasa" className={classes.navLink}>
             Jasa
           </Nav.Link>
         </Nav.Item>
-        <Nav.Item onClick={() => handleNavClick('Barang', false)}>
+        <Nav.Item onClick={() => handleNavClick('Barang')}>
           <Nav.Link eventKey="link-barang" className={classes.navLink}>
             Barang
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      {navActive === 'Jasa' && <Jasa dataJasa={dataJasa} />}
-      {navActive === 'Barang' && <Barang dataBarang={dataBarang} />}
+
+      {navActive === 'Jasa' && (
+        <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
+          <div className="segment-table">
+            <div className="hecto-10">
+              <table className="table-bordered overflow-auto">
+                <thead>
+                  <tr>
+                    {theadItems.map((item) => (
+                      <th
+                        className="bg-primary text-white align-middle"
+                        key={item.id}
+                      >
+                        {item.label}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                {dataJasa.length !== 0 &&
+                  dataJasa.map((item) => {
+                    return (
+                      <React.Fragment key={item.id}>
+                        <tbody>
+                          <tr>
+                            <td className="align-middle">
+                              <button
+                                className="btn btn-primary btn-sm p-0 align-middle"
+                                onClick={(e) => handleExpand(e, item.id)}
+                              >
+                                {item.show ? (
+                                  <ExpandLessOutlined />
+                                ) : (
+                                  <ExpandMoreOutlined />
+                                )}
+                              </button>
+                            </td>
+                            <td className="align-middle">{item.name}</td>
+                            <td className="align-middle">31/01/2021</td>
+                            <td className="align-middle">{item.qty}</td>
+                            <td className="align-middle"></td>
+                            <td className="align-middle">{item.price}</td>
+                            <td className="align-middle"></td>
+                          </tr>
+                        </tbody>
+                        {item.services.length !== 0 && item.show ? (
+                          <tbody>
+                            {item.services.map((service) => (
+                              <tr key={service.id}>
+                                <td className="align-middle">
+                                  <Checkbox
+                                    name={`checkbox-${service.id}`}
+                                    color="secondary"
+                                    onChange={(e) => console.log(e)}
+                                    size="small"
+                                  />
+                                </td>
+                                <td className="align-middle">{service.name}</td>
+                                <td className="align-middle">31/01/2021</td>
+                                <td className="align-middle">{service.qty}</td>
+                                <td className="align-middle"></td>
+                                <td className="align-middle">
+                                  {service.price}
+                                </td>
+                                <td className="align-middle"></td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        ) : null}
+                      </React.Fragment>
+                    );
+                  })}
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {navActive === 'Barang' && (
+        <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
+          <div className="segment-table">
+            <div className="hecto-10">
+              <table className="table-bordered overflow-auto">
+                <thead>
+                  <tr>
+                    {theadItems.map((item) => (
+                      <th
+                        className="bg-primary text-white align-middle"
+                        key={item.id}
+                      >
+                        {item.label}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                {loading ? (
+                  <tr hover>
+                    <td colSpan={4} className="align-middle">
+                      <CircularProgress />
+                    </td>
+                  </tr>
+                ) : null}
+                <tbody>
+                  {dataBarang.length !== 0 &&
+                    dataBarang.map((item) => {
+                      return (
+                        <tr key={item.id}>
+                          <td className="align-middle">
+                            <Checkbox
+                              name={`checkbox-${item.id}`}
+                              color="secondary"
+                              onChange={(e) => console.log(e)}
+                              size="small"
+                              width={50}
+                              variant="body"
+                            />
+                          </td>
+                          <td className="align-middle">{item.name}</td>
+                          <td className="align-middle">31/01/2021</td>
+                          <td className="align-middle">{item.qty}</td>
+                          <td className="align-middle"></td>
+                          <td className="align-middle">{item.price}</td>
+                          <td className="align-middle"></td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
 
       <StyledModal
         visible={showEditDoc}
@@ -332,7 +509,7 @@ export default function Summary(props) {
 
       <div className="d-flex justify-content-end w-100">
         <button
-          className="btn btn-success btn-sm mt-3 mb-2"
+          className="btn btn-outline-success btn-md mt-3 mb-2"
           onClick={handleShowAddDelivModal}
         >
           <span className="nav-icon">
@@ -345,38 +522,23 @@ export default function Summary(props) {
       <div className="responsive">
         <div className="table-wrapper-scroll-y my-custom-scrollbar">
           <div className="segment-table">
-            <div className="hecto-10">
-              <BsTable className="table-bordered overflow-auto">
+            <div className="hecto-12">
+              <table className="table-bordered overflow-auto">
                 <thead>
                   <tr>
-                    <th className="bg-primary text-white align-middle">No</th>
-                    <th className="bg-primary text-white align-middle">
-                      Scope of Work(Term)
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      Delivery Date
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      Bobot(%)
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      Harga Pekerjaan
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      Project Progress(%)
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      Dokumen Progress
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      Deliverable Dokumen
-                    </th>
-                    <th className="bg-primary text-white align-middle">Aksi</th>
+                    {theadDocuments.map((item) => (
+                      <th
+                        className="bg-primary text-white align-middle"
+                        key={item.id}
+                      >
+                        {item.label}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 {rowDoc.map((item, index) => {
                   return (
-                    <>
+                    <React.Fragment key={item.id}>
                       <tbody>
                         <tr>
                           <td className="align-middle">
@@ -398,10 +560,10 @@ export default function Summary(props) {
                         </tr>
                       </tbody>
                       {childTables(item.id)}
-                    </>
+                    </React.Fragment>
                   );
                 })}
-              </BsTable>
+              </table>
             </div>
           </div>
         </div>
