@@ -1,5 +1,11 @@
 import React from 'react';
-import { Table, TableBody, TableCell, Paper } from '@material-ui/core';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  Paper,
+  CircularProgress,
+} from '@material-ui/core';
 import { StyledHead, StyledTableHead, StyledTableRow } from './style';
 
 const exampleHeader = ['', ''];
@@ -20,6 +26,7 @@ const CustomTable = ({
   tableHeader = exampleHeader,
   tableContent = exampleBody,
   align = 'center',
+  loading = false,
 }) => {
   return (
     <Paper style={{ marginTop: 20, marginBottom: 20 }}>
@@ -34,6 +41,13 @@ const CustomTable = ({
           </StyledHead>
         </StyledTableHead>
         <TableBody>
+          {loading ? (
+            <StyledTableRow>
+              <TableCell colSpan={tableHeader.length} align="center">
+                <CircularProgress />
+              </TableCell>
+            </StyledTableRow>
+          ) : null}
           {tableContent?.map((item, i) => (
             <StyledTableRow key={i + 100} hover>
               {item.map((items, ix) => {
