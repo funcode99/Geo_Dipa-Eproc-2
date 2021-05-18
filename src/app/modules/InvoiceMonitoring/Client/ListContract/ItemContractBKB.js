@@ -40,9 +40,11 @@ function ItemContractBKB(props) {
     const print = () => {
         var printContents = document.getElementById("printBkb").innerHTML;
         document.getElementById("root").style.display = "none";
+        document.getElementById("print-content").classList.add("p-5");
         document.getElementById("print-content").innerHTML = printContents;
         window.print();
         document.getElementById("root").removeAttribute("style");
+        document.getElementById("print-content").classList.remove("p-5");
         document.getElementById("print-content").innerHTML = "";
     };
 
