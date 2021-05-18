@@ -72,7 +72,7 @@ const ItemContract = (props) => {
     }
 
     return (
-            <Container>
+            <Container className="px-0">
                 <PageTitle title="012.PJ/PST.30-GDE/IX/2020-1000014263" icon={<i className="fas fa-file-invoice-dollar text-light mx-1"></i>} />
                 <Paper className={classes.paper}>
                     <Container>
