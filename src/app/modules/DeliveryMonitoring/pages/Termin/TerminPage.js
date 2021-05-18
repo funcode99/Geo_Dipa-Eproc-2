@@ -6,6 +6,7 @@ import {
   // Table,
   TableBody,
   TableRow,
+  Checkbox,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import {
@@ -21,10 +22,9 @@ import {
   Nav,
   Table,
 } from 'react-bootstrap';
-import { StyledModal } from '../../../../components/Modals'
+import { StyledModal } from '../../../../components/modals'
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +37,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function createDataJasa(id, name, ktr, due_date, qty, uom, grossPrice, costCenter, wbs) {
+function createDataJasa(
+  id,
+  name,
+  ktr,
+  due_date,
+  qty,
+  uom,
+  grossPrice,
+  costCenter,
+  wbs
+) {
   return { id, name, ktr, due_date, qty, uom, grossPrice, costCenter, wbs };
 }
 
@@ -48,7 +58,7 @@ const rowJasa = [
     'jasa',
     '04/05/2021',
     '7',
-    'Jasa data jasa berupa string yang panjang 10101',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101'
@@ -59,7 +69,7 @@ const rowJasa = [
     'jasa',
     '04/06/2021',
     '9',
-    'Jasa data jasa berupa string yang panjang 10101',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101'
@@ -70,14 +80,24 @@ const rowJasa = [
     'jasa',
     '04/07/2021',
     '3',
-    'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj '
   ),
-]
+];
 
-function createDataBarang(id, name, ktr, due_date, qty, uom, grossPrice, costCenter, wbs) {
+function createDataBarang(
+  id,
+  name,
+  ktr,
+  due_date,
+  qty,
+  uom,
+  grossPrice,
+  costCenter,
+  wbs
+) {
   return { id, name, ktr, due_date, qty, uom, grossPrice, costCenter, wbs };
 }
 
@@ -88,7 +108,7 @@ const rowBarang = [
     'Barang',
     '04/05/2021',
     '7',
-    'BarangdataBarangberupastringyangpanjang10101',
+    'pcs',
     'BarangdataBarangberupastringyangpanjang10101',
     'BarangdataBarangberupastringyangpanjang10101',
     'BarangdataBarangberupastringyangpanjang10101'
@@ -99,7 +119,7 @@ const rowBarang = [
     'Barang',
     '04/06/2021',
     '9',
-    'Barang data Barang berupa string yang panjang 10101',
+    'pcs',
     'Barang data Barang berupa string yang panjang 10101',
     'Barang data Barang berupa string yang panjang 10101',
     'Barang data Barang berupa string yang panjang 10101'
@@ -110,12 +130,12 @@ const rowBarang = [
     'Barang',
     '04/07/2021',
     '3',
-    'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
+    'pcs',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj '
   ),
-]
+];
 
 const rowDoc = [
   {
@@ -127,13 +147,13 @@ const rowDoc = [
         id: '1',
         nama: 'Minggu 1',
         due_date: '01 Jan 2021',
-        mo: 'M'
+        mo: 'M',
       },
       {
         id: '2',
         nama: 'Minggu 2',
         due_date: '07 Jan 2021',
-        mo: 'M'
+        mo: 'M',
       },
     ],
   },
@@ -146,13 +166,13 @@ const rowDoc = [
         id: '5',
         nama: 'FAT',
         due_date: '31 Jan 2021',
-        mo: 'M'
+        mo: 'M',
       },
       {
         id: '6',
         nama: 'SAT',
         due_date: '31 Jan 2021',
-        mo: 'M'
+        mo: 'M',
       },
     ],
   },
@@ -167,7 +187,7 @@ const tableHeads = [
   'Gross Price (SAP)',
   'Cost Center',
   'WBS',
-  'Action'
+  'Action',
 ];
 
 const dlvDocHeads = [
@@ -190,17 +210,17 @@ const docOptions = [
     document: [
       {
         id: 1,
-        name: 'Harian'
+        name: 'Harian',
       },
       {
         id: 2,
-        name: 'Mingguan'
+        name: 'Mingguan',
       },
       {
         id: 3,
-        name: 'Bulanan'
+        name: 'Bulanan',
       },
-    ]
+    ],
   },
   {
     id: 2,
@@ -218,7 +238,7 @@ const docOptions = [
         id: 3,
         name: 'Sertifika Kalibrasi',
       },
-    ]
+    ],
   },
   {
     id: 3,
@@ -232,12 +252,12 @@ const docOptions = [
         id: 2,
         name: 'BAST',
       },
-    ]
+    ],
   },
   {
     id: 4,
     name: 'Dokumen Lain-lain',
-  }
+  },
 ];
 
 export const TerminPage = () => {
@@ -258,15 +278,18 @@ export const TerminPage = () => {
   const handleShowEditDoc = () => setShowEditDoc(true);
   const handleShowAddDelivModal = () => setShowAddDelivModal(true);
 
+  let tabStyle = 'nav-link';
 
   const handleChange = (event) => {
-    const item = rowJasa.find((row) => +event.target.value === row.id)
+    const item = rowJasa.find((row) => +event.target.value === row.id);
 
     if (item) {
-      const selectedItem = selectedItems.find((element) => +item.id === +element.id)
+      const selectedItem = selectedItems.find(
+        (element) => +item.id === +element.id
+      );
 
       if (!selectedItem) {
-        updateSelectedItems((arr) => [...arr, item])
+        updateSelectedItems((arr) => [...arr, item]);
       }
     }
   };
@@ -280,10 +303,14 @@ export const TerminPage = () => {
               <p className="mb-0">Daftar Jasa</p>
             </div>
             <div className="col-10">
-              <select className="form-control" aria-label=".form-select-sm example" onChange={handleChange}>
+              <select
+                className="form-control"
+                aria-label=".form-select-sm example"
+                onChange={handleChange}
+              >
                 <option defaultValue>Pilih Jasa</option>
                 {rowJasa.map((item) => {
-                  return <option value={item.id}>{item.name}</option>
+                  return <option value={item.id}>{item.name}</option>;
                 })}
               </select>
             </div>
@@ -297,67 +324,102 @@ export const TerminPage = () => {
                   <Table className="table-bordered overflow-auto">
                     <thead>
                       <tr>
-                        {tableHeads.map(item => (
-                          <th className="bg-primary text-white align-middle">{item}</th>
+                        {tableHeads.map((item) => (
+                          <th className="bg-primary text-white align-middle">
+                            {item}
+                          </th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
-                      {navName === 'Barang' ? (
-                        rowBarang.map((item) => {
-                          return (
-                            <tr>
-                              <td className="align-middle">{item.id}</td>
-                              <td className="align-middle">{item.name}</td>
-                              <td className="align-middle">
-                                <div className="d-flex justify-content-between flex-row">
-                                  <button className="btn btn-sm p-1" onClick={handleShow}>
-                                    <i className="fas fa-edit text-primary"></i>
-                                  </button>
-                                  <button className="btn btn-sm p-1 mr-2" onClick={handleShowModalDelete}>
-                                    <i className="fas fa-trash text-danger"></i>
-                                  </button>
-                                </div>
-                              </td>
-                              <td className="align-middle">{item.due_date}</td>
-                              <td className="align-middle">{item.qty}</td>
-                              <td className="align-middle">{item.uom}</td>
-                              <td className="align-middle">{item.grossPrice}</td>
-                              <td className="align-middle">{item.costCenter}</td>
-                              <td className="align-middle">{item.wbs}</td>
-                            </tr>
-                          )
-                        })
-                      )
-                        : (
-                          selectedItems.length > 0 && (
-                            selectedItems.map((item) => {
-                              return (
-                                <tr>
-                                  <td className="align-middle">{item.id}</td>
-                                  <td className="align-middle">{item.name}</td>
-                                  <td className="align-middle">
-                                    <div className="d-flex justify-content-between flex-row">
-                                      <button className="btn btn-sm p-1" onClick={handleShow}>
-                                        <i className="fas fa-edit text-primary"></i>
-                                      </button>
-                                      <button className="btn btn-sm p-1 mr-2" onClick={handleShowModalDelete}>
-                                        <i className="fas fa-trash text-danger"></i>
-                                      </button>
-                                    </div>
-                                  </td>
-                                  <td className="align-middle">{item.due_date}</td>
-                                  <td className="align-middle">{item.qty}</td>
-                                  <td className="align-middle">{item.uom}</td>
-                                  <td className="align-middle">{item.grossPrice}</td>
-                                  <td className="align-middle">{item.costCenter}</td>
-                                  <td className="align-middle">{item.wbs}</td>
-                                </tr>
-                              )
-                            })
-                          )
-                        )
-                      }
+                      {navName === 'Barang'
+                        ? rowBarang.map((item) => {
+                            return (
+                              <tr>
+                                <td className="align-middle">{item.id}</td>
+                                <td className="align-middle">{item.name}</td>
+                                {/* <td className="align-middle">
+                                  <div className="d-flex justify-content-between flex-row">
+                                    <button
+                                      className="btn btn-sm p-1"
+                                      onClick={handleShow}
+                                    >
+                                      <i className="fas fa-edit text-primary"></i>
+                                    </button>
+                                    <button
+                                      className="btn btn-sm p-1 mr-2"
+                                      onClick={handleShowModalDelete}
+                                    >
+                                      <i className="fas fa-trash text-danger"></i>
+                                    </button>
+                                  </div>
+                                </td> */}
+                                <td className="align-middle">
+                                  {item.due_date}
+                                </td>
+                                <td className="align-middle">{item.qty}</td>
+                                <td className="align-middle">{item.uom}</td>
+                                <td className="align-middle">
+                                  {item.grossPrice}
+                                </td>
+                                <td className="align-middle">
+                                  {item.costCenter}
+                                </td>
+                                <td className="align-middle">{item.wbs}</td>
+                                <td>
+                                  <Checkbox
+                                    name={`checkbox-${item.id}`}
+                                    color="secondary"
+                                    onChange={(e) => console.log(e.target)}
+                                  />
+                                </td>
+                              </tr>
+                            );
+                          })
+                        : selectedItems.length > 0 &&
+                          selectedItems.map((item) => {
+                            return (
+                              <tr>
+                                <td className="align-middle">{item.id}</td>
+                                <td className="align-middle">{item.name}</td>
+                                {/* <td className="align-middle">
+                                  <div className="d-flex justify-content-between flex-row">
+                                    <button
+                                      className="btn btn-sm p-1"
+                                      onClick={handleShow}
+                                    >
+                                      <i className="fas fa-edit text-primary"></i>
+                                    </button>
+                                    <button
+                                      className="btn btn-sm p-1 mr-2"
+                                      onClick={handleShowModalDelete}
+                                    >
+                                      <i className="fas fa-trash text-danger"></i>
+                                    </button>
+                                  </div>
+                                </td> */}
+                                <td className="align-middle">
+                                  {item.due_date}
+                                </td>
+                                <td className="align-middle">{item.qty}</td>
+                                <td className="align-middle">{item.uom}</td>
+                                <td className="align-middle">
+                                  {item.grossPrice}
+                                </td>
+                                <td className="align-middle">
+                                  {item.costCenter}
+                                </td>
+                                <td className="align-middle">{item.wbs}</td>
+                                <td>
+                                  <Checkbox
+                                    name={`checkbox-${item.id}`}
+                                    color="primary"
+                                    onChange={(e) => console.log(e.target)}
+                                  />
+                                </td>
+                              </tr>
+                            );
+                          })}
                     </tbody>
                   </Table>
                 </div>
@@ -366,98 +428,121 @@ export const TerminPage = () => {
           </div>
         </div>
       </div>
-    )
+    );
   };
 
   const showTabBody = (tabName) => {
-    if (tabName === 'summary') return (
-      <div className="card-body">
-        <div className="tab-content">
-          <div className="tab-pane fade show active" id="summary" role="tabpanel">
-            <Nav variant="pills" defaultActiveKey="link-1">
-              <Nav.Item onClick={() => setNavActive('Jasa')}>
-                <Nav.Link className="border-primary" eventKey="link-1">Jasa</Nav.Link>
-              </Nav.Item>
-              <Nav.Item onClick={() => setNavActive('Barang')}>
-                <Nav.Link className="border-primary" eventKey="link-2">Barang</Nav.Link>
-              </Nav.Item>
-            </Nav>
-            {showNavBody(navActive)}
+    if (tabName === 'summary')
+      return (
+        <div className="card-body">
+          <div className="tab-content">
+            <div
+              className="tab-pane fade show active"
+              id="summary"
+              role="tabpanel"
+            >
+              <Nav variant="pills" defaultActiveKey="link-1">
+                <Nav.Item onClick={() => setNavActive('Jasa')}>
+                  <Nav.Link className="border-primary" eventKey="link-1">
+                    Jasa
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item onClick={() => setNavActive('Barang')}>
+                  <Nav.Link className="border-primary" eventKey="link-2">
+                    Barang
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+              {showNavBody(navActive)}
+            </div>
           </div>
         </div>
-      </div>
-    )
+      );
 
-    if (tabName === 'berita acara') return (
-      <div className="card-body">
-        <div className="tab-content">
-          <div className="tab-pane fade show active" id="berita_acara" role="tabpanel" aria-labelledby="kt_tab_pane_1_4">
-            Body Berita acara
+    if (tabName === 'berita acara')
+      return (
+        <div className="card-body">
+          <div className="tab-content">
+            <div
+              className="tab-pane fade show active"
+              id="berita_acara"
+              role="tabpanel"
+              aria-labelledby="kt_tab_pane_1_4"
+            >
+              Body Berita acara
+            </div>
           </div>
         </div>
-      </div>
-    )
+      );
 
-    if (tabName === 'sa/gr') return (
-      <div className="card-body">
-        <div className="tab-content">
-          <div className="tab-pane fade show active" id="sa_gr" role="tabpanel" aria-labelledby="kt_tab_pane_1_4">
-            SA/GR
+    if (tabName === 'sa/gr')
+      return (
+        <div className="card-body">
+          <div className="tab-content">
+            <div
+              className="tab-pane fade show active"
+              id="sa_gr"
+              role="tabpanel"
+              aria-labelledby="kt_tab_pane_1_4"
+            >
+              SA/GR
+            </div>
           </div>
         </div>
-      </div>
-    )
-
+      );
   };
 
   const handleChildDoc = (id) => {
     rowDoc.forEach((item) => {
       if (id === item.id) {
-
         setShowChild({ show: !showChild.show, data: item });
       }
     });
-  }
+  };
 
   const childTables = (itemId) => {
     if (showChild.show && showChild.data.id === itemId) {
       return (
         <tbody>
-          {
-            showChild.data.child.map((item) => (
-              <tr>
-                <td className="align-middle">
-                  <div className="d-flex justify-content-center">
-                    <i className="fa fa-file"></i>
-                  </div>
-                </td>
-                <td className="align-middle">{item.nama}</td>
-                <td className="align-middle">{item.due_date}</td>
-                <td className="align-middle">{item.mo}</td>
-                <td className="align-middle"></td>
-                <td className="align-middle"></td>
-                <td className="align-middle"></td>
-                <td className="align-middle"></td>
-                <td>
-                  <div className="d-flex justify-content-between flex-row">
-                    <button className="btn btn-sm p-1" onClick={handleShowEditDoc}>
-                      <i className="fas fa-edit text-primary"></i>
-                    </button>
-                    <button className="btn btn-sm p-1 mr-2" onClick={handleShowModalDelete}>
-                      <i className="fas fa-trash text-danger"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          }
+          {showChild.data.child.map((item) => (
+            <tr>
+              <td className="align-middle">
+                <div className="d-flex justify-content-center">
+                  <i className="fa fa-file"></i>
+                </div>
+              </td>
+              <td className="align-middle">{item.nama}</td>
+              <td className="align-middle">{item.due_date}</td>
+              <td className="align-middle">{item.mo}</td>
+              <td className="align-middle"></td>
+              <td className="align-middle"></td>
+              <td className="align-middle"></td>
+              <td className="align-middle"></td>
+              <td>
+                <div className="d-flex justify-content-between flex-row">
+                  <button
+                    className="btn btn-sm p-1"
+                    onClick={handleShowEditDoc}
+                  >
+                    <i className="fas fa-edit text-primary"></i>
+                  </button>
+                  <button
+                    className="btn btn-sm p-1 mr-2"
+                    onClick={handleShowModalDelete}
+                  >
+                    <i className="fas fa-trash text-danger"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
-      )
+      );
     }
-  }
+  };
 
   const handleSelectChange = (event) => {
-    const docId = +event.target.value
+    const docId = +event.target.value;
     setDocId(docId);
   };
 
@@ -465,22 +550,26 @@ export const TerminPage = () => {
     if (key === 4) {
       return (
         <div className="form-group">
-          <label for="doc" className="h3">Document</label>
-          <input type="text" className="form-control" id="doc" name="doc" placeholder="Ketikkan nama dokumen" />
+          <label for="doc" className="h3">
+            Document
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="doc"
+            name="doc"
+            placeholder="Ketikkan nama dokumen"
+          />
         </div>
-      )
+      );
     } else if (key !== 0) {
       return (
-        <CheckBoxStyled
-          label="Document"
-          list={docOptions}
-          keyId={docId}
-        />
-      )
+        <CheckBoxStyled label="Document" list={docOptions} keyId={docId} />
+      );
     } else {
-      return null
+      return null;
     }
-  }
+  };
 
   return (
     <Container>
@@ -491,9 +580,7 @@ export const TerminPage = () => {
           </span>
         </div>
         <div className="d-flex align-items-baseline mr-5">
-          <h2 className="text-dark font-weight-bold my-2 mr-5">
-            Termin
-          </h2>
+          <h2 className="text-dark font-weight-bold my-2 mr-5">Termin</h2>
         </div>
       </div>
 
@@ -501,12 +588,18 @@ export const TerminPage = () => {
         <StyledModal
           visible={show}
           onClose={() => setShow(false)}
-          minWidth='50vw'
+          minWidth="50vw"
         >
           <form>
             <div className="form-group">
               <label for="qty">Quantity</label>
-              <input type="number" className="form-control" id="qty" name="qty" aria-describedby="emailHelp" />
+              <input
+                type="number"
+                className="form-control"
+                id="qty"
+                name="qty"
+                aria-describedby="emailHelp"
+              />
             </div>
             <div className="form-group">
               <label for="due_date">Due Date</label>
@@ -522,12 +615,18 @@ export const TerminPage = () => {
         <StyledModal
           visible={showEditDoc}
           onClose={() => setShowEditDoc(false)}
-          minWidth='50vw'
+          minWidth="50vw"
         >
           <form>
             <div className="form-group">
               <label for="ktr">Keterangan</label>
-              <input type="text" className="form-control" id="ktr" name="ktr" aria-describedby="emailHelp" />
+              <input
+                type="text"
+                className="form-control"
+                id="ktr"
+                name="ktr"
+                aria-describedby="emailHelp"
+              />
             </div>
             <div className="form-group">
               <label for="document">Dokumen</label>
@@ -543,7 +642,7 @@ export const TerminPage = () => {
         <StyledModal
           visible={showModalDelete}
           onClose={() => setShowModalDelete(false)}
-          minWidth='50vw'
+          minWidth="50vw"
         >
           <div className="d-flex justify-content-center">
             <h3>Yakin ingin menghapus?</h3>
@@ -556,7 +655,7 @@ export const TerminPage = () => {
         <StyledModal
           visible={showAddDelivModal}
           onClose={() => setShowAddDelivModal(false)}
-          minWidth='50vw'
+          minWidth="50vw"
         >
           <form>
             <div className="row">
@@ -567,9 +666,7 @@ export const TerminPage = () => {
                   onChange={handleSelectChange}
                 />
               </div>
-              <div className="col-6">
-                {showDocOption(docId)}
-              </div>
+              <div className="col-6">{showDocOption(docId)}</div>
             </div>
             <div className="d-flex">
               <div></div>
@@ -583,20 +680,38 @@ export const TerminPage = () => {
             <div className="card-toolbar">
               <ul className="nav nav-tabs nav-bold nav-tabs-line">
                 <li className="nav-item">
-                  <Link className="nav-link active" data-toggle="tab" onClick={() => setTabctive('summary')}>
-                    <span className="nav-icon"><i className="flaticon2-paper"></i></span>
+                  <Link
+                    className="nav-link active"
+                    data-toggle="tab"
+                    onClick={() => setTabctive('summary')}
+                  >
+                    <span className="nav-icon">
+                      <i className="flaticon2-paper"></i>
+                    </span>
                     <span className="nav-text">Summary</span>
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" data-toggle="tab" onClick={() => setTabctive('berita acara')}>
-                    <span className="nav-icon"><i className="flaticon2-document"></i></span>
+                  <Link
+                    className="nav-link"
+                    data-toggle="tab"
+                    onClick={() => setTabctive('berita acara')}
+                  >
+                    <span className="nav-icon">
+                      <i className="flaticon2-document"></i>
+                    </span>
                     <span className="nav-text">Berita Acara</span>
                   </Link>
                 </li>
                 <li className="nav-item dropdown">
-                  <Link className="nav-link" data-toggle="tab" onClick={() => setTabctive('sa/gr')}>
-                    <span className="nav-icon"><i className="flaticon2-drop"></i></span>
+                  <Link
+                    className="nav-link"
+                    data-toggle="tab"
+                    onClick={() => setTabctive('sa/gr')}
+                  >
+                    <span className="nav-icon">
+                      <i className="flaticon2-drop"></i>
+                    </span>
                     <span className="nav-text">SA / GR</span>
                   </Link>
                 </li>
@@ -608,8 +723,13 @@ export const TerminPage = () => {
 
         <Container>
           <div className="d-flex justify-content-end w-100">
-            <button className="btn btn-success btn-sm mt-3 mb-2" onClick={handleShowAddDelivModal}>
-              <span className="nav-icon"><i className="flaticon2-plus"></i></span>
+            <button
+              className="btn btn-success btn-sm mt-3 mb-2"
+              onClick={handleShowAddDelivModal}
+            >
+              <span className="nav-icon">
+                <i className="flaticon2-plus"></i>
+              </span>
               <span className="nav-text">Deliverables</span>
             </button>
           </div>
@@ -621,47 +741,69 @@ export const TerminPage = () => {
                   <Table className="table-bordered overflow-auto">
                     <thead>
                       <tr>
-                        <th className="bg-primary text-white align-middle">No</th>
-                        <th className="bg-primary text-white align-middle">Scope of Work(Term)</th>
-                        <th className="bg-primary text-white align-middle">Delivery Date</th>
-                        <th className="bg-primary text-white align-middle">Bobot(%)</th>
-                        <th className="bg-primary text-white align-middle">Harga Pekerjaan</th>
-                        <th className="bg-primary text-white align-middle">Project Progress(%)</th>
-                        <th className="bg-primary text-white align-middle">Dokumen Progress</th>
-                        <th className="bg-primary text-white align-middle">Deliverable Dokumen</th>
-                        <th className="bg-primary text-white align-middle">Aksi</th>
+                        <th className="bg-primary text-white align-middle">
+                          No
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          Scope of Work(Term)
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          Delivery Date
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          Bobot(%)
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          Harga Pekerjaan
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          Project Progress(%)
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          Dokumen Progress
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          Deliverable Dokumen
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          Aksi
+                        </th>
                       </tr>
                     </thead>
                     {rowDoc.map((item, index) => {
                       return (
                         <>
-                        <tbody>
-                          <tr>
-                            <td className="align-middle">
-                              <button className="btn btn-sm d-flex justify-content-center p-1" onClick={() => handleChildDoc(item.id)}>
-                                <i className="fa fa-folder-plus text-primary"></i>
-                              </button>
-                            </td>
-                            <td className="align-middle">{item.type}</td>
-                            <td className="align-middle"></td>
-                            <td className="align-middle"></td>
-                            <td className="align-middle"></td>
-                            <td className="align-middle"></td>
-                            <td className="align-middle"></td>
-                            <td className="align-middle"></td>
-                            <td className="align-middle"></td>
-                          </tr>
-                        </tbody>
-                        {childTables(item.id)}
-                      </>
-                    )})}
+                          <tbody>
+                            <tr>
+                              <td className="align-middle">
+                                <button
+                                  className="btn btn-sm d-flex justify-content-center p-1"
+                                  onClick={() => handleChildDoc(item.id)}
+                                >
+                                  <i className="fa fa-folder-plus text-primary"></i>
+                                </button>
+                              </td>
+                              <td className="align-middle">{item.type}</td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                            </tr>
+                          </tbody>
+                          {childTables(item.id)}
+                        </>
+                      );
+                    })}
                   </Table>
                 </div>
               </div>
             </div>
           </div>
         </Container>
-      </Paper >
+      </Paper>
     </Container>
   );
 };

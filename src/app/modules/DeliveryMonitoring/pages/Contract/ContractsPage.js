@@ -1,6 +1,4 @@
 import React from 'react';
-// import http from '../../libs/http';
-// import { makeStyles } from '@material-ui/core/styles';
 import {
   Table,
   TableBody,
@@ -14,9 +12,7 @@ import {
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { Link } from 'react-router-dom';
-// import '../../../_metronic/_assets/css/layout.css';
-import { useSelector, useDispatch } from 'react-redux'
-import { setDataContracts } from '../../_redux/deliveryMonitoringCrud';
+import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,71 +25,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// function createData(kontrak, po, judul, tgl_po, tgl_kontrak, penyedia, status) {
-//   return { kontrak, po, judul, tgl_po, tgl_kontrak, penyedia, status };
-// }
-
-// const rows = [
-//   createData(
-//     'SPK/III/2021',
-//     'PO.I',
-//     'Pengadaan Tenaga Ahli',
-//     '1 Jan 2021',
-//     '11 Jan 2021',
-//     'PT. XYZ',
-//     'On Progress'
-//   ),
-//   createData(
-//     'SPK/IV/2021',
-//     'PO.II',
-//     'Pengadaan Truk',
-//     '1 Jan 2021',
-//     '11 Jan 2021',
-//     'PT. ZZZ',
-//     'Selesai'
-//   ),
-//   createData(
-//     'SPK/I/2021',
-//     'PO.III',
-//     'Pengadaan Bus',
-//     '1 Jan 2021',
-//     '11 Jan 2021',
-//     'PT. QQQ',
-//     'Selesai'
-//   ),
-//   createData(
-//     'SPK/IV/2021',
-//     'PO.IV',
-//     'Pengadaan Truk',
-//     '1 Jan 2021',
-//     '11 Jan 2021',
-//     'PT. asa',
-//     'Selesai'
-//   ),
-// ];
-
-// const initialContract = {
-//   contract_name: 'Pengadaan Barang',
-//   contract_no: '',
-//   contract_period_range_day: '',
-//   contract_period_range_month: '',
-//   contract_status: '',
-//   contract_value: '',
-// };
-
 export const ContractsPage = () => {
   const classes = useStyles();
-  const [contract, setContract] = React.useState();
-  const { dataContracts } = useSelector(state => state.deliveryMonitoring);
-  const dispatch = useDispatch();
+  const [dataContracts, setDataContract] = React.useState();
+
+  const getDataContracts = async () => {
+    const {
+      data: { data },
+    } = await deliveryMonitoring.getDataContracts();
+    console.log(data)
+    setDataContract(data);
+  };
 
   React.useEffect(() => {
-    dispatch(setDataContracts())
-  }, [dispatch]);
+    getDataContracts();
+  }, []);
 
   return (
     <>
-      {/* <div className="d-flex align-items-center flex-wrap mr-1">
+      <div className="d-flex align-items-center flex-wrap mr-1">
         <div className="mr-2 iconWrap">
           <span className="svg-icon menu-icon">
             <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
@@ -104,7 +54,7 @@ export const ContractsPage = () => {
             Daftar Kontrak & PO
           </h2>
         </div>
-      </div> */}
+      </div>
 
       <Paper className={classes.root}>
         <Table className={classes.table}>
