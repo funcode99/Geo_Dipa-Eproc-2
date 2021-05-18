@@ -6,6 +6,7 @@ import {
   // Table,
   TableBody,
   TableRow,
+  Checkbox,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import {
@@ -17,8 +18,11 @@ import {
   TableCellStyled,
   ChildTables,
 } from './style';
-import { Nav, Table } from 'react-bootstrap';
-import { StyledModal } from '../../../../components/modals';
+import {
+  Nav,
+  Table,
+} from 'react-bootstrap';
+import { StyledModal } from '../../../../components/modals'
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 
@@ -54,7 +58,7 @@ const rowJasa = [
     'jasa',
     '04/05/2021',
     '7',
-    'Jasa data jasa berupa string yang panjang 10101',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101'
@@ -65,7 +69,7 @@ const rowJasa = [
     'jasa',
     '04/06/2021',
     '9',
-    'Jasa data jasa berupa string yang panjang 10101',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101',
     'Jasa data jasa berupa string yang panjang 10101'
@@ -76,7 +80,7 @@ const rowJasa = [
     'jasa',
     '04/07/2021',
     '3',
-    'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
+    'pcs',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Jasa data jasa berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj '
@@ -104,7 +108,7 @@ const rowBarang = [
     'Barang',
     '04/05/2021',
     '7',
-    'BarangdataBarangberupastringyangpanjang10101',
+    'pcs',
     'BarangdataBarangberupastringyangpanjang10101',
     'BarangdataBarangberupastringyangpanjang10101',
     'BarangdataBarangberupastringyangpanjang10101'
@@ -115,7 +119,7 @@ const rowBarang = [
     'Barang',
     '04/06/2021',
     '9',
-    'Barang data Barang berupa string yang panjang 10101',
+    'pcs',
     'Barang data Barang berupa string yang panjang 10101',
     'Barang data Barang berupa string yang panjang 10101',
     'Barang data Barang berupa string yang panjang 10101'
@@ -126,7 +130,7 @@ const rowBarang = [
     'Barang',
     '04/07/2021',
     '3',
-    'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
+    'pcs',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj ',
     'Barang data Barang berupa string yang panjang 10101 kjsdbjksdhjkds adjlksjdklasdj '
@@ -274,6 +278,8 @@ export const TerminPage = () => {
   const handleShowEditDoc = () => setShowEditDoc(true);
   const handleShowAddDelivModal = () => setShowAddDelivModal(true);
 
+  let tabStyle = 'nav-link';
+
   const handleChange = (event) => {
     const item = rowJasa.find((row) => +event.target.value === row.id);
 
@@ -332,7 +338,7 @@ export const TerminPage = () => {
                               <tr>
                                 <td className="align-middle">{item.id}</td>
                                 <td className="align-middle">{item.name}</td>
-                                <td className="align-middle">
+                                {/* <td className="align-middle">
                                   <div className="d-flex justify-content-between flex-row">
                                     <button
                                       className="btn btn-sm p-1"
@@ -347,7 +353,7 @@ export const TerminPage = () => {
                                       <i className="fas fa-trash text-danger"></i>
                                     </button>
                                   </div>
-                                </td>
+                                </td> */}
                                 <td className="align-middle">
                                   {item.due_date}
                                 </td>
@@ -360,6 +366,13 @@ export const TerminPage = () => {
                                   {item.costCenter}
                                 </td>
                                 <td className="align-middle">{item.wbs}</td>
+                                <td>
+                                  <Checkbox
+                                    name={`checkbox-${item.id}`}
+                                    color="secondary"
+                                    onChange={(e) => console.log(e.target)}
+                                  />
+                                </td>
                               </tr>
                             );
                           })
@@ -369,7 +382,7 @@ export const TerminPage = () => {
                               <tr>
                                 <td className="align-middle">{item.id}</td>
                                 <td className="align-middle">{item.name}</td>
-                                <td className="align-middle">
+                                {/* <td className="align-middle">
                                   <div className="d-flex justify-content-between flex-row">
                                     <button
                                       className="btn btn-sm p-1"
@@ -384,7 +397,7 @@ export const TerminPage = () => {
                                       <i className="fas fa-trash text-danger"></i>
                                     </button>
                                   </div>
-                                </td>
+                                </td> */}
                                 <td className="align-middle">
                                   {item.due_date}
                                 </td>
@@ -397,6 +410,13 @@ export const TerminPage = () => {
                                   {item.costCenter}
                                 </td>
                                 <td className="align-middle">{item.wbs}</td>
+                                <td>
+                                  <Checkbox
+                                    name={`checkbox-${item.id}`}
+                                    color="primary"
+                                    onChange={(e) => console.log(e.target)}
+                                  />
+                                </td>
                               </tr>
                             );
                           })}

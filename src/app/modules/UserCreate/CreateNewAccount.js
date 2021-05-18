@@ -1,12 +1,10 @@
 import { MODAL } from "../../../service/modalSession/ModalService";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../Auth/_redux/authRedux";
-import { toAbsoluteUrl } from "../../../_metronic/_helpers";
 import { checkUsername, createNewUser } from "./_redux/createApi";
 
 function CreateNewAccount(props) {
@@ -34,19 +32,16 @@ function CreateNewAccount(props) {
         return this.test(`test-card-length`, errorMessage, function (value) {
             const { path, createError } = this;
             return (
-                (formik.values.password == formik.values.conf_password) || createError({ path, message: errorMessage })
+                (formik.values.password === formik.values.conf_password) || createError({ path, message: errorMessage })
             );
         });
     });
 
-    const [count, setCount] = useState(0);
     const [usernameAvailability, setUsernameAvailability] = useState(false);
     const [showPassword, setShowPassword] = useState(false)
     const [showConfPassword, setConfShowPassword] = useState(false);
-    const [asd, setAsd] = useState('');
     const { intl } = props;
     const [loading, setloading] = useState(false);
-    const [alert, setAlert] = useState({ status: false, message: "", variant: "primary" });
     const modal_title_success = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.TITLE_SUCCESS" })
     const modal_body_success = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.BODY_SUCCESS" })
     const modal_button_success = intl.formatMessage({ id: "TITLE.MODAL_CREATE.LABEL.BUTTON_SUCCESS" })

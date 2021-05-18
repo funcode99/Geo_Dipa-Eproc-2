@@ -6,7 +6,7 @@ export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
 export const FORGOT_PASSWORD_URL = `${DEV_RUBY}/api/password_resets?authn_token=&format=&username=none`;
 export const REQUEST_ACCOUNT_URL = `${DEV_NODE}/api/request_new_account`;
 
-export const ME_URL = `${DEV_NODE}/api/user_data_by_token`;
+export const ME_URL = `${DEV_NODE}/regist/user_data_by_token`;
 
 export function login(login, password) {
   return axios.post(LOGIN_URL, {data : { login, password }});

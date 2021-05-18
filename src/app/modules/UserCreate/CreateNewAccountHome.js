@@ -10,24 +10,23 @@ import { checkToken } from "./_redux/createApi";
 function CreateNewAccountHome(props) {
 
     const token = new URLSearchParams(useLocation().search).get('token')
-    const [loading, setloading] = useState(true)
     const [validToken, setValidToken] = useState(false)
     const [data, setData] = useState({})
 
     useEffect(() => {
         checkToken({ token: token })
             .then(response => {
-                if (response.status == 200) {
+                if (response.status === 200) {
                     setValidToken(true)
                     setData(response.data.data)
                 }
             });
-    }, []);
+    }, [token]);
 
     return (
         <div className="container-background" style={{ height: '100%', display: 'flex', flexDirection: 'column', backgroundImage: 'url(/media/bg/bg-4.jpg)' }}>
             {validToken ? (
-                <CreateNewAccountPage data={data}/>
+                <CreateNewAccountPage data={data} />
             ) : <CreateNewAccountErrorPage />}
         </div>
     );

@@ -32,37 +32,30 @@ import {
 } from '@material-ui/core';
 import {toAbsoluteUrl} from "../../../../../_metronic/_helpers";
 
-// const Transition = React.forwardRef(function Transition(props, ref) {
-//     return <Slide direction="up" ref={ref} {...props} />;
-// });
-
 function ItemContractBKB(props) {
 
     useEffect(() => {
-        
     });
 
     const print = () => {
-        // var content = document.getElementById("bkb");
-        // var pri = document.getElementById("ifmcontentstoprint").contentWindow;
-        // pri.document.open();
-        // pri.document.write(content.innerHTML);
-        // pri.document.close();
-        // pri.focus();
-        // pri.print();
+        var printContents = document.getElementById("printBkb").innerHTML;
+        document.getElementById("root").style.display = "none";
+        document.getElementById("print-content").innerHTML = printContents;
+        window.print();
+        document.getElementById("root").removeAttribute("style");
+        document.getElementById("print-content").innerHTML = "";
     };
 
     return (
         <React.Fragment>
-            {/* <iframe id="ifmcontentstoprint" style={{height: 0, width: 0, position: 'absolute'}}></iframe> */}
             <Card>
                 <CardHeader title="">
                     <CardHeaderToolbar>
                     <button type="button" onClick={print} className="btn btn-sm btn-primary"><i className="fas fa-print"></i>Cetak BKB</button>
                     </CardHeaderToolbar>
                 </CardHeader>
-                <CardBody>
-                    <div id="bkb">
+                <CardBody id="printBkb">
+                    <div>
                         <div className="row">
                             <div className="col-md-8">
                                 <img src={toAbsoluteUrl("/media/logos/logo-eprocurement.png")} style={{width: 150}} alt="IconGde" />
@@ -89,10 +82,10 @@ function ItemContractBKB(props) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-md-1 border">
+                            <div className="col-md-2 border text-center">
                                 <h2 className="mb-0" style={{marginTop: 5}}>BKB</h2>
                             </div>
-                            <div className="col-md-10 border text-center">
+                            <div className="col-md-8 border text-center">
                                 <div>
                                     <span className="font-weight-bold">PT GEO DIPA ENERGI</span>
                                 </div>
@@ -100,7 +93,7 @@ function ItemContractBKB(props) {
                                     <span className="font-weight-bold">BUKTI PEMBAYARAN BANK</span>
                                 </div>
                             </div>
-                            <div className="col-md-1 border">
+                            <div className="col-md-2 border text-center">
                                 <h2 className="mb-0" style={{marginTop: 5}}>PST</h2>
                             </div>
                         </div>
