@@ -6,6 +6,7 @@ const initialDelivMonitoringState = {
   dataDeverableDoc: null,
   dataJasa: [],
   dataBarang: [],
+  dataDocuments: [],
 };
 
 export const reducer = persistReducer(
@@ -28,6 +29,13 @@ export const reducer = persistReducer(
         return {
           ...state,
           dataBarang: action.payload,
+        };
+      }
+
+      case actionTypes.SetDataDocuments: {
+        return {
+          ...state,
+          dataDocuments: action.payload,
         };
       }
 

@@ -15,6 +15,7 @@ import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { Link } from 'react-router-dom';
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
+import Subheader from '../../../../components/subheader';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,18 +56,15 @@ export const ContractsPage = () => {
   return (
     <>
       <Toast />
-      <div className="d-flex align-items-center flex-wrap mr-1">
-        <div className="mr-2 iconWrap">
-          <span className="svg-icon menu-icon">
-            <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
-          </span>
-        </div>
-        <div className="d-flex align-items-baseline mr-5">
-          <h2 className="text-dark font-weight-bold my-2 mr-5">
-            Daftar Kontrak & PO
-          </h2>
-        </div>
-      </div>
+      <Subheader
+        text="Daftar Kontrak & PO"
+        IconComponent={
+          <SVG
+            src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')}
+            style={{ color: 'white' }}
+          />
+        }
+      />
 
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -85,6 +83,7 @@ export const ContractsPage = () => {
               <TableCell className="bg-primary text-white">
                 Tanggal Kontrak
               </TableCell>
+              <TableCell className="bg-primary text-white">Group</TableCell>
               <TableCell className="bg-primary text-white">Penyedia</TableCell>
               <TableCell className="bg-primary text-white">Status</TableCell>
               <TableCell className="bg-primary text-white">Aksi</TableCell>
@@ -93,7 +92,7 @@ export const ContractsPage = () => {
           <TableBody>
             {loading ? (
               <TableRow hover>
-                <TableCell colSpan={4} align="center">
+                <TableCell colSpan={9} align="center">
                   <CircularProgress />
                 </TableCell>
               </TableRow>
@@ -105,6 +104,7 @@ export const ContractsPage = () => {
                     <TableCell scope="row">{item.id}</TableCell>
                     <TableCell></TableCell>
                     <TableCell>{item.name}</TableCell>
+                    <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>

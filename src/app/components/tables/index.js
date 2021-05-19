@@ -1,12 +1,16 @@
 import React from 'react';
 import {
-  Table,
   TableBody,
   TableCell,
   Paper,
   CircularProgress,
 } from '@material-ui/core';
-import { StyledHead, StyledTableHead, StyledTableRow } from './style';
+import {
+  StyledHead,
+  StyledTableHead,
+  StyledTableRow,
+  StyledTable,
+} from './style';
 
 const exampleHeader = ['', ''];
 const exampleBody = [
@@ -29,39 +33,45 @@ const CustomTable = ({
   loading = false,
 }) => {
   return (
-    <Paper style={{ marginTop: 20, marginBottom: 20 }}>
-      <Table>
-        <StyledTableHead>
-          <StyledHead>
-            {tableHeader?.map((item, i) => (
-              <TableCell align={align} key={i}>
-                {item}
-              </TableCell>
-            ))}
-          </StyledHead>
-        </StyledTableHead>
-        <TableBody>
-          {loading ? (
-            <StyledTableRow>
-              <TableCell colSpan={tableHeader.length} align="center">
-                <CircularProgress />
-              </TableCell>
-            </StyledTableRow>
-          ) : null}
-          {tableContent?.map((item, i) => (
-            <StyledTableRow key={i + 100} hover>
-              {item.map((items, ix) => {
-                return (
-                  <TableCell align={align} key={ix + 10} {...items.props}>
-                    {items.content}
+    // <Paper style={{ marginTop: 20, marginBottom: 20 }}>
+    <div className="table-wrapper-scroll-y my-custom-scrollbar">
+      <div className="segment-table">
+        <div className="hecto-10">
+          <StyledTable>
+            <StyledTableHead>
+              <StyledHead>
+                {tableHeader?.map((item, i) => (
+                  <TableCell align={align} key={i}>
+                    {item}
                   </TableCell>
-                );
-              })}
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Paper>
+                ))}
+              </StyledHead>
+            </StyledTableHead>
+            <TableBody>
+              {loading ? (
+                <StyledTableRow>
+                  <TableCell colSpan={tableHeader.length} align="center">
+                    <CircularProgress />
+                  </TableCell>
+                </StyledTableRow>
+              ) : null}
+              {tableContent?.map((item, i) => (
+                <StyledTableRow key={i + 100} hover>
+                  {item.map((items, ix) => {
+                    return (
+                      <TableCell align={align} key={ix + 10} {...items.props}>
+                        {items.content}
+                      </TableCell>
+                    );
+                  })}
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </StyledTable>
+        </div>
+      </div>
+    </div>
+    // </Paper>
   );
 };
 

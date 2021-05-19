@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TableHead, TableRow } from '@material-ui/core';
+import { TableHead, TableRow, Table } from '@material-ui/core';
 
 export const Container = styled.div`
   width: 100%;
@@ -22,13 +22,21 @@ export const StyledHead = styled(TableRow)`
   tr,
   th {
     background: transparent;
-    font-size: 1.25rem;
+    border: 1px solid #ebedf3;
+    color: #ffffff;
+    padding: 0.5rem 2rem;
   }
 `;
 
 export const StyledTableRow = styled(TableRow)`
   td,
   th {
-    font-size: 1.25rem;
+    border: 1px solid #ebedf3;
+    padding: 0.5rem 2rem;
   }
+`;
+
+export const StyledTable = styled(Table)`
+  overflow: auto;
+  font-size: 0.75rem;
 `;

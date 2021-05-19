@@ -1,15 +1,16 @@
 import React from 'react';
 import { Container, makeStyles, Paper } from '@material-ui/core';
 import Subheader from '../../../../components/subheader';
-import { Tabs } from '../../components';
+import Tabs from '../../../../components/tabs';
 import Summary from './Summary';
 import {
   DescriptionOutlined,
   AssignmentOutlined,
   BookmarkBorderOutlined,
 } from '@material-ui/icons';
-
 import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
+import Documents from './Documents';
+import BeritaAcara from './BeritaAcara';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -60,12 +61,9 @@ const TerminPage2 = (props) => {
         <hr className="p-0 m-0" />
         <Container style={{ marginTop: 20, paddingBottom: 20 }}>
           {tabActive === 0 && <Summary />}
-          {tabActive === 1 && (
-            <div>
-              <DescriptionOutlined className="mb-0 mr-2" />
-            </div>
-          )}
+          {tabActive === 1 && <BeritaAcara />}
           {tabActive === 2 && <ServAccGR />}
+          <Documents />
         </Container>
       </Paper>
     </Container>
