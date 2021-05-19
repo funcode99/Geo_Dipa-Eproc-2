@@ -14,7 +14,7 @@ import { Form, Row, Col, Container } from 'react-bootstrap';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { Link, useParams } from 'react-router-dom';
-import { Tabs } from '../../components';
+import Tabs from '../../../../components/tabs';
 // import http from '../libs/http';
 // import { rupiah } from '../libs/currency';
 // import { useSelector, useDispatch } from 'react-redux'

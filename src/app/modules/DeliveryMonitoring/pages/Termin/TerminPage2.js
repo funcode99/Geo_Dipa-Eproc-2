@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, makeStyles, Paper } from '@material-ui/core';
 import Subheader from '../../../../components/subheader';
-import { Tabs } from '../../components';
+import Tabs from '../../../../components/tabs';
 import Summary from './Summary';
 import {
   DescriptionOutlined,
@@ -10,6 +10,7 @@ import {
 } from '@material-ui/icons';
 
 import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
+import Documents from './Documents';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -66,6 +67,7 @@ const TerminPage2 = (props) => {
             </div>
           )}
           {tabActive === 2 && <ServAccGR />}
+          <Documents />
         </Container>
       </Paper>
     </Container>
