@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  TableBody,
-  TableCell,
-  Paper,
-  CircularProgress,
-} from '@material-ui/core';
+import { TableBody, TableCell, CircularProgress } from '@material-ui/core';
 import {
   StyledHead,
   StyledTableHead,
@@ -33,8 +28,7 @@ const CustomTable = ({
   loading = false,
 }) => {
   return (
-    // <Paper style={{ marginTop: 20, marginBottom: 20 }}>
-    <div className="table-wrapper-scroll-y my-custom-scrollbar">
+    <div className="table-wrapper-scroll-y my-custom-scrollbar my-10">
       <div className="segment-table">
         <div className="hecto-10">
           <StyledTable>
@@ -71,7 +65,6 @@ const CustomTable = ({
         </div>
       </div>
     </div>
-    // </Paper>
   );
 };
 
