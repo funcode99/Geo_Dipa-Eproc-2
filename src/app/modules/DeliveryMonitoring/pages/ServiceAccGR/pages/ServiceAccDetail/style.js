@@ -68,7 +68,10 @@ export const Wrapper = styled.div`
   width: 50%;
 `;
 
-export const Input = styled(TextField)`
+export const Input = styled(TextField).attrs({
+  size: 'small',
+  color: 'secondary',
+})`
   margin: 0.5rem 0;
   width: 90%;
   display: flex;
@@ -93,10 +96,14 @@ export const InputWrapper = styled.div`
   // justify-content: center;
   align-items: center;
 `;
+
 export const InputSeparator = styled.div`
   margin: 0.5rem 0;
   width: ${(props) => props.w};
   align-items: center;
+  label {
+    font-size: 14px;
+  }
 `;
 
 export const FormContent = styled.div`
@@ -129,4 +136,10 @@ export const Reject = styled.div`
 
 export const TabsWrapper = styled.section`
   margin: 1rem 0;
+`;
+
+export const ErrorText = styled.p`
+  text-align: center;
+  color: red;
+  margin: 5px 0;
 `;

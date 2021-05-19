@@ -1,14 +1,11 @@
 import React from 'react';
 import {
-  Paper,
-  makeStyles,
-  // Icon,
+  Input as Files,
   InputLabel,
   Button,
   Container,
   CircularProgress,
 } from '@material-ui/core';
-// import SVG from 'react-inlinesvg';
 import { useFormik } from 'formik';
 // import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
@@ -22,25 +19,14 @@ import {
   InputWrapper,
   InputSeparator,
   FlexCol,
+  ErrorText,
 } from './style';
 
 import { StyledModal } from '../../../../../../components/modals';
 import useToast from '../../../../../../components/toast';
 import CustomTable from '../../../../../../components/tables';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing(3),
-    overflowX: 'auto',
-  },
-  table: {
-    minWidth: 650,
-  },
-}));
-
 export const GoodReceipt = () => {
-  const classes = useStyles();
   const [Toast, setToast] = useToast();
   // const [data, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
@@ -122,23 +108,23 @@ export const GoodReceipt = () => {
   const handleClose = () => {
     setModals(false);
   };
-  const handleModal = async (type, id) => {
-    if (type === 'update') {
-      // const {
-      //   data: { data },
-      // } = await master.getPeriodeID(id);
-      // // console.log(data[0]);
-      // setUpdate({ id, update: true });
-      // // formik.setFieldValue('document_name', data[0].name);
-      // formik.setValues({
-      //   periode_name: data[0].name,
-      //   periode_value: data[0].value,
-      // });
-    } else {
-      formik.setValues(initialValues);
-    }
-    setModals(true);
-  };
+  // const handleModal = async (type, id) => {
+  //   if (type === 'update') {
+  //     // const {
+  //     //   data: { data },
+  //     // } = await master.getPeriodeID(id);
+  //     // // console.log(data[0]);
+  //     // setUpdate({ id, update: true });
+  //     // // formik.setFieldValue('document_name', data[0].name);
+  //     // formik.setValues({
+  //     //   periode_name: data[0].name,
+  //     //   periode_value: data[0].value,
+  //     // });
+  //   } else {
+  //     formik.setValues(initialValues);
+  //   }
+  //   setModals(true);
+  // };
 
   const handleDelete = async () => {
     try {
@@ -256,230 +242,236 @@ export const GoodReceipt = () => {
 
       {/* Service Acceptance Wrapper  */}
       <div>
-        {/* <div className="d-flex align-items-center flex-wrap mr-1">
-          <SubWrap className="mr-2 iconWrap">
-            <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
-            </span>
-          </SubWrap>
-          <div className="d-flex align-items-baseline mr-5">
-            <h2 className="text-dark font-weight-bold my-2 mr-5">
-              012.PJ/PST.30-GDE/IX/2020 - 1000014264
-            </h2>
-          </div>
-        </div> */}
+        <Flex>
+          <Wrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Nomor SA</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
 
-        <Paper className={classes.root}>
-          <Flex>
-            <Wrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Nomor SA</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Posting Date</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Docuument Date</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>PO Number</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Purchasing Group</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
 
-                    // {...register('document_name')}
-                  />
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Telephone</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
 
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Posting Date</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Currency</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
 
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Docuument Date</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Ref. QA</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
 
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>PO Number</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+          </Wrapper>
 
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Purchasing Group</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
+          {/* Left  */}
+          <Wrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Pihak Pertama</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  //
+                  multiline
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
 
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Telephone</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Pihak Kedua</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Input
+                  //
+                  multiline
+                  variant="outlined"
+                  name="document_name"
+                  // onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
 
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Currency</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
+                  // {...register('document_name')}
+                />
+                <ErrorText>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </ErrorText>
+              </InputSeparator>
+            </InputWrapper>
 
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Ref. QA</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
-
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-            </Wrapper>
-
-            {/* Left  */}
-            <Wrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Pihak Pertama</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    //
-                    multiline
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
-
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Pihak Kedua</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Input
-                    //
-                    multiline
-                    variant="outlined"
-                    name="document_name"
-                    // onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
-
-                    // {...register('document_name')}
-                  />
-                  {/* <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
-                    {errors.document_name?.message}
-                  </p> */}
-                </InputSeparator>
-              </InputWrapper>
-
-              <InputWrapper>
-                <InputSeparator w="25%">
-                  <InputLabel>Unggah SA</InputLabel>
-                </InputSeparator>
-                <InputSeparator w="75%">
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={() => handleModal('create')}
-                  >
-                    Upload SA - TTD
-                  </Button>
-                  <p style={{ margin: 10, color: '#6aa5e3' }}>jpg.pdf</p>
-                </InputSeparator>
-              </InputWrapper>
-            </Wrapper>
-          </Flex>
-        </Paper>
+            <InputWrapper>
+              <InputSeparator w="25%">
+                <InputLabel>Unggah SA</InputLabel>
+              </InputSeparator>
+              <InputSeparator w="75%">
+                <Files
+                  type="file"
+                  style={{ marginBottom: 10 }}
+                  disableUnderline
+                />
+                {/* <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => handleModal('create')}
+                >
+                  Upload SA - TTD
+                </Button>
+                <p style={{ margin: 10, color: '#6aa5e3' }}>jpg.pdf</p> */}
+              </InputSeparator>
+            </InputWrapper>
+          </Wrapper>
+        </Flex>
 
         <CustomTable
           tableHeader={[

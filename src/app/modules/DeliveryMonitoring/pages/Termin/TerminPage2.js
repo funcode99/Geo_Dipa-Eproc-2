@@ -63,7 +63,7 @@ const TerminPage2 = (props) => {
           {tabActive === 0 && <Summary />}
           {tabActive === 1 && <BeritaAcara />}
           {tabActive === 2 && <ServAccGR />}
-          <Documents />
+          {/* <Documents /> */}
         </Container>
       </Paper>
     </Container>

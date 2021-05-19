@@ -59,7 +59,10 @@ export const Flex = styled.div`
   flex-direction: column;
 `;
 
-export const Input = styled(TextField)`
+export const Input = styled(TextField).attrs({
+  size: 'small',
+  color: 'secondary',
+})`
   margin: 1rem 1rem;
   width: 90%;
   display: flex;
