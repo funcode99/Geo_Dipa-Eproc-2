@@ -66,6 +66,12 @@ function CreateNewAccount(props) {
                     id: "TITLE.CREATE_ACCOUNT.VALIDATION.USERNAME_NOT_AVAILABLE",
                 })
             )
+            .matches(
+                /^[a-zA-Z0-9]{3,50}$/,
+                intl.formatMessage({
+                    id: "TITLE.CREATE_ACCOUNT.VALIDATION.USERNAME_NOT_INCLUDE_SYMBOLS",
+                })
+            )
             .checkAvailability(
                 intl.formatMessage({
                     id: "TITLE.CREATE_ACCOUNT.VALIDATION.USERNAME_NOT_AVAILABLE",

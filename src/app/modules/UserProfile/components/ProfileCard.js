@@ -63,9 +63,9 @@ export function ProfileCard(props) {
                   <div
                     className="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary"
                   >
-                    {user.party.full_name}
+                    {user.data.full_name}
                   </div>
-                  <div className="text-muted">{user.party.personnel?.position_name}</div>
+                  <div className="text-muted">{user.data.personnel?.position_name}</div>
                   {/* <div className="mt-2">
                     <a
                       href="#"

@@ -18,7 +18,7 @@ import { login } from "../_redux/authCrud";
 */
 
 const initialValues = {
-  username: "adyt",
+  username: "asdasd@gmail.com",
   password: "Test1234",
 };
 
@@ -81,7 +81,7 @@ function Login(props) {
         login(values.username, values.password)
           .then(({ data: { data } }) => {
             disableLoading();
-            props.login(data.authn_token);
+            props.login(data.token);
           })
           .catch((e) => {
             // console.log(e.response);
