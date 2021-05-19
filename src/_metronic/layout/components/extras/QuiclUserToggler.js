@@ -34,11 +34,11 @@ export function QuickUserToggler() {
                   Hi,
                 </span>
                 <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-                  {user.party.full_name}
+                  {user.data.full_name}
                 </span>
                 <span className="symbol symbol-35 symbol-light-success">
                   <span className="symbol-label font-size-h5 font-weight-bold">
-                    {user.party.full_name[0]}
+                    {user.data.full_name[0]}
                   </span>
                 </span>
               </>

@@ -51,7 +51,7 @@ export function QuickUser() {
               href="#"
               className="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"
             >
-              {user.party.full_name}
+              {user.data.full_name}
             </a>
             <div className="text-muted mt-1">{user.occupation}</div>
             <div className="navi mt-2">
