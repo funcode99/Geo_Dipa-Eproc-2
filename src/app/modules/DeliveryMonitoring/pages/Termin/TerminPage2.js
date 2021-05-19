@@ -8,9 +8,9 @@ import {
   AssignmentOutlined,
   BookmarkBorderOutlined,
 } from '@material-ui/icons';
-
 import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
 import Documents from './Documents';
+import BeritaAcara from './BeritaAcara';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -61,11 +61,7 @@ const TerminPage2 = (props) => {
         <hr className="p-0 m-0" />
         <Container style={{ marginTop: 20, paddingBottom: 20 }}>
           {tabActive === 0 && <Summary />}
-          {tabActive === 1 && (
-            <div>
-              <DescriptionOutlined className="mb-0 mr-2" />
-            </div>
-          )}
+          {tabActive === 1 && <BeritaAcara />}
           {tabActive === 2 && <ServAccGR />}
           <Documents />
         </Container>

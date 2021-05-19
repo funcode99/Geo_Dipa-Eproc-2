@@ -28,12 +28,10 @@ const theadItems = [
   { id: 'wbs', label: 'WBS' },
 ];
 
-export default function Summary(props) {
+export default function Summary() {
   const classes = useStyles();
-
   const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
-
   const [navActive, setNavActive] = React.useState('Jasa');
   const { dataJasa, dataBarang } = useSelector(
     (state) => state.deliveryMonitoring
