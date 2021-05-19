@@ -2,6 +2,11 @@ import React from 'react';
 import { makeStyles, Tabs as MuiTabs, Tab as MuiTab } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    '& button.Mui-selected': {
+      color: '#3699FF',
+    },
+  },
   tabRoot: {
     minWidth: 'max-content',
     minHeight: 'max-content',
@@ -13,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1rem',
     fontWeight: '500',
     textTransform: 'none',
+  },
+  customIndicatorColor: {
+    backgroundColor: '#3699FF',
   },
 }));
 
@@ -27,6 +35,7 @@ export default function Tabs(props) {
       indicatorColor="secondary"
       textColor="secondary"
       variant="standard"
+      classes={{ root: classes.root, indicator: classes.customIndicatorColor }}
     >
       {tabLists.map((item) => (
         <MuiTab
