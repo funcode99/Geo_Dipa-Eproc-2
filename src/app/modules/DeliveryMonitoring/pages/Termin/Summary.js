@@ -81,16 +81,16 @@ const rowDoc = [
     id: 1,
     type: 'Laporan Pekerjaan',
     show: false,
-    child: [
+    childs: [
       {
         id: '1',
-        nama: 'Minggu 1',
+        name: 'Minggu 1',
         due_date: '01 Jan 2021',
         mo: 'M',
       },
       {
         id: '2',
-        nama: 'Minggu 2',
+        name: 'Minggu 2',
         due_date: '07 Jan 2021',
         mo: 'M',
       },
@@ -100,16 +100,16 @@ const rowDoc = [
     id: 2,
     type: 'Dokumen Pendukung',
     show: false,
-    child: [
+    childs: [
       {
         id: '5',
-        nama: 'FAT',
+        name: 'FAT',
         due_date: '31 Jan 2021',
         mo: 'M',
       },
       {
         id: '6',
-        nama: 'SAT',
+        name: 'SAT',
         due_date: '31 Jan 2021',
         mo: 'M',
       },
@@ -151,7 +151,7 @@ export default function Summary(props) {
   const [Toast, setToast] = useToast();
 
   const [navActive, setNavActive] = React.useState('Jasa');
-  const { dataJasa, dataBarang } = useSelector(
+  const { dataJasa, dataBarang, dataDocuments } = useSelector(
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
@@ -188,6 +188,11 @@ export default function Summary(props) {
   React.useEffect(() => {
     getAllItems(true);
     getAllItems(false);
+
+    dispatch({
+      type: actionTypes.SetDataDocuments,
+      payload: rowDoc,
+    });
     // eslint-disable-next-line
   }, []);
 
@@ -199,7 +204,7 @@ export default function Summary(props) {
     if (key === 4) {
       return (
         <div className="form-group">
-          <label for="doc" className="h3">
+          <label htmlFor="doc" className="h3">
             Document
           </label>
           <input
@@ -278,19 +283,36 @@ export default function Summary(props) {
     setNavActive(type);
   };
 
-  const handleExpand = (event, itemId) => {
-    let tempJasa = dataJasa;
+  const handleExpand = (event, itemId, type) => {
+    if (type === 'items') {
+      let tempJasa = dataJasa;
 
-    tempJasa.forEach((item) => {
-      if (item.id === parseInt(itemId)) {
-        item.show = !item.show;
-      }
-    });
+      tempJasa.forEach((item) => {
+        if (item.id === parseInt(itemId)) {
+          item.show = !item.show;
+        }
+      });
 
-    dispatch({
-      type: actionTypes.SetDataJasa,
-      payload: tempJasa,
-    });
+      dispatch({
+        type: actionTypes.SetDataJasa,
+        payload: tempJasa,
+      });
+    }
+
+    if (type === 'documents') {
+      let tempDocuments = dataDocuments;
+
+      tempDocuments.forEach((item) => {
+        if (item.id === parseInt(itemId)) {
+          item.show = !item.show;
+        }
+      });
+
+      dispatch({
+        type: actionTypes.SetDataDocuments,
+        payload: tempDocuments,
+      });
+    }
   };
 
   return (
@@ -336,7 +358,9 @@ export default function Summary(props) {
                             <td className="align-middle">
                               <button
                                 className="btn btn-primary btn-sm p-0 align-middle"
-                                onClick={(e) => handleExpand(e, item.id)}
+                                onClick={(e) =>
+                                  handleExpand(e, item.id, 'items')
+                                }
                               >
                                 {item.show ? (
                                   <ExpandLessOutlined />
@@ -448,7 +472,7 @@ export default function Summary(props) {
       >
         <form>
           <div className="form-group">
-            <label for="ktr">Keterangan</label>
+            <label htmlFor="ktr">Keterangan</label>
             <input
               type="text"
               className="form-control"
@@ -458,7 +482,7 @@ export default function Summary(props) {
             />
           </div>
           <div className="form-group">
-            <label for="document">Dokumen</label>
+            <label htmlFor="document">Dokumen</label>
             <input type="file" className="form-control" id="document" />
           </div>
           <div className="d-flex">
@@ -533,7 +557,7 @@ export default function Summary(props) {
                     ))}
                   </tr>
                 </thead>
-                {rowDoc.map((item, index) => {
+                {dataDocuments.map((item, index) => {
                   return (
                     <React.Fragment key={item.id}>
                       <tbody>
@@ -541,7 +565,9 @@ export default function Summary(props) {
                           <td className="align-middle">
                             <button
                               className="btn btn-sm d-flex justify-content-center p-1"
-                              onClick={() => handleChildDoc(item.id)}
+                              onClick={(e) =>
+                                handleExpand(e, item.id, 'documents')
+                              }
                             >
                               <i className="fa fa-folder-plus text-primary"></i>
                             </button>
@@ -556,7 +582,42 @@ export default function Summary(props) {
                           <td className="align-middle"></td>
                         </tr>
                       </tbody>
-                      {childTables(item.id)}
+                      {item.childs.length !== 0 && item.show ? (
+                        <tbody>
+                          {item.childs.map((child) => (
+                            <tr key={child.id}>
+                              <td className="align-middle">
+                                <div className="d-flex justify-content-center">
+                                  <i className="fa fa-file"></i>
+                                </div>
+                              </td>
+                              <td className="align-middle">{child.name}</td>
+                              <td className="align-middle">{child.due_date}</td>
+                              <td className="align-middle">{child.mo}</td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle"></td>
+                              <td className="align-middle">
+                                <div className="d-flex justify-content-between flex-row">
+                                  <button
+                                    className="btn btn-sm p-1"
+                                    onClick={handleShowEditDoc}
+                                  >
+                                    <i className="fas fa-edit text-primary"></i>
+                                  </button>
+                                  <button
+                                    className="btn btn-sm p-1 mr-2"
+                                    onClick={handleShowModalDelete}
+                                  >
+                                    <i className="fas fa-trash text-danger"></i>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      ) : null}
                     </React.Fragment>
                   );
                 })}
