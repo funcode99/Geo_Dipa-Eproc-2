@@ -12,6 +12,6 @@ export function getContractById(id) {
   return axios.get(`${TEMP_URL}/delivery/contract?id=${id}`);
 }
 
-export function getItem(isService) {
+export function getAllItems(isService) {
   return axios.get(`${TEMP_URL}/delivery/item?is_service=${isService}`);
 }

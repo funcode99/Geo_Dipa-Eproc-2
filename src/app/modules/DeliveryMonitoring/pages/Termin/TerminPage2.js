@@ -1,11 +1,16 @@
 import React from 'react';
 import { Container, makeStyles, Paper } from '@material-ui/core';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import { PageTitle, Tabs } from '../../components';
+import Subheader from '../../../../components/subheader';
+import Tabs from '../../../../components/tabs';
 import Summary from './Summary';
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
-import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
-import BookmarkBorderOutlinedIcon from '@material-ui/icons/BookmarkBorderOutlined';
+import {
+  DescriptionOutlined,
+  AssignmentOutlined,
+  BookmarkBorderOutlined,
+} from '@material-ui/icons';
+import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
+import Documents from './Documents';
+import BeritaAcara from './BeritaAcara';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -17,17 +22,17 @@ const TabLists = [
   {
     id: 'summary',
     label: 'Summary',
-    icon: <DescriptionOutlinedIcon className="mb-0 mr-2" />,
+    icon: <DescriptionOutlined className="mb-0 mr-2" />,
   },
   {
     id: 'berita-acara',
     label: 'Berita Acara',
-    icon: <AssignmentOutlinedIcon className="mb-0 mr-2" />,
+    icon: <AssignmentOutlined className="mb-0 mr-2" />,
   },
   {
     id: 'sa-gr',
     label: 'SA / GR',
-    icon: <BookmarkBorderOutlinedIcon className="mb-0 mr-2" />,
+    icon: <BookmarkBorderOutlined className="mb-0 mr-2" />,
   },
 ];
 
@@ -35,13 +40,16 @@ const TerminPage2 = (props) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
 
-  function handleChangeTab(event, newTabActive) {
+  function handleChangeTab(_, newTabActive) {
     setTabActive(newTabActive);
   }
 
   return (
     <Container>
-      <PageTitle title="Termin 1" icon={<MenuBookIcon fontSize="default" />} />
+      <Subheader
+        text="Termin 1"
+        IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
+      />
       <Paper className={classes.paper}>
         <Container>
           <Tabs
@@ -51,10 +59,11 @@ const TerminPage2 = (props) => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        <Container>
+        <Container style={{ marginTop: 20, paddingBottom: 20 }}>
           {tabActive === 0 && <Summary />}
-          {tabActive === 1 && <div>Item Two</div>}
-          {tabActive === 2 && <div>Item Three</div>}
+          {tabActive === 1 && <BeritaAcara />}
+          {tabActive === 2 && <ServAccGR />}
+          {/* <Documents /> */}
         </Container>
       </Paper>
     </Container>

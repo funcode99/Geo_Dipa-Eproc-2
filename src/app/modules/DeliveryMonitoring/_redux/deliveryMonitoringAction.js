@@ -1,4 +1,5 @@
 export const actionTypes = {
-    SetDataDeverableDoc: "[Set Data] Action",
-    SetDataContracts: "[Set Contracts] Action"
+  SetDataJasa: '[Set Data Jasa] Action',
+  SetDataBarang: '[Set Data Barang] Action',
+  SetDataDocuments: '[Set Data Documents] Action',
 };
