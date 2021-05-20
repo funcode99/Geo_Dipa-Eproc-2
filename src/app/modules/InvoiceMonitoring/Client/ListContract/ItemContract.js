@@ -16,7 +16,8 @@ import {
 import {
   useParams
 } from "react-router-dom";
-import { PageTitle, Tabs } from '../../../DeliveryMonitoring/components';
+import Tabs from '../../../../components/tabs';
+import Subheader from '../../../../components/subheader';
 import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from './ItemContractSummary';
 import ItemContractInvoice from './ItemContractInvoice';
@@ -73,25 +74,28 @@ const ItemContract = (props) => {
 
     return (
             <Container className="px-0">
-                <PageTitle title="012.PJ/PST.30-GDE/IX/2020-1000014263" icon={<i className="fas fa-file-invoice-dollar text-light mx-1"></i>} />
-                <Paper className={classes.paper}>
-                    <Container>
-                    <Tabs
-                        tabActive={tabActive}
-                        handleChange={handleChangeTab}
-                        tabLists={TabLists}
-                    />
-                    </Container>
-                    <hr className="p-0 m-0" />
-                    <Container>
-                    {tabActive === 0 && <ItemContractSummary />}
-                    {tabActive === 1 && <ItemContractInvoice />}
-                    {tabActive === 2 && <ItemContractBKB />}
-                    {tabActive === 3 && <ItemContractFormVerification />}
-                    {tabActive === 4 && <ItemContractRoutingSlip />}
-                    </Container>
-                </Paper>
-                </Container>
+              <Subheader
+                text="012.PJ/PST.30-GDE/IX/2020-1000014263"
+                IconComponent={<i className="fas fa-file-invoice-dollar text-light mx-1"></i>}
+              />
+              <Paper className={classes.paper}>
+                  <Container>
+                  <Tabs
+                      tabActive={tabActive}
+                      handleChange={handleChangeTab}
+                      tabLists={TabLists}
+                  />
+                  </Container>
+                  <hr className="p-0 m-0" />
+                  <Container>
+                  {tabActive === 0 && <ItemContractSummary />}
+                  {tabActive === 1 && <ItemContractInvoice />}
+                  {tabActive === 2 && <ItemContractBKB />}
+                  {tabActive === 3 && <ItemContractFormVerification />}
+                  {tabActive === 4 && <ItemContractRoutingSlip />}
+                  </Container>
+              </Paper>
+            </Container>
     );
 }
 

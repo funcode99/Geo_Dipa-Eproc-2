@@ -3,7 +3,7 @@ import {
     connect 
 } from "react-redux";
 import { 
-    // FormattedMessage, 
+    FormattedMessage, 
     injectIntl 
 } from "react-intl";
 import {
@@ -88,7 +88,7 @@ class DashboardListContract extends React.Component {
                 <Card>
                     <CardBody>
                         <div className="panel-filter-table mb-1">
-                            <span className="mr-2 mt-2 float-left">Filter By:</span>
+                            <span className="mr-2 mt-2 float-left"><FormattedMessage id="TITLE.FILTER.TABLE" /></span>
                             <div className="d-block">
                                 <div className="float-left">
                                     {
@@ -119,7 +119,7 @@ class DashboardListContract extends React.Component {
                                                                 <button type="button" className="ml-2 float-left btn btn-sm btn-primary" onClick={this.updateValueFilter.bind(this, "loop-value-" + index )}>Perbaharui</button>
                                                                 <button type="button" className="float-right btn btn-sm btn-light" onClick={this.resetValueFilter.bind(this, "loop-value-" + index )}>
                                                                     <i className="fas fa-redo fa-right"></i>
-                                                                    <span>Reset</span>
+                                                                    <span><FormattedMessage id="TITLE.FILTER.RESET.TABLE" /></span>
                                                                 </button>
                                                             </form>
                                                         </li>
@@ -132,7 +132,7 @@ class DashboardListContract extends React.Component {
                                 </div>
                             </div>
                             <button type="button" className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit float-left" onClick={this.resetFilter.bind(this)}>
-                                Reset
+                            <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
                             </button>
                         </div>
 
@@ -225,7 +225,7 @@ class DashboardListContract extends React.Component {
                             </div>
                         </div>
                         <div className="mt-3">
-                            <span>Total Data: 5/5</span>
+                            <span><FormattedMessage id="TITLE.COUNT_DATA.TABLE" /> 5/5</span>
                         </div>
                         <div className="d-flex mt-4">
                             <select className="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light mr-1" style={{width: 75}} defaultValue={5}>
