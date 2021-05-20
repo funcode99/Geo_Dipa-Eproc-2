@@ -4,6 +4,7 @@ import { actionTypes } from './deliveryMonitoringAction';
 
 const initialDelivMonitoringState = {
   dataDeverableDoc: null,
+  dataContractById: [],
   dataJasa: [],
   dataBarang: [],
   dataDocuments: [],
@@ -36,6 +37,13 @@ export const reducer = persistReducer(
         return {
           ...state,
           dataDocuments: action.payload,
+        };
+      }
+
+      case actionTypes.SetContractById: {
+        return {
+          ...state,
+          dataContractById: action.payload,
         };
       }
 

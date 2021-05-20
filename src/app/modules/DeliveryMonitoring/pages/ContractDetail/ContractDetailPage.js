@@ -20,6 +20,8 @@ import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 import Subheader from '../../../../components/subheader';
 import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionTypes } from '../../_redux/deliveryMonitoringAction';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -133,10 +135,11 @@ const TabLists = [
 export const ContractDetailPage = () => {
   const classes = useStyles();
   const { id } = useParams();
-  const [dataContract, setDataContract] = React.useState([]);
   const [tabActive, setTabActive] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
+  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
+  const dispatch = useDispatch();
 
   const getContractById = async (id) => {
     try {
@@ -144,7 +147,10 @@ export const ContractDetailPage = () => {
       const {
         data: { data },
       } = await deliveryMonitoring.getContractById(id);
-      setDataContract(data);
+      dispatch({
+        type: actionTypes.SetContractById,
+        payload: data,
+      });
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -178,31 +184,16 @@ export const ContractDetailPage = () => {
             to: '/delivery_monitoring/contract',
           },
           {
-            label: `${dataContract[0] ? dataContract[0].name : 'x'}`,
+            label: `${dataContractById[0] ? dataContractById[0].name : 'x'}`,
             to: '/',
           },
         ]}
       />
 
-      {/* <Card className="p-2 mb-5">
-        <Breadcrumbs aria-label="Breadcrumb">
-          <Link
-            color="inherit"
-            to="/delivery_monitoring/contract"
-            // onClick={() => console.log('x')}
-          >
-            List of Contract & PO
-          </Link>
-          <Typography color="textPrimary">
-            {dataContract[0] ? dataContract[0].name : 'x'}
-          </Typography>
-        </Breadcrumbs>
-      </Card> */}
-
       <Subheader
         text={
-          dataContract[0]
-            ? `${dataContract[0].id} - ${dataContract[0].name}`
+          dataContractById[0]
+            ? `${dataContractById[0].id} - ${dataContractById[0].name}`
             : null
         }
         IconComponent={
@@ -221,7 +212,7 @@ export const ContractDetailPage = () => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        {tabActive === 0 && dataContract[0] ? (
+        {tabActive === 0 && dataContractById[0] ? (
           <>
             <Form className="my-3">
               <Container>
@@ -236,7 +227,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor Kontrak"
-                          defaultValue={dataContract[0].id}
+                          defaultValue={dataContractById[0].id}
                         />
                       </Col>
                     </Form.Group>
@@ -249,7 +240,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Judul Pengadaan"
-                          defaultValue={dataContract[0].name}
+                          defaultValue={dataContractById[0].name}
                         />
                       </Col>
                     </Form.Group>
@@ -374,7 +365,7 @@ export const ContractDetailPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {dataContract[0].tasks.map((item, index) => (
+                  {dataContractById[0].tasks.map((item, index) => (
                     <TableRow key={item.id}>
                       <TableCell scope="row">{(index += 1)}</TableCell>
                       <TableCell align="center"></TableCell>

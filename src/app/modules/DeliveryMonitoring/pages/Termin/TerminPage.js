@@ -12,6 +12,7 @@ import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
 import Documents from './Documents';
 import BeritaAcara from './BeritaAcara';
 import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,6 +41,7 @@ const TabLists = [
 const TerminPage = (props) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
+  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
 
   function handleChangeTab(e, newTabActive) {
     setTabActive(newTabActive);
@@ -54,8 +56,8 @@ const TerminPage = (props) => {
             to: '/delivery_monitoring/contract',
           },
           {
-            label: `contract detail`,
-            to: `/delivery_monitoring/contract/1`,
+            label: `${dataContractById[0].name}`,
+            to: `/delivery_monitoring/contract/${dataContractById[0].id}`,
           },
           {
             label: 'Termin 1',
