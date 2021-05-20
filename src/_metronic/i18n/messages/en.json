@@ -109,7 +109,6 @@
   "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.POSITION_NAME": "User Position",
   "TITLE.USER_PROFILE.PROFILE_CARD.INPUT.USERNAME": "Username:",
   "TITLE.CREATE_ACCOUNT.REGISTER": "Register",
-  "TITLE.CREATE_ACCOUNT": "Create New Account",
   "TITLE.CREATE_ACCOUNT.LABEL.VENDOR": "Company",
   "TITLE.CREATE_ACCOUNT.LABEL.USERNAME": "Username",
   "TITLE.CREATE_ACCOUNT.LABEL.PASSWORD": "Password",
@@ -142,5 +141,8 @@
   "SESSION.LOGIN": "Session Log In",
   "SESSION.LOGIN.MESSAGE": "Your session time is over. Please sign in again!!",
   "TITLE.MY_PROFILE": "My Profile",
-  "TITLE.MY_PROFILE.SPAN": "Account settings and more update"
+  "TITLE.MY_PROFILE.SPAN": "Account settings and more update",
+  "TITLE.FILTER.TABLE": "Filter by:",
+  "TITLE.FILTER.RESET.TABLE": "Reset",
+  "TITLE.COUNT_DATA.TABLE": "Total data:"
 }

@@ -109,7 +109,6 @@
     "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.POSITION_NAME": "Jabatan Pengguna",
     "TITLE.USER_PROFILE.PROFILE_CARD.INPUT.USERNAME": "Nama Pengguna:",
     "TITLE.CREATE_ACCOUNT.REGISTER": "Daftar",
-    "TITLE.CREATE_ACCOUNT": "Buat Akun Baru",
     "TITLE.CREATE_ACCOUNT.LABEL.VENDOR": "Perusahaan",
     "TITLE.CREATE_ACCOUNT.LABEL.USERNAME": "Nama Pengguna",
     "TITLE.CREATE_ACCOUNT.LABEL.PASSWORD": "Kata Sandi",
@@ -142,6 +141,9 @@
     "SESSION.LOGIN": "Sesi Masuk",
     "SESSION.LOGIN.MESSAGE": "Waktu sesi Anda sudah berakhir. Silakan masuk lagi !!",
     "TITLE.MY_PROFILE": "Profil Saya",
-    "TITLE.MY_PROFILE.SPAN": "Pengaturan akun dan pembaruan lainnya"
+    "TITLE.MY_PROFILE.SPAN": "Pengaturan akun dan pembaruan lainnya",
+    "TITLE.FILTER.TABLE": "Penyaring berdasarkan:",
+    "TITLE.FILTER.RESET.TABLE": "Hapus",
+    "TITLE.COUNT_DATA.TABLE": "Total data:"
   }
   
