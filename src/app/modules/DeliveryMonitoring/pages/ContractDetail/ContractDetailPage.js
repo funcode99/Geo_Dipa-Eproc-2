@@ -15,13 +15,13 @@ import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { Link, useParams } from 'react-router-dom';
 import Tabs from '../../../../components/tabs';
-
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 import Subheader from '../../../../components/subheader';
 import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
+import CustomTable from '../../../../components/tables';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -132,14 +132,63 @@ const TabLists = [
   },
 ];
 
+const tableHeaderTermin = [
+  'No',
+  'Scope of Work',
+  'Due Date',
+  'Bobot',
+  'Harga Pekerjaan',
+  'Project Progress',
+  'Document Progress',
+  'Deliverables Document',
+  'Status',
+  'Action',
+];
+
 export const ContractDetailPage = () => {
   const classes = useStyles();
   const { id } = useParams();
-  const [tabActive, setTabActive] = React.useState(0);
-  const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
+  const [tabActive, setTabActive] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
+  const [tableContent, setTableContent] = React.useState([]);
+
+  const generateTableContent = (data) => {
+    data.forEach((item, index) => {
+      const rows = [
+        { content: (index += 1) },
+        { content: '' },
+        { content: item.due_date },
+        { content: '' },
+        { content: '' },
+        { content: item.progress },
+        { content: item.document_progress },
+        {
+          content: (
+            <Link to={`/delivery_monitoring/contract/${item.id}/item`}>
+              <span>Document</span>
+            </Link>
+          ),
+        },
+        { content: '' },
+        {
+          content: (
+            <div className="d-flex justify-content-between flex-row">
+              <button className="btn btn-sm p-1">
+                <Icon className="fas fa-edit text-primary" />
+              </button>
+              <button className="btn btn-sm p-1 mr-2">
+                <Icon className="fas fa-trash text-danger" />
+              </button>
+            </div>
+          ),
+        },
+      ];
+      setTableContent((prev) => [...prev, rows]);
+    });
+  };
 
   const getContractById = async (id) => {
     try {
@@ -147,10 +196,13 @@ export const ContractDetailPage = () => {
       const {
         data: { data },
       } = await deliveryMonitoring.getContractById(id);
+
       dispatch({
         type: actionTypes.SetContractById,
         payload: data,
       });
+
+      generateTableContent(data[0].tasks);
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -331,6 +383,13 @@ export const ContractDetailPage = () => {
             </Form>
 
             <Container>
+              <CustomTable
+                tableHeader={tableHeaderTermin}
+                tableContent={tableContent}
+                marginY="my-3"
+                hecto="hecto-16"
+              />
+
               <Table className={classes.table}>
                 <TableHead>
                   <TableRow>

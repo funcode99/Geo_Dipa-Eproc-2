@@ -55,8 +55,8 @@ export default function BeritaAcara() {
   const [navActive, setNavActive] = React.useState('BAPP');
   const [tableContent, setTableContent] = React.useState([]);
 
-  React.useEffect(() => {
-    dataBAPP.forEach((item) => {
+  const generateTableContent = (data) => {
+    data.forEach((item) => {
       const rows = [
         { content: item.no_bapp },
         { content: item.tanggal },
@@ -83,6 +83,10 @@ export default function BeritaAcara() {
       ];
       setTableContent((prev) => [...prev, rows]);
     });
+  };
+
+  React.useEffect(() => {
+    generateTableContent(dataBAPP);
   }, []);
 
   return (
