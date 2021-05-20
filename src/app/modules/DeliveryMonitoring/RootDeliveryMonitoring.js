@@ -1,27 +1,14 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { useSubheader } from '../../../_metronic/layout';
-// import DeliveryMonitoring from "./DeliveryMonitoring";
-// import ItemDeliveryMonitoring from "./ItemDeliveryMonitoring";
-
-// import { DeliveryMonitoring } from "./pages/DeliveryMonitoringCopy";
 
 import {
   // FormattedMessage,
   injectIntl,
 } from 'react-intl';
 import { connect } from 'react-redux';
-// import DeliveryDocument from "./pages/DeliveryDocument";
-// import { useSelector } from "react-redux";
 
-// import { DeliveryMonitoring } from '../DeliveryMonitoring2/pages/DeliveryMonitoring';
-
-import {
-  ContractsPage,
-  ContractDetailPage,
-  TerminPage,
-  TerminPage2,
-} from './pages';
+import { ContractsPage, ContractDetailPage, TerminPage } from './pages';
 
 function DeliveryMonitoringRoutes(props) {
   // const { user } = useSelector((state) => state.auth);
@@ -37,13 +24,8 @@ function DeliveryMonitoringRoutes(props) {
       />
 
       <Route
-        path="/delivery_monitoring/contract/termin"
-        component={TerminPage}
-      />
-
-      <Route
         path="/delivery_monitoring/contract/:id/item"
-        component={TerminPage2}
+        component={TerminPage}
       />
 
       <Route
