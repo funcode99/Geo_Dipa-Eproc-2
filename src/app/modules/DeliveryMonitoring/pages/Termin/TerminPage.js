@@ -11,6 +11,7 @@ import {
 import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
 import Documents from './Documents';
 import BeritaAcara from './BeritaAcara';
+import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,16 +37,32 @@ const TabLists = [
   },
 ];
 
-const TerminPage2 = (props) => {
+const TerminPage = (props) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
 
-  function handleChangeTab(_, newTabActive) {
+  function handleChangeTab(e, newTabActive) {
     setTabActive(newTabActive);
   }
 
   return (
     <Container>
+      <SubBreadcrumbs
+        items={[
+          {
+            label: 'List of Contract & PO',
+            to: '/delivery_monitoring/contract',
+          },
+          {
+            label: `contract detail`,
+            to: `/delivery_monitoring/contract/1`,
+          },
+          {
+            label: 'Termin 1',
+            to: '',
+          },
+        ]}
+      />
       <Subheader
         text="Termin 1"
         IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
@@ -70,4 +87,4 @@ const TerminPage2 = (props) => {
   );
 };
 
-export default TerminPage2;
+export default TerminPage;

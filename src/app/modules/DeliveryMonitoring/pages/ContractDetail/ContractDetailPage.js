@@ -15,19 +15,16 @@ import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { Link, useParams } from 'react-router-dom';
 import Tabs from '../../../../components/tabs';
-// import http from '../libs/http';
-// import { rupiah } from '../libs/currency';
-// import { useSelector, useDispatch } from 'react-redux'
-// import { setDataContracts } from '../../_redux/deliveryMonitoringCrud';
 
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 import Subheader from '../../../../components/subheader';
+import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
     overflowX: 'auto',
   },
   table: {
@@ -173,6 +170,34 @@ export const ContractDetailPage = () => {
           <CircularProgress />
         </div>
       ) : null}
+
+      <SubBreadcrumbs
+        items={[
+          {
+            label: 'List of Contract & PO',
+            to: '/delivery_monitoring/contract',
+          },
+          {
+            label: `${dataContract[0] ? dataContract[0].name : 'x'}`,
+            to: '/',
+          },
+        ]}
+      />
+
+      {/* <Card className="p-2 mb-5">
+        <Breadcrumbs aria-label="Breadcrumb">
+          <Link
+            color="inherit"
+            to="/delivery_monitoring/contract"
+            // onClick={() => console.log('x')}
+          >
+            List of Contract & PO
+          </Link>
+          <Typography color="textPrimary">
+            {dataContract[0] ? dataContract[0].name : 'x'}
+          </Typography>
+        </Breadcrumbs>
+      </Card> */}
 
       <Subheader
         text={
