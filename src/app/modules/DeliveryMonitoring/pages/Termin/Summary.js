@@ -128,6 +128,15 @@ export default function Summary() {
                         ))}
                       </tr>
                     </thead>
+                    {loading ? (
+                      <tbdody>
+                        <tr hover>
+                          <td colSpan={4} className="align-middle">
+                            <CircularProgress />
+                          </td>
+                        </tr>
+                      </tbdody>
+                    ) : null}
                     {dataJasa.length !== 0 &&
                       dataJasa.map((item) => {
                         return (
@@ -209,11 +218,13 @@ export default function Summary() {
                       </tr>
                     </thead>
                     {loading ? (
-                      <tr hover>
-                        <td colSpan={4} className="align-middle">
-                          <CircularProgress />
-                        </td>
-                      </tr>
+                      <tbdody>
+                        <tr hover>
+                          <td colSpan={4} className="align-middle">
+                            <CircularProgress />
+                          </td>
+                        </tr>
+                      </tbdody>
                     ) : null}
                     <tbody>
                       {dataBarang.length !== 0 &&
