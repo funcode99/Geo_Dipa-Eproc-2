@@ -44,6 +44,13 @@ const CustomTable = ({
               </StyledHead>
             </StyledTableHead>
             <TableBody>
+              {tableContent.length < 1 ? (
+                <StyledTableRow>
+                  <TableCell colSpan={tableHeader.length} align="center">
+                    Empty Data
+                  </TableCell>
+                </StyledTableRow>
+              ) : null}
               {loading ? (
                 <StyledTableRow>
                   <TableCell colSpan={tableHeader.length} align="center">
