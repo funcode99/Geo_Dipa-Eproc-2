@@ -1,7 +1,11 @@
-import { makeStyles, CircularProgress } from '@material-ui/core';
+import { makeStyles, CircularProgress, Button } from '@material-ui/core';
 import React from 'react';
 import { Nav } from 'react-bootstrap';
-import { ExpandLessOutlined, ExpandMoreOutlined } from '@material-ui/icons';
+import {
+  ExpandLessOutlined,
+  ExpandMoreOutlined,
+  Send,
+} from '@material-ui/icons';
 import { Checkbox } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
@@ -11,7 +15,7 @@ import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   navLink: {
     fontWeight: 600,
@@ -93,7 +97,7 @@ export default function Summary() {
   };
 
   return (
-    <div className={classes.root}>
+    <div>
       <Toast />
 
       <Card>
@@ -128,6 +132,18 @@ export default function Summary() {
                         ))}
                       </tr>
                     </thead>
+                    {loading ? (
+                      <tbody>
+                        <tr>
+                          <td
+                            colSpan={theadItems.length}
+                            className="align-middle"
+                          >
+                            <CircularProgress />
+                          </td>
+                        </tr>
+                      </tbody>
+                    ) : null}
                     {dataJasa.length !== 0 &&
                       dataJasa.map((item) => {
                         return (
@@ -209,11 +225,13 @@ export default function Summary() {
                       </tr>
                     </thead>
                     {loading ? (
-                      <tr hover>
-                        <td colSpan={4} className="align-middle">
-                          <CircularProgress />
-                        </td>
-                      </tr>
+                      <tbody>
+                        <tr>
+                          <td className="align-middle">
+                            <CircularProgress />
+                          </td>
+                        </tr>
+                      </tbody>
                     ) : null}
                     <tbody>
                       {dataBarang.length !== 0 &&
@@ -245,6 +263,13 @@ export default function Summary() {
               </div>
             </div>
           )}
+
+          <div className="d-flex justify-content-end w-100">
+            <Button variant="contained" color="secondary" size="medium">
+              <span className="mr-1">Submit</span>
+              <Send />
+            </Button>
+          </div>
         </CardBody>
       </Card>
     </div>

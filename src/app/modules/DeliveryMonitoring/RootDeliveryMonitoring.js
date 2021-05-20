@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 
 import { ContractsPage, ContractDetailPage, TerminPage } from './pages';
 
-function DeliveryMonitoringRoutes(props) {
+function RootDeliveryMonitoring(props) {
   // const { user } = useSelector((state) => state.auth);
   // const { intl } = props;
   const suhbeader = useSubheader();
@@ -38,4 +38,4 @@ function DeliveryMonitoringRoutes(props) {
     </Switch>
   );
 }
-export default injectIntl(connect(null, null)(DeliveryMonitoringRoutes));
+export default injectIntl(connect(null, null)(RootDeliveryMonitoring));

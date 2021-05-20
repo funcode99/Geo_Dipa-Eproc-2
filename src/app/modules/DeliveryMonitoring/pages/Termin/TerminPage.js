@@ -11,6 +11,8 @@ import {
 import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
 import Documents from './Documents';
 import BeritaAcara from './BeritaAcara';
+import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,11 +38,12 @@ const TabLists = [
   },
 ];
 
-const TerminPage2 = (props) => {
+const TerminPage = (props) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
+  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
 
-  function handleChangeTab(_, newTabActive) {
+  function handleChangeTab(e, newTabActive) {
     setTabActive(newTabActive);
   }
 
@@ -50,6 +53,24 @@ const TerminPage2 = (props) => {
         text="Termin 1"
         IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
       />
+
+      <SubBreadcrumbs
+        items={[
+          {
+            label: 'List of Contract & PO',
+            to: '/delivery_monitoring/contract',
+          },
+          {
+            label: `${dataContractById[0].name}`,
+            to: `/delivery_monitoring/contract/${dataContractById[0].id}`,
+          },
+          {
+            label: 'Termin 1',
+            to: '',
+          },
+        ]}
+      />
+
       <Paper className={classes.paper}>
         <Container>
           <Tabs
@@ -70,4 +91,4 @@ const TerminPage2 = (props) => {
   );
 };
 
-export default TerminPage2;
+export default TerminPage;

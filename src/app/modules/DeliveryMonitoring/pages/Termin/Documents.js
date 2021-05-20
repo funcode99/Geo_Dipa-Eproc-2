@@ -249,7 +249,7 @@ export default function Documents() {
 
           <div className="d-flex justify-content-end w-100">
             <button
-              className="btn btn-outline-success btn-md mt-3 mb-2"
+              className="btn btn-outline-success btn-sm mt-3 mb-2"
               onClick={handleShowAddDelivModal}
             >
               <span className="nav-icon">

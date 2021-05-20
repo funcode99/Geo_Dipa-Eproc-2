@@ -1,38 +1,65 @@
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
-  makeStyles,
-  Icon,
-  CircularProgress,
-} from '@material-ui/core';
+import { Paper, makeStyles, Icon } from '@material-ui/core';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { Link } from 'react-router-dom';
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 import Subheader from '../../../../components/subheader';
+import CustomTable from '../../../../components/tables';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
     overflowX: 'auto',
+    padding: theme.spacing(2),
   },
   table: {
     minWidth: 650,
   },
 }));
 
+const tableHeaderContracts = [
+  'No Kontrak',
+  'No PO',
+  'Judul Pengadaan',
+  'Tanggal PO',
+  'Tanggal Kontrak',
+  'Group',
+  'Penyedia',
+  'Status',
+  'Action',
+];
+
 export const ContractsPage = () => {
   const classes = useStyles();
-  const [dataContracts, setDataContracts] = React.useState();
-  const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
+  const [loading, setLoading] = React.useState(false);
+  const [tableContent, setTableContent] = React.useState([]);
+
+  const generateTableContent = (data) => {
+    data.forEach((item) => {
+      const rows = [
+        { content: item.id },
+        { content: '' },
+        { content: item.name },
+        { content: '' },
+        { content: '' },
+        { content: '' },
+        { content: '' },
+        { content: '' },
+        {
+          content: (
+            <Link to={`/delivery_monitoring/contract/${item.id}`}>
+              <Icon className="fas fa-search pointer text-primary" />
+            </Link>
+          ),
+        },
+      ];
+      setTableContent((prev) => [...prev, rows]);
+    });
+  };
 
   const getDataContracts = async () => {
     try {
@@ -40,7 +67,7 @@ export const ContractsPage = () => {
       const {
         data: { data },
       } = await deliveryMonitoring.getDataContracts();
-      setDataContracts(data);
+      generateTableContent(data);
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -67,58 +94,12 @@ export const ContractsPage = () => {
       />
 
       <Paper className={classes.root}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell className="bg-primary text-white">
-                No Kontrak
-              </TableCell>
-              <TableCell className="bg-primary text-white">No PO</TableCell>
-              <TableCell className="bg-primary text-white">
-                Judul Pengadaan
-              </TableCell>
-              <TableCell className="bg-primary text-white">
-                Tanggal PO
-              </TableCell>
-              <TableCell className="bg-primary text-white">
-                Tanggal Kontrak
-              </TableCell>
-              <TableCell className="bg-primary text-white">Group</TableCell>
-              <TableCell className="bg-primary text-white">Penyedia</TableCell>
-              <TableCell className="bg-primary text-white">Status</TableCell>
-              <TableCell className="bg-primary text-white">Aksi</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow hover>
-                <TableCell colSpan={9} align="center">
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            ) : null}
-            {dataContracts &&
-              dataContracts.map((item) => {
-                return (
-                  <TableRow key={item.id} hover>
-                    <TableCell scope="row">{item.id}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>
-                      <Link to={`/delivery_monitoring/contract/${item.id}`}>
-                        <Icon className="fas fa-search pointer text-primary" />
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
+        <CustomTable
+          tableHeader={tableHeaderContracts}
+          tableContent={tableContent}
+          marginY="my-1"
+          hecto="hecto-13"
+        />
       </Paper>
     </>
   );
