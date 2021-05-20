@@ -26,9 +26,10 @@ const CustomTable = ({
   tableContent = exampleBody,
   align = 'center',
   loading = false,
+  marginY = 'my-10',
 }) => {
   return (
-    <div className="table-wrapper-scroll-y my-custom-scrollbar my-10">
+    <div className={`table-wrapper-scroll-y my-custom-scrollbar ${marginY}`}>
       <div className="segment-table">
         <div className="hecto-10">
           <StyledTable>
