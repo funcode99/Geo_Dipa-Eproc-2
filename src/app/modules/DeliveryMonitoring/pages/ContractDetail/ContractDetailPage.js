@@ -386,77 +386,9 @@ export const ContractDetailPage = () => {
               <CustomTable
                 tableHeader={tableHeaderTermin}
                 tableContent={tableContent}
-                marginY="my-3"
+                marginY="my-5"
                 hecto="hecto-16"
               />
-
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell className="text-white bg-primary">No</TableCell>
-                    <TableCell className="text-white bg-primary" align="left">
-                      Scope of Work
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Due Date
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Bobot
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Harga Pekerjaan
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Project Progress
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Document Progress
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Deliverables Document
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Status
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Action
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {dataContractById[0].tasks.map((item, index) => (
-                    <TableRow key={item.id}>
-                      <TableCell scope="row">{(index += 1)}</TableCell>
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="left">{item.due_date}</TableCell>
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="center">{item.progress}</TableCell>
-                      <TableCell align="center">
-                        {item.document_progress}
-                      </TableCell>
-                      <TableCell align="center">
-                        <Link
-                          to={`/delivery_monitoring/contract/${item.id}/item`}
-                        >
-                          <span>Document</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="center">
-                        <div className="d-flex justify-content-between flex-row">
-                          <button className="btn btn-sm p-1">
-                            <Icon className="fas fa-edit text-primary" />
-                          </button>
-                          <button className="btn btn-sm p-1 mr-2">
-                            <Icon className="fas fa-trash text-danger" />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
             </Container>
           </>
         ) : null}
