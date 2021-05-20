@@ -35,7 +35,6 @@ const tableHeaderContracts = [
 export const ContractsPage = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [dataContracts, setDataContracts] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
 
@@ -68,7 +67,6 @@ export const ContractsPage = () => {
       const {
         data: { data },
       } = await deliveryMonitoring.getDataContracts();
-      setDataContracts(data);
       generateTableContent(data);
     } catch (error) {
       setToast('Error API, please contact developer!');

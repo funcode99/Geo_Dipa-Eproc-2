@@ -13,7 +13,7 @@ export default function SubBreadcrumbs(props) {
   const { items = defaultItems } = props;
 
   return (
-    <Card className="p-2 mb-5">
+    <Card className="p-2 my-5">
       <Breadcrumbs aria-label="Breadcrumb">
         {items.map((item, index) =>
           index !== items.length - 1 ? (

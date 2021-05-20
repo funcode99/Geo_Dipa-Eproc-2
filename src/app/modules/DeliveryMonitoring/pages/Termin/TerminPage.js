@@ -49,6 +49,11 @@ const TerminPage = (props) => {
 
   return (
     <Container>
+      <Subheader
+        text="Termin 1"
+        IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
+      />
+
       <SubBreadcrumbs
         items={[
           {
@@ -65,10 +70,7 @@ const TerminPage = (props) => {
           },
         ]}
       />
-      <Subheader
-        text="Termin 1"
-        IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
-      />
+
       <Paper className={classes.paper}>
         <Container>
           <Tabs

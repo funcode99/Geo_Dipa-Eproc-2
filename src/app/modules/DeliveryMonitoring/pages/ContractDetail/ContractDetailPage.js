@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
-  makeStyles,
-  Icon,
-  CircularProgress,
-} from '@material-ui/core';
+import { Paper, makeStyles, Icon, CircularProgress } from '@material-ui/core';
 import { Form, Row, Col, Container } from 'react-bootstrap';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
@@ -229,19 +219,6 @@ export const ContractDetailPage = () => {
         </div>
       ) : null}
 
-      <SubBreadcrumbs
-        items={[
-          {
-            label: 'List of Contract & PO',
-            to: '/delivery_monitoring/contract',
-          },
-          {
-            label: `${dataContractById[0] ? dataContractById[0].name : 'x'}`,
-            to: '/',
-          },
-        ]}
-      />
-
       <Subheader
         text={
           dataContractById[0]
@@ -255,6 +232,20 @@ export const ContractDetailPage = () => {
           />
         }
       />
+
+      <SubBreadcrumbs
+        items={[
+          {
+            label: 'List of Contract & PO',
+            to: '/delivery_monitoring/contract',
+          },
+          {
+            label: `${dataContractById[0] ? dataContractById[0].name : 'x'}`,
+            to: '/',
+          },
+        ]}
+      />
+
       <Paper className={classes.root}>
         <Container>
           <Tabs

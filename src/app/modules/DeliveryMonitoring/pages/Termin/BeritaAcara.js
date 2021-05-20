@@ -439,7 +439,7 @@ export default function BeritaAcara() {
                 print BAPP
               </Button>
               <CustomTable
-                tableHeader={tableHeaderBAPP}
+                tableHeader={tableHeaderBAST}
                 tableContent={tableContent}
                 marginY="my-3"
               />
