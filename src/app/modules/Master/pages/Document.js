@@ -134,16 +134,14 @@ export const Documents = ({ typeId }) => {
       const {
         data: { data },
       } = await master.getDocList();
-      const { options } = data;
-      // console.log(options);
-      const value = options.document_types.filter((item) => {
+
+      const value = data.document_types.filter((item) => {
         return item.id === typeId;
       });
       if (value.length > 0) {
         setPeriodic(value[0].periode !== null);
       }
-      setOptions(options);
-      // setData(data.data);
+      setOptions(data);
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
