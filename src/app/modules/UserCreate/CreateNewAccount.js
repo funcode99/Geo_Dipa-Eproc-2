@@ -67,7 +67,7 @@ function CreateNewAccount(props) {
                 })
             )
             .matches(
-                /^[a-zA-Z0-9]{3,50}$/,
+                /^[a-zA-Z0-9-_.]{3,50}$/,
                 intl.formatMessage({
                     id: "TITLE.CREATE_ACCOUNT.VALIDATION.USERNAME_NOT_INCLUDE_SYMBOLS",
                 })
