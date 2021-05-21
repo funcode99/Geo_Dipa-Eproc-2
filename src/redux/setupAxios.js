@@ -1,5 +1,7 @@
 import { MODAL } from "../service/modalSession/ModalService";
+import { DEV_NODE } from './BaseHost';
 export default function setupAxios(axios, store) {
+  axios.defaults.baseURL = DEV_NODE;
   axios.interceptors.request.use(
     config => {
       const {
@@ -22,7 +24,7 @@ export default function setupAxios(axios, store) {
     return response;
   }, function (error) {
     console.log("error", error);
-    if(error.response?.status === 401 && error.response?.data.error.message === "You have to login first."){
+    if(error.response?.status === 400 && error.response?.data.message === "TokenExpiredError"){
       var title = "";
       var message = "";
       var button = "";
@@ -32,7 +34,7 @@ export default function setupAxios(axios, store) {
         button = "Keluar";
       }else{
         title = "Session Log In";
-        message = "Your session time is over. Please sign in again!!";
+        message = "Your session time is over. Please sign in again !!";
         button = "Sign Out";
       }
       MODAL.showSession(title, message, button);
