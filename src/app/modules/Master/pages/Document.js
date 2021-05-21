@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
+  // Table,
+  // TableBody,
+  // TableCell,
   Paper,
   makeStyles,
   Icon,
@@ -13,27 +13,29 @@ import {
   InputLabel,
   MenuItem,
 } from '@material-ui/core';
-import SVG from 'react-inlinesvg';
+// import SVG from 'react-inlinesvg';
 import { useFormik } from 'formik';
-import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
+// import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import * as master from '../service/MasterCrud';
 // import http from '../../libs/http';
 import {
   Flex,
-  StyledTableHead,
+  // StyledTableHead,
   Input,
   IconWrapper,
-  StyledTableRow,
-  StyledHead,
-  SubWrap,
+  // StyledTableRow,
+  // StyledHead,
+  // SubWrap,
   InputWrapper,
   SelectStyled,
   FormContent,
 } from './style';
 import { StyledModal } from '../../../components/modals';
 import useToast from '../../../components/toast';
+import CustomTable from '../../../components/tables';
+import Subheader from '../../../components/subheader';
 // import DocumentsTable from './Document';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,13 +52,14 @@ const useStyles = makeStyles((theme) => ({
 export const Documents = ({ typeId }) => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [dataList, setData] = React.useState();
+  // const [dataList, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
   const [confirm, setConfirm] = React.useState({ show: false, id: '' });
   const [update, setUpdate] = React.useState({ id: '', update: false });
   const [loading, setLoading] = React.useState(false);
   const [periodic, setPeriodic] = React.useState(false);
   const [options, setOptions] = React.useState();
+  const [tableContent, setTableContent] = React.useState([]);
 
   const FormSchema = Yup.object().shape({
     document_name: Yup.string()
@@ -91,22 +94,54 @@ export const Documents = ({ typeId }) => {
   //   }
   // };
 
+  const generateTableContent = (data) => {
+    data.forEach((item, i) => {
+      const rows = [
+        { content: i + 1, props: { width: '5%' } },
+        { content: item.name },
+        {
+          content: item.is_periodic ? (
+            <Icon className="fas fa-check-circle" color="primary" />
+          ) : (
+            <Icon className="fas fa-times-circle" color="error" />
+          ),
+        },
+        {
+          content: (
+            <IconWrapper>
+              <Icon
+                style={{ marginInline: 5 }}
+                className="fas fa-edit"
+                onClick={() => handleModal('update', item.id)}
+              />
+              <Icon
+                style={{ marginInline: 5 }}
+                className="fas fa-trash"
+                color="error"
+                onClick={() => setConfirm({ show: true, id: item.id })}
+              />
+            </IconWrapper>
+          ),
+        },
+      ];
+      setTableContent((prev) => [...prev, rows]);
+    });
+  };
+
   const getOptions = async () => {
     try {
       setLoading(true);
       const {
         data: { data },
       } = await master.getDocList();
-      const { options } = data;
-      // console.log(options);
-      const value = options.document_types.filter((item) => {
+
+      const value = data.document_types.filter((item) => {
         return item.id === typeId;
       });
       if (value.length > 0) {
         setPeriodic(value[0].periode !== null);
       }
-      setOptions(options);
-      // setData(data.data);
+      setOptions(data);
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -121,10 +156,11 @@ export const Documents = ({ typeId }) => {
         data: { data },
       } = await master.getDocumentByType(typeId);
       if (typeId !== ' ') {
-        console.log('x');
         formik.setValues({ document_type: typeId });
       }
-      setData(data.data);
+      // setData(data.data);
+      // setData(data);
+      generateTableContent(data);
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -364,18 +400,10 @@ export const Documents = ({ typeId }) => {
         </Flex>
       </StyledModal>
       <div>
-        <div className="d-flex align-items-center flex-wrap mr-1">
-          <SubWrap className="mr-2 iconWrap">
-            <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
-            </span>
-          </SubWrap>
-          <div className="d-flex align-items-baseline mr-5">
-            <h2 className="text-dark font-weight-bold my-2 mr-5">
-              Master Document
-            </h2>
-          </div>
-        </div>
+        <Subheader
+          text="Master Dokumen"
+          // IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
+        />
         <Flex>
           <div></div>
           <Button
@@ -389,7 +417,14 @@ export const Documents = ({ typeId }) => {
         </Flex>
 
         <Paper className={classes.root} style={{ marginBottom: 30 }}>
-          <Table className={classes.table}>
+          <CustomTable
+            tableHeader={['No', 'Dokumen', 'Periode Hari', 'Action']}
+            tableContent={tableContent}
+            marginY="my-1"
+            hecto="hecto-10"
+            loading={loading}
+          />
+          {/* <Table className={classes.table}>
             <StyledTableHead>
               <StyledHead>
                 <TableCell>No</TableCell>
@@ -431,12 +466,6 @@ export const Documents = ({ typeId }) => {
                   </TableCell>
                   <TableCell align="center">
                     <IconWrapper>
-                      {/* TODO: select document row for open doc table  */}
-                      {/* <Icon
-                        style={{ marginInline: 5 }}
-                        className="fas fa-search"
-                        onClick={() => setType(row.id)}
-                      /> */}
                       <Icon
                         style={{ marginInline: 5 }}
                         className="fas fa-edit"
@@ -453,7 +482,7 @@ export const Documents = ({ typeId }) => {
                 </StyledTableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
         </Paper>
         {/* {docId ? <DocumentsTable dataList={docId} /> : null} */}
       </div>

@@ -54,7 +54,7 @@ export function deletePeriode(id) {
 // Document
 
 export function getDocList() {
-  return axios.get(`${TEMP_URL}/delivery/document`);
+  return axios.get(`${TEMP_URL}/delivery/options`);
 }
 
 export function getDocumentByType(id) {

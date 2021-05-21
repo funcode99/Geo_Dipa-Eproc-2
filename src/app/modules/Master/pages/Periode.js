@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
+  // Table,
+  // TableBody,
+  // TableCell,
   Paper,
   makeStyles,
   Icon,
@@ -10,24 +10,26 @@ import {
   Container,
   CircularProgress,
 } from '@material-ui/core';
-import SVG from 'react-inlinesvg';
+// import SVG from 'react-inlinesvg';
 import { useFormik } from 'formik';
-import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
+// import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import * as master from '../service/MasterCrud';
 // import http from '../../libs/http';
 import {
   Flex,
-  StyledTableHead,
+  // StyledTableHead,
   Input,
   IconWrapper,
-  StyledTableRow,
-  StyledHead,
-  SubWrap,
+  // StyledTableRow,
+  // StyledHead,
+  // SubWrap,
 } from './style';
 import { StyledModal } from '../../../components/modals';
 import useToast from '../../../components/toast';
+import CustomTable from '../../../components/tables';
+import Subheader from '../../../components/subheader';
 // import DocumentsTable from './Document';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,11 +46,12 @@ const useStyles = makeStyles((theme) => ({
 export const Periode = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [data, setData] = React.useState();
+  // const [data, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
   const [confirm, setConfirm] = React.useState({ show: false, id: '' });
   const [update, setUpdate] = React.useState({ id: '', update: false });
   const [loading, setLoading] = React.useState(false);
+  const [tableContent, setTableContent] = React.useState([]);
 
   const FormSchema = Yup.object().shape({
     periode_name: Yup.string()
@@ -69,13 +72,42 @@ export const Periode = () => {
     periode_value: 0,
   };
 
+  const generateTableContent = (data) => {
+    data.forEach((item, i) => {
+      const rows = [
+        { content: i + 1, props: { width: '5%' } },
+        { content: item.name },
+        { content: item.value },
+        {
+          content: (
+            <IconWrapper>
+              <Icon
+                style={{ marginInline: 5 }}
+                className="fas fa-edit"
+                onClick={() => handleModal('update', item.id)}
+              />
+              <Icon
+                style={{ marginInline: 5 }}
+                className="fas fa-trash"
+                color="error"
+                onClick={() => setConfirm({ show: true, id: item.id })}
+              />
+            </IconWrapper>
+          ),
+        },
+      ];
+      setTableContent((prev) => [...prev, rows]);
+    });
+  };
+
   const getList = async () => {
     try {
       setLoading(true);
       const {
         data: { data },
       } = await master.getPeriodeList();
-      setData(data);
+      generateTableContent(data);
+      // setData(data);
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -255,18 +287,10 @@ export const Periode = () => {
         </Flex>
       </StyledModal>
       <div>
-        <div className="d-flex align-items-center flex-wrap mr-1">
-          <SubWrap className="mr-2 iconWrap">
-            <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
-            </span>
-          </SubWrap>
-          <div className="d-flex align-items-baseline mr-5">
-            <h2 className="text-dark font-weight-bold my-2 mr-5">
-              Master Periode
-            </h2>
-          </div>
-        </div>
+        <Subheader
+          text="Master Periode"
+          // IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
+        />
         <Flex>
           <div></div>
           <Button
@@ -280,7 +304,14 @@ export const Periode = () => {
         </Flex>
 
         <Paper className={classes.root} style={{ marginBottom: 30 }}>
-          <Table className={classes.table}>
+          <CustomTable
+            tableHeader={['No', 'Nama', 'Value (dalam hari)', 'Action']}
+            tableContent={tableContent}
+            marginY="my-1"
+            hecto="hecto-10"
+            loading={loading}
+          />
+          {/* <Table className={classes.table}>
             <StyledTableHead>
               <StyledHead>
                 <TableCell>No</TableCell>
@@ -324,7 +355,7 @@ export const Periode = () => {
                 </StyledTableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
         </Paper>
       </div>
     </Container>

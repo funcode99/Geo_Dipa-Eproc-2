@@ -99,6 +99,7 @@ export const ContractsPage = () => {
           tableContent={tableContent}
           marginY="my-1"
           hecto="hecto-13"
+          loading={loading}
         />
       </Paper>
     </>

@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
   Paper,
   makeStyles,
   Icon,
@@ -12,25 +9,19 @@ import {
   Checkbox,
   CircularProgress,
 } from '@material-ui/core';
-import SVG from 'react-inlinesvg';
+// import SVG from 'react-inlinesvg';
 import { useFormik } from 'formik';
-import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
+// import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import * as master from '../service/MasterCrud';
 // import http from '../../libs/http';
-import {
-  Flex,
-  StyledTableHead,
-  Input,
-  IconWrapper,
-  StyledTableRow,
-  StyledHead,
-  SubWrap,
-} from './style';
+import { Flex, Input, IconWrapper } from './style';
 import { StyledModal } from '../../../components/modals';
 import useToast from '../../../components/toast';
 import DocumentsTable from './Document';
+import CustomTable from '../../../components/tables';
+import Subheader from '../../../components/subheader';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,13 +37,13 @@ const useStyles = makeStyles((theme) => ({
 export const DocumentTypes = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [docType, setDocType] = React.useState();
+  // const [docType, setDocType] = React.useState();
   const [modals, setModals] = React.useState(false);
   const [docId, setType] = React.useState();
   const [confirm, setConfirm] = React.useState({ show: false, id: '' });
   const [update, setUpdate] = React.useState({ id: '', update: false });
   const [loading, setLoading] = React.useState(false);
-  // const [form, setForm] = React.useState({ name: '', checked: false });
+  const [tableContent, setTableContent] = React.useState([]);
 
   const FormSchema = Yup.object().shape({
     document_name: Yup.string()
@@ -72,13 +63,53 @@ export const DocumentTypes = () => {
     check_periodic: false,
   };
 
+  const generateTableContent = (data) => {
+    data.forEach((item, i) => {
+      const rows = [
+        { content: i + 1, props: { width: '5%' } },
+        { content: item.name },
+        {
+          content: item.is_periodic ? (
+            <Icon className="fas fa-check-circle" color="primary" />
+          ) : (
+            <Icon className="fas fa-times-circle" color="error" />
+          ),
+        },
+        {
+          content: (
+            <IconWrapper>
+              <Icon
+                style={{ marginInline: 5 }}
+                className="fas fa-search"
+                onClick={() => setType(item.id)}
+              />
+              <Icon
+                style={{ marginInline: 5 }}
+                className="fas fa-edit"
+                onClick={() => handleModal('update', item.id)}
+              />
+              <Icon
+                style={{ marginInline: 5 }}
+                className="fas fa-trash"
+                color="error"
+                onClick={() => setConfirm({ show: true, id: item.id })}
+              />
+            </IconWrapper>
+          ),
+        },
+      ];
+      setTableContent((prev) => [...prev, rows]);
+    });
+  };
+
   const getList = async () => {
     try {
       setLoading(true);
       const {
         data: { data },
       } = await master.getList();
-      setDocType(data);
+      // setDocType(data);
+      generateTableContent(data);
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -87,6 +118,17 @@ export const DocumentTypes = () => {
   };
 
   React.useEffect(() => {
+    const rows1 = [
+      {
+        content: (
+          <Button variant="contained" onClick={() => setType(' ')}>
+            See all document type
+          </Button>
+        ),
+        props: { colSpan: 4 },
+      },
+    ];
+    setTableContent((prev) => [...prev, rows1]);
     getList();
     // eslint-disable-next-line
   }, []);
@@ -123,38 +165,6 @@ export const DocumentTypes = () => {
     },
   });
 
-  // const getInputClasses = (fieldname) => {
-  //   if (formik.touched[fieldname] && formik.errors[fieldname]) {
-  //     return 'is-invalid';
-  //   }
-
-  //   if (formik.touched[fieldname] && !formik.errors[fieldname]) {
-  //     return 'is-valid';
-  //   }
-
-  //   return '';
-  // };
-
-  // const {
-  //   // register,
-  //   handleSubmit,
-  //   setValue,
-  //   formState: { errors },
-  // } = useForm({
-  //   resolver: yupResolver(FormSchema),
-  // });
-
-  // const getDocType = async () => {
-  //   try {
-  //     const { data } = await http.get(`/document-type`);
-  //     // console.log(data);
-  //     setDocType(data);
-  //   } catch (error) {
-  //     setToast('Error with API, please contact Developer!');
-  //     window.console.error(error);
-  //   }
-  // };
-
   const handleClose = () => {
     setModals(false);
   };
@@ -175,32 +185,6 @@ export const DocumentTypes = () => {
     }
     setModals(true);
   };
-
-  // TODO : delete unused code
-  // const formSubmit = async (values) => {
-  //   try {
-  //     setLoading(true);
-
-  //     const requestData = {
-  //       name: values.document_name,
-  //       is_periodic: values.check_periodic === 'true',
-  //     };
-  //     console.log(requestData);
-  //     // const { status } = update.update
-  //     //   ? await http.put(`/document-type/${update.id}`, requestData)
-  //     //   : await http.post(`/document-type`, requestData);
-  //     // if (status) {
-  //     //   getDocType();
-  //     //   setModals(false);
-  //     //   setForm({ checked: false, name: '' });
-  //     // }
-  //   } catch (error) {
-  //     setToast('Error with API, please contact Developer!');
-  //     console.error(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleDelete = async () => {
     try {
@@ -317,18 +301,10 @@ export const DocumentTypes = () => {
         </Flex>
       </StyledModal>
       <div>
-        <div className="d-flex align-items-center flex-wrap mr-1">
-          <SubWrap className="mr-2 iconWrap">
-            <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
-            </span>
-          </SubWrap>
-          <div className="d-flex align-items-baseline mr-5">
-            <h2 className="text-dark font-weight-bold my-2 mr-5">
-              Master Document Type
-            </h2>
-          </div>
-        </div>
+        <Subheader
+          text="Master Document Type"
+          // IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
+        />
         <Flex>
           <div></div>
           <Button
@@ -342,7 +318,14 @@ export const DocumentTypes = () => {
         </Flex>
 
         <Paper className={classes.root} style={{ marginBottom: 30 }}>
-          <Table className={classes.table}>
+          <CustomTable
+            tableHeader={['No', 'Dokumen', 'Periode', 'Action']}
+            tableContent={tableContent}
+            marginY="my-1"
+            hecto="hecto-10"
+            loading={loading}
+          />
+          {/* <Table className={classes.table}>
             <StyledTableHead>
               <StyledHead>
                 <TableCell>No</TableCell>
@@ -355,9 +338,7 @@ export const DocumentTypes = () => {
               </StyledHead>
             </StyledTableHead>
             <TableBody>
-              {/* TODO: create open document table  */}
               <StyledTableRow hover onClick={() => setType(' ')}>
-                {/* <StyledTableRow hover> */}
                 <TableCell colSpan={4} align="center">
                   <Button variant="contained">See all document type</Button>
                 </TableCell>
@@ -388,7 +369,6 @@ export const DocumentTypes = () => {
                   </TableCell>
                   <TableCell align="center">
                     <IconWrapper>
-                      {/* TODO: select document row for open doc table  */}
                       <Icon
                         style={{ marginInline: 5 }}
                         className="fas fa-search"
@@ -410,7 +390,7 @@ export const DocumentTypes = () => {
                 </StyledTableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
         </Paper>
         {docId ? <DocumentsTable typeId={docId} /> : null}
       </div>
