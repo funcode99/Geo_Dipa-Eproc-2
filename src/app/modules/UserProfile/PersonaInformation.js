@@ -17,7 +17,7 @@ function PersonaInformation(props) {
   const [alert, setAlert] = useState({status: false, message:"", variant: "primary"});
   // const [pic, setPic] = useState("");
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user, shallowEqual);
+  const user = useSelector((state) => state.auth.user.data, shallowEqual);
   useEffect(() => {
     // if (user.pic) {
     //   setPic(user.pic);
@@ -58,12 +58,12 @@ function PersonaInformation(props) {
   // UI Helpers
   const initialValues = {
     // pic: user.pic,
-    full_name: user.party.full_name,
+    full_name: user.full_name,
     // lastname: user.lastname,
     // companyName: user.companyName,
     // phone: user.phone,
     email: user.email,
-    position_name: user.party.personnel.position_name,
+    position_name: user.position,
     // website: user.website,
   };
   const Schema = Yup.object().shape({
