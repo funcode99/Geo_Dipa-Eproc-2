@@ -335,6 +335,17 @@ export function AsideMenuList({ layoutProps }) {
                   <span className="menu-text">Periode</span>
                 </NavLink>
               </li>
+              <li
+                className={`menu-item ${getMenuItemActive('/master/roles')}`}
+                aria-haspopup="true"
+              >
+                <NavLink className="menu-link" to="/master/roles">
+                  <i className="menu-bullet menu-bullet-dot">
+                    <span />
+                  </i>
+                  <span className="menu-text">Roles</span>
+                </NavLink>
+              </li>
             </ul>
           </div>
         </li>
