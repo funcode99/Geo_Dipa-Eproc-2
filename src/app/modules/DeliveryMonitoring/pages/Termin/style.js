@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TableCell } from '@material-ui/core';
+import { TableCell, TableHead, TableRow, Table } from '@material-ui/core';
 
 export const Container = styled.div`
   width: 100%;
@@ -14,29 +14,39 @@ export const TableCellStyled = styled(TableCell)`
   font-size: 1rem;
 `;
 
-export const TableHeadStyled = ({ rows }) => {
-  return (
-    <thead>
-      <tr className="text-muted">
-        {rows.map((row) => (
-          <th>{row}</th>
-        ))}
-      </tr>
-    </thead>
-  );
-};
+export const StyledTableHead = styled(TableHead)`
+&&& {
+  background: linear-gradient(
+    90deg,
+    rgba(111, 227, 255, 1) 0%,
+    rgba(47, 199, 245, 1) 100%
+  ) !important;
+`;
 
-export const TableResponsive = ({ children }) => {
-  return (
-    <div className="table-responsive" style={{ maxHeight: '30vh' }}>
-      {children}
-    </div>
-  );
-};
+export const StyledHead = styled(TableRow)`
+  tr,
+  th {
+    background: transparent;
+    border: 1px solid #ebedf3;
+    color: #ffffff;
+    padding: 0.5rem 2rem;
+    font-size: 14px;
+  }
+`;
 
-export const TableStyled = ({ children }) => {
-  return <table className="table table-hover table-bordered">{children}</table>;
-};
+export const StyledTableRow = styled(TableRow)`
+  td,
+  th {
+    border: 1px solid #ebedf3;
+    padding: 0.5rem 2rem;
+    font-size: 14px;
+  }
+`;
+
+export const StyledTable = styled(Table)`
+  overflow: auto;
+  font-size: 0.75rem;
+`;
 
 export const SelectStyled = (props) => {
   const { options, label, onChange } = props;

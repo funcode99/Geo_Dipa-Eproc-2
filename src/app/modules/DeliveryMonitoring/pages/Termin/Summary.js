@@ -1,4 +1,10 @@
-import { makeStyles, CircularProgress, Button } from '@material-ui/core';
+import {
+  TableCell,
+  makeStyles,
+  CircularProgress,
+  Button,
+  TableBody,
+} from '@material-ui/core';
 import React from 'react';
 import { Nav } from 'react-bootstrap';
 import {
@@ -12,6 +18,8 @@ import { actionTypes } from '../../_redux/deliveryMonitoringAction';
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
+import { StyledTableHead } from '../../../../components/tables/style';
+import { StyledHead, StyledTable, StyledTableRow } from './style';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -119,89 +127,105 @@ export default function Summary() {
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
                 <div className="hecto-10">
-                  <table className="table-bordered overflow-auto">
-                    <thead>
-                      <tr>
+                  <StyledTable className="table-bordered overflow-auto">
+                    <StyledTableHead>
+                      <StyledHead>
                         {theadItems.map((item) => (
-                          <th
-                            className="bg-primary text-white align-middle"
+                          <TableCell
+                            className="text-white align-middle"
                             key={item.id}
                           >
                             {item.label}
-                          </th>
+                          </TableCell>
                         ))}
-                      </tr>
-                    </thead>
-                    {loading ? (
-                      <tbody>
-                        <tr>
-                          <td
+                      </StyledHead>
+                    </StyledTableHead>
+                    <TableBody>
+                      {dataJasa.length < 1 ? (
+                        <StyledTableRow>
+                          <TableCell
                             colSpan={theadItems.length}
-                            className="align-middle"
+                            className="text-center"
+                          >
+                            Empty Data
+                          </TableCell>
+                        </StyledTableRow>
+                      ) : null}
+                      {loading ? (
+                        <StyledTableRow>
+                          <TableCell
+                            colSpan={theadItems.length}
+                            className="text-center"
                           >
                             <CircularProgress />
-                          </td>
-                        </tr>
-                      </tbody>
-                    ) : null}
-                    {dataJasa.length !== 0 &&
-                      dataJasa.map((item) => {
+                          </TableCell>
+                        </StyledTableRow>
+                      ) : null}
+                      {dataJasa.map((item) => {
                         return (
                           <React.Fragment key={item.id}>
-                            <tbody>
-                              <tr>
-                                <td className="align-middle">
-                                  <button
-                                    className="btn btn-primary btn-sm p-0 align-middle"
-                                    onClick={(e) => handleExpand(e, item.id)}
-                                  >
-                                    {item.show ? (
-                                      <ExpandLessOutlined />
-                                    ) : (
-                                      <ExpandMoreOutlined />
-                                    )}
-                                  </button>
-                                </td>
-                                <td className="align-middle">{item.name}</td>
-                                <td className="align-middle">31/01/2021</td>
-                                <td className="align-middle">{item.qty}</td>
-                                <td className="align-middle"></td>
-                                <td className="align-middle">{item.price}</td>
-                                <td className="align-middle"></td>
-                              </tr>
-                            </tbody>
-                            {item.services.length !== 0 && item.show ? (
-                              <tbody>
-                                {item.services.map((service) => (
-                                  <tr key={service.id}>
-                                    <td className="align-middle">
+                            <StyledTableRow>
+                              <TableCell className="align-middle">
+                                <button
+                                  className="btn btn-primary btn-sm p-0 align-middle"
+                                  onClick={(e) => handleExpand(e, item.id)}
+                                >
+                                  {item.show ? (
+                                    <ExpandLessOutlined />
+                                  ) : (
+                                    <ExpandMoreOutlined />
+                                  )}
+                                </button>
+                              </TableCell>
+                              <TableCell className="align-middle">
+                                {item.name}
+                              </TableCell>
+                              <TableCell className="align-middle">
+                                31/01/2021
+                              </TableCell>
+                              <TableCell className="align-middle">
+                                {item.qty}
+                              </TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                              <TableCell className="align-middle">
+                                {item.price}
+                              </TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                            </StyledTableRow>
+
+                            {item.services.length !== 0 && item.show
+                              ? item.services.map((service) => (
+                                  <StyledTableRow key={service.id}>
+                                    <TableCell className="align-middle">
                                       <Checkbox
                                         name={`checkbox-${service.id}`}
                                         color="secondary"
                                         onChange={(e) => console.log(e)}
                                         size="small"
                                       />
-                                    </td>
-                                    <td className="align-middle">
+                                    </TableCell>
+                                    <TableCell className="align-middle">
                                       {service.name}
-                                    </td>
-                                    <td className="align-middle">31/01/2021</td>
-                                    <td className="align-middle">
+                                    </TableCell>
+                                    <TableCell className="align-middle">
+                                      31/01/2021
+                                    </TableCell>
+                                    <TableCell className="align-middle">
                                       {service.qty}
-                                    </td>
-                                    <td className="align-middle"></td>
-                                    <td className="align-middle">
+                                    </TableCell>
+                                    <TableCell className="align-middle"></TableCell>
+                                    <TableCell className="align-middle">
                                       {service.price}
-                                    </td>
-                                    <td className="align-middle"></td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            ) : null}
+                                    </TableCell>
+                                    <TableCell className="align-middle"></TableCell>
+                                  </StyledTableRow>
+                                ))
+                              : null}
                           </React.Fragment>
                         );
                       })}
-                  </table>
+                    </TableBody>
+                  </StyledTable>
                 </div>
               </div>
             </div>
@@ -211,34 +235,45 @@ export default function Summary() {
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
                 <div className="hecto-10">
-                  <table className="table-bordered overflow-auto">
-                    <thead>
-                      <tr>
+                  <StyledTable className="table-bordered overflow-auto">
+                    <StyledTableHead>
+                      <StyledHead>
                         {theadItems.map((item) => (
-                          <th
-                            className="bg-primary text-white align-middle"
+                          <TableCell
+                            className="text-white align-middle"
                             key={item.id}
                           >
                             {item.label}
-                          </th>
+                          </TableCell>
                         ))}
-                      </tr>
-                    </thead>
-                    {loading ? (
-                      <tbody>
-                        <tr>
-                          <td className="align-middle">
+                      </StyledHead>
+                    </StyledTableHead>
+                    <TableBody>
+                      {dataBarang.length < 1 ? (
+                        <StyledTableRow>
+                          <TableCell
+                            colSpan={theadItems.length}
+                            className="text-center"
+                          >
+                            Empty Data
+                          </TableCell>
+                        </StyledTableRow>
+                      ) : null}
+                      {loading ? (
+                        <StyledTableRow>
+                          <TableCell
+                            colSpan={theadItems.length}
+                            className="text-center"
+                          >
                             <CircularProgress />
-                          </td>
-                        </tr>
-                      </tbody>
-                    ) : null}
-                    <tbody>
+                          </TableCell>
+                        </StyledTableRow>
+                      ) : null}
                       {dataBarang.length !== 0 &&
                         dataBarang.map((item) => {
                           return (
-                            <tr key={item.id}>
-                              <td className="align-middle">
+                            <StyledTableRow key={item.id}>
+                              <TableCell className="align-middle">
                                 <Checkbox
                                   name={`checkbox-${item.id}`}
                                   color="secondary"
@@ -247,18 +282,26 @@ export default function Summary() {
                                   width={50}
                                   variant="body"
                                 />
-                              </td>
-                              <td className="align-middle">{item.name}</td>
-                              <td className="align-middle">31/01/2021</td>
-                              <td className="align-middle">{item.qty}</td>
-                              <td className="align-middle"></td>
-                              <td className="align-middle">{item.price}</td>
-                              <td className="align-middle"></td>
-                            </tr>
+                              </TableCell>
+                              <TableCell className="align-middle">
+                                {item.name}
+                              </TableCell>
+                              <TableCell className="align-middle">
+                                31/01/2021
+                              </TableCell>
+                              <TableCell className="align-middle">
+                                {item.qty}
+                              </TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                              <TableCell className="align-middle">
+                                {item.price}
+                              </TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                            </StyledTableRow>
                           );
                         })}
-                    </tbody>
-                  </table>
+                    </TableBody>
+                  </StyledTable>
                 </div>
               </div>
             </div>

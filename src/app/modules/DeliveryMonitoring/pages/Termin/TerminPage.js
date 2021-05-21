@@ -61,8 +61,8 @@ const TerminPage = (props) => {
             to: '/delivery_monitoring/contract',
           },
           {
-            label: `${dataContractById[0].name}`,
-            to: `/delivery_monitoring/contract/${dataContractById[0].id}`,
+            label: `${dataContractById[0]?.name || 'no data'}`,
+            to: `/delivery_monitoring/contract/${dataContractById[0]?.id || 1}`,
           },
           {
             label: 'Termin 1',
