@@ -41,14 +41,14 @@ export const ContractsPage = () => {
   const generateTableContent = (data) => {
     data.forEach((item) => {
       const rows = [
-        { content: item.id },
+        { content: item.contract_no },
+        { content: item.purch_order_no },
+        { content: item.contract_name },
         { content: '' },
-        { content: item.name },
+        { content: item.issued_date },
         { content: '' },
-        { content: '' },
-        { content: '' },
-        { content: '' },
-        { content: '' },
+        { content: item.vendor.code },
+        { content: item.state },
         {
           content: (
             <Link to={`/delivery_monitoring/contract/${item.id}`}>
