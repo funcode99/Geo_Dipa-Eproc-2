@@ -98,3 +98,10 @@ export function getUserByToken() {
 export function forgotPassword(username) {
   return axios.post(FORGOT_PASSWORD_URL, { data: { login: username } });
 }
+
+
+// master data roles
+
+export function getRolesBKB() {
+  return axios.get(`data/get_role_bkb`);
+}
