@@ -20,6 +20,7 @@ import useToast from '../../../../components/toast';
 import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
 import { StyledTableHead } from '../../../../components/tables/style';
 import { StyledHead, StyledTable, StyledTableRow } from './style';
+import { rupiah } from '../../../../libs/currency';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,10 +86,6 @@ export default function Summary() {
     // eslint-disable-next-line
   }, []);
 
-  const handleNavClick = (type) => {
-    setNavActive(type);
-  };
-
   const handleExpand = (event, itemId) => {
     let tempJasa = dataJasa;
 
@@ -111,12 +108,12 @@ export default function Summary() {
       <Card>
         <CardBody>
           <Nav variant="pills" defaultActiveKey="link-jasa">
-            <Nav.Item onClick={() => handleNavClick('Jasa')}>
+            <Nav.Item onClick={() => setNavActive('Jasa')}>
               <Nav.Link eventKey="link-jasa" className={classes.navLink}>
                 Jasa
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item onClick={() => handleNavClick('Barang')}>
+            <Nav.Item onClick={() => setNavActive('Barang')}>
               <Nav.Link eventKey="link-barang" className={classes.navLink}>
                 Barang
               </Nav.Link>
@@ -188,7 +185,7 @@ export default function Summary() {
                               </TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle">
-                                {item.price}
+                                {rupiah(item.price)}
                               </TableCell>
                               <TableCell className="align-middle"></TableCell>
                             </StyledTableRow>
@@ -215,7 +212,7 @@ export default function Summary() {
                                     </TableCell>
                                     <TableCell className="align-middle"></TableCell>
                                     <TableCell className="align-middle">
-                                      {service.price}
+                                      {rupiah(service.price)}
                                     </TableCell>
                                     <TableCell className="align-middle"></TableCell>
                                   </StyledTableRow>
@@ -294,7 +291,7 @@ export default function Summary() {
                               </TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle">
-                                {item.price}
+                                {rupiah(item.price)}
                               </TableCell>
                               <TableCell className="align-middle"></TableCell>
                             </StyledTableRow>
