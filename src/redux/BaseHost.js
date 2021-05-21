@@ -1,6 +1,5 @@
 import storage from "redux-persist/lib/storage";  
 
-
 export const DEV_RUBY = 'http://192.168.0.99:81';
 export const DEV_NODE = 'http://192.168.0.168:5000';
 export const STG = '';

@@ -95,8 +95,7 @@ function ItemContractSummary(props) {
                                     <span className="col-md">Jeffry@gmail.com</span>
                                     <div className="col-md text-right-md">
                                         <span>Status: <span className="font-weight-bold text-primary">Terverifikasi</span></span>
-                                        <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
-                                        <span className="ml-2"><i className="far fa-trash-alt text-danger pointer"></i></span>
+                                        {/* <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span> */}
                                     </div>
                                 </div>
                             </li>
@@ -125,8 +124,7 @@ function ItemContractSummary(props) {
                                     <span className="col-md">Udin@gmail.com</span>
                                     <div className="col-md text-right-md">
                                         <span>Status: <span className="font-weight-bold text-primary">Terverifikasi</span></span>
-                                        <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span>
-                                        <span className="ml-2"><i className="far fa-trash-alt text-danger pointer"></i></span>
+                                        {/* <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span> */}
                                     </div>
                                 </div>
                             </li>
