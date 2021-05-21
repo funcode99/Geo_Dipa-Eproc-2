@@ -5,7 +5,7 @@ export const URL = `http://172.18.1.112:3000/api/get-docs-deliverable/1/80000035
 const TEMP_URL = `http://geo.abdmandhan.com`;
 
 export function getDataContracts() {
-  return axios.get(`${TEMP_URL}/delivery/contract`);
+  return axios.get(`/delivery/contract`);
 }
 
 export function getContractById(id) {
