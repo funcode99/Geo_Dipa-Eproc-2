@@ -144,6 +144,12 @@
     "TITLE.MY_PROFILE.SPAN": "Pengaturan akun dan pembaruan lainnya",
     "TITLE.FILTER.TABLE": "Penyaring berdasarkan:",
     "TITLE.FILTER.RESET.TABLE": "Hapus",
-    "TITLE.COUNT_DATA.TABLE": "Total data:"
+    "TITLE.COUNT_DATA.TABLE": "Total data:",
+    "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NO": "No",
+    "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MIN": "Nama Role",
+    "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX": "Nilai min. kontrak",
+    "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NAME": "Nilai max. kontrak",
+    "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.ACTION": "Action",
+    "TITLE.CURRENCY": "Rp. "
   }
   
