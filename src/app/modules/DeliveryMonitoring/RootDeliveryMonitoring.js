@@ -24,12 +24,12 @@ function RootDeliveryMonitoring(props) {
       />
 
       <Route
-        path="/delivery_monitoring/contract/:id/item"
+        path="/delivery_monitoring/contract/:contract_id/task/:task_id"
         component={TerminPage}
       />
 
       <Route
-        path="/delivery_monitoring/contract/:id"
+        path="/delivery_monitoring/contract/:contract_id"
         component={ContractDetailPage}
         exact={true}
       />

@@ -24,41 +24,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function createDetailContract(
-  nomor_kontrak,
-  no_po,
-  judul_pengadaan,
-  kewenangan,
-  user,
-  header_text_po,
-  harga_pekerjaan,
-  penyedia,
-  status
-) {
-  return {
-    nomor_kontrak,
-    no_po,
-    judul_pengadaan,
-    kewenangan,
-    user,
-    header_text_po,
-    harga_pekerjaan,
-    penyedia,
-    status,
-  };
-}
+// function createDetailContract(
+//   nomor_kontrak,
+//   no_po,
+//   judul_pengadaan,
+//   kewenangan,
+//   user,
+//   header_text_po,
+//   harga_pekerjaan,
+//   penyedia,
+//   status
+// ) {
+//   return {
+//     nomor_kontrak,
+//     no_po,
+//     judul_pengadaan,
+//     kewenangan,
+//     user,
+//     header_text_po,
+//     harga_pekerjaan,
+//     penyedia,
+//     status,
+//   };
+// }
 
-const detailContractRows = createDetailContract(
-  '011.PJ/PST30-GDE/X/2020',
-  'PO.I',
-  'Pengadaan Leapfrog',
-  '',
-  'Juned',
-  '',
-  2000000,
-  'PT. XYZ',
-  'Selesai'
-);
+// const detailContractRows = createDetailContract(
+//   '011.PJ/PST30-GDE/X/2020',
+//   'PO.I',
+//   'Pengadaan Leapfrog',
+//   '',
+//   'Juned',
+//   '',
+//   2000000,
+//   'PT. XYZ',
+//   'Selesai'
+// );
 
 // function createTermin(
 //   termin_id,
@@ -137,7 +137,7 @@ const tableHeaderTermin = [
 
 export const ContractDetailPage = () => {
   const classes = useStyles();
-  const { id } = useParams();
+  const { contract_id } = useParams();
   const [Toast, setToast] = useToast();
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
@@ -149,20 +149,22 @@ export const ContractDetailPage = () => {
     data.forEach((item, index) => {
       const rows = [
         { content: (index += 1) },
-        { content: '' },
+        { content: item.name },
         { content: item.due_date },
         { content: '' },
         { content: '' },
         { content: item.progress },
-        { content: item.document_progress },
+        { content: '' },
         {
           content: (
-            <Link to={`/delivery_monitoring/contract/${item.id}/item`}>
+            <Link
+              to={`/delivery_monitoring/contract/${contract_id}/task/${item.id}`}
+            >
               <span>Document</span>
             </Link>
           ),
         },
-        { content: '' },
+        { content: item.task_status.name },
         {
           content: (
             <div className="d-flex justify-content-between flex-row">
@@ -180,20 +182,24 @@ export const ContractDetailPage = () => {
     });
   };
 
-  const getContractById = async (id) => {
+  const getContractById = async (contract_id) => {
     try {
       setLoading(true);
       const {
         data: { data },
-      } = await deliveryMonitoring.getContractById(id);
+      } = await deliveryMonitoring.getContractById(contract_id);
+      console.log(data);
 
       dispatch({
         type: actionTypes.SetContractById,
         payload: data,
       });
 
+      console.log(data[0].tasks);
+
       generateTableContent(data[0].tasks);
     } catch (error) {
+      console.log(error);
       setToast('Error API, please contact developer!');
     } finally {
       setLoading(false);
@@ -201,7 +207,7 @@ export const ContractDetailPage = () => {
   };
 
   React.useEffect(() => {
-    getContractById(id);
+    getContractById(contract_id);
     // eslint-disable-next-line
   }, []);
 
@@ -222,7 +228,7 @@ export const ContractDetailPage = () => {
       <Subheader
         text={
           dataContractById[0]
-            ? `${dataContractById[0].id} - ${dataContractById[0].name}`
+            ? `${dataContractById[0].contract_no} - ${dataContractById[0].contract_name}`
             : null
         }
         IconComponent={
@@ -240,7 +246,9 @@ export const ContractDetailPage = () => {
             to: '/delivery_monitoring/contract',
           },
           {
-            label: `${dataContractById[0] ? dataContractById[0].name : 'x'}`,
+            label: `${
+              dataContractById[0] ? dataContractById[0].contract_name : 'x'
+            }`,
             to: '/',
           },
         ]}
@@ -270,7 +278,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor Kontrak"
-                          defaultValue={dataContractById[0].id}
+                          defaultValue={dataContractById[0].contract_no}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -283,7 +292,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Judul Pengadaan"
-                          defaultValue={dataContractById[0].name}
+                          defaultValue={dataContractById[0].contract_name}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -296,7 +306,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Kewenangan"
-                          defaultValue={detailContractRows.kewenangan}
+                          // defaultValue={detailContractRows.kewenangan}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -309,7 +320,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="User"
-                          defaultValue={detailContractRows.user}
+                          // defaultValue={detailContractRows.user}
                         />
                       </Col>
                     </Form.Group>
@@ -325,7 +336,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor PO"
-                          defaultValue={detailContractRows.no_po}
+                          defaultValue={dataContractById[0].purch_order_no}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -338,7 +350,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Header Text PO"
-                          defaultValue={detailContractRows.header_text_po}
+                          defaultValue={dataContractById[0].purch_order.name}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -364,7 +377,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Penyedia"
-                          defaultValue={detailContractRows.penyedia}
+                          defaultValue={dataContractById[0].vendor.code}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
