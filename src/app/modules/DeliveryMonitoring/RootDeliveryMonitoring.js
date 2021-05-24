@@ -24,7 +24,7 @@ function RootDeliveryMonitoring(props) {
       />
 
       <Route
-        path="/delivery_monitoring/contract/:contract_id/task/:task_id"
+        path="/delivery_monitoring/contract/:contract_id/task"
         component={TerminPage}
       />
 

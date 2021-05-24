@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
 import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
 import { TableCell, TableBody } from '@material-ui/core';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const docOptions = [
   {
@@ -128,14 +129,30 @@ export default function Documents() {
   const [showModalDelete, setShowModalDelete] = React.useState(false);
   const [showEditDoc, setShowEditDoc] = React.useState(false);
   const [showAddDelivModal, setShowAddDelivModal] = React.useState(false);
-  const { dataDocuments } = useSelector((state) => state.deliveryMonitoring);
+  const { dataDocuments, dataContractById } = useSelector(
+    (state) => state.deliveryMonitoring
+  );
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { state } = useLocation();
 
-  React.useEffect(() => {
+  const getDataDocuments = (taskId) => {
+    let tempTaskDocuments = [];
+
+    dataContractById[0].tasks.forEach((item) => {
+      if (item.id === taskId) {
+        tempTaskDocuments = item.task_documents;
+      }
+    });
+
     dispatch({
       type: actionTypes.SetDataDocuments,
-      payload: rowDoc,
+      payload: tempTaskDocuments,
     });
+  };
+
+  React.useEffect(() => {
+    getDataDocuments(state.task_id);
     // eslint-disable-next-line
   }, []);
 
@@ -284,7 +301,7 @@ export default function Documents() {
                         ))}
                       </StyledHead>
                     </StyledTableHead>
-                    <TableBody>
+                    {/* <TableBody>
                       {dataDocuments.length < 1 ? (
                         <tr>
                           <td
@@ -295,16 +312,6 @@ export default function Documents() {
                           </td>
                         </tr>
                       ) : null}
-                      {/* {loading ? (
-                        <tr>
-                          <td
-                            colSpan={theadDocuments.length}
-                            className="text-center"
-                          >
-                            <CircularProgress />
-                          </td>
-                        </tr>
-                      ) : null} */}
                       {dataDocuments.map((item, index) => {
                         return (
                           <React.Fragment key={item.id}>
@@ -371,7 +378,7 @@ export default function Documents() {
                           </React.Fragment>
                         );
                       })}
-                    </TableBody>
+                    </TableBody> */}
                   </StyledTable>
                 </div>
               </div>

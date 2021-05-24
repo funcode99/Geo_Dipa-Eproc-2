@@ -40,7 +40,7 @@ export default function Summary() {
   const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
   const [navActive, setNavActive] = React.useState(navLists[0].id);
-  const { dataJasa, dataBarang } = useSelector(
+  const { dataJasa, dataBarang, dataContractById } = useSelector(
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
@@ -74,9 +74,43 @@ export default function Summary() {
     }
   };
 
+  const getAllPO = async () => {
+    try {
+      const data = dataContractById[0].purch_order.purch_order_items;
+      const tempPOJasa = [];
+      const tempPOBarang = [];
+
+      data.forEach((item) => {
+        item.show = false;
+
+        if (item.purch_order_services.length > 0) {
+          tempPOJasa.push(item);
+        } else {
+          tempPOBarang.push(item);
+        }
+      });
+
+      dispatch({
+        type: actionTypes.SetDataJasa,
+        payload: tempPOJasa,
+      });
+
+      dispatch({
+        type: actionTypes.SetDataBarang,
+        payload: tempPOBarang,
+      });
+    } catch (error) {
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   React.useEffect(() => {
-    getAllItems(true);
-    getAllItems(false);
+    // getAllItems(true);
+    // getAllItems(false);
+
+    getAllPO();
     // eslint-disable-next-line
   }, []);
 
@@ -84,7 +118,7 @@ export default function Summary() {
     let tempJasa = dataJasa;
 
     tempJasa.forEach((item) => {
-      if (item.id === parseInt(itemId)) {
+      if (item.id === itemId) {
         item.show = !item.show;
       }
     });
@@ -161,23 +195,21 @@ export default function Summary() {
                                 </button>
                               </TableCell>
                               <TableCell className="align-middle">
-                                {item.name}
+                                {item.desc}
                               </TableCell>
                               <TableCell className="align-middle">
-                                31/01/2021
+                                {/* 31/01/2021 */}
                               </TableCell>
                               <TableCell className="align-middle">
                                 {item.qty}
                               </TableCell>
                               <TableCell className="align-middle"></TableCell>
-                              <TableCell className="align-middle">
-                                {rupiah(item.price)}
-                              </TableCell>
+                              <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle"></TableCell>
                             </StyledTableRow>
 
-                            {item.services.length !== 0 && item.show
-                              ? item.services.map((service) => (
+                            {item.purch_order_services.length !== 0 && item.show
+                              ? item.purch_order_services.map((service) => (
                                   <StyledTableRow key={service.id}>
                                     <TableCell className="align-middle">
                                       <Checkbox
@@ -188,17 +220,19 @@ export default function Summary() {
                                       />
                                     </TableCell>
                                     <TableCell className="align-middle">
-                                      {service.name}
+                                      {service.short_text}
                                     </TableCell>
                                     <TableCell className="align-middle">
-                                      31/01/2021
+                                      {/* 31/01/2021 */}
                                     </TableCell>
                                     <TableCell className="align-middle">
-                                      {service.qty}
+                                      {service.quantity}
                                     </TableCell>
-                                    <TableCell className="align-middle"></TableCell>
                                     <TableCell className="align-middle">
-                                      {rupiah(service.price)}
+                                      {item.base_uom}
+                                    </TableCell>
+                                    <TableCell className="align-middle">
+                                      {rupiah(service.price_unit)}
                                     </TableCell>
                                     <TableCell className="align-middle"></TableCell>
                                   </StyledTableRow>
@@ -267,17 +301,17 @@ export default function Summary() {
                                 />
                               </TableCell>
                               <TableCell className="align-middle">
-                                {item.name}
+                                {item.desc}
                               </TableCell>
                               <TableCell className="align-middle">
-                                31/01/2021
+                                {/* 31/01/2021 */}
                               </TableCell>
                               <TableCell className="align-middle">
                                 {item.qty}
                               </TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle">
-                                {rupiah(item.price)}
+                                {rupiah(item.unit_price)}
                               </TableCell>
                               <TableCell className="align-middle"></TableCell>
                             </StyledTableRow>
