@@ -1,9 +1,17 @@
 import React from 'react';
 import { StyledModal } from '../../../../components/modals';
-import { SelectStyled, CheckBoxStyled } from './style';
+import {
+  SelectStyled,
+  CheckBoxStyled,
+  StyledTable,
+  StyledTableHead,
+  StyledHead,
+  StyledTableRow,
+} from './style';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
 import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
+import { TableCell, TableBody } from '@material-ui/core';
 
 const docOptions = [
   {
@@ -112,7 +120,7 @@ const theadDocuments = [
   { id: 'progress', label: 'Project Progress(%)' },
   { id: 'dokumen-progress', label: 'Dokumen Progress' },
   { id: 'deliv-dokumen', label: 'Deliverable Dokumen' },
-  { id: 'aksi', label: 'aksi' },
+  { id: 'aksi', label: 'Action' },
 ];
 
 export default function Documents() {
@@ -249,7 +257,7 @@ export default function Documents() {
 
           <div className="d-flex justify-content-end w-100">
             <button
-              className="btn btn-outline-success btn-md mt-3 mb-2"
+              className="btn btn-outline-success btn-sm mt-3 mb-2"
               onClick={handleShowAddDelivModal}
             >
               <span className="nav-icon">
@@ -258,88 +266,113 @@ export default function Documents() {
               <span className="nav-text">Deliverables</span>
             </button>
           </div>
+
           <div className="responsive">
             <div className="table-wrapper-scroll-y my-custom-scrollbar">
               <div className="segment-table">
-                <div className="hecto-12">
-                  <table className="table-bordered overflow-auto">
-                    <thead>
-                      <tr>
+                <div className="hecto-15">
+                  <StyledTable className="table-bordered overflow-auto">
+                    <StyledTableHead>
+                      <StyledHead>
                         {theadDocuments.map((item) => (
-                          <th
-                            className="bg-primary text-white align-middle"
+                          <TableCell
+                            className="text-white align-middle"
                             key={item.id}
                           >
                             {item.label}
-                          </th>
+                          </TableCell>
                         ))}
-                      </tr>
-                    </thead>
-                    {dataDocuments.map((item, index) => {
-                      return (
-                        <React.Fragment key={item.id}>
-                          <tbody>
-                            <tr>
-                              <td className="align-middle">
+                      </StyledHead>
+                    </StyledTableHead>
+                    <TableBody>
+                      {dataDocuments.length < 1 ? (
+                        <tr>
+                          <td
+                            colSpan={theadDocuments.length}
+                            className="text-center"
+                          >
+                            Empty Data
+                          </td>
+                        </tr>
+                      ) : null}
+                      {/* {loading ? (
+                        <tr>
+                          <td
+                            colSpan={theadDocuments.length}
+                            className="text-center"
+                          >
+                            <CircularProgress />
+                          </td>
+                        </tr>
+                      ) : null} */}
+                      {dataDocuments.map((item, index) => {
+                        return (
+                          <React.Fragment key={item.id}>
+                            <StyledTableRow>
+                              <TableCell className="align-middle">
                                 <button
                                   className="btn btn-sm d-flex justify-content-center p-1"
                                   onClick={(e) => handleExpand(e, item.id)}
                                 >
                                   <i className="fa fa-folder-plus text-primary"></i>
                                 </button>
-                              </td>
-                              <td className="align-middle">{item.type}</td>
-                              <td className="align-middle"></td>
-                              <td className="align-middle"></td>
-                              <td className="align-middle"></td>
-                              <td className="align-middle"></td>
-                              <td className="align-middle"></td>
-                              <td className="align-middle"></td>
-                              <td className="align-middle"></td>
-                            </tr>
-                          </tbody>
-                          {item.childs.length !== 0 && item.show ? (
-                            <tbody>
-                              {item.childs.map((child) => (
-                                <tr key={child.id}>
-                                  <td className="align-middle">
-                                    <div className="d-flex justify-content-center">
-                                      <i className="fa fa-file"></i>
-                                    </div>
-                                  </td>
-                                  <td className="align-middle">{child.name}</td>
-                                  <td className="align-middle">
-                                    {child.due_date}
-                                  </td>
-                                  <td className="align-middle">{child.mo}</td>
-                                  <td className="align-middle"></td>
-                                  <td className="align-middle"></td>
-                                  <td className="align-middle"></td>
-                                  <td className="align-middle"></td>
-                                  <td className="align-middle">
-                                    <div className="d-flex justify-content-between flex-row">
-                                      <button
-                                        className="btn btn-sm p-1"
-                                        onClick={handleShowEditDoc}
-                                      >
-                                        <i className="fas fa-edit text-primary"></i>
-                                      </button>
-                                      <button
-                                        className="btn btn-sm p-1 mr-2"
-                                        onClick={handleShowModalDelete}
-                                      >
-                                        <i className="fas fa-trash text-danger"></i>
-                                      </button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          ) : null}
-                        </React.Fragment>
-                      );
-                    })}
-                  </table>
+                              </TableCell>
+                              <TableCell className="align-middle">
+                                {item.type}
+                              </TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                              <TableCell className="align-middle"></TableCell>
+                            </StyledTableRow>
+                            {item.childs.length !== 0 && item.show
+                              ? item.childs.map((child) => (
+                                  <StyledTableRow key={child.id}>
+                                    <TableCell className="align-middle">
+                                      <div className="d-flex justify-content-center">
+                                        <i className="fa fa-file"></i>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="align-middle">
+                                      {child.name}
+                                    </TableCell>
+                                    <TableCell className="align-middle">
+                                      {child.due_date}
+                                    </TableCell>
+                                    <TableCell className="align-middle">
+                                      {child.mo}
+                                    </TableCell>
+                                    <TableCell className="align-middle"></TableCell>
+                                    <TableCell className="align-middle"></TableCell>
+                                    <TableCell className="align-middle"></TableCell>
+                                    <TableCell className="align-middle"></TableCell>
+                                    <TableCell className="align-middle">
+                                      <div className="d-flex justify-content-between flex-row">
+                                        <button
+                                          className="btn btn-sm p-1"
+                                          onClick={handleShowEditDoc}
+                                        >
+                                          <i className="fas fa-edit text-primary"></i>
+                                        </button>
+                                        <button
+                                          className="btn btn-sm p-1 mr-2"
+                                          onClick={handleShowModalDelete}
+                                        >
+                                          <i className="fas fa-trash text-danger"></i>
+                                        </button>
+                                      </div>
+                                    </TableCell>
+                                  </StyledTableRow>
+                                ))
+                              : null}
+                          </React.Fragment>
+                        );
+                      })}
+                    </TableBody>
+                  </StyledTable>
                 </div>
               </div>
             </div>

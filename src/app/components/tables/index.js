@@ -26,11 +26,13 @@ const CustomTable = ({
   tableContent = exampleBody,
   align = 'center',
   loading = false,
+  marginY = 'my-10',
+  hecto = 'hecto-10',
 }) => {
   return (
-    <div className="table-wrapper-scroll-y my-custom-scrollbar my-10">
+    <div className={`table-wrapper-scroll-y my-custom-scrollbar ${marginY}`}>
       <div className="segment-table">
-        <div className="hecto-10">
+        <div className={hecto}>
           <StyledTable>
             <StyledTableHead>
               <StyledHead>
@@ -42,6 +44,13 @@ const CustomTable = ({
               </StyledHead>
             </StyledTableHead>
             <TableBody>
+              {tableContent.length < 1 ? (
+                <StyledTableRow>
+                  <TableCell colSpan={tableHeader.length} align="center">
+                    Empty Data
+                  </TableCell>
+                </StyledTableRow>
+              ) : null}
               {loading ? (
                 <StyledTableRow>
                   <TableCell colSpan={tableHeader.length} align="center">

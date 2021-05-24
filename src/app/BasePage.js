@@ -22,7 +22,7 @@ import { DashboardPage } from './pages/DashboardPage';
 const UserProfilepage = lazy(() =>
   import('./modules/UserProfile/UserProfilePage')
 );
-const DeliveryMonitoringRoutes = lazy(() =>
+const RootDeliveryMonitoring = lazy(() =>
   import('./modules/DeliveryMonitoring/RootDeliveryMonitoring')
 );
 
@@ -66,10 +66,7 @@ export default function BasePage() {
         />
 
         <Route path="/master" component={MasterData} />
-        <Route
-          path="/delivery_monitoring"
-          component={DeliveryMonitoringRoutes}
-        />
+        <Route path="/delivery_monitoring" component={RootDeliveryMonitoring} />
         <Redirect to="/error" />
       </Switch>
     </Suspense>

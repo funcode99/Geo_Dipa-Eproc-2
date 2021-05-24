@@ -1,33 +1,22 @@
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
-  makeStyles,
-  Icon,
-  CircularProgress,
-} from '@material-ui/core';
+import { Paper, makeStyles, Icon, CircularProgress } from '@material-ui/core';
 import { Form, Row, Col, Container } from 'react-bootstrap';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { Link, useParams } from 'react-router-dom';
 import Tabs from '../../../../components/tabs';
-// import http from '../libs/http';
-// import { rupiah } from '../libs/currency';
-// import { useSelector, useDispatch } from 'react-redux'
-// import { setDataContracts } from '../../_redux/deliveryMonitoringCrud';
-
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 import Subheader from '../../../../components/subheader';
+import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionTypes } from '../../_redux/deliveryMonitoringAction';
+import CustomTable from '../../../../components/tables';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
     overflowX: 'auto',
   },
   table: {
@@ -35,41 +24,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function createDetailContract(
-  nomor_kontrak,
-  no_po,
-  judul_pengadaan,
-  kewenangan,
-  user,
-  header_text_po,
-  harga_pekerjaan,
-  penyedia,
-  status
-) {
-  return {
-    nomor_kontrak,
-    no_po,
-    judul_pengadaan,
-    kewenangan,
-    user,
-    header_text_po,
-    harga_pekerjaan,
-    penyedia,
-    status,
-  };
-}
+// function createDetailContract(
+//   nomor_kontrak,
+//   no_po,
+//   judul_pengadaan,
+//   kewenangan,
+//   user,
+//   header_text_po,
+//   harga_pekerjaan,
+//   penyedia,
+//   status
+// ) {
+//   return {
+//     nomor_kontrak,
+//     no_po,
+//     judul_pengadaan,
+//     kewenangan,
+//     user,
+//     header_text_po,
+//     harga_pekerjaan,
+//     penyedia,
+//     status,
+//   };
+// }
 
-const detailContractRows = createDetailContract(
-  '011.PJ/PST30-GDE/X/2020',
-  'PO.I',
-  'Pengadaan Leapfrog',
-  '',
-  'Juned',
-  '',
-  2000000,
-  'PT. XYZ',
-  'Selesai'
-);
+// const detailContractRows = createDetailContract(
+//   '011.PJ/PST30-GDE/X/2020',
+//   'PO.I',
+//   'Pengadaan Leapfrog',
+//   '',
+//   'Juned',
+//   '',
+//   2000000,
+//   'PT. XYZ',
+//   'Selesai'
+// );
 
 // function createTermin(
 //   termin_id,
@@ -133,22 +122,84 @@ const TabLists = [
   },
 ];
 
+const tableHeaderTermin = [
+  'No',
+  'Scope of Work',
+  'Due Date',
+  'Bobot',
+  'Harga Pekerjaan',
+  'Project Progress',
+  'Document Progress',
+  'Deliverables Document',
+  'Status',
+  'Action',
+];
+
 export const ContractDetailPage = () => {
   const classes = useStyles();
-  const { id } = useParams();
-  const [dataContract, setDataContract] = React.useState([]);
+  const { contract_id } = useParams();
+  const [Toast, setToast] = useToast();
+  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
+  const dispatch = useDispatch();
   const [tabActive, setTabActive] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-  const [Toast, setToast] = useToast();
+  const [tableContent, setTableContent] = React.useState([]);
 
-  const getContractById = async (id) => {
+  const generateTableContent = (data) => {
+    data.forEach((item, index) => {
+      const rows = [
+        { content: (index += 1) },
+        { content: item.name },
+        { content: item.due_date },
+        { content: '' },
+        { content: '' },
+        { content: item.progress },
+        { content: '' },
+        {
+          content: (
+            <Link
+              to={`/delivery_monitoring/contract/${contract_id}/task/${item.id}`}
+            >
+              <span>Document</span>
+            </Link>
+          ),
+        },
+        { content: item.task_status.name },
+        {
+          content: (
+            <div className="d-flex justify-content-between flex-row">
+              <button className="btn btn-sm p-1">
+                <Icon className="fas fa-edit text-primary" />
+              </button>
+              <button className="btn btn-sm p-1 mr-2">
+                <Icon className="fas fa-trash text-danger" />
+              </button>
+            </div>
+          ),
+        },
+      ];
+      setTableContent((prev) => [...prev, rows]);
+    });
+  };
+
+  const getContractById = async (contract_id) => {
     try {
       setLoading(true);
       const {
         data: { data },
-      } = await deliveryMonitoring.getContractById(id);
-      setDataContract(data);
+      } = await deliveryMonitoring.getContractById(contract_id);
+      console.log(data);
+
+      dispatch({
+        type: actionTypes.SetContractById,
+        payload: data,
+      });
+
+      console.log(data[0].tasks);
+
+      generateTableContent(data[0].tasks);
     } catch (error) {
+      console.log(error);
       setToast('Error API, please contact developer!');
     } finally {
       setLoading(false);
@@ -156,7 +207,7 @@ export const ContractDetailPage = () => {
   };
 
   React.useEffect(() => {
-    getContractById(id);
+    getContractById(contract_id);
     // eslint-disable-next-line
   }, []);
 
@@ -176,8 +227,8 @@ export const ContractDetailPage = () => {
 
       <Subheader
         text={
-          dataContract[0]
-            ? `${dataContract[0].id} - ${dataContract[0].name}`
+          dataContractById[0]
+            ? `${dataContractById[0].contract_no} - ${dataContractById[0].contract_name}`
             : null
         }
         IconComponent={
@@ -187,6 +238,22 @@ export const ContractDetailPage = () => {
           />
         }
       />
+
+      <SubBreadcrumbs
+        items={[
+          {
+            label: 'List of Contract & PO',
+            to: '/delivery_monitoring/contract',
+          },
+          {
+            label: `${
+              dataContractById[0] ? dataContractById[0].contract_name : 'x'
+            }`,
+            to: '/',
+          },
+        ]}
+      />
+
       <Paper className={classes.root}>
         <Container>
           <Tabs
@@ -196,7 +263,7 @@ export const ContractDetailPage = () => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        {tabActive === 0 && dataContract[0] ? (
+        {tabActive === 0 && dataContractById[0] ? (
           <>
             <Form className="my-3">
               <Container>
@@ -211,7 +278,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor Kontrak"
-                          defaultValue={dataContract[0].id}
+                          defaultValue={dataContractById[0].contract_no}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -224,7 +292,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Judul Pengadaan"
-                          defaultValue={dataContract[0].name}
+                          defaultValue={dataContractById[0].contract_name}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -237,7 +306,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Kewenangan"
-                          defaultValue={detailContractRows.kewenangan}
+                          // defaultValue={detailContractRows.kewenangan}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -250,7 +320,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="User"
-                          defaultValue={detailContractRows.user}
+                          // defaultValue={detailContractRows.user}
                         />
                       </Col>
                     </Form.Group>
@@ -266,7 +336,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor PO"
-                          defaultValue={detailContractRows.no_po}
+                          defaultValue={dataContractById[0].purch_order_no}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -279,7 +350,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Header Text PO"
-                          defaultValue={detailContractRows.header_text_po}
+                          defaultValue={dataContractById[0].purch_order.name}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -305,7 +377,8 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Penyedia"
-                          defaultValue={detailContractRows.penyedia}
+                          defaultValue={dataContractById[0].vendor.code}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -315,73 +388,12 @@ export const ContractDetailPage = () => {
             </Form>
 
             <Container>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell className="text-white bg-primary">No</TableCell>
-                    <TableCell className="text-white bg-primary" align="left">
-                      Scope of Work
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Due Date
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Bobot
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Harga Pekerjaan
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Project Progress
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Document Progress
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Deliverables Document
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Status
-                    </TableCell>
-                    <TableCell className="text-white bg-primary" align="center">
-                      Action
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {dataContract[0].tasks.map((item, index) => (
-                    <TableRow key={item.id}>
-                      <TableCell scope="row">{(index += 1)}</TableCell>
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="left">{item.due_date}</TableCell>
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="center">{item.progress}</TableCell>
-                      <TableCell align="center">
-                        {item.document_progress}
-                      </TableCell>
-                      <TableCell align="center">
-                        <Link
-                          to={`/delivery_monitoring/contract/${item.id}/item`}
-                        >
-                          <span>Document</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="center">
-                        <div className="d-flex justify-content-between flex-row">
-                          <button className="btn btn-sm p-1">
-                            <Icon className="fas fa-edit text-primary" />
-                          </button>
-                          <button className="btn btn-sm p-1 mr-2">
-                            <Icon className="fas fa-trash text-danger" />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <CustomTable
+                tableHeader={tableHeaderTermin}
+                tableContent={tableContent}
+                marginY="my-5"
+                hecto="hecto-16"
+              />
             </Container>
           </>
         ) : null}
