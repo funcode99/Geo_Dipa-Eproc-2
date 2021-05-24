@@ -152,6 +152,10 @@ export default function Documents() {
   };
 
   React.useEffect(() => {
+    if (!state.task_id) {
+      history.goBack();
+    }
+
     getDataDocuments(state.task_id);
     // eslint-disable-next-line
   }, []);
