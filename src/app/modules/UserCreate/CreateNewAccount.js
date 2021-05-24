@@ -340,7 +340,7 @@ function CreateNewAccount(props) {
                                 }
                             >
                                 <FormattedMessage id="TITLE.CREATE_ACCOUNT.REGISTER" />
-                                {loading && <span class="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
+                                {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
                                 {formik.isSubmitting}
                             </button>
                         </div>

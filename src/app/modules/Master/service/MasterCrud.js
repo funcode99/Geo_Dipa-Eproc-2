@@ -104,3 +104,15 @@ export function forgotPassword(username) {
 export function getRolesBKB() {
   return axios.get(`data/get_role_bkb`);
 }
+
+export function getRolesVerification() {
+  return axios.get(`data/get_role_verification`);
+}
+
+export function getRolesPayment() {
+  return axios.get(`data/get_role_payment`);
+}
+
+export function updateRoles(data) {
+  return axios.post(`data/update_role/${data.id}`, data );
+}
