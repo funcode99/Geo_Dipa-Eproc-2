@@ -30,14 +30,23 @@ const RolesPage = (props) => {
   const [rolesData, setRolesData] = useState([]);
   const [Toast, setToast] = useToast();
   const [modals, setModals] = useState(false);
+  const [loadData, setLoadData] = useState(true);
+  const [errorData, setErrorData] = useState(false);
 
   const getRolesData = () => {
+    setLoadData(true)
     if (props.data.type === "BKB") {
-      getRolesBKB().then(response => setRolesData(response.data.data));
+      getRolesBKB()
+        .then(response => { setRolesData(response.data.data); setLoadData(false) })
+        .catch(() => { setLoadData(false); setErrorData(true) })
     } else if (props.data.type === "Verification") {
-      getRolesVerification().then(response => setRolesData(response.data.data));
+      getRolesVerification()
+        .then(response => { setRolesData(response.data.data); setLoadData(false) })
+        .catch(() => { setLoadData(false); setErrorData(true) })
     } else {
-      getRolesPayment().then(response => setRolesData(response.data.data));
+      getRolesPayment()
+        .then(response => { setRolesData(response.data.data); setLoadData(false) })
+        .catch(() => { setLoadData(false); setErrorData(true) })
     }
   }
 
@@ -254,8 +263,21 @@ const RolesPage = (props) => {
             </Table>
           </div>
         </div>
+        <div className="table-loading-data">
+          <div className="text-center font-weight-bold">
+            <div className="table-loading-data-potition">
+              {loadData && <span>
+                <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+                <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+              </span>}
+              {errorData && <span>
+                <FormattedMessage id="TITLE.ERROR_REQUEST" />
+              </span>}
+            </div>
+          </div>
+        </div>
       </div>
-    </Paper>
+    </Paper >
 
   );
 }

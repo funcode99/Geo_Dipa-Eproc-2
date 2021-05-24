@@ -160,5 +160,7 @@
     "REQ.UPDATE_SUCCESS": "Perubahan berhasil disimpan.",
     "REQ.UPDATE_FAILED": "Perubahan gagal disimpan. Kesalahan Sistem, Silakan coba lagi.",
   "TITLE.TABLE.NO_DATA_AVAILABLE": "Tidak ada data",
-  "TITLE.TABLE.WAITING_DATA": "Mohon tunggu, memuat data..."
+  "TITLE.TABLE.WAITING_DATA": "Mohon tunggu, memuat data...",
+  "TITLE.ERROR_REQUEST": "Terjadi kesalahan saat mengakses server."
+  
 }
