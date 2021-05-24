@@ -1,5 +1,10 @@
 import React from 'react';
 import { makeStyles, Tabs as MuiTabs, Tab as MuiTab } from '@material-ui/core';
+import {
+  DescriptionOutlined,
+  AssignmentOutlined,
+  BookmarkBorderOutlined,
+} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,8 +29,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Tabs(props) {
-  const { tabLists, tabActive, handleChange } = props;
+const initialTabLists = [
+  {
+    id: 'tab-1',
+    label: 'Tab One',
+    icon: <DescriptionOutlined className="mb-0 mr-2" />,
+  },
+  {
+    id: 'tab-2',
+    label: 'Tab Two',
+    icon: <AssignmentOutlined className="mb-0 mr-2" />,
+  },
+  {
+    id: 'tab-3',
+    label: 'Tab Three',
+    icon: <BookmarkBorderOutlined className="mb-0 mr-2" />,
+  },
+];
+
+export default function Tabs({
+  tabLists = initialTabLists,
+  tabActive,
+  handleChange,
+}) {
   const classes = useStyles();
 
   return (

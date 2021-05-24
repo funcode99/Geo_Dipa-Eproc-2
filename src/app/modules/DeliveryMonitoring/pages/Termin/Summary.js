@@ -1,12 +1,10 @@
 import {
   TableCell,
-  makeStyles,
   CircularProgress,
   Button,
   TableBody,
 } from '@material-ui/core';
 import React from 'react';
-import { Nav } from 'react-bootstrap';
 import {
   ExpandLessOutlined,
   ExpandMoreOutlined,
@@ -21,15 +19,7 @@ import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
 import { StyledTableHead } from '../../../../components/tables/style';
 import { StyledHead, StyledTable, StyledTableRow } from './style';
 import { rupiah } from '../../../../libs/currency';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(1),
-  },
-  navLink: {
-    fontWeight: 600,
-  },
-}));
+import Navs from '../../../../components/navs';
 
 const theadItems = [
   { id: 'action', label: '' },
@@ -41,11 +31,15 @@ const theadItems = [
   { id: 'wbs', label: 'WBS' },
 ];
 
+const navLists = [
+  { id: 'link-jasa', label: 'Jasa' },
+  { id: 'link-barang', label: 'Barang' },
+];
+
 export default function Summary() {
-  const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
-  const [navActive, setNavActive] = React.useState('Jasa');
+  const [navActive, setNavActive] = React.useState(navLists[0].id);
   const { dataJasa, dataBarang } = useSelector(
     (state) => state.deliveryMonitoring
   );
@@ -107,20 +101,12 @@ export default function Summary() {
 
       <Card>
         <CardBody>
-          <Nav variant="pills" defaultActiveKey="link-jasa">
-            <Nav.Item onClick={() => setNavActive('Jasa')}>
-              <Nav.Link eventKey="link-jasa" className={classes.navLink}>
-                Jasa
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item onClick={() => setNavActive('Barang')}>
-              <Nav.Link eventKey="link-barang" className={classes.navLink}>
-                Barang
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
+          <Navs
+            navLists={navLists}
+            handleSelect={(selectedKey) => setNavActive(selectedKey)}
+          />
 
-          {navActive === 'Jasa' && (
+          {navActive === 'link-jasa' && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
                 <div className="hecto-10">
@@ -228,7 +214,7 @@ export default function Summary() {
             </div>
           )}
 
-          {navActive === 'Barang' && (
+          {navActive === 'link-barang' && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
                 <div className="hecto-10">
