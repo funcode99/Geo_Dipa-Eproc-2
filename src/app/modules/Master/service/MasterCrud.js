@@ -7,73 +7,73 @@ export const FORGOT_PASSWORD_URL = `${DEV_RUBY}/api/password_resets?authn_token=
 
 export const ME_URL = `${DEV_NODE}/api/user_data_by_token`;
 
-const TEMP_URL = `http://geo.abdmandhan.com`;
+// const TEMP_URL = `http://geo.abdmandhan.com`;
 
 // Document Type
 
 export function getList() {
-  return axios.get(`${TEMP_URL}/delivery/document-type`);
+  return axios.get(`/delivery/document-type`);
 }
 
 export function getByID(id) {
-  return axios.get(`${TEMP_URL}/delivery/document-type?id=${id}`);
+  return axios.get(`/delivery/document-type?id=${id}`);
 }
 
 export function submitDoctypes(values, update) {
   if (update) {
-    return axios.put(`${TEMP_URL}/delivery/document-type/${update.id}`, values);
+    return axios.put(`/delivery/document-type/${update.id}`, values);
   }
-  return axios.post(`${TEMP_URL}/delivery/document-type`, values);
+  return axios.post(`/delivery/document-type`, values);
 }
 
 export function deleteDoctypes(id) {
-  return axios.delete(`${TEMP_URL}/delivery/document-type/${id}`);
+  return axios.delete(`/delivery/document-type/${id}`);
 }
 
 // Periode
 
 export function getPeriodeList() {
-  return axios.get(`${TEMP_URL}/delivery/periode`);
+  return axios.get(`/delivery/periode`);
 }
 
 export function getPeriodeID(id) {
-  return axios.get(`${TEMP_URL}/delivery/periode?id=${id}`);
+  return axios.get(`/delivery/periode?id=${id}`);
 }
 
 export function submitPeriode(values, update) {
   if (update) {
-    return axios.put(`${TEMP_URL}/delivery/periode/${update.id}`, values);
+    return axios.put(`/delivery/periode/${update.id}`, values);
   }
-  return axios.post(`${TEMP_URL}/delivery/periode`, values);
+  return axios.post(`/delivery/periode`, values);
 }
 
 export function deletePeriode(id) {
-  return axios.delete(`${TEMP_URL}/delivery/periode/${id}`);
+  return axios.delete(`/delivery/periode/${id}`);
 }
 
 // Document
 
 export function getDocList() {
-  return axios.get(`${TEMP_URL}/delivery/options`);
+  return axios.get(`/delivery/options`);
 }
 
 export function getDocumentByType(id) {
-  return axios.get(`${TEMP_URL}/delivery/document?document_type_id=${id}`);
+  return axios.get(`/delivery/document?document_type_id=${id}`);
 }
 
 export function getDocumentID(id) {
-  return axios.get(`${TEMP_URL}/delivery/document?id=${id}`);
+  return axios.get(`/delivery/document?id=${id}`);
 }
 
 export function submitDocument(values, update) {
   if (update) {
-    return axios.put(`${TEMP_URL}/delivery/document/${update.id}`, values);
+    return axios.put(`/delivery/document/${update.id}`, values);
   }
-  return axios.post(`${TEMP_URL}/delivery/document`, values);
+  return axios.post(`/delivery/document`, values);
 }
 
 export function deleteDocument(id) {
-  return axios.delete(`${TEMP_URL}/delivery/document/${id}`);
+  return axios.delete(`/delivery/document/${id}`);
 }
 
 // example from login
@@ -98,7 +98,6 @@ export function getUserByToken() {
 export function forgotPassword(username) {
   return axios.post(FORGOT_PASSWORD_URL, { data: { login: username } });
 }
-
 
 // master data roles
 
