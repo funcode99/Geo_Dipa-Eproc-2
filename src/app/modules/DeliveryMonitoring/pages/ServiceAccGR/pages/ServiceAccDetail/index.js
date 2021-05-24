@@ -1,46 +1,29 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
-import {
-  DescriptionOutlined,
-  BookmarkBorderOutlined,
-} from '@material-ui/icons';
-import Tabs from '../../../../../../components/tabs';
 import ServiceAcceptance from './ServiceAccDetail';
 import { TabsWrapper } from './style';
 import GoodReceipt from './GoodReceipt';
+import Navs from '../../../../../../components/navs';
 
-const TabLists = [
-  {
-    id: 'sa',
-    label: 'Service Acceptance',
-    icon: <DescriptionOutlined className="mb-0 mr-2" />,
-  },
-  {
-    id: 'gr',
-    label: 'Good Receipt',
-    icon: <BookmarkBorderOutlined className="mb-0 mr-2" />,
-  },
+const navLists = [
+  { id: 'link-sa', label: 'Service Acceptance' },
+  { id: 'link-gr', label: 'Good Receipt' },
 ];
 
 export const ContainerSA = () => {
-  const [tabActive, setTabActive] = React.useState(0);
-
-  function handleChangeTab(_, newTabActive) {
-    setTabActive(newTabActive);
-  }
+  const [tabActive, setTabActive] = React.useState('link-sa');
 
   return (
     <Container>
       <div>
-        <Tabs
-          tabActive={tabActive}
-          handleChange={handleChangeTab}
-          tabLists={TabLists}
+        <Navs
+          navLists={navLists}
+          handleSelect={(selectedKey) => setTabActive(selectedKey)}
         />
       </div>
       <TabsWrapper>
-        {tabActive === 0 && <ServiceAcceptance />}
-        {tabActive === 1 && <GoodReceipt />}
+        {tabActive === 'link-sa' && <ServiceAcceptance />}
+        {tabActive === 'link-gr' && <GoodReceipt />}
       </TabsWrapper>
     </Container>
   );
