@@ -5,7 +5,6 @@ import {
     connect
 } from "react-redux";
 import {
-    FormattedMessage,
     injectIntl
 } from "react-intl";
 import {
@@ -14,7 +13,7 @@ import {
     Paper
 } from '@material-ui/core';
 import Tabs from '../../../components/tabs';
-import RolesBKB from './RolesPages/RolesBKB';
+import RolesPage from './RolesPages/RolesPage';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
 import {
@@ -45,7 +44,6 @@ const TabLists = [
 ];
 
 const Roles = (props) => {
-    const { intl } = props;
     const classes = useStyles();
     const [tabActive, setTabActive] = React.useState(0);
 
@@ -63,7 +61,7 @@ const Roles = (props) => {
                 </SubWrap>
                 <div className="d-flex align-items-baseline mr-5">
                     <h2 className="text-dark font-weight-bold my-2 mr-5">
-                        Master Periode
+                        Master Roles
                     </h2>
                 </div>
             </div>
@@ -77,7 +75,9 @@ const Roles = (props) => {
                 </Container>
                 <hr className="p-0 m-0" />
                 <Container className="pt-10 pb-10">
-                    {tabActive === 0 && <RolesBKB />}
+                    {tabActive === 0 && <RolesPage data={{type: "BKB"}} />}
+                    {tabActive === 1 && <RolesPage data={{type: "Verification"}} />}
+                    {tabActive === 2 && <RolesPage data={{type: "Payment"}} />}
                 </Container>
             </Paper>
         </Container>
