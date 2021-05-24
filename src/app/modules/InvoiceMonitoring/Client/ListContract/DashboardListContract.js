@@ -78,6 +78,7 @@ class DashboardListContract extends React.Component {
       <React.Fragment>
         <Card>
           <CardBody>
+            {/* begin: Filter Table */}
             <div className="panel-filter-table mb-1">
               <span className="mr-2 mt-2 float-left">
                 <FormattedMessage id="TITLE.FILTER.TABLE" />
@@ -169,7 +170,9 @@ class DashboardListContract extends React.Component {
                 <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
               </button>
             </div>
+            {/* end: Filter Table */}
 
+            {/* begin: Table */}
             <div className="table-wrapper-scroll-y my-custom-scrollbar">
               <div className="segment-table">
                 <div className="hecto-8">
@@ -309,6 +312,9 @@ class DashboardListContract extends React.Component {
                 </div>
               </div>
             </div>
+            {/* end: Table */}
+
+            {/* begin: Pagination Table */}
             <div className="mt-3">
               <span>
                 <FormattedMessage id="TITLE.COUNT_DATA.TABLE" /> 5/5
@@ -340,6 +346,7 @@ class DashboardListContract extends React.Component {
                 <Pagination.Last disabled />
               </Pagination>
             </div>
+            {/* end: Pagination Table */}
           </CardBody>
         </Card>
       </React.Fragment>
