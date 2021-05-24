@@ -9,7 +9,7 @@ export function getDataContracts() {
 }
 
 export function getContractById(id) {
-  return axios.get(`${TEMP_URL}/delivery/contract?id=${id}`);
+  return axios.get(`/delivery/contract?id=${id}`);
 }
 
 export function getAllItems(isService) {

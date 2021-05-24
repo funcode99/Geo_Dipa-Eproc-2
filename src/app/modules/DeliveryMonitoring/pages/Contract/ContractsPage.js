@@ -98,7 +98,7 @@ export const ContractsPage = () => {
           tableHeader={tableHeaderContracts}
           tableContent={tableContent}
           marginY="my-1"
-          hecto="hecto-13"
+          hecto="hecto-15"
           loading={loading}
         />
       </Paper>
