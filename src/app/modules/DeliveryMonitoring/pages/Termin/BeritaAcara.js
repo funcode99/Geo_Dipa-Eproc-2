@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
-import { Nav, Form, Row, Col } from 'react-bootstrap';
+import { Form, Row, Col } from 'react-bootstrap';
 import { makeStyles, Button } from '@material-ui/core';
 import CustomTable from '../../../../components/tables';
 import { Send } from '@material-ui/icons';
+import Navs from '../../../../components/navs';
 
 const useStyles = makeStyles((theme) => ({
   navLink: {
@@ -50,9 +51,14 @@ const dataBAPP = [
   },
 ];
 
+const navLists = [
+  { id: 'link-bapp', label: 'BAPP' },
+  { id: 'link-bast', label: 'BAST' },
+];
+
 export default function BeritaAcara() {
   const classes = useStyles();
-  const [navActive, setNavActive] = React.useState('BAPP');
+  const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [tableContent, setTableContent] = React.useState([]);
 
   const generateTableContent = (data) => {
@@ -93,7 +99,11 @@ export default function BeritaAcara() {
     <React.Fragment>
       <Card>
         <CardBody>
-          <Nav variant="pills" defaultActiveKey="link-bapp">
+          <Navs
+            navLists={navLists}
+            handleSelect={(selectedKey) => setNavActive(selectedKey)}
+          />
+          {/* <Nav variant="pills" defaultActiveKey="link-bapp">
             <Nav.Item onClick={() => setNavActive('BAPP')}>
               <Nav.Link eventKey="link-bapp" className={classes.navLink}>
                 BAPP
@@ -104,9 +114,9 @@ export default function BeritaAcara() {
                 BAST
               </Nav.Link>
             </Nav.Item>
-          </Nav>
+          </Nav> */}
 
-          {navActive === 'BAPP' && (
+          {navActive === 'link-bapp' && (
             <React.Fragment>
               <Form className="mt-3">
                 <Row>
@@ -230,7 +240,7 @@ export default function BeritaAcara() {
             </React.Fragment>
           )}
 
-          {navActive === 'BAST' && (
+          {navActive === 'link-bast' && (
             <React.Fragment>
               <Form className="mt-3">
                 <Row>
