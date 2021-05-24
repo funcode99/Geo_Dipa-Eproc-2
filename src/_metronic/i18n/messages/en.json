@@ -133,11 +133,11 @@
   "TITLE.MODAL_CREATE.LABEL.TITLE_FAILED": "Failed Creating Account!",
   "TITLE.MODAL_CREATE.LABEL.BODY_FAILED": "Server error, please try again later.",
   "TITLE.MODAL_CREATE.LABEL.BUTTON_FAILED": "Close",
-  "TITLE.TODAY":"Today",
-  "TITLE.CHANGE_PASSWORD":"Change Password",
-  "TITLE.CHANGE_PASSWORD.SPAN":"Change your account password",
-  "CHANGE_PASSWORD.INPUT.CURRENT_PASSWORD":"Current Password",
-  "CHANGE_PASSWORD.INPUT.NEW_PASSWORD":"New Password",
+  "TITLE.TODAY": "Today",
+  "TITLE.CHANGE_PASSWORD": "Change Password",
+  "TITLE.CHANGE_PASSWORD.SPAN": "Change your account password",
+  "CHANGE_PASSWORD.INPUT.CURRENT_PASSWORD": "Current Password",
+  "CHANGE_PASSWORD.INPUT.NEW_PASSWORD": "New Password",
   "SESSION.LOGIN": "Session Log In",
   "SESSION.LOGIN.MESSAGE": "Your session time is over. Please sign in again!!",
   "TITLE.MY_PROFILE": "My Profile",
@@ -150,5 +150,7 @@
   "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX": "Contract min value",
   "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NAME": "Contract max value",
   "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.ACTION": "Action",
-  "TITLE.CURRENCY": "Rp. "
+  "TITLE.CURRENCY": "Rp. ",
+  "TITLE.TABLE.NO_DATA_AVAILABLE": "No data available",
+  "TITLE.TABLE.WAITING_DATA": "Please wait, load data ..."
 }

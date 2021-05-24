@@ -133,11 +133,11 @@
     "TITLE.MODAL_CREATE.LABEL.TITLE_FAILED": "Gagal membuat akun!",
     "TITLE.MODAL_CREATE.LABEL.BODY_FAILED": "Server bermasalah, silahkan coba lagi!",
     "TITLE.MODAL_CREATE.LABEL.BUTTON_FAILED": "Tutup",
-    "TITLE.TODAY":"Hari ini",
-    "TITLE.CHANGE_PASSWORD":"Ganti kata sandi",
-    "TITLE.CHANGE_PASSWORD.SPAN":"Ubah kata sandi akun Anda",
-    "CHANGE_PASSWORD.INPUT.CURRENT_PASSWORD":"kata sandi saat ini",
-    "CHANGE_PASSWORD.INPUT.NEW_PASSWORD":"kata sandi baru",
+  "TITLE.TODAY": "Hari ini",
+  "TITLE.CHANGE_PASSWORD": "Ganti kata sandi",
+  "TITLE.CHANGE_PASSWORD.SPAN": "Ubah kata sandi akun Anda",
+  "CHANGE_PASSWORD.INPUT.CURRENT_PASSWORD": "kata sandi saat ini",
+  "CHANGE_PASSWORD.INPUT.NEW_PASSWORD": "kata sandi baru",
     "SESSION.LOGIN": "Sesi Masuk",
     "SESSION.LOGIN.MESSAGE": "Waktu sesi Anda sudah berakhir. Silakan masuk lagi !!",
     "TITLE.MY_PROFILE": "Profil Saya",
@@ -150,6 +150,7 @@
     "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX": "Nilai min. kontrak",
     "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NAME": "Nilai max. kontrak",
     "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.ACTION": "Action",
-    "TITLE.CURRENCY": "Rp. "
-  }
-  
+  "TITLE.CURRENCY": "Rp. ",
+  "TITLE.TABLE.NO_DATA_AVAILABLE": "Tidak ada data",
+  "TITLE.TABLE.WAITING_DATA": "Mohon tunggu, memuat data..."
+}
