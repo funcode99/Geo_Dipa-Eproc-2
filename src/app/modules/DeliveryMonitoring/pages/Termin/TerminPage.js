@@ -13,6 +13,7 @@ import Documents from './Documents';
 import BeritaAcara from './BeritaAcara';
 import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
 import { useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,6 +43,15 @@ const TerminPage = (props) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
+  const history = useHistory();
+  const { state } = useLocation();
+
+  React.useEffect(() => {
+    if (!state.task_id) {
+      history.goBack();
+    }
+    // eslint-disable-next-line
+  }, []);
 
   function handleChangeTab(e, newTabActive) {
     setTabActive(newTabActive);
@@ -81,7 +91,7 @@ const TerminPage = (props) => {
         </Container>
         <hr className="p-0 m-0" />
         <Container style={{ marginTop: 20, paddingBottom: 20 }}>
-          {tabActive === 0 && <Summary />}
+          {tabActive === 0 && <Summary taskId={state.task_id} />}
           {tabActive === 1 && <BeritaAcara />}
           {tabActive === 2 && <ServAccGR />}
           {tabActive !== 2 && <Documents />}

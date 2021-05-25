@@ -13,7 +13,7 @@ import {
 import { Checkbox } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
-// import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
+import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
 import { StyledTableHead } from '../../../../components/tables/style';
@@ -36,69 +36,49 @@ const navLists = [
   { id: 'link-barang', label: 'Barang' },
 ];
 
-export default function Summary() {
+export default function Summary({ taskId = '' }) {
   const [loading, setLoading] = React.useState(false);
-  const [Toast, setToast] = useToast();
   const [navActive, setNavActive] = React.useState(navLists[0].id);
-  const { dataJasa, dataBarang, dataContractById } = useSelector(
+  const [Toast, setToast] = useToast();
+  const { dataJasa, dataBarang } = useSelector(
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
 
-  // const getAllItems = async (isService) => {
-  //   try {
-  //     setLoading(true);
-  //     const {
-  //       data: { data },
-  //     } = await deliveryMonitoring.getAllItems(isService);
+  const setJasaAndBarang = (data) => {
+    const tempItemsJasa = [];
+    const tempItemsBarang = [];
 
-  //     if (isService) {
-  //       data.forEach((item) => {
-  //         item.show = false;
-  //       });
+    data.forEach((item) => {
+      item.show = false;
 
-  //       dispatch({
-  //         type: actionTypes.SetDataJasa,
-  //         payload: data,
-  //       });
-  //     } else {
-  //       dispatch({
-  //         type: actionTypes.SetDataBarang,
-  //         payload: data,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     setToast('Error API, please contact developer!');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      if (item.purch_order_services.length > 0) {
+        tempItemsJasa.push(item);
+      } else {
+        tempItemsBarang.push(item);
+      }
+    });
 
-  const getAllPO = async () => {
+    dispatch({
+      type: actionTypes.SetDataJasa,
+      payload: tempItemsJasa,
+    });
+
+    dispatch({
+      type: actionTypes.SetDataBarang,
+      payload: tempItemsBarang,
+    });
+  };
+
+  const getAllItems = async (taskId) => {
     try {
-      const data = dataContractById[0].purch_order.purch_order_items;
-      const tempPOJasa = [];
-      const tempPOBarang = [];
+      setLoading(true);
 
-      data.forEach((item) => {
-        item.show = false;
+      const {
+        data: { data },
+      } = await deliveryMonitoring.getTaskById(taskId);
 
-        if (item.purch_order_services.length > 0) {
-          tempPOJasa.push(item);
-        } else {
-          tempPOBarang.push(item);
-        }
-      });
-
-      dispatch({
-        type: actionTypes.SetDataJasa,
-        payload: tempPOJasa,
-      });
-
-      dispatch({
-        type: actionTypes.SetDataBarang,
-        payload: tempPOBarang,
-      });
+      setJasaAndBarang(data.items);
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -107,10 +87,7 @@ export default function Summary() {
   };
 
   React.useEffect(() => {
-    // getAllItems(true);
-    // getAllItems(false);
-
-    getAllPO();
+    getAllItems(taskId);
     // eslint-disable-next-line
   }, []);
 
