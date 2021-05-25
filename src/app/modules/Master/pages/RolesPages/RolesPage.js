@@ -98,7 +98,7 @@ const RolesPage = (props) => {
 
   const FormSchema = Yup.object().shape({
     min_value: Yup.string()
-      .matches(/^[0-9]*$/,
+      .matches(/^[0-9-.]*$/,
         intl.formatMessage({
           id: "AUTH.VALIDATION.NUMBER_ONLY",
         })
@@ -109,7 +109,7 @@ const RolesPage = (props) => {
         })
       ),
     max_value: Yup.string()
-      .matches(/^[0-9]*$/,
+      .matches(/^[0-9-.]*$/,
         intl.formatMessage({
           id: "AUTH.VALIDATION.NUMBER_ONLY",
         })
@@ -265,7 +265,7 @@ const RolesPage = (props) => {
         </div>
         <div className="table-loading-data">
           <div className="text-center font-weight-bold">
-            <div className="table-loading-data-potition">
+            <div className={`table-loading-data-potition ${errorData ? 'text-danger' : null }`}>
               {loadData && <span>
                 <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
                 <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
