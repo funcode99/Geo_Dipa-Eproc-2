@@ -8,6 +8,6 @@ const format = (countryCode, currency, number) => {
   return new Intl.NumberFormat(countryCode, options).format(number);
 };
 
-export const rupiah = (number) => format('id-ID', 'IDR', number).slice(0, -3);
+export const rupiah = (number) => format('id-ID', 'IDR', number);
 
 export default format;

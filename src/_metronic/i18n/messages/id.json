@@ -161,6 +161,19 @@
     "REQ.UPDATE_FAILED": "Perubahan gagal disimpan. Kesalahan Sistem, Silakan coba lagi.",
   "TITLE.TABLE.NO_DATA_AVAILABLE": "Tidak ada data",
   "TITLE.TABLE.WAITING_DATA": "Mohon tunggu, memuat data...",
-  "TITLE.ERROR_REQUEST": "Terjadi kesalahan saat mengakses server."
-  
+  "TITLE.MASTER_DATA.PERIODE.HEADER.NAME": "Nama",
+  "TITLE.MASTER_DATA.PERIODE.HEADER.VALUE": "Durasi (hari)",
+
+  "MASTER": {
+    "create": "Buat",
+    "update": "Update",
+    "confirmation": "Yakin ingin menghapus?",
+    "delete": "Hapus",
+    "cancel": "Batal",
+    "periode": {
+      "name": "Nama",
+      "val": "Durasi (hari)",
+      "action": "Aksi"
+    }
+  }
 }
