@@ -3,7 +3,7 @@ import { Paper, makeStyles, Icon, CircularProgress } from '@material-ui/core';
 import { Form, Row, Col, Container } from 'react-bootstrap';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useHistory, withRouter } from 'react-router-dom';
 import Tabs from '../../../../components/tabs';
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
@@ -141,6 +141,7 @@ export const ContractDetailPage = () => {
   const [Toast, setToast] = useToast();
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
+  const history = useHistory();
   const [tabActive, setTabActive] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
@@ -158,7 +159,10 @@ export const ContractDetailPage = () => {
         {
           content: (
             <Link
-              to={`/delivery_monitoring/contract/${contract_id}/task/${item.id}`}
+              to={{
+                pathname: `/delivery_monitoring/contract/${contract_id}/task`,
+                state: { task_id: item.id },
+              }}
             >
               <span>Document</span>
             </Link>
@@ -188,18 +192,14 @@ export const ContractDetailPage = () => {
       const {
         data: { data },
       } = await deliveryMonitoring.getContractById(contract_id);
-      console.log(data);
 
       dispatch({
         type: actionTypes.SetContractById,
         payload: data,
       });
 
-      console.log(data[0].tasks);
-
       generateTableContent(data[0].tasks);
     } catch (error) {
-      console.log(error);
       setToast('Error API, please contact developer!');
     } finally {
       setLoading(false);
@@ -407,4 +407,4 @@ export const ContractDetailPage = () => {
   );
 };
 
-export default ContractDetailPage;
+export default withRouter(ContractDetailPage);

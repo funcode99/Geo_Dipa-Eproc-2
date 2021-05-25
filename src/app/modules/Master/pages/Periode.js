@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-  // Table,
-  // TableBody,
-  // TableCell,
   Paper,
   makeStyles,
   Icon,
@@ -10,27 +7,15 @@ import {
   Container,
   CircularProgress,
 } from '@material-ui/core';
-// import SVG from 'react-inlinesvg';
 import { useFormik } from 'formik';
-// import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
-// import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import * as master from '../service/MasterCrud';
-// import http from '../../libs/http';
-import {
-  Flex,
-  // StyledTableHead,
-  Input,
-  IconWrapper,
-  // StyledTableRow,
-  // StyledHead,
-  // SubWrap,
-} from './style';
+import useTranslate from '../../../libs/translation';
+import { Flex, Input, IconWrapper } from './style';
 import { StyledModal } from '../../../components/modals';
 import useToast from '../../../components/toast';
 import CustomTable from '../../../components/tables';
 import Subheader from '../../../components/subheader';
-// import DocumentsTable from './Document';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Periode = () => {
   const classes = useStyles();
+  const { t } = useTranslate('MASTER');
   const [Toast, setToast] = useToast();
   // const [data, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
@@ -117,6 +103,10 @@ export const Periode = () => {
 
   React.useEffect(() => {
     getList();
+    console.log(t('update'));
+    // console.log(messages);
+    // console.log(lang);
+    // console.log(messages['TITLE.MASTER_DATA.PERIODE.HEADER.NAME']);
     // eslint-disable-next-line
   }, []);
 
@@ -244,7 +234,7 @@ export const Periode = () => {
                 style={{ width: '50%' }}
               >
                 {loading ? <CircularProgress /> : null}&nbsp;
-                {update.update ? 'Update' : 'Create'}
+                {update.update ? t('update') : t('create')}
               </Button>
             </div>
           </form>
@@ -259,7 +249,7 @@ export const Periode = () => {
       >
         <Flex>
           <div>
-            <p>Yakin ingin menghapus?</p>
+            <p>{t('confirmation')}</p>
           </div>
           <div>
             <Button
@@ -273,7 +263,7 @@ export const Periode = () => {
               }}
               onClick={() => handleDelete()}
             >
-              {loading ? <CircularProgress /> : null}&nbsp; Delete
+              {loading ? <CircularProgress /> : null}&nbsp; {t('delete')}
             </Button>
             <Button
               variant="contained"
@@ -281,16 +271,13 @@ export const Periode = () => {
               style={{ width: '40%', marginInline: 10 }}
               onClick={() => setConfirm({ ...confirm, show: false })}
             >
-              Cancel
+              {t('cancel')}
             </Button>
           </div>
         </Flex>
       </StyledModal>
       <div>
-        <Subheader
-          text="Master Periode"
-          // IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
-        />
+        <Subheader text="Master Periode" />
         <Flex>
           <div></div>
           <Button
@@ -299,63 +286,23 @@ export const Periode = () => {
             style={{ marginLeft: 'auto' }}
             onClick={() => handleModal('create')}
           >
-            Create
+            {t('create')}
           </Button>
         </Flex>
 
         <Paper className={classes.root} style={{ marginBottom: 30 }}>
           <CustomTable
-            tableHeader={['No', 'Nama', 'Value (dalam hari)', 'Action']}
+            tableHeader={[
+              'No',
+              t('periode.name'),
+              t('periode.val'),
+              t('periode.action'),
+            ]}
             tableContent={tableContent}
             marginY="my-1"
             hecto="hecto-10"
             loading={loading}
           />
-          {/* <Table className={classes.table}>
-            <StyledTableHead>
-              <StyledHead>
-                <TableCell>No</TableCell>
-                <TableCell>Periode Name</TableCell>
-                <TableCell>Periode Value</TableCell>
-
-                <TableCell align="center" className="MuiTableCell-sizeSmall">
-                  Action
-                </TableCell>
-              </StyledHead>
-            </StyledTableHead>
-            <TableBody>
-              {loading ? (
-                <StyledTableRow hover>
-                  <TableCell colSpan={4} align="center">
-                    <CircularProgress />
-                  </TableCell>
-                </StyledTableRow>
-              ) : null}
-
-              {data?.map((row, i) => (
-                <StyledTableRow key={row.id} hover>
-                  <TableCell scope="row">{i + 1}</TableCell>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.value}</TableCell>
-                  <TableCell align="center">
-                    <IconWrapper>
-                      <Icon
-                        style={{ marginInline: 5 }}
-                        className="fas fa-edit"
-                        onClick={() => handleModal('update', row.id)}
-                      />
-                      <Icon
-                        style={{ marginInline: 5 }}
-                        className="fas fa-trash"
-                        color="error"
-                        onClick={() => setConfirm({ show: true, id: row.id })}
-                      />
-                    </IconWrapper>
-                  </TableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table> */}
         </Paper>
       </div>
     </Container>
