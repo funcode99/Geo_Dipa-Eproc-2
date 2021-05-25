@@ -161,10 +161,9 @@
   "REQ.UPDATE_FAILED": "Failed save changes. System error, Please try again later.",
   "TITLE.TABLE.NO_DATA_AVAILABLE": "No data available",
   "TITLE.TABLE.WAITING_DATA": "Please wait, load data ...",
-  "TITLE.ERROR_REQUEST": "An error occurred while trying to access server."
+  "TITLE.ERROR_REQUEST": "An error occurred while trying to access server.",
   "TITLE.MASTER_DATA.PERIODE.HEADER.NAME": "Name",
   "TITLE.MASTER_DATA.PERIODE.HEADER.VALUE": "Duration (days)",
-
   "MASTER": {
     "create": "Create",
     "update": "Update",
