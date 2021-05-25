@@ -15,3 +15,7 @@ export function getContractById(id) {
 export function getAllItems(isService) {
   return axios.get(`${TEMP_URL}/delivery/item?is_service=${isService}`);
 }
+
+export function getTaskById(taskId) {
+  return axios.get(`/delivery/task/${taskId}`);
+}

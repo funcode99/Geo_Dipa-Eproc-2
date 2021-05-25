@@ -3,7 +3,7 @@ import { Paper, makeStyles, Icon, CircularProgress } from '@material-ui/core';
 import { Form, Row, Col, Container } from 'react-bootstrap';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
-import { Link, useParams, useHistory, withRouter } from 'react-router-dom';
+import { Link, useParams, withRouter } from 'react-router-dom';
 import Tabs from '../../../../components/tabs';
 import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
@@ -12,6 +12,7 @@ import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
 import CustomTable from '../../../../components/tables';
+import { rupiah } from '../../../../libs/currency';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -141,7 +142,6 @@ export const ContractDetailPage = () => {
   const [Toast, setToast] = useToast();
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
-  const history = useHistory();
   const [tabActive, setTabActive] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
@@ -307,7 +307,6 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Kewenangan"
                           // defaultValue={detailContractRows.kewenangan}
-                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -343,7 +342,7 @@ export const ContractDetailPage = () => {
                     </Form.Group>
                     <Form.Group as={Row}>
                       <Form.Label column md="4">
-                        Header Text PO
+                        Nama PO
                       </Form.Label>
                       <Col md="8">
                         <Form.Control
@@ -364,7 +363,10 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Harga Pekerjaan"
-                          // defaultValue={rupiah(contract.contract_value)}
+                          defaultValue={rupiah(
+                            parseInt(dataContractById[0].total_amount)
+                          )}
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -377,7 +379,9 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Penyedia"
-                          defaultValue={dataContractById[0].vendor.code}
+                          defaultValue={
+                            dataContractById[0].vendor.party.full_name
+                          }
                           disabled
                         />
                       </Col>

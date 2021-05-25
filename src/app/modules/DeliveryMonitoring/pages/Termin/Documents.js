@@ -12,105 +12,107 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
 import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
 import { TableCell, TableBody } from '@material-ui/core';
-import { useHistory, useLocation } from 'react-router-dom';
+import * as documentOption from '../../../../service/Document';
+import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
+import useToast from '../../../../components/toast';
 
-const docOptions = [
-  {
-    id: 1,
-    name: 'Laporan Pekerjaan',
-    document: [
-      {
-        id: 1,
-        name: 'Harian',
-      },
-      {
-        id: 2,
-        name: 'Mingguan',
-      },
-      {
-        id: 3,
-        name: 'Bulanan',
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: 'Dokumen Pendukung',
-    document: [
-      {
-        id: 1,
-        name: 'MSDS',
-      },
-      {
-        id: 2,
-        name: 'Manual Book',
-      },
-      {
-        id: 3,
-        name: 'Sertifika Kalibrasi',
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: 'BAPP/BAST',
-    document: [
-      {
-        id: 1,
-        name: 'BAPP',
-      },
-      {
-        id: 2,
-        name: 'BAST',
-      },
-    ],
-  },
-  {
-    id: 4,
-    name: 'Dokumen Lain-lain',
-  },
-];
+// const docOptions = [
+//   {
+//     id: 1,
+//     name: 'Laporan Pekerjaan',
+//     document: [
+//       {
+//         id: 1,
+//         name: 'Harian',
+//       },
+//       {
+//         id: 2,
+//         name: 'Mingguan',
+//       },
+//       {
+//         id: 3,
+//         name: 'Bulanan',
+//       },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     name: 'Dokumen Pendukung',
+//     document: [
+//       {
+//         id: 1,
+//         name: 'MSDS',
+//       },
+//       {
+//         id: 2,
+//         name: 'Manual Book',
+//       },
+//       {
+//         id: 3,
+//         name: 'Sertifika Kalibrasi',
+//       },
+//     ],
+//   },
+//   {
+//     id: 3,
+//     name: 'BAPP/BAST',
+//     document: [
+//       {
+//         id: 1,
+//         name: 'BAPP',
+//       },
+//       {
+//         id: 2,
+//         name: 'BAST',
+//       },
+//     ],
+//   },
+//   {
+//     id: 4,
+//     name: 'Dokumen Lain-lain',
+//   },
+// ];
 
-const rowDoc = [
-  {
-    id: 1,
-    type: 'Laporan Pekerjaan',
-    show: false,
-    childs: [
-      {
-        id: '1',
-        name: 'Minggu 1',
-        due_date: '01 Jan 2021',
-        mo: 'M',
-      },
-      {
-        id: '2',
-        name: 'Minggu 2',
-        due_date: '07 Jan 2021',
-        mo: 'M',
-      },
-    ],
-  },
-  {
-    id: 2,
-    type: 'Dokumen Pendukung',
-    show: false,
-    childs: [
-      {
-        id: '5',
-        name: 'FAT',
-        due_date: '31 Jan 2021',
-        mo: 'M',
-      },
-      {
-        id: '6',
-        name: 'SAT',
-        due_date: '31 Jan 2021',
-        mo: 'M',
-      },
-    ],
-  },
-];
+// const rowDoc = [
+//   {
+//     id: 1,
+//     type: 'Laporan Pekerjaan',
+//     show: false,
+//     childs: [
+//       {
+//         id: '1',
+//         name: 'Minggu 1',
+//         due_date: '01 Jan 2021',
+//         mo: 'M',
+//       },
+//       {
+//         id: '2',
+//         name: 'Minggu 2',
+//         due_date: '07 Jan 2021',
+//         mo: 'M',
+//       },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     type: 'Dokumen Pendukung',
+//     show: false,
+//     childs: [
+//       {
+//         id: '5',
+//         name: 'FAT',
+//         due_date: '31 Jan 2021',
+//         mo: 'M',
+//       },
+//       {
+//         id: '6',
+//         name: 'SAT',
+//         due_date: '31 Jan 2021',
+//         mo: 'M',
+//       },
+//     ],
+//   },
+// ];
 
 const theadDocuments = [
   { id: 'action', label: '' },
@@ -124,39 +126,75 @@ const theadDocuments = [
   { id: 'aksi', label: 'Action' },
 ];
 
-export default function Documents() {
-  const [docId, setDocId] = React.useState(0);
+export default function Documents({ taskId = '' }) {
+  const [docTypeId, setDocTypeId] = React.useState(0);
+  const [docTypeOptions, setDocTypeOptions] = React.useState([]);
+  const [docOptions, setDocOptions] = React.useState([]);
   const [showModalDelete, setShowModalDelete] = React.useState(false);
   const [showEditDoc, setShowEditDoc] = React.useState(false);
   const [showAddDelivModal, setShowAddDelivModal] = React.useState(false);
-  const { dataDocuments, dataContractById } = useSelector(
-    (state) => state.deliveryMonitoring
-  );
+  const [loading, setLoading] = React.useState(false);
+  const { dataDocuments } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
-  const history = useHistory();
-  const { state } = useLocation();
+  const [Toast, setToast] = useToast();
 
-  const getDataDocuments = (taskId) => {
-    let tempTaskDocuments = [];
+  const getDocumentTypeOption = async () => {
+    try {
+      setLoading(true);
+      const {
+        data: { data },
+      } = await documentOption.getDocTypeOptions();
+      setDocTypeOptions(data.document_types);
+    } catch (error) {
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    dataContractById[0].tasks.forEach((item) => {
-      if (item.id === taskId) {
-        tempTaskDocuments = item.task_documents;
+  const getDocumentOption = async (docTypeId) => {
+    try {
+      setLoading(true);
+      const documentType = docTypeOptions.find((item) => item.id === docTypeId);
+      if (documentType.is_periodic) {
+        const {
+          data: { data },
+        } = await documentOption.getPeriodByDocTypeOptions();
+        setDocOptions(data);
+      } else {
+        const {
+          data: { data },
+        } = await documentOption.getDocByTypeOptions(docTypeId);
+        setDocOptions(data);
       }
-    });
+    } catch (error) {
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    dispatch({
-      type: actionTypes.SetDataDocuments,
-      payload: tempTaskDocuments,
-    });
+  const getDataDocuments = async (taskId) => {
+    try {
+      setLoading(true);
+      const {
+        data: { data },
+      } = await deliveryMonitoring.getTaskById(taskId);
+
+      dispatch({
+        type: actionTypes.SetDataDocuments,
+        payload: data.task_documents,
+      });
+    } catch (error) {
+      setToast('Error API, please contact developer!');
+    } finally {
+      setLoading(false);
+    }
   };
 
   React.useEffect(() => {
-    if (!state.task_id) {
-      history.goBack();
-    }
-
-    getDataDocuments(state.task_id);
+    getDataDocuments(taskId);
+    getDocumentTypeOption();
     // eslint-disable-next-line
   }, []);
 
@@ -179,8 +217,8 @@ export default function Documents() {
     });
   };
 
-  const showDocOption = (key) => {
-    if (key === 4) {
+  const showDocOption = (docTypeId) => {
+    if (docTypeId === 4) {
       return (
         <div className="form-group">
           <label htmlFor="doc" className="h3">
@@ -195,9 +233,9 @@ export default function Documents() {
           />
         </div>
       );
-    } else if (key !== 0) {
+    } else if (docTypeId) {
       return (
-        <CheckBoxStyled label="Document" list={docOptions} keyId={docId} />
+        <CheckBoxStyled label="Document" list={docOptions} keyId={docTypeId} />
       );
     } else {
       return null;
@@ -205,8 +243,9 @@ export default function Documents() {
   };
 
   const handleSelectChange = (event) => {
-    const docId = +event.target.value;
-    setDocId(docId);
+    if (event.target.value) getDocumentOption(event.target.value);
+
+    setDocTypeId(event.target.value);
   };
 
   return (
@@ -263,11 +302,13 @@ export default function Documents() {
                 <div className="col-6">
                   <SelectStyled
                     label="Document Type"
-                    options={docOptions}
-                    onChange={handleSelectChange}
+                    options={docTypeOptions}
+                    onChange={(e) => handleSelectChange(e)}
                   />
                 </div>
-                <div className="col-6">{showDocOption(docId)}</div>
+                <div className="col-6">
+                  {docOptions && showDocOption(docTypeId)}
+                </div>
               </div>
               <div className="d-flex">
                 <div></div>
