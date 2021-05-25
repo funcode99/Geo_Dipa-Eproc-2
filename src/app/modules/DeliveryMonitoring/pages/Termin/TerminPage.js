@@ -94,7 +94,7 @@ const TerminPage = (props) => {
           {tabActive === 0 && <Summary taskId={state.task_id} />}
           {tabActive === 1 && <BeritaAcara />}
           {tabActive === 2 && <ServAccGR />}
-          {tabActive !== 2 && <Documents />}
+          {tabActive !== 2 && <Documents taskId={state.task_id} />}
         </Container>
       </Paper>
     </Container>

@@ -48,9 +48,17 @@ export const StyledTable = styled(Table)`
   font-size: 0.75rem;
 `;
 
-export const SelectStyled = (props) => {
-  const { options, label, onChange } = props;
+const initialOptions = [
+  { id: 'item-1', name: 'Item One' },
+  { id: 'item-2', name: 'Item Two' },
+  { id: 'item-3', name: 'Item Three' },
+];
 
+export const SelectStyled = ({
+  options = initialOptions,
+  label = 'Select Option',
+  onChange,
+}) => {
   return (
     <div className="form-group">
       <label htmlFor="doc_type" className="h3">
@@ -68,28 +76,29 @@ export const SelectStyled = (props) => {
   );
 };
 
-export const CheckBoxStyled = (props) => {
-  const { list, keyId, label } = props;
+export const CheckBoxStyled = ({
+  list = initialOptions,
+  keyId = '',
+  label = 'Checkbox',
+}) => {
   return (
     <div className="form-group">
       <label htmlFor="doc_type" className="h3">
         {label}
       </label>
-      {list
-        .find((item) => item.id === +keyId)
-        .document.map((item) => (
-          <div className="form-check" key={item.id}>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              value={item.id}
-              id={`check-${item.id}`}
-            />
-            <label className="form-check-label" htmlFor={`check-${keyId}`}>
-              {item.name}
-            </label>
-          </div>
-        ))}
+      {list.map((item) => (
+        <div className="form-check" key={item.id}>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            value={item.id}
+            id={`check-${item.id}`}
+          />
+          <label className="form-check-label" htmlFor={`check-${keyId}`}>
+            {item.name}
+          </label>
+        </div>
+      ))}
     </div>
   );
 };
