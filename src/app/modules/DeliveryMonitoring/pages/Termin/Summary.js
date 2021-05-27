@@ -45,31 +45,6 @@ export default function Summary({ taskId = '' }) {
   );
   const dispatch = useDispatch();
 
-  const setJasaAndBarang = (data) => {
-    const tempItemsJasa = [];
-    const tempItemsBarang = [];
-
-    data.forEach((item) => {
-      item.show = false;
-
-      if (item.purch_order_services.length > 0) {
-        tempItemsJasa.push(item);
-      } else {
-        tempItemsBarang.push(item);
-      }
-    });
-
-    dispatch({
-      type: actionTypes.SetDataJasa,
-      payload: tempItemsJasa,
-    });
-
-    dispatch({
-      type: actionTypes.SetDataBarang,
-      payload: tempItemsBarang,
-    });
-  };
-
   const getAllItems = async (taskId) => {
     try {
       setLoading(true);
@@ -78,7 +53,15 @@ export default function Summary({ taskId = '' }) {
         data: { data },
       } = await deliveryMonitoring.getTaskById(taskId);
 
-      setJasaAndBarang(data.items);
+      dispatch({
+        type: actionTypes.SetDataJasa,
+        payload: data.task_item_services,
+      });
+
+      dispatch({
+        type: actionTypes.SetDataBarang,
+        payload: data.task_items,
+      });
     } catch (error) {
       setToast('Error API, please contact developer!');
     } finally {
@@ -185,8 +168,8 @@ export default function Summary({ taskId = '' }) {
                               <TableCell className="align-middle"></TableCell>
                             </StyledTableRow>
 
-                            {item.purch_order_services.length !== 0 && item.show
-                              ? item.purch_order_services.map((service) => (
+                            {item.item_services.length !== 0 && item.show
+                              ? item.item_services.map((service) => (
                                   <StyledTableRow key={service.id}>
                                     <TableCell className="align-middle">
                                       <Checkbox
