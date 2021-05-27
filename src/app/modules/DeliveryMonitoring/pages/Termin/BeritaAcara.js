@@ -368,7 +368,7 @@ export default function BeritaAcara() {
 
       <Card className="mt-5">
         <CardBody>
-          {navActive === 'BAPP' && (
+          {navActive === 'link-bapp' && (
             <React.Fragment>
               <Button
                 variant="contained"
@@ -412,7 +412,7 @@ export default function BeritaAcara() {
             </React.Fragment>
           )}
 
-          {navActive === 'BAST' && (
+          {navActive === 'link-bast' && (
             <React.Fragment>
               <Button
                 variant="contained"

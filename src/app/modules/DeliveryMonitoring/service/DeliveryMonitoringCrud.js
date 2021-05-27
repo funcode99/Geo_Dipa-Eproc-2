@@ -19,3 +19,7 @@ export function getAllItems(isService) {
 export function getTaskById(taskId) {
   return axios.get(`/delivery/task/${taskId}`);
 }
+
+export function submitItems(values, taskId) {
+  return axios.post(`/delivery/task/${taskId}`, values);
+}
