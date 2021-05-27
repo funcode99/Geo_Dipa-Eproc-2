@@ -165,7 +165,7 @@ function ItemContractSummary(props) {
   });
 
   const check_email = () => {
-    if (formikUpdate.values) {
+    if (formikUpdate.values.email.length > 3) {
       checkEmail(formikUpdate.values.email)
         .then(({ data: { data } }) => {
           setEmailAvailability(data.check)
@@ -173,7 +173,7 @@ function ItemContractSummary(props) {
         .catch((error) => {
           setEmailAvailability(false)
         });
-    } else if (formikNew.values) {
+    } else if (formikNew.values.email.length > 3) {
       checkEmail(formikNew.values.email)
         .then(({ data: { data } }) => {
           setEmailAvailability(data.check)
@@ -423,7 +423,7 @@ function ItemContractSummary(props) {
                   <button
                     type="button"
                     className="btn btn-danger rounded-0"
-                    onClick={() => setEditEmail(false)}
+                    onClick={() => { setEditEmail(false); formikUpdate.setValues({ email: "" })}}
                     disabled={loading}
                   >
                     Batal
