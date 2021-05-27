@@ -128,7 +128,6 @@ function CreateNewAccount(props) {
                 .catch((error) => {
                 });
         }
-
     }
 
     const getInputClasses = (fieldname) => {

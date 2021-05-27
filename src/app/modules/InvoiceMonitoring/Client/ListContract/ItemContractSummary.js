@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, useRef } from "react";
+import { connect, shallowEqual, useSelector } from "react-redux";
 import {
   // FormattedMessage,
   injectIntl,
@@ -25,12 +25,17 @@ import {
 } from "@material-ui/core";
 import Select2 from "react-select2-wrapper";
 import "react-select2-wrapper/css/select2.css";
+import { getPicContract, getPicVendor, checkEmail, updateEmail, requestUser, deleteUser, assignUser } from './service/invoice';
+import useToast from '../../../../components/toast';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function ItemContractSummary(props) {
+  const { intl } = props;
   const [data] = useState([
     {
       name: "BAPP",
@@ -84,8 +89,33 @@ function ItemContractSummary(props) {
   ]);
 
   const [openModalEmail, setopenModalEmail] = useState(false);
+  const [openModalDeletePIC, setOpenModalDeletePIC] = useState(false);
+  const [picContractData, setPicContractData] = useState([]);
+  const [picVendorData, setPicVendorData] = useState([]);
+  const [editEmail, setEditEmail] = useState(false);
+  const [emailAvailability, setEmailAvailability] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [tempPic, setTempPic] = useState([]);
 
+  const [Toast, setToast] = useToast();
+  const updateEmailRef = useRef(null)
+
+  const vendor_id = useSelector((state) => state.auth.user.data.vendor_id, shallowEqual);
+  const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
+
+  const getPicContractData = () => {
+    getPicContract({ id: "7aff33c8-6d24-4a93-bf48-e86e8b18d457", vendor_id: vendor_id })
+      .then(response => { setPicContractData(response.data.data) })
+      .catch(() => { setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000) })
+  }
+  const getPicVendorData = () => {
+    getPicVendor(vendor_id)
+      .then(response => { setPicVendorData(response.data.data) })
+      .catch(() => { setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000) })
+  }
   useEffect(() => {
+    getPicContractData()
+    getPicVendorData()
     window.$("#kt_daterangepicker_1").daterangepicker({
       buttonClasses: " btn",
       applyClass: "btn-primary",
@@ -97,9 +127,243 @@ function ItemContractSummary(props) {
       startDate: new Date(),
       endDate: new Date(),
     });
+  }, []);
+
+  const picUnselect = (e) => {
+    var value = e.params.data.id
+    var temp = JSON.parse(JSON.stringify(picContractData))
+    var index = temp.indexOf(value)
+    temp.splice(index, 1)
+    setPicContractData(temp)
+  }
+
+  const picSelect = (e) => {
+    var value = e.params.data.id
+    var temp = [...picContractData, value]
+    setPicContractData(temp)
+  }
+
+  const initialValuesUpdate = {
+    email: "",
+    id: ""
+  };
+
+  const initialValues = {
+    email: "",
+    user_id: user_id,
+    vendor_id: vendor_id,
+    monitoring_type: "INVOICE"
+  };
+
+  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function (errorMessage) {
+    return this.test(`test-card-length`, errorMessage, function (value) {
+      const { path, createError } = this;
+      return (
+        (emailAvailability) || createError({ path, message: errorMessage })
+      );
+    });
   });
+
+  const check_email = () => {
+    if (formikUpdate.values) {
+      checkEmail(formikUpdate.values.email)
+        .then(({ data: { data } }) => {
+          setEmailAvailability(data.check)
+        })
+        .catch((error) => {
+          setEmailAvailability(false)
+        });
+    } else if (formikNew.values) {
+      checkEmail(formikNew.values.email)
+        .then(({ data: { data } }) => {
+          setEmailAvailability(data.check)
+        })
+        .catch((error) => {
+          setEmailAvailability(false)
+        });
+    }
+  }
+
+  const UpdateSchema = Yup.object().shape({
+    email: Yup.string()
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      )
+      .email(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.INVALID_EMAILS",
+        })
+      )
+      .min(8, intl.formatMessage({
+        id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
+      }, { length: 8 }))
+      .max(50, intl.formatMessage({
+        id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
+      }, { length: 50 }))
+      .checkAvailabilityEmail(
+        intl.formatMessage({
+          id: "REQ.EMAIL_NOT_AVAILABLE",
+        }))
+  });
+
+  const NewSchema = Yup.object().shape({
+    email: Yup.string()
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      )
+      .email(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.INVALID_EMAILS",
+        })
+      )
+      .min(8, intl.formatMessage({
+        id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
+      }, { length: 8 }))
+      .max(50, intl.formatMessage({
+        id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
+      }, { length: 50 }))
+      .checkAvailabilityEmail(
+        intl.formatMessage({
+          id: "REQ.EMAIL_NOT_AVAILABLE",
+        }))
+  });
+
+  const formikUpdate = useFormik({
+    initialValues: initialValuesUpdate,
+    validationSchema: UpdateSchema
+  });
+
+  const formikNew = useFormik({
+    initialValues,
+    validationSchema: NewSchema
+  });
+
+  const handleUpdate = (index) => {
+    setEditEmail(true)
+    formikUpdate.setValues({
+      email: picVendorData[index].text,
+      id: picVendorData[index].id,
+      user_id: user_id,
+      vendor_id: vendor_id,
+      monitoring_type: "INVOICE"
+    })
+    updateEmailRef.current.scrollIntoView({ behavior: 'smooth'})
+  }
+
+  const submitUpdateEmail = () => {
+    setLoading(true)
+    updateEmail(formikUpdate.values)
+      .then(response => {
+        if (response.data.message === "Data Not Found") {
+          setToast(intl.formatMessage({ id: "REQ.NOT_FOUND" }), 10000)
+        } else {
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_EMAIL_SUCCESS" }), 10000)
+          getPicVendorData()
+          setEditEmail(false)
+          setEmailAvailability(false)
+        }
+        setLoading(false)
+      })
+      .catch(() => {
+        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000)
+        setLoading(false)
+      })
+  }
+
+  const submitNewEmail = () => {
+    setLoading(true)
+    requestUser(formikNew.values)
+      .then(response => {
+        formikNew.setValues({ email: "" })
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_ACCOUNT_SUCCESS" }), 10000)
+        getPicVendorData()
+        setEmailAvailability(false)
+        setLoading(false)
+      })
+      .catch(() => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
+        setLoading(false)
+      })
+  }
+
+  const openDeletePIC = (index) => {
+    setOpenModalDeletePIC(true)
+    setTempPic(picVendorData[index])
+  }
+
+  const deletePic = (id) => {
+    setLoading(true)
+    deleteUser({ users_pic_id: id })
+      .then(response => {
+        setOpenModalDeletePIC(false)
+        setToast(intl.formatMessage({ id: "REQ.DELETE_ACCOUNT_SUCCESS" }), 10000)
+        getPicVendorData()
+        setLoading(false)
+        setEditEmail(false)
+      })
+      .catch(() => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
+        setLoading(false)
+        setOpenModalDeletePIC(false)
+      })
+  }
+
+  const assignPic = () => {
+    setLoading(true)
+    var data = { contract_id: "7aff33c8-6d24-4a93-bf48-e86e8b18d457", data: picContractData, monitoring_type: "INVOICE", user_id: user_id }
+    assignUser(data)
+      .then(response => {
+        setToast(intl.formatMessage({ id: "REQ.ASSIGN_ACCOUNT_SUCCESS" }), 10000)
+        getPicContractData()
+        setLoading(false)
+      })
+      .catch(() => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
+        setLoading(false)
+      })
+  }
+
   return (
     <React.Fragment>
+      <Toast />
+      <Dialog
+        open={openModalDeletePIC}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+        style={{zIndex: '1400'}}
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          Batalkan PIC
+        </DialogTitle>
+        <DialogContent>
+          Apakah anda akan membatalkan PIC dengan Email <span className="text-danger">{tempPic.text}</span> ?
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-secondary"
+            onClick={() => { setOpenModalDeletePIC(false) }}
+            disabled={loading}
+          >
+            Kembali
+          </button>
+          <button
+            className="btn btn-danger"
+            disabled={loading}
+            onClick={() => deletePic(tempPic.id)}
+          >
+            Batalkan
+            {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
+          </button>
+        </DialogActions>
+      </Dialog>
       <Dialog
         open={openModalEmail}
         TransitionComponent={Transition}
@@ -110,113 +374,124 @@ function ItemContractSummary(props) {
         fullWidth={true}
       >
         <DialogTitle id="alert-dialog-slide-title">
-          Daftar Email PIC
+          Daftar Email PIC / {editEmail ? 'Ubah' : 'Tambah'}
         </DialogTitle>
         <DialogContent>
-          <div>
-            <div className="form-group row">
+          <div ref={updateEmailRef}>
+            {!editEmail && <div className="form-group row">
               <label className="col-sm-2 col-form-label">Email</label>
               <div className="input-group col-sm-10">
                 <input
-                  type="text"
+                  type="email"
                   className="form-control"
                   placeholder="Email"
+                  onKeyUp={check_email}
+                  {...formikNew.getFieldProps('email')}
                 />
                 <div className="input-group-append">
-                  <span className="input-group-text bg-primary text-white pointer">
+                  <button
+                    type="button"
+                    className="btn btn-primary rounded-right"
+                    disabled={loading || !emailAvailability || (formikNew.touched.email && formikNew.errors.email)}
+                    onClick={submitNewEmail}
+                  >
                     Simpan
-                  </span>
+                    {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
+                  </button>
                 </div>
+                {(formikNew.touched.email && formikNew.errors.email) ? (
+                  <div className="invalid-feedback display-block">
+                    {formikNew.errors.email}
+                  </div>
+                ) : null}
               </div>
             </div>
+            }
+            {editEmail && <div className="form-group row">
+              <label className="col-sm-2 col-form-label">Email</label>
+              <div className="input-group col-sm-10">
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Email"
+                  onKeyUp={check_email}
+                  {...formikUpdate.getFieldProps('email')}
+                  disabled={loading}
+                />
+                <div className="input-group-append">
+                  {/* <span className="input-group-text bg-danger text-white pointer" onClick={() => setEditEmail(false)}> */}
+                  <button
+                    type="button"
+                    className="btn btn-danger rounded-0"
+                    onClick={() => setEditEmail(false)}
+                    disabled={loading}
+                  >
+                    Batal
+                    </button>
+                  {/* </span> */}
+                </div>
+                <div className="input-group-append ml-0">
+                  <button
+                    type="button"
+                    className="btn btn-primary rounded-right"
+                    onClick={submitUpdateEmail}
+                    disabled={loading || !emailAvailability || (formikUpdate.touched.email && formikUpdate.errors.email)}
+                  >
+                    Ubah
+                    {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
+                  </button>
+                </div>
+                {(formikUpdate.touched.email && formikUpdate.errors.email) || !emailAvailability ? (
+                  <div className="invalid-feedback display-block">
+                    {formikUpdate.errors.email}
+                  </div>
+                ) : null}
+              </div>
+
+            </div>}
             <div className="form-group">
               <label>Register:</label>
               <ul className="list-group">
-                <li className="list-group-item">
-                  <div className="row">
-                    <span className="col-md">Jeffry@gmail.com</span>
-                    <div className="col-md text-right-md">
-                      <span>
-                        Status:{" "}
-                        <span className="font-weight-bold text-primary">
-                          Terverifikasi
-                        </span>
-                      </span>
-                      {/* <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span> */}
-                    </div>
-                  </div>
-                </li>
-                <li className="list-group-item">
-                  <div className="row">
-                    <span className="col-md">JeffryAR@gmail.com</span>
-                    <div className="col-md text-right-md">
-                      <span>
-                        Status:{" "}
-                        <span className="font-weight-bold text-danger">
-                          Belum Verifikasi
-                        </span>
-                      </span>
-                      <span className="ml-2">
-                        <i className="fas fa-edit text-success pointer"></i>
-                      </span>
-                      <span className="ml-2">
-                        <i className="far fa-trash-alt text-danger pointer"></i>
-                      </span>
-                    </div>
-                  </div>
-                </li>
-                <li className="list-group-item">
-                  <div className="row">
-                    <span className="col-md">Rosman@gmail.com</span>
-                    <div className="col-md text-right-md">
-                      <span>
-                        Status:{" "}
-                        <span className="font-weight-bold text-danger">
-                          Belum Verifikasi
-                        </span>
-                      </span>
-                      <span className="ml-2">
-                        <i className="fas fa-edit text-success pointer"></i>
-                      </span>
-                      <span className="ml-2">
-                        <i className="far fa-trash-alt text-danger pointer"></i>
-                      </span>
-                    </div>
-                  </div>
-                </li>
-                <li className="list-group-item">
-                  <div className="row">
-                    <span className="col-md">Udin@gmail.com</span>
-                    <div className="col-md text-right-md">
-                      <span>
-                        Status:{" "}
-                        <span className="font-weight-bold text-primary">
-                          Terverifikasi
-                        </span>
-                      </span>
-                      {/* <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span> */}
-                    </div>
-                  </div>
-                </li>
-                <li className="list-group-item">
-                  <div className="row">
-                    <span className="col-md">Adin@gmail.com</span>
-                    <div className="col-md text-right-md">
-                      <span>
-                        Status:{" "}
-                        <span className="font-weight-bold text-danger">
-                          Belum Verifikasi
-                        </span>
-                      </span>
-                      <span className="ml-2">
-                        <i className="fas fa-edit text-success pointer"></i>
-                      </span>
-                      <span className="ml-2">
-                        <i className="far fa-trash-alt text-danger pointer"></i>
-                      </span>
-                    </div>
-                  </div>
-                </li>
+                {
+                  picVendorData.map((item, index) => {
+                    return (
+                      <li className="list-group-item" key={index.toString()}>
+                        <div className="row">
+                          <span className="col-md">{item.text}</span>
+                          <div className="col-md text-right-md">
+                            <span>
+                              Status:{" "}
+                              <span className={`font-weight-bold ${item.actives === 'true' ? 'text-primary' : 'text-danger'}`}>
+                                {item.actives === 'true' ? 'Terverifikasi' : 'Belum Verifikasi'}
+                              </span>
+                            </span>
+                            {item.actives === 'false' &&
+                              <span>
+                                <button
+                                  className="btn p-0 ml-2"
+                                  type="button"
+                                  onClick={() => handleUpdate(index)}
+                                  disabled={loading}
+                                >
+                                  <i className="fas fa-edit text-success pointer"></i>
+                                </button>
+                                <button
+                                  className="btn p-0 ml-2"
+                                  type="button"
+                                  onClick={() => openDeletePIC(index)}
+                                  disabled={loading}
+                                >
+                                  <i className="far fa-trash-alt text-danger pointer"></i>
+                                </button>
+                              </span>
+                            }
+                            {/* <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span> */}
+                          </div>
+                        </div>
+                      </li>
+                    )
+                  })
+                }
               </ul>
             </div>
           </div>
@@ -397,13 +672,10 @@ function ItemContractSummary(props) {
                 <div className="input-group col-sm-8">
                   <Select2
                     multiple
-                    defaultValue={[1, 2]}
-                    data={[
-                      { text: "jeffryar@gmail.com", id: 1 },
-                      { text: "azhariar@gmail.com", id: 2 },
-                      { text: "udin@gmail.com", id: 3 },
-                      { text: "adin@gmail.com", id: 4 },
-                    ]}
+                    defaultValue={picContractData}
+                    data={picVendorData}
+                    onUnselect={picUnselect}
+                    onSelect={picSelect}
                     options={{
                       placeholder: "search by tags",
                     }}
@@ -426,8 +698,14 @@ function ItemContractSummary(props) {
           </div>
         </CardBody>
         <CardFooter className="text-right">
-          <button type="button" className="btn btn-primary mx-1">
+          <button
+            type="button"
+            className="btn btn-primary mx-1"
+            onClick={assignPic}
+            disabled={loading}
+          >
             Simpan
+            {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
           </button>
         </CardFooter>
       </Card>

@@ -50,9 +50,6 @@
     "AUTH.LABEL.FORGOT_BODY": "Tolong masukan username yang digunakan untuk account Anda",
     "AUTH.LABEL.FORGOT_HEADING": "Reset Password",
     "AUTH.LABEL.BUTTON_SUBMIT": "Kirim saya tata cara mengganti Kata Sandi",
-    "AUTH.VALIDATION.ERROR": "Terjadi kesalahan di sistem. Tolong hubungi admin untuk melanjutkan",
-    "AUTH.VALIDATION.SUCCESS": "Tata cara pengaturan ulang Kata Sandi berhasil dikirim",
-    "AUTH.VALIDATION.NOT_FOUND_USERNAME": "Akun dengan username ini tidak terasosiasi dengan email manapun",
     "AUTH.VALIDATION.INVALID": "{name} tidak valid",
     "AUTH.VALIDATION.REQUIRED": "{name} Dibutuhkan",
     "AUTH.VALIDATION.MIN_LENGTH": "{name}} panjang minimum adalah {{min}",
@@ -66,6 +63,10 @@
     "AUTH.VALIDATION.INVALID_FIELD": "Bidang tidak valid",
     "AUTH.VALIDATION.FORGOT_MIN_CHARACTER": "Minimal 3 karakter",
     "AUTH.VALIDATION.FORGOT_MAX_CHARACTER": "Maximal 50 karakter",
+  "AUTH.VALIDATION.ERROR": "Terjadi kesalahan di sistem. Tolong hubungi admin untuk melanjutkan",
+  "AUTH.VALIDATION.SUCCESS": "Tata cara pengaturan ulang Kata Sandi berhasil dikirim",
+  "AUTH.VALIDATION.NOT_FOUND_USERNAME": "Akun dengan username ini tidak terasosiasi dengan email manapun",
+  "AUTH.VALIDATION.INVALID_EMAILS": "Alamat email salah",
     "ECOMMERCE.COMMON.SELECTED_RECORDS_COUNT": "Jumlah catatan yang dipilih: ",
     "ECOMMERCE.COMMON.ALL": "Semua",
     "ECOMMERCE.COMMON.SUSPENDED": "Tergantung",
@@ -157,8 +158,12 @@
     "TITLE.MASTER_DATA.ROLES.MODAL_UPDATE.MAX_VALUE": "Max. nilai invoice",
     "TITLE.UPDATE": "Perbaharui",
   "TITLE.CURRENCY": "Rp. ",
-    "REQ.UPDATE_SUCCESS": "Perubahan berhasil disimpan.",
+  "REQ.UPDATE_EMAIL_SUCCESS": "Perubahan berhasil disimpan. Email pendaftaran dikirimkan.",
     "REQ.UPDATE_FAILED": "Perubahan gagal disimpan. Kesalahan Sistem, Silakan coba lagi.",
+  "REQ.REQUEST_ACCOUNT_SUCCESS": "Permintaan akun baru berhasil. Email pendaftaran dikirimkan.",
+  "REQ.DELETE_ACCOUNT_SUCCESS": "Akun berhasil dihapus.",
+  "REQ.ASSIGN_ACCOUNT_SUCCESS": "Pemilihan PIC berhasil ditetapkan.",
+  "REQ.REQUEST_FAILED": "Permintaan gagal dilakukan. Kesalahan Sistem, Silakan coba lagi.",
   "TITLE.TABLE.NO_DATA_AVAILABLE": "Tidak ada data",
   "TITLE.TABLE.WAITING_DATA": "Mohon tunggu, memuat data...",
   "TITLE.ERROR_REQUEST": "Terjadi kesalahan saat mengakses server.",
@@ -175,6 +180,7 @@
       "val": "Durasi (hari)",
       "action": "Aksi"
     }
-  }
-
+  },
+  "REQ.EMAIL_NOT_AVAILABLE": "Email Tidak Tersedia",
+  "REQ.NOT_FOUND": "Error data tidak ditemukan"
 }
