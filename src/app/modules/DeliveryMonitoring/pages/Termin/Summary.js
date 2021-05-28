@@ -531,7 +531,7 @@ export default function Summary({ taskId = '' }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
-                                            min={0}
+                                            min={1}
                                             max={service.qty_available}
                                             disabled={!service.checked}
                                             defaultValue={service.qty_available}
@@ -596,7 +596,7 @@ export default function Summary({ taskId = '' }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
-                                            min={0}
+                                            min={1}
                                             max={service.service.qty_available}
                                             disabled={!service.checked}
                                             defaultValue={
@@ -714,7 +714,7 @@ export default function Summary({ taskId = '' }) {
                                   <Form.Control
                                     type="number"
                                     size="sm"
-                                    min={0}
+                                    min={1}
                                     max={item.qty_available}
                                     disabled={!item.checked}
                                     defaultValue={item.qty_available}
@@ -776,7 +776,7 @@ export default function Summary({ taskId = '' }) {
                                   <Form.Control
                                     type="number"
                                     size="sm"
-                                    min={0}
+                                    min={1}
                                     max={item.item.qty_available}
                                     disabled={!item.checked}
                                     defaultValue={item.item.qty_available}
