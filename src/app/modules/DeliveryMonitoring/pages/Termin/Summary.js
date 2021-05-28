@@ -170,8 +170,8 @@ export default function Summary({ taskId = '' }) {
     item.checked = !item.checked;
   };
 
-  const handleChecklistBarang = (qtyValue, itemId, desc) => {
-    addSubmitBarang(qtyValue, itemId, desc);
+  const handleChecklistBarang = (qtyValue, qtyAvailable, itemId, desc) => {
+    addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
 
     let tempBarang = dataBarang;
 
@@ -260,36 +260,50 @@ export default function Summary({ taskId = '' }) {
     });
   };
 
-  const addSubmitBarang = (qtyValue, itemId, desc) => {
-    const tempSubmitItems = itemBarang;
+  const addSubmitBarang = (qtyValue, qtyAvailable, itemId, desc) => {
+    const intQty = parseInt(qtyValue);
+    const intQtyAvailable = parseInt(qtyAvailable);
 
-    const submitItem = {
-      item_id: itemId,
-      qty: qtyValue,
-      desc: desc,
-    };
+    //validate quantity number
+    if (intQty < 1 || intQty > intQtyAvailable) {
+      removeFromSubmitItem(itemId, 'barang');
+      setToast(
+        `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
+        10000
+      );
+    } else {
+      const tempSubmitItems = itemBarang;
 
-    if (tempSubmitItems.length === 0) {
-      tempSubmitItems.push(submitItem);
-    }
+      const submitItem = {
+        item_id: itemId,
+        qty: intQty,
+        desc: desc,
+      };
 
-    if (tempSubmitItems.length > 0) {
-      const findItem = tempSubmitItems.find((item) => item.item_id === itemId);
-
-      if (findItem) {
-        tempSubmitItems.forEach((item) => {
-          if (item.item_id === itemId) {
-            item.qty = qtyValue;
-          }
-        });
-      }
-
-      if (!findItem) {
+      if (tempSubmitItems.length === 0) {
         tempSubmitItems.push(submitItem);
       }
-    }
 
-    setItemBarang(tempSubmitItems);
+      if (tempSubmitItems.length > 0) {
+        const findItem = tempSubmitItems.find(
+          (item) => item.item_id === itemId
+        );
+
+        if (findItem) {
+          tempSubmitItems.forEach((item) => {
+            if (item.item_id === itemId) {
+              item.qty = intQty;
+            }
+          });
+        }
+
+        if (!findItem) {
+          tempSubmitItems.push(submitItem);
+        }
+      }
+
+      setItemBarang(tempSubmitItems);
+    }
   };
 
   const addSubmitJasa = (qtyValue, itemId, desc) => {
@@ -336,19 +350,24 @@ export default function Summary({ taskId = '' }) {
       };
 
       const {
-        data: { status },
+        data: { status, code, message },
       } = await deliveryMonitoring.submitItems(requestData, taskId);
 
       if (status) {
         getAllItems(taskId);
         setShowModal(false);
+      } else {
+        if (code === 422) {
+          setShowModal(false);
+          setToast(message, 10000);
+        }
       }
     } catch (error) {
       if (
         error.response?.status !== 400 &&
         error.response?.data.message !== 'TokenExpiredError'
       ) {
-        setToast('Error API, Please contact developer!');
+        setToast('Error API, Please contact developer!', 10000);
       }
     } finally {
       disableLoading();
@@ -714,6 +733,7 @@ export default function Summary({ taskId = '' }) {
                                     onChange={() =>
                                       handleChecklistBarang(
                                         item.qty_available,
+                                        item.qty_available,
                                         item.id,
                                         item.desc
                                       )
@@ -744,6 +764,7 @@ export default function Summary({ taskId = '' }) {
                                     onChange={(e) =>
                                       addSubmitBarang(
                                         e.target.value,
+                                        item.qty_available,
                                         item.id,
                                         item.desc
                                       )
@@ -774,6 +795,7 @@ export default function Summary({ taskId = '' }) {
                                     onChange={() =>
                                       handleChecklistBarang(
                                         item.item.qty_available,
+                                        item.item.qty_available,
                                         item.item.id,
                                         item.item.desc
                                       )
@@ -802,10 +824,11 @@ export default function Summary({ taskId = '' }) {
                                     min={1}
                                     max={item.item.qty_available}
                                     disabled={!item.checked}
-                                    defaultValue={item.item.qty_available}
+                                    defaultValue={item.qty}
                                     onChange={(e) =>
                                       addSubmitBarang(
                                         e.target.value,
+                                        item.item.qty_available,
                                         item.item.id,
                                         item.item.desc
                                       )
