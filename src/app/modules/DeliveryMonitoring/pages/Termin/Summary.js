@@ -145,35 +145,22 @@ export default function Summary({ taskId = '' }) {
   };
 
   const removeFromSubmitBarang = (itemId) => {
-    const tempBarang = dataBarang;
     let tempSubmitBarang = itemBarang;
 
-    tempBarang.forEach((item) => {
-      if (item.id === itemId && !item.checked) {
-        tempSubmitBarang = tempSubmitBarang.filter(
-          (item) => item.item_id !== itemId
-        );
-      }
-    });
+    tempSubmitBarang = tempSubmitBarang.filter(
+      (item) => item.item_id !== itemId
+    );
 
     setItemBarang(tempSubmitBarang);
   };
 
-  const removeFromSubmitJasa = (itemId, serviceId) => {
-    const tempJasa = dataJasa;
+  const removeFromSubmitJasa = (serviceId) => {
     let tempSubmitJasa = itemJasa;
 
-    tempJasa.forEach((item) => {
-      if (item.id === itemId) {
-        item.item_services.forEach((service) => {
-          if (service.id === serviceId && !service.checked) {
-            tempSubmitJasa = tempSubmitJasa.filter(
-              (item) => item.service_id !== serviceId
-            );
-          }
-        });
-      }
-    });
+    tempSubmitJasa = tempSubmitJasa.filter(
+      (item) => item.service_id !== serviceId
+    );
+
     setItemJasa(tempSubmitJasa);
   };
 
@@ -187,7 +174,7 @@ export default function Summary({ taskId = '' }) {
     let tempBarang = dataBarang;
 
     tempBarang.forEach((item) => {
-      // Check if already submit
+      // Check if already submit then change checked
       if (item.item === undefined) {
         if (item.id === itemId) {
           changeChecked(item);
@@ -197,16 +184,31 @@ export default function Summary({ taskId = '' }) {
           changeChecked(item);
         }
       }
+
+      //remove from itemBarang if checked false
+      if (item.item === undefined) {
+        if (
+          item.id === itemId &&
+          item.checked === false &&
+          itemBarang.length > 0
+        ) {
+          removeFromSubmitBarang(item.id);
+        }
+      } else {
+        if (
+          item.item_id === itemId &&
+          item.checked === false &&
+          itemBarang.length > 0
+        ) {
+          removeFromSubmitBarang(item.item_id);
+        }
+      }
     });
 
     dispatch({
       type: actionTypes.SetDataBarang,
       payload: tempBarang,
     });
-
-    if (itemBarang.length > 0) {
-      removeFromSubmitBarang(itemId);
-    }
   };
 
   const handleChecklistJasa = (qtyValue, itemId, serviceId, desc) => {
@@ -217,7 +219,7 @@ export default function Summary({ taskId = '' }) {
     tempJasa.forEach((item) => {
       if (item.id === itemId) {
         item.item_services.forEach((service) => {
-          // Check if already submit
+          // Check if already submit then change checked
           if (service.service === undefined) {
             if (service.id === serviceId) {
               changeChecked(service);
@@ -225,6 +227,25 @@ export default function Summary({ taskId = '' }) {
           } else {
             if (service.service_id === serviceId) {
               changeChecked(service);
+            }
+          }
+
+          //remove from itemJasa if checked false
+          if (service.service === undefined) {
+            if (
+              service.id === serviceId &&
+              service.checked === false &&
+              itemJasa.length > 0
+            ) {
+              removeFromSubmitJasa(service.id);
+            }
+          } else {
+            if (
+              service.service_id === serviceId &&
+              service.checked === false &&
+              itemJasa.length > 0
+            ) {
+              removeFromSubmitJasa(service.service_id);
             }
           }
         });
@@ -235,10 +256,6 @@ export default function Summary({ taskId = '' }) {
       type: actionTypes.SetDataJasa,
       payload: tempJasa,
     });
-
-    if (itemJasa.length > 0) {
-      removeFromSubmitJasa(itemId, serviceId);
-    }
   };
 
   const addSubmitBarang = (qtyValue, itemId, desc) => {
