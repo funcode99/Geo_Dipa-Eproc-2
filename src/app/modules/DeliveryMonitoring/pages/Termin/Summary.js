@@ -289,7 +289,7 @@ export default function Summary({ taskId = '' }) {
 
       if (findItem) {
         tempSubmitJasa.forEach((item) => {
-          if (item.item_id === itemId) {
+          if (item.service_id === itemId) {
             item.qty = qtyValue;
           }
         });
