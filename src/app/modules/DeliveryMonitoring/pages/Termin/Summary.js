@@ -144,7 +144,7 @@ export default function Summary({ taskId = '' }) {
     });
   };
 
-  const removeFromSubmitItem = (itemId) => {
+  const removeFromSubmitBarang = (itemId) => {
     const tempBarang = dataBarang;
     let tempSubmitBarang = itemBarang;
 
@@ -178,7 +178,7 @@ export default function Summary({ taskId = '' }) {
   };
 
   const handleChecklistBarang = (qtyValue, itemId, desc) => {
-    addSubmitItem(qtyValue, itemId, desc);
+    addSubmitBarang(qtyValue, itemId, desc);
 
     let tempBarang = dataBarang;
 
@@ -201,7 +201,7 @@ export default function Summary({ taskId = '' }) {
     });
 
     if (itemBarang.length > 0) {
-      removeFromSubmitItem(itemId);
+      removeFromSubmitBarang(itemId);
     }
   };
 
@@ -237,7 +237,7 @@ export default function Summary({ taskId = '' }) {
     }
   };
 
-  const addSubmitItem = (qtyValue, itemId, desc) => {
+  const addSubmitBarang = (qtyValue, itemId, desc) => {
     const tempSubmitItems = itemBarang;
 
     const submitItem = {
@@ -719,7 +719,7 @@ export default function Summary({ taskId = '' }) {
                                     disabled={!item.checked}
                                     defaultValue={item.qty_available}
                                     onChange={(e) =>
-                                      addSubmitItem(
+                                      addSubmitBarang(
                                         e.target.value,
                                         item.id,
                                         item.desc
@@ -781,7 +781,7 @@ export default function Summary({ taskId = '' }) {
                                     disabled={!item.checked}
                                     defaultValue={item.item.qty_available}
                                     onChange={(e) =>
-                                      addSubmitItem(
+                                      addSubmitBarang(
                                         e.target.value,
                                         item.item.id,
                                         item.item.desc
