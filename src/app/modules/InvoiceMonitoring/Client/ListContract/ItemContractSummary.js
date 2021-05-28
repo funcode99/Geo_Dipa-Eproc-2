@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
+import { rupiah } from '../../../../libs/currency';
 import {
   // FormattedMessage,
   injectIntl,
@@ -25,7 +26,7 @@ import {
 } from "@material-ui/core";
 import Select2 from "react-select2-wrapper";
 import "react-select2-wrapper/css/select2.css";
-import { getPicContract, getPicVendor, checkEmail, updateEmail, requestUser, deleteUser, assignUser } from './service/invoice';
+import { getPicContract, getPicVendor, checkEmail, updateEmail, requestUser, deleteUser, assignUser, getContractSummary, checkRole } from './service/invoice';
 import useToast from '../../../../components/toast';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -96,6 +97,8 @@ function ItemContractSummary(props) {
   const [emailAvailability, setEmailAvailability] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tempPic, setTempPic] = useState([]);
+  const [contractData, setContractData] = useState({})
+  const [role, setRole] = useState({})
 
   const [Toast, setToast] = useToast();
   const updateEmailRef = useRef(null)
@@ -106,16 +109,53 @@ function ItemContractSummary(props) {
   const getPicContractData = () => {
     getPicContract({ id: "7aff33c8-6d24-4a93-bf48-e86e8b18d457", vendor_id: vendor_id })
       .then(response => { setPicContractData(response.data.data) })
-      .catch(() => { setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000) })
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
+      })
   }
   const getPicVendorData = () => {
     getPicVendor(vendor_id)
       .then(response => { setPicVendorData(response.data.data) })
-      .catch(() => { setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000) })
+      .catch((error) => {
+        if (error.response?.status !== 400 && error.response?.data.message !== "TokenExpiredError")
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
+      })
   }
-  useEffect(() => {
-    getPicContractData()
-    getPicVendorData()
+  const getRole = () => {
+    checkRole(user_id)
+      .then(response => { setRole(response.data.data) })
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
+      })
+  }
+  const getContractData = () => {
+    getContractSummary('7aff33c8-6d24-4a93-bf48-e86e8b18d457')
+      .then(response => {
+        response['data']['data']['contract_value'] = rupiah(response['data']['data']['contract_value'])
+        response['data']['data']['contract_party']['direksi'] = response['data']['data']['contract_party']['party_1_contract_signature_name'].concat(' - ', response['data']['data']['contract_party']['party_1_director_position'])
+        response['data']['data']['vendor']['full_name'] = response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["legal_org_type_sub"]["name"].concat(". ", response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["full_name"])
+        response['data']['data']['vendor']['full_address'] = `${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["postal_address"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["postal_address"] : null} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["sub_district"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["sub_district"]["name"] : null} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["district"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["district"]["name"] : null} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["province"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["province"]["name"] : null} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["postal_code"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["postal_code"] : null}`
+        response['data']['data']['vendor']['full_data'] = `${response['data']['data']['vendor']['full_name']} \n\n${response['data']['data']['vendor']['full_address']} \n${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["phone_number"]["number"]} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["phone_number"]["ext"] ? "\next: ".concat(response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["phone_number"]["ext"]) : ''}`
+        setContractData(response.data.data)
+        setTimePIcker(response.data.data.from_time, response.data.data.thru_time)
+      })
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }
+  const setTimePIcker = (from_time, thru_time) => {
     window.$("#kt_daterangepicker_1").daterangepicker({
       buttonClasses: " btn",
       applyClass: "btn-primary",
@@ -124,9 +164,17 @@ function ItemContractSummary(props) {
       locale: {
         format: "DD MMM YYYY",
       },
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: new Date(from_time),
+      endDate: new Date(thru_time),
     });
+  }
+
+
+  useEffect(() => {
+    getContractData()
+    getPicContractData()
+    getPicVendorData()
+    getRole()
   }, []);
 
   const picUnselect = (e) => {
@@ -251,7 +299,7 @@ function ItemContractSummary(props) {
       vendor_id: vendor_id,
       monitoring_type: "INVOICE"
     })
-    updateEmailRef.current.scrollIntoView({ behavior: 'smooth'})
+    updateEmailRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   const submitUpdateEmail = () => {
@@ -261,18 +309,25 @@ function ItemContractSummary(props) {
         if (response.data.message === "Data Not Found") {
           setToast(intl.formatMessage({ id: "REQ.NOT_FOUND" }), 10000)
         } else {
-          setToast(intl.formatMessage({ id: "REQ.UPDATE_EMAIL_SUCCESS" }), 10000)
-          getPicVendorData()
-          setEditEmail(false)
-          setEmailAvailability(false)
+          setToast(
+            intl.formatMessage({ id: "REQ.UPDATE_EMAIL_SUCCESS" }),
+            10000
+          );
+          getPicVendorData();
+          setEditEmail(false);
+          setEmailAvailability(false);
         }
         setLoading(false)
       })
-      .catch(() => {
-        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000)
-        setLoading(false)
-      })
-  }
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+        setLoading(false);
+      });
+  };
 
   const submitNewEmail = () => {
     setLoading(true)
@@ -284,11 +339,15 @@ function ItemContractSummary(props) {
         setEmailAvailability(false)
         setLoading(false)
       })
-      .catch(() => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
-        setLoading(false)
-      })
-  }
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoading(false);
+      });
+  };
 
   const openDeletePIC = (index) => {
     setOpenModalDeletePIC(true)
@@ -305,12 +364,16 @@ function ItemContractSummary(props) {
         setLoading(false)
         setEditEmail(false)
       })
-      .catch(() => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
-        setLoading(false)
-        setOpenModalDeletePIC(false)
-      })
-  }
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoading(false);
+        setOpenModalDeletePIC(false);
+      });
+  };
 
   const assignPic = () => {
     setLoading(true)
@@ -321,11 +384,15 @@ function ItemContractSummary(props) {
         getPicContractData()
         setLoading(false)
       })
-      .catch(() => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
-        setLoading(false)
-      })
-  }
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoading(false);
+      });
+  };
 
   return (
     <React.Fragment>
@@ -338,7 +405,7 @@ function ItemContractSummary(props) {
         aria-describedby="alert-dialog-slide-description"
         maxWidth="xs"
         fullWidth={true}
-        style={{zIndex: '1400'}}
+        style={{ zIndex: "1301" }}
       >
         <DialogTitle id="alert-dialog-slide-title">
           Batalkan PIC
@@ -423,7 +490,7 @@ function ItemContractSummary(props) {
                   <button
                     type="button"
                     className="btn btn-danger rounded-0"
-                    onClick={() => { setEditEmail(false); formikUpdate.setValues({ email: "" })}}
+                    onClick={() => { setEditEmail(false); formikUpdate.setValues({ email: "" }) }}
                     disabled={loading}
                   >
                     Batal
@@ -524,7 +591,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="numberContract"
-                    defaultValue="10000014264"
+                    defaultValue={contractData['contract_no']}
                     disabled
                   />
                 </div>
@@ -554,7 +621,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue="Rp. 1.000.000"
+                    defaultValue={contractData['contract_value']}
                     disabled
                   />
                 </div>
@@ -568,7 +635,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="poNumber"
-                    defaultValue="PO 123"
+                    defaultValue={contractData['purch_order_no']}
                     disabled
                   />
                 </div>
@@ -599,7 +666,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="authorizedOffice"
-                    defaultValue="Dirum"
+                    defaultValue={contractData["contract_party"] ? contractData["contract_party"]['party_1_position_of_autorize'] : null}
                     disabled
                   />
                 </div>
@@ -616,7 +683,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="jobDirectors"
-                    defaultValue="Dian - Manager General Affairs"
+                    defaultValue={contractData["contract_party"] ? contractData["contract_party"]['direksi'] : null}
                     disabled
                   />
                 </div>
@@ -662,6 +729,7 @@ function ItemContractSummary(props) {
                     className="form-control"
                     id="second"
                     disabled
+                    defaultValue={contractData['vendor'] ? contractData['vendor']['full_data'] : null}
                   ></textarea>
                 </div>
               </div>
@@ -671,6 +739,7 @@ function ItemContractSummary(props) {
                 </label>
                 <div className="input-group col-sm-8">
                   <Select2
+                    disabled={!role.main_vendor}
                     multiple
                     defaultValue={picContractData}
                     data={picVendorData}
@@ -681,7 +750,7 @@ function ItemContractSummary(props) {
                     }}
                     className="form-control"
                   />
-                  <div className="input-group-prepend">
+                  {role.main_vendor && <div className="input-group-prepend">
                     <span
                       className="input-group-text pointer"
                       onClick={() => {
@@ -690,7 +759,7 @@ function ItemContractSummary(props) {
                     >
                       <i className="fas fa-pencil-alt"></i>
                     </span>
-                  </div>
+                  </div>}
                 </div>
                 <div className="col-sm-8"></div>
               </div>

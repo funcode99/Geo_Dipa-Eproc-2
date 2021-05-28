@@ -1,11 +1,11 @@
-import React, { Suspense, lazy } from 'react';
-import { Redirect, Switch, Route } from 'react-router-dom';
-import { LayoutSplashScreen, ContentRoute } from '../_metronic/layout';
+import React, { Suspense, lazy } from "react";
+import { Redirect, Switch, Route } from "react-router-dom";
+import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 // Page Guide Metronic
 // import { BuilderPage } from "./pages/BuilderPage";
 // import { MyPage } from "./pages/MyPage";
 // Page Guide Metronic
-import { DashboardPage } from './pages/DashboardPage';
+import { DashboardPage } from "./pages/DashboardPage";
 
 // Page Guide Metronic
 // const GoogleMaterialPage = lazy(() =>
@@ -20,17 +20,17 @@ import { DashboardPage } from './pages/DashboardPage';
 // Page Guide Metronic
 
 const UserProfilepage = lazy(() =>
-  import('./modules/UserProfile/UserProfilePage')
+  import("./modules/UserProfile/UserProfilePage")
 );
 const RootDeliveryMonitoring = lazy(() =>
-  import('./modules/DeliveryMonitoring/RootDeliveryMonitoring')
+  import("./modules/DeliveryMonitoring/RootDeliveryMonitoring")
 );
 
 const RootClientInvoiceMonitoring = lazy(() =>
-  import('./modules/InvoiceMonitoring/Client/RootClientInvoiceMonitoring')
+  import("./modules/InvoiceMonitoring/Client/RootClientInvoiceMonitoring")
 );
 
-const MasterData = lazy(() => import('./modules/Master/RootMasterData'));
+const MasterData = lazy(() => import("./modules/Master/RootMasterData"));
 
 export default function BasePage() {
   // useEffect(() => {
@@ -46,7 +46,7 @@ export default function BasePage() {
           <Redirect
             exact
             from="/"
-            to={true ? '/client/dashboard' : '/vendor/dashboard'}
+            to={true ? "/client/dashboard" : "/vendor/dashboard"}
           />
         }
         <ContentRoute path="/client/dashboard" component={DashboardPage} />

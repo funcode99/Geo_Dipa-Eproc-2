@@ -16,7 +16,7 @@
   position: relative;
   height: 50vh;
   /* touch-action: none; */
-  border: 1px solid #EBEDF3;
+  border: 1px solid #ebedf3;
   border-radius: 5px;
   overflow: auto;
   font-size: 12px !important;
@@ -51,7 +51,7 @@
   justify-content: center;
 }
 .table-wrapper-scroll-y .table-loading-data .table-loading-data-potition {
-  position: fixed;
+  /* position: fixed; */
 }
 .button-filter-submit {
   height: 23px;

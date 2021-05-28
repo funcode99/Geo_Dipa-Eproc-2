@@ -23,8 +23,7 @@ export default function setupAxios(axios, store) {
     // console.log("respons:", response );
     return response;
   }, function (error) {
-    console.log("error", error);
-    if(error.response?.status === 400 && error.response?.data.message === "TokenExpiredError"){
+    if(error.response?.status === 400 && ( error.response?.data.message === "TokenExpiredError" || error.response?.data.message === "Token Not Found!")){
       var title = "";
       var message = "";
       var button = "";
