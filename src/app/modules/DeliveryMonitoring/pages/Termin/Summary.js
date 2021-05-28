@@ -113,7 +113,12 @@ export default function Summary({ taskId = '' }) {
         payload: tempDataBarang,
       });
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== 'TokenExpiredError'
+      ) {
+        setToast('Error API, please contact developer!');
+      }
     } finally {
       disableLoading();
     }
@@ -316,7 +321,12 @@ export default function Summary({ taskId = '' }) {
         setShowModal(false);
       }
     } catch (error) {
-      setToast('Error API, Please contact developer!');
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== 'TokenExpiredError'
+      ) {
+        setToast('Error API, Please contact developer!');
+      }
     } finally {
       disableLoading();
     }
@@ -399,7 +409,7 @@ export default function Summary({ taskId = '' }) {
             </div>
           </div>
         ) : (
-          <p>Tidak ada data yang dipilih</p>
+          <p className="text-center">Tidak ada data yang dipilih</p>
         )}
       </StyledModal>
 
@@ -481,7 +491,14 @@ export default function Summary({ taskId = '' }) {
                                   // Check if already submit
                                   if (service.service === undefined) {
                                     return (
-                                      <StyledTableRow key={service.id}>
+                                      <StyledTableRow
+                                        key={service.id}
+                                        className={
+                                          service.qty_available === 0
+                                            ? `bg-secondary`
+                                            : null
+                                        }
+                                      >
                                         <TableCell className="align-middle">
                                           <Checkbox
                                             name={`checkbox-${service.id}`}
@@ -496,6 +513,11 @@ export default function Summary({ taskId = '' }) {
                                             }
                                             size="small"
                                             checked={service.checked}
+                                            disabled={
+                                              service.qty_available === 0
+                                                ? true
+                                                : false
+                                            }
                                           />
                                         </TableCell>
                                         <TableCell className="align-middle">
@@ -533,7 +555,14 @@ export default function Summary({ taskId = '' }) {
                                     );
                                   } else {
                                     return (
-                                      <StyledTableRow key={service.service.id}>
+                                      <StyledTableRow
+                                        key={service.service.id}
+                                        className={
+                                          service.service.qty_available === 0
+                                            ? `bg-secondary`
+                                            : null
+                                        }
+                                      >
                                         <TableCell className="align-middle">
                                           <Checkbox
                                             name={`checkbox-${service.service.id}`}
@@ -548,6 +577,12 @@ export default function Summary({ taskId = '' }) {
                                             }
                                             size="small"
                                             checked={service.checked}
+                                            disabled={
+                                              service.service.qty_available ===
+                                              0
+                                                ? true
+                                                : false
+                                            }
                                           />
                                         </TableCell>
                                         <TableCell className="align-middle">
@@ -641,7 +676,14 @@ export default function Summary({ taskId = '' }) {
                           // Check if already submit
                           if (item.item === undefined) {
                             return (
-                              <StyledTableRow key={item.id}>
+                              <StyledTableRow
+                                key={item.id}
+                                className={
+                                  item.qty_available === 0
+                                    ? `bg-secondary`
+                                    : null
+                                }
+                              >
                                 <TableCell className="align-middle">
                                   <Checkbox
                                     name={`checkbox-${item.id}`}
@@ -657,6 +699,9 @@ export default function Summary({ taskId = '' }) {
                                     width={50}
                                     variant="body"
                                     checked={item.checked}
+                                    disabled={
+                                      item.qty_available === 0 ? true : false
+                                    }
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -691,7 +736,14 @@ export default function Summary({ taskId = '' }) {
                             );
                           } else {
                             return (
-                              <StyledTableRow key={item.item.id}>
+                              <StyledTableRow
+                                key={item.item.id}
+                                className={
+                                  item.item.qty_available === 0
+                                    ? `bg-secondary`
+                                    : null
+                                }
+                              >
                                 <TableCell className="align-middle">
                                   <Checkbox
                                     name={`checkbox-${item.item.id}`}
@@ -707,6 +759,11 @@ export default function Summary({ taskId = '' }) {
                                     width={50}
                                     variant="body"
                                     checked={item.checked}
+                                    disabled={
+                                      item.item.qty_available === 0
+                                        ? true
+                                        : false
+                                    }
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
