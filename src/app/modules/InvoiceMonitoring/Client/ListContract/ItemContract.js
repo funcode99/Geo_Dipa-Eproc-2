@@ -88,7 +88,7 @@ const ItemContract = (props) => {
                   </Container>
                   <hr className="p-0 m-0" />
                   <Container className="p-0">
-                  {tabActive === 0 && <ItemContractSummary />}
+                  {tabActive === 0 && <ItemContractSummary {...props} />}
                   {tabActive === 1 && <ItemContractInvoice />}
                   {tabActive === 2 && <ItemContractBKB />}
                   {tabActive === 3 && <ItemContractFormVerification />}

@@ -105,9 +105,10 @@ function ItemContractSummary(props) {
 
   const vendor_id = useSelector((state) => state.auth.user.data.vendor_id, shallowEqual);
   const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
+  const contract_id = props.match.params.id;
 
   const getPicContractData = () => {
-    getPicContract({ id: "7aff33c8-6d24-4a93-bf48-e86e8b18d457", vendor_id: vendor_id })
+    getPicContract({ id: contract_id, vendor_id: vendor_id })
       .then(response => { setPicContractData(response.data.data) })
       .catch((error) => {
         if (
@@ -137,7 +138,7 @@ function ItemContractSummary(props) {
       })
   }
   const getContractData = () => {
-    getContractSummary('7aff33c8-6d24-4a93-bf48-e86e8b18d457')
+    getContractSummary(contract_id)
       .then(response => {
         response['data']['data']['contract_value'] = rupiah(response['data']['data']['contract_value'])
         response['data']['data']['contract_party']['direksi'] = response['data']['data']['contract_party']['party_1_contract_signature_name'].concat(' - ', response['data']['data']['contract_party']['party_1_director_position'])
@@ -377,7 +378,7 @@ function ItemContractSummary(props) {
 
   const assignPic = () => {
     setLoading(true)
-    var data = { contract_id: "7aff33c8-6d24-4a93-bf48-e86e8b18d457", data: picContractData, monitoring_type: "INVOICE", user_id: user_id }
+    var data = { contract_id: contract_id, data: picContractData, monitoring_type: "INVOICE", user_id: user_id }
     assignUser(data)
       .then(response => {
         setToast(intl.formatMessage({ id: "REQ.ASSIGN_ACCOUNT_SUCCESS" }), 10000)

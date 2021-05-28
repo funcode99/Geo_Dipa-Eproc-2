@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    Route, 
+  Route,
     Switch,
     // Redirect
 } from "react-router-dom";
@@ -8,7 +8,7 @@ import {
 import DashboardListContract from "./ListContract/DashboardListContract";
 import ItemContract from "./ListContract/ItemContract";
 import {
-  injectIntl 
+  injectIntl
 } from "react-intl";
 import { connect } from "react-redux";
 
@@ -23,7 +23,7 @@ function RootClientInvoiceMonitoring(props) {
           {/* <Redirect exact from="/client" to="/client/invoice_monitoring" /> */}
           <Route
             path="/client/invoice_monitoring/:id"
-            component={ItemContract}
+        component={(props) => <ItemContract {...props} />}
             exact={true}
           />
           <Route
