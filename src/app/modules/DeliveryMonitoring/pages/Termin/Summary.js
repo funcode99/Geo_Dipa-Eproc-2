@@ -144,24 +144,26 @@ export default function Summary({ taskId = '' }) {
     });
   };
 
-  const removeFromSubmitBarang = (itemId) => {
-    let tempSubmitBarang = itemBarang;
+  const removeFromSubmitItem = (itemId, type) => {
+    if (type === 'barang') {
+      let tempSubmitBarang = itemBarang;
 
-    tempSubmitBarang = tempSubmitBarang.filter(
-      (item) => item.item_id !== itemId
-    );
+      tempSubmitBarang = tempSubmitBarang.filter(
+        (item) => item.item_id !== itemId
+      );
 
-    setItemBarang(tempSubmitBarang);
-  };
+      setItemBarang(tempSubmitBarang);
+    }
 
-  const removeFromSubmitJasa = (serviceId) => {
-    let tempSubmitJasa = itemJasa;
+    if (type === 'jasa') {
+      let tempSubmitJasa = itemJasa;
 
-    tempSubmitJasa = tempSubmitJasa.filter(
-      (item) => item.service_id !== serviceId
-    );
+      tempSubmitJasa = tempSubmitJasa.filter(
+        (item) => item.service_id !== itemId
+      );
 
-    setItemJasa(tempSubmitJasa);
+      setItemJasa(tempSubmitJasa);
+    }
   };
 
   const changeChecked = (item) => {
@@ -192,7 +194,7 @@ export default function Summary({ taskId = '' }) {
           item.checked === false &&
           itemBarang.length > 0
         ) {
-          removeFromSubmitBarang(item.id);
+          removeFromSubmitItem(item.id, 'barang');
         }
       } else {
         if (
@@ -200,7 +202,7 @@ export default function Summary({ taskId = '' }) {
           item.checked === false &&
           itemBarang.length > 0
         ) {
-          removeFromSubmitBarang(item.item_id);
+          removeFromSubmitItem(item.item_id, 'barang');
         }
       }
     });
@@ -237,7 +239,7 @@ export default function Summary({ taskId = '' }) {
               service.checked === false &&
               itemJasa.length > 0
             ) {
-              removeFromSubmitJasa(service.id);
+              removeFromSubmitItem(service.id, 'jasa');
             }
           } else {
             if (
@@ -245,7 +247,7 @@ export default function Summary({ taskId = '' }) {
               service.checked === false &&
               itemJasa.length > 0
             ) {
-              removeFromSubmitJasa(service.service_id);
+              removeFromSubmitItem(service.service_id, 'jasa');
             }
           }
         });
