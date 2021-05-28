@@ -177,6 +177,10 @@ export default function Summary({ taskId = '' }) {
     setItemJasa(tempSubmitJasa);
   };
 
+  const changeChecked = (item) => {
+    item.checked = !item.checked;
+  };
+
   const handleChecklistBarang = (qtyValue, itemId, desc) => {
     addSubmitBarang(qtyValue, itemId, desc);
 
@@ -186,11 +190,11 @@ export default function Summary({ taskId = '' }) {
       // Check if already submit
       if (item.item === undefined) {
         if (item.id === itemId) {
-          item.checked = !item.checked;
+          changeChecked(item);
         }
       } else {
         if (item.item_id === itemId) {
-          item.checked = !item.checked;
+          changeChecked(item);
         }
       }
     });
@@ -216,11 +220,11 @@ export default function Summary({ taskId = '' }) {
           // Check if already submit
           if (service.service === undefined) {
             if (service.id === serviceId) {
-              service.checked = !service.checked;
+              changeChecked(service);
             }
           } else {
             if (service.service_id === serviceId) {
-              service.checked = !service.checked;
+              changeChecked(service);
             }
           }
         });
@@ -690,7 +694,7 @@ export default function Summary({ taskId = '' }) {
                                     color="secondary"
                                     onChange={() =>
                                       handleChecklistBarang(
-                                        item.qty,
+                                        item.qty_available,
                                         item.id,
                                         item.desc
                                       )
@@ -750,7 +754,7 @@ export default function Summary({ taskId = '' }) {
                                     color="secondary"
                                     onChange={() =>
                                       handleChecklistBarang(
-                                        item.item.qty,
+                                        item.item.qty_available,
                                         item.item.id,
                                         item.item.desc
                                       )
