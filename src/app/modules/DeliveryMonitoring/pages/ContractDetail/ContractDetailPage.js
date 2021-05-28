@@ -25,71 +25,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// function createDetailContract(
-//   nomor_kontrak,
-//   no_po,
-//   judul_pengadaan,
-//   kewenangan,
-//   user,
-//   header_text_po,
-//   harga_pekerjaan,
-//   penyedia,
-//   status
-// ) {
-//   return {
-//     nomor_kontrak,
-//     no_po,
-//     judul_pengadaan,
-//     kewenangan,
-//     user,
-//     header_text_po,
-//     harga_pekerjaan,
-//     penyedia,
-//     status,
-//   };
-// }
-
-// const detailContractRows = createDetailContract(
-//   '011.PJ/PST30-GDE/X/2020',
-//   'PO.I',
-//   'Pengadaan Leapfrog',
-//   '',
-//   'Juned',
-//   '',
-//   2000000,
-//   'PT. XYZ',
-//   'Selesai'
-// );
-
-// function createTermin(
-//   termin_id,
-//   scope_of_work,
-//   due_date,
-//   bobot,
-//   harga_pekerjaan,
-//   project_progress,
-//   document_progress,
-//   status
-// ) {
-//   return {
-//     termin_id,
-//     scope_of_work,
-//     due_date,
-//     bobot,
-//     harga_pekerjaan,
-//     project_progress,
-//     document_progress,
-//     status,
-//   };
-// }
-
-// const terminRows = [
-//   createTermin(1, '', '', 20, '', '', '', ''),
-//   createTermin(2, '', '', 20, '', '', '', ''),
-//   createTermin(3, '', '', 30, '', '', '', ''),
-//   createTermin(4, '', '', 30, '', '', '', ''),
-// ];
-
 const TabLists = [
   {
     id: 'detail',
@@ -200,7 +135,12 @@ export const ContractDetailPage = () => {
 
       generateTableContent(data[0].tasks);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== 'TokenExpiredError'
+      ) {
+        setToast('Error API, please contact developer!');
+      }
     } finally {
       setLoading(false);
     }
