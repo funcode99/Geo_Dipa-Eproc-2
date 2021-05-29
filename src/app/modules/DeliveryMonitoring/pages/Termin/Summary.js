@@ -113,7 +113,12 @@ export default function Summary({ taskId = '' }) {
         payload: tempDataBarang,
       });
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== 'TokenExpiredError'
+      ) {
+        setToast('Error API, please contact developer!');
+      }
     } finally {
       disableLoading();
     }
@@ -139,53 +144,65 @@ export default function Summary({ taskId = '' }) {
     });
   };
 
-  const removeFromSubmitItem = (itemId) => {
-    const tempBarang = dataBarang;
-    let tempSubmitBarang = itemBarang;
+  const removeFromSubmitItem = (itemId, type) => {
+    if (type === 'barang') {
+      let tempSubmitBarang = itemBarang;
 
-    tempBarang.forEach((item) => {
-      if (item.id === itemId && !item.checked) {
-        tempSubmitBarang = tempSubmitBarang.filter(
-          (item) => item.item_id !== itemId
-        );
-      }
-    });
+      tempSubmitBarang = tempSubmitBarang.filter(
+        (item) => item.item_id !== itemId
+      );
 
-    setItemBarang(tempSubmitBarang);
+      setItemBarang(tempSubmitBarang);
+    }
+
+    if (type === 'jasa') {
+      let tempSubmitJasa = itemJasa;
+
+      tempSubmitJasa = tempSubmitJasa.filter(
+        (item) => item.service_id !== itemId
+      );
+
+      setItemJasa(tempSubmitJasa);
+    }
   };
 
-  const removeFromSubmitJasa = (itemId, serviceId) => {
-    const tempJasa = dataJasa;
-    let tempSubmitJasa = itemJasa;
-
-    tempJasa.forEach((item) => {
-      if (item.id === itemId) {
-        item.item_services.forEach((service) => {
-          if (service.id === serviceId && !service.checked) {
-            tempSubmitJasa = tempSubmitJasa.filter(
-              (item) => item.service_id !== serviceId
-            );
-          }
-        });
-      }
-    });
-    setItemJasa(tempSubmitJasa);
+  const changeChecked = (item) => {
+    item.checked = !item.checked;
   };
 
-  const handleChecklistBarang = (qtyValue, itemId, desc) => {
-    addSubmitItem(qtyValue, itemId, desc);
+  const handleChecklistBarang = (qtyValue, qtyAvailable, itemId, desc) => {
+    addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
 
     let tempBarang = dataBarang;
 
     tempBarang.forEach((item) => {
-      // Check if already submit
+      // Check if already submit then change checked
       if (item.item === undefined) {
         if (item.id === itemId) {
-          item.checked = !item.checked;
+          changeChecked(item);
         }
       } else {
         if (item.item_id === itemId) {
-          item.checked = !item.checked;
+          changeChecked(item);
+        }
+      }
+
+      //remove from itemBarang if checked false
+      if (item.item === undefined) {
+        if (
+          item.id === itemId &&
+          item.checked === false &&
+          itemBarang.length > 0
+        ) {
+          removeFromSubmitItem(item.id, 'barang');
+        }
+      } else {
+        if (
+          item.item_id === itemId &&
+          item.checked === false &&
+          itemBarang.length > 0
+        ) {
+          removeFromSubmitItem(item.item_id, 'barang');
         }
       }
     });
@@ -194,28 +211,49 @@ export default function Summary({ taskId = '' }) {
       type: actionTypes.SetDataBarang,
       payload: tempBarang,
     });
-
-    if (itemBarang.length > 0) {
-      removeFromSubmitItem(itemId);
-    }
   };
 
-  const handleChecklistJasa = (qtyValue, itemId, serviceId, desc) => {
-    addSubmitJasa(qtyValue, serviceId, desc);
+  const handleChecklistJasa = (
+    qtyValue,
+    qtyAvailable,
+    itemId,
+    serviceId,
+    desc
+  ) => {
+    addSubmitJasa(qtyValue, qtyAvailable, serviceId, desc);
 
     let tempJasa = dataJasa;
 
     tempJasa.forEach((item) => {
       if (item.id === itemId) {
         item.item_services.forEach((service) => {
-          // Check if already submit
+          // Check if already submit then change checked
           if (service.service === undefined) {
             if (service.id === serviceId) {
-              service.checked = !service.checked;
+              changeChecked(service);
             }
           } else {
             if (service.service_id === serviceId) {
-              service.checked = !service.checked;
+              changeChecked(service);
+            }
+          }
+
+          //remove from itemJasa if checked false
+          if (service.service === undefined) {
+            if (
+              service.id === serviceId &&
+              service.checked === false &&
+              itemJasa.length > 0
+            ) {
+              removeFromSubmitItem(service.id, 'jasa');
+            }
+          } else {
+            if (
+              service.service_id === serviceId &&
+              service.checked === false &&
+              itemJasa.length > 0
+            ) {
+              removeFromSubmitItem(service.service_id, 'jasa');
             }
           }
         });
@@ -226,76 +264,98 @@ export default function Summary({ taskId = '' }) {
       type: actionTypes.SetDataJasa,
       payload: tempJasa,
     });
-
-    if (itemJasa.length > 0) {
-      removeFromSubmitJasa(itemId, serviceId);
-    }
   };
 
-  const addSubmitItem = (qtyValue, itemId, desc) => {
-    const tempSubmitItems = itemBarang;
+  const addSubmitBarang = (qtyValue, qtyAvailable, itemId, desc) => {
+    const intQty = parseInt(qtyValue);
+    const intQtyAvailable = parseInt(qtyAvailable);
 
-    const submitItem = {
-      item_id: itemId,
-      qty: qtyValue,
-      desc: desc,
-    };
+    //validate quantity number
+    if (intQty < 1 || intQty > intQtyAvailable) {
+      removeFromSubmitItem(itemId, 'barang');
+      setToast(
+        `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
+        10000
+      );
+    } else {
+      const tempSubmitItems = itemBarang;
 
-    if (tempSubmitItems.length === 0) {
-      tempSubmitItems.push(submitItem);
-    }
+      const submitItem = {
+        item_id: itemId,
+        qty: intQty,
+        desc: desc,
+      };
 
-    if (tempSubmitItems.length > 0) {
-      const findItem = tempSubmitItems.find((item) => item.item_id === itemId);
-
-      if (findItem) {
-        tempSubmitItems.forEach((item) => {
-          if (item.item_id === itemId) {
-            item.qty = qtyValue;
-          }
-        });
-      }
-
-      if (!findItem) {
+      if (tempSubmitItems.length === 0) {
         tempSubmitItems.push(submitItem);
       }
-    }
 
-    setItemBarang(tempSubmitItems);
+      if (tempSubmitItems.length > 0) {
+        const findItem = tempSubmitItems.find(
+          (item) => item.item_id === itemId
+        );
+
+        if (findItem) {
+          tempSubmitItems.forEach((item) => {
+            if (item.item_id === itemId) {
+              item.qty = intQty;
+            }
+          });
+        }
+
+        if (!findItem) {
+          tempSubmitItems.push(submitItem);
+        }
+      }
+
+      setItemBarang(tempSubmitItems);
+    }
   };
 
-  const addSubmitJasa = (qtyValue, itemId, desc) => {
-    const tempSubmitJasa = itemJasa;
+  const addSubmitJasa = (qtyValue, qtyAvailable, itemId, desc) => {
+    const intQtyValue = qtyValue;
+    const intQtyAvailable = qtyAvailable;
 
-    const submitItem = {
-      service_id: itemId,
-      qty: qtyValue,
-      desc: desc,
-    };
-
-    if (tempSubmitJasa.length === 0) {
-      tempSubmitJasa.push(submitItem);
-    }
-
-    if (tempSubmitJasa.length > 0) {
-      const findItem = tempSubmitJasa.find(
-        (item) => item.service_id === itemId
+    //validate quantity number
+    if (intQtyValue < 1 || intQtyValue > intQtyAvailable) {
+      removeFromSubmitItem(itemId, 'jasa');
+      setToast(
+        `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
+        10000
       );
+    } else {
+      const tempSubmitJasa = itemJasa;
 
-      if (findItem) {
-        tempSubmitJasa.forEach((item) => {
-          if (item.item_id === itemId) {
-            item.qty = qtyValue;
-          }
-        });
-      }
+      const submitItem = {
+        service_id: itemId,
+        qty: qtyValue,
+        desc: desc,
+      };
 
-      if (!findItem) {
+      if (tempSubmitJasa.length === 0) {
         tempSubmitJasa.push(submitItem);
       }
-    }
 
-    setItemJasa(tempSubmitJasa);
+      if (tempSubmitJasa.length > 0) {
+        const findItem = tempSubmitJasa.find(
+          (item) => item.service_id === itemId
+        );
+
+        if (findItem) {
+          tempSubmitJasa.forEach((item) => {
+            if (item.service_id === itemId) {
+              item.qty = qtyValue;
+            }
+          });
+        }
+
+        if (!findItem) {
+          tempSubmitJasa.push(submitItem);
+        }
+      }
+
+      setItemJasa(tempSubmitJasa);
+    }
   };
 
   const handleSubmit = async () => {
@@ -308,15 +368,25 @@ export default function Summary({ taskId = '' }) {
       };
 
       const {
-        data: { status },
+        data: { status, code, message },
       } = await deliveryMonitoring.submitItems(requestData, taskId);
 
       if (status) {
         getAllItems(taskId);
         setShowModal(false);
+      } else {
+        if (code === 422) {
+          setShowModal(false);
+          setToast(message, 10000);
+        }
       }
     } catch (error) {
-      setToast('Error API, Please contact developer!');
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== 'TokenExpiredError'
+      ) {
+        setToast('Error API, Please contact developer!', 10000);
+      }
     } finally {
       disableLoading();
     }
@@ -399,7 +469,7 @@ export default function Summary({ taskId = '' }) {
             </div>
           </div>
         ) : (
-          <p>Tidak ada data yang dipilih</p>
+          <p className="text-center">Tidak ada data yang dipilih</p>
         )}
       </StyledModal>
 
@@ -481,13 +551,21 @@ export default function Summary({ taskId = '' }) {
                                   // Check if already submit
                                   if (service.service === undefined) {
                                     return (
-                                      <StyledTableRow key={service.id}>
+                                      <StyledTableRow
+                                        key={service.id}
+                                        className={
+                                          service.qty_available === 0
+                                            ? `bg-secondary`
+                                            : null
+                                        }
+                                      >
                                         <TableCell className="align-middle">
                                           <Checkbox
                                             name={`checkbox-${service.id}`}
                                             color="secondary"
                                             onChange={() =>
                                               handleChecklistJasa(
+                                                service.qty_available,
                                                 service.qty_available,
                                                 item.id,
                                                 service.id,
@@ -496,6 +574,11 @@ export default function Summary({ taskId = '' }) {
                                             }
                                             size="small"
                                             checked={service.checked}
+                                            disabled={
+                                              service.qty_available === 0
+                                                ? true
+                                                : false
+                                            }
                                           />
                                         </TableCell>
                                         <TableCell className="align-middle">
@@ -509,13 +592,14 @@ export default function Summary({ taskId = '' }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
-                                            min={0}
+                                            min={1}
                                             max={service.qty_available}
                                             disabled={!service.checked}
                                             defaultValue={service.qty_available}
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
+                                                service.qty_available,
                                                 service.id,
                                                 service.short_text
                                               )
@@ -533,13 +617,21 @@ export default function Summary({ taskId = '' }) {
                                     );
                                   } else {
                                     return (
-                                      <StyledTableRow key={service.service.id}>
+                                      <StyledTableRow
+                                        key={service.service.id}
+                                        className={
+                                          service.service.qty_available === 0
+                                            ? `bg-secondary`
+                                            : null
+                                        }
+                                      >
                                         <TableCell className="align-middle">
                                           <Checkbox
                                             name={`checkbox-${service.service.id}`}
                                             color="secondary"
                                             onChange={() =>
                                               handleChecklistJasa(
+                                                service.service.qty_available,
                                                 service.service.qty_available,
                                                 item.id,
                                                 service.service.id,
@@ -548,6 +640,12 @@ export default function Summary({ taskId = '' }) {
                                             }
                                             size="small"
                                             checked={service.checked}
+                                            disabled={
+                                              service.service.qty_available ===
+                                              0
+                                                ? true
+                                                : false
+                                            }
                                           />
                                         </TableCell>
                                         <TableCell className="align-middle">
@@ -561,15 +659,14 @@ export default function Summary({ taskId = '' }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
-                                            min={0}
+                                            min={1}
                                             max={service.service.qty_available}
                                             disabled={!service.checked}
-                                            defaultValue={
-                                              service.service.quantity
-                                            }
+                                            defaultValue={service.quantity}
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
+                                                service.service.qty_available,
                                                 service.service.id,
                                                 service.service.short_text
                                               )
@@ -641,14 +738,22 @@ export default function Summary({ taskId = '' }) {
                           // Check if already submit
                           if (item.item === undefined) {
                             return (
-                              <StyledTableRow key={item.id}>
+                              <StyledTableRow
+                                key={item.id}
+                                className={
+                                  item.qty_available === 0
+                                    ? `bg-secondary`
+                                    : null
+                                }
+                              >
                                 <TableCell className="align-middle">
                                   <Checkbox
                                     name={`checkbox-${item.id}`}
                                     color="secondary"
                                     onChange={() =>
                                       handleChecklistBarang(
-                                        item.qty,
+                                        item.qty_available,
+                                        item.qty_available,
                                         item.id,
                                         item.desc
                                       )
@@ -657,6 +762,9 @@ export default function Summary({ taskId = '' }) {
                                     width={50}
                                     variant="body"
                                     checked={item.checked}
+                                    disabled={
+                                      item.qty_available === 0 ? true : false
+                                    }
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -669,13 +777,14 @@ export default function Summary({ taskId = '' }) {
                                   <Form.Control
                                     type="number"
                                     size="sm"
-                                    min={0}
+                                    min={1}
                                     max={item.qty_available}
                                     disabled={!item.checked}
                                     defaultValue={item.qty_available}
                                     onChange={(e) =>
-                                      addSubmitItem(
+                                      addSubmitBarang(
                                         e.target.value,
+                                        item.qty_available,
                                         item.id,
                                         item.desc
                                       )
@@ -691,14 +800,22 @@ export default function Summary({ taskId = '' }) {
                             );
                           } else {
                             return (
-                              <StyledTableRow key={item.item.id}>
+                              <StyledTableRow
+                                key={item.item.id}
+                                className={
+                                  item.item.qty_available === 0
+                                    ? `bg-secondary`
+                                    : null
+                                }
+                              >
                                 <TableCell className="align-middle">
                                   <Checkbox
                                     name={`checkbox-${item.item.id}`}
                                     color="secondary"
                                     onChange={() =>
                                       handleChecklistBarang(
-                                        item.item.qty,
+                                        item.item.qty_available,
+                                        item.item.qty_available,
                                         item.item.id,
                                         item.item.desc
                                       )
@@ -707,6 +824,11 @@ export default function Summary({ taskId = '' }) {
                                     width={50}
                                     variant="body"
                                     checked={item.checked}
+                                    disabled={
+                                      item.item.qty_available === 0
+                                        ? true
+                                        : false
+                                    }
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -719,13 +841,14 @@ export default function Summary({ taskId = '' }) {
                                   <Form.Control
                                     type="number"
                                     size="sm"
-                                    min={0}
+                                    min={1}
                                     max={item.item.qty_available}
                                     disabled={!item.checked}
-                                    defaultValue={item.item.qty_available}
+                                    defaultValue={item.qty}
                                     onChange={(e) =>
-                                      addSubmitItem(
+                                      addSubmitBarang(
                                         e.target.value,
+                                        item.item.qty_available,
                                         item.item.id,
                                         item.item.desc
                                       )
