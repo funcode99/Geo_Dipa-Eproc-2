@@ -213,8 +213,14 @@ export default function Summary({ taskId = '' }) {
     });
   };
 
-  const handleChecklistJasa = (qtyValue, itemId, serviceId, desc) => {
-    addSubmitJasa(qtyValue, serviceId, desc);
+  const handleChecklistJasa = (
+    qtyValue,
+    qtyAvailable,
+    itemId,
+    serviceId,
+    desc
+  ) => {
+    addSubmitJasa(qtyValue, qtyAvailable, serviceId, desc);
 
     let tempJasa = dataJasa;
 
@@ -306,38 +312,50 @@ export default function Summary({ taskId = '' }) {
     }
   };
 
-  const addSubmitJasa = (qtyValue, itemId, desc) => {
-    const tempSubmitJasa = itemJasa;
+  const addSubmitJasa = (qtyValue, qtyAvailable, itemId, desc) => {
+    const intQtyValue = qtyValue;
+    const intQtyAvailable = qtyAvailable;
 
-    const submitItem = {
-      service_id: itemId,
-      qty: qtyValue,
-      desc: desc,
-    };
-
-    if (tempSubmitJasa.length === 0) {
-      tempSubmitJasa.push(submitItem);
-    }
-
-    if (tempSubmitJasa.length > 0) {
-      const findItem = tempSubmitJasa.find(
-        (item) => item.service_id === itemId
+    //validate quantity number
+    if (intQtyValue < 1 || intQtyValue > intQtyAvailable) {
+      removeFromSubmitItem(itemId, 'jasa');
+      setToast(
+        `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
+        10000
       );
+    } else {
+      const tempSubmitJasa = itemJasa;
 
-      if (findItem) {
-        tempSubmitJasa.forEach((item) => {
-          if (item.service_id === itemId) {
-            item.qty = qtyValue;
-          }
-        });
-      }
+      const submitItem = {
+        service_id: itemId,
+        qty: qtyValue,
+        desc: desc,
+      };
 
-      if (!findItem) {
+      if (tempSubmitJasa.length === 0) {
         tempSubmitJasa.push(submitItem);
       }
-    }
 
-    setItemJasa(tempSubmitJasa);
+      if (tempSubmitJasa.length > 0) {
+        const findItem = tempSubmitJasa.find(
+          (item) => item.service_id === itemId
+        );
+
+        if (findItem) {
+          tempSubmitJasa.forEach((item) => {
+            if (item.service_id === itemId) {
+              item.qty = qtyValue;
+            }
+          });
+        }
+
+        if (!findItem) {
+          tempSubmitJasa.push(submitItem);
+        }
+      }
+
+      setItemJasa(tempSubmitJasa);
+    }
   };
 
   const handleSubmit = async () => {
@@ -548,6 +566,7 @@ export default function Summary({ taskId = '' }) {
                                             onChange={() =>
                                               handleChecklistJasa(
                                                 service.qty_available,
+                                                service.qty_available,
                                                 item.id,
                                                 service.id,
                                                 service.short_text
@@ -580,6 +599,7 @@ export default function Summary({ taskId = '' }) {
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
+                                                service.qty_available,
                                                 service.id,
                                                 service.short_text
                                               )
@@ -612,6 +632,7 @@ export default function Summary({ taskId = '' }) {
                                             onChange={() =>
                                               handleChecklistJasa(
                                                 service.service.qty_available,
+                                                service.service.qty_available,
                                                 item.id,
                                                 service.service.id,
                                                 service.service.short_text
@@ -641,12 +662,11 @@ export default function Summary({ taskId = '' }) {
                                             min={1}
                                             max={service.service.qty_available}
                                             disabled={!service.checked}
-                                            defaultValue={
-                                              service.service.quantity
-                                            }
+                                            defaultValue={service.quantity}
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
+                                                service.service.qty_available,
                                                 service.service.id,
                                                 service.service.short_text
                                               )
