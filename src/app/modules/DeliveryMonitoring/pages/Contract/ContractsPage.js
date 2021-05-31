@@ -47,7 +47,7 @@ export const ContractsPage = () => {
         { content: '' },
         { content: item.issued_date },
         { content: '' },
-        { content: item.vendor.code },
+        { content: item.vendor.party.full_name },
         { content: item.state },
         {
           content: (
