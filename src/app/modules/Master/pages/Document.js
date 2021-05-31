@@ -95,6 +95,7 @@ export const Documents = ({ typeId }) => {
   // };
 
   const generateTableContent = (data) => {
+    setTableContent([]);
     data.forEach((item, i) => {
       const rows = [
         { content: i + 1, props: { width: '5%' } },
