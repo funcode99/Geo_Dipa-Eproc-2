@@ -44,9 +44,9 @@ export const ContractsPage = () => {
         { content: item.contract_no },
         { content: item.purch_order_no },
         { content: item.contract_name },
-        { content: '' },
         { content: item.issued_date },
-        { content: '' },
+        { content: item.issued_date },
+        { content: item.purch_order.purch_group.alias_name },
         { content: item.vendor.party.full_name },
         { content: item.state },
         {
