@@ -162,7 +162,7 @@
     "REQ.UPDATE_FAILED": "Perubahan gagal disimpan. Kesalahan Sistem, Silakan coba lagi.",
   "REQ.REQUEST_ACCOUNT_SUCCESS": "Permintaan akun baru berhasil. Email pendaftaran dikirimkan.",
   "REQ.DELETE_ACCOUNT_SUCCESS": "Akun berhasil dihapus.",
-  "REQ.ASSIGN_ACCOUNT_SUCCESS": "Pemilihan PIC berhasil ditetapkan.",
+  "REQ.ASSIGN_ACCOUNT_SUCCESS": "Pemilihan PIC berhasil ditetapkan. Notifikasi email telah dikirimkan.",
   "REQ.REQUEST_FAILED": "Permintaan gagal dilakukan. Kesalahan Sistem, Silakan coba lagi.",
   "TITLE.TABLE.NO_DATA_AVAILABLE": "Tidak ada data",
   "TITLE.TABLE.WAITING_DATA": "Mohon tunggu, memuat data...",

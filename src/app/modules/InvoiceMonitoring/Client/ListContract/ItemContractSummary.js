@@ -141,10 +141,11 @@ function ItemContractSummary(props) {
     getContractSummary(contract_id)
       .then(response => {
         response['data']['data']['contract_value'] = rupiah(response['data']['data']['contract_value'])
-        response['data']['data']['contract_party']['direksi'] = response['data']['data']['contract_party']['party_1_contract_signature_name'].concat(' - ', response['data']['data']['contract_party']['party_1_director_position'])
-        response['data']['data']['vendor']['full_name'] = response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["legal_org_type_sub"]["name"].concat(". ", response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["full_name"])
-        response['data']['data']['vendor']['full_address'] = `${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["postal_address"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["postal_address"] : null} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["sub_district"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["sub_district"]["name"] : null} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["district"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["district"]["name"] : null} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["province"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["province"]["name"] : null} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["postal_code"] ? response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["address"]["postal_code"] : null}`
-        response['data']['data']['vendor']['full_data'] = `${response['data']['data']['vendor']['full_name']} \n\n${response['data']['data']['vendor']['full_address']} \n${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["phone_number"]["number"]} ${response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["phone_number"]["ext"] ? "\next: ".concat(response['data']['data']["vendor"]["vendor_registration"]["vendor_registration_entries"][0]["data"]["phone_number"]["ext"]) : ''}`
+        response['data']['data']['direksi'] = response['data']['data']['party_1_contract_signature_name'].concat(' - ', response['data']['data']['party_1_director_position'])
+        response['data']['data']['full_name'] = response['data']['data']["data"]["legal_org_type_sub"]["name"].concat(". ", response['data']['data']["data"]["full_name"])
+        response['data']['data']['full_address_party_2'] = `${response['data']['data']["data"]["address"]["postal_address"] ? response['data']['data']["data"]["address"]["postal_address"] : null} ${response['data']['data']["data"]["address"]["sub_district"] ? response['data']['data']["data"]["address"]["sub_district"]["name"] : null} ${response['data']['data']["data"]["address"]["district"] ? response['data']['data']["data"]["address"]["district"]["name"] : null} ${response['data']['data']["data"]["address"]["province"] ? response['data']['data']["data"]["address"]["province"]["name"] : null} ${response['data']['data']["data"]["address"]["postal_code"] ? response['data']['data']["data"]["address"]["postal_code"] : null}`
+        response['data']['data']['full_data_party_2'] = `${response['data']['data']['full_name']} \n\n${response['data']['data']['full_address_party_2']} \n${response['data']['data']["data"]["phone_number"]["number"]} ${response['data']['data']["data"]["phone_number"]["ext"] ? "\next: ".concat(response['data']['data']["data"]["phone_number"]["ext"]) : ''}`
+        response['data']['data']['full_data_party_1'] = `PT. GEO DIPA ENERGI \n\n${response['data']['data']['name']} \n${response['data']['data']['address']}`
         setContractData(response.data.data)
         setTimePIcker(response.data.data.from_time, response.data.data.thru_time)
       })
@@ -667,7 +668,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="authorizedOffice"
-                    defaultValue={contractData["contract_party"] ? contractData["contract_party"]['party_1_position_of_autorize'] : null}
+                    defaultValue={contractData ? contractData['party_1_position_of_autorize'] : null}
                     disabled
                   />
                 </div>
@@ -684,7 +685,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="jobDirectors"
-                    defaultValue={contractData["contract_party"] ? contractData["contract_party"]['direksi'] : null}
+                    defaultValue={contractData ? contractData['direksi'] : null}
                     disabled
                   />
                 </div>
@@ -716,6 +717,7 @@ function ItemContractSummary(props) {
                     className="form-control"
                     id="first"
                     disabled
+                    defaultValue={contractData ? contractData['full_data_party_1'] : null}
                   ></textarea>
                 </div>
               </div>
@@ -730,7 +732,7 @@ function ItemContractSummary(props) {
                     className="form-control"
                     id="second"
                     disabled
-                    defaultValue={contractData['vendor'] ? contractData['vendor']['full_data'] : null}
+                    defaultValue={contractData ? contractData['full_data_party_2'] : null}
                   ></textarea>
                 </div>
               </div>
