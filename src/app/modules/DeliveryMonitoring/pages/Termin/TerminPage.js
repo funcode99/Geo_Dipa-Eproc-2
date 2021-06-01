@@ -57,6 +57,10 @@ const TerminPage = (props) => {
     setTabActive(newTabActive);
   }
 
+  console.log(`state`, state);
+
+  if (!state) return <div/>
+
   return (
     <Container>
       <Subheader
@@ -90,7 +94,7 @@ const TerminPage = (props) => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        {state?.taskId && (
+        {state.hasOwnProperty("task_id") && (
           <Container style={{ marginTop: 20, paddingBottom: 20 }}>
             {tabActive === 0 && <Summary taskId={state?.task_id} />}
             {tabActive === 1 && <BeritaAcara />}
