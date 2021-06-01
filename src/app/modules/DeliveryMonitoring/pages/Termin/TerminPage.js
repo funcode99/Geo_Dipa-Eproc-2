@@ -90,12 +90,14 @@ const TerminPage = (props) => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        <Container style={{ marginTop: 20, paddingBottom: 20 }}>
-          {tabActive === 0 && <Summary taskId={state?.task_id} />}
-          {tabActive === 1 && <BeritaAcara />}
-          {tabActive === 2 && <ServAccGR />}
-          {tabActive === 0 && <Documents taskId={state?.task_id} />}
-        </Container>
+        {state?.taskId && (
+          <Container style={{ marginTop: 20, paddingBottom: 20 }}>
+            {tabActive === 0 && <Summary taskId={state?.task_id} />}
+            {tabActive === 1 && <BeritaAcara />}
+            {tabActive === 2 && <ServAccGR />}
+            {tabActive === 0 && <Documents taskId={state?.task_id} />}
+          </Container>
+        )}
       </Paper>
     </Container>
   );
