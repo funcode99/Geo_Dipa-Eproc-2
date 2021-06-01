@@ -4,41 +4,41 @@ import {
   Button,
   TableBody,
   Checkbox,
-} from '@material-ui/core';
-import React from 'react';
+} from "@material-ui/core";
+import React from "react";
 import {
   ExpandLessOutlined,
   ExpandMoreOutlined,
   Send,
-} from '@material-ui/icons';
-import { Form } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import { actionTypes } from '../../_redux/deliveryMonitoringAction';
-import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
-import useToast from '../../../../components/toast';
-import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
-import { StyledTableHead } from '../../../../components/tables/style';
-import { StyledHead, StyledTable, StyledTableRow } from './style';
-import { rupiah } from '../../../../libs/currency';
-import Navs from '../../../../components/navs';
-import { StyledModal } from '../../../../components/modals';
+} from "@material-ui/icons";
+import { Form } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { actionTypes } from "../../_redux/deliveryMonitoringAction";
+import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+import useToast from "../../../../components/toast";
+import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import { StyledTableHead } from "../../../../components/tables/style";
+import { StyledHead, StyledTable, StyledTableRow } from "./style";
+import { rupiah } from "../../../../libs/currency";
+import Navs from "../../../../components/navs";
+import { StyledModal } from "../../../../components/modals";
 
 const theadItems = [
-  { id: 'action', label: '' },
-  { id: 'keterangan', label: 'Keterangan' },
-  { id: 'due-date', label: 'Due Date' },
-  { id: 'qty', label: 'Qty' },
-  { id: 'uom', label: 'Uom' },
-  { id: 'cost-center', label: 'Cost Center' },
-  { id: 'wbs', label: 'WBS' },
+  { id: "action", label: "" },
+  { id: "keterangan", label: "Keterangan" },
+  { id: "due-date", label: "Due Date" },
+  { id: "qty", label: "Qty" },
+  { id: "uom", label: "Uom" },
+  { id: "cost-center", label: "Cost Center" },
+  { id: "wbs", label: "WBS" },
 ];
 
 const navLists = [
-  { id: 'link-jasa', label: 'Jasa' },
-  { id: 'link-barang', label: 'Barang' },
+  { id: "link-jasa", label: "Jasa" },
+  { id: "link-barang", label: "Barang" },
 ];
 
-export default function Summary({ taskId = '' }) {
+export default function Summary({ taskId = "" }) {
   const [loading, setLoading] = React.useState(false);
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
@@ -65,7 +65,7 @@ export default function Summary({ taskId = '' }) {
   };
 
   const addCheckedField = (data, type) => {
-    if (type === 'barang') {
+    if (type === "barang") {
       data.forEach((item) => {
         if (!item.item) {
           item.checked = false;
@@ -75,7 +75,7 @@ export default function Summary({ taskId = '' }) {
       });
     }
 
-    if (type === 'jasa') {
+    if (type === "jasa") {
       data.forEach((item) => {
         item.item_services.forEach((service) => {
           if (!service.service) {
@@ -100,8 +100,8 @@ export default function Summary({ taskId = '' }) {
       const tempDataBarang = data.task_items;
 
       addShowField(tempDataJasa);
-      addCheckedField(tempDataJasa, 'jasa');
-      addCheckedField(tempDataBarang, 'barang');
+      addCheckedField(tempDataJasa, "jasa");
+      addCheckedField(tempDataBarang, "barang");
 
       dispatch({
         type: actionTypes.SetDataJasa,
@@ -115,10 +115,11 @@ export default function Summary({ taskId = '' }) {
     } catch (error) {
       if (
         error.response?.status !== 400 &&
-        error.response?.data.message !== 'TokenExpiredError'
+        error.response?.data.message !== "TokenExpiredError"
       ) {
-        setToast('Error API, please contact developer!');
+        setToast("Error API, please contact developer!");
       }
+      console.log(`error`, error);
     } finally {
       disableLoading();
     }
@@ -145,7 +146,7 @@ export default function Summary({ taskId = '' }) {
   };
 
   const removeFromSubmitItem = (itemId, type) => {
-    if (type === 'barang') {
+    if (type === "barang") {
       let tempSubmitBarang = itemBarang;
 
       tempSubmitBarang = tempSubmitBarang.filter(
@@ -155,7 +156,7 @@ export default function Summary({ taskId = '' }) {
       setItemBarang(tempSubmitBarang);
     }
 
-    if (type === 'jasa') {
+    if (type === "jasa") {
       let tempSubmitJasa = itemJasa;
 
       tempSubmitJasa = tempSubmitJasa.filter(
@@ -194,7 +195,7 @@ export default function Summary({ taskId = '' }) {
           item.checked === false &&
           itemBarang.length > 0
         ) {
-          removeFromSubmitItem(item.id, 'barang');
+          removeFromSubmitItem(item.id, "barang");
         }
       } else {
         if (
@@ -202,7 +203,7 @@ export default function Summary({ taskId = '' }) {
           item.checked === false &&
           itemBarang.length > 0
         ) {
-          removeFromSubmitItem(item.item_id, 'barang');
+          removeFromSubmitItem(item.item_id, "barang");
         }
       }
     });
@@ -245,7 +246,7 @@ export default function Summary({ taskId = '' }) {
               service.checked === false &&
               itemJasa.length > 0
             ) {
-              removeFromSubmitItem(service.id, 'jasa');
+              removeFromSubmitItem(service.id, "jasa");
             }
           } else {
             if (
@@ -253,7 +254,7 @@ export default function Summary({ taskId = '' }) {
               service.checked === false &&
               itemJasa.length > 0
             ) {
-              removeFromSubmitItem(service.service_id, 'jasa');
+              removeFromSubmitItem(service.service_id, "jasa");
             }
           }
         });
@@ -272,7 +273,7 @@ export default function Summary({ taskId = '' }) {
 
     //validate quantity number
     if (intQty < 1 || intQty > intQtyAvailable) {
-      removeFromSubmitItem(itemId, 'barang');
+      removeFromSubmitItem(itemId, "barang");
       setToast(
         `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
         10000
@@ -318,7 +319,7 @@ export default function Summary({ taskId = '' }) {
 
     //validate quantity number
     if (intQtyValue < 1 || intQtyValue > intQtyAvailable) {
-      removeFromSubmitItem(itemId, 'jasa');
+      removeFromSubmitItem(itemId, "jasa");
       setToast(
         `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
         10000
@@ -383,9 +384,9 @@ export default function Summary({ taskId = '' }) {
     } catch (error) {
       if (
         error.response?.status !== 400 &&
-        error.response?.data.message !== 'TokenExpiredError'
+        error.response?.data.message !== "TokenExpiredError"
       ) {
-        setToast('Error API, Please contact developer!', 10000);
+        setToast("Error API, Please contact developer!", 10000);
       }
     } finally {
       disableLoading();
@@ -480,7 +481,7 @@ export default function Summary({ taskId = '' }) {
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
           />
 
-          {navActive === 'link-jasa' && (
+          {navActive === "link-jasa" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
                 <div className="hecto-10">
@@ -695,7 +696,7 @@ export default function Summary({ taskId = '' }) {
             </div>
           )}
 
-          {navActive === 'link-barang' && (
+          {navActive === "link-barang" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
                 <div className="hecto-10">
