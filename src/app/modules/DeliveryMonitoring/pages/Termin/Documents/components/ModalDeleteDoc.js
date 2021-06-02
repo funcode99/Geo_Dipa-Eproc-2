@@ -3,7 +3,7 @@ import { StyledModal } from "../../../../../../components/modals";
 
 const ModalDeleteDoc = ({ visible, onClose, onSubmit }) => {
   return (
-    <StyledModal visible={visible} onClose={onClose} minWidth="50vw">
+    <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
       <div className="d-flex align-items-center flex-column">
         <h3>Yakin ingin menghapus dokumen ini ?</h3>
         <h6> Setelah dihapus file tidak akan lagi ditampilkan</h6>

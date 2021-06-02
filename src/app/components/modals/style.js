@@ -1,14 +1,15 @@
 // import React from 'react';
-import styled from 'styled-components';
-import { Icon, Modal } from '@material-ui/core';
+import styled from "styled-components";
+import { Icon, Modal } from "@material-ui/core";
 
 export const Container = styled.section`
   position: relative;
   border-radius: 1.25rem;
   padding: 2.15rem 1.5rem 2rem;
-  min-width: ${(props) => props.minWidth || '70vw'};
+  min-width: ${(props) => props.minWidth || "70vw"};
   text-align: ${(props) => props.align};
   background: #fff;
+  max-width: ${(props) => props.maxWidth || "100vw"};
   // display: flex;
   // justify-content: center;
 `;

@@ -2,6 +2,33 @@ import React from "react";
 import { StyledModal } from "../../../../../../components/modals";
 import useToast from "../../../../../../components/toast";
 import * as documentOption from "../../../../../../service/Document";
+import Select from "react-select";
+
+const groupStyles = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+};
+
+const groupBadgeStyles = {
+  backgroundColor: "#EBECF0",
+  borderRadius: "2em",
+  color: "#172B4D",
+  display: "inline-block",
+  fontSize: 12,
+  fontWeight: "normal",
+  lineHeight: "1",
+  minWidth: 1,
+  padding: "0.16666666666667em 0.5em",
+  textAlign: "center",
+};
+
+const formatGroupLabel = (data) => (
+  <div style={groupStyles}>
+    <span>{data.label}</span>
+    <span style={groupBadgeStyles}>{data.options.length}</span>
+  </div>
+);
 
 const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
   const [content, setContent] = React.useState({
@@ -26,8 +53,8 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
   };
 
   const handleSelectChange = (e) => {
-    console.log(`e`, e.target.value);
-    setOptionSelected(e.target.value);
+    // console.log(`e`, e);
+    setOptionSelected(e);
   };
 
   React.useEffect(() => {
@@ -37,20 +64,45 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
   const handleSubmit = React.useCallback(() => {
     if (optionSelected !== false) onSubmit(optionSelected);
     else setToast("Mohon pilih tipe jawaban !");
-  }, [optionSelected, onSubmit, setToast]);
-
+    setOptionSelected(false);
+  }, [optionSelected, onSubmit, setToast, setOptionSelected]);
+  const handleClose = React.useCallback(() => {
+    onClose();
+    setOptionSelected(false);
+  }, [setOptionSelected]);
   //   console.log(`content`, content);
 
   return (
     <React.Fragment>
       <Toast />
-      <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
+      <StyledModal
+        visible={visible}
+        onClose={handleClose}
+        minWidth="30vw"
+        maxWidth="35vw"
+      >
         {/* <form onSubmit={() => onSubmit(optionSelected)}> */}
         <div className="d-flex align-items-start flex-column">
           <h3>Tambah Dokumen Baru</h3>
           <h6> Silahkan pilih jenis dokumen yang akan ditambahkan</h6>
         </div>
-        <div className="row">
+        <Select
+          isMulti
+          value={optionSelected}
+          onChange={(e) => handleSelectChange(e)}
+          // defaultValue={}
+          options={content?.data?.map((el) => ({
+            label: el.name,
+            options: el?.documents?.map((el2) => ({
+              value: el2?.id,
+              label: `${el2?.name} ${el2?.periode !== null &&
+                `(${el2?.periode?.name})`}`,
+            })),
+          }))}
+          // options={groupedOptions}
+          formatGroupLabel={formatGroupLabel}
+        />
+        {/* <div className="row">
           <div className="col-12">
             <select
               value={optionSelected}
@@ -69,7 +121,8 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
               ))}
             </select>
           </div>
-        </div>
+        </div> */}
+
         <div className="d-flex mt-5">
           <button
             disabled={optionSelected === false}

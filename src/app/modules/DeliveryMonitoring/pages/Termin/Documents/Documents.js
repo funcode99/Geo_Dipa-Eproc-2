@@ -127,8 +127,10 @@ const Documents = ({ taskId }) => {
             });
           break;
         case "create":
+          let mappedParams = params?.map((el) => ({ document_id: el.value }));
+          console.log(`type`, type, params, mappedParams);
           deliveryMonitoring
-            .postCreateDoc(taskId, params)
+            .postCreateDocArr(taskId, mappedParams)
             .then((res) => {
               //   console.log(`res`, res);
               if (res?.data?.status === true) {
@@ -196,19 +198,19 @@ const Documents = ({ taskId }) => {
         onClose={() => handleVisible("upload")}
         onSubmit={(params) => handleApi("upload", params)}
       />
-      <div className="d-flex justify-content-end w-100">
-        <button
-          className="btn btn-outline-success btn-sm mt-3 mb-2"
-          onClick={() => handleAction("create")}
-        >
-          <span className="nav-icon">
-            <i className="flaticon2-plus"></i>
-          </span>
-          <span className="nav-text">Deliverables</span>
-        </button>
-      </div>
       <Card className="mt-5">
         <CardBody>
+          <div className="d-flex justify-content-end w-100 mb-5">
+            <button
+              className="btn btn-outline-success btn-sm"
+              onClick={() => handleAction("create")}
+            >
+              <span className="nav-icon">
+                <i className="flaticon2-plus"></i>
+              </span>
+              <span className="nav-text">Deliverables</span>
+            </button>
+          </div>
           <TableDoc />
         </CardBody>
       </Card>

@@ -9,6 +9,7 @@ const theadDocuments = [
   { id: "doc-name", label: "Document Name" },
   { id: "dokumen-progress", label: "Document Progress" },
   { id: "deliv-dokumen", label: "Deliverable Document" },
+  { id: "remarks", label: "Remarks" },
   { id: "aksi", label: "Action" },
 ];
 
@@ -45,7 +46,7 @@ const TableDoc = ({}) => {
     <div className="responsive">
       <div className="table-wrapper-scroll-y my-custom-scrollbar">
         <div className="segment-table">
-          <div className="hecto-15">
+          <div className="hecto-17">
             <StyledTable>
               <StyledTableHead>
                 <StyledHead>
@@ -66,7 +67,7 @@ const TableDoc = ({}) => {
                     <RowAccordion
                       key={id}
                       dataAll={el}
-                      data={["accordIcon", el.name, "-", "-", ""]}
+                      data={["accordIcon", el.name, "-", "-", "-", ""]}
                     >
                       {(item) => {
                         const isPeriodic = item.is_periodic;
@@ -77,7 +78,14 @@ const TableDoc = ({}) => {
                                 key={id}
                                 classBtn={"pl-12"}
                                 dataAll={el}
-                                data={["accordIcon", el?.name, "-", "-", ""]}
+                                data={[
+                                  "accordIcon",
+                                  el?.name,
+                                  "-",
+                                  "-",
+                                  "-",
+                                  "",
+                                ]}
                               >
                                 {/* Dokumen */}
                                 {(item2) =>
@@ -92,6 +100,7 @@ const TableDoc = ({}) => {
                                           ? "WAITING TO UPLOAD"
                                           : "AVAILABLE",
                                         els?.url,
+                                        els?.remarks,
                                         <BtnAksi item={els} />,
                                       ]}
                                     />
@@ -111,6 +120,7 @@ const TableDoc = ({}) => {
                                     ? "WAITING TO UPLOAD"
                                     : "AVAILABLE",
                                   el?.url,
+                                  el?.remarks,
                                   <BtnAksi item={el} />,
                                   //   "aksi",
                                 ]}

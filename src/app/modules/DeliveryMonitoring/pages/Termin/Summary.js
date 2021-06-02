@@ -499,7 +499,7 @@ export default function Summary({ taskId = "" }) {
                       </StyledHead>
                     </StyledTableHead>
                     <TableBody>
-                      {dataJasa.length < 1 ? (
+                      {dataJasa?.length < 1 ? (
                         <StyledTableRow>
                           <TableCell
                             colSpan={theadItems.length}
@@ -519,7 +519,7 @@ export default function Summary({ taskId = "" }) {
                           </TableCell>
                         </StyledTableRow>
                       ) : null}
-                      {dataJasa.map((item) => {
+                      {dataJasa?.map((item) => {
                         return (
                           <React.Fragment key={item.id}>
                             <StyledTableRow>
