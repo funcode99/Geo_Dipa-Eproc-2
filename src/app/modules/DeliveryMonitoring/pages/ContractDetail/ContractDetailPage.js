@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actionTypes } from '../../_redux/deliveryMonitoringAction';
 import CustomTable from '../../../../components/tables';
 import { rupiah } from '../../../../libs/currency';
+import { StyledModal } from '../../../../components/modals';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,7 +81,9 @@ export const ContractDetailPage = () => {
   const [tabActive, setTabActive] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
+  const [modals, setModals] = React.useState(false);
 
+  // generate isi table task
   const generateTableContent = (data) => {
     data.forEach((item, index) => {
       const rows = [
@@ -107,7 +110,10 @@ export const ContractDetailPage = () => {
         {
           content: (
             <div className="d-flex justify-content-between flex-row">
-              <button className="btn btn-sm p-1">
+              <button
+                className="btn btn-sm p-1"
+                onClick={() => handleModal('update', item.id)}
+              >
                 <Icon className="fas fa-edit text-primary" />
               </button>
               <button className="btn btn-sm p-1 mr-2">
@@ -121,8 +127,14 @@ export const ContractDetailPage = () => {
     });
   };
 
+  // get data contract detail from api
   const getContractById = async (contract_id) => {
     try {
+      dispatch({
+        type: actionTypes.SetContractById,
+        payload: [],
+      });
+
       setLoading(true);
       const {
         data: { data },
@@ -155,9 +167,75 @@ export const ContractDetailPage = () => {
     setTabActive(newTabActive);
   }
 
+  const handleClose = () => {
+    setModals(false);
+  };
+
+  const handleModal = async (type, id) => {
+    // if (type === 'update') {
+    //   const {
+    //     data: {
+    //       data: { data },
+    //     },
+    //   } = await master.getDocumentID(id);
+    //   // console.log(data[0].is_periodic);
+    //   setUpdate({ id, update: true });
+    //   // formik.setFieldValue('document_name', data[0].name);
+    //   formik.setValues({
+    //     document_name: data[0].name,
+    //     document_type: data[0].document_type_id,
+    //     document_periode: data[0].periode_id,
+    //   });
+    // } else {
+    //   // formik.setValues(initialValues);
+    // }
+    setModals(true);
+  };
+
   return (
-    <>
+    <React.Fragment>
       <Toast />
+
+      <StyledModal
+        visible={modals}
+        onClose={handleClose}
+        hideCloseIcon={false}
+        disableBackdrop
+        minWidth="40vw"
+      >
+        <div className="d-flex align-items-start flex-column">
+          <h3>Update Task</h3>
+        </div>
+        <Form>
+          <Form.Group controlId="file-attachment">
+            <Form.Label>Due Date</Form.Label>
+            {/* <Form.File onChange={handleSelectChange} size="sm" /> */}
+            <Form.Control
+              type="date"
+              onChange={(e) => console.log(e.target.value)}
+              name="due_date"
+            />
+          </Form.Group>
+        </Form>
+
+        <div className="d-flex mt-5">
+          <button
+            // disabled={optionSelected === false}
+            // onClick={handleSubmit}
+            className="btn btn-primary ml-auto"
+          >
+            Update
+          </button>
+        </div>
+      </StyledModal>
+
+      {/* <ModalEditTask
+        visible={modals}
+        onClose={handleClose}
+        hideCloseIcon={false}
+        disableBackdrop
+        minWidth="30vw"
+      /> */}
 
       {loading ? (
         <div className="d-flex justify-content-center m-5 border-danger">
@@ -203,7 +281,7 @@ export const ContractDetailPage = () => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        {tabActive === 0 && dataContractById[0] ? (
+        {tabActive === 0 ? (
           <>
             <Form className="my-3">
               <Container>
@@ -218,7 +296,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor Kontrak"
-                          defaultValue={dataContractById[0].contract_no}
+                          defaultValue={dataContractById[0]?.contract_no}
                           disabled
                         />
                       </Col>
@@ -232,7 +310,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Judul Pengadaan"
-                          defaultValue={dataContractById[0].contract_name}
+                          defaultValue={dataContractById[0]?.contract_name}
                           disabled
                         />
                       </Col>
@@ -275,7 +353,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor PO"
-                          defaultValue={dataContractById[0].purch_order_no}
+                          defaultValue={dataContractById[0]?.purch_order_no}
                           disabled
                         />
                       </Col>
@@ -289,7 +367,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Header Text PO"
-                          defaultValue={dataContractById[0].purch_order.name}
+                          defaultValue={dataContractById[0]?.purch_order.name}
                           disabled
                         />
                       </Col>
@@ -304,7 +382,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Harga Pekerjaan"
                           defaultValue={rupiah(
-                            parseInt(dataContractById[0].total_amount)
+                            parseInt(dataContractById[0]?.total_amount)
                           )}
                           disabled
                         />
@@ -320,7 +398,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Penyedia"
                           defaultValue={
-                            dataContractById[0].vendor.party.full_name
+                            dataContractById[0]?.vendor.party.full_name
                           }
                           disabled
                         />
@@ -347,7 +425,7 @@ export const ContractDetailPage = () => {
         {tabActive === 4 && <div>Jangka Waktu</div>}
         {tabActive === 5 && <div>Para Pihak</div>}
       </Paper>
-    </>
+    </React.Fragment>
   );
 };
 
