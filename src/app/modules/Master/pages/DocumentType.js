@@ -64,6 +64,18 @@ export const DocumentTypes = () => {
   };
 
   const generateTableContent = (data) => {
+    setTableContent([]);
+    const rows1 = [
+      {
+        content: (
+          <Button variant="contained" onClick={() => setType(' ')}>
+            See all document type
+          </Button>
+        ),
+        props: { colSpan: 4 },
+      },
+    ];
+    setTableContent((prev) => [...prev, rows1]);
     data.forEach((item, i) => {
       const rows = [
         { content: i + 1, props: { width: '5%' } },
@@ -118,17 +130,17 @@ export const DocumentTypes = () => {
   };
 
   React.useEffect(() => {
-    const rows1 = [
-      {
-        content: (
-          <Button variant="contained" onClick={() => setType(' ')}>
-            See all document type
-          </Button>
-        ),
-        props: { colSpan: 4 },
-      },
-    ];
-    setTableContent((prev) => [...prev, rows1]);
+    // const rows1 = [
+    //   {
+    //     content: (
+    //       <Button variant="contained" onClick={() => setType(' ')}>
+    //         See all document type
+    //       </Button>
+    //     ),
+    //     props: { colSpan: 4 },
+    //   },
+    // ];
+    // setTableContent((prev) => [...prev, rows1]);
     getList();
     // eslint-disable-next-line
   }, []);
@@ -173,6 +185,8 @@ export const DocumentTypes = () => {
       const {
         data: { data },
       } = await master.getByID(id);
+      setModals(true);
+
       // console.log(data[0].is_periodic);
       setUpdate({ id, update: true });
       // formik.setFieldValue('document_name', data[0].name);
@@ -181,9 +195,10 @@ export const DocumentTypes = () => {
         check_periodic: data[0].is_periodic,
       });
     } else {
+      setUpdate({ id: '', update: false });
+      setModals(true);
       formik.setValues(initialValues);
     }
-    setModals(true);
   };
 
   const handleDelete = async () => {
