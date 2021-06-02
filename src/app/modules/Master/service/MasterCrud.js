@@ -101,16 +101,20 @@ export function forgotPassword(username) {
 
 // master data roles
 
-export function getRolesBKB() {
-  return axios.get(`data/get_role_bkb`);
+export function getRolesBKB(plant) {
+  return axios.get(`data/get_role_bkb?plant=${plant}`);
 }
 
-export function getRolesVerification() {
-  return axios.get(`data/get_role_verification`);
+export function getRolesVerification(plant) {
+  return axios.get(`data/get_role_verification?plant=${plant}`);
 }
 
-export function getRolesPayment() {
-  return axios.get(`data/get_role_payment`);
+export function getRolesApproval(plant) {
+  return axios.get(`data/get_role_approval?plant=${plant}`);
+}
+
+export function getRolesAcceptance(plant) {
+  return axios.get(`data/get_role_acceptance?plant=${plant}`);
 }
 
 export function updateRoles(data) {
