@@ -2,7 +2,7 @@ import React, {
   useState, useEffect
 } from 'react';
 import {
-  connect
+  connect, shallowEqual, useSelector
 } from "react-redux";
 import {
   FormattedMessage,
@@ -17,7 +17,7 @@ import {
   Flex,
   Input
 } from '../style';
-import { getRolesBKB, getRolesVerification, getRolesPayment, updateRoles } from '../../service/MasterCrud';
+import { getRolesBKB, getRolesVerification, getRolesApproval, getRolesAcceptance, updateRoles } from '../../service/MasterCrud';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { StyledModal } from '../../../../components/modals';
@@ -33,18 +33,24 @@ const RolesPage = (props) => {
   const [loadData, setLoadData] = useState(true);
   const [errorData, setErrorData] = useState(false);
 
+  const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
+
   const getRolesData = () => {
     setLoadData(true)
     if (props.data.type === "BKB") {
-      getRolesBKB()
+      getRolesBKB(props.data.authority)
         .then(response => { setRolesData(response.data.data); setLoadData(false) })
         .catch(() => { setLoadData(false); setErrorData(true) })
     } else if (props.data.type === "Verification") {
-      getRolesVerification()
+      getRolesVerification(props.data.authority)
         .then(response => { setRolesData(response.data.data); setLoadData(false) })
         .catch(() => { setLoadData(false); setErrorData(true) })
-    } else {
-      getRolesPayment()
+    } else if (props.data.type === "Approval") {
+      getRolesApproval(props.data.authority)
+        .then(response => { setRolesData(response.data.data); setLoadData(false) })
+        .catch(() => { setLoadData(false); setErrorData(true) })
+    } else if (props.data.type === "Accept") {
+      getRolesAcceptance(props.data.authority)
         .then(response => { setRolesData(response.data.data); setLoadData(false) })
         .catch(() => { setLoadData(false); setErrorData(true) })
     }
@@ -66,7 +72,8 @@ const RolesPage = (props) => {
         max_value: rolesData[index].bkb_max_value,
         role_name: rolesData[index].name,
         id: rolesData[index].id,
-        type: props.data.type
+        type: props.data.type,
+        user_id: user_id
       });
     } else if (props.data.type === "Verification") {
       formik.setValues({
@@ -74,15 +81,17 @@ const RolesPage = (props) => {
         max_value: rolesData[index].verification_max_value,
         role_name: rolesData[index].name,
         id: rolesData[index].id,
-        type: props.data.type
+        type: props.data.type,
+        user_id: user_id
       });
     } else {
       formik.setValues({
-        min_value: rolesData[index].payment_min_value,
-        max_value: rolesData[index].payment_max_value,
+        min_value: rolesData[index].approval_min_value,
+        max_value: rolesData[index].approval_max_value,
         role_name: rolesData[index].name,
         id: rolesData[index].id,
-        type: props.data.type
+        type: props.data.type,
+        user_id: user_id
       });
     }
     setModals(true);
@@ -93,12 +102,13 @@ const RolesPage = (props) => {
     max_value: 0,
     role_name: "",
     id: "",
-    type: ""
+    type: "",
+    user_id: user_id
   };
 
   const FormSchema = Yup.object().shape({
     min_value: Yup.string()
-      .matches(/^[0-9-.]*$/,
+      .matches(/^[0-9.]*$/,
         intl.formatMessage({
           id: "AUTH.VALIDATION.NUMBER_ONLY",
         })
@@ -109,7 +119,7 @@ const RolesPage = (props) => {
         })
       ),
     max_value: Yup.string()
-      .matches(/^[0-9-.]*$/,
+      .matches(/^[0-9.]*$/,
         intl.formatMessage({
           id: "AUTH.VALIDATION.NUMBER_ONLY",
         })
@@ -234,7 +244,7 @@ const RolesPage = (props) => {
                   <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NAME" /></th>
                   <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MIN" /></th>
                   <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX" /></th>
-                  <th className="bg-primary text-white align-middle text-center"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.ACTION" /></th>
+                  {props.data.type !== "Accept" && <th className="bg-primary text-white align-middle text-center"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.ACTION" /></th>}
                 </tr>
               </thead>
               <tbody>
@@ -247,14 +257,14 @@ const RolesPage = (props) => {
                           {item.name}
                         </td>
                         <td>
-                          {item.bkb_min_value ? rupiah(item.bkb_min_value) : item.verification_min_value ? rupiah(item.verification_min_value) : rupiah(item.payment_min_value)}
+                          {item.bkb_min_value ? rupiah(item.bkb_min_value) : item.verification_min_value ? rupiah(item.verification_min_value) : item.approval_min_value ? rupiah(item.approval_min_value) : '-'}
                         </td>
                         <td>
-                          {item.bkb_max_value ? rupiah(item.bkb_max_value) : item.verification_max_value ? rupiah(item.verification_max_value) : rupiah(item.payment_max_value)}
+                          {item.bkb_max_value ? rupiah(item.bkb_max_value) : item.verification_max_value ? rupiah(item.verification_max_value) : item.approval_max_value ? rupiah(item.approval_max_value) : '-'}
                         </td>
-                        <td className="text-center">
+                        { props.data.type !== "Accept" && <td className="text-center">
                           <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>
-                        </td>
+                        </td>}
                       </tr>
                     )
                   })
@@ -265,7 +275,7 @@ const RolesPage = (props) => {
         </div>
         <div className="table-loading-data">
           <div className="text-center font-weight-bold">
-            <div className={`table-loading-data-potition ${errorData ? 'text-danger' : null }`}>
+            <div className={`table-loading-data-potition ${errorData ? 'text-danger' : null}`}>
               {loadData && <span>
                 <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
                 <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />

@@ -29,7 +29,8 @@ export async function checkRole(id) {
 }
 export async function getContractVendor(id) {
     return axios.get(`/invoice/contract_by_vendors/${id}`);
-}export async function saveInvoice(data) {
+}
+export async function saveInvoice(data) {
     return axios.post(`/invoice/contract_invoice_save/`, data);
 }
 export async function getInvoice(contract_id, termin) {
