@@ -222,9 +222,7 @@ export const Documents = ({ typeId }) => {
   const handleModal = async (type, id) => {
     if (type === 'update') {
       const {
-        data: {
-          data: { data },
-        },
+        data: { data },
       } = await master.getDocumentID(id);
       // console.log(data[0].is_periodic);
       setUpdate({ id, update: true });
@@ -235,6 +233,7 @@ export const Documents = ({ typeId }) => {
         document_periode: data[0].periode_id,
       });
     } else {
+      setUpdate({ id: '', update: false });
       // formik.setValues(initialValues);
     }
     setModals(true);
