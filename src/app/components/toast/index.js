@@ -1,9 +1,9 @@
-import React from 'react';
-import { Snackbar } from '@material-ui/core';
+import React from "react";
+import { Snackbar } from "@material-ui/core";
 
 const useToast = (props) => {
   const [visible, setVisible] = React.useState(false);
-  const [toastMessage, setMessage] = React.useState('');
+  const [toastMessage, setMessage] = React.useState("");
   const [timeToast, setTimeToast] = React.useState(1500);
 
   const setToast = React.useCallback(
@@ -22,7 +22,7 @@ const useToast = (props) => {
         onClose={() => setVisible(false)}
         autoHideDuration={timeToast}
         message={toastMessage}
-        style={{ width: '90%' }}
+        style={{ width: "90%" }}
       />
     );
   };
