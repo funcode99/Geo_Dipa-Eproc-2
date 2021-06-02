@@ -624,7 +624,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Penyedia"
                           defaultValue={
-                            dataContractById[0]?.vendor.party.full_name
+                            dataContractById[0]?.vendor?.party?.full_name
                           }
                           disabled
                         />
