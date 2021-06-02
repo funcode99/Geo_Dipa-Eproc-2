@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
-import { rupiah } from '../../../../libs/currency';
+import { rupiah } from "../../../../libs/currency";
 import {
   // FormattedMessage,
   injectIntl,
@@ -26,10 +26,20 @@ import {
 } from "@material-ui/core";
 import Select2 from "react-select2-wrapper";
 import "react-select2-wrapper/css/select2.css";
-import { getPicContract, getPicVendor, checkEmail, updateEmail, requestUser, deleteUser, assignUser, getContractSummary, checkRole } from './service/invoice';
-import useToast from '../../../../components/toast';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import {
+  getPicContract,
+  getPicVendor,
+  checkEmail,
+  updateEmail,
+  requestUser,
+  deleteUser,
+  assignUser,
+  getContractSummary,
+  checkRole,
+} from "./service/invoice";
+import useToast from "../../../../components/toast";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -97,57 +107,26 @@ function ItemContractSummary(props) {
   const [emailAvailability, setEmailAvailability] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tempPic, setTempPic] = useState([]);
-  const [contractData, setContractData] = useState({})
-  const [role, setRole] = useState({})
+  const [contractData, setContractData] = useState({});
+  const [role, setRole] = useState({});
 
   const [Toast, setToast] = useToast();
-  const updateEmailRef = useRef(null)
+  const updateEmailRef = useRef(null);
 
-  const vendor_id = useSelector((state) => state.auth.user.data.vendor_id, shallowEqual);
-  const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
+  const vendor_id = useSelector(
+    (state) => state.auth.user.data.vendor_id,
+    shallowEqual
+  );
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
   const contract_id = props.match.params.id;
 
   const getPicContractData = () => {
     getPicContract({ id: contract_id, vendor_id: vendor_id })
-      .then(response => { setPicContractData(response.data.data) })
-      .catch((error) => {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        )
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
-      })
-  }
-  const getPicVendorData = () => {
-    getPicVendor(vendor_id)
-      .then(response => { setPicVendorData(response.data.data) })
-      .catch((error) => {
-        if (error.response?.status !== 400 && error.response?.data.message !== "TokenExpiredError")
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
-      })
-  }
-  const getRole = () => {
-    checkRole(user_id)
-      .then(response => { setRole(response.data.data) })
-      .catch((error) => {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        )
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000)
-      })
-  }
-  const getContractData = () => {
-    getContractSummary(contract_id)
-      .then(response => {
-        response['data']['data']['contract_value'] = rupiah(response['data']['data']['contract_value'])
-        response['data']['data']['direksi'] = response['data']['data']['party_1_contract_signature_name'].concat(' - ', response['data']['data']['party_1_director_position'])
-        response['data']['data']['full_name'] = response['data']['data']["data"]["legal_org_type_sub"]["name"].concat(". ", response['data']['data']["data"]["full_name"])
-        response['data']['data']['full_address_party_2'] = `${response['data']['data']["data"]["address"]["postal_address"] ? response['data']['data']["data"]["address"]["postal_address"] : null} ${response['data']['data']["data"]["address"]["sub_district"] ? response['data']['data']["data"]["address"]["sub_district"]["name"] : null} ${response['data']['data']["data"]["address"]["district"] ? response['data']['data']["data"]["address"]["district"]["name"] : null} ${response['data']['data']["data"]["address"]["province"] ? response['data']['data']["data"]["address"]["province"]["name"] : null} ${response['data']['data']["data"]["address"]["postal_code"] ? response['data']['data']["data"]["address"]["postal_code"] : null}`
-        response['data']['data']['full_data_party_2'] = `${response['data']['data']['full_name']} \n\n${response['data']['data']['full_address_party_2']} \n${response['data']['data']["data"]["phone_number"]["number"]} ${response['data']['data']["data"]["phone_number"]["ext"] ? "\next: ".concat(response['data']['data']["data"]["phone_number"]["ext"]) : ''}`
-        response['data']['data']['full_data_party_1'] = `PT. GEO DIPA ENERGI \n\n${response['data']['data']['name']} \n${response['data']['data']['address']}`
-        setContractData(response.data.data)
-        setTimePIcker(response.data.data.from_time, response.data.data.thru_time)
+      .then((response) => {
+        setPicContractData(response.data.data);
       })
       .catch((error) => {
         if (
@@ -156,7 +135,99 @@ function ItemContractSummary(props) {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  }
+  };
+  const getPicVendorData = () => {
+    getPicVendor(vendor_id)
+      .then((response) => {
+        setPicVendorData(response.data.data);
+      })
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  };
+  const getRole = () => {
+    checkRole(user_id)
+      .then((response) => {
+        setRole(response.data.data);
+      })
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  };
+  const getContractData = () => {
+    getContractSummary(contract_id)
+      .then((response) => {
+        response["data"]["data"]["contract_value"] = rupiah(
+          response["data"]["data"]["contract_value"]
+        );
+        response["data"]["data"]["direksi"] = response["data"]["data"][
+          "party_1_contract_signature_name"
+        ].concat(" - ", response["data"]["data"]["party_1_director_position"]);
+        response["data"]["data"]["full_name"] = response["data"]["data"][
+          "data"
+        ]["legal_org_type_sub"]["name"].concat(
+          ". ",
+          response["data"]["data"]["data"]["full_name"]
+        );
+        response["data"]["data"]["full_address_party_2"] = `${
+          response["data"]["data"]["data"]["address"]["postal_address"]
+            ? response["data"]["data"]["data"]["address"]["postal_address"]
+            : null
+        } ${
+          response["data"]["data"]["data"]["address"]["sub_district"]
+            ? response["data"]["data"]["data"]["address"]["sub_district"][
+                "name"
+              ]
+            : null
+        } ${
+          response["data"]["data"]["data"]["address"]["district"]
+            ? response["data"]["data"]["data"]["address"]["district"]["name"]
+            : null
+        } ${
+          response["data"]["data"]["data"]["address"]["province"]
+            ? response["data"]["data"]["data"]["address"]["province"]["name"]
+            : null
+        } ${
+          response["data"]["data"]["data"]["address"]["postal_code"]
+            ? response["data"]["data"]["data"]["address"]["postal_code"]
+            : null
+        }`;
+        response["data"]["data"]["full_data_party_2"] = `${
+          response["data"]["data"]["full_name"]
+        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
+          response["data"]["data"]["data"]["phone_number"]["number"]
+        } ${
+          response["data"]["data"]["data"]["phone_number"]["ext"]
+            ? "\next: ".concat(
+                response["data"]["data"]["data"]["phone_number"]["ext"]
+              )
+            : ""
+        }`;
+        response["data"]["data"][
+          "full_data_party_1"
+        ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
+        setContractData(response.data.data);
+        setTimePIcker(
+          response.data.data.from_time,
+          response.data.data.thru_time
+        );
+      })
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  };
   const setTimePIcker = (from_time, thru_time) => {
     window.$("#kt_daterangepicker_1").daterangepicker({
       buttonClasses: " btn",
@@ -169,48 +240,45 @@ function ItemContractSummary(props) {
       startDate: new Date(from_time),
       endDate: new Date(thru_time),
     });
-  }
-
+  };
 
   useEffect(() => {
-    getContractData()
-    getPicContractData()
-    getPicVendorData()
-    getRole()
+    getContractData();
+    getPicContractData();
+    getPicVendorData();
+    getRole();
   }, []);
 
   const picUnselect = (e) => {
-    var value = e.params.data.id
-    var temp = JSON.parse(JSON.stringify(picContractData))
-    var index = temp.indexOf(value)
-    temp.splice(index, 1)
-    setPicContractData(temp)
-  }
+    var value = e.params.data.id;
+    var temp = JSON.parse(JSON.stringify(picContractData));
+    var index = temp.indexOf(value);
+    temp.splice(index, 1);
+    setPicContractData(temp);
+  };
 
   const picSelect = (e) => {
-    var value = e.params.data.id
-    var temp = [...picContractData, value]
-    setPicContractData(temp)
-  }
+    var value = e.params.data.id;
+    var temp = [...picContractData, value];
+    setPicContractData(temp);
+  };
 
   const initialValuesUpdate = {
     email: "",
-    id: ""
+    id: "",
   };
 
   const initialValues = {
     email: "",
     user_id: user_id,
     vendor_id: vendor_id,
-    monitoring_type: "INVOICE"
+    monitoring_type: "INVOICE",
   };
 
-  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function (errorMessage) {
-    return this.test(`test-card-length`, errorMessage, function (value) {
+  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function(errorMessage) {
+    return this.test(`test-card-length`, errorMessage, function(value) {
       const { path, createError } = this;
-      return (
-        (emailAvailability) || createError({ path, message: errorMessage })
-      );
+      return emailAvailability || createError({ path, message: errorMessage });
     });
   });
 
@@ -218,21 +286,21 @@ function ItemContractSummary(props) {
     if (formikUpdate.values.email.length > 3) {
       checkEmail(formikUpdate.values.email)
         .then(({ data: { data } }) => {
-          setEmailAvailability(data.check)
+          setEmailAvailability(data.check);
         })
         .catch((error) => {
-          setEmailAvailability(false)
+          setEmailAvailability(false);
         });
     } else if (formikNew.values.email.length > 3) {
       checkEmail(formikNew.values.email)
         .then(({ data: { data } }) => {
-          setEmailAvailability(data.check)
+          setEmailAvailability(data.check);
         })
         .catch((error) => {
-          setEmailAvailability(false)
+          setEmailAvailability(false);
         });
     }
-  }
+  };
 
   const UpdateSchema = Yup.object().shape({
     email: Yup.string()
@@ -246,16 +314,29 @@ function ItemContractSummary(props) {
           id: "AUTH.VALIDATION.INVALID_EMAILS",
         })
       )
-      .min(8, intl.formatMessage({
-        id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
-      }, { length: 8 }))
-      .max(50, intl.formatMessage({
-        id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
-      }, { length: 50 }))
+      .min(
+        8,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
+          },
+          { length: 8 }
+        )
+      )
+      .max(
+        50,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
+          },
+          { length: 50 }
+        )
+      )
       .checkAvailabilityEmail(
         intl.formatMessage({
           id: "REQ.EMAIL_NOT_AVAILABLE",
-        }))
+        })
+      ),
   });
 
   const NewSchema = Yup.object().shape({
@@ -270,46 +351,59 @@ function ItemContractSummary(props) {
           id: "AUTH.VALIDATION.INVALID_EMAILS",
         })
       )
-      .min(8, intl.formatMessage({
-        id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
-      }, { length: 8 }))
-      .max(50, intl.formatMessage({
-        id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
-      }, { length: 50 }))
+      .min(
+        8,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
+          },
+          { length: 8 }
+        )
+      )
+      .max(
+        50,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
+          },
+          { length: 50 }
+        )
+      )
       .checkAvailabilityEmail(
         intl.formatMessage({
           id: "REQ.EMAIL_NOT_AVAILABLE",
-        }))
+        })
+      ),
   });
 
   const formikUpdate = useFormik({
     initialValues: initialValuesUpdate,
-    validationSchema: UpdateSchema
+    validationSchema: UpdateSchema,
   });
 
   const formikNew = useFormik({
     initialValues,
-    validationSchema: NewSchema
+    validationSchema: NewSchema,
   });
 
   const handleUpdate = (index) => {
-    setEditEmail(true)
+    setEditEmail(true);
     formikUpdate.setValues({
       email: picVendorData[index].text,
       id: picVendorData[index].id,
       user_id: user_id,
       vendor_id: vendor_id,
-      monitoring_type: "INVOICE"
-    })
-    updateEmailRef.current.scrollIntoView({ behavior: 'smooth' })
-  }
+      monitoring_type: "INVOICE",
+    });
+    updateEmailRef.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   const submitUpdateEmail = () => {
-    setLoading(true)
+    setLoading(true);
     updateEmail(formikUpdate.values)
-      .then(response => {
+      .then((response) => {
         if (response.data.message === "Data Not Found") {
-          setToast(intl.formatMessage({ id: "REQ.NOT_FOUND" }), 10000)
+          setToast(intl.formatMessage({ id: "REQ.NOT_FOUND" }), 10000);
         } else {
           setToast(
             intl.formatMessage({ id: "REQ.UPDATE_EMAIL_SUCCESS" }),
@@ -319,7 +413,7 @@ function ItemContractSummary(props) {
           setEditEmail(false);
           setEmailAvailability(false);
         }
-        setLoading(false)
+        setLoading(false);
       })
       .catch((error) => {
         if (
@@ -332,14 +426,17 @@ function ItemContractSummary(props) {
   };
 
   const submitNewEmail = () => {
-    setLoading(true)
+    setLoading(true);
     requestUser(formikNew.values)
-      .then(response => {
-        formikNew.setValues({ email: "" })
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_ACCOUNT_SUCCESS" }), 10000)
-        getPicVendorData()
-        setEmailAvailability(false)
-        setLoading(false)
+      .then((response) => {
+        formikNew.setValues({ email: "" });
+        setToast(
+          intl.formatMessage({ id: "REQ.REQUEST_ACCOUNT_SUCCESS" }),
+          10000
+        );
+        getPicVendorData();
+        setEmailAvailability(false);
+        setLoading(false);
       })
       .catch((error) => {
         if (
@@ -352,19 +449,22 @@ function ItemContractSummary(props) {
   };
 
   const openDeletePIC = (index) => {
-    setOpenModalDeletePIC(true)
-    setTempPic(picVendorData[index])
-  }
+    setOpenModalDeletePIC(true);
+    setTempPic(picVendorData[index]);
+  };
 
   const deletePic = (id) => {
-    setLoading(true)
+    setLoading(true);
     deleteUser({ users_pic_id: id })
-      .then(response => {
-        setOpenModalDeletePIC(false)
-        setToast(intl.formatMessage({ id: "REQ.DELETE_ACCOUNT_SUCCESS" }), 10000)
-        getPicVendorData()
-        setLoading(false)
-        setEditEmail(false)
+      .then((response) => {
+        setOpenModalDeletePIC(false);
+        setToast(
+          intl.formatMessage({ id: "REQ.DELETE_ACCOUNT_SUCCESS" }),
+          10000
+        );
+        getPicVendorData();
+        setLoading(false);
+        setEditEmail(false);
       })
       .catch((error) => {
         if (
@@ -378,13 +478,21 @@ function ItemContractSummary(props) {
   };
 
   const assignPic = () => {
-    setLoading(true)
-    var data = { contract_id: contract_id, data: picContractData, monitoring_type: "INVOICE", user_id: user_id }
+    setLoading(true);
+    var data = {
+      contract_id: contract_id,
+      data: picContractData,
+      monitoring_type: "INVOICE",
+      user_id: user_id,
+    };
     assignUser(data)
-      .then(response => {
-        setToast(intl.formatMessage({ id: "REQ.ASSIGN_ACCOUNT_SUCCESS" }), 10000)
-        getPicContractData()
-        setLoading(false)
+      .then((response) => {
+        setToast(
+          intl.formatMessage({ id: "REQ.ASSIGN_ACCOUNT_SUCCESS" }),
+          10000
+        );
+        getPicContractData();
+        setLoading(false);
       })
       .catch((error) => {
         if (
@@ -409,16 +517,17 @@ function ItemContractSummary(props) {
         fullWidth={true}
         style={{ zIndex: "1301" }}
       >
-        <DialogTitle id="alert-dialog-slide-title">
-          Batalkan PIC
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">Batalkan PIC</DialogTitle>
         <DialogContent>
-          Apakah anda akan membatalkan PIC dengan Email <span className="text-danger">{tempPic.text}</span> ?
+          Apakah anda akan membatalkan PIC dengan Email{" "}
+          <span className="text-danger">{tempPic.text}</span> ?
         </DialogContent>
         <DialogActions>
           <button
             className="btn btn-secondary"
-            onClick={() => { setOpenModalDeletePIC(false) }}
+            onClick={() => {
+              setOpenModalDeletePIC(false);
+            }}
             disabled={loading}
           >
             Kembali
@@ -429,7 +538,12 @@ function ItemContractSummary(props) {
             onClick={() => deletePic(tempPic.id)}
           >
             Batalkan
-            {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
+            {loading && (
+              <span
+                className="spinner-border spinner-border-sm ml-1"
+                aria-hidden="true"
+              ></span>
+            )}
           </button>
         </DialogActions>
       </Dialog>
@@ -443,124 +557,155 @@ function ItemContractSummary(props) {
         fullWidth={true}
       >
         <DialogTitle id="alert-dialog-slide-title">
-          Daftar Email PIC / {editEmail ? 'Ubah' : 'Tambah'}
+          Daftar Email PIC / {editEmail ? "Ubah" : "Tambah"}
         </DialogTitle>
         <DialogContent>
           <div ref={updateEmailRef}>
-            {!editEmail && <div className="form-group row">
-              <label className="col-sm-2 col-form-label">Email</label>
-              <div className="input-group col-sm-10">
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="Email"
-                  onKeyUp={check_email}
-                  {...formikNew.getFieldProps('email')}
-                />
-                <div className="input-group-append">
-                  <button
-                    type="button"
-                    className="btn btn-primary rounded-right"
-                    disabled={loading || !emailAvailability || (formikNew.touched.email && formikNew.errors.email)}
-                    onClick={submitNewEmail}
-                  >
-                    Simpan
-                    {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
-                  </button>
-                </div>
-                {(formikNew.touched.email && formikNew.errors.email) ? (
-                  <div className="invalid-feedback display-block">
-                    {formikNew.errors.email}
-                  </div>
-                ) : null}
-              </div>
-            </div>
-            }
-            {editEmail && <div className="form-group row">
-              <label className="col-sm-2 col-form-label">Email</label>
-              <div className="input-group col-sm-10">
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="Email"
-                  onKeyUp={check_email}
-                  {...formikUpdate.getFieldProps('email')}
-                  disabled={loading}
-                />
-                <div className="input-group-append">
-                  {/* <span className="input-group-text bg-danger text-white pointer" onClick={() => setEditEmail(false)}> */}
-                  <button
-                    type="button"
-                    className="btn btn-danger rounded-0"
-                    onClick={() => { setEditEmail(false); formikUpdate.setValues({ email: "" }) }}
-                    disabled={loading}
-                  >
-                    Batal
+            {!editEmail && (
+              <div className="form-group row">
+                <label className="col-sm-2 col-form-label">Email</label>
+                <div className="input-group col-sm-10">
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Email"
+                    onKeyUp={check_email}
+                    {...formikNew.getFieldProps("email")}
+                  />
+                  <div className="input-group-append">
+                    <button
+                      type="button"
+                      className="btn btn-primary rounded-right"
+                      disabled={
+                        loading ||
+                        !emailAvailability ||
+                        (formikNew.touched.email && formikNew.errors.email)
+                      }
+                      onClick={submitNewEmail}
+                    >
+                      Simpan
+                      {loading && (
+                        <span
+                          className="spinner-border spinner-border-sm ml-1"
+                          aria-hidden="true"
+                        ></span>
+                      )}
                     </button>
-                  {/* </span> */}
-                </div>
-                <div className="input-group-append ml-0">
-                  <button
-                    type="button"
-                    className="btn btn-primary rounded-right"
-                    onClick={submitUpdateEmail}
-                    disabled={loading || !emailAvailability || (formikUpdate.touched.email && formikUpdate.errors.email)}
-                  >
-                    Ubah
-                    {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
-                  </button>
-                </div>
-                {(formikUpdate.touched.email && formikUpdate.errors.email) || !emailAvailability ? (
-                  <div className="invalid-feedback display-block">
-                    {formikUpdate.errors.email}
                   </div>
-                ) : null}
+                  {formikNew.touched.email && formikNew.errors.email ? (
+                    <div className="invalid-feedback display-block">
+                      {formikNew.errors.email}
+                    </div>
+                  ) : null}
+                </div>
               </div>
-
-            </div>}
+            )}
+            {editEmail && (
+              <div className="form-group row">
+                <label className="col-sm-2 col-form-label">Email</label>
+                <div className="input-group col-sm-10">
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Email"
+                    onKeyUp={check_email}
+                    {...formikUpdate.getFieldProps("email")}
+                    disabled={loading}
+                  />
+                  <div className="input-group-append">
+                    {/* <span className="input-group-text bg-danger text-white pointer" onClick={() => setEditEmail(false)}> */}
+                    <button
+                      type="button"
+                      className="btn btn-danger rounded-0"
+                      onClick={() => {
+                        setEditEmail(false);
+                        formikUpdate.setValues({ email: "" });
+                      }}
+                      disabled={loading}
+                    >
+                      Batal
+                    </button>
+                    {/* </span> */}
+                  </div>
+                  <div className="input-group-append ml-0">
+                    <button
+                      type="button"
+                      className="btn btn-primary rounded-right"
+                      onClick={submitUpdateEmail}
+                      disabled={
+                        loading ||
+                        !emailAvailability ||
+                        (formikUpdate.touched.email &&
+                          formikUpdate.errors.email)
+                      }
+                    >
+                      Ubah
+                      {loading && (
+                        <span
+                          className="spinner-border spinner-border-sm ml-1"
+                          aria-hidden="true"
+                        ></span>
+                      )}
+                    </button>
+                  </div>
+                  {(formikUpdate.touched.email && formikUpdate.errors.email) ||
+                  !emailAvailability ? (
+                    <div className="invalid-feedback display-block">
+                      {formikUpdate.errors.email}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            )}
             <div className="form-group">
               <label>Register:</label>
               <ul className="list-group">
-                {
-                  picVendorData.map((item, index) => {
-                    return (
-                      <li className="list-group-item" key={index.toString()}>
-                        <div className="row">
-                          <span className="col-md">{item.text}</span>
-                          <div className="col-md text-right-md">
-                            <span>
-                              Status:{" "}
-                              <span className={`font-weight-bold ${item.actives === 'true' ? 'text-primary' : 'text-danger'}`}>
-                                {item.actives === 'true' ? 'Terverifikasi' : 'Belum Verifikasi'}
-                              </span>
+                {picVendorData.map((item, index) => {
+                  return (
+                    <li className="list-group-item" key={index.toString()}>
+                      <div className="row">
+                        <span className="col-md">{item.text}</span>
+                        <div className="col-md text-right-md">
+                          <span>
+                            Status:{" "}
+                            <span
+                              className={`font-weight-bold ${
+                                item.actives === "true"
+                                  ? "text-primary"
+                                  : "text-danger"
+                              }`}
+                            >
+                              {item.actives === "true"
+                                ? "Terverifikasi"
+                                : "Belum Verifikasi"}
                             </span>
-                            {item.actives === 'false' &&
-                              <span>
-                                <button
-                                  className="btn p-0 ml-2"
-                                  type="button"
-                                  onClick={() => handleUpdate(index)}
-                                  disabled={loading}
-                                >
-                                  <i className="fas fa-edit text-success pointer"></i>
-                                </button>
-                                <button
-                                  className="btn p-0 ml-2"
-                                  type="button"
-                                  onClick={() => openDeletePIC(index)}
-                                  disabled={loading}
-                                >
-                                  <i className="far fa-trash-alt text-danger pointer"></i>
-                                </button>
-                              </span>
-                            }
-                            {/* <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span> */}
-                          </div>
+                          </span>
+                          {item.actives === "false" && (
+                            <span>
+                              <button
+                                className="btn p-0 ml-2"
+                                type="button"
+                                onClick={() => handleUpdate(index)}
+                                disabled={loading}
+                              >
+                                <i className="fas fa-edit text-success pointer"></i>
+                              </button>
+                              <button
+                                className="btn p-0 ml-2"
+                                type="button"
+                                onClick={() => openDeletePIC(index)}
+                                disabled={loading}
+                              >
+                                <i className="far fa-trash-alt text-danger pointer"></i>
+                              </button>
+                            </span>
+                          )}
+                          {/* <span className="ml-2"><i className="fas fa-edit text-success pointer"></i></span> */}
                         </div>
-                      </li>
-                    )
-                  })
-                }
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>
@@ -593,7 +738,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="numberContract"
-                    defaultValue={contractData['contract_no']}
+                    defaultValue={contractData["contract_no"]}
                     disabled
                   />
                 </div>
@@ -623,7 +768,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={contractData['contract_value']}
+                    defaultValue={contractData["contract_value"]}
                     disabled
                   />
                 </div>
@@ -637,7 +782,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="poNumber"
-                    defaultValue={contractData['purch_order_no']}
+                    defaultValue={contractData["purch_order_no"]}
                     disabled
                   />
                 </div>
@@ -668,7 +813,11 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="authorizedOffice"
-                    defaultValue={contractData ? contractData['party_1_position_of_autorize'] : null}
+                    defaultValue={
+                      contractData
+                        ? contractData["party_1_position_of_autorize"]
+                        : null
+                    }
                     disabled
                   />
                 </div>
@@ -685,7 +834,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="jobDirectors"
-                    defaultValue={contractData ? contractData['direksi'] : null}
+                    defaultValue={contractData ? contractData["direksi"] : null}
                     disabled
                   />
                 </div>
@@ -717,7 +866,9 @@ function ItemContractSummary(props) {
                     className="form-control"
                     id="first"
                     disabled
-                    defaultValue={contractData ? contractData['full_data_party_1'] : null}
+                    defaultValue={
+                      contractData ? contractData["full_data_party_1"] : null
+                    }
                   ></textarea>
                 </div>
               </div>
@@ -732,7 +883,9 @@ function ItemContractSummary(props) {
                     className="form-control"
                     id="second"
                     disabled
-                    defaultValue={contractData ? contractData['full_data_party_2'] : null}
+                    defaultValue={
+                      contractData ? contractData["full_data_party_2"] : null
+                    }
                   ></textarea>
                 </div>
               </div>
@@ -753,16 +906,18 @@ function ItemContractSummary(props) {
                     }}
                     className="form-control"
                   />
-                  {role.main_vendor && <div className="input-group-prepend">
-                    <span
-                      className="input-group-text pointer"
-                      onClick={() => {
-                        setopenModalEmail(true);
-                      }}
-                    >
-                      <i className="fas fa-pencil-alt"></i>
-                    </span>
-                  </div>}
+                  {role.main_vendor && (
+                    <div className="input-group-prepend">
+                      <span
+                        className="input-group-text pointer"
+                        onClick={() => {
+                          setopenModalEmail(true);
+                        }}
+                      >
+                        <i className="fas fa-pencil-alt"></i>
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="col-sm-8"></div>
               </div>
@@ -777,7 +932,12 @@ function ItemContractSummary(props) {
             disabled={loading}
           >
             Simpan
-            {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
+            {loading && (
+              <span
+                className="spinner-border spinner-border-sm ml-1"
+                aria-hidden="true"
+              ></span>
+            )}
           </button>
         </CardFooter>
       </Card>
