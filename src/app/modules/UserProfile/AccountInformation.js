@@ -114,7 +114,7 @@ function AccountInformation(props) {
             {formik.isSubmitting}
           </button>
           <Link
-            to="/user-profile/profile-overview"
+            to="/client/user-profile/profile-overview"
             className="btn btn-secondary"
           >
             Cancel

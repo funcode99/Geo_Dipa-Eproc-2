@@ -34,14 +34,15 @@ const RootClientInvoiceMonitoring = lazy(() =>
 const MasterData = lazy(() => import("./modules/Master/RootMasterData"));
 
 export default function BasePage() {
-  // const data = useSelector((state) => state, shallowEqual);
+  let status = useSelector(
+    (state) => state.auth.user.data.status,
+    shallowEqual
+  );
 
   useEffect(() => {
-    if (window.location.pathname.split("/")[1] === "vendor") {
+    if (window.location.pathname.split("/")[1] !== status) {
       window.location.href = window.location.origin;
     }
-    // console.log("data", data);
-    // console.log("window", window);
   }, []); // [] - is required if you need only one call
   // https://reactjs.org/docs/hooks-reference.html#useeffect
 
@@ -53,7 +54,7 @@ export default function BasePage() {
           <Redirect
             exact
             from="/"
-            to={true ? "/client/dashboard" : "/vendor/dashboard"}
+            to={status === "client" ? "/client/dashboard" : "/vendor/dashboard"}
           />
         }
         {<Redirect exact from="/client" to="/client/dashboard" />}
@@ -69,7 +70,7 @@ export default function BasePage() {
         <Route path="/e-commerce" component={ECommercePage} /> */}
         {/* Page Guide Metronic */}
 
-        <Route path="/user-profile" component={UserProfilepage} />
+        <Route path="/client/user-profile" component={UserProfilepage} />
         <Route
           path="/client/invoice_monitoring"
           component={RootClientInvoiceMonitoring}

@@ -9,9 +9,9 @@ import { toAbsoluteUrl } from "../../../../_metronic/_helpers";
 //   DropdownCustomToggler,
 //   DropdownMenu4,
 // } from "../../../../_metronic/_partials/dropdowns";
-import { 
-  FormattedMessage, 
-  // injectIntl 
+import {
+  FormattedMessage,
+  // injectIntl
 } from "react-intl";
 
 export function ProfileCard(props) {
@@ -111,7 +111,7 @@ export function ProfileCard(props) {
               <div className="navi navi-bold navi-hover navi-active navi-link-rounded">
                 {/* <div className="navi-item mb-2">
                   <NavLink
-                    to="/user-profile/profile-overview"
+                    to="/client/user-profile/profile-overview"
                     className="navi-link py-4"
                     activeClassName="active"
                   >
@@ -131,7 +131,7 @@ export function ProfileCard(props) {
                 </div> */}
                 <div className="navi-item mb-2">
                   <NavLink
-                    to="/user-profile/personal-information"
+                    to="/client/user-profile/personal-information"
                     className="navi-link py-4"
                     activeClassName="active"
                   >
@@ -151,7 +151,7 @@ export function ProfileCard(props) {
                 </div>
                 {/* <div className="navi-item mb-2">
                   <NavLink
-                    to="/user-profile/account-information"
+                    to="/client/user-profile/account-information"
                     className="navi-link py-4"
                     activeClassName="active"
                   >
@@ -171,7 +171,7 @@ export function ProfileCard(props) {
                 </div> */}
                 <div className="navi-item mb-2">
                   <NavLink
-                    to="/user-profile/change-password"
+                    to="/client/user-profile/change-password"
                     className="navi-link py-4"
                     activeClassName="active"
                   >
@@ -196,7 +196,7 @@ export function ProfileCard(props) {
                 </div>
                 {/* <div className="navi-item mb-2">
                   <NavLink
-                    to="/user-profile/email-settings"
+                    to="/client/user-profile/email-settings"
                     className="navi-link py-4"
                     activeClassName="active"
                   >
