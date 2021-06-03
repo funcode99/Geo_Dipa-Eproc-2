@@ -26,6 +26,10 @@ function RootMasterData() {
         path="/client/master/service_level_agreement"
         component={ServiceLevelAgreement}
       />
+
+      <Route path="/client/master/document_types" component={DocTypes} />
+      <Route path="/client/master/periode" component={Periode} />
+      <Route path="/client/master/roles" component={Roles} />
     </Switch>
   );
 }

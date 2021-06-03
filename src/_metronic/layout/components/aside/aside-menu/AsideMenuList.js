@@ -1,34 +1,34 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React from "react";
-import { useLocation } from "react-router";
-import { NavLink } from "react-router-dom";
-import SVG from "react-inlinesvg";
-import { toAbsoluteUrl, checkIsActive } from "../../../../_helpers";
+import React from 'react';
+import { useLocation } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import SVG from 'react-inlinesvg';
+import { toAbsoluteUrl, checkIsActive } from '../../../../_helpers';
 import {
   FormattedMessage,
   // injectIntl
-} from "react-intl";
-import { useSelector, shallowEqual } from "react-redux";
+} from 'react-intl';
+import { useSelector, shallowEqual } from 'react-redux';
 import {
   DataAsideMenuListClient,
   DataAsideMenuListVendor,
-} from "./DataAsideMenuList";
+} from './DataAsideMenuList';
 
 export function AsideMenuList({ layoutProps }) {
   const location = useLocation();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)
       ? ` ${!hasSubmenu &&
-          "menu-item-active"} menu-item-open menu-item-not-hightlighted`
-      : "";
+          'menu-item-active'} menu-item-open menu-item-not-hightlighted`
+      : '';
   };
   let status = useSelector(
     (state) => state.auth.user.data.status,
     shallowEqual
   );
   let asideMenu =
-    status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor;
+    status === 'client' ? DataAsideMenuListClient : DataAsideMenuListVendor;
 
   return (
     <>
@@ -44,7 +44,7 @@ export function AsideMenuList({ layoutProps }) {
         >
           <NavLink className="menu-link" to={`/${status}/dashboard`}>
             <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")} />
+              <SVG src={toAbsoluteUrl('/media/svg/icons/Design/Layers.svg')} />
             </span>
             <span className="menu-text">Dashboard</span>
           </NavLink>
@@ -56,8 +56,8 @@ export function AsideMenuList({ layoutProps }) {
               key={index.toString()}
               className={`${
                 item.subMenu && item.subMenu.length > 0
-                  ? "menu-item menu-item-submenu"
-                  : "menu-item"
+                  ? 'menu-item menu-item-submenu'
+                  : 'menu-item'
               } ${getMenuItemActive(item.rootPath, true)}`}
               aria-haspopup="true"
               data-menu-toggle="hover"
@@ -65,13 +65,13 @@ export function AsideMenuList({ layoutProps }) {
               <NavLink
                 className={
                   item.subMenu && item.subMenu.length > 0
-                    ? "menu-link menu-toggle"
-                    : "menu-link"
+                    ? 'menu-link menu-toggle'
+                    : 'menu-link'
                 }
                 to={item.rootPath}
               >
                 <span className="svg-icon menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/svg/icons" + item.icon)} />
+                  <SVG src={toAbsoluteUrl('/media/svg/icons' + item.icon)} />
                 </span>
                 <span className="menu-text">
                   <FormattedMessage id={item.title} />
@@ -100,16 +100,16 @@ export function AsideMenuList({ layoutProps }) {
                           key={index_1.toString()}
                           className={`${
                             submenu.subMenu && submenu.subMenu.length > 0
-                              ? "menu-item menu-item-submenu"
-                              : "menu-item"
+                              ? 'menu-item menu-item-submenu'
+                              : 'menu-item'
                           }  ${getMenuItemActive(submenu.rootPath)}`}
                           aria-haspopup="true"
                         >
                           <NavLink
                             className={
                               submenu.subMenu && submenu.subMenu.length > 0
-                                ? "menu-link menu-toggle"
-                                : "menu-link"
+                                ? 'menu-link menu-toggle'
+                                : 'menu-link'
                             }
                             to={submenu.rootPath}
                           >
@@ -129,7 +129,7 @@ export function AsideMenuList({ layoutProps }) {
                               <ul className="menu-subnav">
                                 {submenu.subMenu.map((submenus, index_2) => {
                                   return (
-        <li
+                                    <li
                                       key={index_2.toString()}
                                       className={`menu-item  ${getMenuItemActive(
                                         submenus.rootPath
@@ -167,13 +167,16 @@ export function AsideMenuList({ layoutProps }) {
         {/* begin: Delivery Monitoring */}
         {/* <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
-            "/delivery_monitoring",
+            '/client/delivery-monitoring',
             true
           )}`}
           aria-haspopup="true"
           data-menu-toggle="hover"
         >
-          <NavLink className="menu-link menu-toggle" to="/delivery_monitoring">
+          <NavLink
+            className="menu-link menu-toggle"
+            to="/client/delivery-monitoring"
+          >
             <span className="svg-icon menu-icon">
               <SVG
                 src={toAbsoluteUrl("/media/svg/icons/All/route-solid.svg")}
@@ -196,11 +199,11 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  "/delivery_monitoring"
+                  '/client/delivery-monitoring'
                 )}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/delivery_monitoring">
+                <NavLink className="menu-link" to="/client/delivery-monitoring">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -211,13 +214,13 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  "/delivery_monitoring/error-v2"
+                  '/client/delivery-monitoring/error-v2'
                 )}`}
                 aria-haspopup="true"
               >
                 <NavLink
                   className="menu-link"
-                  to="/delivery_monitoring/error-v2"
+                  to="/client/delivery-monitoring/error-v2"
                 >
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
@@ -229,13 +232,13 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  "/delivery_monitoring/error-v3"
+                  '/client/delivery-monitoring/error-v3'
                 )}`}
                 aria-haspopup="true"
               >
                 <NavLink
                   className="menu-link"
-                  to="/delivery_monitoring/error-v3"
+                  to="/client/delivery-monitoring/error-v3"
                 >
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
@@ -430,11 +433,14 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  "/master/document_types"
+                  '/client/master/document_types'
                 )}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/master/document_types">
+                <NavLink
+                  className="menu-link"
+                  to="/client/master/document_types"
+                >
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -444,10 +450,12 @@ export function AsideMenuList({ layoutProps }) {
                 </NavLink>
               </li>
               <li
-                className={`menu-item ${getMenuItemActive("/master/periode")}`}
+                className={`menu-item ${getMenuItemActive(
+                  '/client/master/periode'
+                )}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/master/periode">
+                <NavLink className="menu-link" to="/client/master/periode">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -455,10 +463,12 @@ export function AsideMenuList({ layoutProps }) {
                 </NavLink>
               </li>
               <li
-                className={`menu-item ${getMenuItemActive("/master/roles")}`}
+                className={`menu-item ${getMenuItemActive(
+                  '/client/master/roles'
+                )}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/master/roles">
+                <NavLink className="menu-link" to="/client/master/roles">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>

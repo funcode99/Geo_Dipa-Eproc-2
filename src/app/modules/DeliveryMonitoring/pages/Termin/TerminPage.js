@@ -1,19 +1,19 @@
-import React from "react";
-import { Container, makeStyles, Paper } from "@material-ui/core";
-import Subheader from "../../../../components/subheader";
-import Tabs from "../../../../components/tabs";
-import Summary from "./Summary";
+import React from 'react';
+import { Container, makeStyles, Paper } from '@material-ui/core';
+import Subheader from '../../../../components/subheader';
+import Tabs from '../../../../components/tabs';
+import Summary from './Summary';
 import {
   DescriptionOutlined,
   AssignmentOutlined,
   BookmarkBorderOutlined,
-} from "@material-ui/icons";
-import ServAccGR from "../ServiceAccGR/pages/ServiceAccDetail";
-import Documents from "./Documents";
-import BeritaAcara from "./BeritaAcara";
-import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-import { useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+} from '@material-ui/icons';
+import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
+import Documents from './Documents';
+import BeritaAcara from './BeritaAcara';
+import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
+import { useSelector } from 'react-redux';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,18 +23,18 @@ const useStyles = makeStyles((theme) => ({
 
 const TabLists = [
   {
-    id: "summary",
-    label: "Summary",
+    id: 'summary',
+    label: 'Summary',
     icon: <DescriptionOutlined className="mb-0 mr-2" />,
   },
   {
-    id: "berita-acara",
-    label: "Berita Acara",
+    id: 'berita-acara',
+    label: 'Berita Acara',
     icon: <AssignmentOutlined className="mb-0 mr-2" />,
   },
   {
-    id: "sa-gr",
-    label: "SA / GR",
+    id: 'sa-gr',
+    label: 'SA / GR',
     icon: <BookmarkBorderOutlined className="mb-0 mr-2" />,
   },
 ];
@@ -44,10 +44,21 @@ const TerminPage = (props) => {
   const [tabActive, setTabActive] = React.useState(0);
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const history = useHistory();
-  const { state } = useLocation();
+  const { task_id } = useParams();
+  // const { state } = useLocation();
+
+  const getTask = React.useCallback(
+    (taskId) => {
+      const task = dataContractById[0]?.tasks?.find(
+        (item) => item.id === taskId
+      );
+      return task.name;
+    },
+    [task_id]
+  );
 
   React.useEffect(() => {
-    if (!state?.task_id) {
+    if (!task_id) {
       history.goBack();
     }
     // eslint-disable-next-line
@@ -57,30 +68,32 @@ const TerminPage = (props) => {
     setTabActive(newTabActive);
   }
 
-  console.log(`state`, state);
+  // console.log(task_id);
+  // console.log(`state`, state);
 
-  if (!state) return <div/>
+  // if (!state) return <div />;
 
   return (
     <Container>
       <Subheader
         text="Termin 1"
-        IconComponent={<DescriptionOutlined style={{ color: "white" }} />}
+        IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
       />
 
       <SubBreadcrumbs
         items={[
           {
-            label: "List of Contract & PO",
-            to: "/delivery_monitoring/contract",
+            label: 'List of Contract & PO',
+            to: '/client/delivery-monitoring/contract',
           },
           {
-            label: `${dataContractById[0]?.contract_name || "no data"}`,
-            to: `/delivery_monitoring/contract/${dataContractById[0]?.id || 1}`,
+            label: `${dataContractById[0]?.contract_name || 'no data'}`,
+            to: `/client/delivery-monitoring/contract/${dataContractById[0]
+              ?.id || 1}`,
           },
           {
-            label: "Termin 1",
-            to: "",
+            label: getTask(task_id) || `Termin`,
+            to: '',
           },
         ]}
       />
@@ -94,14 +107,14 @@ const TerminPage = (props) => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        {state.hasOwnProperty("task_id") && (
-          <Container style={{ marginTop: 20, paddingBottom: 20 }}>
-            {tabActive === 0 && <Summary taskId={state?.task_id} />}
-            {tabActive === 1 && <BeritaAcara />}
-            {tabActive === 2 && <ServAccGR />}
-            {tabActive === 0 && <Documents taskId={state?.task_id} />}
-          </Container>
-        )}
+        {/* {state.hasOwnProperty('task_id') && ( */}
+        <Container style={{ marginTop: 20, paddingBottom: 20 }}>
+          {tabActive === 0 && <Summary taskId={task_id} />}
+          {tabActive === 1 && <BeritaAcara />}
+          {tabActive === 2 && <ServAccGR />}
+          {tabActive === 0 && <Documents taskId={task_id} />}
+        </Container>
+        {/* )} */}
       </Paper>
     </Container>
   );

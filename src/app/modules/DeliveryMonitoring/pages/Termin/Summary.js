@@ -4,51 +4,99 @@ import {
   Button,
   TableBody,
   Checkbox,
-} from "@material-ui/core";
-import React from "react";
+} from '@material-ui/core';
+import React from 'react';
 import {
   ExpandLessOutlined,
   ExpandMoreOutlined,
   Send,
-} from "@material-ui/icons";
-import { Form } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { actionTypes } from "../../_redux/deliveryMonitoringAction";
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
-import useToast from "../../../../components/toast";
-import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
-import { StyledTableHead } from "../../../../components/tables/style";
-import { StyledHead, StyledTable, StyledTableRow } from "./style";
-import { rupiah } from "../../../../libs/currency";
-import Navs from "../../../../components/navs";
-import { StyledModal } from "../../../../components/modals";
+} from '@material-ui/icons';
+import { Form } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionTypes } from '../../_redux/deliveryMonitoringAction';
+import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
+import useToast from '../../../../components/toast';
+import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
+import { StyledTableHead } from '../../../../components/tables/style';
+import { StyledHead, StyledTable, StyledTableRow } from './style';
+import { rupiah } from '../../../../libs/currency';
+import Navs from '../../../../components/navs';
+import { StyledModal } from '../../../../components/modals';
 
 const theadItems = [
-  { id: "action", label: "" },
-  { id: "keterangan", label: "Keterangan" },
-  { id: "due-date", label: "Due Date" },
-  { id: "qty", label: "Qty" },
-  { id: "uom", label: "Uom" },
-  { id: "cost-center", label: "Cost Center" },
-  { id: "wbs", label: "WBS" },
+  { id: 'action', label: '' },
+  { id: 'keterangan', label: 'Keterangan' },
+  { id: 'due-date', label: 'Due Date' },
+  { id: 'qty', label: 'Qty' },
+  { id: 'uom', label: 'Uom' },
+  { id: 'net-value', label: 'Net Value' },
+  // { id: 'wbs', label: 'WBS' },
 ];
 
 const navLists = [
-  { id: "link-jasa", label: "Jasa" },
-  { id: "link-barang", label: "Barang" },
+  { id: 'link-jasa', label: 'Jasa' },
+  { id: 'link-barang', label: 'Barang' },
 ];
 
-export default function Summary({ taskId = "" }) {
+export default function Summary({ taskId = '' }) {
   const [loading, setLoading] = React.useState(false);
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
   const [itemJasa, setItemJasa] = React.useState([]);
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = React.useState({
+    submit: false,
+    success: false,
+  });
   const [Toast, setToast] = useToast();
   const { dataJasa, dataBarang } = useSelector(
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
+
+  const setInitialSubmitItems = (data, type) => {
+    if (type === 'jasa') {
+      const tempSubmitJasa = [];
+      // console.log(data);
+
+      data.forEach((item) => {
+        item.item_services.forEach((service) => {
+          if (service.service) {
+            tempSubmitJasa.push({
+              service_id: service.service.id,
+              desc: service.service.short_text,
+              qty: service.service.quantity,
+            });
+          }
+        });
+      });
+
+      setItemJasa(tempSubmitJasa);
+    }
+
+    if (type === 'barang') {
+      const tempSubmitBarang = [];
+      // console.log(data);
+
+      data.forEach((items) => {
+        if (items.item) {
+          tempSubmitBarang.push({
+            item_id: items.item.id,
+            desc: items.item.desc,
+            qty: items.item.qty,
+          });
+        }
+      });
+
+      setItemBarang(tempSubmitBarang);
+    }
+  };
+
+  const handleVisibleModal = (key) => {
+    setShowModal((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
 
   const enableLoading = () => {
     setLoading(true);
@@ -64,33 +112,63 @@ export default function Summary({ taskId = "" }) {
     });
   };
 
-  const addCheckedField = (data, type) => {
-    if (type === "barang") {
+  const addCheckedAndErrorField = (data, type) => {
+    if (type === 'barang') {
       data.forEach((item) => {
         if (!item.item) {
           item.checked = false;
+          item.error = '';
         } else {
           item.checked = true;
+          item.error = '';
         }
       });
     }
 
-    if (type === "jasa") {
+    if (type === 'jasa') {
       data.forEach((item) => {
         item.item_services.forEach((service) => {
           if (!service.service) {
             service.checked = false;
+            service.error = '';
           } else {
             service.checked = true;
+            service.error = '';
           }
         });
       });
     }
   };
 
+  const setInitialData = () => {
+    dispatch({
+      type: actionTypes.SetDataJasa,
+      payload: [],
+    });
+
+    dispatch({
+      type: actionTypes.SetDataBarang,
+      payload: [],
+    });
+  };
+
+  const setDataFromAPI = (dataJasa, dataBarang) => {
+    dispatch({
+      type: actionTypes.SetDataJasa,
+      payload: dataJasa,
+    });
+
+    dispatch({
+      type: actionTypes.SetDataBarang,
+      payload: dataBarang,
+    });
+  };
+
   const getAllItems = async (taskId) => {
     try {
       enableLoading();
+
+      setInitialData();
 
       const {
         data: { data },
@@ -100,24 +178,19 @@ export default function Summary({ taskId = "" }) {
       const tempDataBarang = data.task_items;
 
       addShowField(tempDataJasa);
-      addCheckedField(tempDataJasa, "jasa");
-      addCheckedField(tempDataBarang, "barang");
+      addCheckedAndErrorField(tempDataJasa, 'jasa');
+      addCheckedAndErrorField(tempDataBarang, 'barang');
 
-      dispatch({
-        type: actionTypes.SetDataJasa,
-        payload: tempDataJasa,
-      });
+      setInitialSubmitItems(tempDataJasa, 'jasa');
+      setInitialSubmitItems(tempDataBarang, 'barang');
 
-      dispatch({
-        type: actionTypes.SetDataBarang,
-        payload: tempDataBarang,
-      });
+      setDataFromAPI(tempDataJasa, tempDataBarang);
     } catch (error) {
       if (
         error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
+        error.response?.data.message !== 'TokenExpiredError'
       ) {
-        setToast("Error API, please contact developer!");
+        setToast('Error, please contact developer!');
       }
       console.log(`error`, error);
     } finally {
@@ -126,7 +199,9 @@ export default function Summary({ taskId = "" }) {
   };
 
   React.useEffect(() => {
-    getAllItems(taskId);
+    if (taskId) {
+      getAllItems(taskId);
+    }
     // eslint-disable-next-line
   }, []);
 
@@ -146,7 +221,7 @@ export default function Summary({ taskId = "" }) {
   };
 
   const removeFromSubmitItem = (itemId, type) => {
-    if (type === "barang") {
+    if (type === 'barang') {
       let tempSubmitBarang = itemBarang;
 
       tempSubmitBarang = tempSubmitBarang.filter(
@@ -156,7 +231,7 @@ export default function Summary({ taskId = "" }) {
       setItemBarang(tempSubmitBarang);
     }
 
-    if (type === "jasa") {
+    if (type === 'jasa') {
       let tempSubmitJasa = itemJasa;
 
       tempSubmitJasa = tempSubmitJasa.filter(
@@ -172,7 +247,7 @@ export default function Summary({ taskId = "" }) {
   };
 
   const handleChecklistBarang = (qtyValue, qtyAvailable, itemId, desc) => {
-    addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
+    // addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
 
     let tempBarang = dataBarang;
 
@@ -181,10 +256,16 @@ export default function Summary({ taskId = "" }) {
       if (item.item === undefined) {
         if (item.id === itemId) {
           changeChecked(item);
+          if (item.checked === true) {
+            addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
+          }
         }
       } else {
         if (item.item_id === itemId) {
           changeChecked(item);
+          if (item.checked === true) {
+            addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
+          }
         }
       }
 
@@ -195,7 +276,7 @@ export default function Summary({ taskId = "" }) {
           item.checked === false &&
           itemBarang.length > 0
         ) {
-          removeFromSubmitItem(item.id, "barang");
+          removeFromSubmitItem(item.id, 'barang');
         }
       } else {
         if (
@@ -203,7 +284,7 @@ export default function Summary({ taskId = "" }) {
           item.checked === false &&
           itemBarang.length > 0
         ) {
-          removeFromSubmitItem(item.item_id, "barang");
+          removeFromSubmitItem(item.item_id, 'barang');
         }
       }
     });
@@ -232,10 +313,16 @@ export default function Summary({ taskId = "" }) {
           if (service.service === undefined) {
             if (service.id === serviceId) {
               changeChecked(service);
+              if (service.checked === true) {
+                addSubmitJasa(qtyValue, qtyAvailable, serviceId, desc);
+              }
             }
           } else {
             if (service.service_id === serviceId) {
               changeChecked(service);
+              if (service.checked === true) {
+                addSubmitJasa(qtyValue, qtyAvailable, serviceId, desc);
+              }
             }
           }
 
@@ -246,7 +333,7 @@ export default function Summary({ taskId = "" }) {
               service.checked === false &&
               itemJasa.length > 0
             ) {
-              removeFromSubmitItem(service.id, "jasa");
+              removeFromSubmitItem(service.id, 'jasa');
             }
           } else {
             if (
@@ -254,7 +341,7 @@ export default function Summary({ taskId = "" }) {
               service.checked === false &&
               itemJasa.length > 0
             ) {
-              removeFromSubmitItem(service.service_id, "jasa");
+              removeFromSubmitItem(service.service_id, 'jasa');
             }
           }
         });
@@ -268,12 +355,13 @@ export default function Summary({ taskId = "" }) {
   };
 
   const addSubmitBarang = (qtyValue, qtyAvailable, itemId, desc) => {
-    const intQty = parseInt(qtyValue);
-    const intQtyAvailable = parseInt(qtyAvailable);
+    const isValidQty = parseFloat(qtyValue) ? true : false;
+    const floatQty = parseFloat(qtyValue);
+    const floatQtyAvailable = parseFloat(qtyAvailable);
 
     //validate quantity number
-    if (intQty < 1 || intQty > intQtyAvailable) {
-      removeFromSubmitItem(itemId, "barang");
+    if (!isValidQty || floatQty < 1 || floatQty > floatQtyAvailable) {
+      removeFromSubmitItem(itemId, 'barang');
       setToast(
         `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
         10000
@@ -283,7 +371,7 @@ export default function Summary({ taskId = "" }) {
 
       const submitItem = {
         item_id: itemId,
-        qty: intQty,
+        qty: floatQty,
         desc: desc,
       };
 
@@ -299,7 +387,7 @@ export default function Summary({ taskId = "" }) {
         if (findItem) {
           tempSubmitItems.forEach((item) => {
             if (item.item_id === itemId) {
-              item.qty = intQty;
+              item.qty = floatQty;
             }
           });
         }
@@ -313,13 +401,14 @@ export default function Summary({ taskId = "" }) {
     }
   };
 
-  const addSubmitJasa = (qtyValue, qtyAvailable, itemId, desc) => {
-    const intQtyValue = qtyValue;
-    const intQtyAvailable = qtyAvailable;
+  const addSubmitJasa = (qtyValue, qtyAvailable, serviceId, desc) => {
+    const isValidQty = parseFloat(qtyValue) ? true : false;
+    const floatQtyValue = parseFloat(qtyValue);
+    const floatQtyAvailable = parseFloat(qtyValue);
 
     //validate quantity number
-    if (intQtyValue < 1 || intQtyValue > intQtyAvailable) {
-      removeFromSubmitItem(itemId, "jasa");
+    if (!isValidQty || floatQtyValue < 0 || floatQtyValue > floatQtyAvailable) {
+      removeFromSubmitItem(serviceId, 'jasa');
       setToast(
         `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
         10000
@@ -328,8 +417,8 @@ export default function Summary({ taskId = "" }) {
       const tempSubmitJasa = itemJasa;
 
       const submitItem = {
-        service_id: itemId,
-        qty: qtyValue,
+        service_id: serviceId,
+        qty: floatQtyValue,
         desc: desc,
       };
 
@@ -339,13 +428,13 @@ export default function Summary({ taskId = "" }) {
 
       if (tempSubmitJasa.length > 0) {
         const findItem = tempSubmitJasa.find(
-          (item) => item.service_id === itemId
+          (item) => item.service_id === serviceId
         );
 
         if (findItem) {
           tempSubmitJasa.forEach((item) => {
-            if (item.service_id === itemId) {
-              item.qty = qtyValue;
+            if (item.service_id === serviceId) {
+              item.qty = floatQtyValue;
             }
           });
         }
@@ -384,9 +473,9 @@ export default function Summary({ taskId = "" }) {
     } catch (error) {
       if (
         error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
+        error.response?.data.message !== 'TokenExpiredError'
       ) {
-        setToast("Error API, Please contact developer!", 10000);
+        setToast('Error API, Please contact developer!', 10000);
       }
     } finally {
       disableLoading();
@@ -397,10 +486,12 @@ export default function Summary({ taskId = "" }) {
     <div>
       <Toast />
 
+      {/* Modal ketika klik submit */}
       <StyledModal
-        visible={showModal}
-        onClose={() => setShowModal(false)}
-        minWidth="70vw"
+        visible={showModal.submit}
+        onClose={() => handleVisibleModal('submit')}
+        minWidth="50vw"
+        maxWidth="70vw"
       >
         {itemJasa.length > 0 && (
           <div>
@@ -456,7 +547,7 @@ export default function Summary({ taskId = "" }) {
             <div className="d-flex justify-content-end w-100">
               <Button
                 className="btn btn-secondary border-success mr-3"
-                onClick={() => setShowModal(false)}
+                onClick={() => handleVisibleModal('submit')}
               >
                 Batal
               </Button>
@@ -470,10 +561,9 @@ export default function Summary({ taskId = "" }) {
             </div>
           </div>
         ) : (
-          <p className="text-center">Tidak ada data yang dipilih</p>
+          <h3 className="text-center">Tidak ada data yang dipilih</h3>
         )}
       </StyledModal>
-
       <Card>
         <CardBody>
           <Navs
@@ -481,7 +571,8 @@ export default function Summary({ taskId = "" }) {
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
           />
 
-          {navActive === "link-jasa" && (
+          {/* component table jasa */}
+          {navActive === 'link-jasa' && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
                 <div className="hecto-10">
@@ -538,13 +629,11 @@ export default function Summary({ taskId = "" }) {
                               <TableCell className="align-middle">
                                 {item.desc}
                               </TableCell>
-                              <TableCell className="align-middle">
-                                {/* 31/01/2021 */}
-                              </TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle"></TableCell>
+                              {/* <TableCell className="align-middle"></TableCell> */}
                             </StyledTableRow>
 
                             {item.item_services.length !== 0 && item.show
@@ -593,6 +682,8 @@ export default function Summary({ taskId = "" }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
+                                            // min="0.1"
+                                            // step="0.1"
                                             min={1}
                                             max={service.qty_available}
                                             disabled={!service.checked}
@@ -613,27 +704,20 @@ export default function Summary({ taskId = "" }) {
                                         <TableCell className="align-middle">
                                           {rupiah(service.net_value)}
                                         </TableCell>
-                                        <TableCell className="align-middle"></TableCell>
+                                        {/* <TableCell className="align-middle"></TableCell> */}
                                       </StyledTableRow>
                                     );
                                   } else {
                                     return (
-                                      <StyledTableRow
-                                        key={service.service.id}
-                                        className={
-                                          service.service.qty_available === 0
-                                            ? `bg-secondary`
-                                            : null
-                                        }
-                                      >
+                                      <StyledTableRow key={service.service.id}>
                                         <TableCell className="align-middle">
                                           <Checkbox
                                             name={`checkbox-${service.service.id}`}
                                             color="secondary"
                                             onChange={() =>
                                               handleChecklistJasa(
-                                                service.service.qty_available,
-                                                service.service.qty_available,
+                                                service.service.quantity,
+                                                service.qty,
                                                 item.id,
                                                 service.service.id,
                                                 service.service.short_text
@@ -641,12 +725,6 @@ export default function Summary({ taskId = "" }) {
                                             }
                                             size="small"
                                             checked={service.checked}
-                                            disabled={
-                                              service.service.qty_available ===
-                                              0
-                                                ? true
-                                                : false
-                                            }
                                           />
                                         </TableCell>
                                         <TableCell className="align-middle">
@@ -660,19 +738,26 @@ export default function Summary({ taskId = "" }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
+                                            // min="0.1"
+                                            // step="0.1"
                                             min={1}
-                                            max={service.service.qty_available}
+                                            max={service.qty}
                                             disabled={!service.checked}
-                                            defaultValue={service.quantity}
+                                            defaultValue={
+                                              service.service.quantity
+                                            }
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
-                                                service.service.qty_available,
+                                                service.qty,
                                                 service.service.id,
                                                 service.service.short_text
                                               )
                                             }
                                           />
+                                          <p className="p-0 m-0 text-danger">
+                                            {item.error || null}
+                                          </p>
                                         </TableCell>
                                         <TableCell className="align-middle">
                                           {service.service.base_uom}
@@ -680,7 +765,7 @@ export default function Summary({ taskId = "" }) {
                                         <TableCell className="align-middle">
                                           {rupiah(service.service.net_value)}
                                         </TableCell>
-                                        <TableCell className="align-middle"></TableCell>
+                                        {/* <TableCell className="align-middle"></TableCell> */}
                                       </StyledTableRow>
                                     );
                                   }
@@ -696,7 +781,8 @@ export default function Summary({ taskId = "" }) {
             </div>
           )}
 
-          {navActive === "link-barang" && (
+          {/* component table barang */}
+          {navActive === 'link-barang' && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
                 <div className="hecto-10">
@@ -796,7 +882,7 @@ export default function Summary({ taskId = "" }) {
                                 <TableCell className="align-middle">
                                   {rupiah(item.unit_price)}
                                 </TableCell>
-                                <TableCell className="align-middle"></TableCell>
+                                {/* <TableCell className="align-middle"></TableCell> */}
                               </StyledTableRow>
                             );
                           } else {
@@ -860,7 +946,7 @@ export default function Summary({ taskId = "" }) {
                                 <TableCell className="align-middle">
                                   {rupiah(item.unit_price)}
                                 </TableCell>
-                                <TableCell className="align-middle"></TableCell>
+                                {/* <TableCell className="align-middle"></TableCell> */}
                               </StyledTableRow>
                             );
                           }
@@ -877,7 +963,7 @@ export default function Summary({ taskId = "" }) {
               variant="contained"
               color="secondary"
               size="medium"
-              onClick={() => setShowModal(true)}
+              onClick={() => handleVisibleModal('submit')}
             >
               <span className="mr-1">Submit</span>
               <Send />
