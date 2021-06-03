@@ -32,7 +32,7 @@ const ServiceLevelAgreement = (props) => {
   const classes = useStyles();
   const [filterTable, setFilterTable] = useState({});
   const [nameStateFilter, setNameStateFilter] = useState("");
-  const [filterData, setFilterData] = useState([
+  const [filterData] = useState([
     {
       title: intl.formatMessage({
         id: "TITLE.SERVICE_LEVEL_AGREEMENT",
@@ -124,7 +124,10 @@ const ServiceLevelAgreement = (props) => {
     requestFilterSort({});
   };
 
-  const requestFilterSort = (updateFilterTable, updateSortTable) => {
+  const requestFilterSort = useCallback(
+    (updateFilterTable, updateSortTable) => {
+    setLoading(true);
+    setData([]);
     let filterSorts = filterSort;
     filterSorts.filter = JSON.stringify(
       updateFilterTable ? updateFilterTable : filterTable
@@ -148,7 +151,9 @@ const ServiceLevelAgreement = (props) => {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  };
+    },
+    []
+  );
 
   const sendUpdate = () => {
     setOnSubmit(true);
@@ -167,7 +172,6 @@ const ServiceLevelAgreement = (props) => {
           setDialogState(false);
           setOnSubmit(false);
           setStatusSubmit(false);
-          setLoading(true);
           requestFilterSort();
         }, 2000);
       })
@@ -349,6 +353,7 @@ const ServiceLevelAgreement = (props) => {
                                 <input
                                   type={item.type}
                                   className="form-control form-control-sm"
+                                  min="0"
                                   name={"filter-" + item.name}
                                   id={"filter-" + item.name}
                                   defaultValue={
@@ -361,8 +366,6 @@ const ServiceLevelAgreement = (props) => {
                                 type="button"
                                 className="ml-2 float-left btn btn-sm btn-primary"
                                 onClick={() => {
-                                  setLoading(true);
-                                  setData([]);
                                   updateValueFilter(item.name, index);
                                 }}
                               >
@@ -372,8 +375,6 @@ const ServiceLevelAgreement = (props) => {
                                 type="button"
                                 className="float-right btn btn-sm btn-light"
                                 onClick={() => {
-                                  setLoading(true);
-                                  setData([]);
                                   resetValueFilter("filter-" + item.name);
                                 }}
                               >
@@ -418,8 +419,6 @@ const ServiceLevelAgreement = (props) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
-                          setLoading(true);
-                          setData([]);
                           setSortData({ ...sortDatas });
                           requestFilterSort();
                         }}
@@ -454,8 +453,6 @@ const ServiceLevelAgreement = (props) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
-                          setLoading(true);
-                          setData([]);
                           setSortData({ ...sortDatas });
                           requestFilterSort();
                         }}
