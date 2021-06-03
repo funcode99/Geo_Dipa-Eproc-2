@@ -183,5 +183,12 @@
     }
   },
   "REQ.EMAIL_NOT_AVAILABLE": "Email Not Available",
-  "REQ.NOT_FOUND": "Error data not found"
+  "REQ.NOT_FOUND": "Error data not found",
+  "TITLE.SERVICE_LEVEL_AGREEMENT": "Service Level Agreement (SLA)",
+  "TITLE.NO": "No",
+  "TITLE.DURATION": "Duration (Days)",
+  "TITLE.SAVE": "Save",
+  "TITLE.CANCEL": "Cancel",
+  "TITLE.WAITING": "Please wait",
+  "TITLE.UPDATE_DATA_SUCCESS": "Changes saved successfully"
 }

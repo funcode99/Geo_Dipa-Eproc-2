@@ -183,5 +183,12 @@
     }
   },
   "REQ.EMAIL_NOT_AVAILABLE": "Email Tidak Tersedia",
-  "REQ.NOT_FOUND": "Error data tidak ditemukan"
+  "REQ.NOT_FOUND": "Error data tidak ditemukan",
+  "TITLE.SERVICE_LEVEL_AGREEMENT": "Service Level Agreement (SLA)",
+  "TITLE.NO": "No",
+  "TITLE.DURATION": "Durasi (hari)",
+  "TITLE.SAVE": "Simpan",
+  "TITLE.CANCEL": "Batal",
+  "TITLE.WAITING": "Mohon tunggu",
+  "TITLE.UPDATE_DATA_SUCCESS": "Perubahan berhasil disimpan"
 }
