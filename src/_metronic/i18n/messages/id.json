@@ -20,6 +20,7 @@
     "MENU.MASTER_DATA": "Master Data",
   "MENU.MASTER_DATA.DOCUMENT_TYPES": "Document Types",
   "MENU.MASTER_DATA.ROLES": "Roles",
+  "MENU.MASTER_DATA.INVOICE_PERIODS": "Invoice Periods",
   "MENU.MASTER_DATA.PERIOD": "Periode",
     "REQ.UPDATE": "Akun Anda telah berhasil diperbarui.",
     "REQ.FAILED": "Akun Anda gagal diperbarui. Kesalahan Sistem, Silakan coba lagi.",
