@@ -75,7 +75,7 @@ export default function BasePage() {
           component={RootClientInvoiceMonitoring}
         />
 
-        <Route path="/master" component={MasterData} />
+        <Route path="/client/master" component={MasterData} />
         <Route path="/delivery_monitoring" component={RootDeliveryMonitoring} />
         <Redirect to="/error" />
       </Switch>

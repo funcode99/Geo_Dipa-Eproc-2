@@ -1,22 +1,22 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React from 'react';
-import { useLocation } from 'react-router';
-import { NavLink } from 'react-router-dom';
-import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl, checkIsActive } from '../../../../_helpers';
+import React from "react";
+import { useLocation } from "react-router";
+import { NavLink } from "react-router-dom";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl, checkIsActive } from "../../../../_helpers";
 import {
   FormattedMessage,
   // injectIntl
-} from 'react-intl';
+} from "react-intl";
 
 export function AsideMenuList({ layoutProps }) {
   const location = useLocation();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)
       ? ` ${!hasSubmenu &&
-          'menu-item-active'} menu-item-open menu-item-not-hightlighted`
-      : '';
+          "menu-item-active"} menu-item-open menu-item-not-hightlighted`
+      : "";
   };
 
   return (
@@ -26,14 +26,14 @@ export function AsideMenuList({ layoutProps }) {
         {/*begin::1 Level*/}
         <li
           className={`menu-item ${getMenuItemActive(
-            '/client/dashboard',
+            "/client/dashboard",
             false
           )}`}
           aria-haspopup="true"
         >
           <NavLink className="menu-link" to="/client/dashboard">
             <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl('/media/svg/icons/Design/Layers.svg')} />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")} />
             </span>
             <span className="menu-text">Dashboard</span>
           </NavLink>
@@ -43,7 +43,7 @@ export function AsideMenuList({ layoutProps }) {
         {/* begin: Delivery Monitoring */}
         <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
-            '/delivery_monitoring',
+            "/delivery_monitoring",
             true
           )}`}
           aria-haspopup="true"
@@ -52,7 +52,7 @@ export function AsideMenuList({ layoutProps }) {
           <NavLink className="menu-link menu-toggle" to="/delivery_monitoring">
             <span className="svg-icon menu-icon">
               <SVG
-                src={toAbsoluteUrl('/media/svg/icons/All/route-solid.svg')}
+                src={toAbsoluteUrl("/media/svg/icons/All/route-solid.svg")}
               />
             </span>
             <span className="menu-text">
@@ -72,7 +72,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/delivery_monitoring'
+                  "/delivery_monitoring"
                 )}`}
                 aria-haspopup="true"
               >
@@ -87,7 +87,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/delivery_monitoring/error-v2'
+                  "/delivery_monitoring/error-v2"
                 )}`}
                 aria-haspopup="true"
               >
@@ -105,7 +105,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/delivery_monitoring/error-v3'
+                  "/delivery_monitoring/error-v3"
                 )}`}
                 aria-haspopup="true"
               >
@@ -129,7 +129,7 @@ export function AsideMenuList({ layoutProps }) {
         {/* begin: Invoice Monitoring || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com */}
         <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
-            '/client/invoice_monitoring',
+            "/client/invoice_monitoring",
             false
           )}`}
           aria-haspopup="true"
@@ -142,7 +142,7 @@ export function AsideMenuList({ layoutProps }) {
             <span className="svg-icon menu-icon">
               <SVG
                 src={toAbsoluteUrl(
-                  '/media/svg/icons/All/file-invoice-dollar-solid.svg'
+                  "/media/svg/icons/All/file-invoice-dollar-solid.svg"
                 )}
               />
             </span>
@@ -163,7 +163,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/client/invoice_monitoring'
+                  "/client/invoice_monitoring"
                 )}`}
                 aria-haspopup="true"
               >
@@ -181,7 +181,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/invoice_monitoring/error-v2'
+                  "/invoice_monitoring/error-v2"
                 )}`}
                 aria-haspopup="true"
               >
@@ -199,7 +199,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/invoice_monitoring/error-v3'
+                  "/invoice_monitoring/error-v3"
                 )}`}
                 aria-haspopup="true"
               >
@@ -217,7 +217,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/invoice_monitoring/error-v3'
+                  "/invoice_monitoring/error-v3"
                 )}`}
                 aria-haspopup="true"
               >
@@ -235,7 +235,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/invoice_monitoring/error-v3'
+                  "/invoice_monitoring/error-v3"
                 )}`}
                 aria-haspopup="true"
               >
@@ -259,7 +259,7 @@ export function AsideMenuList({ layoutProps }) {
         {/* begin: User Management */}
         <li
           className={`menu-item ${getMenuItemActive(
-            '/user_management',
+            "/user_management",
             false
           )}`}
           aria-haspopup="true"
@@ -267,7 +267,7 @@ export function AsideMenuList({ layoutProps }) {
           <NavLink className="menu-link" to="/user_management">
             <span className="svg-icon menu-icon">
               <SVG
-                src={toAbsoluteUrl('/media/svg/icons/All/users-solid.svg')}
+                src={toAbsoluteUrl("/media/svg/icons/All/users-solid.svg")}
               />
             </span>
             <span className="menu-text">
@@ -280,16 +280,16 @@ export function AsideMenuList({ layoutProps }) {
         {/* begin: Master Data || Farhan Aziz */}
         <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
-            '/master',
+            "/client/master",
             true
           )}`}
           aria-haspopup="true"
           data-menu-toggle="hover"
         >
-          <NavLink className="menu-link menu-toggle" to="/delivery_monitoring">
+          <NavLink className="menu-link menu-toggle" to="/client/master">
             <span className="svg-icon menu-icon">
               <SVG
-                src={toAbsoluteUrl('/media/svg/icons/All/table-solid.svg')}
+                src={toAbsoluteUrl("/media/svg/icons/All/table-solid.svg")}
               />
             </span>
             <span className="menu-text">
@@ -310,7 +310,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/master/document_types'
+                  "/master/document_types"
                 )}`}
                 aria-haspopup="true"
               >
@@ -325,7 +325,7 @@ export function AsideMenuList({ layoutProps }) {
                 </NavLink>
               </li>
               <li
-                className={`menu-item ${getMenuItemActive('/master/periode')}`}
+                className={`menu-item ${getMenuItemActive("/master/periode")}`}
                 aria-haspopup="true"
               >
                 <NavLink className="menu-link" to="/master/periode">
@@ -336,7 +336,7 @@ export function AsideMenuList({ layoutProps }) {
                 </NavLink>
               </li>
               <li
-                className={`menu-item ${getMenuItemActive('/master/roles')}`}
+                className={`menu-item ${getMenuItemActive("/master/roles")}`}
                 aria-haspopup="true"
               >
                 <NavLink className="menu-link" to="/master/roles">
@@ -344,6 +344,24 @@ export function AsideMenuList({ layoutProps }) {
                     <span />
                   </i>
                   <span className="menu-text">Roles</span>
+                </NavLink>
+              </li>
+              <li
+                className={`menu-item ${getMenuItemActive(
+                  "/client/master/service_level_agreement"
+                )}`}
+                aria-haspopup="true"
+              >
+                <NavLink
+                  className="menu-link"
+                  to="/client/master/service_level_agreement"
+                >
+                  <i className="menu-bullet menu-bullet-dot">
+                    <span />
+                  </i>
+                  <span className="menu-text">
+                    <FormattedMessage id="TITLE.SERVICE_LEVEL_AGREEMENT" />
+                  </span>
                 </NavLink>
               </li>
             </ul>
