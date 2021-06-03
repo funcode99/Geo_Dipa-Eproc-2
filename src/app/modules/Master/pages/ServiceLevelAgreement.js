@@ -125,6 +125,7 @@ const ServiceLevelAgreement = (props) => {
   };
 
   const requestFilterSort = (updateFilterTable, updateSortTable) => {
+    setLoading(true);
     let filterSorts = filterSort;
     filterSorts.filter = JSON.stringify(
       updateFilterTable ? updateFilterTable : filterTable
@@ -167,7 +168,6 @@ const ServiceLevelAgreement = (props) => {
           setDialogState(false);
           setOnSubmit(false);
           setStatusSubmit(false);
-          setLoading(true);
           requestFilterSort();
         }, 2000);
       })
