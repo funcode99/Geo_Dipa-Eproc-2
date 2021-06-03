@@ -141,6 +141,7 @@ const ServiceLevelAgreement = (props) => {
       })
       .catch((err) => {
         setErr(true);
+        setLoading(false);
         if (
           err.response?.status !== 400 &&
           err.response?.data.message !== "TokenExpiredError"
@@ -166,6 +167,7 @@ const ServiceLevelAgreement = (props) => {
           setDialogState(false);
           setOnSubmit(false);
           setStatusSubmit(false);
+          setLoading(true);
           requestFilterSort();
         }, 2000);
       })
