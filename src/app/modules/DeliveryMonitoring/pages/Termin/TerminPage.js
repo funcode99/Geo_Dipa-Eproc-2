@@ -1,18 +1,19 @@
-import React from 'react';
-import { Container, makeStyles, Paper } from '@material-ui/core';
-import Subheader from '../../../../components/subheader';
-import Tabs from '../../../../components/tabs';
-import Summary from './Summary';
+import React from "react";
+import { Container, makeStyles, Paper } from "@material-ui/core";
+import Subheader from "../../../../components/subheader";
+import Tabs from "../../../../components/tabs";
+import Summary from "./Summary";
 import {
   DescriptionOutlined,
   AssignmentOutlined,
   BookmarkBorderOutlined,
-} from '@material-ui/icons';
-import ServAccGR from '../ServiceAccGR/pages/ServiceAccDetail';
-import Documents from './Documents';
-import BeritaAcara from './BeritaAcara';
-import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
-import { useSelector } from 'react-redux';
+} from "@material-ui/icons";
+import ServAccGR from "../ServiceAccGR/pages/ServiceAccDetail";
+import Documents from "./Documents";
+import BeritaAcara from "./BeritaAcara";
+import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
+import { useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -22,18 +23,18 @@ const useStyles = makeStyles((theme) => ({
 
 const TabLists = [
   {
-    id: 'summary',
-    label: 'Summary',
+    id: "summary",
+    label: "Summary",
     icon: <DescriptionOutlined className="mb-0 mr-2" />,
   },
   {
-    id: 'berita-acara',
-    label: 'Berita Acara',
+    id: "berita-acara",
+    label: "Berita Acara",
     icon: <AssignmentOutlined className="mb-0 mr-2" />,
   },
   {
-    id: 'sa-gr',
-    label: 'SA / GR',
+    id: "sa-gr",
+    label: "SA / GR",
     icon: <BookmarkBorderOutlined className="mb-0 mr-2" />,
   },
 ];
@@ -42,31 +43,44 @@ const TerminPage = (props) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
+  const history = useHistory();
+  const { state } = useLocation();
+
+  React.useEffect(() => {
+    if (!state?.task_id) {
+      history.goBack();
+    }
+    // eslint-disable-next-line
+  }, []);
 
   function handleChangeTab(e, newTabActive) {
     setTabActive(newTabActive);
   }
 
+  console.log(`state`, state);
+
+  if (!state) return <div/>
+
   return (
     <Container>
       <Subheader
         text="Termin 1"
-        IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
+        IconComponent={<DescriptionOutlined style={{ color: "white" }} />}
       />
 
       <SubBreadcrumbs
         items={[
           {
-            label: 'List of Contract & PO',
-            to: '/delivery_monitoring/contract',
+            label: "List of Contract & PO",
+            to: "/delivery_monitoring/contract",
           },
           {
-            label: `${dataContractById[0]?.contract_name || 'no data'}`,
+            label: `${dataContractById[0]?.contract_name || "no data"}`,
             to: `/delivery_monitoring/contract/${dataContractById[0]?.id || 1}`,
           },
           {
-            label: 'Termin 1',
-            to: '',
+            label: "Termin 1",
+            to: "",
           },
         ]}
       />
@@ -80,12 +94,14 @@ const TerminPage = (props) => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        <Container style={{ marginTop: 20, paddingBottom: 20 }}>
-          {tabActive === 0 && <Summary />}
-          {tabActive === 1 && <BeritaAcara />}
-          {tabActive === 2 && <ServAccGR />}
-          {tabActive !== 2 && <Documents />}
-        </Container>
+        {state.hasOwnProperty("task_id") && (
+          <Container style={{ marginTop: 20, paddingBottom: 20 }}>
+            {tabActive === 0 && <Summary taskId={state?.task_id} />}
+            {tabActive === 1 && <BeritaAcara />}
+            {tabActive === 2 && <ServAccGR />}
+            {tabActive === 0 && <Documents taskId={state?.task_id} />}
+          </Container>
+        )}
       </Paper>
     </Container>
   );

@@ -59,6 +59,7 @@ export const Periode = () => {
   };
 
   const generateTableContent = (data) => {
+    setTableContent([]);
     data.forEach((item, i) => {
       const rows = [
         { content: i + 1, props: { width: '5%' } },
@@ -158,6 +159,7 @@ export const Periode = () => {
         periode_value: data[0].value,
       });
     } else {
+      setUpdate({ id: '', update: false });
       formik.setValues(initialValues);
     }
     setModals(true);

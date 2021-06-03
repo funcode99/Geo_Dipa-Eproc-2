@@ -44,10 +44,10 @@ export const ContractsPage = () => {
         { content: item.contract_no },
         { content: item.purch_order_no },
         { content: item.contract_name },
-        { content: '' },
         { content: item.issued_date },
-        { content: '' },
-        { content: item.vendor.code },
+        { content: item.issued_date },
+        { content: item.purch_order.purch_group.alias_name },
+        { content: item.vendor.party.full_name },
         { content: item.state },
         {
           content: (
@@ -69,7 +69,12 @@ export const ContractsPage = () => {
       } = await deliveryMonitoring.getDataContracts();
       generateTableContent(data);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== 'TokenExpiredError'
+      ) {
+        setToast('Error API, please contact developer!');
+      }
     } finally {
       setLoading(false);
     }
