@@ -7,9 +7,9 @@ import ChangePassword from "./ChangePassword";
 import PersonaInformation from "./PersonaInformation";
 // import EmailSettings from "./EmailSettings";
 import { ProfileCard } from "./components/ProfileCard";
-import { 
-  // FormattedMessage, 
-  injectIntl 
+import {
+  // FormattedMessage,
+  injectIntl,
 } from "react-intl";
 import { connect } from "react-redux";
 import { useSelector } from "react-redux";
@@ -20,7 +20,7 @@ function UserProfilePage(props) {
   const suhbeader = useSubheader();
   suhbeader.setTitle(
     intl.formatMessage({
-      id: "TITLE.MY_PROFILE"
+      id: "TITLE.MY_PROFILE",
     })
   );
   return (
@@ -29,28 +29,28 @@ function UserProfilePage(props) {
       <div className="flex-row-fluid ml-lg-8">
         <Switch>
           <Redirect
-            from="/user-profile"
+            from="/client/user-profile"
             exact={true}
-            to="/user-profile/personal-information"
+            to="/client/user-profile/personal-information"
           />
           {/* <Route
-            path="/user-profile/profile-overview"
+            path="/client/user-profile/profile-overview"
             component={ProfileOverview}
           /> */}
           {/* <Route
-            path="/user-profile/account-information"
+            path="/client/user-profile/account-information"
             component={AccountInformation}
           /> */}
           <Route
-            path="/user-profile/change-password"
+            path="/client/user-profile/change-password"
             component={ChangePassword}
           />
           {/* <Route
-            path="/user-profile/email-settings"
+            path="/client/user-profile/email-settings"
             component={EmailSettings}
           /> */}
           <Route
-            path="/user-profile/personal-information"
+            path="/client/user-profile/personal-information"
             component={PersonaInformation}
           />
         </Switch>
