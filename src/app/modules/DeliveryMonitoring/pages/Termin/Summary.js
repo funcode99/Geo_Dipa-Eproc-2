@@ -112,13 +112,15 @@ export default function Summary({ taskId = '' }) {
     });
   };
 
-  const addCheckedField = (data, type) => {
+  const addCheckedAndErrorField = (data, type) => {
     if (type === 'barang') {
       data.forEach((item) => {
         if (!item.item) {
           item.checked = false;
+          item.error = '';
         } else {
           item.checked = true;
+          item.error = '';
         }
       });
     }
@@ -128,17 +130,45 @@ export default function Summary({ taskId = '' }) {
         item.item_services.forEach((service) => {
           if (!service.service) {
             service.checked = false;
+            service.error = '';
           } else {
             service.checked = true;
+            service.error = '';
           }
         });
       });
     }
   };
 
+  const setInitialData = () => {
+    dispatch({
+      type: actionTypes.SetDataJasa,
+      payload: [],
+    });
+
+    dispatch({
+      type: actionTypes.SetDataBarang,
+      payload: [],
+    });
+  };
+
+  const setDataFromAPI = (dataJasa, dataBarang) => {
+    dispatch({
+      type: actionTypes.SetDataJasa,
+      payload: dataJasa,
+    });
+
+    dispatch({
+      type: actionTypes.SetDataBarang,
+      payload: dataBarang,
+    });
+  };
+
   const getAllItems = async (taskId) => {
     try {
       enableLoading();
+
+      setInitialData();
 
       const {
         data: { data },
@@ -148,21 +178,13 @@ export default function Summary({ taskId = '' }) {
       const tempDataBarang = data.task_items;
 
       addShowField(tempDataJasa);
-      addCheckedField(tempDataJasa, 'jasa');
-      addCheckedField(tempDataBarang, 'barang');
+      addCheckedAndErrorField(tempDataJasa, 'jasa');
+      addCheckedAndErrorField(tempDataBarang, 'barang');
 
       setInitialSubmitItems(tempDataJasa, 'jasa');
       setInitialSubmitItems(tempDataBarang, 'barang');
 
-      dispatch({
-        type: actionTypes.SetDataJasa,
-        payload: tempDataJasa,
-      });
-
-      dispatch({
-        type: actionTypes.SetDataBarang,
-        payload: tempDataBarang,
-      });
+      setDataFromAPI(tempDataJasa, tempDataBarang);
     } catch (error) {
       if (
         error.response?.status !== 400 &&
@@ -225,7 +247,7 @@ export default function Summary({ taskId = '' }) {
   };
 
   const handleChecklistBarang = (qtyValue, qtyAvailable, itemId, desc) => {
-    addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
+    // addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
 
     let tempBarang = dataBarang;
 
@@ -234,10 +256,16 @@ export default function Summary({ taskId = '' }) {
       if (item.item === undefined) {
         if (item.id === itemId) {
           changeChecked(item);
+          if (item.checked === true) {
+            addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
+          }
         }
       } else {
         if (item.item_id === itemId) {
           changeChecked(item);
+          if (item.checked === true) {
+            addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
+          }
         }
       }
 
@@ -285,10 +313,16 @@ export default function Summary({ taskId = '' }) {
           if (service.service === undefined) {
             if (service.id === serviceId) {
               changeChecked(service);
+              if (service.checked === true) {
+                addSubmitJasa(qtyValue, qtyAvailable, serviceId, desc);
+              }
             }
           } else {
             if (service.service_id === serviceId) {
               changeChecked(service);
+              if (service.checked === true) {
+                addSubmitJasa(qtyValue, qtyAvailable, serviceId, desc);
+              }
             }
           }
 
@@ -321,11 +355,12 @@ export default function Summary({ taskId = '' }) {
   };
 
   const addSubmitBarang = (qtyValue, qtyAvailable, itemId, desc) => {
-    const intQty = parseInt(qtyValue);
-    const intQtyAvailable = parseInt(qtyAvailable);
+    const isValidQty = parseFloat(qtyValue) ? true : false;
+    const floatQty = parseFloat(qtyValue);
+    const floatQtyAvailable = parseFloat(qtyAvailable);
 
     //validate quantity number
-    if (intQty < 1 || intQty > intQtyAvailable) {
+    if (!isValidQty || floatQty < 1 || floatQty > floatQtyAvailable) {
       removeFromSubmitItem(itemId, 'barang');
       setToast(
         `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
@@ -336,7 +371,7 @@ export default function Summary({ taskId = '' }) {
 
       const submitItem = {
         item_id: itemId,
-        qty: intQty,
+        qty: floatQty,
         desc: desc,
       };
 
@@ -352,7 +387,7 @@ export default function Summary({ taskId = '' }) {
         if (findItem) {
           tempSubmitItems.forEach((item) => {
             if (item.item_id === itemId) {
-              item.qty = intQty;
+              item.qty = floatQty;
             }
           });
         }
@@ -366,13 +401,14 @@ export default function Summary({ taskId = '' }) {
     }
   };
 
-  const addSubmitJasa = (qtyValue, qtyAvailable, itemId, desc) => {
-    const intQtyValue = qtyValue;
-    const intQtyAvailable = qtyAvailable;
+  const addSubmitJasa = (qtyValue, qtyAvailable, serviceId, desc) => {
+    const isValidQty = parseFloat(qtyValue) ? true : false;
+    const floatQtyValue = parseFloat(qtyValue);
+    const floatQtyAvailable = parseFloat(qtyValue);
 
     //validate quantity number
-    if (intQtyValue < 1 || intQtyValue > intQtyAvailable) {
-      removeFromSubmitItem(itemId, 'jasa');
+    if (!isValidQty || floatQtyValue < 0 || floatQtyValue > floatQtyAvailable) {
+      removeFromSubmitItem(serviceId, 'jasa');
       setToast(
         `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
         10000
@@ -381,8 +417,8 @@ export default function Summary({ taskId = '' }) {
       const tempSubmitJasa = itemJasa;
 
       const submitItem = {
-        service_id: itemId,
-        qty: qtyValue,
+        service_id: serviceId,
+        qty: floatQtyValue,
         desc: desc,
       };
 
@@ -392,13 +428,13 @@ export default function Summary({ taskId = '' }) {
 
       if (tempSubmitJasa.length > 0) {
         const findItem = tempSubmitJasa.find(
-          (item) => item.service_id === itemId
+          (item) => item.service_id === serviceId
         );
 
         if (findItem) {
           tempSubmitJasa.forEach((item) => {
-            if (item.service_id === itemId) {
-              item.qty = qtyValue;
+            if (item.service_id === serviceId) {
+              item.qty = floatQtyValue;
             }
           });
         }
@@ -646,6 +682,8 @@ export default function Summary({ taskId = '' }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
+                                            // min="0.1"
+                                            // step="0.1"
                                             min={1}
                                             max={service.qty_available}
                                             disabled={!service.checked}
@@ -671,14 +709,7 @@ export default function Summary({ taskId = '' }) {
                                     );
                                   } else {
                                     return (
-                                      <StyledTableRow
-                                        key={service.service.id}
-                                        className={
-                                          service.service.qty_available === 0
-                                            ? `bg-secondary`
-                                            : null
-                                        }
-                                      >
+                                      <StyledTableRow key={service.service.id}>
                                         <TableCell className="align-middle">
                                           <Checkbox
                                             name={`checkbox-${service.service.id}`}
@@ -686,7 +717,7 @@ export default function Summary({ taskId = '' }) {
                                             onChange={() =>
                                               handleChecklistJasa(
                                                 service.service.quantity,
-                                                service.service.qty_available,
+                                                service.qty,
                                                 item.id,
                                                 service.service.id,
                                                 service.service.short_text
@@ -694,12 +725,6 @@ export default function Summary({ taskId = '' }) {
                                             }
                                             size="small"
                                             checked={service.checked}
-                                            disabled={
-                                              service.service.qty_available ===
-                                              0
-                                                ? true
-                                                : false
-                                            }
                                           />
                                         </TableCell>
                                         <TableCell className="align-middle">
@@ -713,8 +738,10 @@ export default function Summary({ taskId = '' }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
+                                            // min="0.1"
+                                            // step="0.1"
                                             min={1}
-                                            max={service.service.qty_available}
+                                            max={service.qty}
                                             disabled={!service.checked}
                                             defaultValue={
                                               service.service.quantity
@@ -722,12 +749,15 @@ export default function Summary({ taskId = '' }) {
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
-                                                service.service.qty_available,
+                                                service.qty,
                                                 service.service.id,
                                                 service.service.short_text
                                               )
                                             }
                                           />
+                                          <p className="p-0 m-0 text-danger">
+                                            {item.error || null}
+                                          </p>
                                         </TableCell>
                                         <TableCell className="align-middle">
                                           {service.service.base_uom}
