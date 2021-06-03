@@ -18,6 +18,9 @@
     "MENU.INVOICE_MONITORING.TAX": "TAX",
     "MENU.USER_MANAGEMENT": "Manajemen Pengguna",
     "MENU.MASTER_DATA": "Master Data",
+  "MENU.MASTER_DATA.DOCUMENT_TYPES": "Document Types",
+  "MENU.MASTER_DATA.ROLES": "Roles",
+  "MENU.MASTER_DATA.PERIOD": "Periode",
     "REQ.UPDATE": "Akun Anda telah berhasil diperbarui.",
     "REQ.FAILED": "Akun Anda gagal diperbarui. Kesalahan Sistem, Silakan coba lagi.",
     "REQ.CREATE_ACCOUNT.SUCCESS": "Akun baru telah berhasil dibuat.",
@@ -190,5 +193,6 @@
   "TITLE.SAVE": "Simpan",
   "TITLE.CANCEL": "Batal",
   "TITLE.WAITING": "Mohon tunggu",
-  "TITLE.UPDATE_DATA_SUCCESS": "Perubahan berhasil disimpan"
+  "TITLE.UPDATE_DATA_SUCCESS": "Perubahan berhasil disimpan",
+  "TITLE.TEST": "Tes"
 }

@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { 
-  useSelector, 
-  shallowEqual, 
-  connect, 
-  // useDispatch 
+import {
+  useSelector,
+  shallowEqual,
+  connect,
+  // useDispatch
 } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -14,17 +14,18 @@ import { ModalProgressBar } from "../../../_metronic/_partials/controls";
 // import { toAbsoluteUrl } from "../../../_metronic/_helpers";
 import * as auth from "../Auth";
 import { updatePassword } from "./_redux/authCrud";
-import { 
-  FormattedMessage, 
-  injectIntl 
-} from "react-intl";
-import {Alert} from "react-bootstrap";
+import { FormattedMessage, injectIntl } from "react-intl";
+import { Alert } from "react-bootstrap";
 
 function ChangePassword(props) {
   // Fields
   const { intl } = props;
   const [loading, setloading] = useState(false);
-  const [alert, setAlert] = useState({status: false, message:"", variant: "primary"});
+  const [alert, setAlert] = useState({
+    status: false,
+    message: "",
+    variant: "primary",
+  });
   // const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user, shallowEqual);
   useEffect(() => {}, [user]);
@@ -36,24 +37,32 @@ function ChangePassword(props) {
     setTimeout(() => {
       // Do request to your server for user update, we just imitate user update there, For example:
       updatePassword(params, values)
-      .then(({ data: { data } }) => {
-        setloading(false);
-        setSubmitting(false);
-        setAlert({status: true, message: "REQ.UPDATE", variant: "primary"});
-        setTimeout(() => {
-          setAlert({status: false, message: "REQ.UPDATE", variant: "primary"})
-        }, 3000);
-        setloading(false);
-      })
-      .catch((error) => {
-        setloading(false);
-        setSubmitting(false);
-        setStatus(error);
-        setAlert({status: true, message: "REQ.FAILED", variant: "danger"});
-        setTimeout(() => {
-          setAlert({status: false, message: "REQ.FAILED", variant: "danger"})
-        }, 3000);
-     });
+        .then(({ data: { data } }) => {
+          setloading(false);
+          setSubmitting(false);
+          setAlert({ status: true, message: "REQ.UPDATE", variant: "primary" });
+          setTimeout(() => {
+            setAlert({
+              status: false,
+              message: "REQ.UPDATE",
+              variant: "primary",
+            });
+          }, 3000);
+          setloading(false);
+        })
+        .catch((error) => {
+          setloading(false);
+          setSubmitting(false);
+          setStatus(error);
+          setAlert({ status: true, message: "REQ.FAILED", variant: "danger" });
+          setTimeout(() => {
+            setAlert({
+              status: false,
+              message: "REQ.FAILED",
+              variant: "danger",
+            });
+          }, 3000);
+        });
     }, 1000);
   };
   // UI Helpers
@@ -62,47 +71,64 @@ function ChangePassword(props) {
     password: "",
     password_confirmation: "",
   };
-  
+
   const Schema = Yup.object().shape({
     current_password: Yup.string()
-    .min(8, intl.formatMessage({
-      id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
-    }, {length: 8}))
-    .max(50, intl.formatMessage({
-      id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
-    }, {length: 50}))
-    .required(
-      intl.formatMessage({
-        id: "AUTH.VALIDATION.REQUIRED_FIELD",
-      })
-    )
-    ,
+      .min(
+        8,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
+          },
+          { length: 8 }
+        )
+      )
+      .max(
+        50,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
+          },
+          { length: 50 }
+        )
+      )
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      ),
     password: Yup.string()
-    .min(8, intl.formatMessage({
-      id: "AUTH.INPUT.PASSWORD.VALIDATION.MATCHE",
-    }))
-    .max(50, intl.formatMessage({
-      id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
-    }, {length: 50}))
-    .required(
-      intl.formatMessage({
-        id: "AUTH.VALIDATION.REQUIRED_FIELD",
-      })
-    )
-    .test(
-      "regex",
-      intl.formatMessage({
-        id: "AUTH.INPUT.PASSWORD.VALIDATION.MATCHE",
-      }),
-      val => {
-        let regExp = new RegExp(
-          "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
-        );
-        // console.log(regExp.test(val), regExp, val);
-        return regExp.test(val);
-      }
-    )
-    ,
+      .min(
+        8,
+        intl.formatMessage({
+          id: "AUTH.INPUT.PASSWORD.VALIDATION.MATCHE",
+        })
+      )
+      .max(
+        50,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
+          },
+          { length: 50 }
+        )
+      )
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      )
+      .test(
+        "regex",
+        intl.formatMessage({
+          id: "AUTH.INPUT.PASSWORD.VALIDATION.MATCHE",
+        }),
+        (val) => {
+          let regExp = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$");
+          // console.log(regExp.test(val), regExp, val);
+          return regExp.test(val);
+        }
+      ),
     password_confirmation: Yup.string()
       .required(
         intl.formatMessage({
@@ -143,7 +169,12 @@ function ChangePassword(props) {
 
   return (
     <form className="card card-custom" onSubmit={formik.handleSubmit}>
-      <Alert variant={alert.variant} show={alert.status} onClick={() => setAlert({status: false, message: "REQ.UPDATE"})} dismissible>
+      <Alert
+        variant={alert.variant}
+        show={alert.status}
+        onClick={() => setAlert({ status: false, message: "REQ.UPDATE" })}
+        dismissible
+      >
         <FormattedMessage id={alert.message} />
       </Alert>
       {loading && <ModalProgressBar />}
@@ -170,10 +201,10 @@ function ChangePassword(props) {
             {formik.isSubmitting}
           </button>
           <Link
-            to="/user-profile/personal-information"
+            to="/client/user-profile/personal-information"
             className="btn btn-secondary"
           >
-          <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.SUBMIT_BUTTON.CANCEL_CHANGES" />
+            <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.SUBMIT_BUTTON.CANCEL_CHANGES" />
           </Link>
         </div>
       </div>
@@ -233,7 +264,7 @@ function ChangePassword(props) {
           </div>
           <div className="form-group row">
             <label className="col-xl-3 col-lg-3 col-form-label text-alert">
-            <FormattedMessage id="AUTH.INPUT.CONFIRM_PASSWORD" />
+              <FormattedMessage id="AUTH.INPUT.CONFIRM_PASSWORD" />
               <span className="text-danger">*</span>
             </label>
             <div className="col-lg-9 col-xl-6">
@@ -248,7 +279,8 @@ function ChangePassword(props) {
                 name="password_confirmation"
                 {...formik.getFieldProps("password_confirmation")}
               />
-              {formik.touched.password_confirmation && formik.errors.password_confirmation ? (
+              {formik.touched.password_confirmation &&
+              formik.errors.password_confirmation ? (
                 <div className="invalid-feedback">
                   {formik.errors.password_confirmation}
                 </div>

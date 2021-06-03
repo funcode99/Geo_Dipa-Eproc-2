@@ -8,13 +8,17 @@ import { ModalProgressBar } from "../../../_metronic/_partials/controls";
 import * as auth from "../Auth";
 import { updateProfile } from "./_redux/authCrud";
 import { FormattedMessage, injectIntl } from "react-intl";
-import {Alert} from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 
 function PersonaInformation(props) {
   // Fields
   const { intl } = props;
   const [loading, setloading] = useState(false);
-  const [alert, setAlert] = useState({status: false, message:"", variant: "primary"});
+  const [alert, setAlert] = useState({
+    status: false,
+    message: "",
+    variant: "primary",
+  });
   // const [pic, setPic] = useState("");
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user.data, shallowEqual);
@@ -34,25 +38,33 @@ function PersonaInformation(props) {
     setTimeout(() => {
       // Do request to your server for user update, we just imitate user update there, For example:
       updateProfile(updatedUser.id, values)
-       .then(({ data: { data } }) => {
-         setloading(false);
-         setSubmitting(false);
-         dispatch(props.updateProfile(updatedUser));
-         setAlert({status: true, message: "REQ.UPDATE", variant: "primary"});
-         setTimeout(() => {
-           setAlert({status: false, message: "REQ.UPDATE", variant: "primary"})
-         }, 3000);
-         setloading(false);
-       })
-       .catch((error) => {
-         setloading(false);
-         setSubmitting(false);
-         setStatus(error);
-         setAlert({status: true, message: "REQ.FAILED", variant: "danger"});
-         setTimeout(() => {
-           setAlert({status: false, message: "REQ.FAILED", variant: "danger"})
-         }, 3000);
-      });
+        .then(({ data: { data } }) => {
+          setloading(false);
+          setSubmitting(false);
+          dispatch(props.updateProfile(updatedUser));
+          setAlert({ status: true, message: "REQ.UPDATE", variant: "primary" });
+          setTimeout(() => {
+            setAlert({
+              status: false,
+              message: "REQ.UPDATE",
+              variant: "primary",
+            });
+          }, 3000);
+          setloading(false);
+        })
+        .catch((error) => {
+          setloading(false);
+          setSubmitting(false);
+          setStatus(error);
+          setAlert({ status: true, message: "REQ.FAILED", variant: "danger" });
+          setTimeout(() => {
+            setAlert({
+              status: false,
+              message: "REQ.FAILED",
+              variant: "danger",
+            });
+          }, 3000);
+        });
     }, 1000);
   };
   // UI Helpers
@@ -126,7 +138,12 @@ function PersonaInformation(props) {
       className="card card-custom card-stretch"
       onSubmit={formik.handleSubmit}
     >
-      <Alert variant={alert.variant} show={alert.status} onClick={() => setAlert({status: false, message: "REQ.UPDATE"})} dismissible>
+      <Alert
+        variant={alert.variant}
+        show={alert.status}
+        onClick={() => setAlert({ status: false, message: "REQ.UPDATE" })}
+        dismissible
+      >
         <FormattedMessage id={alert.message} />
       </Alert>
       {loading && <ModalProgressBar />}
@@ -149,11 +166,11 @@ function PersonaInformation(props) {
               formik.isSubmitting || (formik.touched && !formik.isValid)
             }
           >
-              <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.SUBMIT_BUTTON.SAVE_CHANGES" />
+            <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.SUBMIT_BUTTON.SAVE_CHANGES" />
             {formik.isSubmitting}
           </button>
           {/* <Link
-            to="/user-profile/profile-overview"
+            to="/client/user-profile/profile-overview"
             className="btn btn-secondary"
           >
             Cancel
@@ -168,7 +185,9 @@ function PersonaInformation(props) {
           <div className="row">
             <label className="col-xl-3"></label>
             <div className="col-lg-9 col-xl-6">
-              <h5 className="font-weight-bold mb-6"><FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.CUSTOMER_INFO" /></h5>
+              <h5 className="font-weight-bold mb-6">
+                <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.CUSTOMER_INFO" />
+              </h5>
             </div>
           </div>
           {/* <div className="form-group row">
@@ -236,11 +255,9 @@ function PersonaInformation(props) {
             <div className="col-lg-9 col-xl-6">
               <input
                 type="text"
-                placeholder={
-                  intl.formatMessage({
-                    id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.FULLNAME",
-                  })
-                }
+                placeholder={intl.formatMessage({
+                  id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.FULLNAME",
+                })}
                 className={`form-control form-control-lg form-control-solid ${getInputClasses(
                   "full_name"
                 )}`}
@@ -268,11 +285,10 @@ function PersonaInformation(props) {
                 </div>
                 <input
                   type="email"
-                  placeholder={
-                    intl.formatMessage({
-                      id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.EMAIL_ADDRESS",
-                    })
-                  }
+                  placeholder={intl.formatMessage({
+                    id:
+                      "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.EMAIL_ADDRESS",
+                  })}
                   className={`form-control form-control-lg form-control-solid ${getInputClasses(
                     "email"
                   )}`}
@@ -295,11 +311,10 @@ function PersonaInformation(props) {
             <div className="col-lg-9 col-xl-6">
               <input
                 type="text"
-                placeholder={
-                  intl.formatMessage({
-                    id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.POSITION_NAME",
-                  })
-                }
+                placeholder={intl.formatMessage({
+                  id:
+                    "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.POSITION_NAME",
+                })}
                 className={`form-control form-control-lg form-control-solid ${getInputClasses(
                   "position_name"
                 )}`}

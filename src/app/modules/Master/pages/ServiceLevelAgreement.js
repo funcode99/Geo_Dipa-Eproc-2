@@ -521,9 +521,9 @@ const ServiceLevelAgreement = (props) => {
                     </span>
                   )}
                   {err && (
-                    <span>
+                    <span className="text-danger">
                       <i className="far fa-frown text-danger mr-1"></i>
-                      <FormattedMessage id="TITLE.TABLE.NO_DATA_AVAILABLE" />
+                      <FormattedMessage id="TITLE.ERROR_REQUEST" />
                     </span>
                   )}
                 </div>

@@ -18,6 +18,9 @@
   "MENU.INVOICE_MONITORING.TAX": "TAX",
   "MENU.USER_MANAGEMENT": "User Management",
   "MENU.MASTER_DATA": "Master Data",
+  "MENU.MASTER_DATA.DOCUMENT_TYPES": "Document Types",
+  "MENU.MASTER_DATA.ROLES": "Roles",
+  "MENU.MASTER_DATA.PERIOD": "Period",
   "REQ.UPDATE": "Your account has been successfully update.",
   "REQ.FAILED": "Your account has failed to update. System Error, Please try again.",
   "REQ.CREATE_ACCOUNT.SUCCESS": "New account has been successfully created.",
@@ -190,5 +193,6 @@
   "TITLE.SAVE": "Save",
   "TITLE.CANCEL": "Cancel",
   "TITLE.WAITING": "Please wait",
-  "TITLE.UPDATE_DATA_SUCCESS": "Changes saved successfully"
+  "TITLE.UPDATE_DATA_SUCCESS": "Changes saved successfully",
+  "TITLE.TEST": "Test"
 }
