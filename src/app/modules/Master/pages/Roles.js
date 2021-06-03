@@ -44,7 +44,7 @@ const TabLists = [
     {
         id: 'accept',
         label: 'Acceptance',
-        icon: <i className="fas fa-file-invoice-dollar mb-0 mr-2" style={{ color: 'inherit' }}></i>,
+        icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
     }
 ];
 

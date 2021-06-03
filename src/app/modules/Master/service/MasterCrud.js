@@ -129,3 +129,12 @@ export function getSla(params) {
 export function updateSla(id, data) {
   return axios.post(`data/update_sla/${id}`, data);
 }
+// master data invoice periods
+
+export function getInvoicePeriods() {
+  return axios.get(`data/get_invoice_periods`);
+}
+
+export function updateInvoicePeriods(data) {
+  return axios.post(`data/update_invoice_periods/${data.id}`, data );
+}
