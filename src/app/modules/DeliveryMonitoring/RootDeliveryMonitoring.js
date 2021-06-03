@@ -18,23 +18,26 @@ function RootDeliveryMonitoring(props) {
   return (
     <Switch>
       <Redirect
-        from="/delivery_monitoring"
+        from="/client/delivery-monitoring"
         exact={true}
-        to="/delivery_monitoring/contract"
+        to="/client/delivery-monitoring/contract"
       />
 
       <Route
-        path="/delivery_monitoring/contract/:contract_id/task"
+        path="/client/delivery-monitoring/contract/task/:task_id"
         component={TerminPage}
       />
 
       <Route
-        path="/delivery_monitoring/contract/:contract_id"
+        path="/client/delivery-monitoring/contract/:contract_id"
         component={ContractDetailPage}
         exact={true}
       />
 
-      <Route path="/delivery_monitoring/contract" component={ContractsPage} />
+      <Route
+        path="/client/delivery-monitoring/contract"
+        component={ContractsPage}
+      />
     </Switch>
   );
 }

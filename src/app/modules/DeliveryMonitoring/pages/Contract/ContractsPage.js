@@ -51,7 +51,7 @@ export const ContractsPage = () => {
         { content: item.state },
         {
           content: (
-            <Link to={`/delivery_monitoring/contract/${item.id}`}>
+            <Link to={`/client/delivery-monitoring/contract/${item.id}`}>
               <Icon className="fas fa-search pointer text-primary" />
             </Link>
           ),

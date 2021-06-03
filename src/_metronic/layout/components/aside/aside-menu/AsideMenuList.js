@@ -43,13 +43,16 @@ export function AsideMenuList({ layoutProps }) {
         {/* begin: Delivery Monitoring */}
         <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
-            '/delivery_monitoring',
+            '/client/delivery-monitoring',
             true
           )}`}
           aria-haspopup="true"
           data-menu-toggle="hover"
         >
-          <NavLink className="menu-link menu-toggle" to="/delivery_monitoring">
+          <NavLink
+            className="menu-link menu-toggle"
+            to="/client/delivery-monitoring"
+          >
             <span className="svg-icon menu-icon">
               <SVG
                 src={toAbsoluteUrl('/media/svg/icons/All/route-solid.svg')}
@@ -72,11 +75,11 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/delivery_monitoring'
+                  '/client/delivery-monitoring'
                 )}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/delivery_monitoring">
+                <NavLink className="menu-link" to="/client/delivery-monitoring">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -87,13 +90,13 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/delivery_monitoring/error-v2'
+                  '/client/delivery-monitoring/error-v2'
                 )}`}
                 aria-haspopup="true"
               >
                 <NavLink
                   className="menu-link"
-                  to="/delivery_monitoring/error-v2"
+                  to="/client/delivery-monitoring/error-v2"
                 >
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
@@ -105,13 +108,13 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/delivery_monitoring/error-v3'
+                  '/client/delivery-monitoring/error-v3'
                 )}`}
                 aria-haspopup="true"
               >
                 <NavLink
                   className="menu-link"
-                  to="/delivery_monitoring/error-v3"
+                  to="/client/delivery-monitoring/error-v3"
                 >
                   <i className="menu-bullet menu-bullet-dot">
                     <span />

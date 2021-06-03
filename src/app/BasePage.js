@@ -76,7 +76,10 @@ export default function BasePage() {
         />
 
         <Route path="/client/master" component={MasterData} />
-        <Route path="/delivery_monitoring" component={RootDeliveryMonitoring} />
+        <Route
+          path="/client/delivery-monitoring"
+          component={RootDeliveryMonitoring}
+        />
         <Redirect to="/error" />
       </Switch>
     </Suspense>
