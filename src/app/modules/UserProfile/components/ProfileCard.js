@@ -86,7 +86,9 @@ export function ProfileCard(props) {
               {/* begin::Contact */}
               <div className="py-9">
                 <div className="d-flex align-items-center justify-content-between mb-2">
-                  <span className="font-weight-bold mr-2"><FormattedMessage id="TITLE.USER_PROFILE.PROFILE_CARD.INPUT.USERNAME" /></span>
+                  <span className="font-weight-bold mr-2">
+                    <FormattedMessage id="TITLE.USER_PROFILE.PROFILE_CARD.INPUT.USERNAME" />
+                  </span>
                   <span className="text-muted text-hover-primary">
                     {user.username}
                   </span>
