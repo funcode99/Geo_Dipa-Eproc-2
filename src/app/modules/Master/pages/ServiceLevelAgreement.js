@@ -152,7 +152,7 @@ const ServiceLevelAgreement = (props) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
     },
-    []
+    [filterTable, sortData]
   );
 
   const sendUpdate = () => {
