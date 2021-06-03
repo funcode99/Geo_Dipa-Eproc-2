@@ -14,11 +14,15 @@ function RootMasterData() {
   subheader.setTitle('MASTER DATA');
   return (
     <Switch>
-      <Redirect exact from="/master" to="/master/document_types" />
+      <Redirect
+        exact
+        from="/client/master"
+        to="/client/master/document_types"
+      />
 
-      <Route path="/master/document_types" component={DocTypes} />
-      <Route path="/master/periode" component={Periode} />
-      <Route path="/master/roles" component={Roles} />
+      <Route path="/client/master/document_types" component={DocTypes} />
+      <Route path="/client/master/periode" component={Periode} />
+      <Route path="/client/master/roles" component={Roles} />
     </Switch>
   );
 }

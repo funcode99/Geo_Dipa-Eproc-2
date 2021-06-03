@@ -167,10 +167,7 @@ export function AsideMenuList({ layoutProps }) {
                 )}`}
                 aria-haspopup="true"
               >
-                <NavLink
-                  className="menu-link"
-                  to="/client/invoice_monitoring"
-                >
+                <NavLink className="menu-link" to="/client/invoice_monitoring">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -286,7 +283,7 @@ export function AsideMenuList({ layoutProps }) {
           aria-haspopup="true"
           data-menu-toggle="hover"
         >
-          <NavLink className="menu-link menu-toggle" to="/delivery_monitoring">
+          <NavLink className="menu-link menu-toggle" to="/client/master">
             <span className="svg-icon menu-icon">
               <SVG
                 src={toAbsoluteUrl('/media/svg/icons/All/table-solid.svg')}
@@ -310,11 +307,14 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/master/document_types'
+                  '/client/master/document_types'
                 )}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/master/document_types">
+                <NavLink
+                  className="menu-link"
+                  to="/client/master/document_types"
+                >
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -325,10 +325,12 @@ export function AsideMenuList({ layoutProps }) {
                 </NavLink>
               </li>
               <li
-                className={`menu-item ${getMenuItemActive('/master/periode')}`}
+                className={`menu-item ${getMenuItemActive(
+                  '/client/master/periode'
+                )}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/master/periode">
+                <NavLink className="menu-link" to="/client/master/periode">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -336,10 +338,12 @@ export function AsideMenuList({ layoutProps }) {
                 </NavLink>
               </li>
               <li
-                className={`menu-item ${getMenuItemActive('/master/roles')}`}
+                className={`menu-item ${getMenuItemActive(
+                  '/client/master/roles'
+                )}`}
                 aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/master/roles">
+                <NavLink className="menu-link" to="/client/master/roles">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
