@@ -71,7 +71,7 @@ const ServiceLevelAgreement = (props) => {
 
   useEffect(() => {
     requestFilterSort();
-  }, []);
+  }, [requestFilterSort]);
 
   const openFilterTable = (name, index) => {
     let idFilter = "filter-" + index;
@@ -152,7 +152,7 @@ const ServiceLevelAgreement = (props) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
     },
-    [filterTable, sortData]
+    [filterTable, sortData, filterSort, intl, setToast]
   );
 
   const sendUpdate = () => {
