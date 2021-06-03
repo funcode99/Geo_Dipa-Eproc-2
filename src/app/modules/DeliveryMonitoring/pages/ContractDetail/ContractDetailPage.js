@@ -521,7 +521,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor Kontrak"
-                          defaultValue={dataContractById?.[0]?.contract_no}
+                          defaultValue={dataContractById[0]?.contract_no}
                           disabled
                         />
                       </Col>
@@ -535,7 +535,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Judul Pengadaan"
-                          defaultValue={dataContractById?.[0]?.contract_name}
+                          defaultValue={dataContractById[0]?.contract_name}
                           disabled
                         />
                       </Col>
@@ -549,7 +549,10 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Kewenangan"
-                          // defaultValue={detailContractRows.kewenangan}
+                          defaultValue={
+                            dataContractById[0]?.authority_group?.alias_name
+                          }
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -562,7 +565,10 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="User"
-                          // defaultValue={detailContractRows.user}
+                          defaultValue={
+                            dataContractById[0]?.user_group?.alias_name
+                          }
+                          disabled
                         />
                       </Col>
                     </Form.Group>
@@ -578,7 +584,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor PO"
-                          defaultValue={dataContractById?.[0]?.purch_order_no}
+                          defaultValue={dataContractById[0]?.purch_order_no}
                           disabled
                         />
                       </Col>
@@ -592,7 +598,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Header Text PO"
-                          defaultValue={dataContractById?.[0]?.purch_order.name}
+                          defaultValue={dataContractById[0]?.purch_order.name}
                           disabled
                         />
                       </Col>
@@ -607,7 +613,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Harga Pekerjaan"
                           defaultValue={rupiah(
-                            parseInt(dataContractById?.[0]?.total_amount)
+                            parseInt(dataContractById[0]?.total_amount)
                           )}
                           disabled
                         />
@@ -623,7 +629,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Penyedia"
                           defaultValue={
-                            dataContractById?.[0]?.vendor?.party?.full_name
+                            dataContractById[0]?.vendor?.party?.full_name
                           }
                           disabled
                         />
