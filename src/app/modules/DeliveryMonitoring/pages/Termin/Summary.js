@@ -29,8 +29,8 @@ const theadItems = [
   { id: 'due-date', label: 'Due Date' },
   { id: 'qty', label: 'Qty' },
   { id: 'uom', label: 'Uom' },
-  { id: 'cost-center', label: 'Cost Center' },
-  { id: 'wbs', label: 'WBS' },
+  { id: 'net-value', label: 'Net Value' },
+  // { id: 'wbs', label: 'WBS' },
 ];
 
 const navLists = [
@@ -43,12 +43,60 @@ export default function Summary({ taskId = '' }) {
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
   const [itemJasa, setItemJasa] = React.useState([]);
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = React.useState({
+    submit: false,
+    success: false,
+  });
   const [Toast, setToast] = useToast();
   const { dataJasa, dataBarang } = useSelector(
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
+
+  const setInitialSubmitItems = (data, type) => {
+    if (type === 'jasa') {
+      const tempSubmitJasa = [];
+      // console.log(data);
+
+      data.forEach((item) => {
+        item.item_services.forEach((service) => {
+          if (service.service) {
+            tempSubmitJasa.push({
+              service_id: service.service.id,
+              desc: service.service.short_text,
+              qty: service.service.quantity,
+            });
+          }
+        });
+      });
+
+      setItemJasa(tempSubmitJasa);
+    }
+
+    if (type === 'barang') {
+      const tempSubmitBarang = [];
+      // console.log(data);
+
+      data.forEach((items) => {
+        if (items.item) {
+          tempSubmitBarang.push({
+            item_id: items.item.id,
+            desc: items.item.desc,
+            qty: items.item.qty,
+          });
+        }
+      });
+
+      setItemBarang(tempSubmitBarang);
+    }
+  };
+
+  const handleVisibleModal = (key) => {
+    setShowModal((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
 
   const enableLoading = () => {
     setLoading(true);
@@ -103,6 +151,9 @@ export default function Summary({ taskId = '' }) {
       addCheckedField(tempDataJasa, 'jasa');
       addCheckedField(tempDataBarang, 'barang');
 
+      setInitialSubmitItems(tempDataJasa, 'jasa');
+      setInitialSubmitItems(tempDataBarang, 'barang');
+
       dispatch({
         type: actionTypes.SetDataJasa,
         payload: tempDataJasa,
@@ -117,7 +168,7 @@ export default function Summary({ taskId = '' }) {
         error.response?.status !== 400 &&
         error.response?.data.message !== 'TokenExpiredError'
       ) {
-        setToast('Error API, please contact developer!');
+        setToast('Error, please contact developer!');
       }
       console.log(`error`, error);
     } finally {
@@ -401,9 +452,10 @@ export default function Summary({ taskId = '' }) {
 
       {/* Modal ketika klik submit */}
       <StyledModal
-        visible={showModal}
-        onClose={() => setShowModal(false)}
-        minWidth="70vw"
+        visible={showModal.submit}
+        onClose={() => handleVisibleModal('submit')}
+        minWidth="50vw"
+        maxWidth="70vw"
       >
         {itemJasa.length > 0 && (
           <div>
@@ -459,7 +511,7 @@ export default function Summary({ taskId = '' }) {
             <div className="d-flex justify-content-end w-100">
               <Button
                 className="btn btn-secondary border-success mr-3"
-                onClick={() => setShowModal(false)}
+                onClick={() => handleVisibleModal('submit')}
               >
                 Batal
               </Button>
@@ -473,7 +525,7 @@ export default function Summary({ taskId = '' }) {
             </div>
           </div>
         ) : (
-          <p className="text-center">Tidak ada data yang dipilih</p>
+          <h3 className="text-center">Tidak ada data yang dipilih</h3>
         )}
       </StyledModal>
       <Card>
@@ -483,6 +535,7 @@ export default function Summary({ taskId = '' }) {
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
           />
 
+          {/* component table jasa */}
           {navActive === 'link-jasa' && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
@@ -540,13 +593,11 @@ export default function Summary({ taskId = '' }) {
                               <TableCell className="align-middle">
                                 {item.desc}
                               </TableCell>
-                              <TableCell className="align-middle">
-                                {/* 31/01/2021 */}
-                              </TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle"></TableCell>
                               <TableCell className="align-middle"></TableCell>
+                              {/* <TableCell className="align-middle"></TableCell> */}
                             </StyledTableRow>
 
                             {item.item_services.length !== 0 && item.show
@@ -615,7 +666,7 @@ export default function Summary({ taskId = '' }) {
                                         <TableCell className="align-middle">
                                           {rupiah(service.net_value)}
                                         </TableCell>
-                                        <TableCell className="align-middle"></TableCell>
+                                        {/* <TableCell className="align-middle"></TableCell> */}
                                       </StyledTableRow>
                                     );
                                   } else {
@@ -634,7 +685,7 @@ export default function Summary({ taskId = '' }) {
                                             color="secondary"
                                             onChange={() =>
                                               handleChecklistJasa(
-                                                service.service.qty_available,
+                                                service.service.quantity,
                                                 service.service.qty_available,
                                                 item.id,
                                                 service.service.id,
@@ -665,7 +716,9 @@ export default function Summary({ taskId = '' }) {
                                             min={1}
                                             max={service.service.qty_available}
                                             disabled={!service.checked}
-                                            defaultValue={service.quantity}
+                                            defaultValue={
+                                              service.service.quantity
+                                            }
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
@@ -682,7 +735,7 @@ export default function Summary({ taskId = '' }) {
                                         <TableCell className="align-middle">
                                           {rupiah(service.service.net_value)}
                                         </TableCell>
-                                        <TableCell className="align-middle"></TableCell>
+                                        {/* <TableCell className="align-middle"></TableCell> */}
                                       </StyledTableRow>
                                     );
                                   }
@@ -698,6 +751,7 @@ export default function Summary({ taskId = '' }) {
             </div>
           )}
 
+          {/* component table barang */}
           {navActive === 'link-barang' && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
               <div className="segment-table">
@@ -798,7 +852,7 @@ export default function Summary({ taskId = '' }) {
                                 <TableCell className="align-middle">
                                   {rupiah(item.unit_price)}
                                 </TableCell>
-                                <TableCell className="align-middle"></TableCell>
+                                {/* <TableCell className="align-middle"></TableCell> */}
                               </StyledTableRow>
                             );
                           } else {
@@ -862,7 +916,7 @@ export default function Summary({ taskId = '' }) {
                                 <TableCell className="align-middle">
                                   {rupiah(item.unit_price)}
                                 </TableCell>
-                                <TableCell className="align-middle"></TableCell>
+                                {/* <TableCell className="align-middle"></TableCell> */}
                               </StyledTableRow>
                             );
                           }
@@ -879,7 +933,7 @@ export default function Summary({ taskId = '' }) {
               variant="contained"
               color="secondary"
               size="medium"
-              onClick={() => setShowModal(true)}
+              onClick={() => handleVisibleModal('submit')}
             >
               <span className="mr-1">Submit</span>
               <Send />

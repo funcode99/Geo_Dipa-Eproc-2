@@ -112,7 +112,7 @@ export const ContractDetailPage = () => {
     due_date: Yup.date()
       .required('Field ini wajib diisi')
       .nullable()
-      .min(new Date().getHours(0, 0, 0, 0), 'Minimal hari ini'),
+      .min(new Date(Date.now() - 86400000), 'Minimal hari ini'),
   });
 
   const initialValues = {
