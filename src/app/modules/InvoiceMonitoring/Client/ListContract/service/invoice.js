@@ -27,6 +27,9 @@ export async function getContractSummary(id) {
 export async function checkRole(id) {
     return axios.get(`/invoice/check_role/${id}`);
 }
+export async function getContractClient() {
+    return axios.get(`/invoice/contract_invoice/`);
+}
 export async function getContractVendor(id) {
     return axios.get(`/invoice/contract_by_vendors/${id}`);
 }

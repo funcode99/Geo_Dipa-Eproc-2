@@ -107,28 +107,38 @@ const RolesPage = (props) => {
   };
 
   const FormSchema = Yup.object().shape({
-    min_value: Yup.string()
-      .matches(/^[0-9.]*$/,
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.NUMBER_ONLY",
-        })
-      )
+    min_value: Yup.number()
       .required(
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
-      ),
-    max_value: Yup.string()
-      .matches(/^[0-9.]*$/,
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.NUMBER_ONLY",
-        })
       )
+      .min(0,
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.POSITIVE_NUMBER_ONLY",
+        })
+      ),
+    max_value: Yup.number()
       .required(
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
+      )
+      .min(0,
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.POSITIVE_NUMBER_ONLY",
+        })
       ),
+    // .matches(/^[0-9.]*$/,
+    //   intl.formatMessage({
+    //     id: "AUTH.VALIDATION.NUMBER_ONLY",
+    //   })
+    // )
+    // .required(
+    //   intl.formatMessage({
+    //     id: "AUTH.VALIDATION.REQUIRED_FIELD",
+    //   })
+    // ),
   });
 
   const formik = useFormik({
@@ -167,12 +177,12 @@ const RolesPage = (props) => {
             onSubmit={formik.handleSubmit}
           >
             <div style={{ justifyContent: 'center', display: 'flex' }}>
-              <h3><FormattedMessage id="TITLE.MASTER_DATA.ROLES.MODAL_UPDATE.TITLE" /></h3>
+              <h3><FormattedMessage id="TITLE.MODAL_UPDATE.TITLE" /></h3>
             </div>
             <div style={{ justifyContent: 'center', display: 'flex' }}>
               <div style={{ width: '70%', alignSelf: 'center' }}>
                 <Input
-                  label={intl.formatMessage({ id: "TITLE.MASTER_DATA.ROLES.MODAL_UPDATE.ROLE_NAME" })}
+                  label={intl.formatMessage({ id: "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NAME" })}
                   type="text"
                   variant="outlined"
                   name="role_name"
@@ -190,7 +200,7 @@ const RolesPage = (props) => {
               </div>
               <div style={{ width: '70%', alignSelf: 'center' }}>
                 <Input
-                  label={intl.formatMessage({ id: "TITLE.MASTER_DATA.ROLES.MODAL_UPDATE.MIN_VALUE" })}
+                  label={intl.formatMessage({ id: "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MIN" })}
                   type="number"
                   variant="outlined"
                   name="min_value"
@@ -205,7 +215,7 @@ const RolesPage = (props) => {
               </div>
               <div style={{ width: '70%', alignSelf: 'center' }}>
                 <Input
-                  label={intl.formatMessage({ id: "TITLE.MASTER_DATA.ROLES.MODAL_UPDATE.MAX_VALUE" })}
+                  label={intl.formatMessage({ id: "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX" })}
                   type="number"
                   variant="outlined"
                   name="max_value"
@@ -221,7 +231,7 @@ const RolesPage = (props) => {
             </div>
             <div style={{ justifyContent: 'center', display: 'flex' }}>
               <Button
-                disabled={loading}
+                disabled={(formik.touched && !formik.isValid) || loading}
                 type="submit"
                 color="secondary"
                 variant="contained"
@@ -240,11 +250,11 @@ const RolesPage = (props) => {
             <Table className="table-bordered overflow-auto">
               <thead>
                 <tr>
-                  <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NO" /></th>
+                  <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.TABLE_HEADER.NO" /></th>
                   <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NAME" /></th>
                   <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MIN" /></th>
                   <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX" /></th>
-                  {props.data.type !== "Accept" && <th className="bg-primary text-white align-middle text-center"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.ACTION" /></th>}
+                  {props.data.type !== "Accept" && <th className="bg-primary text-white align-middle text-center"><FormattedMessage id="TITLE.TABLE_HEADER.ACTION" /></th>}
                 </tr>
               </thead>
               <tbody>
