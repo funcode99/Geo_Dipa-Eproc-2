@@ -6,7 +6,7 @@ import { Table, Pagination } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import { Link } from "react-router-dom";
-import { getContractVendor } from './service/invoice';
+import { getContractClient } from './service/invoice';
 import useToast from '../../../../components/toast';
 
 function DashboardListContract(props) {
@@ -69,7 +69,7 @@ function DashboardListContract(props) {
   const [Toast, setToast] = useToast();
 
   const getListContractData = () => {
-    getContractVendor(vendor_id)
+    getContractClient()
       .then(response => { setContractData(response.data.data) })
       .catch((error) => {
         if (error.response?.status !== 400 && error.response?.data.message !== "TokenExpiredError")

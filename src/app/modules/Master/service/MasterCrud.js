@@ -1,8 +1,8 @@
-import axios from 'axios';
-import { DEV_NODE, DEV_RUBY } from '../../../../redux/BaseHost';
+import axios from "axios";
+import { DEV_NODE, DEV_RUBY } from "../../../../redux/BaseHost";
 export const LOGIN_URL = `${DEV_RUBY}/api/login`;
-export const REGISTER_URL = 'api/auth/register';
-export const REQUEST_PASSWORD_URL = 'api/auth/forgot-password';
+export const REGISTER_URL = "api/auth/register";
+export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
 export const FORGOT_PASSWORD_URL = `${DEV_RUBY}/api/password_resets?authn_token=&format=&username=none`;
 
 export const ME_URL = `${DEV_NODE}/api/user_data_by_token`;
@@ -118,5 +118,23 @@ export function getRolesAcceptance(plant) {
 }
 
 export function updateRoles(data) {
-  return axios.post(`data/update_role/${data.id}`, data );
+  return axios.post(`data/update_role/${data.id}`, data);
+}
+
+// master data SLA || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com
+
+export function getSla(params) {
+  return axios.get(`data/get_sla${params ? "?" + params : ""}`);
+}
+export function updateSla(id, data) {
+  return axios.post(`data/update_sla/${id}`, data);
+}
+// master data invoice periods
+
+export function getInvoicePeriods() {
+  return axios.get(`data/get_invoice_periods`);
+}
+
+export function updateInvoicePeriods(data) {
+  return axios.post(`data/update_invoice_periods/${data.id}`, data );
 }

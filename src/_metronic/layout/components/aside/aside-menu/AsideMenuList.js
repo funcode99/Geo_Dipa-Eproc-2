@@ -1,23 +1,34 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React from 'react';
-import { useLocation } from 'react-router';
-import { NavLink } from 'react-router-dom';
-import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl, checkIsActive } from '../../../../_helpers';
+import React from "react";
+import { useLocation } from "react-router";
+import { NavLink } from "react-router-dom";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl, checkIsActive } from "../../../../_helpers";
 import {
   FormattedMessage,
   // injectIntl
-} from 'react-intl';
+} from "react-intl";
+import { useSelector, shallowEqual } from "react-redux";
+import {
+  DataAsideMenuListClient,
+  DataAsideMenuListVendor,
+} from "./DataAsideMenuList";
 
 export function AsideMenuList({ layoutProps }) {
   const location = useLocation();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)
       ? ` ${!hasSubmenu &&
-          'menu-item-active'} menu-item-open menu-item-not-hightlighted`
-      : '';
+          "menu-item-active"} menu-item-open menu-item-not-hightlighted`
+      : "";
   };
+  let status = useSelector(
+    (state) => state.auth.user.data.status,
+    shallowEqual
+  );
+  let asideMenu =
+    status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor;
 
   return (
     <>
@@ -26,22 +37,135 @@ export function AsideMenuList({ layoutProps }) {
         {/*begin::1 Level*/}
         <li
           className={`menu-item ${getMenuItemActive(
-            '/client/dashboard',
+            `/${status}/dashboard`,
             false
           )}`}
           aria-haspopup="true"
         >
-          <NavLink className="menu-link" to="/client/dashboard">
+          <NavLink className="menu-link" to={`/${status}/dashboard`}>
             <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl('/media/svg/icons/Design/Layers.svg')} />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")} />
             </span>
             <span className="menu-text">Dashboard</span>
           </NavLink>
         </li>
         {/*end::1 Level*/}
-
-        {/* begin: Delivery Monitoring */}
+        {asideMenu.map((item, index) => {
+          return (
+            <li
+              key={index.toString()}
+              className={`${
+                item.subMenu && item.subMenu.length > 0
+                  ? "menu-item menu-item-submenu"
+                  : "menu-item"
+              } ${getMenuItemActive(item.rootPath, true)}`}
+              aria-haspopup="true"
+              data-menu-toggle="hover"
+            >
+              <NavLink
+                className={
+                  item.subMenu && item.subMenu.length > 0
+                    ? "menu-link menu-toggle"
+                    : "menu-link"
+                }
+                to={item.rootPath}
+              >
+                <span className="svg-icon menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/svg/icons" + item.icon)} />
+                </span>
+                <span className="menu-text">
+                  <FormattedMessage id={item.title} />
+                </span>
+                {item.subMenu && item.subMenu.length > 0 && (
+                  <i className="menu-arrow" />
+                )}
+              </NavLink>
+              {item.subMenu && item.subMenu.length > 0 && (
+                <div className="menu-submenu ">
+                  <i className="menu-arrow" />
+                  <ul className="menu-subnav">
+                    <li
+                      className="menu-item menu-item-parent"
+                      aria-haspopup="true"
+                    >
+                      <span className="menu-link">
+                        <span className="menu-text">
+                          <FormattedMessage id={item.title} />
+                        </span>
+                      </span>
+                    </li>
+                    {item.subMenu.map((submenu, index_1) => {
+                      return (
+                        <li
+                          key={index_1.toString()}
+                          className={`${
+                            submenu.subMenu && submenu.subMenu.length > 0
+                              ? "menu-item menu-item-submenu"
+                              : "menu-item"
+                          }  ${getMenuItemActive(submenu.rootPath)}`}
+                          aria-haspopup="true"
+                        >
+                          <NavLink
+                            className={
+                              submenu.subMenu && submenu.subMenu.length > 0
+                                ? "menu-link menu-toggle"
+                                : "menu-link"
+                            }
+                            to={submenu.rootPath}
+                          >
+                            <i className="menu-bullet menu-bullet-dot">
+                              <span />
+                            </i>
+                            <span className="menu-text">
+                              <FormattedMessage id={submenu.title} />
+                            </span>
+                            {submenu.subMenu && submenu.subMenu.length > 0 && (
+                              <i className="menu-arrow" />
+                            )}
+                          </NavLink>
+                          {submenu.subMenu && submenu.subMenu.length > 0 && (
+                            <div className="menu-submenu ">
+                              <i className="menu-arrow" />
+                              <ul className="menu-subnav">
+                                {submenu.subMenu.map((submenus, index_2) => {
+                                  return (
         <li
+                                      key={index_2.toString()}
+                                      className={`menu-item  ${getMenuItemActive(
+                                        submenus.rootPath
+                                      )}`}
+                                      aria-haspopup="true"
+                                    >
+                                      <NavLink
+                                        className="menu-link"
+                                        to={submenus.rootPath}
+                                      >
+                                        <i className="menu-bullet menu-bullet-dot">
+                                          <span />
+                                        </i>
+                                        <span className="menu-text">
+                                          <FormattedMessage
+                                            id={submenus.title}
+                                          />
+                                        </span>
+                                      </NavLink>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+            </li>
+          );
+        })}
+        {/* begin: Delivery Monitoring */}
+        {/* <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
             '/client/delivery-monitoring',
             true
@@ -55,7 +179,7 @@ export function AsideMenuList({ layoutProps }) {
           >
             <span className="svg-icon menu-icon">
               <SVG
-                src={toAbsoluteUrl('/media/svg/icons/All/route-solid.svg')}
+                src={toAbsoluteUrl("/media/svg/icons/All/route-solid.svg")}
               />
             </span>
             <span className="menu-text">
@@ -126,13 +250,13 @@ export function AsideMenuList({ layoutProps }) {
               </li>
             </ul>
           </div>
-        </li>
+        </li> */}
         {/* end: Delivery Monitoring */}
 
         {/* begin: Invoice Monitoring || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com */}
-        <li
+        {/* <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
-            '/client/invoice_monitoring',
+            "/client/invoice_monitoring",
             false
           )}`}
           aria-haspopup="true"
@@ -145,7 +269,7 @@ export function AsideMenuList({ layoutProps }) {
             <span className="svg-icon menu-icon">
               <SVG
                 src={toAbsoluteUrl(
-                  '/media/svg/icons/All/file-invoice-dollar-solid.svg'
+                  "/media/svg/icons/All/file-invoice-dollar-solid.svg"
                 )}
               />
             </span>
@@ -166,7 +290,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/client/invoice_monitoring'
+                  "/client/invoice_monitoring"
                 )}`}
                 aria-haspopup="true"
               >
@@ -181,7 +305,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/invoice_monitoring/error-v2'
+                  "/invoice_monitoring/error-v2"
                 )}`}
                 aria-haspopup="true"
               >
@@ -199,7 +323,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/invoice_monitoring/error-v3'
+                  "/invoice_monitoring/error-v3"
                 )}`}
                 aria-haspopup="true"
               >
@@ -217,7 +341,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/invoice_monitoring/error-v3'
+                  "/invoice_monitoring/error-v3"
                 )}`}
                 aria-haspopup="true"
               >
@@ -235,7 +359,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
               <li
                 className={`menu-item ${getMenuItemActive(
-                  '/invoice_monitoring/error-v3'
+                  "/invoice_monitoring/error-v3"
                 )}`}
                 aria-haspopup="true"
               >
@@ -253,13 +377,13 @@ export function AsideMenuList({ layoutProps }) {
               </li>
             </ul>
           </div>
-        </li>
+        </li> */}
         {/* end: Invoice Monitoring || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com */}
 
         {/* begin: User Management */}
-        <li
+        {/* <li
           className={`menu-item ${getMenuItemActive(
-            '/user_management',
+            "/user_management",
             false
           )}`}
           aria-haspopup="true"
@@ -267,20 +391,20 @@ export function AsideMenuList({ layoutProps }) {
           <NavLink className="menu-link" to="/user_management">
             <span className="svg-icon menu-icon">
               <SVG
-                src={toAbsoluteUrl('/media/svg/icons/All/users-solid.svg')}
+                src={toAbsoluteUrl("/media/svg/icons/All/users-solid.svg")}
               />
             </span>
             <span className="menu-text">
               <FormattedMessage id="MENU.USER_MANAGEMENT" />
             </span>
           </NavLink>
-        </li>
+        </li> */}
         {/* end: User Management */}
 
         {/* begin: Master Data || Farhan Aziz */}
-        <li
+        {/* <li
           className={`menu-item menu-item-submenu ${getMenuItemActive(
-            '/master',
+            "/client/master",
             true
           )}`}
           aria-haspopup="true"
@@ -289,7 +413,7 @@ export function AsideMenuList({ layoutProps }) {
           <NavLink className="menu-link menu-toggle" to="/client/master">
             <span className="svg-icon menu-icon">
               <SVG
-                src={toAbsoluteUrl('/media/svg/icons/All/table-solid.svg')}
+                src={toAbsoluteUrl("/media/svg/icons/All/table-solid.svg")}
               />
             </span>
             <span className="menu-text">
@@ -303,7 +427,6 @@ export function AsideMenuList({ layoutProps }) {
               <li className="menu-item  menu-item-parent" aria-haspopup="true">
                 <span className="menu-link">
                   <span className="menu-text">
-                    {/* <FormattedMessage id="MENU.MASTER_DATA" /> */}
                     Master Data
                   </span>
                 </span>
@@ -323,7 +446,6 @@ export function AsideMenuList({ layoutProps }) {
                   </i>
                   <span className="menu-text">
                     Document Types
-                    {/* <FormattedMessage id="MENU.MASTER_DATA.LIST_CONTRACT_PO" /> */}
                   </span>
                 </NavLink>
               </li>
@@ -353,9 +475,27 @@ export function AsideMenuList({ layoutProps }) {
                   <span className="menu-text">Roles</span>
                 </NavLink>
               </li>
+              <li
+                className={`menu-item ${getMenuItemActive(
+                  "/client/master/service_level_agreement"
+                )}`}
+                aria-haspopup="true"
+              >
+                <NavLink
+                  className="menu-link"
+                  to="/client/master/service_level_agreement"
+                >
+                  <i className="menu-bullet menu-bullet-dot">
+                    <span />
+                  </i>
+                  <span className="menu-text">
+                    <FormattedMessage id="TITLE.SERVICE_LEVEL_AGREEMENT" />
+                  </span>
+                </NavLink>
+              </li>
             </ul>
           </div>
-        </li>
+        </li> */}
         {/* end: Master Data || Create By Farhan Aziz  */}
       </ul>
 
