@@ -126,6 +126,7 @@ const ServiceLevelAgreement = (props) => {
 
   const requestFilterSort = (updateFilterTable, updateSortTable) => {
     setLoading(true);
+    setData([]);
     let filterSorts = filterSort;
     filterSorts.filter = JSON.stringify(
       updateFilterTable ? updateFilterTable : filterTable
@@ -418,8 +419,6 @@ const ServiceLevelAgreement = (props) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
-                          setLoading(true);
-                          setData([]);
                           setSortData({ ...sortDatas });
                           requestFilterSort();
                         }}
@@ -454,8 +453,6 @@ const ServiceLevelAgreement = (props) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
-                          setLoading(true);
-                          setData([]);
                           setSortData({ ...sortDatas });
                           requestFilterSort();
                         }}
