@@ -7,9 +7,10 @@ import {
   DialogTitle,
   Slide,
   makeStyles,
+  TablePagination,
 } from "@material-ui/core";
 import { Card, CardBody } from "../../../../_metronic/_partials/controls";
-import { Table, Pagination } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
@@ -64,6 +65,13 @@ const ServiceLevelAgreement = (props) => {
   const [onSubmit, setOnSubmit] = useState(false);
   const [statusSubmit, setStatusSubmit] = useState(false);
   const [errOnSubmit, setErrOnSubmit] = useState(false);
+  const [paginations, setPaginations] = useState({
+    numberColum: 0,
+    page: 0,
+    count: 15,
+    rowsPerPage: 10,
+  });
+
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
     shallowEqual
@@ -128,6 +136,7 @@ const ServiceLevelAgreement = (props) => {
     (updateFilterTable, updateSortTable) => {
     setLoading(true);
     setData([]);
+      let pagination = Object.assign({}, paginations);
     let filterSorts = filterSort;
     filterSorts.filter = JSON.stringify(
       updateFilterTable ? updateFilterTable : filterTable
@@ -135,6 +144,8 @@ const ServiceLevelAgreement = (props) => {
     filterSorts.sort = JSON.stringify(
       updateSortTable ? updateSortTable : sortData
     );
+      pagination.page = pagination.page + 1;
+      filterSorts = Object.assign({}, filterSorts, pagination);
     setFilterSort({ ...filterSorts });
     let params = new URLSearchParams(filterSorts).toString();
     getSla(params)
@@ -152,7 +163,7 @@ const ServiceLevelAgreement = (props) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
     },
-    [filterTable, sortData, filterSort, intl, setToast]
+    [filterTable, sortData, filterSort, intl, setToast, paginations]
   );
 
   const sendUpdate = () => {
@@ -184,6 +195,30 @@ const ServiceLevelAgreement = (props) => {
           setErrOnSubmit(true);
         }
       });
+  };
+
+  const handleChangePage = (event, newPage) => {
+    console.log("newPage", newPage);
+    let pagination = paginations;
+    pagination.numberColum =
+      newPage > pagination.page
+        ? pagination.numberColum + pagination.rowsPerPage
+        : pagination.numberColum - pagination.rowsPerPage;
+    pagination.page = newPage;
+    setPaginations({
+      ...pagination,
+    });
+    requestFilterSort();
+  };
+  const handleChangeRowsPerPage = (event) => {
+    let pagination = paginations;
+    pagination.page = 0;
+    pagination.rowsPerPage = parseInt(event.target.value, 10);
+    pagination.numberColum = 0;
+    setPaginations({
+      ...pagination,
+    });
+    requestFilterSort();
   };
 
   return (
@@ -488,7 +523,7 @@ const ServiceLevelAgreement = (props) => {
                     {data.map((item, index) => {
                       return (
                         <tr key={index.toString()}>
-                          <td>{index + 1}</td>
+                          <td>{index + 1 + paginations.numberColum}</td>
                           <td>{item.name}</td>
                           <td>{item.days}</td>
                           <td>
@@ -500,7 +535,7 @@ const ServiceLevelAgreement = (props) => {
                                 setDialogState(true);
                               }}
                             >
-                              <i className="fas fa-pen-alt"></i>
+                              <i className="fas fa-edit"></i>
                               Edit
                             </button>
                           </td>
@@ -531,37 +566,14 @@ const ServiceLevelAgreement = (props) => {
             </div>
           </div>
           {/* begin: Pagination Table */}
-          <div className="mt-3">
-            <span>
-              <FormattedMessage id="TITLE.COUNT_DATA.TABLE" /> 5/5
-            </span>
-          </div>
-          <div className="d-flex mt-4">
-            <select
-              className="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light mr-1"
-              style={{ width: 75 }}
-              defaultValue={5}
-            >
-              {["5", "10", "20", "50", "100"].map((item, index) => {
-                return (
-                  <option key={index.toString()} value={item}>
-                    {item}
-                  </option>
-                );
-              })}
-            </select>
-            <Pagination>
-              <Pagination.First />
-              <Pagination.Prev />
-
-              <Pagination.Item>{11}</Pagination.Item>
-              <Pagination.Item active>{12}</Pagination.Item>
-              <Pagination.Item disabled>{13}</Pagination.Item>
-
-              <Pagination.Next disabled />
-              <Pagination.Last disabled />
-            </Pagination>
-          </div>
+          <TablePagination
+            component="div"
+            count={paginations.count}
+            page={paginations.page}
+            onChangePage={handleChangePage}
+            rowsPerPage={paginations.rowsPerPage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
           {/* end: Pagination Table */}
         </CardBody>
       </Card>
