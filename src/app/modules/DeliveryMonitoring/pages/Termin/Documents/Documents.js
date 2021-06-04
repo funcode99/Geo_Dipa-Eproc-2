@@ -6,6 +6,11 @@ import ModalDeleteDoc from "./components/ModalDeleteDoc";
 import useToast from "../../../../../components/toast";
 import ModalAddDeliverables from "./components/ModalAddDeliverables";
 import ModalUploadDoc from "./components/ModalUploadDoc";
+import Button from "@material-ui/core/Button";
+import HeaderTableDoc from "./components/HeaderTableDoc";
+import ModalSubmitDoc from "./components/ModalSubmitDoc";
+import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
+import BASE_MODAL_CONF from "./BASE_MODAL_CONF";
 
 export const DocumentsContext = createContext({});
 
@@ -15,12 +20,18 @@ const Documents = ({ taskId }) => {
     create: false,
     upload: false,
     delete: false,
+    submit: false,
+    accept: false,
+    reject: false,
   });
   const [content, setContent] = React.useState({});
   const [open, setOpen] = React.useState({
     create: false,
     upload: false,
     delete: false,
+    submit: false,
+    accept: false,
+    reject: false,
     tempParams: {},
   });
   const [Toast, setToast] = useToast();
@@ -65,21 +76,27 @@ const Documents = ({ taskId }) => {
 
   // buat buka modal + simpan param sementara dari list
   const handleAction = (type, params) => {
+    console.log(`type`, type, params);
     switch (type) {
       case "create":
-        console.log(`type`, type, params);
         handleVisible(type, params);
         break;
       case "delete":
-        console.log(`type`, type, params);
         handleVisible(type, params);
         break;
       case "update":
-        console.log(`type`, type, params);
         // handleVisible(type, params);
         break;
       case "upload":
-        console.log(`type`, type, params);
+        handleVisible(type, params);
+        break;
+      case "submit":
+        handleVisible(type, params);
+        break;
+      case "accept":
+        handleVisible(type, params);
+        break;
+      case "reject":
         handleVisible(type, params);
         break;
       default:
@@ -179,6 +196,9 @@ const Documents = ({ taskId }) => {
         loading,
         taskId,
         handleAction,
+        handleVisible,
+        open,
+        handleApi,
       }}
     >
       <Toast />
@@ -198,19 +218,18 @@ const Documents = ({ taskId }) => {
         onClose={() => handleVisible("upload")}
         onSubmit={(params) => handleApi("upload", params)}
       />
+      {BASE_MODAL_CONF.map(({ type, ...other }, id) => (
+        <ModalConfirmation
+          key={id}
+          visible={open[type]}
+          onClose={() => handleVisible(type)}
+          onSubmit={(params) => handleApi(type, params)}
+          {...other}
+        />
+      ))}
       <Card className="mt-5">
         <CardBody>
-          <div className="d-flex justify-content-end w-100 mb-5">
-            <button
-              className="btn btn-outline-success btn-sm"
-              onClick={() => handleAction("create")}
-            >
-              <span className="nav-icon">
-                <i className="flaticon2-plus"></i>
-              </span>
-              <span className="nav-text">Deliverables</span>
-            </button>
-          </div>
+          <HeaderTableDoc />
           <TableDoc />
         </CardBody>
       </Card>

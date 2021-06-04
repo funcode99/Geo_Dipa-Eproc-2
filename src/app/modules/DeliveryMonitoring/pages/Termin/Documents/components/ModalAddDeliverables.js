@@ -3,6 +3,7 @@ import { StyledModal } from "../../../../../../components/modals";
 import useToast from "../../../../../../components/toast";
 import * as documentOption from "../../../../../../service/Document";
 import Select from "react-select";
+import { Form, Row, Col } from "react-bootstrap";
 
 const groupStyles = {
   display: "flex",
@@ -37,6 +38,7 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
   });
   const [Toast, setToast] = useToast();
   const [optionSelected, setOptionSelected] = React.useState(false);
+  const [isCustom, setIsCustom] = React.useState(false);
 
   const getDocumentTypeOption = async () => {
     try {
@@ -53,7 +55,7 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
   };
 
   const handleSelectChange = (e) => {
-    // console.log(`e`, e);
+    console.log(`e`, e);
     setOptionSelected(e);
   };
 
@@ -94,14 +96,27 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
           options={content?.data?.map((el) => ({
             label: el.name,
             options: el?.documents?.map((el2) => ({
+              // value: JSON.stringify(el2),
               value: el2?.id,
-              label: `${el2?.name} ${el2?.periode !== null &&
-                `(${el2?.periode?.name})`}`,
+              label: `${el2?.name} ${
+                el2?.periode?.hasOwnProperty("name")
+                  ? `(${el2?.periode?.name})`
+                  : ""
+              }`,
             })),
           }))}
           // options={groupedOptions}
           formatGroupLabel={formatGroupLabel}
         />
+        <Form.Group className="my-3" controlId="formBasicEmail">
+          <Form.Label>Nama Dokumen Lainnya</Form.Label>
+          <Form.Control
+            type="input"
+            // onChange={handleRemarksChange}
+            placeholder="COMING SOON"
+            disabled={true}
+          />
+        </Form.Group>
         {/* <div className="row">
           <div className="col-12">
             <select
