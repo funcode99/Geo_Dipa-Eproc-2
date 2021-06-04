@@ -38,7 +38,6 @@ const ServiceLevelAgreement = (props) => {
       title: intl.formatMessage({
         id: "TITLE.SERVICE_LEVEL_AGREEMENT",
       }),
-      id: "TITLE.SERVICE_LEVEL_AGREEMENT",
       name: "sla",
       type: "text",
     },
@@ -46,7 +45,6 @@ const ServiceLevelAgreement = (props) => {
       title: intl.formatMessage({
         id: "TITLE.DURATION",
       }),
-      id: "TITLE.DURATION",
       name: "duration",
       type: "number",
     },
@@ -134,34 +132,34 @@ const ServiceLevelAgreement = (props) => {
 
   const requestFilterSort = useCallback(
     (updateFilterTable, updateSortTable) => {
-    setLoading(true);
-    setData([]);
+      setLoading(true);
+      setData([]);
       let pagination = Object.assign({}, paginations);
-    let filterSorts = filterSort;
-    filterSorts.filter = JSON.stringify(
-      updateFilterTable ? updateFilterTable : filterTable
-    );
-    filterSorts.sort = JSON.stringify(
-      updateSortTable ? updateSortTable : sortData
-    );
+      let filterSorts = filterSort;
+      filterSorts.filter = JSON.stringify(
+        updateFilterTable ? updateFilterTable : filterTable
+      );
+      filterSorts.sort = JSON.stringify(
+        updateSortTable ? updateSortTable : sortData
+      );
       pagination.page = pagination.page + 1;
       filterSorts = Object.assign({}, filterSorts, pagination);
-    setFilterSort({ ...filterSorts });
-    let params = new URLSearchParams(filterSorts).toString();
-    getSla(params)
-      .then((result) => {
-        setLoading(false);
-        setData(result.data.data);
-      })
-      .catch((err) => {
-        setErr(true);
-        setLoading(false);
-        if (
-          err.response?.status !== 400 &&
-          err.response?.data.message !== "TokenExpiredError"
-        )
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      });
+      setFilterSort({ ...filterSorts });
+      let params = new URLSearchParams(filterSorts).toString();
+      getSla(params)
+        .then((result) => {
+          setLoading(false);
+          setData(result.data.data);
+        })
+        .catch((err) => {
+          setErr(true);
+          setLoading(false);
+          if (
+            err.response?.status !== 400 &&
+            err.response?.data.message !== "TokenExpiredError"
+          )
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        });
     },
     [filterTable, sortData, filterSort, intl, setToast, paginations]
   );
@@ -341,102 +339,104 @@ const ServiceLevelAgreement = (props) => {
       <Card className={classes.paper}>
         <CardBody>
           {/* begin: Filter Table */}
-          <div className="panel-filter-table mb-1">
+          <form id="filter-form-all" className="panel-filter-table mb-1">
             <span className="mr-2 mt-2 float-left">
               <FormattedMessage id="TITLE.FILTER.TABLE" />
             </span>
             <div className="d-block">
-              <div className="float-left">
-                <form id="filter-form-all" className="form">
-                  {filterData.map((item, index) => {
-                    return (
+              <div className="">
+                {filterData.map((item, index) => {
+                  return (
+                    <div
+                      key={index.toString()}
+                      className="btn-group hover-filter-table"
+                      status="closed"
+                      id={"filter-" + index}
+                    >
                       <div
-                        key={index.toString()}
-                        className="btn-group hover-filter-table"
-                        status="closed"
-                        id={"filter-" + index}
+                        className="btn btn-sm dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-expanded="false"
+                        onClick={() => {
+                          openFilterTable(item.name, index);
+                        }}
                       >
-                        <div
-                          className="btn btn-sm dropdown-toggle"
-                          data-toggle="dropdown"
-                          aria-expanded="false"
-                          onClick={() => {
-                            openFilterTable(item.name, index);
-                          }}
-                        >
-                          <span>{item.title}:</span>
-                          <strong style={{ paddingRight: 1, paddingLeft: 1 }}>
-                            <span
-                              className="filter-label"
-                              id={"filter-span-" + index}
-                            >
-                              {filterTable["filter-" + item.name]}
-                            </span>
-                          </strong>
-                          {filterTable["filter-" + item.name] ? null : (
-                            <span style={{ color: "#777777" }}>semua</span>
-                          )}
-                        </div>
-                        <ul
-                          role="menu"
-                          className="dropdown-menu"
-                          style={{ zIndex: 90 }}
-                        >
-                          <li style={{ width: 360, padding: 5 }}>
-                            <div className="clearfix">
-                              <div className="float-left">
-                                <input
-                                  type={item.type}
-                                  className="form-control form-control-sm"
-                                  min="0"
-                                  name={"filter-" + item.name}
-                                  id={"filter-" + item.name}
-                                  defaultValue={
-                                    filterTable["filter-" + item.name] || ""
-                                  }
-                                  placeholder="semua"
-                                />
-                              </div>
-                              <button
-                                type="button"
-                                className="ml-2 float-left btn btn-sm btn-primary"
-                                onClick={() => {
-                                  updateValueFilter(item.name, index);
-                                }}
-                              >
-                                Perbaharui
-                              </button>
-                              <button
-                                type="button"
-                                className="float-right btn btn-sm btn-light"
-                                onClick={() => {
-                                  resetValueFilter("filter-" + item.name);
-                                }}
-                              >
-                                <i className="fas fa-redo fa-right"></i>
-                                <span>
-                                  <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
-                                </span>
-                              </button>
-                            </div>
-                          </li>
-                        </ul>
+                        <span>{item.title}:</span>
+                        <strong style={{ paddingRight: 1, paddingLeft: 1 }}>
+                          <span
+                            className="filter-label"
+                            id={"filter-span-" + index}
+                          >
+                            {filterTable["filter-" + item.name]}
+                          </span>
+                        </strong>
+                        {filterTable["filter-" + item.name] ? null : (
+                          <span style={{ color: "#777777" }}>
+                            <FormattedMessage id="TITLE.ALL" />
+                          </span>
+                        )}
                       </div>
-                    );
-                  })}
-                </form>
+                      <ul
+                        role="menu"
+                        className="dropdown-menu"
+                        style={{ zIndex: 90 }}
+                      >
+                        <li style={{ width: 360, padding: 5 }}>
+                          <div className="clearfix">
+                            <div className="float-left">
+                              <input
+                                type={item.type}
+                                className="form-control form-control-sm"
+                                min="0"
+                                name={"filter-" + item.name}
+                                id={"filter-" + item.name}
+                                defaultValue={
+                                  filterTable["filter-" + item.name] || ""
+                                }
+                                placeholder={intl.formatMessage({
+                                  id: "TITLE.ALL",
+                                })}
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              className="ml-2 float-left btn btn-sm btn-primary"
+                              onClick={() => {
+                                updateValueFilter(item.name, index);
+                              }}
+                            >
+                              Perbaharui
+                            </button>
+                            <button
+                              type="button"
+                              className="float-right btn btn-sm btn-light"
+                              onClick={() => {
+                                resetValueFilter("filter-" + item.name);
+                              }}
+                            >
+                              <i className="fas fa-redo fa-right"></i>
+                              <span>
+                                <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
+                              </span>
+                            </button>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  );
+                })}
+                <button
+                  type="button"
+                  className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit"
+                  onClick={() => {
+                    resetFilter();
+                  }}
+                >
+                  <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
+                </button>
               </div>
             </div>
-            <button
-              type="button"
-              className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit float-left"
-              onClick={() => {
-                resetFilter();
-              }}
-            >
-              <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
-            </button>
-          </div>
+          </form>
           {/* end: Filter Table */}
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">

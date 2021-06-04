@@ -36,7 +36,7 @@ import {
   assignUser,
   getContractSummary,
   checkRole,
-} from "./service/invoice";
+} from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
