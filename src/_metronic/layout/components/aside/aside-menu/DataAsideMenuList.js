@@ -1,32 +1,32 @@
 // Menu Client / Internal
 export const DataAsideMenuListClient = [
   {
-    rootPath: '/client/delivery-monitoring',
-    icon: '/All/route-solid.svg',
-    title: 'MENU.DELIVERY_MONITORING',
+    rootPath: "/delivery_monitoring",
+    icon: "/All/route-solid.svg",
+    title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       {
-        rootPath: '/client/delivery-monitoring',
-        title: 'MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO',
+        rootPath: "/delivery_monitoring",
+        title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },
       {
-        rootPath: '/client/delivery-monitoring-1/error-v',
-        title: 'MENU.DELIVERY_MONITORING.GOOD_RECEIPT',
+        rootPath: "/delivery_monitoring-1/error-v",
+        title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
         subMenu: [
           {
-            rootPath: '/delivery_monitoring-1/error-v/1',
-            title: 'TITLE.TEST',
+            rootPath: "/delivery_monitoring-1/error-v/1",
+            title: "TITLE.TEST",
           },
         ],
       },
       {
-        rootPath: '/client/delivery-monitoring-2/error-v',
-        title: 'MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE',
+        rootPath: "/delivery_monitoring-2/error-v",
+        title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
         subMenu: [
           {
-            rootPath: '/client/delivery-monitoring-2/error-v/1',
-            title: 'TITLE.TEST',
+            rootPath: "/delivery_monitoring-2/error-v/1",
+            title: "TITLE.TEST",
           },
         ],
       },

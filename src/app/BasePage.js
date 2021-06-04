@@ -1,12 +1,12 @@
-import React, { Suspense, lazy, useEffect } from 'react';
-import { Redirect, Switch, Route } from 'react-router-dom';
-import { LayoutSplashScreen, ContentRoute } from '../_metronic/layout';
+import React, { Suspense, lazy, useEffect } from "react";
+import { Redirect, Switch, Route } from "react-router-dom";
+import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 // Page Guide Metronic
 // import { BuilderPage } from "./pages/BuilderPage";
 // import { MyPage } from "./pages/MyPage";
 // Page Guide Metronic
-import { DashboardPage } from './pages/DashboardPage';
-import { useSelector, shallowEqual, connect, useDispatch } from 'react-redux';
+import { DashboardPage } from "./pages/DashboardPage";
+import { useSelector, shallowEqual, connect, useDispatch } from "react-redux";
 
 // Page Guide Metronic
 // const GoogleMaterialPage = lazy(() =>
@@ -21,17 +21,21 @@ import { useSelector, shallowEqual, connect, useDispatch } from 'react-redux';
 // Page Guide Metronic
 
 const UserProfilepage = lazy(() =>
-  import('./modules/UserProfile/UserProfilePage')
+  import("./modules/UserProfile/UserProfilePage")
 );
 const RootDeliveryMonitoring = lazy(() =>
-  import('./modules/DeliveryMonitoring/RootDeliveryMonitoring')
+  import("./modules/DeliveryMonitoring/RootDeliveryMonitoring")
 );
 
 const RootClientInvoiceMonitoring = lazy(() =>
-  import('./modules/InvoiceMonitoring/Client/RootClientInvoiceMonitoring')
+  import("./modules/InvoiceMonitoring/Client/RootClientInvoiceMonitoring")
 );
 
-const MasterData = lazy(() => import('./modules/Master/RootMasterData'));
+const RootVendorInvoiceMonitoring = lazy(() =>
+  import("./modules/InvoiceMonitoring/Vendor/RootVendorInvoiceMonitoring")
+);
+
+const MasterData = lazy(() => import("./modules/Master/RootMasterData"));
 
 export default function BasePage() {
   let status = useSelector(

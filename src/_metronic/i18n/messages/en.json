@@ -242,5 +242,12 @@
   "CONTRACT_DETAIL.TAB.SUMMARY": "Summary",
   "CONTRACT_DETAIL.TAB.OFFICIAL_REPORT": "Official Report",
   "SUMMARY.NAV.SERVICE": "SERVICE",
-  "SUMMARY.NAV.ITEM": "ITEM"
+  "SUMMARY.NAV.ITEM": "ITEM",
+  "TITLE.CONTRACT_NO": "Contract Number",
+  "TITLE.PROCUREMENT_TITLE": "Procurement Title",
+  "TITLE.PO_NUMBER": "PO Number",
+  "TITLE.TERMIN": "Termin",
+  "TITLE.SA_NUMBER": "SA Number",
+  "TITLE.INVOICE_NO": "Invoice Number",
+  "TITLE.ALL": "all"
 }

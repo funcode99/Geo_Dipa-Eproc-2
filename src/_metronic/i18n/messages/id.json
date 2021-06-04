@@ -242,5 +242,12 @@
   "CONTRACT_DETAIL.TAB.SUMMARY": "Ikhtisar",
   "CONTRACT_DETAIL.TAB.OFFICIAL_REPORT": "Berita Acara",
   "SUMMARY.NAV.SERVICE": "JASA",
-  "SUMMARY.NAV.ITEM": "BARANG"
+  "SUMMARY.NAV.ITEM": "BARANG",
+  "TITLE.CONTRACT_NO": "Nomor Kontrak",
+  "TITLE.PROCUREMENT_TITLE": "Judul Pengadaan",
+  "TITLE.PO_NUMBER": "Nomor PO",
+  "TITLE.TERMIN": "Termin",
+  "TITLE.SA_NUMBER": "Nomor SA",
+  "TITLE.INVOICE_NO": "Nomor Faktur",
+  "TITLE.ALL": "semua"
 }
