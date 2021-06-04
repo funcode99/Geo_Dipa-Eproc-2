@@ -29,6 +29,7 @@ import * as Yup from 'yup';
 import { format } from 'date-fns';
 import formatDate from '../../../../libs/date';
 import * as Option from '../../../../service/Option';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -127,9 +128,9 @@ export const ContractDetailPage = () => {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       try {
         enableLoading();
-        console.log(values);
-        console.log(formik.errors);
-        console.log(formik.status);
+        // console.log(values);
+        // console.log(formik.errors);
+        // console.log(formik.status);
 
         let requestData = {};
 
@@ -190,7 +191,7 @@ export const ContractDetailPage = () => {
           content:
             item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
         },
-        { content: '' },
+        { content: item.value },
         { content: '' },
         { content: item.progress },
         { content: '' },
@@ -201,7 +202,9 @@ export const ContractDetailPage = () => {
                 pathname: `/client/delivery-monitoring/contract/task/${item.id}`,
               }}
             >
-              <span>Document</span>
+              <span>
+                <FormattedMessage id="CONTRACT_DETAIL.TABLE_CONTENT.URL" />
+              </span>
             </Link>
           ),
         },
@@ -234,6 +237,12 @@ export const ContractDetailPage = () => {
     });
   };
 
+  const sortTerminByPaymentMethod = (data) => {
+    data.sort((a, b) => {
+      return a.payment - b.payment;
+    });
+  };
+
   // get data contract detail from api
   const getContractById = async (contract_id) => {
     try {
@@ -246,6 +255,10 @@ export const ContractDetailPage = () => {
       const {
         data: { data },
       } = await deliveryMonitoring.getContractById(contract_id);
+
+      if (data[0]?.payment_method === 'gradually') {
+        sortTerminByPaymentMethod(data[0]?.tasks);
+      }
 
       dispatch({
         type: actionTypes.SetContractById,
@@ -324,9 +337,10 @@ export const ContractDetailPage = () => {
       setLoading(true);
       await deliveryMonitoring.deleteTask(confirm.id);
       setConfirm({ ...confirm, show: false });
+      setToast('Successfully delete data.', 10000);
       getContractById(contract_id);
     } catch (error) {
-      setToast('Error with API, please contact Developer!');
+      setToast('Error with API, please contact Developer!', 10000);
       console.error(error);
     } finally {
       setLoading(false);
@@ -351,7 +365,14 @@ export const ContractDetailPage = () => {
           onSubmit={formik.handleSubmit}
         >
           <div className="d-flex align-items-start flex-column mb-5">
-            <h3>{update.update ? 'Update ' : 'Create '} Termin</h3>
+            <h3>
+              {update.update ? (
+                <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.UPDATE" />
+              ) : (
+                <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.CREATE" />
+              )}{' '}
+              <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.TERM" />
+            </h3>
           </div>
 
           <TextField
@@ -421,7 +442,11 @@ export const ContractDetailPage = () => {
               variant="contained"
             >
               {loading ? <CircularProgress /> : null}&nbsp;
-              {update.update ? 'Update ' : 'Create '}
+              {update.update ? (
+                <FormattedMessage id="BUTTON.UPDATE" />
+              ) : (
+                <FormattedMessage id="BUTTON.CREATE" />
+              )}
             </Button>
           </div>
         </form>
@@ -449,7 +474,8 @@ export const ContractDetailPage = () => {
             }}
             onClick={() => handleDelete()}
           >
-            {loading ? <CircularProgress /> : null}&nbsp; Delete
+            {loading ? <CircularProgress /> : null}&nbsp;{' '}
+            <FormattedMessage id="BUTTON.DELETE" />
           </Button>
           <Button
             variant="contained"
@@ -457,7 +483,7 @@ export const ContractDetailPage = () => {
             style={{ width: '40%', marginInline: 10 }}
             onClick={() => setConfirm({ ...confirm, show: false })}
           >
-            Cancel
+            <FormattedMessage id="BUTTON.CANCEL" />
           </Button>
         </div>
       </StyledModal>
@@ -514,7 +540,7 @@ export const ContractDetailPage = () => {
                   <Col>
                     <Form.Group as={Row}>
                       <Form.Label column md="4">
-                        Nomor Kontrak
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />
                       </Form.Label>
                       <Col sm="8">
                         <Form.Control
@@ -528,7 +554,7 @@ export const ContractDetailPage = () => {
                     </Form.Group>
                     <Form.Group as={Row}>
                       <Form.Label column md="4">
-                        Judul Pengadaan
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />
                       </Form.Label>
                       <Col md="8">
                         <Form.Control
@@ -542,7 +568,7 @@ export const ContractDetailPage = () => {
                     </Form.Group>
                     <Form.Group as={Row} controlId="validationCustom02">
                       <Form.Label column sm="4">
-                        Kewenangan
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.AUTHORITY_GROUP" />
                       </Form.Label>
                       <Col md="8">
                         <Form.Control
@@ -558,7 +584,7 @@ export const ContractDetailPage = () => {
                     </Form.Group>
                     <Form.Group as={Row} controlId="validationCustom02">
                       <Form.Label column md="4">
-                        User
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.USER_GROUP" />
                       </Form.Label>
                       <Col md="8">
                         <Form.Control
@@ -577,7 +603,7 @@ export const ContractDetailPage = () => {
                   <Col>
                     <Form.Group as={Row}>
                       <Form.Label column md="4">
-                        Nomor PO
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />
                       </Form.Label>
                       <Col sm="8">
                         <Form.Control
@@ -591,7 +617,7 @@ export const ContractDetailPage = () => {
                     </Form.Group>
                     <Form.Group as={Row}>
                       <Form.Label column md="4">
-                        Nama PO
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NAME" />
                       </Form.Label>
                       <Col md="8">
                         <Form.Control
@@ -605,7 +631,7 @@ export const ContractDetailPage = () => {
                     </Form.Group>
                     <Form.Group as={Row}>
                       <Form.Label column sm="4">
-                        Harga Pekerjaan
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PRICE" />
                       </Form.Label>
                       <Col md="8">
                         <Form.Control
@@ -621,7 +647,7 @@ export const ContractDetailPage = () => {
                     </Form.Group>
                     <Form.Group as={Row}>
                       <Form.Label column md="4">
-                        Penyedia
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />
                       </Form.Label>
                       <Col md="8">
                         <Form.Control
@@ -643,13 +669,15 @@ export const ContractDetailPage = () => {
             <Container>
               <div className="d-flex justify-content-end w-100">
                 <button
-                  className="btn btn-outline-success btn-sm mt-3 mb-1"
+                  className="btn btn-outline-success btn-sm"
                   onClick={() => handleModal('create')}
                 >
                   <span className="nav-icon">
                     <i className="flaticon2-plus"></i>
                   </span>
-                  <span className="nav-text">Create</span>
+                  <span className="nav-text">
+                    <FormattedMessage id="BUTTON.CREATE" />
+                  </span>
                 </button>
               </div>
 

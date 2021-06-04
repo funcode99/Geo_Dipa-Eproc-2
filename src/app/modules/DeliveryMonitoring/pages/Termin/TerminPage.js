@@ -13,7 +13,8 @@ import Documents from './Documents';
 import BeritaAcara from './BeritaAcara';
 import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
 import { useSelector } from 'react-redux';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -24,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
 const TabLists = [
   {
     id: 'summary',
-    label: 'Summary',
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.SUMMARY" />,
     icon: <DescriptionOutlined className="mb-0 mr-2" />,
   },
   {
     id: 'berita-acara',
-    label: 'Berita Acara',
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.OFFICIAL_REPORT" />,
     icon: <AssignmentOutlined className="mb-0 mr-2" />,
   },
   {
