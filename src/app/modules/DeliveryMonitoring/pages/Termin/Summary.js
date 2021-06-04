@@ -22,6 +22,7 @@ import { StyledHead, StyledTable, StyledTableRow } from './style';
 import { rupiah } from '../../../../libs/currency';
 import Navs from '../../../../components/navs';
 import { StyledModal } from '../../../../components/modals';
+import { FormattedMessage } from 'react-intl';
 
 const theadItems = [
   { id: 'action', label: '' },
@@ -34,8 +35,8 @@ const theadItems = [
 ];
 
 const navLists = [
-  { id: 'link-jasa', label: 'Jasa' },
-  { id: 'link-barang', label: 'Barang' },
+  { id: 'link-jasa', label: <FormattedMessage id="SUMMARY.NAV.SERVICE" /> },
+  { id: 'link-barang', label: <FormattedMessage id="SUMMARY.NAV.ITEM" /> },
 ];
 
 export default function Summary({ taskId = '' }) {
@@ -64,7 +65,7 @@ export default function Summary({ taskId = '' }) {
             tempSubmitJasa.push({
               service_id: service.service.id,
               desc: service.service.short_text,
-              qty: service.service.quantity,
+              qty: service.qty,
             });
           }
         });
@@ -82,7 +83,7 @@ export default function Summary({ taskId = '' }) {
           tempSubmitBarang.push({
             item_id: items.item.id,
             desc: items.item.desc,
-            qty: items.item.qty,
+            qty: items.qty,
           });
         }
       });
@@ -458,24 +459,20 @@ export default function Summary({ taskId = '' }) {
       };
 
       const {
-        data: { status, code, message },
+        data: { status },
       } = await deliveryMonitoring.submitItems(requestData, taskId);
 
       if (status) {
+        setToast('Successfully submit item', 5000);
         getAllItems(taskId);
-        setShowModal(false);
-      } else {
-        if (code === 422) {
-          setShowModal(false);
-          setToast(message, 10000);
-        }
+        handleVisibleModal('submit');
       }
     } catch (error) {
       if (
         error.response?.status !== 400 &&
         error.response?.data.message !== 'TokenExpiredError'
       ) {
-        setToast('Error API, Please contact developer!', 10000);
+        setToast('Error API, Please contact developer!', 5000);
       }
     } finally {
       disableLoading();
@@ -490,7 +487,7 @@ export default function Summary({ taskId = '' }) {
       <StyledModal
         visible={showModal.submit}
         onClose={() => handleVisibleModal('submit')}
-        minWidth="50vw"
+        minWidth="40vw"
         maxWidth="70vw"
       >
         {itemJasa.length > 0 && (
@@ -520,7 +517,7 @@ export default function Summary({ taskId = '' }) {
         {itemBarang.length > 0 && (
           <div>
             <h4>Barang</h4>
-            <table className="table table-bordered table-hover">
+            <table className="table table-sm table-bordered table-hover">
               <thead>
                 <tr>
                   <th>No</th>
@@ -543,7 +540,7 @@ export default function Summary({ taskId = '' }) {
 
         {itemBarang.length > 0 || itemJasa.length > 0 ? (
           <div>
-            <p>Anda yakin ingin submit data tersebut?</p>
+            <h6>Anda yakin ingin submit?</h6>
             <div className="d-flex justify-content-end w-100">
               <Button
                 className="btn btn-secondary border-success mr-3"
@@ -561,7 +558,25 @@ export default function Summary({ taskId = '' }) {
             </div>
           </div>
         ) : (
-          <h3 className="text-center">Tidak ada data yang dipilih</h3>
+          <div className="d-flex justify-content-center align-items-center flex-column">
+            <h4>Barang</h4>
+            <h6>Anda yakin ingin submit?</h6>
+            <div className="d-flex justify-content-end">
+              <Button
+                className="btn btn-secondary border-success mr-3"
+                onClick={() => handleVisibleModal('submit')}
+              >
+                Batal
+              </Button>
+              <Button
+                className="btn btn-success"
+                onClick={() => handleSubmit()}
+              >
+                Ya
+                {loading ? <CircularProgress /> : null}
+              </Button>
+            </div>
+          </div>
         )}
       </StyledModal>
       <Card>
@@ -682,9 +697,10 @@ export default function Summary({ taskId = '' }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
-                                            // min="0.1"
-                                            // step="0.1"
-                                            min={1}
+                                            min="0.1"
+                                            step="0.1"
+                                            // min="1"
+                                            // step="1"
                                             max={service.qty_available}
                                             disabled={!service.checked}
                                             defaultValue={service.qty_available}
@@ -738,18 +754,17 @@ export default function Summary({ taskId = '' }) {
                                           <Form.Control
                                             type="number"
                                             size="sm"
-                                            // min="0.1"
-                                            // step="0.1"
-                                            min={1}
-                                            max={service.qty}
+                                            min="0.1"
+                                            step="0.1"
+                                            // min="1"
+                                            // step="1"
+                                            max={service.service.quantity}
                                             disabled={!service.checked}
-                                            defaultValue={
-                                              service.service.quantity
-                                            }
+                                            defaultValue={service.qty}
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
-                                                service.qty,
+                                                service.service.quantity,
                                                 service.service.id,
                                                 service.service.short_text
                                               )
@@ -892,7 +907,7 @@ export default function Summary({ taskId = '' }) {
                                     onChange={() =>
                                       handleChecklistBarang(
                                         item.item.qty,
-                                        item.qty,
+                                        item.item.qty_available,
                                         item.item.id,
                                         item.item.desc
                                       )
@@ -916,11 +931,11 @@ export default function Summary({ taskId = '' }) {
                                     min={1}
                                     max={item.qty}
                                     disabled={!item.checked}
-                                    defaultValue={item.item.qty}
+                                    defaultValue={item.qty}
                                     onChange={(e) =>
                                       addSubmitBarang(
                                         e.target.value,
-                                        item.qty,
+                                        item.item.qty_available,
                                         item.item.id,
                                         item.item.desc
                                       )
