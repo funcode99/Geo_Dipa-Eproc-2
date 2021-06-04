@@ -31,6 +31,10 @@ const RootClientInvoiceMonitoring = lazy(() =>
   import("./modules/InvoiceMonitoring/Client/RootClientInvoiceMonitoring")
 );
 
+const RootVendorInvoiceMonitoring = lazy(() =>
+  import("./modules/InvoiceMonitoring/Vendor/RootVendorInvoiceMonitoring")
+);
+
 const MasterData = lazy(() => import("./modules/Master/RootMasterData"));
 
 export default function BasePage() {
@@ -74,6 +78,10 @@ export default function BasePage() {
         <Route
           path="/client/invoice_monitoring"
           component={RootClientInvoiceMonitoring}
+        />
+        <Route
+          path="/vendor/invoice_monitoring"
+          component={RootVendorInvoiceMonitoring}
         />
 
         <Route path="/client/master" component={MasterData} />
