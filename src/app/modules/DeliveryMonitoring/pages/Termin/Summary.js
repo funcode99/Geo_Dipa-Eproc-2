@@ -755,9 +755,6 @@ export default function Summary({ taskId = '' }) {
                                               )
                                             }
                                           />
-                                          <p className="p-0 m-0 text-danger">
-                                            {item.error || null}
-                                          </p>
                                         </TableCell>
                                         <TableCell className="align-middle">
                                           {service.service.base_uom}
@@ -887,22 +884,15 @@ export default function Summary({ taskId = '' }) {
                             );
                           } else {
                             return (
-                              <StyledTableRow
-                                key={item.item.id}
-                                className={
-                                  item.item.qty_available === 0
-                                    ? `bg-secondary`
-                                    : null
-                                }
-                              >
+                              <StyledTableRow key={item.item.id}>
                                 <TableCell className="align-middle">
                                   <Checkbox
                                     name={`checkbox-${item.item.id}`}
                                     color="secondary"
                                     onChange={() =>
                                       handleChecklistBarang(
-                                        item.item.qty_available,
-                                        item.item.qty_available,
+                                        item.item.qty,
+                                        item.qty,
                                         item.item.id,
                                         item.item.desc
                                       )
@@ -911,11 +901,6 @@ export default function Summary({ taskId = '' }) {
                                     width={50}
                                     variant="body"
                                     checked={item.checked}
-                                    disabled={
-                                      item.item.qty_available === 0
-                                        ? true
-                                        : false
-                                    }
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -929,13 +914,13 @@ export default function Summary({ taskId = '' }) {
                                     type="number"
                                     size="sm"
                                     min={1}
-                                    max={item.item.qty_available}
+                                    max={item.qty}
                                     disabled={!item.checked}
-                                    defaultValue={item.qty}
+                                    defaultValue={item.item.qty}
                                     onChange={(e) =>
                                       addSubmitBarang(
                                         e.target.value,
-                                        item.item.qty_available,
+                                        item.qty,
                                         item.item.id,
                                         item.item.desc
                                       )
@@ -944,7 +929,7 @@ export default function Summary({ taskId = '' }) {
                                 </TableCell>
                                 <TableCell className="align-middle"></TableCell>
                                 <TableCell className="align-middle">
-                                  {rupiah(item.unit_price)}
+                                  {rupiah(item.item.unit_price)}
                                 </TableCell>
                                 {/* <TableCell className="align-middle"></TableCell> */}
                               </StyledTableRow>
