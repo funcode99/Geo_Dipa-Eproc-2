@@ -1,8 +1,14 @@
-import { TableBody, TableCell } from "@material-ui/core";
+import {
+  makeStyles,
+  TableBody,
+  TableCell,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
 import { StyledHead, StyledTable, StyledTableHead } from "../../style";
 import { DocumentsContext } from "../Documents";
 import RowAccordion from "./RowAccordion";
+import Button from "@material-ui/core/Button";
 
 const theadDocuments = [
   { id: "action", label: "" },
@@ -37,6 +43,22 @@ const BtnAksi = ({ item }) => {
       >
         <i className="fas fa-upload text-primary"></i>
       </button>
+    </div>
+  );
+};
+
+const BtnLihat = ({ url }) => {
+  const handleOpen = React.useCallback(() => {
+    window.open(url, "_blank");
+  }, [url]);
+  return (
+    <div className={"d-flex flex-row align-items-center"}>
+      <Typography>{url}</Typography>
+      {url && (
+        <Button onClick={handleOpen} href="#text-buttons">
+          Lihat Dokumen
+        </Button>
+      )}
     </div>
   );
 };
@@ -103,7 +125,7 @@ const TableDoc = ({}) => {
                                         els?.url === null
                                           ? "WAITING TO UPLOAD"
                                           : "AVAILABLE",
-                                        els?.url,
+                                        <BtnLihat url={els?.url} />,
                                         els?.remarks,
                                         <BtnAksi item={els} />,
                                       ]}
@@ -125,7 +147,7 @@ const TableDoc = ({}) => {
                                   el?.url === null
                                     ? "WAITING TO UPLOAD"
                                     : "AVAILABLE",
-                                  el?.url,
+                                  <BtnLihat url={el?.url} />,
                                   el?.remarks,
                                   <BtnAksi item={el} />,
                                   //   "aksi",
