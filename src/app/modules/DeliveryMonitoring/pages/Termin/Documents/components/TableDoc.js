@@ -7,6 +7,7 @@ import RowAccordion from "./RowAccordion";
 const theadDocuments = [
   { id: "action", label: "" },
   { id: "doc-name", label: "Document Name" },
+  { id: "due-date", label: "Due Date" },
   { id: "dokumen-progress", label: "Document Progress" },
   { id: "deliv-dokumen", label: "Deliverable Document" },
   { id: "remarks", label: "Remarks" },
@@ -67,7 +68,7 @@ const TableDoc = ({}) => {
                     <RowAccordion
                       key={id}
                       dataAll={el}
-                      data={["accordIcon", el.name, "-", "-", "-", ""]}
+                      data={["accordIcon", el.name, "-", "-", "-", "-", ""]}
                     >
                       {(item) => {
                         const isPeriodic = item.is_periodic;
@@ -84,6 +85,7 @@ const TableDoc = ({}) => {
                                   "-",
                                   "-",
                                   "-",
+                                  "-",
                                   "",
                                 ]}
                               >
@@ -95,7 +97,9 @@ const TableDoc = ({}) => {
                                       classBtn={"pl-17"}
                                       data={[
                                         "accordIcon",
-                                        els?.document?.name,
+                                        els?.document_custom_name ??
+                                          els?.document?.name,
+                                        els?.document?.due_date,
                                         els?.url === null
                                           ? "WAITING TO UPLOAD"
                                           : "AVAILABLE",
@@ -115,7 +119,9 @@ const TableDoc = ({}) => {
                                 classBtn={"pl-17"}
                                 data={[
                                   "accordIcon",
-                                  el?.document?.name,
+                                  el?.document_custom_name ??
+                                    el?.document?.name,
+                                  el?.document?.due_date,
                                   el?.url === null
                                     ? "WAITING TO UPLOAD"
                                     : "AVAILABLE",
