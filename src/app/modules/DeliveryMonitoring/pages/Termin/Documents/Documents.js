@@ -144,22 +144,47 @@ const Documents = ({ taskId }) => {
             });
           break;
         case "create":
-          let mappedParams = params?.map((el) => ({ document_id: el.value }));
-          console.log(`type`, type, params, mappedParams);
-          deliveryMonitoring
-            .postCreateDocArr(taskId, mappedParams)
-            .then((res) => {
-              //   console.log(`res`, res);
-              if (res?.data?.status === true) {
-                setToast("Berhasil tambah data");
-                fetchData();
-              }
-            })
-            .catch((err) => handleError())
-            .finally(() => {
-              handleLoading(type, false);
-              handleVisible(type);
+          console.log(`params`, params);
+          if (Array.isArray(params)) {
+            let mappedParams = params?.map((el) => {
+              let val = JSON.parse(el.value);
+              return { document_id: val.id };
             });
+            console.log(`type`, type, params, mappedParams);
+            deliveryMonitoring
+              .postCreateDocArr(taskId, mappedParams)
+              .then((res) => {
+                // console.log(`resarr`, res);
+                if (res?.data?.status === true) {
+                  setToast("Berhasil tambah data");
+                  fetchData();
+                }
+              })
+              .catch((err) => handleError())
+              .finally(() => {
+                handleLoading(type, false);
+                handleVisible(type);
+              });
+          } else {
+            let val = JSON.parse(params.value);
+            deliveryMonitoring
+              .postCreateDoc(taskId, {
+                document_id: val.id,
+                document_custom_name: params.remarks,
+              })
+              .then((res) => {
+                // console.log(`resobj`, res);
+                if (res?.data?.status === true) {
+                  setToast("Berhasil tambah data");
+                  fetchData();
+                }
+              })
+              .catch((err) => handleError())
+              .finally(() => {
+                handleLoading(type, false);
+                handleVisible(type);
+              });
+          }
           break;
         case "upload":
           deliveryMonitoring

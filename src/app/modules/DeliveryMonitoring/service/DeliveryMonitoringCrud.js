@@ -42,12 +42,12 @@ export async function deleteDocId(document_id) {
   // console.log(`api`, `delivery/task-document/${document_id}`);
   return axios.delete(`delivery/task-document/${document_id}`);
 }
-export async function postCreateDoc(task_id, document_id) {
-  // console.log(`api post`, `delivery/task-document/${task_id}`, document_id);
-  return axios.post(`delivery/task-document/${task_id}`, { document_id });
+export async function postCreateDoc(task_id, params) {
+  // console.log(`api post`, `delivery/task-document/${task_id}`, params);
+  return axios.post(`delivery/task-document/${task_id}`, params);
 }
 export async function postCreateDocArr(task_id, documents) {
-  // console.log(`api post`, `delivery/task-document/${task_id}`, document_id);
+  // console.log(`api post`, `delivery/task-document-array/${task_id}`, documents);
   return axios.post(`delivery/task-document-array/${task_id}`, { documents });
 }
 export async function postUploadDoc(document_id, oldParams) {
