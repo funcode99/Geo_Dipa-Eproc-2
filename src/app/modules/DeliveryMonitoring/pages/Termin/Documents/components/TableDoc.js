@@ -14,6 +14,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import BtnAksi from "./BtnAksi";
+import formatDate from "../../../../../../libs/date";
 
 const theadDocuments = [
   { id: "action", label: "" },
@@ -127,7 +128,7 @@ const TableDoc = ({}) => {
                                         "accordIcon",
                                         els?.document_custom_name ??
                                           els?.document?.name,
-                                        els?.document?.due_date,
+                                        formatDate(new Date(els?.due_date)),
                                         els?.url === null
                                           ? "WAITING TO UPLOAD"
                                           : "AVAILABLE",
@@ -152,7 +153,7 @@ const TableDoc = ({}) => {
                                   "accordIcon",
                                   el?.document_custom_name ??
                                     el?.document?.name,
-                                  el?.document?.due_date,
+                                  formatDate(new Date(el?.due_date)),
                                   el?.url === null
                                     ? "WAITING TO UPLOAD"
                                     : "AVAILABLE",
