@@ -24,7 +24,7 @@ const HeaderTableDoc = ({ params }) => {
   return (
     <React.Fragment>
       <div className="d-flex justify-content-end w-100 mb-5">
-        <div>
+        {/* <div>
           <Button
             //   aria-controls="simple-menu"
             aria-haspopup="true"
@@ -54,7 +54,7 @@ const HeaderTableDoc = ({ params }) => {
             <MenuItem onClick={() => handleOpen("accept")}>Accept</MenuItem>
             <MenuItem onClick={() => handleOpen("reject")}>Reject</MenuItem>
           </Menu>
-        </div>
+        </div> */}
         <button
           className="btn btn-outline-success btn-sm"
           onClick={() => handleAction("create")}

@@ -9,6 +9,11 @@ import { StyledHead, StyledTable, StyledTableHead } from "../../style";
 import { DocumentsContext } from "../Documents";
 import RowAccordion from "./RowAccordion";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import BtnAksi from "./BtnAksi";
 
 const theadDocuments = [
   { id: "action", label: "" },
@@ -20,32 +25,33 @@ const theadDocuments = [
   { id: "aksi", label: "Action" },
 ];
 
-const BtnAksi = ({ item }) => {
-  const { handleAction } = React.useContext(DocumentsContext);
-  //   console.log(`item`, item);
-  return (
-    <div className="d-flex flex-row">
-      {/* <button
-        className="btn btn-sm p-1"
-        onClick={() => handleAction("update", { update_id: item?.id })}
-      >
-        <i className="fas fa-edit text-warning"></i>
-      </button> */}
-      <button
-        className="btn btn-sm p-1"
-        onClick={() => handleAction("delete", { delete_id: item?.id })}
-      >
-        <i className="fas fa-trash text-danger"></i>
-      </button>
-      <button
-        className="btn btn-sm p-1 mr-2"
-        onClick={() => handleAction("upload", { upload_id: item?.id })}
-      >
-        <i className="fas fa-upload text-primary"></i>
-      </button>
-    </div>
-  );
-};
+// const BtnAksi = ({ item }) => {
+//   const { handleAction } = React.useContext(DocumentsContext);
+//   //   console.log(`item`, item);
+
+//   return (
+//     <div className="d-flex flex-row">
+//       {/* <button
+//         className="btn btn-sm p-1"
+//         onClick={() => handleAction("update", { update_id: item?.id })}
+//       >
+//         <i className="fas fa-edit text-warning"></i>
+//       </button> */}
+//       <button
+//         className="btn btn-sm p-1"
+//         onClick={() => handleAction("delete", { delete_id: item?.id })}
+//       >
+//         <i className="fas fa-trash text-danger"></i>
+//       </button>
+//       <button
+//         className="btn btn-sm p-1 mr-2"
+//         onClick={() => handleAction("upload", { upload_id: item?.id })}
+//       >
+//         <i className="fas fa-upload text-primary"></i>
+//       </button>
+//     </div>
+//   );
+// };
 
 const BtnLihat = ({ url }) => {
   const handleOpen = React.useCallback(() => {
@@ -64,7 +70,7 @@ const BtnLihat = ({ url }) => {
 };
 
 const TableDoc = ({}) => {
-  const { content } = React.useContext(DocumentsContext);
+  const { content, handleAction } = React.useContext(DocumentsContext);
   return (
     <div className="responsive">
       <div className="table-wrapper-scroll-y my-custom-scrollbar">
@@ -127,7 +133,10 @@ const TableDoc = ({}) => {
                                           : "AVAILABLE",
                                         <BtnLihat url={els?.url} />,
                                         els?.remarks,
-                                        <BtnAksi item={els} />,
+                                        <BtnAksi
+                                          item={els}
+                                          handleAction={handleAction}
+                                        />,
                                       ]}
                                     />
                                   ))
@@ -149,7 +158,10 @@ const TableDoc = ({}) => {
                                     : "AVAILABLE",
                                   <BtnLihat url={el?.url} />,
                                   el?.remarks,
-                                  <BtnAksi item={el} />,
+                                  <BtnAksi
+                                    item={el}
+                                    handleAction={handleAction}
+                                  />,
                                   //   "aksi",
                                 ]}
                               />

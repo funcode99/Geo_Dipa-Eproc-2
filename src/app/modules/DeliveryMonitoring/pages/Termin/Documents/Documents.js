@@ -11,6 +11,7 @@ import HeaderTableDoc from "./components/HeaderTableDoc";
 import ModalSubmitDoc from "./components/ModalSubmitDoc";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 import BASE_MODAL_CONF from "./BASE_MODAL_CONF";
+import ModalEditDraft from "./components/ModalEditDraft";
 
 export const DocumentsContext = createContext({});
 
@@ -19,51 +20,29 @@ const Documents = ({ taskId }) => {
     get: false,
     create: false,
     upload: false,
-    delete: false,
+    edit: false,
+    resend: false,
     submit: false,
     accept: false,
     reject: false,
+    delete: false,
   });
   const [content, setContent] = React.useState({});
   const [open, setOpen] = React.useState({
     create: false,
     upload: false,
-    delete: false,
+    edit: false,
+    resend: false,
     submit: false,
     accept: false,
     reject: false,
+    delete: false,
     tempParams: {},
   });
   const [Toast, setToast] = useToast();
   const handleError = React.useCallback(() => {
     setToast("Error API, please contact developer!");
   }, [setToast]);
-
-  // untuk handle kalo ada error dari api
-  const serviceFetch = async (action, key) => {
-    try {
-      //   const data = await action();
-      //   const data = await deliveryMonitoring.getTaskById(taskId);
-      //   console.log(`data`, data);
-      //   action();
-      //   await deliveryMonitoring.getTaskById(taskId);
-      //   const res = await deliveryMonitoring.getTaskById(taskId);
-      const res = await action();
-      console.log(`res1`, res);
-      if (res !== undefined) return res;
-    } catch (error) {
-      if (
-        error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
-      ) {
-        setToast("Error API, please contact developer!");
-      }
-      console.log(`error`, error);
-    } finally {
-      handleVisible(key);
-      handleLoading(key);
-    }
-  };
 
   // untuk buka / tutup modal
   const handleVisible = (key, tempParams = {}) => {
@@ -77,31 +56,32 @@ const Documents = ({ taskId }) => {
   // buat buka modal + simpan param sementara dari list
   const handleAction = (type, params) => {
     console.log(`type`, type, params);
-    switch (type) {
-      case "create":
-        handleVisible(type, params);
-        break;
-      case "delete":
-        handleVisible(type, params);
-        break;
-      case "update":
-        // handleVisible(type, params);
-        break;
-      case "upload":
-        handleVisible(type, params);
-        break;
-      case "submit":
-        handleVisible(type, params);
-        break;
-      case "accept":
-        handleVisible(type, params);
-        break;
-      case "reject":
-        handleVisible(type, params);
-        break;
-      default:
-        break;
-    }
+    handleVisible(type, params);
+    //   switch (type) {
+    //     case "create":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "delete":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "update":
+    //       // handleVisible(type, params);
+    //       break;
+    //     case "upload":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "submit":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "accept":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "reject":
+    //       handleVisible(type, params);
+    //       break;
+    //     default:
+    //       break;
+    //   }
   };
 
   const handleLoading = React.useCallback(
@@ -227,7 +207,6 @@ const Documents = ({ taskId }) => {
       }}
     >
       <Toast />
-
       <ModalDeleteDoc
         visible={open.delete}
         onClose={() => handleVisible("delete")}
@@ -243,6 +222,16 @@ const Documents = ({ taskId }) => {
         onClose={() => handleVisible("upload")}
         onSubmit={(params) => handleApi("upload", params)}
       />
+      {/* <ModalEditDraft
+        visible={open.edit}
+        onClose={() => handleVisible("edit")}
+        onSubmit={(params) => handleApi("edit", params)}
+      /> */}
+      <ModalEditDraft
+        visible={open.resend}
+        onClose={() => handleVisible("resend")}
+        onSubmit={(params) => handleApi("resend", params)}
+      />
       {BASE_MODAL_CONF.map(({ type, ...other }, id) => (
         <ModalConfirmation
           key={id}
@@ -252,6 +241,7 @@ const Documents = ({ taskId }) => {
           {...other}
         />
       ))}
+
       <Card className="mt-5">
         <CardBody>
           <HeaderTableDoc />
