@@ -6,6 +6,12 @@ import ModalDeleteDoc from "./components/ModalDeleteDoc";
 import useToast from "../../../../../components/toast";
 import ModalAddDeliverables from "./components/ModalAddDeliverables";
 import ModalUploadDoc from "./components/ModalUploadDoc";
+import Button from "@material-ui/core/Button";
+import HeaderTableDoc from "./components/HeaderTableDoc";
+import ModalSubmitDoc from "./components/ModalSubmitDoc";
+import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
+import BASE_MODAL_CONF from "./BASE_MODAL_CONF";
+import ModalEditDraft from "./components/ModalEditDraft";
 
 export const DocumentsContext = createContext({});
 
@@ -14,12 +20,22 @@ const Documents = ({ taskId }) => {
     get: false,
     create: false,
     upload: false,
+    edit: false,
+    resend: false,
+    submit: false,
+    accept: false,
+    reject: false,
     delete: false,
   });
   const [content, setContent] = React.useState({});
   const [open, setOpen] = React.useState({
     create: false,
     upload: false,
+    edit: false,
+    resend: false,
+    submit: false,
+    accept: false,
+    reject: false,
     delete: false,
     tempParams: {},
   });
@@ -27,32 +43,6 @@ const Documents = ({ taskId }) => {
   const handleError = React.useCallback(() => {
     setToast("Error API, please contact developer!");
   }, [setToast]);
-
-  // untuk handle kalo ada error dari api
-  const serviceFetch = async (action, key) => {
-    try {
-      //   const data = await action();
-      //   const data = await deliveryMonitoring.getTaskById(taskId);
-      //   console.log(`data`, data);
-      //   action();
-      //   await deliveryMonitoring.getTaskById(taskId);
-      //   const res = await deliveryMonitoring.getTaskById(taskId);
-      const res = await action();
-      console.log(`res1`, res);
-      if (res !== undefined) return res;
-    } catch (error) {
-      if (
-        error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
-      ) {
-        setToast("Error API, please contact developer!");
-      }
-      console.log(`error`, error);
-    } finally {
-      handleVisible(key);
-      handleLoading(key);
-    }
-  };
 
   // untuk buka / tutup modal
   const handleVisible = (key, tempParams = {}) => {
@@ -65,26 +55,33 @@ const Documents = ({ taskId }) => {
 
   // buat buka modal + simpan param sementara dari list
   const handleAction = (type, params) => {
-    switch (type) {
-      case "create":
-        console.log(`type`, type, params);
-        handleVisible(type, params);
-        break;
-      case "delete":
-        console.log(`type`, type, params);
-        handleVisible(type, params);
-        break;
-      case "update":
-        console.log(`type`, type, params);
-        // handleVisible(type, params);
-        break;
-      case "upload":
-        console.log(`type`, type, params);
-        handleVisible(type, params);
-        break;
-      default:
-        break;
-    }
+    console.log(`type`, type, params);
+    handleVisible(type, params);
+    //   switch (type) {
+    //     case "create":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "delete":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "update":
+    //       // handleVisible(type, params);
+    //       break;
+    //     case "upload":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "submit":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "accept":
+    //       handleVisible(type, params);
+    //       break;
+    //     case "reject":
+    //       handleVisible(type, params);
+    //       break;
+    //     default:
+    //       break;
+    //   }
   };
 
   const handleLoading = React.useCallback(
@@ -127,22 +124,47 @@ const Documents = ({ taskId }) => {
             });
           break;
         case "create":
-          let mappedParams = params?.map((el) => ({ document_id: el.value }));
-          console.log(`type`, type, params, mappedParams);
-          deliveryMonitoring
-            .postCreateDocArr(taskId, mappedParams)
-            .then((res) => {
-              //   console.log(`res`, res);
-              if (res?.data?.status === true) {
-                setToast("Berhasil tambah data");
-                fetchData();
-              }
-            })
-            .catch((err) => handleError())
-            .finally(() => {
-              handleLoading(type, false);
-              handleVisible(type);
+          console.log(`params`, params);
+          if (Array.isArray(params)) {
+            let mappedParams = params?.map((el) => {
+              let val = JSON.parse(el.value);
+              return { document_id: val.id };
             });
+            console.log(`type`, type, params, mappedParams);
+            deliveryMonitoring
+              .postCreateDocArr(taskId, mappedParams)
+              .then((res) => {
+                // console.log(`resarr`, res);
+                if (res?.data?.status === true) {
+                  setToast("Berhasil tambah data");
+                  fetchData();
+                }
+              })
+              .catch((err) => handleError())
+              .finally(() => {
+                handleLoading(type, false);
+                handleVisible(type);
+              });
+          } else {
+            let val = JSON.parse(params.value);
+            deliveryMonitoring
+              .postCreateDoc(taskId, {
+                document_id: val.id,
+                document_custom_name: params.remarks,
+              })
+              .then((res) => {
+                // console.log(`resobj`, res);
+                if (res?.data?.status === true) {
+                  setToast("Berhasil tambah data");
+                  fetchData();
+                }
+              })
+              .catch((err) => handleError())
+              .finally(() => {
+                handleLoading(type, false);
+                handleVisible(type);
+              });
+          }
           break;
         case "upload":
           deliveryMonitoring
@@ -179,10 +201,12 @@ const Documents = ({ taskId }) => {
         loading,
         taskId,
         handleAction,
+        handleVisible,
+        open,
+        handleApi,
       }}
     >
       <Toast />
-
       <ModalDeleteDoc
         visible={open.delete}
         onClose={() => handleVisible("delete")}
@@ -198,19 +222,29 @@ const Documents = ({ taskId }) => {
         onClose={() => handleVisible("upload")}
         onSubmit={(params) => handleApi("upload", params)}
       />
+      {/* <ModalEditDraft
+        visible={open.edit}
+        onClose={() => handleVisible("edit")}
+        onSubmit={(params) => handleApi("edit", params)}
+      /> */}
+      <ModalEditDraft
+        visible={open.resend}
+        onClose={() => handleVisible("resend")}
+        onSubmit={(params) => handleApi("resend", params)}
+      />
+      {BASE_MODAL_CONF.map(({ type, ...other }, id) => (
+        <ModalConfirmation
+          key={id}
+          visible={open[type]}
+          onClose={() => handleVisible(type)}
+          onSubmit={(params) => handleApi(type, params)}
+          {...other}
+        />
+      ))}
+
       <Card className="mt-5">
         <CardBody>
-          <div className="d-flex justify-content-end w-100 mb-5">
-            <button
-              className="btn btn-outline-success btn-sm"
-              onClick={() => handleAction("create")}
-            >
-              <span className="nav-icon">
-                <i className="flaticon2-plus"></i>
-              </span>
-              <span className="nav-text">Deliverables</span>
-            </button>
-          </div>
+          <HeaderTableDoc />
           <TableDoc />
         </CardBody>
       </Card>
