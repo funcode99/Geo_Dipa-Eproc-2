@@ -1,31 +1,31 @@
 // Menu Client / Internal
 export const DataAsideMenuListClient = [
   {
-    rootPath: "/delivery_monitoring",
+    rootPath: "/client/delivery-monitoring",
     icon: "/All/route-solid.svg",
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       {
-        rootPath: "/delivery_monitoring",
+        rootPath: "/client/delivery-monitoring",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },
       {
-        rootPath: "/delivery_monitoring-1/error-v",
+        rootPath: "/client/delivery-monitoring-1/error-v",
         title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
         subMenu: [
           {
-            rootPath: "/delivery_monitoring-1/error-v/1",
+            rootPath: "/client/delivery-monitoring-1/error-v/1",
             title: "TITLE.TEST",
           },
         ],
       },
       {
-        rootPath: "/delivery_monitoring-2/error-v",
+        rootPath: "/client/delivery-monitoring-2/error-v",
         title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
         subMenu: [
           {
-            rootPath: "/delivery_monitoring-2/error-v/1",
+            rootPath: "/client/delivery-monitoring-2/error-v/1",
             title: "TITLE.TEST",
           },
         ],
