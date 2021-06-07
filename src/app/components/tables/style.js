@@ -24,7 +24,7 @@ export const StyledHead = styled(TableRow)`
     background: transparent;
     border: 1px solid #ebedf3;
     color: #ffffff;
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 0.5rem;
     font-size: 14px;
   }
 `;
@@ -33,7 +33,7 @@ export const StyledTableRow = styled(TableRow)`
   td,
   th {
     border: 1px solid #ebedf3;
-    padding: 0.5rem 2rem;
+    padding: 0.2rem 0.5rem;
     font-size: 14px;
   }
 `;
