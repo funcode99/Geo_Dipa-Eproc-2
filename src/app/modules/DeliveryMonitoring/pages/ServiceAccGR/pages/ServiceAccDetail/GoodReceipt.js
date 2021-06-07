@@ -475,14 +475,14 @@ export const GoodReceipt = () => {
 
         <CustomTable
           tableHeader={[
-            'Line',
-            'Material Number',
-            'Description',
-            'Order Qty',
-            'Received Qty',
-            'UoM',
-            'Sloc',
-            'Stor Bin',
+            { label: 'Line' },
+            { label: 'Material Number' },
+            { label: 'Description' },
+            { label: 'Order Qty' },
+            { label: 'Received Qty' },
+            { label: 'UoM' },
+            { label: 'Sloc' },
+            { label: 'Stor Bin' },
           ]}
           tableContent={[
             [

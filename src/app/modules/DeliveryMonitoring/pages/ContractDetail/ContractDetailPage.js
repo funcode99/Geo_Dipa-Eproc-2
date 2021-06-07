@@ -80,16 +80,16 @@ const TabLists = [
 ];
 
 const tableHeaderTermin = [
-  'No',
-  'Scope of Work',
-  'Due Date',
-  'Bobot',
-  'Harga Pekerjaan',
-  'Project Progress',
-  'Document Progress',
-  'Deliverables Document',
-  'Status',
-  'Action',
+  { label: 'No' },
+  { label: 'Scope of Work', props: { align: 'left' } },
+  { label: 'Due Date' },
+  { label: 'Bobot' },
+  { label: 'Harga Pekerjaan' },
+  { label: 'Project Progress' },
+  { label: 'Document Progress' },
+  { label: 'Deliverables Document' },
+  { label: 'Status' },
+  { label: 'Action' },
 ];
 
 export const ContractDetailPage = () => {
@@ -211,7 +211,7 @@ export const ContractDetailPage = () => {
         { content: item?.task_status?.name },
         {
           content: (
-            <div className="d-flex justify-content-between flex-row">
+            <div className="d-flex flex-row justify-content-center">
               <button
                 disabled={
                   item.task_status_id === '89a4fe6c-9ce2-4595-b8f0-914d17c91bb4'

@@ -19,19 +19,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const tableHeaderBAPP = [
-  'Nomor BAPP',
-  'Tanggal',
-  'Approve By',
-  'Lampiran BAPP TTD',
-  'Action',
+  { label: 'Nomor BAPP' },
+  { label: 'Tanggal' },
+  { label: 'Approve By' },
+  { label: 'Lampiran BAPP TTD' },
+  { label: 'Action' },
 ];
 
 const tableHeaderBAST = [
-  'Nomor BAST',
-  'Tanggal',
-  'Approve By',
-  'Lampiran BAST TTD',
-  'Action',
+  { label: 'Nomor BAST' },
+  { label: 'Tanggal' },
+  { label: 'Approve By' },
+  { label: 'Lampiran BAST TTD' },
+  { label: 'Action' },
 ];
 
 const dataBAPP = [
@@ -70,7 +70,7 @@ export default function BeritaAcara() {
         { content: item.lampiran },
         {
           content: (
-            <div className="d-flex justify-content-between flex-row">
+            <div className="d-flex flex-row justify-content-center">
               <button
                 className="btn btn-sm p-1"
                 onClick={(e) => console.log(e)}

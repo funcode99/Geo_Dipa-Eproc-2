@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const tableHeaderContracts = [
-  'No Kontrak',
-  'No PO',
-  'Judul Pengadaan',
-  'Tanggal PO',
-  'Tanggal Kontrak',
-  'Group',
-  'Penyedia',
-  'Status',
-  'Action',
+  { label: 'No Kontrak', props: { align: 'left' } },
+  { label: 'No PO' },
+  { label: 'Judul Pengadaan', props: { align: 'left' } },
+  { label: 'Tanggal PO' },
+  { label: 'Tanggal Kontrak' },
+  { label: 'Group' },
+  { label: 'Penyedia' },
+  { label: 'Status' },
+  { label: 'Action' },
 ];
 
 export const ContractsPage = () => {
@@ -42,9 +42,9 @@ export const ContractsPage = () => {
   const generateTableContent = (data) => {
     data.forEach((item) => {
       const rows = [
-        { content: item?.contract_no },
+        { content: item?.contract_no, props: { align: 'left' } },
         { content: item?.purch_order_no },
-        { content: item?.contract_name },
+        { content: item?.contract_name, props: { align: 'left' } },
         {
           content:
             item?.issued_date !== null

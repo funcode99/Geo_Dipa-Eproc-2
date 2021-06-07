@@ -476,12 +476,12 @@ export const ServiceAccDetail = () => {
         </Flex>
         <CustomTable
           tableHeader={[
-            'No',
-            'Service',
-            'Quantity',
-            'UoM',
-            'Unit Price',
-            'Net Value',
+            { label: 'No' },
+            { label: 'Service' },
+            { label: 'Quantity' },
+            { label: 'UoM' },
+            { label: 'Unit Price' },
+            { label: 'Net Value' },
           ]}
           tableContent={[
             [
@@ -507,12 +507,12 @@ export const ServiceAccDetail = () => {
 
         <CustomTable
           tableHeader={[
-            'Nama',
-            'Posisi',
-            'Aktifitas',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
-            'Komentar',
+            { label: 'Nama' },
+            { label: 'Posisi' },
+            { label: 'Aktifitas' },
+            { label: 'Tanggal Mulai' },
+            { label: 'Tanggal Selesai' },
+            { label: 'Komentar' },
           ]}
           tableContent={[
             [
