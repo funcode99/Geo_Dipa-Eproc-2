@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Paper,
   makeStyles,
@@ -9,87 +9,105 @@ import {
   Select,
   MenuItem,
   InputLabel,
-} from '@material-ui/core';
-import { Form, Row, Col, Container } from 'react-bootstrap';
-import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
-import { Link, useParams, withRouter } from 'react-router-dom';
-import Tabs from '../../../../components/tabs';
-import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
-import useToast from '../../../../components/toast';
-import Subheader from '../../../../components/subheader';
-import SubBreadcrumbs from '../../../../components/SubBreadcrumbs';
-import { useSelector, useDispatch } from 'react-redux';
-import { actionTypes } from '../../_redux/deliveryMonitoringAction';
-import CustomTable from '../../../../components/tables';
-import { rupiah } from '../../../../libs/currency';
-import { StyledModal } from '../../../../components/modals';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { format } from 'date-fns';
-import formatDate from '../../../../libs/date';
-import * as Option from '../../../../service/Option';
-import { FormattedMessage, injectIntl } from 'react-intl';
+} from "@material-ui/core";
+import { Form, Row, Col, Container } from "react-bootstrap";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import { Link, useParams, withRouter } from "react-router-dom";
+import Tabs from "../../../../components/tabs";
+import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+import useToast from "../../../../components/toast";
+import Subheader from "../../../../components/subheader";
+import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
+import { useSelector, useDispatch } from "react-redux";
+import { actionTypes } from "../../_redux/deliveryMonitoringAction";
+import CustomTable from "../../../../components/tables";
+import { rupiah } from "../../../../libs/currency";
+import { StyledModal } from "../../../../components/modals";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { format } from "date-fns";
+import formatDate from "../../../../libs/date";
+import * as Option from "../../../../service/Option";
+import { FormattedMessage, injectIntl } from "react-intl";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import FindInPageIcon from "@material-ui/icons/FindInPage";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
+import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
+import FeaturedPlayListIcon from "@material-ui/icons/FeaturedPlayList";
+import ErrorIcon from "@material-ui/icons/Error";
+import ParaPihak from "./components/ParaPihak";
+import DokContract from "./components/DokContract";
+import HargaPekerjaan from "./components/HargaPekerjaan";
+import JangkaWaktu from "./components/JangkaWaktu";
+import Jaminan from "./components/Jaminan";
+import Denda from "./components/Denda";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(1),
-    overflowX: 'auto',
+    overflowX: "auto",
   },
   table: {
     minWidth: 650,
   },
   textField: {
-    width: '75%',
+    width: "75%",
     marginBottom: theme.spacing(2),
   },
 }));
 
 const TabLists = [
   {
-    id: 'detail',
-    label: 'Detail',
-    icon: '',
+    id: "detail",
+    label: "Detail",
+    icon: <FindInPageIcon className="mb-0 mr-2" />,
   },
   {
-    id: 'dokumen-kontrak',
-    label: 'Dokumen Kontrak',
-    icon: '',
+    id: "para-pihak",
+    label: "Para Pihak",
+    icon: <PeopleAltIcon className="mb-0 mr-2" />,
   },
   {
-    id: 'jaminan',
-    label: 'Jaminan',
-    icon: '',
+    id: "dokumen-kontrak",
+    label: "Dokumen Kontrak",
+    icon: <AssignmentIcon className="mb-0 mr-2" />,
   },
   {
-    id: 'harga-pekerjaan',
-    label: 'Harga Pekerjaan',
-    icon: '',
+    id: "harga-pekerjaan",
+    label: "Harga Pekerjaan",
+    icon: <MonetizationOnIcon className="mb-0 mr-2" />,
   },
   {
-    id: 'jangka-waktu',
-    label: 'Jangka Waktu',
-    icon: '',
+    id: "jangka-waktu",
+    label: "Jangka Waktu",
+    icon: <QueryBuilderIcon className="mb-0 mr-2" />,
   },
   {
-    id: 'para-pihak',
-    label: 'Para Pihak',
-    icon: '',
+    id: "jaminan",
+    label: "Jaminan",
+    icon: <FeaturedPlayListIcon className="mb-0 mr-2" />,
+  },
+  {
+    id: "denda",
+    label: "Denda",
+    icon: <ErrorIcon className="mb-0 mr-2" />,
   },
 ];
 
 const tableHeaderTermin = [
-  { label: 'No' },
-  { label: 'Scope of Work', props: { align: 'left' } },
-  { label: 'Due Date' },
-  { label: 'Bobot' },
-  { label: 'Harga Pekerjaan' },
-  { label: 'Project Progress' },
-  { label: 'Document Progress' },
-  { label: 'Deliverables Document' },
-  { label: 'Status' },
-  { label: 'Action' },
+  { label: "No" },
+  { label: "Scope of Work", props: { align: "left" } },
+  { label: "Due Date" },
+  { label: "Bobot" },
+  { label: "Harga Pekerjaan" },
+  { label: "Project Progress" },
+  { label: "Document Progress" },
+  { label: "Deliverables Document" },
+  { label: "Status" },
+  { label: "Action" },
 ];
 
 export const ContractDetailPage = () => {
@@ -102,23 +120,23 @@ export const ContractDetailPage = () => {
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
   const [modals, setModals] = React.useState(false);
-  const [update, setUpdate] = React.useState({ id: '', update: false });
-  const [confirm, setConfirm] = React.useState({ show: false, id: '' });
+  const [update, setUpdate] = React.useState({ id: "", update: false });
+  const [confirm, setConfirm] = React.useState({ show: false, id: "" });
   const [options, setOptions] = React.useState();
 
   const FormSchema = Yup.object().shape({
     name: Yup.string()
-      .min(3, 'Input minimal 3 karakter')
-      .required('Field ini wajib diisi'),
+      .min(3, "Input minimal 3 karakter")
+      .required("Field ini wajib diisi"),
     due_date: Yup.date()
-      .required('Field ini wajib diisi')
+      .required("Field ini wajib diisi")
       .nullable()
-      .min(new Date(Date.now() - 86400000), 'Minimal hari ini'),
+      .min(new Date(Date.now() - 86400000), "Minimal hari ini"),
   });
 
   const initialValues = {
-    name: '',
-    due_date: format(new Date(), 'yyy-MM-dd'),
+    name: "",
+    due_date: format(new Date(), "yyy-MM-dd"),
     status: 876,
   };
 
@@ -163,9 +181,9 @@ export const ContractDetailPage = () => {
           setModals(false);
         }
       } catch (error) {
-        setToast('Error API, Please contact developer!');
+        setToast("Error API, Please contact developer!");
         setSubmitting(false);
-        setStatus('Failed Submit Data');
+        setStatus("Failed Submit Data");
       } finally {
         disableLoading();
       }
@@ -186,15 +204,15 @@ export const ContractDetailPage = () => {
     data.forEach((item, index) => {
       const rows = [
         { content: (index += 1) },
-        { content: item.name, props: { align: 'left' } },
+        { content: item.name, props: { align: "left" } },
         {
           content:
             item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
         },
         { content: item.value },
-        { content: '' },
+        { content: "" },
         { content: item.progress },
-        { content: '' },
+        { content: "" },
         {
           content: (
             <Link
@@ -214,12 +232,12 @@ export const ContractDetailPage = () => {
             <div className="d-flex flex-row justify-content-center">
               <button
                 disabled={
-                  item.task_status_id === '89a4fe6c-9ce2-4595-b8f0-914d17c91bb4'
+                  item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
                     ? true
                     : false
                 }
                 className="btn btn-sm p-1"
-                onClick={() => handleModal('update', item)}
+                onClick={() => handleModal("update", item)}
               >
                 <Icon className="fas fa-edit text-primary" />
               </button>
@@ -258,7 +276,7 @@ export const ContractDetailPage = () => {
 
       console.log(data);
 
-      if (data?.payment_method === 'gradually') {
+      if (data?.payment_method === "gradually") {
         sortTerminByPaymentMethod(data?.tasks);
       }
 
@@ -272,9 +290,9 @@ export const ContractDetailPage = () => {
     } catch (error) {
       if (
         error.response?.status !== 400 &&
-        error.response?.data.message !== 'TokenExpiredError'
+        error.response?.data.message !== "TokenExpiredError"
       ) {
-        setToast('Error API, please contact developer!');
+        setToast("Error API, please contact developer!");
       }
     } finally {
       setLoading(false);
@@ -292,7 +310,7 @@ export const ContractDetailPage = () => {
 
       setOptions(data.task_status);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -313,7 +331,7 @@ export const ContractDetailPage = () => {
   };
 
   const handleModal = async (type, items) => {
-    if (type === 'update') {
+    if (type === "update") {
       // console.log(`type: ${type}`);
       // console.log(items);
       // console.log(items.due_date);
@@ -323,13 +341,13 @@ export const ContractDetailPage = () => {
       formik.setValues({
         name: items.name,
         due_date: items.due_date
-          ? format(new Date(items.due_date), 'yyy-MM-dd')
-          : format(new Date(), 'yyy-MM-dd'),
+          ? format(new Date(items.due_date), "yyy-MM-dd")
+          : format(new Date(), "yyy-MM-dd"),
         status: items.task_status_id,
       });
-    } else if (type === 'create') {
+    } else if (type === "create") {
       formik.setValues(initialValues);
-      setUpdate({ id: '', update: false });
+      setUpdate({ id: "", update: false });
     }
 
     setModals(true);
@@ -340,10 +358,10 @@ export const ContractDetailPage = () => {
       setLoading(true);
       await deliveryMonitoring.deleteTask(confirm.id);
       setConfirm({ ...confirm, show: false });
-      setToast('Successfully delete data.', 10000);
+      setToast("Successfully delete data.", 10000);
       getContractById(contract_id);
     } catch (error) {
-      setToast('Error with API, please contact Developer!', 10000);
+      setToast("Error with API, please contact Developer!", 10000);
       console.error(error);
     } finally {
       setLoading(false);
@@ -373,7 +391,7 @@ export const ContractDetailPage = () => {
                 <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.UPDATE" />
               ) : (
                 <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.CREATE" />
-              )}{' '}
+              )}{" "}
               <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.TERM" />
             </h3>
           </div>
@@ -384,9 +402,9 @@ export const ContractDetailPage = () => {
             name="name"
             className={classes.textField}
             size="small"
-            {...formik.getFieldProps('name')}
+            {...formik.getFieldProps("name")}
           />
-          <p style={{ color: 'red' }}>
+          <p style={{ color: "red" }}>
             {formik.touched.name && formik.errors.name
               ? formik.errors.name
               : null}
@@ -402,9 +420,9 @@ export const ContractDetailPage = () => {
             InputLabelProps={{
               shrink: true,
             }}
-            {...formik.getFieldProps('due_date')}
+            {...formik.getFieldProps("due_date")}
           />
-          <p style={{ color: 'red' }}>
+          <p style={{ color: "red" }}>
             {formik.touched.due_date && formik.errors.due_date
               ? formik.errors.due_date
               : null}
@@ -419,7 +437,7 @@ export const ContractDetailPage = () => {
                 name="status"
                 size="small"
                 className={classes.textField}
-                {...formik.getFieldProps('status')}
+                {...formik.getFieldProps("status")}
               >
                 <MenuItem value={876}>Select Item</MenuItem>
                 {options &&
@@ -429,7 +447,7 @@ export const ContractDetailPage = () => {
                     </MenuItem>
                   ))}
               </Select>
-              <p style={{ color: 'red' }}>
+              <p style={{ color: "red" }}>
                 {formik.touched.status && formik.errors.status
                   ? formik.errors.status
                   : null}
@@ -470,20 +488,20 @@ export const ContractDetailPage = () => {
             variant="contained"
             disabled={loading}
             style={{
-              width: '40%',
-              background: 'red',
-              color: 'white',
+              width: "40%",
+              background: "red",
+              color: "white",
               marginInline: 10,
             }}
             onClick={() => handleDelete()}
           >
-            {loading ? <CircularProgress /> : null}&nbsp;{' '}
+            {loading ? <CircularProgress /> : null}&nbsp;{" "}
             <FormattedMessage id="BUTTON.DELETE" />
           </Button>
           <Button
             variant="contained"
             disabled={loading}
-            style={{ width: '40%', marginInline: 10 }}
+            style={{ width: "40%", marginInline: 10 }}
             onClick={() => setConfirm({ ...confirm, show: false })}
           >
             <FormattedMessage id="BUTTON.CANCEL" />
@@ -505,8 +523,8 @@ export const ContractDetailPage = () => {
         }
         IconComponent={
           <SVG
-            src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')}
-            style={{ color: 'white' }}
+            src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")}
+            style={{ color: "white" }}
           />
         }
       />
@@ -514,14 +532,14 @@ export const ContractDetailPage = () => {
       <SubBreadcrumbs
         items={[
           {
-            label: 'List of Contract & PO',
-            to: '/client/delivery-monitoring/contract',
+            label: "List of Contract & PO",
+            to: "/client/delivery-monitoring/contract",
           },
           {
             label: `${
-              dataContractById ? dataContractById?.contract_name : 'x'
+              dataContractById ? dataContractById?.contract_name : "x"
             }`,
-            to: '/',
+            to: "/",
           },
         ]}
       />
@@ -673,7 +691,7 @@ export const ContractDetailPage = () => {
               <div className="d-flex justify-content-end w-100">
                 <button
                   className="btn btn-outline-success btn-sm"
-                  onClick={() => handleModal('create')}
+                  onClick={() => handleModal("create")}
                 >
                   <span className="nav-icon">
                     <i className="flaticon2-plus"></i>
@@ -693,11 +711,12 @@ export const ContractDetailPage = () => {
             </Container>
           </>
         ) : null}
-        {tabActive === 1 && <div>Dokumen Kontrak</div>}
-        {tabActive === 2 && <div>Jaminan</div>}
-        {tabActive === 3 && <div>Harga Pekerjaan</div>}
-        {tabActive === 4 && <div>Jangka Waktu</div>}
-        {tabActive === 5 && <div>Para Pihak</div>}
+        {tabActive === 1 && <ParaPihak />}
+        {tabActive === 2 && <DokContract />}
+        {tabActive === 3 && <HargaPekerjaan />}
+        {tabActive === 4 && <JangkaWaktu />}
+        {tabActive === 5 && <Jaminan />}
+        {tabActive === 6 && <Denda />}
       </Paper>
     </React.Fragment>
   );
