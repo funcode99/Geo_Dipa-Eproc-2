@@ -1,12 +1,12 @@
 import React, { Suspense, lazy, useEffect } from "react";
-import { Redirect, Switch, Route } from "react-router-dom";
+import { Redirect, Switch, Route, useHistory } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 // Page Guide Metronic
 // import { BuilderPage } from "./pages/BuilderPage";
 // import { MyPage } from "./pages/MyPage";
 // Page Guide Metronic
 import { DashboardPage } from "./pages/DashboardPage";
-import { useSelector, shallowEqual, connect, useDispatch } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 
 // Page Guide Metronic
 // const GoogleMaterialPage = lazy(() =>
@@ -23,9 +23,11 @@ import { useSelector, shallowEqual, connect, useDispatch } from "react-redux";
 const UserProfilePageClient = lazy(() =>
   import("./modules/UserProfile/Client/UserProfilePage")
 );
+
 const UserProfilePageVendor = lazy(() =>
   import("./modules/UserProfile/Vendor/UserProfilePage")
 );
+
 const RootDeliveryMonitoring = lazy(() =>
   import("./modules/DeliveryMonitoring/RootDeliveryMonitoring")
 );
@@ -45,10 +47,11 @@ export default function BasePage() {
     (state) => state.auth.user.data.status,
     shallowEqual
   );
+  const history = useHistory();
 
   useEffect(() => {
     if (window.location.pathname.split("/")[1] !== status) {
-      window.location.href = window.location.origin;
+      history.push("/");
     }
   }, []); // [] - is required if you need only one call
   // https://reactjs.org/docs/hooks-reference.html#useeffect
