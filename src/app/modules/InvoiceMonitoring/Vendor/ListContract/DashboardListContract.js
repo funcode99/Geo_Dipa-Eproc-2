@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { connect, shallowEqual, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import { Table } from "react-bootstrap";
@@ -9,21 +9,15 @@ import { Link } from "react-router-dom";
 import { getContractClient } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Slide,
-  makeStyles,
   TablePagination,
 } from "@material-ui/core";
 
 function DashboardListContract(props) {
   const { intl } = props;
-  const vendor_id = useSelector(
-    (state) => state.auth.user.data.vendor_id,
-    shallowEqual
-  );
+  // const vendor_id = useSelector(
+  //   (state) => state.auth.user.data.vendor_id,
+  //   shallowEqual
+  // );
   const [filterTable, setFilterTable] = useState({});
   const [contractData, setContractData] = useState([]);
   const [nameStateFilter, setNameStateFilter] = useState("");
@@ -215,6 +209,7 @@ function DashboardListContract(props) {
 
   return (
     <React.Fragment>
+      <Toast />
       <Card>
         <CardBody>
           {/* begin: Filter Table */}
@@ -349,11 +344,11 @@ function DashboardListContract(props) {
                                   )}
                                 />
                               ) : (
-                          <SVG
-                            src={toAbsoluteUrl(
-                              "/media/svg/icons/Navigation/Down-2.svg"
-                            )}
-                          />
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Down-2.svg"
+                                  )}
+                                />
                               )}
                             </span>
                           )}
@@ -545,40 +540,40 @@ function DashboardListContract(props) {
                       return (
                         <tr key={index.toString()}>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
                               {item.contract_no}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
                               {item.contract_name}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
                               {item.purch_order_no}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
                               {index === 0
                                 ? 1
                                 : index === 1
-                                ? 2
-                                : index === 2
-                                ? 3
-                                : index === 3
-                                ? 4
-                                : 5}
+                                  ? 2
+                                  : index === 2
+                                    ? 3
+                                    : index === 3
+                                      ? 4
+                                      : 5}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
                               80000035434
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
                               INV0352345
                             </Link>
                           </td>
