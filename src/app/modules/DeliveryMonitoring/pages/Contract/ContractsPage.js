@@ -7,6 +7,7 @@ import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
 import useToast from '../../../../components/toast';
 import Subheader from '../../../../components/subheader';
 import CustomTable from '../../../../components/tables';
+import formatDate from '../../../../libs/date';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,15 +22,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const tableHeaderContracts = [
-  'No Kontrak',
-  'No PO',
-  'Judul Pengadaan',
-  'Tanggal PO',
-  'Tanggal Kontrak',
-  'Group',
-  'Penyedia',
-  'Status',
-  'Action',
+  { label: 'No Kontrak', props: { align: 'left' } },
+  { label: 'No PO' },
+  { label: 'Judul Pengadaan', props: { align: 'left' } },
+  { label: 'Tanggal PO' },
+  { label: 'Tanggal Kontrak' },
+  { label: 'Group' },
+  { label: 'Penyedia' },
+  { label: 'Status' },
+  { label: 'Action' },
 ];
 
 export const ContractsPage = () => {
@@ -41,14 +42,24 @@ export const ContractsPage = () => {
   const generateTableContent = (data) => {
     data.forEach((item) => {
       const rows = [
-        { content: item.contract_no },
-        { content: item.purch_order_no },
-        { content: item.contract_name },
-        { content: item.issued_date },
-        { content: item.issued_date },
-        { content: item.purch_order.purch_group.alias_name },
-        { content: item.vendor.party.full_name },
-        { content: item.state },
+        { content: item?.contract_no, props: { align: 'left' } },
+        { content: item?.purch_order_no },
+        { content: item?.contract_name, props: { align: 'left' } },
+        {
+          content:
+            item?.issued_date !== null
+              ? formatDate(new Date(item?.issued_date))
+              : null,
+        },
+        {
+          content:
+            item?.issued_date !== null
+              ? formatDate(new Date(item?.issued_date))
+              : null,
+        },
+        { content: item?.purch_order?.purch_group?.alias_name },
+        { content: item?.vendor.party?.full_name },
+        { content: item?.state },
         {
           content: (
             <Link to={`/client/delivery-monitoring/contract/${item.id}`}>

@@ -295,10 +295,10 @@ export const Periode = () => {
         <Paper className={classes.root} style={{ marginBottom: 30 }}>
           <CustomTable
             tableHeader={[
-              'No',
-              t('periode.name'),
-              t('periode.val'),
-              t('periode.action'),
+              { label: 'No' },
+              { label: t('periode.name') },
+              { label: t('periode.val') },
+              { label: t('periode.action') },
             ]}
             tableContent={tableContent}
             marginY="my-1"

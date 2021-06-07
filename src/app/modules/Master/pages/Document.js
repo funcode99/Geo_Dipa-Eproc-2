@@ -418,7 +418,12 @@ export const Documents = ({ typeId }) => {
 
         <Paper className={classes.root} style={{ marginBottom: 30 }}>
           <CustomTable
-            tableHeader={['No', 'Dokumen', 'Periode Hari', 'Action']}
+            tableHeader={[
+              { label: 'No' },
+              { label: 'Dokumen' },
+              { label: 'Periode Hari' },
+              { label: 'Action' },
+            ]}
             tableContent={tableContent}
             marginY="my-1"
             hecto="hecto-10"

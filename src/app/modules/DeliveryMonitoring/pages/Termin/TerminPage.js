@@ -50,9 +50,7 @@ const TerminPage = (props) => {
 
   const getTask = React.useCallback(
     (taskId) => {
-      const task = dataContractById[0]?.tasks?.find(
-        (item) => item.id === taskId
-      );
+      const task = dataContractById?.tasks?.find((item) => item.id === taskId);
       return task.name;
     },
     [task_id]
@@ -88,9 +86,9 @@ const TerminPage = (props) => {
             to: '/client/delivery-monitoring/contract',
           },
           {
-            label: `${dataContractById[0]?.contract_name || 'no data'}`,
-            to: `/client/delivery-monitoring/contract/${dataContractById[0]
-              ?.id || 1}`,
+            label: `${dataContractById?.contract_name || 'no data'}`,
+            to: `/client/delivery-monitoring/contract/${dataContractById?.id ||
+              1}`,
           },
           {
             label: getTask(task_id) || `Termin`,

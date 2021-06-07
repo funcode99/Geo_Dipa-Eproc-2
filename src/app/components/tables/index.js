@@ -7,7 +7,10 @@ import {
   StyledTable,
 } from './style';
 
-const exampleHeader = ['', ''];
+const exampleHeader = [
+  { label: 'contoh 1', props: {} },
+  { label: 'contoh 2', props: {} },
+];
 const exampleBody = [
   [
     { content: '', props: {} },
@@ -37,8 +40,8 @@ const CustomTable = ({
             <StyledTableHead>
               <StyledHead>
                 {tableHeader?.map((item, i) => (
-                  <TableCell align={align} key={i}>
-                    {item}
+                  <TableCell align={align} key={i} {...item.props}>
+                    {item.label}
                   </TableCell>
                 ))}
               </StyledHead>
