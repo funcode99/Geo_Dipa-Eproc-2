@@ -75,6 +75,7 @@ function ItemContractInvoice(props) {
                             <ContractTaxPage {...props} />
                         </div>
                     )}
+
                 </CardBody>
             </Card>
         </React.Fragment>

@@ -30,7 +30,8 @@ function ContractSprPage(props) {
     const [Toast, setToast] = useToast();
 
     const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
-    const contract_id = props.match.params.id;
+    const contract_id = props.match.params.contract;
+    const termin = props.match.params.termin;
     const { intl } = props;
 
     const initialValues = {
@@ -200,7 +201,7 @@ function ContractSprPage(props) {
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="priceStep1" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: 1 }} /></label>
+                                    <label htmlFor="priceStep1" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
                                     <div className="col-sm-8">
                                         <input type="text" className="form-control" id="priceStep1" defaultValue="Rp. 1.000.000" disabled />
                                     </div>
@@ -249,8 +250,10 @@ function ContractSprPage(props) {
                         </div>
                     </CardBody>
                     <CardFooter className="text-right">
-                        <button type="button" className="btn btn-primary mx-1">Terima</button>
-                        <button type="button" className="btn btn-danger mx-1">Tolak</button>
+                        <button type="submit" className="btn btn-primary mx-1" disabled={(formik.touched && !formik.isValid) || loading}>
+                            <FormattedMessage id="TITLE.UPLOAD" />
+                            {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
+                        </button>
                     </CardFooter>
                 </form>
             </Card>

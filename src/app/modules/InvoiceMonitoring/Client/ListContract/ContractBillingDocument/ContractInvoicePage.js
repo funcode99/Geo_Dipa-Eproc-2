@@ -15,7 +15,7 @@ import {
     CardBody,
     CardFooter
 } from "../../../../../../_metronic/_partials/controls";
-import { getContractSummary, saveInvoice, getInvoice } from '../service/invoice';
+import { getContractSummary, saveInvoice, getInvoice } from '../../../_redux/InvoiceMonitoringCrud';
 import useToast from '../../../../../components/toast';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -289,10 +289,6 @@ function ContractInvoicePage(props) {
                         </div>
                     </CardBody>
                     <CardFooter className="text-right">
-                        <button type="submit" className="btn btn-primary mx-1" disabled={(formik.touched && !formik.isValid) || loading || invoiceStatus}>
-                            <FormattedMessage id="TITLE.UPLOAD" />
-                            {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
-                        </button>
                         <button type="button" className="btn btn-primary mx-1">Terima</button>
                         <button type="button" className="btn btn-danger mx-1">Tolak</button>
                     </CardFooter>

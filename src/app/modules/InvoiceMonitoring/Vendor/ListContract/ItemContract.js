@@ -21,9 +21,6 @@ import Subheader from '../../../../components/subheader';
 import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from './ItemContractSummary';
 import ItemContractInvoice from './ItemContractInvoice';
-import ItemContractBKB from './ItemContractBKB';
-import ItemContractRoutingSlip from './ItemContractRoutingSlip';
-import ItemContractFormVerification from './ItemContractFormVerification';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -90,9 +87,6 @@ const ItemContract = (props) => {
         <Container className="p-0">
           {tabActive === 0 && <ItemContractSummary {...props} />}
           {tabActive === 1 && <ItemContractInvoice {...props} />}
-          {tabActive === 2 && <ItemContractBKB />}
-          {tabActive === 3 && <ItemContractFormVerification />}
-          {tabActive === 4 && <ItemContractRoutingSlip />}
         </Container>
       </Paper>
     </Container>

@@ -15,22 +15,25 @@ import {
     CardBody,
     CardFooter
 } from "../../../../../../_metronic/_partials/controls";
-import { getContractSummary } from '../../../_redux/InvoiceMonitoringCrud';
+import { getContractSummary, saveInvoice, getInvoice } from '../../../_redux/InvoiceMonitoringCrud';
 import useToast from '../../../../../components/toast';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { rupiah } from '../../../../../libs/currency';
 
-function ContractSprPage(props) {
+function ContractInvoicePage(props) {
 
     const [loading, setLoading] = useState(false);
     const [contractData, setContractData] = useState({})
     const [uploadFilename, setUploadFilename] = useState('Pilih File')
+    const [invoiceStatus, setInvoiceStatus] = useState(false)
+    const [invoiceData, setInvoiceData] = useState({})
 
     const [Toast, setToast] = useToast();
 
     const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
-    const contract_id = props.match.params.id;
+    const contract_id = props.match.params.contract;
+    const termin = props.match.params.termin;
     const { intl } = props;
 
     const initialValues = {
@@ -96,7 +99,23 @@ function ContractSprPage(props) {
         validationSchema: InvoiceSchema,
         onSubmit: async (values, { setStatus, setSubmitting }) => {
             setLoading(true)
-        }
+            setInvoiceStatus(true)
+            var data = new FormData()
+            for (var key in values) {
+                data.append(key, values[key])
+            }
+            saveInvoice(data)
+                .then(response => {
+                    setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+                    getInvoiceData()
+                    setLoading(false)
+                })
+                .catch((error) => {
+                    if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                    setLoading(false);
+                    setInvoiceStatus(false)
+                });
+        },
     });
 
     const getContractData = useCallback(() => {
@@ -138,6 +157,31 @@ function ContractSprPage(props) {
             });
     }, [contract_id, formik, intl, setToast, user_id])
 
+    const getInvoiceData = useCallback(() => {
+        getInvoice(contract_id, termin)
+            .then(response => {
+                if (!response.data.data) {
+                    setInvoiceStatus(false)
+                } else {
+                    formik.setFieldValue('description', response.data.data ? response.data.data.description : null)
+                    setInvoiceStatus(true)
+                }
+                setInvoiceData(response.data.data)
+            })
+            .catch((error) => {
+                if (
+                    error.response?.status !== 400 &&
+                    error.response?.data.message !== "TokenExpiredError"
+                )
+                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+            });
+    }, [contract_id, formik, intl, setToast])
+
+    useEffect(() => { 
+        getContractData(); 
+        getInvoiceData(); 
+    }, []);
+
     const handleUpload = (e) => {
         setUploadFilename(e.currentTarget.files[0].name)
         formik.setFieldValue('file_name', e.currentTarget.files[0].name)
@@ -150,8 +194,6 @@ function ContractSprPage(props) {
         date.setMonth(date.getMonth() + 1)
         formik.setFieldValue('thru_time', date.toISOString().split('T')[0])
     }
-
-    useEffect(getContractData, []);
 
     return (
         <React.Fragment>
@@ -166,9 +208,9 @@ function ContractSprPage(props) {
                         <div className="row">
                             <div className="col-md-6">
                                 <div className="form-group row">
-                                    <label htmlFor="numberInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.SPR_NUMBER" /></label>
+                                    <label htmlFor="numberInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" /></label>
                                     <div className="col-sm-8">
-                                        <input type="text" className="form-control" id="numberInvoice" disabled={loading} {...formik.getFieldProps('invoice_no')} />
+                                        <input type="text" className="form-control" id="numberInvoice" disabled={loading || invoiceStatus} defaultValue={invoiceData ? invoiceData['invoice_no'] : null} {...formik.getFieldProps('invoice_no')} />
                                     </div>
                                     {(formik.touched.invoice_no && formik.errors.invoice_no) ? (
                                         <span className="col-sm-8 offset-sm-4 text-center text-danger" >
@@ -177,9 +219,9 @@ function ContractSprPage(props) {
                                     ) : null}
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="dateInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.SPR_DATE" /></label>
+                                    <label htmlFor="dateInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" /></label>
                                     <div className="col-sm-8">
-                                        <input type="date" className="form-control" id="dateInvoice" disabled={loading} onChange={e => handleDate(e)} />
+                                        <input type="date" className="form-control" id="dateInvoice" disabled={loading || invoiceStatus} defaultValue={invoiceData ? invoiceData['from_time'] : null} onChange={e => handleDate(e)} />
                                     </div>
                                     {(formik.touched.from_time && formik.errors.from_time) ? (
                                         <span className="col-sm-8 offset-sm-4 text-center text-danger" >
@@ -200,36 +242,36 @@ function ContractSprPage(props) {
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="priceStep1" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: 1 }} /></label>
+                                    <label htmlFor="priceStep1" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
                                     <div className="col-sm-8">
                                         <input type="text" className="form-control" id="priceStep1" defaultValue="Rp. 1.000.000" disabled />
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="numberInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.ACCOUNT_NUMBER" /></label>
+                                    <label htmlFor="note" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DESCRIPTION" /></label>
                                     <div className="col-sm-8">
-                                        <input type="text" className="form-control" id="numberInvoice" disabled={loading} defaultValue="0001010-0121" />
+                                        <textarea rows="4" cols="" className="form-control" id="note" disabled={loading || invoiceStatus} {...formik.getFieldProps('description')}></textarea>
                                     </div>
-                                    {(formik.touched.invoice_no && formik.errors.invoice_no) ? (
+                                    {(formik.touched.description && formik.errors.description) ? (
                                         <span className="col-sm-8 offset-sm-4 text-center text-danger" >
-                                            {formik.errors.invoice_no}
+                                            {formik.errors.description}
                                         </span>
                                     ) : null}
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="upload" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.SPR_UPLOAD" /></label>
+                                    <label htmlFor="upload" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_UPLOAD" /></label>
                                     <label htmlFor="upload" className="input-group mb-3 col-sm-8 pointer">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fas fa-file-upload"></i></span>
                                         </div>
-                                        <span className="form-control">{uploadFilename}</span>
+                                        <span className="form-control">{invoiceData ? invoiceData['file_name'] : uploadFilename}</span>
                                     </label>
                                     {(formik.touched.file && formik.errors.file) ? (
                                         <span className="col-sm-8 offset-sm-4 text-center text-danger" >
                                             {formik.errors.file}
                                         </span>
                                     ) : null}
-                                    <input type="file" className="d-none" id="upload" disabled={loading} onChange={(e => handleUpload(e))} />
+                                    <input type="file" className="d-none" id="upload" disabled={loading || invoiceStatus} onChange={(e => handleUpload(e))} />
                                 </div>
                             </div>
                             <div className="col-md-6">
@@ -249,12 +291,14 @@ function ContractSprPage(props) {
                         </div>
                     </CardBody>
                     <CardFooter className="text-right">
-                        <button type="button" className="btn btn-primary mx-1">Terima</button>
-                        <button type="button" className="btn btn-danger mx-1">Tolak</button>
+                        <button type="submit" className="btn btn-primary mx-1" disabled={(formik.touched && !formik.isValid) || loading || invoiceStatus}>
+                            <FormattedMessage id="TITLE.UPLOAD" />
+                            {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
+                        </button>
                     </CardFooter>
                 </form>
             </Card>
         </React.Fragment>
     )
 }
-export default injectIntl(connect(null, null)(ContractSprPage));
+export default injectIntl(connect(null, null)(ContractInvoicePage));
