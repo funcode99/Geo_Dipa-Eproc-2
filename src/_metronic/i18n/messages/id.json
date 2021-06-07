@@ -249,5 +249,6 @@
   "TITLE.TERMIN": "Termin",
   "TITLE.SA_NUMBER": "Nomor SA",
   "TITLE.INVOICE_NO": "Nomor Faktur",
-  "TITLE.ALL": "semua"
+  "TITLE.ALL": "semua",
+  "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.COMPANY_NAME": "Nama Perusahaan"
 }

@@ -186,4 +186,10 @@ export const DataAsideMenuListVendor = [
       },
     ],
   },
+  {
+    rootPath: "/vendor/user-profile",
+    icon: "/All/users-solid.svg",
+    title: "MENU.USER_MANAGEMENT",
+    subMenu: null,
+  },
 ];

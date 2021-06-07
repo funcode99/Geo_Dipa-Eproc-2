@@ -249,5 +249,6 @@
   "TITLE.TERMIN": "Termin",
   "TITLE.SA_NUMBER": "SA Number",
   "TITLE.INVOICE_NO": "Invoice Number",
-  "TITLE.ALL": "all"
+  "TITLE.ALL": "all",
+  "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.COMPANY_NAME": "Company Name"
 }

@@ -95,7 +95,7 @@ export function UserProfileDropdown() {
 
         <div className="navi navi-spacer-x-0 pt-5">
           <Link
-            to="/client/user-profile"
+            to={`/${user.data.status}/user-profile`}
             className="navi-item px-8 cursor-pointer"
           >
             <div className="navi-link">
