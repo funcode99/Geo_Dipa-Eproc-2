@@ -150,6 +150,7 @@ const ServiceLevelAgreement = (props) => {
         .then((result) => {
           setLoading(false);
           setData(result.data.data);
+          setPaginations({ ...paginations, count: result.data.count || 0 });
         })
         .catch((err) => {
           setErr(true);
