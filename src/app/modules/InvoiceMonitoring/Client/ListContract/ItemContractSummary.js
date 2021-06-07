@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { rupiah } from "../../../../libs/currency";
 import {
@@ -36,7 +36,7 @@ import {
   assignUser,
   getContractSummary,
   checkRole,
-} from "../../_redux/InvoiceMonitoringCrud";
+} from "./service/invoice";
 import useToast from "../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -109,21 +109,18 @@ function ItemContractSummary(props) {
   const [tempPic, setTempPic] = useState([]);
   const [contractData, setContractData] = useState({});
   const [role, setRole] = useState({});
+  const [vendorId, setVendorId] = useState("");
 
   const [Toast, setToast] = useToast();
   const updateEmailRef = useRef(null);
 
-  const vendor_id = useSelector(
-    (state) => state.auth.user.data.vendor_id,
-    shallowEqual
-  );
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
     shallowEqual
   );
   const contract_id = props.match.params.id;
 
-  const getPicContractData = () => {
+  const getPicContractData = useCallback((vendor_id) => {
     getPicContract({ id: contract_id, vendor_id: vendor_id })
       .then((response) => {
         setPicContractData(response.data.data);
@@ -135,8 +132,9 @@ function ItemContractSummary(props) {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  };
-  const getPicVendorData = () => {
+  }, [contract_id, intl, setToast]);
+
+  const getPicVendorData = useCallback((vendor_id) => {
     getPicVendor(vendor_id)
       .then((response) => {
         setPicVendorData(response.data.data);
@@ -148,8 +146,9 @@ function ItemContractSummary(props) {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  };
-  const getRole = () => {
+  }, [vendorId, intl, setToast]);
+
+  const getRole = useCallback(() => {
     checkRole(user_id)
       .then((response) => {
         setRole(response.data.data);
@@ -161,8 +160,9 @@ function ItemContractSummary(props) {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  };
-  const getContractData = () => {
+  }, [user_id, intl, setToast]);
+
+  const getContractData = useCallback(() => {
     getContractSummary(contract_id)
       .then((response) => {
         response["data"]["data"]["contract_value"] = rupiah(
@@ -177,40 +177,32 @@ function ItemContractSummary(props) {
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${
-          response["data"]["data"]["data"]["address"]["postal_address"]
-            ? response["data"]["data"]["data"]["address"]["postal_address"]
-            : null
-        } ${
-          response["data"]["data"]["data"]["address"]["sub_district"]
+        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
+          ? response["data"]["data"]["data"]["address"]["postal_address"]
+          : null
+          } ${response["data"]["data"]["data"]["address"]["sub_district"]
             ? response["data"]["data"]["data"]["address"]["sub_district"][
-                "name"
-              ]
+            "name"
+            ]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["district"]
+          } ${response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["province"]
+          } ${response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["postal_code"]
+          } ${response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
-        }`;
-        response["data"]["data"]["full_data_party_2"] = `${
-          response["data"]["data"]["full_name"]
-        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
-          response["data"]["data"]["data"]["phone_number"]["number"]
-        } ${
-          response["data"]["data"]["data"]["phone_number"]["ext"]
+          }`;
+        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
+          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
+          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
-                response["data"]["data"]["data"]["phone_number"]["ext"]
-              )
+              response["data"]["data"]["data"]["phone_number"]["ext"]
+            )
             : ""
-        }`;
+          }`;
         response["data"]["data"][
           "full_data_party_1"
         ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
@@ -219,6 +211,8 @@ function ItemContractSummary(props) {
           response.data.data.from_time,
           response.data.data.thru_time
         );
+        getPicContractData(response.data.data.vendor_id)
+        getPicVendorData(response.data.data.vendor_id)
       })
       .catch((error) => {
         if (
@@ -227,7 +221,8 @@ function ItemContractSummary(props) {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  };
+  }, [contract_id, intl, setToast]);
+
   const setTimePIcker = (from_time, thru_time) => {
     window.$("#kt_daterangepicker_1").daterangepicker({
       buttonClasses: " btn",
@@ -242,12 +237,7 @@ function ItemContractSummary(props) {
     });
   };
 
-  useEffect(() => {
-    getContractData();
-    getPicContractData();
-    getPicVendorData();
-    getRole();
-  }, []);
+  useEffect(getContractData, []);
 
   const picUnselect = (e) => {
     var value = e.params.data.id;
@@ -271,12 +261,12 @@ function ItemContractSummary(props) {
   const initialValues = {
     email: "",
     user_id: user_id,
-    vendor_id: vendor_id,
+    vendor_id: vendorId,
     monitoring_type: "INVOICE",
   };
 
-  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function(errorMessage) {
-    return this.test(`test-card-length`, errorMessage, function(value) {
+  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function (errorMessage) {
+    return this.test(`test-card-length`, errorMessage, function (value) {
       const { path, createError } = this;
       return emailAvailability || createError({ path, message: errorMessage });
     });
@@ -392,7 +382,7 @@ function ItemContractSummary(props) {
       email: picVendorData[index].text,
       id: picVendorData[index].id,
       user_id: user_id,
-      vendor_id: vendor_id,
+      vendor_id: vendorId,
       monitoring_type: "INVOICE",
     });
     updateEmailRef.current.scrollIntoView({ behavior: "smooth" });
@@ -649,7 +639,7 @@ function ItemContractSummary(props) {
                     </button>
                   </div>
                   {(formikUpdate.touched.email && formikUpdate.errors.email) ||
-                  !emailAvailability ? (
+                    !emailAvailability ? (
                     <div className="invalid-feedback display-block">
                       {formikUpdate.errors.email}
                     </div>
@@ -669,11 +659,10 @@ function ItemContractSummary(props) {
                           <span>
                             Status:{" "}
                             <span
-                              className={`font-weight-bold ${
-                                item.actives === "true"
-                                  ? "text-primary"
-                                  : "text-danger"
-                              }`}
+                              className={`font-weight-bold ${item.actives === "true"
+                                ? "text-primary"
+                                : "text-danger"
+                                }`}
                             >
                               {item.actives === "true"
                                 ? "Terverifikasi"

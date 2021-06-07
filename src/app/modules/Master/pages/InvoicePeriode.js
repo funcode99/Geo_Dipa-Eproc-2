@@ -104,6 +104,13 @@ const InvoicePeriode = (props) => {
             ),
     });
 
+    const initialValues = {
+        name: "",
+        accepted_from_day: "",
+        accepted_thru_day: "",
+        user_id: user_id
+    };
+
     const formik = useFormik({
         initialValues,
         validationSchema: FormSchema,
@@ -138,13 +145,6 @@ const InvoicePeriode = (props) => {
 
     const handleClose = () => {
         setModals(false);
-    };
-
-    const initialValues = {
-        name: "",
-        accepted_from_day: "",
-        accepted_thru_day: "",
-        user_id: user_id
     };
 
     return (
@@ -279,7 +279,7 @@ const InvoicePeriode = (props) => {
                                     </Table>
                                 </div>
                             </div>
-                            {/* <div className="table-loading-data">
+                            <div className="table-loading-data">
                                 <div className="text-center font-weight-bold">
                                     <div className={`table-loading-data-potition ${errorData ? 'text-danger' : null}`}>
                                         {loadData && <span>
@@ -291,7 +291,7 @@ const InvoicePeriode = (props) => {
                                         </span>}
                                     </div>
                                 </div>
-                            </div> */}
+                            </div>
                         </div>
                     </Paper >
                 </Container>

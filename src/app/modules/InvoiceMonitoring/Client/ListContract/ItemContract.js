@@ -38,8 +38,8 @@ const TabLists = [
     icon: <i className="fas fa-file-invoice mb-0 mr-2" style={{color: 'inherit'}}></i>,
   },
   {
-    id: 'invoice',
-    label: 'Invoice',
+    id: 'document',
+    label: 'Document',
     icon: <i className="fas fa-receipt mb-0 mr-2" style={{color: 'inherit'}}></i>,
   },
   {
