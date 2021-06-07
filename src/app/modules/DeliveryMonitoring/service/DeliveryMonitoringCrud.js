@@ -9,7 +9,7 @@ export function getDataContracts() {
 }
 
 export function getContractById(id) {
-  return axios.get(`/delivery/contract?id=${id}`);
+  return axios.get(`/delivery/contract/${id}`);
 }
 
 // Tasks
@@ -25,10 +25,6 @@ export function deleteTask(id) {
 }
 
 // Task Item
-export function getAllItems(isService) {
-  return axios.get(`${TEMP_URL}/delivery/item?is_service=${isService}`);
-}
-
 export function getTaskById(taskId) {
   return axios.get(`/delivery/task/${taskId}`);
 }

@@ -186,7 +186,7 @@ export const ContractDetailPage = () => {
     data.forEach((item, index) => {
       const rows = [
         { content: (index += 1) },
-        { content: item.name },
+        { content: item.name, props: { align: 'left' } },
         {
           content:
             item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
@@ -208,7 +208,7 @@ export const ContractDetailPage = () => {
             </Link>
           ),
         },
-        { content: item.task_status.name },
+        { content: item?.task_status?.name },
         {
           content: (
             <div className="d-flex justify-content-between flex-row">
@@ -256,8 +256,10 @@ export const ContractDetailPage = () => {
         data: { data },
       } = await deliveryMonitoring.getContractById(contract_id);
 
-      if (data[0]?.payment_method === 'gradually') {
-        sortTerminByPaymentMethod(data[0]?.tasks);
+      console.log(data);
+
+      if (data?.payment_method === 'gradually') {
+        sortTerminByPaymentMethod(data?.tasks);
       }
 
       dispatch({
@@ -265,7 +267,8 @@ export const ContractDetailPage = () => {
         payload: data,
       });
 
-      generateTableContent(data[0].tasks);
+      console.log(data.tasks);
+      generateTableContent(data?.tasks);
     } catch (error) {
       if (
         error.response?.status !== 400 &&
@@ -496,8 +499,8 @@ export const ContractDetailPage = () => {
 
       <Subheader
         text={
-          dataContractById?.[0]
-            ? `${dataContractById[0].contract_no} - ${dataContractById[0].contract_name}`
+          dataContractById
+            ? `${dataContractById?.contract_no} - ${dataContractById?.contract_name}`
             : null
         }
         IconComponent={
@@ -516,7 +519,7 @@ export const ContractDetailPage = () => {
           },
           {
             label: `${
-              dataContractById?.[0] ? dataContractById[0].contract_name : 'x'
+              dataContractById ? dataContractById?.contract_name : 'x'
             }`,
             to: '/',
           },
@@ -547,7 +550,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor Kontrak"
-                          defaultValue={dataContractById[0]?.contract_no}
+                          defaultValue={dataContractById?.contract_no}
                           disabled
                         />
                       </Col>
@@ -561,7 +564,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Judul Pengadaan"
-                          defaultValue={dataContractById[0]?.contract_name}
+                          defaultValue={dataContractById?.contract_name}
                           disabled
                         />
                       </Col>
@@ -576,7 +579,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Kewenangan"
                           defaultValue={
-                            dataContractById[0]?.authority_group?.alias_name
+                            dataContractById?.authority_group?.alias_name
                           }
                           disabled
                         />
@@ -592,7 +595,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="User"
                           defaultValue={
-                            dataContractById[0]?.user_group?.alias_name
+                            dataContractById?.user_group?.alias_name
                           }
                           disabled
                         />
@@ -610,7 +613,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Nomor PO"
-                          defaultValue={dataContractById[0]?.purch_order_no}
+                          defaultValue={dataContractById?.purch_order_no}
                           disabled
                         />
                       </Col>
@@ -624,7 +627,7 @@ export const ContractDetailPage = () => {
                           required
                           type="text"
                           placeholder="Header Text PO"
-                          defaultValue={dataContractById[0]?.purch_order.name}
+                          defaultValue={dataContractById?.purch_order?.name}
                           disabled
                         />
                       </Col>
@@ -639,7 +642,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Harga Pekerjaan"
                           defaultValue={rupiah(
-                            parseInt(dataContractById[0]?.total_amount)
+                            parseInt(dataContractById?.total_amount)
                           )}
                           disabled
                         />
@@ -655,7 +658,7 @@ export const ContractDetailPage = () => {
                           type="text"
                           placeholder="Penyedia"
                           defaultValue={
-                            dataContractById[0]?.vendor?.party?.full_name
+                            dataContractById?.vendor?.party?.full_name
                           }
                           disabled
                         />
