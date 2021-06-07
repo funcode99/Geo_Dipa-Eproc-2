@@ -110,9 +110,7 @@ const ServiceLevelAgreement = (props) => {
     [filterTable, sortData, filterSort, intl, setToast, paginations]
   );
 
-  useEffect(() => {
-    requestFilterSort();
-  }, [requestFilterSort]);
+  useEffect(requestFilterSort, []);
 
   const openFilterTable = (name, index) => {
     let idFilter = "filter-" + index;
