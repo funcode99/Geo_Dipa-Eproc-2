@@ -20,8 +20,11 @@ import { useSelector, shallowEqual, connect, useDispatch } from "react-redux";
 // );
 // Page Guide Metronic
 
-const UserProfilepage = lazy(() =>
-  import("./modules/UserProfile/UserProfilePage")
+const UserProfilePageClient = lazy(() =>
+  import("./modules/UserProfile/Client/UserProfilePage")
+);
+const UserProfilePageVendor = lazy(() =>
+  import("./modules/UserProfile/Vendor/UserProfilePage")
 );
 const RootDeliveryMonitoring = lazy(() =>
   import("./modules/DeliveryMonitoring/RootDeliveryMonitoring")
@@ -74,7 +77,8 @@ export default function BasePage() {
         <Route path="/e-commerce" component={ECommercePage} /> */}
         {/* Page Guide Metronic */}
 
-        <Route path="/client/user-profile" component={UserProfilepage} />
+        <Route path="/client/user-profile" component={UserProfilePageClient} />
+        <Route path="/vendor/user-profile" component={UserProfilePageVendor} />
         <Route
           path="/client/invoice_monitoring"
           component={RootClientInvoiceMonitoring}

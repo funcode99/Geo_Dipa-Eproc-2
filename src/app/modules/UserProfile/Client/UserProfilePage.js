@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { useSubheader } from "../../../_metronic/layout";
+import { useSubheader } from "../../../../_metronic/layout";
 // import AccountInformation from "./AccountInformation";
 // import { ProfileOverview } from "./ProfileOverview";
 import ChangePassword from "./ChangePassword";

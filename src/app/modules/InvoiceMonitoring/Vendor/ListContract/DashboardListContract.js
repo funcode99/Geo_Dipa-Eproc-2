@@ -20,63 +20,10 @@ import {
 
 function DashboardListContract(props) {
   const { intl } = props;
-
-  const openFilterTable = (name, index) => {
-    let idFilter = "filter-" + index;
-    let idInputFilter = "filter-" + name;
-    let status = document.getElementById(idFilter).getAttribute("status");
-    if (nameStateFilter === "") {
-      setNameStateFilter(idFilter);
-      document.getElementById(idFilter).setAttribute("status", "open");
-      document.getElementById(idFilter).classList.add("open");
-    } else if (nameStateFilter === idFilter) {
-      if (status === "closed") {
-        document.getElementById(idFilter).setAttribute("status", "open");
-        document.getElementById(idFilter).classList.add("open");
-      } else {
-        document.getElementById(idFilter).setAttribute("status", "closed");
-        document.getElementById(idFilter).classList.remove("open");
-        document.getElementById(idInputFilter).value =
-          filterTable[idInputFilter] || "";
-      }
-    } else {
-      document.getElementById(nameStateFilter).setAttribute("status", "closed");
-      document.getElementById(nameStateFilter).classList.remove("open");
-      setNameStateFilter(idFilter);
-      document.getElementById(idFilter).setAttribute("status", "open");
-      document.getElementById(idFilter).classList.add("open");
-    }
-  };
-
-  const updateValueFilter = (property, index) => {
-    let filterTables = filterTable;
-    filterTables["filter-" + property] = document.getElementById(
-      "filter-" + property
-    ).value;
-    setFilterTable({ ...filterTables });
-    openFilterTable(property, index);
-    // requestFilterSort();
-  };
-
-  const resetValueFilter = (property) => {
-    let filterTables = filterTable;
-    filterTables[property] = "";
-    document.getElementById(property).value = "";
-    setFilterTable({ ...filterTables });
-    // requestFilterSort();
-  };
-
-  const resetFilter = () => {
-    setFilterTable({});
-    document.getElementById("filter-form-all").reset();
-    // requestFilterSort({});
-  };
-
   const vendor_id = useSelector(
     (state) => state.auth.user.data.vendor_id,
     shallowEqual
   );
-
   const [filterTable, setFilterTable] = useState({});
   const [contractData, setContractData] = useState([]);
   const [nameStateFilter, setNameStateFilter] = useState("");
@@ -131,10 +78,104 @@ function DashboardListContract(props) {
       type: "text",
     },
   ]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [filterSort, setFilterSort] = useState({ filter: {}, sort: {} });
+  const [sortData, setSortData] = useState({
+    name: "no_contract",
+    order: false,
+  });
+  const [err, setErr] = useState(false);
 
   useEffect(() => {
     getListContractData();
   }, []);
+
+  const openFilterTable = (name, index) => {
+    let idFilter = "filter-" + index;
+    let idInputFilter = "filter-" + name;
+    let status = document.getElementById(idFilter).getAttribute("status");
+    if (nameStateFilter === "") {
+      setNameStateFilter(idFilter);
+      document.getElementById(idFilter).setAttribute("status", "open");
+      document.getElementById(idFilter).classList.add("open");
+    } else if (nameStateFilter === idFilter) {
+      if (status === "closed") {
+        document.getElementById(idFilter).setAttribute("status", "open");
+        document.getElementById(idFilter).classList.add("open");
+      } else {
+        document.getElementById(idFilter).setAttribute("status", "closed");
+        document.getElementById(idFilter).classList.remove("open");
+        document.getElementById(idInputFilter).value =
+          filterTable[idInputFilter] || "";
+      }
+    } else {
+      document.getElementById(nameStateFilter).setAttribute("status", "closed");
+      document.getElementById(nameStateFilter).classList.remove("open");
+      setNameStateFilter(idFilter);
+      document.getElementById(idFilter).setAttribute("status", "open");
+      document.getElementById(idFilter).classList.add("open");
+    }
+  };
+
+  const updateValueFilter = (property, index) => {
+    let filterTables = filterTable;
+    filterTables["filter-" + property] = document.getElementById(
+      "filter-" + property
+    ).value;
+    setFilterTable({ ...filterTables });
+    openFilterTable(property, index);
+    // requestFilterSort();
+  };
+
+  const resetValueFilter = (property) => {
+    let filterTables = filterTable;
+    filterTables[property] = "";
+    document.getElementById(property).value = "";
+    setFilterTable({ ...filterTables });
+    // requestFilterSort();
+  };
+
+  const resetFilter = () => {
+    setFilterTable({});
+    document.getElementById("filter-form-all").reset();
+    // requestFilterSort({});
+  };
+
+  const requestFilterSort = useCallback(
+    (updateFilterTable, updateSortTable) => {
+      setLoading(true);
+      setData([]);
+      let pagination = Object.assign({}, paginations);
+      let filterSorts = filterSort;
+      filterSorts.filter = JSON.stringify(
+        updateFilterTable ? updateFilterTable : filterTable
+      );
+      filterSorts.sort = JSON.stringify(
+        updateSortTable ? updateSortTable : sortData
+      );
+      pagination.page = pagination.page + 1;
+      filterSorts = Object.assign({}, filterSorts, pagination);
+      setFilterSort({ ...filterSorts });
+      let params = new URLSearchParams(filterSorts).toString();
+      // getSla(params)
+      //   .then((result) => {
+      //     setLoading(false);
+      //     setData(result.data.data);
+      //     setPaginations({ ...paginations, count: result.data.count || 0 });
+      //   })
+      //   .catch((err) => {
+      //     setErr(true);
+      //     setLoading(false);
+      //     if (
+      //       err.response?.status !== 400 &&
+      //       err.response?.data.message !== "TokenExpiredError"
+      //     )
+      //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      //   });
+    },
+    [filterTable, sortData, filterSort, intl, setToast, paginations]
+  );
 
   const getListContractData = () => {
     getContractClient()
@@ -284,29 +325,214 @@ function DashboardListContract(props) {
                 <Table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
-                      <th className="bg-primary text-white align-middle td-25 pointer">
+                      <th
+                        className="bg-primary text-white align-middle td-23 pointer"
+                        id="no_contract"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
                         <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
+                          {sortData.name === "no_contract" && (
+                            <span
+                              id="iconSort"
+                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                            >
+                              {sortData.order ? (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Up-2.svg"
+                                  )}
+                                />
+                              ) : (
                           <SVG
                             src={toAbsoluteUrl(
                               "/media/svg/icons/Navigation/Down-2.svg"
                             )}
                           />
+                              )}
+                            </span>
+                          )}
                         </span>
                         Nomor Kontrak
                       </th>
-                      <th className="bg-primary text-white pointer align-middle td-20">
+                      <th
+                        className="bg-primary text-white pointer align-middle td-20"
+                        id="procurement_title"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
+                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
+                          {sortData.name === "procurement_title" && (
+                            <span
+                              id="iconSort"
+                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                            >
+                              {sortData.order ? (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Up-2.svg"
+                                  )}
+                                />
+                              ) : (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Down-2.svg"
+                                  )}
+                                />
+                              )}
+                            </span>
+                          )}
+                        </span>
                         Judul Pengadaan
                       </th>
-                      <th className="bg-primary text-white pointer align-middle td-10">
+                      <th
+                        className="bg-primary text-white pointer align-middle td-12"
+                        id="no_po"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
+                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
+                          {sortData.name === "no_po" && (
+                            <span
+                              id="iconSort"
+                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                            >
+                              {sortData.order ? (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Up-2.svg"
+                                  )}
+                                />
+                              ) : (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Down-2.svg"
+                                  )}
+                                />
+                              )}
+                            </span>
+                          )}
+                        </span>
                         Nomor PO
                       </th>
-                      <th className="bg-primary text-white pointer align-middle td-10">
+                      <th
+                        className="bg-primary text-white pointer align-middle td-10"
+                        id="termin"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
+                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
+                          {sortData.name === "termin" && (
+                            <span
+                              id="iconSort"
+                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                            >
+                              {sortData.order ? (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Up-2.svg"
+                                  )}
+                                />
+                              ) : (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Down-2.svg"
+                                  )}
+                                />
+                              )}
+                            </span>
+                          )}
+                        </span>
                         Termin
                       </th>
-                      <th className="bg-primary text-white pointer align-middle td-15">
+                      <th
+                        className="bg-primary text-white pointer align-middle td-15"
+                        id="no_sa"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
+                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
+                          {sortData.name === "no_sa" && (
+                            <span
+                              id="iconSort"
+                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                            >
+                              {sortData.order ? (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Up-2.svg"
+                                  )}
+                                />
+                              ) : (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Down-2.svg"
+                                  )}
+                                />
+                              )}
+                            </span>
+                          )}
+                        </span>
                         Nomor SA
                       </th>
-                      <th className="bg-primary text-white pointer align-middle td-17">
+                      <th
+                        className="bg-primary text-white pointer align-middle td-17"
+                        id="no_invoice"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
+                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
+                          {sortData.name === "no_invoice" && (
+                            <span
+                              id="iconSort"
+                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                            >
+                              {sortData.order ? (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Up-2.svg"
+                                  )}
+                                />
+                              ) : (
+                                <SVG
+                                  src={toAbsoluteUrl(
+                                    "/media/svg/icons/Navigation/Down-2.svg"
+                                  )}
+                                />
+                              )}
+                            </span>
+                          )}
+                        </span>
                         Nomor Invoice
                       </th>
                       <th className="bg-primary text-white align-middle td-3">

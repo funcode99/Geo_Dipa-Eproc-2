@@ -10,9 +10,9 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 // import SVG from "react-inlinesvg";
-import { ModalProgressBar } from "../../../_metronic/_partials/controls";
+import { ModalProgressBar } from "../../../../_metronic/_partials/controls";
 // import { toAbsoluteUrl } from "../../../_metronic/_helpers";
-import * as auth from "../Auth";
+import * as auth from "../../Auth";
 import { updatePassword } from "./_redux/authCrud";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Alert } from "react-bootstrap";
@@ -201,7 +201,7 @@ function ChangePassword(props) {
             {formik.isSubmitting}
           </button>
           <Link
-            to="/client/user-profile/personal-information"
+            to="/vendor/user-profile/personal-information"
             className="btn btn-secondary"
           >
             <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.SUBMIT_BUTTON.CANCEL_CHANGES" />

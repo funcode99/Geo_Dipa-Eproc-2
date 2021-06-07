@@ -75,6 +75,41 @@ const ServiceLevelAgreement = (props) => {
     shallowEqual
   );
 
+  const requestFilterSort = useCallback(
+    (updateFilterTable, updateSortTable) => {
+      setLoading(true);
+      setData([]);
+      let pagination = Object.assign({}, paginations);
+      let filterSorts = filterSort;
+      filterSorts.filter = JSON.stringify(
+        updateFilterTable ? updateFilterTable : filterTable
+      );
+      filterSorts.sort = JSON.stringify(
+        updateSortTable ? updateSortTable : sortData
+      );
+      pagination.page = pagination.page + 1;
+      filterSorts = Object.assign({}, filterSorts, pagination);
+      setFilterSort({ ...filterSorts });
+      let params = new URLSearchParams(filterSorts).toString();
+      getSla(params)
+        .then((result) => {
+          setLoading(false);
+          setData(result.data.data);
+          setPaginations({ ...paginations, count: result.data.count || 0 });
+        })
+        .catch((err) => {
+          setErr(true);
+          setLoading(false);
+          if (
+            err.response?.status !== 400 &&
+            err.response?.data.message !== "TokenExpiredError"
+          )
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        });
+    },
+    [filterTable, sortData, filterSort, intl, setToast, paginations]
+  );
+
   useEffect(() => {
     requestFilterSort();
   }, [requestFilterSort]);
@@ -129,41 +164,6 @@ const ServiceLevelAgreement = (props) => {
     document.getElementById("filter-form-all").reset();
     requestFilterSort({});
   };
-
-  const requestFilterSort = useCallback(
-    (updateFilterTable, updateSortTable) => {
-      setLoading(true);
-      setData([]);
-      let pagination = Object.assign({}, paginations);
-      let filterSorts = filterSort;
-      filterSorts.filter = JSON.stringify(
-        updateFilterTable ? updateFilterTable : filterTable
-      );
-      filterSorts.sort = JSON.stringify(
-        updateSortTable ? updateSortTable : sortData
-      );
-      pagination.page = pagination.page + 1;
-      filterSorts = Object.assign({}, filterSorts, pagination);
-      setFilterSort({ ...filterSorts });
-      let params = new URLSearchParams(filterSorts).toString();
-      getSla(params)
-        .then((result) => {
-          setLoading(false);
-          setData(result.data.data);
-          setPaginations({ ...paginations, count: result.data.count || 0 });
-        })
-        .catch((err) => {
-          setErr(true);
-          setLoading(false);
-          if (
-            err.response?.status !== 400 &&
-            err.response?.data.message !== "TokenExpiredError"
-          )
-            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-        });
-    },
-    [filterTable, sortData, filterSort, intl, setToast, paginations]
-  );
 
   const sendUpdate = () => {
     setOnSubmit(true);
