@@ -862,6 +862,20 @@ function ItemContractSummary(props) {
                 </div>
               </div>
               <div className="form-group row">
+                <label htmlFor="first" className="col-sm-4 col-form-label">
+                  Authorization Invoice
+                </label>
+                <div className="col-sm-8">
+                  <select className="custom-select custom-select-sm">
+                    <option selected hidden>
+                      Pilih
+                    </option>
+                    <option className="1">Pusat</option>
+                    <option className="2">Unit</option>
+                  </select>
+                </div>
+              </div>
+              <div className="form-group row">
                 <label htmlFor="second" className="col-sm-4 col-form-label">
                   Pihak Kedua
                 </label>
