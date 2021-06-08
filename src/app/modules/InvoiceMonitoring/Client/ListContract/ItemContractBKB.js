@@ -1,12 +1,6 @@
-import React, {
-  // useState,
-  useEffect,
-} from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import {
-  // FormattedMessage,
-  injectIntl,
-} from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Card,
   CardBody,
@@ -14,21 +8,14 @@ import {
   CardHeader,
   CardHeaderToolbar,
 } from "../../../../../_metronic/_partials/controls";
-import // Table,
-// Form,
-// Col,
-// Row,
-// Pagination
-"react-bootstrap";
-import // Dialog,
-// DialogActions,
-// DialogContent,
-// DialogTitle,
-// Slide
-"@material-ui/core";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import { QRCodeG } from "../../../../components/qrCodeGenerate/QRCodeGenerate";
 
 function ItemContractBKB(props) {
+  const [styleCustom] = React.useState({
+    heightAppvDiv: 145,
+    minHeightAppv: 80,
+  });
   useEffect(() => {});
 
   const print = () => {
@@ -52,7 +39,8 @@ function ItemContractBKB(props) {
               onClick={print}
               className="btn btn-sm btn-primary"
             >
-              <i className="fas fa-print"></i>Cetak BKB
+              <i className="fas fa-print"></i>
+              <FormattedMessage id="TITLE.PRINT" /> BKB
             </button>
           </CardHeaderToolbar>
         </CardHeader>
@@ -78,7 +66,9 @@ function ItemContractBKB(props) {
                 </div>
                 <div className="row">
                   <div className="col-md-6 border d-flex justify-content-between">
-                    <span>Tanggal</span>
+                    <span>
+                      <FormattedMessage id="TITLE.DATE" />
+                    </span>
                     <span>:</span>
                   </div>
                   <div className="col-md-6 border text-center font-weight-bold">
@@ -99,7 +89,7 @@ function ItemContractBKB(props) {
                 </div>
                 <div>
                   <span className="font-weight-bold">
-                    BUKTI PEMBAYARAN BANK
+                    <FormattedMessage id="TITLE.PROOF_OF_PAYMENT" />
                   </span>
                 </div>
               </div>
@@ -113,19 +103,25 @@ function ItemContractBKB(props) {
               <div className="col-md-2 border">
                 <div className="row">
                   <div className="col d-flex justify-content-between">
-                    <span className="font-weight-bold">Dibayar Kepada</span>
+                    <span className="font-weight-bold">
+                      <FormattedMessage id="TITLE.PAID_TO" />
+                    </span>
                     <span>:</span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col d-flex justify-content-between">
-                    <span className="font-weight-bold">Alamat</span>
+                    <span className="font-weight-bold">
+                      <FormattedMessage id="TITLE.ADDRESS" />
+                    </span>
                     <span>:</span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col d-flex justify-content-between">
-                    <span className="font-weight-bold">Untuk</span>
+                    <span className="font-weight-bold">
+                      <FormattedMessage id="TITLE.FOR" />
+                    </span>
                     <span>:</span>
                   </div>
                 </div>
@@ -160,7 +156,9 @@ function ItemContractBKB(props) {
               <div className="col-md-2">
                 <div className="row border">
                   <div className="col d-flex justify-content-between">
-                    <span className="font-weight-bold">Kode Supplier</span>
+                    <span className="font-weight-bold">
+                      <FormattedMessage id="TITLE.SUPPLIER_CODE" />
+                    </span>
                     <span>:</span>
                   </div>
                 </div>
@@ -175,13 +173,19 @@ function ItemContractBKB(props) {
               <div className="col-md-8 border">
                 <div className="row">
                   <div className="col border-right">
-                    <span className="font-weight-bold">Nama Bank</span>
+                    <span className="font-weight-bold">
+                      <FormattedMessage id="TITLE.BANK_NAME" />
+                    </span>
                   </div>
                   <div className="col border-right">
-                    <span className="font-weight-bold">Nomor Rekening</span>
+                    <span className="font-weight-bold">
+                      <FormattedMessage id="TITLE.ACCOUNT_NUMBER" />
+                    </span>
                   </div>
                   <div className="col">
-                    <span className="font-weight-bold">Refernsi</span>
+                    <span className="font-weight-bold">
+                      <FormattedMessage id="TITLE.REFERENCE" />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -189,7 +193,7 @@ function ItemContractBKB(props) {
             <div className="row">
               <div className="col-md-4" style={{ paddingTop: 10 }}>
                 <span className="font-weight-bold">
-                  Cara Pembayaran (Pilih metode dibawah ini)
+                  <FormattedMessage id="TITLE.PAYMENT_METHOD" />
                 </span>
               </div>
               <div className="col-md-8">
@@ -208,7 +212,9 @@ function ItemContractBKB(props) {
             </div>
             <div className="row mt-3">
               <div className="col-md-2 d-flex justify-content-between">
-                <span className="font-weight-bold">Transfer</span>
+                <span className="font-weight-bold">
+                  <FormattedMessage id="TITLE.TRANSFER" />
+                </span>
                 <div className="form-check">
                   <input
                     className="form-check-input pointer"
@@ -220,7 +226,7 @@ function ItemContractBKB(props) {
               </div>
               <div className="col-md-5 px-0">
                 <label className="font-weight-bold pointer" htmlFor="transfer">
-                  Instruksi Pemindahan Bukuan/Transfer Bank Nomor Surat
+                  <FormattedMessage id="TITLE.TRANSFER.INSTRUCTION" />
                 </label>
               </div>
               <div className="col-md-5 form-group">
@@ -236,7 +242,9 @@ function ItemContractBKB(props) {
             </div>
             <div className="row mt-3">
               <div className="col-md-2 d-flex justify-content-between">
-                <span className="font-weight-bold">Cek/Giro</span>
+                <span className="font-weight-bold">
+                  <FormattedMessage id="TITLE.CEK_OR_GIRO" />
+                </span>
                 <div className="form-check">
                   <input
                     className="form-check-input pointer"
@@ -252,7 +260,7 @@ function ItemContractBKB(props) {
                     className="font-weight-bold pointer col-sm-3 px-0"
                     htmlFor="giro"
                   >
-                    No Cek
+                    <FormattedMessage id="TITLE.CEK_NUMBER" />
                   </label>
                   <div className="col-sm-9">
                     <input
@@ -264,7 +272,9 @@ function ItemContractBKB(props) {
               </div>
               <div className="col-md-6 form-group">
                 <div className="row">
-                  <label className="font-weight-bold col-sm-2">No Giro</label>
+                  <label className="font-weight-bold col-sm-2">
+                    <FormattedMessage id="TITLE.GIRO_NUMBER" />
+                  </label>
                   <div className="col-sm-10">
                     <input
                       type="text"
@@ -278,10 +288,18 @@ function ItemContractBKB(props) {
               <table className="table table-bordered">
                 <thead>
                   <tr>
-                    <td className="td-15 text-center">No. Invoice / PO</td>
-                    <td className="td-15 text-center">Tanggal Invoice</td>
-                    <td className="td-50 text-center">Keterangan</td>
-                    <td className="td-20 text-center">Jumlah Invoice</td>
+                    <td className="td-15 text-center">
+                      <FormattedMessage id="TITLE.NO_INVOICE_PO" />
+                    </td>
+                    <td className="td-15 text-center">
+                      <FormattedMessage id="TITLE.INVOICE_DATE" />
+                    </td>
+                    <td className="td-50 text-center">
+                      <FormattedMessage id="TITLE.INFORMATION" />
+                    </td>
+                    <td className="td-20 text-center">
+                      <FormattedMessage id="TITLE.TOTAL_INVOICE" />
+                    </td>
                   </tr>
                 </thead>
                 <tbody>
@@ -312,7 +330,7 @@ function ItemContractBKB(props) {
                   </tr>
                   <tr>
                     <td colSpan="3" className="text-right">
-                      Kurang:
+                      <FormattedMessage id="TITLE.LESS" />:
                     </td>
                     <td></td>
                   </tr>
@@ -340,7 +358,7 @@ function ItemContractBKB(props) {
                   </tr>
                   <tr>
                     <td colSpan="3" className="text-right">
-                      Denda / Lainnya
+                      <FormattedMessage id="TITLE.FINE_OR_OTHER" />
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
@@ -351,7 +369,7 @@ function ItemContractBKB(props) {
                   </tr>
                   <tr>
                     <td colSpan="3" className="text-right font-weight-bold">
-                      Jumlah bersih yang harus dibayar
+                      <FormattedMessage id="TITLE.NET_TO_PAID" />
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
@@ -365,13 +383,19 @@ function ItemContractBKB(props) {
             </div>
             <div className="row">
               <div className="col-md border text-center">
-                <span>Diarsipkan Oleh:</span>
+                <span>
+                  <FormattedMessage id="TITLE.ARCHIVED_BY" />:
+                </span>
               </div>
               <div className="col-md border text-center">
-                <span>Finance:</span>
+                <span>
+                  <FormattedMessage id="TITLE.FINANCE" />:
+                </span>
               </div>
               <div className="col-md border text-center">
-                <span>Accounting:</span>
+                <span>
+                  <FormattedMessage id="TITLE.ACCOUNTING" />:
+                </span>
               </div>
             </div>
             <div className="row">
@@ -394,19 +418,25 @@ function ItemContractBKB(props) {
               <div className="col-md-7 border">
                 <div className="row border-bottom">
                   <div className="col-md-5 d-flex justify-content-between">
-                    <span>No. Vendor</span>
+                    <span>
+                      <FormattedMessage id="TITLE.NO_VENDOR" />
+                    </span>
                     <span>:</span>
                   </div>
                 </div>
                 <div className="row border-bottom">
                   <div className="col-md-5 d-flex justify-content-between">
-                    <span>No. Dokumen Park AP</span>
+                    <span>
+                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
+                    </span>
                     <span>:</span>
                   </div>
                 </div>
                 <div className="row border-bottom">
                   <div className="col-md-5 d-flex justify-content-between">
-                    <span>No. Dokumen Park BYR</span>
+                    <span>
+                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
+                    </span>
                     <span>:</span>
                   </div>
                 </div>
@@ -414,7 +444,9 @@ function ItemContractBKB(props) {
               <div className="col-md-5 border">
                 <div className="row border-bottom">
                   <div className="col-md text-center">
-                    <span>Keterangan / Catatan</span>
+                    <span>
+                      <FormattedMessage id="TITLE.INFORMATION_OR_NOTE" />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -425,24 +457,32 @@ function ItemContractBKB(props) {
                   <div className="col-md-4 border">
                     <div className="row border">
                       <div className="col-md text-center">
-                        <span>Penerima Cek/Giro</span>
+                        <span>
+                          <FormattedMessage id="TITLE.CEK_OR_GIRO_RECEIVER" />
+                        </span>
                       </div>
                     </div>
                     <div
                       className="row d-flex align-items-end"
-                      style={{ minHeight: 130 }}
+                      style={{ minHeight: 137 }}
                     >
                       <div>
-                        <span style={{ fontSize: 8 }}>Nama: -</span>
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.NAME" />: -
+                        </span>
                         <br />
-                        <span style={{ fontSize: 8 }}>Tanggal:</span>
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.DATE" />:
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div className="col-md-8 border">
                     <div className="row border">
                       <div className="col-md text-center">
-                        <span>Telah disetujui oleh</span>
+                        <span>
+                          <FormattedMessage id="TITLE.APPROVED_BY" />
+                        </span>
                       </div>
                     </div>
                     <div className="row">
@@ -459,30 +499,42 @@ function ItemContractBKB(props) {
                     <div className="row">
                       <div
                         className="col-md border-right"
-                        style={{ minHeight: 83 }}
+                        style={{ height: styleCustom.heightAppvDiv }}
                       >
-                        <div className="text-center" style={{ height: 71 }}>
-                          <img
-                            src={toAbsoluteUrl("/media/frame.png")}
-                            alt="Qr"
-                            style={{ width: 70 }}
-                          />
+                        <div
+                          className="text-center"
+                          style={{
+                            height: styleCustom.minHeightAppv,
+                            paddingTop: 5,
+                            paddingBottom: 5,
+                          }}
+                        >
+                          <QRCodeG value="https://www.geodipa.co.id/" />
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
-                            <span style={{ fontSize: 8 }}>Nama: Test00000</span>
+                            <span style={{ fontSize: 8 }}>
+                              <FormattedMessage id="TITLE.NAME" />: Test00000
+                            </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
-                              Tanggal: 24-Mei-2021
+                              <FormattedMessage id="TITLE.DATE" />: 24/04/2021
                             </span>
                           </div>
                         </div>
                       </div>
                       <div
                         className="col-md border-right"
-                        style={{ minHeight: 83 }}
+                        style={{ height: styleCustom.heightAppvDiv }}
                       >
-                        <div className="text-center" style={{ height: 71 }}>
+                        <div
+                          className="text-center"
+                          style={{
+                            height: styleCustom.minHeightAppv,
+                            paddingTop: 5,
+                            paddingBottom: 5,
+                          }}
+                        >
                           {/* <button
                             type="button"
                             className="btn btn-primary btn-sm"
@@ -497,29 +549,38 @@ function ItemContractBKB(props) {
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
-                            <span style={{ fontSize: 8 }}>Nama: -</span>
+                            <span style={{ fontSize: 8 }}>
+                              <FormattedMessage id="TITLE.NAME" />: -
+                            </span>
                             <br />
-                            <span style={{ fontSize: 8 }}>Tanggal:</span>
+                            <span style={{ fontSize: 8 }}>
+                              <FormattedMessage id="TITLE.DATE" />:
+                            </span>
                           </div>
                         </div>
                       </div>
                       <div
                         className="col-md border-right"
-                        style={{ minHeight: 83 }}
+                        style={{ height: styleCustom.heightAppvDiv }}
                       >
-                        <div className="text-center" style={{ height: 71 }}>
-                          <img
-                            src={toAbsoluteUrl("/media/approved.png")}
-                            alt="IMG"
-                            style={{ width: 80, marginTop: 10 }}
-                          />
+                        <div
+                          className="text-center"
+                          style={{
+                            height: styleCustom.minHeightAppv,
+                            paddingTop: 5,
+                            paddingBottom: 5,
+                          }}
+                        >
+                          <QRCodeG value="https://www.geodipa.co.id/" />
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
-                            <span style={{ fontSize: 8 }}>Nama: Test1234</span>
+                            <span style={{ fontSize: 8 }}>
+                              <FormattedMessage id="TITLE.NAME" />: Test1234
+                            </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
-                              Tanggal: 24-Mei-2021
+                              <FormattedMessage id="TITLE.DATE" />: 24/04/2021
                             </span>
                           </div>
                         </div>
@@ -530,7 +591,9 @@ function ItemContractBKB(props) {
               </div>
               <div className="col-md-5 border">
                 <div className="text-center">
-                  <span>Penanda-tanganan Cek / Giro</span>
+                  <span>
+                    <FormattedMessage id="TITLE.APPROVED_CEK_OR_GIRO" />
+                  </span>
                 </div>
                 <div className="row border-top">
                   <div className="col-md border text-center px-0">
@@ -548,21 +611,139 @@ function ItemContractBKB(props) {
                 </div>
                 <div className="row">
                   <div
-                    className="col-md border-right d-flex align-items-end"
-                    style={{ minHeight: 111 }}
-                  ></div>
+                    className="col-md border-right"
+                    style={{ height: styleCustom.heightAppvDiv }}
+                  >
+                    <div
+                      className="text-center"
+                      style={{
+                        height: styleCustom.minHeightAppv,
+                        paddingTop: 5,
+                        paddingBottom: 5,
+                      }}
+                    >
+                      <QRCodeG value="https://www.geodipa.co.id/" size="60" />
+                    </div>
+                    <div className="d-flex align-items-end">
+                      <div>
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.NAME" />: Test1234
+                        </span>
+                        <br />
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.DATE" />: 24/04/2021
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                   <div
-                    className="col-md border-right d-flex align-items-end"
-                    style={{ minHeight: 111 }}
-                  ></div>
+                    className="col-md border-right"
+                    style={{ height: styleCustom.heightAppvDiv }}
+                  >
+                    <div
+                      className="text-center"
+                      style={{
+                        height: styleCustom.minHeightAppv,
+                        paddingTop: 5,
+                        paddingBottom: 5,
+                      }}
+                    >
+                      {/* <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            style={{ fontSize: 10, marginTop: 20 }}
+                          >
+                            <i
+                              className="fas fa-check-circle"
+                              style={{ fontSize: 10 }}
+                            ></i>
+                            Setuju
+                          </button> */}
+                    </div>
+                    <div className="d-flex align-items-end">
+                      <div>
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.NAME" />: -
+                        </span>
+                        <br />
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.DATE" />:
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                   <div
-                    className="col-md border-right d-flex align-items-end"
-                    style={{ minHeight: 111 }}
-                  ></div>
+                    className="col-md border-right"
+                    style={{ height: styleCustom.heightAppvDiv }}
+                  >
+                    <div
+                      className="text-center"
+                      style={{
+                        height: styleCustom.minHeightAppv,
+                        paddingTop: 5,
+                        paddingBottom: 5,
+                      }}
+                    >
+                      {/* <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            style={{ fontSize: 10, marginTop: 20 }}
+                          >
+                            <i
+                              className="fas fa-check-circle"
+                              style={{ fontSize: 10 }}
+                            ></i>
+                            Setuju
+                          </button> */}
+                    </div>
+                    <div className="d-flex align-items-end">
+                      <div>
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.NAME" />: -
+                        </span>
+                        <br />
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.DATE" />:
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                   <div
-                    className="col-md d-flex align-items-end"
-                    style={{ minHeight: 111 }}
-                  ></div>
+                    className="col-md"
+                    style={{ height: styleCustom.heightAppvDiv }}
+                  >
+                    <div
+                      className="text-center"
+                      style={{
+                        height: styleCustom.minHeightAppv,
+                        paddingTop: 5,
+                        paddingBottom: 5,
+                      }}
+                    >
+                      {/* <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            style={{ fontSize: 10, marginTop: 20 }}
+                          >
+                            <i
+                              className="fas fa-check-circle"
+                              style={{ fontSize: 10 }}
+                            ></i>
+                            Setuju
+                          </button> */}
+                    </div>
+                    <div className="d-flex align-items-end">
+                      <div>
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.NAME" />: -
+                        </span>
+                        <br />
+                        <span style={{ fontSize: 8 }}>
+                          <FormattedMessage id="TITLE.DATE" />:
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
