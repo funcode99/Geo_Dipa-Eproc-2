@@ -53,31 +53,14 @@ const formatGroupLabel = (data) => (
 
 const SelectInputCustom = () => {
   return (
-    <div className="col-md-6">
-      <div className="form-group row">
-        <label htmlFor="first" className="col-sm-4 col-form-label">
-          Authorization Invoice
-        </label>
-        <div className="col-sm-8">
-          {/* <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Control as="select">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </Form.Control>
-          </Form.Group> */}
-          <Select
-            // isMulti
-            value={"optionSelected"}
-            // onChange={(e) => handleSelectChange(e)}
-            options={groupedOptions}
-            formatGroupLabel={formatGroupLabel}
-          />
-        </div>
-      </div>
-    </div>
+    <Select
+      // isMulti
+      value={"optionSelected"}
+      // onChange={(e) => handleSelectChange(e)}
+      options={groupedOptions}
+      formatGroupLabel={formatGroupLabel}
+      menuPosition={"fixed"}
+    />
   );
 };
 
