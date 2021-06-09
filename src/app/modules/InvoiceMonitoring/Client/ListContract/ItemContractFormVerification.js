@@ -33,15 +33,14 @@ function ItemContractFormVerification(props) {
   useEffect(() => {});
 
   const print = () => {
-    var printContents = document.getElementById("printFormVerifikaction")
-      .innerHTML;
-    document.getElementById("root").style.display = "none";
-    document.getElementById("print-content").classList.add("p-5");
-    document.getElementById("print-content").innerHTML = printContents;
+    var printContents = window.$("#printFormVerifikaction").html();
+    window.$("#root").css("display", "none");
+    window.$("#print-content").addClass("p-5");
+    window.$("#print-content").html(printContents);
     window.print();
-    document.getElementById("root").removeAttribute("style");
-    document.getElementById("print-content").classList.remove("p-5");
-    document.getElementById("print-content").innerHTML = "";
+    window.$("#root").removeAttr("style");
+    window.$("#print-content").removeClass("p-5");
+    window.$("#print-content").html("");
   };
 
   return (
@@ -62,21 +61,21 @@ function ItemContractFormVerification(props) {
         <CardBody id="printFormVerifikaction">
           <div>
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-sm-12">
                 <h6 className="text-uppercase text-center">
                   Kelengkapan Invoice
                 </h6>
               </div>
             </div>
             <div className="row">
-              <div className="col-md-4 d-flex align-items-center">
+              <div className="col-sm-4 d-flex align-items-center">
                 <img
                   src={toAbsoluteUrl("/media/logos/logo-eprocurement.png")}
                   style={{ width: 300 }}
                   alt="IconGde"
                 />
               </div>
-              <div className="col-md-8">
+              <div className="col-sm-8">
                 <div className="form-group row mb-1">
                   <label className="col-sm-4 col-form-label">Nama Vendor</label>
                   <div className="col-sm-8">
@@ -141,20 +140,20 @@ function ItemContractFormVerification(props) {
             </div>
             <div className="mt-3">
               <div className="row">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <h6 className="font-weight-bold">
                     Lampiran Dokumen Pembayaran
                   </h6>
                 </div>
-                <div className="col-md-3">
+                <div className="col-sm-3">
                   <h6 className="font-weight-bold">Tanggal Dokumen</h6>
                 </div>
-                <div className="col-md-5">
+                <div className="col-sm-5">
                   <h6 className="font-weight-bold">Keterangan</h6>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -162,15 +161,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Surat Permohonan Pembayaran</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span>12 Januari 2020</span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span>Test</span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -178,15 +177,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Kwitansi Rangkap 4</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -194,15 +193,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Invoice Rangkap 4</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span>12 Januari 2020</span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span>Test</span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -210,15 +209,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Faktur Pajak 3 Lembar</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span>12 Januari 2020</span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span>Test</span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -226,15 +225,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Copy NPWP</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -242,15 +241,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Purchase Order (PO)</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -260,15 +259,15 @@ function ItemContractFormVerification(props) {
                     Surat Perjanjian (Kontrak) bermaterai
                   </span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -278,15 +277,15 @@ function ItemContractFormVerification(props) {
                     Berita Acara Pelaksanaan Pekerjaan
                   </span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -294,15 +293,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Berita Acara Pemeriksaan Mutu</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -312,15 +311,15 @@ function ItemContractFormVerification(props) {
                     Berita Acara Serah Terima Pekerjaan
                   </span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -332,15 +331,15 @@ function ItemContractFormVerification(props) {
                   <span>/</span>
                   <span>Service Acceptance</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -348,15 +347,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Surat Garansi Barang</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -364,15 +363,15 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">COO/COM</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-4">
+                <div className="col-sm-4">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -380,49 +379,49 @@ function ItemContractFormVerification(props) {
                   />
                   <span className="ml-2">Lainnya</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-2">
-                <div className="col-md-4 border-bottom">
+                <div className="col-sm-4 border-bottom">
                   <span>1. Test</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span>12 Desember 2020</span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span>Test</span>
                 </div>
               </div>
               <div className="row mt-2">
-                <div className="col-md-4 border-bottom">
+                <div className="col-sm-4 border-bottom">
                   <span>2.</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
               <div className="row mt-2">
-                <div className="col-md-4 border-bottom">
+                <div className="col-sm-4 border-bottom">
                   <span>3.</span>
                 </div>
-                <div className="col-md-3 border-bottom">
+                <div className="col-sm-3 border-bottom">
                   <span></span>
                 </div>
-                <div className="col-md-5 border-bottom">
+                <div className="col-sm-5 border-bottom">
                   <span></span>
                 </div>
               </div>
             </div>
             <div className="row mt-4">
-              <div className="col-md-12">
+              <div className="col-sm-12">
                 <span className="font-italic">
                   *Proses pembayaran dihitung sejak dokumen penagihan diterima
                   dengan lengkap
@@ -430,14 +429,14 @@ function ItemContractFormVerification(props) {
               </div>
             </div>
             <div className="row mt-5">
-              <div className="col-md-6">
+              <div className="col-sm-6">
                 <span>Disertakan Oleh</span>
                 <div
                   className="w-50 border-bottom"
                   style={{ minHeight: 80 }}
                 ></div>
               </div>
-              <div className="col-md-6">
+              <div className="col-sm-6">
                 <span>DIterima Oleh</span>
                 <div
                   className="w-50 border-bottom"
