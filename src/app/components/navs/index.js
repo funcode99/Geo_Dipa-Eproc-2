@@ -1,18 +1,23 @@
-import React from 'react';
-import { Nav } from 'react-bootstrap';
+import React from "react";
+import { Nav } from "react-bootstrap";
 
 const initialNavLists = [
-  { id: 'link-item-1', label: 'Item 1' },
-  { id: 'link-item-2', label: 'Item 2' },
-  { id: 'link-item-3', label: 'Item 3' },
+  { id: "link-item-1", label: "Item 1" },
+  { id: "link-item-2", label: "Item 2" },
+  { id: "link-item-3", label: "Item 3" },
 ];
 
-export default function Navs({ navLists = initialNavLists, handleSelect }) {
+export default function Navs({
+  navLists = initialNavLists,
+  handleSelect,
+  ...other
+}) {
   return (
     <Nav
       variant="pills"
       defaultActiveKey={navLists[0].id}
       onSelect={handleSelect}
+      {...other}
     >
       {navLists.map((item) => (
         <Nav.Item key={item.id}>
