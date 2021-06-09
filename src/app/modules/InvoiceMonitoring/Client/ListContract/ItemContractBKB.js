@@ -19,14 +19,14 @@ function ItemContractBKB(props) {
   useEffect(() => {});
 
   const print = () => {
-    var printContents = document.getElementById("printBkb").innerHTML;
-    document.getElementById("root").style.display = "none";
-    document.getElementById("print-content").classList.add("p-5");
-    document.getElementById("print-content").innerHTML = printContents;
+    var printContents = window.$("#printBkb").html();
+    window.$("#root").css("display", "none");
+    window.$("#print-content").addClass("p-5");
+    window.$("#print-content").html(printContents);
     window.print();
-    document.getElementById("root").removeAttribute("style");
-    document.getElementById("print-content").classList.remove("p-5");
-    document.getElementById("print-content").innerHTML = "";
+    window.$("#root").removeAttr("style");
+    window.$("#print-content").removeClass("p-5");
+    window.$("#print-content").html("");
   };
 
   return (
@@ -47,43 +47,43 @@ function ItemContractBKB(props) {
         <CardBody id="printBkb">
           <div>
             <div className="row">
-              <div className="col-md-8">
+              <div className="col-sm-8">
                 <img
                   src={toAbsoluteUrl("/media/logos/logo-eprocurement.png")}
                   style={{ width: 150 }}
                   alt="IconGde"
                 />
               </div>
-              <div className="col-md-4">
+              <div className="col-sm-4">
                 <div className="row">
-                  <div className="col-md-6 border d-flex justify-content-between">
+                  <div className="col-sm-6 border d-flex justify-content-between">
                     <span>No</span>
                     <span>:</span>
                   </div>
-                  <div className="col-md-6 border text-center font-weight-bold">
+                  <div className="col-sm-6 border text-center font-weight-bold">
                     <span>863</span>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-6 border d-flex justify-content-between">
+                  <div className="col-sm-6 border d-flex justify-content-between">
                     <span>
                       <FormattedMessage id="TITLE.DATE" />
                     </span>
                     <span>:</span>
                   </div>
-                  <div className="col-md-6 border text-center font-weight-bold">
+                  <div className="col-sm-6 border text-center font-weight-bold">
                     <span>20 Mei 2020</span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="row">
-              <div className="col-md-2 border text-center">
+              <div className="col-sm-2 border text-center">
                 <h2 className="mb-0" style={{ marginTop: 5 }}>
                   BKB
                 </h2>
               </div>
-              <div className="col-md-8 border text-center">
+              <div className="col-sm-8 border text-center">
                 <div>
                   <span className="font-weight-bold">PT GEO DIPA ENERGI</span>
                 </div>
@@ -93,14 +93,14 @@ function ItemContractBKB(props) {
                   </span>
                 </div>
               </div>
-              <div className="col-md-2 border text-center">
+              <div className="col-sm-2 border text-center">
                 <h2 className="mb-0" style={{ marginTop: 5 }}>
                   PST
                 </h2>
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-md-2 border">
+              <div className="col-sm-2 border">
                 <div className="row">
                   <div className="col d-flex justify-content-between">
                     <span className="font-weight-bold">
@@ -126,7 +126,7 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-md-10 border">
+              <div className="col-sm-10 border">
                 <div className="row">
                   <div className="col">
                     <span className="font-weight-bold">
@@ -153,7 +153,7 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row">
-              <div className="col-md-2">
+              <div className="col-sm-2">
                 <div className="row border">
                   <div className="col d-flex justify-content-between">
                     <span className="font-weight-bold">
@@ -163,14 +163,14 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-md-2">
+              <div className="col-sm-2">
                 <div className="row border">
                   <div className="col">
                     <span className="font-weight-bold">1234567</span>
                   </div>
                 </div>
               </div>
-              <div className="col-md-8 border">
+              <div className="col-sm-8 border">
                 <div className="row">
                   <div className="col border-right">
                     <span className="font-weight-bold">
@@ -191,12 +191,12 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row">
-              <div className="col-md-4" style={{ paddingTop: 10 }}>
+              <div className="col-sm-4" style={{ paddingTop: 10 }}>
                 <span className="font-weight-bold">
                   <FormattedMessage id="TITLE.PAYMENT_METHOD" />
                 </span>
               </div>
-              <div className="col-md-8">
+              <div className="col-sm-8">
                 <div className="row">
                   <div className="col border">
                     <span className="">Bank Citibank</span>
@@ -211,7 +211,7 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-md-2 d-flex justify-content-between">
+              <div className="col-sm-2 d-flex justify-content-between">
                 <span className="font-weight-bold">
                   <FormattedMessage id="TITLE.TRANSFER" />
                 </span>
@@ -224,12 +224,12 @@ function ItemContractBKB(props) {
                   />
                 </div>
               </div>
-              <div className="col-md-5 px-0">
+              <div className="col-sm-5 px-0">
                 <label className="font-weight-bold pointer" htmlFor="transfer">
                   <FormattedMessage id="TITLE.TRANSFER.INSTRUCTION" />
                 </label>
               </div>
-              <div className="col-md-5 form-group">
+              <div className="col-sm-5 form-group">
                 <div className="row">
                   <div className="col">
                     <input
@@ -241,7 +241,7 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-md-2 d-flex justify-content-between">
+              <div className="col-sm-2 d-flex justify-content-between">
                 <span className="font-weight-bold">
                   <FormattedMessage id="TITLE.CEK_OR_GIRO" />
                 </span>
@@ -254,7 +254,7 @@ function ItemContractBKB(props) {
                   />
                 </div>
               </div>
-              <div className="col-md-4 form-group">
+              <div className="col-sm-4 form-group">
                 <div className="row">
                   <label
                     className="font-weight-bold pointer col-sm-3 px-0"
@@ -270,7 +270,7 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-md-6 form-group">
+              <div className="col-sm-6 form-group">
                 <div className="row">
                   <label className="font-weight-bold col-sm-2">
                     <FormattedMessage id="TITLE.GIRO_NUMBER" />
@@ -382,17 +382,17 @@ function ItemContractBKB(props) {
               </table>
             </div>
             <div className="row">
-              <div className="col-md border text-center">
+              <div className="col-sm border text-center">
                 <span>
                   <FormattedMessage id="TITLE.ARCHIVED_BY" />:
                 </span>
               </div>
-              <div className="col-md border text-center">
+              <div className="col-sm border text-center">
                 <span>
                   <FormattedMessage id="TITLE.FINANCE" />:
                 </span>
               </div>
-              <div className="col-md border text-center">
+              <div className="col-sm border text-center">
                 <span>
                   <FormattedMessage id="TITLE.ACCOUNTING" />:
                 </span>
@@ -400,24 +400,24 @@ function ItemContractBKB(props) {
             </div>
             <div className="row">
               <div
-                className="col-md border d-flex align-items-end"
+                className="col-sm border d-flex align-items-end"
                 style={{ height: 80 }}
               >
                 <span className="mx-auto">Merry</span>
               </div>
               <div
-                className="col-md border text-center"
+                className="col-sm border text-center"
                 style={{ height: 80 }}
               ></div>
               <div
-                className="col-md border text-center"
+                className="col-sm border text-center"
                 style={{ height: 80 }}
               ></div>
             </div>
             <div className="row mt-3" style={{ minHeight: 300 }}>
-              <div className="col-md-7 border">
+              <div className="col-sm-7 border">
                 <div className="row border-bottom">
-                  <div className="col-md-5 d-flex justify-content-between">
+                  <div className="col-sm-5 d-flex justify-content-between">
                     <span>
                       <FormattedMessage id="TITLE.NO_VENDOR" />
                     </span>
@@ -425,7 +425,7 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
                 <div className="row border-bottom">
-                  <div className="col-md-5 d-flex justify-content-between">
+                  <div className="col-sm-5 d-flex justify-content-between">
                     <span>
                       <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
                     </span>
@@ -433,7 +433,7 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
                 <div className="row border-bottom">
-                  <div className="col-md-5 d-flex justify-content-between">
+                  <div className="col-sm-5 d-flex justify-content-between">
                     <span>
                       <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
                     </span>
@@ -441,9 +441,9 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-md-5 border">
+              <div className="col-sm-5 border">
                 <div className="row border-bottom">
-                  <div className="col-md text-center">
+                  <div className="col-sm text-center">
                     <span>
                       <FormattedMessage id="TITLE.INFORMATION_OR_NOTE" />
                     </span>
@@ -452,11 +452,11 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-md-7">
+              <div className="col-sm-7">
                 <div className="row">
-                  <div className="col-md-4 border">
+                  <div className="col-sm-4 border">
                     <div className="row border">
-                      <div className="col-md text-center">
+                      <div className="col-sm text-center">
                         <span>
                           <FormattedMessage id="TITLE.CEK_OR_GIRO_RECEIVER" />
                         </span>
@@ -477,28 +477,28 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-8 border">
+                  <div className="col-sm-8 border">
                     <div className="row border">
-                      <div className="col-md text-center">
+                      <div className="col-sm text-center">
                         <span>
                           <FormattedMessage id="TITLE.APPROVED_BY" />
                         </span>
                       </div>
                     </div>
                     <div className="row">
-                      <div className="col-md border text-center px-0">
+                      <div className="col-sm border text-center px-0">
                         <span style={{ fontSize: 10 }}>Tax &amp; Ass Man</span>
                       </div>
-                      <div className="col-md border text-center px-0">
+                      <div className="col-sm border text-center px-0">
                         <span style={{ fontSize: 10 }}>Finance Manager</span>
                       </div>
-                      <div className="col-md border text-center px-0">
+                      <div className="col-sm border text-center px-0">
                         <span style={{ fontSize: 10 }}>Direktur Keuangan</span>
                       </div>
                     </div>
                     <div className="row">
                       <div
-                        className="col-md border-right"
+                        className="col-sm border-right"
                         style={{ height: styleCustom.heightAppvDiv }}
                       >
                         <div
@@ -524,7 +524,7 @@ function ItemContractBKB(props) {
                         </div>
                       </div>
                       <div
-                        className="col-md border-right"
+                        className="col-sm border-right"
                         style={{ height: styleCustom.heightAppvDiv }}
                       >
                         <div
@@ -560,7 +560,7 @@ function ItemContractBKB(props) {
                         </div>
                       </div>
                       <div
-                        className="col-md border-right"
+                        className="col-sm border-right"
                         style={{ height: styleCustom.heightAppvDiv }}
                       >
                         <div
@@ -589,29 +589,29 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-md-5 border">
+              <div className="col-sm-5 border">
                 <div className="text-center">
                   <span>
                     <FormattedMessage id="TITLE.APPROVED_CEK_OR_GIRO" />
                   </span>
                 </div>
                 <div className="row border-top">
-                  <div className="col-md border text-center px-0">
+                  <div className="col-sm border text-center px-0">
                     <span style={{ fontSize: 10 }}>Dirut</span>
                   </div>
-                  <div className="col-md border text-center px-0">
+                  <div className="col-sm border text-center px-0">
                     <span style={{ fontSize: 10 }}>Dirkeu</span>
                   </div>
-                  <div className="col-md border text-center px-0">
+                  <div className="col-sm border text-center px-0">
                     <span style={{ fontSize: 10 }}>Dir</span>
                   </div>
-                  <div className="col-md border text-center px-0">
+                  <div className="col-sm border text-center px-0">
                     <span style={{ fontSize: 10 }}>Fin Mgr</span>
                   </div>
                 </div>
                 <div className="row">
                   <div
-                    className="col-md border-right"
+                    className="col-sm border-right"
                     style={{ height: styleCustom.heightAppvDiv }}
                   >
                     <div
@@ -637,7 +637,7 @@ function ItemContractBKB(props) {
                     </div>
                   </div>
                   <div
-                    className="col-md border-right"
+                    className="col-sm border-right"
                     style={{ height: styleCustom.heightAppvDiv }}
                   >
                     <div
@@ -673,7 +673,7 @@ function ItemContractBKB(props) {
                     </div>
                   </div>
                   <div
-                    className="col-md border-right"
+                    className="col-sm border-right"
                     style={{ height: styleCustom.heightAppvDiv }}
                   >
                     <div
@@ -709,7 +709,7 @@ function ItemContractBKB(props) {
                     </div>
                   </div>
                   <div
-                    className="col-md"
+                    className="col-sm"
                     style={{ height: styleCustom.heightAppvDiv }}
                   >
                     <div

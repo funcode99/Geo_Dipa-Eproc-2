@@ -9,7 +9,7 @@ import { Alert } from "react-bootstrap";
 
 function PersonaInformation(props) {
   const { intl } = props;
-  const [loading, setloading] = useState(false);
+  const [loading] = useState(false);
   const [alert, setAlert] = useState({
     status: false,
     message: "",
