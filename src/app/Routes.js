@@ -17,6 +17,10 @@ const UserNewAccountHomePage = lazy(() =>
   import("./modules/UserCreate/CreateNewAccountHome")
 );
 
+const VerificationQrCode = lazy(() =>
+  import("./modules/VerificationQrCode/VerificationQrCode")
+);
+
 export function Routes() {
   const { isAuthorized } = useSelector(
     ({ auth }) => ({
@@ -28,6 +32,7 @@ export function Routes() {
   return (
     <Switch>
       <Route path="/create-account" component={UserNewAccountHomePage} />
+      <Route path="/qrcode" component={VerificationQrCode} />
       {!isAuthorized ? (
         /*Render auth page when user at `/auth` and not authorized.*/
         <Route>

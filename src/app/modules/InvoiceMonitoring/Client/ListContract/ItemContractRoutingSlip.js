@@ -33,14 +33,14 @@ function ItemContractRoutingSlip(props) {
   useEffect(() => {});
 
   const print = () => {
-    var printContents = document.getElementById("printRoutingSlip").innerHTML;
-    document.getElementById("root").style.display = "none";
-    document.getElementById("print-content").classList.add("p-5");
-    document.getElementById("print-content").innerHTML = printContents;
+    var printContents = window.$("#printRoutingSlip").html();
+    window.$("#root").css("display", "none");
+    window.$("#print-content").addClass("p-5");
+    window.$("#print-content").html(printContents);
     window.print();
-    document.getElementById("root").removeAttribute("style");
-    document.getElementById("print-content").classList.remove("p-5");
-    document.getElementById("print-content").innerHTML = "";
+    window.$("#root").removeAttr("style");
+    window.$("#print-content").removeClass("p-5");
+    window.$("#print-content").html("");
   };
 
   return (
@@ -61,7 +61,7 @@ function ItemContractRoutingSlip(props) {
         <CardBody id="printRoutingSlip">
           <div>
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-sm-12">
                 <div className="d-flex justify-content-center">
                   <div>
                     <img
@@ -77,28 +77,28 @@ function ItemContractRoutingSlip(props) {
               </div>
             </div>
             <div className="row mt-5">
-              <div className="col-md-12">
+              <div className="col-sm-12">
                 <div className="row">
-                  <div className="col-md-2">
+                  <div className="col-sm-2">
                     <span>Nama Supplier</span>
                   </div>
-                  <div className="col-md-10">
+                  <div className="col-sm-10">
                     <span>PT. Ecolab International Indonesia</span>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-2">
+                  <div className="col-sm-2">
                     <span>No. Invoice</span>
                   </div>
-                  <div className="col-md-10">
+                  <div className="col-sm-10">
                     <span>249714 / 8000005793</span>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-2">
+                  <div className="col-sm-2">
                     <span>Tanggal Invoice</span>
                   </div>
-                  <div className="col-md-10">
+                  <div className="col-sm-10">
                     <span>12 Maret 2021</span>
                   </div>
                 </div>
@@ -133,21 +133,21 @@ function ItemContractRoutingSlip(props) {
             </div>
             <div className="row border">
               <div
-                className="col-md border-right text-center"
+                className="col-sm border-right text-center"
                 style={{ backgroundColor: "whitesmoke" }}
               >
                 <span style={{ fontSize: 10 }}>Diisi Oleh</span>
                 <div>Finance</div>
               </div>
               <div
-                className="col-md border-right text-center"
+                className="col-sm border-right text-center"
                 style={{ backgroundColor: "whitesmoke" }}
               >
                 <span style={{ fontSize: 10 }}>Diisi Oleh</span>
                 <div>Budget</div>
               </div>
               <div
-                className="col-md text-center"
+                className="col-sm text-center"
                 style={{ backgroundColor: "whitesmoke" }}
               >
                 <span style={{ fontSize: 10 }}>Diisi Oleh</span>
@@ -155,209 +155,209 @@ function ItemContractRoutingSlip(props) {
               </div>
             </div>
             <div className="row border">
-              <div className="col-md border-right text-center">
+              <div className="col-sm border-right text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>Uraian</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>Jumlah</span>
                   </div>
                 </div>
               </div>
-              <div className="col-md border-right text-center">
+              <div className="col-sm border-right text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>Kode Anggaran</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>Jumlah</span>
                   </div>
                 </div>
               </div>
-              <div className="col-md text-center">
+              <div className="col-sm text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>Kode Akun</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>Jumlah</span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="row border">
-              <div className="col-md border-right text-left">
+              <div className="col-sm border-right text-left">
                 <div className="row mt-3">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>1. Tagihan</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>171.666.000</span>
                   </div>
                 </div>
                 <div className="row mt-3">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span className="pl-3">PPN (10%)</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>(15.606.000)</span>
                   </div>
                 </div>
                 <div className="row mt-3">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>2. Potongan</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     {/* <span>171.666.000</span> */}
                   </div>
                 </div>
                 <div className="row mt-3">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span className="pl-3">PPh 23 (2%)</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>(3.121.200)</span>
                   </div>
                 </div>
                 <div className="row mt-3">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span className="pl-3">PPh 22 (1.5%)</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>-</span>
                   </div>
                 </div>
                 <div className="row mt-3">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span className="pl-3">Denda</span>
                   </div>
-                  <div className="col-md-6">{/* <span>-</span> */}</div>
+                  <div className="col-sm-6">{/* <span>-</span> */}</div>
                 </div>
                 <div className="row mt-3">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span className="pl-5">Saldo</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>-</span>
                   </div>
                 </div>
                 <div className="row mt-3">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>3. Jumlah Dibayar</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>152.938.800</span>
                   </div>
                 </div>
               </div>
-              <div className="col-md border-right text-left">
+              <div className="col-sm border-right text-left">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     {/* <span>Kode Anggaran</span> */}
                   </div>
-                  <div className="col-md-6">{/* <span>Jumlah</span> */}</div>
+                  <div className="col-sm-6">{/* <span>Jumlah</span> */}</div>
                 </div>
               </div>
-              <div className="col-md text-left">
+              <div className="col-sm text-left">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     {/* <span>Kode Akun</span> */}
                   </div>
-                  <div className="col-md-6">{/* <span>Jumlah</span> */}</div>
+                  <div className="col-sm-6">{/* <span>Jumlah</span> */}</div>
                 </div>
               </div>
             </div>
             <div className="row border">
-              <div className="col-md border-right text-center">
+              <div className="col-sm border-right text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>Tanggal Masuk</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>Tanggal Keluar</span>
                   </div>
                 </div>
               </div>
-              <div className="col-md border-right text-center">
+              <div className="col-sm border-right text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>Tanggal Masuk</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>Tanggal Keluar</span>
                   </div>
                 </div>
               </div>
-              <div className="col-md text-center">
+              <div className="col-sm text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>Tanggal Masuk</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>Tanggal Keluar</span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="row border">
-              <div className="col-md border-right text-center">
+              <div className="col-sm border-right text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span>20 Mei 2020</span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span>20 Mei 2020</span>
                   </div>
                 </div>
               </div>
-              <div className="col-md border-right text-center">
+              <div className="col-sm border-right text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span></span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span></span>
                   </div>
                 </div>
               </div>
-              <div className="col-md text-center">
+              <div className="col-sm text-center">
                 <div className="row">
-                  <div className="col-md-6 border-right">
+                  <div className="col-sm-6 border-right">
                     <span></span>
                   </div>
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <span></span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="row border">
-              <div className="col-md border-right text-center">
+              <div className="col-sm border-right text-center">
                 <span>Tanda Tangan &#38; Nama</span>
               </div>
-              <div className="col-md border-right text-center">
+              <div className="col-sm border-right text-center">
                 <span>Tanda Tangan &#38; Nama</span>
               </div>
-              <div className="col-md text-center">
+              <div className="col-sm text-center">
                 <span>Tanda Tangan &#38; Nama</span>
               </div>
             </div>
             <div className="row border">
               <div
-                className="col-md border-right d-flex align-items-end"
+                className="col-sm border-right d-flex align-items-end"
                 style={{ height: 80 }}
               >
                 <span className="mx-auto">Merry</span>
               </div>
               <div
-                className="col-md border-right d-flex align-items-end"
+                className="col-sm border-right d-flex align-items-end"
                 style={{ height: 80 }}
               >
                 <span></span>
               </div>
               <div
-                className="col-md border-right d-flex align-items-end"
+                className="col-sm border-right d-flex align-items-end"
                 style={{ height: 80 }}
               >
                 <span></span>
