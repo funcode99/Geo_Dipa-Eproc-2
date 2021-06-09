@@ -191,7 +191,7 @@ export default function Summary({ taskId = '' }) {
         error.response?.status !== 400 &&
         error.response?.data.message !== 'TokenExpiredError'
       ) {
-        setToast('Error, please contact developer!');
+        setToast('Error, please contact developer!', 5000);
       }
       console.log(`error`, error);
     } finally {
@@ -364,8 +364,7 @@ export default function Summary({ taskId = '' }) {
     if (!isValidQty || floatQty < 1 || floatQty > floatQtyAvailable) {
       removeFromSubmitItem(itemId, 'barang');
       setToast(
-        `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
-        10000
+        `Quantity should be greater than 0 and lower than ${qtyAvailable}`
       );
     } else {
       const tempSubmitItems = itemBarang;
@@ -411,8 +410,7 @@ export default function Summary({ taskId = '' }) {
     if (!isValidQty || floatQtyValue < 0 || floatQtyValue > floatQtyAvailable) {
       removeFromSubmitItem(serviceId, 'jasa');
       setToast(
-        `Quantity should be greater than 0 and lower than ${qtyAvailable}`,
-        10000
+        `Quantity should be greater than 0 and lower than ${qtyAvailable}`
       );
     } else {
       const tempSubmitJasa = itemJasa;
@@ -423,15 +421,19 @@ export default function Summary({ taskId = '' }) {
         desc: desc,
       };
 
+      // jika masih kosong maka tambahkan
       if (tempSubmitJasa.length === 0) {
         tempSubmitJasa.push(submitItem);
       }
 
+      // jika sudah ada isinya
       if (tempSubmitJasa.length > 0) {
+        // cari berdasarkan id
         const findItem = tempSubmitJasa.find(
           (item) => item.service_id === serviceId
         );
 
+        // jika ketemu ubah qty sesuai id
         if (findItem) {
           tempSubmitJasa.forEach((item) => {
             if (item.service_id === serviceId) {
@@ -440,6 +442,7 @@ export default function Summary({ taskId = '' }) {
           });
         }
 
+        // jika tidak maka push
         if (!findItem) {
           tempSubmitJasa.push(submitItem);
         }
@@ -559,8 +562,8 @@ export default function Summary({ taskId = '' }) {
           </div>
         ) : (
           <div className="d-flex justify-content-center align-items-center flex-column">
-            <h4>Barang</h4>
             <h6>Anda yakin ingin submit?</h6>
+            <p>Tidak ada item yang dipilih untuk termin ini</p>
             <div className="d-flex justify-content-end">
               <Button
                 className="btn btn-secondary border-success mr-3"
@@ -605,7 +608,7 @@ export default function Summary({ taskId = '' }) {
                       </StyledHead>
                     </StyledTableHead>
                     <TableBody>
-                      {dataJasa?.length < 1 ? (
+                      {dataJasa?.length < 1 && !loading ? (
                         <StyledTableRow>
                           <TableCell
                             colSpan={theadItems.length}
@@ -712,6 +715,14 @@ export default function Summary({ taskId = '' }) {
                                                 service.short_text
                                               )
                                             }
+                                            // onBlur={(e) =>
+                                            //   addSubmitJasa(
+                                            //     e.target.value,
+                                            //     service.qty_available,
+                                            //     service.id,
+                                            //     service.short_text
+                                            //   )
+                                            // }
                                           />
                                         </TableCell>
                                         <TableCell className="align-middle">
@@ -769,6 +780,14 @@ export default function Summary({ taskId = '' }) {
                                                 service.service.short_text
                                               )
                                             }
+                                            // onBlur={(e) =>
+                                            //   addSubmitJasa(
+                                            //     e.target.value,
+                                            //     service.service.quantity,
+                                            //     service.service.id,
+                                            //     service.service.short_text
+                                            //   )
+                                            // }
                                           />
                                         </TableCell>
                                         <TableCell className="align-middle">
@@ -812,7 +831,7 @@ export default function Summary({ taskId = '' }) {
                       </StyledHead>
                     </StyledTableHead>
                     <TableBody>
-                      {dataBarang.length < 1 ? (
+                      {dataBarang.length < 1 && !loading ? (
                         <StyledTableRow>
                           <TableCell
                             colSpan={theadItems.length}
@@ -888,6 +907,14 @@ export default function Summary({ taskId = '' }) {
                                         item.desc
                                       )
                                     }
+                                    // onBlur={(e) =>
+                                    //   addSubmitBarang(
+                                    //     e.target.value,
+                                    //     item.qty_available,
+                                    //     item.id,
+                                    //     item.desc
+                                    //   )
+                                    // }
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle"></TableCell>
@@ -929,7 +956,7 @@ export default function Summary({ taskId = '' }) {
                                     type="number"
                                     size="sm"
                                     min={1}
-                                    max={item.qty}
+                                    max={item.item.qty_available}
                                     disabled={!item.checked}
                                     defaultValue={item.qty}
                                     onChange={(e) =>
@@ -940,6 +967,14 @@ export default function Summary({ taskId = '' }) {
                                         item.item.desc
                                       )
                                     }
+                                    // onBlur={(e) =>
+                                    //   addSubmitBarang(
+                                    //     e.target.value,
+                                    //     item.item.qty_available,
+                                    //     item.item.id,
+                                    //     item.item.desc
+                                    //   )
+                                    // }
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle"></TableCell>
