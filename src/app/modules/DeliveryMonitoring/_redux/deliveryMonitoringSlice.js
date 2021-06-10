@@ -1,6 +1,6 @@
-import { persistReducer } from 'redux-persist';
-import { PERSIST_REDUCER } from '../../../../redux/BaseHost';
-import { actionTypes } from './deliveryMonitoringAction';
+import { persistReducer } from "redux-persist";
+import { PERSIST_REDUCER } from "../../../../redux/BaseHost";
+import { actionTypes } from "./deliveryMonitoringAction";
 
 const initialDelivMonitoringState = {
   dataDeverableDoc: null,
@@ -8,6 +8,10 @@ const initialDelivMonitoringState = {
   dataJasa: [],
   dataBarang: [],
   dataDocuments: [],
+  dataSubmitItems: {
+    task_items: [],
+    task_services: [],
+  },
 };
 
 export const reducer = persistReducer(
@@ -44,6 +48,13 @@ export const reducer = persistReducer(
         return {
           ...state,
           dataContractById: action.payload,
+        };
+      }
+
+      case actionTypes.SetSubmitItemsByContractId: {
+        return {
+          ...state,
+          dataSubmitItems: action.payload,
         };
       }
 
