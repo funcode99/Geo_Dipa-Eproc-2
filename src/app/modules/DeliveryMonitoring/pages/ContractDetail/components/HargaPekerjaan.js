@@ -152,19 +152,29 @@ const HargaPekerjaan = () => {
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
           style={{ marginBottom: 21 }}
         />
-        {navActive === "pertama" &&
+        {/* {navActive === "pertama" &&
           [1, 2, 3, 4].map((el, id) => (
             <Row key={id}>
               <Col md={6}>
-                <RenderInput values={{}} name={"namama"} label={"Tahap 1"} />
+                <RenderInput
+                  disabled
+                  values={{}}
+                  name={"namama"}
+                  label={"Tahap 1"}
+                />
               </Col>
             </Row>
-          ))}
+          ))} */}
         {navActive === "kedua" &&
           [1, 2, 3, 4].map((el, id) => (
             <Row key={id}>
               <Col md={6}>
-                <RenderInput values={{}} name={"namama"} label={"Tahap 1"} />
+                <RenderInput
+                  disabled
+                  values={{}}
+                  name={"namama"}
+                  label={"Tahap 1"}
+                />
               </Col>
             </Row>
           ))}
