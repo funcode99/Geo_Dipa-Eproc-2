@@ -4,18 +4,32 @@ import DUMMY_FIELD from "./DUMMY_FIELD.js";
 import RenderInput from "../input/RenderInput.js";
 import { Col, Row } from "react-bootstrap";
 
-const FieldBuilder = ({ formData }) => {
+const FieldBuilder = ({
+  formData,
+  values = {},
+  errors,
+  handleSubmit,
+  readOnly,
+}) => {
+  const formProps = {
+    values,
+    errors,
+    handleSubmit,
+    readOnly,
+    onChange: readOnly ? () => {} : undefined,
+    disabled: readOnly,
+  };
   return (
     <Row className={"mt-9"}>
       {formData &&
         formData.map((item, idx) => {
           if (Array.isArray(item)) {
             return (
-              <Col md={12}>
+              <Col key={idx} md={12}>
                 <Row>
                   {item?.map((it, id) => (
                     <Col key={id} md={6}>
-                      <RenderInput {...it} />
+                      <RenderInput {...it} {...formProps} />
                     </Col>
                   ))}
                 </Row>
@@ -24,7 +38,7 @@ const FieldBuilder = ({ formData }) => {
           } else if (typeof item === "object") {
             return (
               <Col key={idx} md={12}>
-                <RenderInput {...item} />
+                <RenderInput {...item} {...formProps} />
               </Col>
             );
           } else {

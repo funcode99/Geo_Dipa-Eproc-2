@@ -38,6 +38,7 @@ import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
 import FeaturedPlayListIcon from "@material-ui/icons/FeaturedPlayList";
 import ErrorIcon from "@material-ui/icons/Error";
 import ParaPihak from "./components/ParaPihak";
+import ParaPihak2 from "./components/ParaPihak/ParaPihak2";
 import DokContract from "./components/DokContract";
 import HargaPekerjaan from "./components/HargaPekerjaan";
 import JangkaWaktu from "./components/JangkaWaktu";
@@ -70,6 +71,7 @@ const TabLists = [
     label: "Para Pihak",
     icon: <PeopleAltIcon className="mb-0 mr-2" />,
   },
+
   {
     id: "dokumen-kontrak",
     label: "Dokumen Kontrak",
@@ -95,6 +97,11 @@ const TabLists = [
     label: "Denda",
     icon: <ErrorIcon className="mb-0 mr-2" />,
   },
+  {
+    id: "para-pihak2",
+    label: "Para Pihak 2",
+    icon: <PeopleAltIcon className="mb-0 mr-2" />,
+  },
 ];
 
 const tableHeaderTermin = [
@@ -116,7 +123,7 @@ export const ContractDetailPage = () => {
   const [Toast, setToast] = useToast();
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
-  const [tabActive, setTabActive] = React.useState(0);
+  const [tabActive, setTabActive] = React.useState(3);
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
   const [modals, setModals] = React.useState(false);
@@ -552,6 +559,7 @@ export const ContractDetailPage = () => {
             tabActive={tabActive}
             handleChange={handleChangeTab}
             tabLists={TabLists}
+            variant="scrollable"
           />
         </Container>
         <hr className="p-0 m-0" />
@@ -719,6 +727,7 @@ export const ContractDetailPage = () => {
         {tabActive === 4 && <JangkaWaktu />}
         {tabActive === 5 && <Jaminan />}
         {tabActive === 6 && <Denda />}
+        {tabActive === 7 && <ParaPihak2 />}
       </Paper>
     </React.Fragment>
   );

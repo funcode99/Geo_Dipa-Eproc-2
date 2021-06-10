@@ -1,14 +1,14 @@
 import React from "react";
 
-const BasicInput = ({ placeholder }) => {
+const BasicInput = ({ placeholder, ...other }) => {
   return (
     <input
       type="text"
       className="form-control"
-      id="numberContract"
+      // id="numberContract"
       // defaultValue={'contractData["contract_no"]'}
       placeholder={placeholder}
-      disabled
+      {...other}
     />
   );
 };

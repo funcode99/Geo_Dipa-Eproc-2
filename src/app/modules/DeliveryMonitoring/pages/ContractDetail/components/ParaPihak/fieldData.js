@@ -342,6 +342,51 @@ export const formData2 = [
     },
   ],
 ];
+export const formData3 = [
+  {
+    Child: TitleField,
+    ChildrenProps: {
+      title: "Pemberi Kerja",
+    },
+  },
+  {
+    name: "nama_pejabat",
+    label: "Nama Pejabat Berwenang",
+  },
+  {
+    name: "jabatan_pejabat",
+    label: "Jabatan",
+  },
+  {
+    name: "nama_direksi",
+    label: "Direksi Pekerjaan",
+  },
+];
+export const formData4 = [
+  {
+    Child: TitleField,
+    ChildrenProps: {
+      title: "Penyedia",
+    },
+  },
+  {
+    name: "penyedia",
+    label: "Nama Penyedia",
+  },
+  {
+    name: "nama_penyedia",
+    label: "Nama Pejabat Berwenang",
+  },
+  {
+    name: "jabatan_penyedia",
+    label: "Jabatan",
+  },
+  {
+    name: "email_pic",
+    label: "Email PIC",
+    // typeInput: "SelectInputCustom",
+  },
+];
 
 export const valSchemaPihakPertama = object().shape({
   nama_pemberi: validation.require("Nama Pemberi Kerja"),
