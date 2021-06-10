@@ -285,5 +285,7 @@
   "TITLE.INFORMATION_OR_NOTE": "Information/Note",
   "TITLE.CEK_OR_GIRO_RECEIVER": "Cek/Giro Receiver",
   "TITLE.APPROVED_BY": "Approved by",
-  "TITLE.APPROVED_CEK_OR_GIRO": "Signing Cek/Giro"
+  "TITLE.APPROVED_CEK_OR_GIRO": "Signing Cek/Giro",
+  "TITLE.ACCEPT_DOCUMENT": "Accept Document",
+  "TITLE.REJECT_DOCUMENT": "Reject Document"
 }

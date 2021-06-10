@@ -6,7 +6,6 @@ import {
   CardBody,
   CardHeader,
 } from "../../../../../_metronic/_partials/controls";
-import { Table } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import { Link } from "react-router-dom";
@@ -429,7 +428,7 @@ function DashboardListContract(props) {
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">
               <div className="hecto-11">
-                <Table className="table-bordered overflow-auto">
+                <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
                       <th
@@ -743,7 +742,7 @@ function DashboardListContract(props) {
                       );
                     })}
                   </tbody>
-                </Table>
+                </table>
               </div>
             </div>
             <div className="table-loading-data">

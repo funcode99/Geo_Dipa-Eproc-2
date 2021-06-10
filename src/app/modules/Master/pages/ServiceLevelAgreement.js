@@ -10,7 +10,6 @@ import {
   TablePagination,
 } from "@material-ui/core";
 import { Card, CardBody } from "../../../../_metronic/_partials/controls";
-import { Table } from "react-bootstrap";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
@@ -440,7 +439,7 @@ const ServiceLevelAgreement = (props) => {
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">
               <div className="hecto-8">
-                <Table className="table-bordered overflow-auto">
+                <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
                       <th className="bg-primary text-white align-middle td-2">
@@ -542,7 +541,7 @@ const ServiceLevelAgreement = (props) => {
                       );
                     })}
                   </tbody>
-                </Table>
+                </table>
               </div>
             </div>
             <div className="table-loading-data">

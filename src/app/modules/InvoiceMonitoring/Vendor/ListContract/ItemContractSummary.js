@@ -11,9 +11,6 @@ import {
   CardFooter,
 } from "../../../../../_metronic/_partials/controls";
 import {
-  Table
-} from "react-bootstrap";
-import {
   Dialog,
   DialogActions,
   DialogContent,
@@ -176,32 +173,40 @@ function ItemContractSummary(props) {
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
-          ? response["data"]["data"]["data"]["address"]["postal_address"]
-          : null
-          } ${response["data"]["data"]["data"]["address"]["sub_district"]
-            ? response["data"]["data"]["data"]["address"]["sub_district"][
-            "name"
-            ]
+        response["data"]["data"]["full_address_party_2"] = `${
+          response["data"]["data"]["data"]["address"]["postal_address"]
+            ? response["data"]["data"]["data"]["address"]["postal_address"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["district"]
+        } ${
+          response["data"]["data"]["data"]["address"]["sub_district"]
+            ? response["data"]["data"]["data"]["address"]["sub_district"][
+                "name"
+              ]
+            : null
+        } ${
+          response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["province"]
+        } ${
+          response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["postal_code"]
+        } ${
+          response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
-          }`;
-        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
-          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
-          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
+        }`;
+        response["data"]["data"]["full_data_party_2"] = `${
+          response["data"]["data"]["full_name"]
+        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
+          response["data"]["data"]["data"]["phone_number"]["number"]
+        } ${
+          response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
-              response["data"]["data"]["data"]["phone_number"]["ext"]
-            )
+                response["data"]["data"]["data"]["phone_number"]["ext"]
+              )
             : ""
-          }`;
+        }`;
         response["data"]["data"][
           "full_data_party_1"
         ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
@@ -210,9 +215,9 @@ function ItemContractSummary(props) {
           response.data.data.from_time,
           response.data.data.thru_time
         );
-        getPicContractData()
-        getPicVendorData()
-        getRole()
+        getPicContractData();
+        getPicVendorData();
+        getRole();
       })
       .catch((error) => {
         if (
@@ -221,7 +226,14 @@ function ItemContractSummary(props) {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  }, [getPicContractData, getPicVendorData, getRole, contract_id, intl, setToast]);
+  }, [
+    getPicContractData,
+    getPicVendorData,
+    getRole,
+    contract_id,
+    intl,
+    setToast,
+  ]);
 
   const setTimePIcker = (from_time, thru_time) => {
     window.$("#kt_daterangepicker_1").daterangepicker({
@@ -265,8 +277,8 @@ function ItemContractSummary(props) {
     monitoring_type: "INVOICE",
   };
 
-  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function (errorMessage) {
-    return this.test(`test-card-length`, errorMessage, function (value) {
+  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function(errorMessage) {
+    return this.test(`test-card-length`, errorMessage, function(value) {
       const { path, createError } = this;
       return emailAvailability || createError({ path, message: errorMessage });
     });
@@ -638,7 +650,7 @@ function ItemContractSummary(props) {
                     </button>
                   </div>
                   {(formikUpdate.touched.email && formikUpdate.errors.email) ||
-                    !emailAvailability ? (
+                  !emailAvailability ? (
                     <div className="invalid-feedback display-block">
                       {formikUpdate.errors.email}
                     </div>
@@ -658,10 +670,11 @@ function ItemContractSummary(props) {
                           <span>
                             Status:{" "}
                             <span
-                              className={`font-weight-bold ${item.actives === "true"
-                                ? "text-primary"
-                                : "text-danger"
-                                }`}
+                              className={`font-weight-bold ${
+                                item.actives === "true"
+                                  ? "text-primary"
+                                  : "text-danger"
+                              }`}
                             >
                               {item.actives === "true"
                                 ? "Terverifikasi"
@@ -938,7 +951,7 @@ function ItemContractSummary(props) {
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">
               <div className="hecto-10">
-                <Table className="table-bordered overflow-auto">
+                <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
                       <th className="bg-primary text-white align-middle">No</th>
@@ -977,7 +990,7 @@ function ItemContractSummary(props) {
                       );
                     })}
                   </tbody>
-                </Table>
+                </table>
               </div>
             </div>
           </div>
