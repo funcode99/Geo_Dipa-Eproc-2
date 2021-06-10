@@ -1359,3 +1359,89 @@ th {
 @page {
   size: A3 portrait;
 }
+
+.react-component {
+  width: calc(100% - 10%);
+  max-width: 1110px;
+  margin-top: calc(var(--component-height) / -2);
+  margin-bottom: 4em;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  font-size: 19px;
+  overflow: hidden;
+}
+
+.react-component > * {
+  box-shadow: 0 30px 40px 0 rgb(16 36 94 / 20%);
+}
+
+.react-pdf__Document {
+  border-radius: 8px;
+  max-width: 100%;
+  position: relative;
+  background-color: white;
+}
+
+.react-pdf__Page {
+  max-width: 700px;
+  width: 90vw;
+}
+
+.react-pdf__Page__svg {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 8px;
+}
+
+.react-pdf__Page__svg svg {
+  border-radius: 8px;
+  max-width: 700px;
+  width: 90vw;
+  height: auto;
+  display: block;
+  background-color: white;
+}
+
+.page-controls {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  background: white;
+  opacity: 0.5;
+  transform: translateX(-50%);
+  transition: opacity ease-in-out 0.2s;
+  box-shadow: 0 30px 40px 0 rgb(16 36 94 / 20%);
+  border-radius: 4px;
+}
+
+.page-controls:hover {
+  opacity: 1;
+}
+
+.page-controls button:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.page-controls button {
+  width: 44px;
+  height: 44px;
+  background: white;
+  border: 0;
+  font: inherit;
+  font-size: 0.8em;
+  border-radius: 4px;
+}
+
+.page-controls span {
+  font: inherit;
+  font-size: 0.8em;
+  padding: 0 0.5em;
+}
+
+.page-controls button:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
-import { Table } from "react-bootstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+} from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import { Link } from "react-router-dom";
@@ -10,7 +13,51 @@ import { getContractClient } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import {
   TablePagination,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Typography,
+  IconButton,
 } from "@material-ui/core";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import { withStyles } from "@material-ui/core/styles";
+import { Document, Page, pdfjs } from "react-pdf";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
+
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(3),
+    top: theme.spacing(0),
+    backgroundColor: "#187de4",
+    "&:hover": {
+      background: "#f00",
+    },
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          <i className="fas fa-times text-light"></i>
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 function DashboardListContract(props) {
   const { intl } = props;
@@ -80,6 +127,7 @@ function DashboardListContract(props) {
     order: false,
   });
   const [err, setErr] = useState(false);
+  const [dialogState, setDialogState] = useState(false);
 
   useEffect(() => {
     getListContractData();
@@ -207,10 +255,73 @@ function DashboardListContract(props) {
     });
   };
 
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  function onDocumentLoadSuccess({ numPages }) {
+    console.log("numPages", numPages);
+    setNumPages(numPages);
+  }
+
   return (
     <React.Fragment>
       <Toast />
+      <Dialog
+        open={dialogState}
+        // keepMounted
+        maxWidth={false}
+        fullWidth={true}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-description"
+          onClose={() => {
+            setDialogState(false);
+          }}
+        >
+          Modal title
+        </DialogTitle>
+        <PerfectScrollbar>
+          <DialogContent>
+            <div className="react-component">
+              <Document file="" onLoadSuccess={onDocumentLoadSuccess}>
+                <Page pageNumber={pageNumber} renderMode="svg" />
+                <div className="page-controls">
+                  <button type="button" disabled="">
+                    ‹
+                  </button>
+                  <span>1 of 4</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPageNumber(2);
+                    }}
+                  >
+                    ›
+                  </button>
+                </div>
+              </Document>
+            </div>
+          </DialogContent>
+        </PerfectScrollbar>
+      </Dialog>
       <Card>
+        <CardHeader>
+          <button
+            onClick={() => {
+              setDialogState(true);
+            }}
+          >
+            Open
+          </button>
+        </CardHeader>
         <CardBody>
           {/* begin: Filter Table */}
           <form id="filter-form-all" className="panel-filter-table mb-1">
@@ -317,7 +428,7 @@ function DashboardListContract(props) {
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">
               <div className="hecto-11">
-                <Table className="table-bordered overflow-auto">
+                <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
                       <th
@@ -540,40 +651,52 @@ function DashboardListContract(props) {
                       return (
                         <tr key={index.toString()}>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               {item.contract_no}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               {item.contract_name}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               {item.purch_order_no}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               {index === 0
                                 ? 1
                                 : index === 1
-                                  ? 2
-                                  : index === 2
-                                    ? 3
-                                    : index === 3
-                                      ? 4
-                                      : 5}
+                                ? 2
+                                : index === 2
+                                ? 3
+                                : index === 3
+                                ? 4
+                                : 5}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               80000035434
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               INV0352345
                             </Link>
                           </td>
@@ -619,7 +742,7 @@ function DashboardListContract(props) {
                       );
                     })}
                   </tbody>
-                </Table>
+                </table>
               </div>
             </div>
             <div className="table-loading-data">

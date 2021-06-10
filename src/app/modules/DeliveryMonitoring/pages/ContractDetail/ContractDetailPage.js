@@ -10,7 +10,8 @@ import {
   MenuItem,
   InputLabel,
 } from "@material-ui/core";
-import { Form, Row, Col, Container } from "react-bootstrap";
+import { Send } from "@material-ui/icons";
+import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { Link, useParams, withRouter } from "react-router-dom";
@@ -22,7 +23,6 @@ import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import { useSelector, useDispatch } from "react-redux";
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import CustomTable from "../../../../components/tables";
-import { rupiah } from "../../../../libs/currency";
 import { StyledModal } from "../../../../components/modals";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -30,6 +30,7 @@ import { format } from "date-fns";
 import formatDate from "../../../../libs/date";
 import * as Option from "../../../../service/Option";
 import { FormattedMessage, injectIntl } from "react-intl";
+import { FormDetail, Item } from "./components/Detail";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import FindInPageIcon from "@material-ui/icons/FindInPage";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
@@ -121,7 +122,9 @@ export const ContractDetailPage = () => {
   const classes = useStyles();
   const { contract_id } = useParams();
   const [Toast, setToast] = useToast();
-  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
+  const { dataContractById, dataSubmitItems } = useSelector(
+    (state) => state.deliveryMonitoring
+  );
   const dispatch = useDispatch();
   const [tabActive, setTabActive] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
@@ -137,8 +140,7 @@ export const ContractDetailPage = () => {
       .required("Field ini wajib diisi"),
     due_date: Yup.date()
       .required("Field ini wajib diisi")
-      .nullable()
-      .min(new Date(Date.now() - 86400000), "Minimal hari ini"),
+      .nullable(),
   });
 
   const initialValues = {
@@ -170,10 +172,10 @@ export const ContractDetailPage = () => {
             contract_id: contract_id,
             name: values.name,
             due_date: values.due_date,
+            task_items: dataSubmitItems.task_items,
+            task_services: dataSubmitItems.task_services,
           };
         }
-
-        console.log(requestData);
 
         const {
           data: { status },
@@ -181,17 +183,21 @@ export const ContractDetailPage = () => {
           ? await deliveryMonitoring.submitTask(requestData, update)
           : await deliveryMonitoring.submitTask(requestData);
 
-        console.log(status);
-
         if (status) {
           getContractById(contract_id);
+          setInitialSubmitItems();
           setModals(false);
           setToast("Successfully create term");
         }
       } catch (error) {
-        setToast("Error API, Please contact developer!");
-        setSubmitting(false);
-        setStatus("Failed Submit Data");
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        ) {
+          setToast(error.response?.data.message, 5000);
+          setSubmitting(false);
+          setStatus("Failed Submit Data");
+        }
       } finally {
         disableLoading();
       }
@@ -269,6 +275,32 @@ export const ContractDetailPage = () => {
     });
   };
 
+  const addCheckedField = (data, type) => {
+    if (type === "jasa") {
+      data.map((services) => {
+        services.item_services.map((service) => {
+          service.checked = false;
+        });
+      });
+    }
+    if (type === "barang") {
+      data.map((item) => {
+        item.checked = false;
+      });
+    }
+  };
+
+  const setInitialSubmitItems = () => {
+    const initialSubmitItems = {
+      task_items: [],
+      task_services: [],
+    };
+    dispatch({
+      type: actionTypes.SetSubmitItemsByContractId,
+      payload: initialSubmitItems,
+    });
+  };
+
   // get data contract detail from api
   const getContractById = async (contract_id) => {
     try {
@@ -282,25 +314,30 @@ export const ContractDetailPage = () => {
         data: { data },
       } = await deliveryMonitoring.getContractById(contract_id);
 
-      console.log(data);
+      // if (data?.payment_method === "gradually") {
+      //   sortTerminByPaymentMethod(data?.tasks);
+      // }
 
-      if (data?.payment_method === "gradually") {
-        sortTerminByPaymentMethod(data?.tasks);
-      }
+      addCheckedField(data?.services, "jasa");
+      addCheckedField(data?.items, "barang");
 
       dispatch({
         type: actionTypes.SetContractById,
         payload: data,
       });
 
-      console.log(data.tasks);
       generateTableContent(data?.tasks);
     } catch (error) {
       if (
         error.response?.status !== 400 &&
         error.response?.data.message !== "TokenExpiredError"
       ) {
-        setToast("Error API, please contact developer!");
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        ) {
+          setToast("Error API, please contact developer!");
+        }
       }
     } finally {
       setLoading(false);
@@ -314,8 +351,6 @@ export const ContractDetailPage = () => {
         data: { data },
       } = await Option.getAllOptions();
 
-      // console.log(data.task_status);
-
       setOptions(data.task_status);
     } catch (error) {
       setToast("Error API, please contact developer!");
@@ -326,6 +361,7 @@ export const ContractDetailPage = () => {
 
   React.useEffect(() => {
     getContractById(contract_id);
+    setInitialSubmitItems();
     getOptions();
     // eslint-disable-next-line
   }, []);
@@ -388,23 +424,73 @@ export const ContractDetailPage = () => {
         minWidth="40vw"
         maxwidth="70vw"
       >
+        <h3 className="mb-5">
+          {update.update ? (
+            <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.UPDATE" />
+          ) : (
+            <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.CREATE" />
+          )}{" "}
+          <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.TERM" />
+        </h3>
+        {dataSubmitItems.task_items.length === 0 &&
+          dataSubmitItems.task_services.length === 0 && (
+            <p>Tidak ada item yang dipilih</p>
+          )}
+        <div className="mb-5">
+          {dataSubmitItems && dataSubmitItems.task_services.length > 0 && (
+            <React.Fragment>
+              <h5>Jasa</h5>
+              <table className="table-md table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th className="bg-primary text-white">No</th>
+                    <th className="bg-primary text-white">Name</th>
+                    <th className="bg-primary text-white">Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataSubmitItems.task_services.map((item, index) => (
+                    <tr key={item?.service_id}>
+                      <td>{(index += 1)}</td>
+                      <td>{item?.name}</td>
+                      <td>{item?.qty}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </React.Fragment>
+          )}
+          {dataSubmitItems && dataSubmitItems.task_items.length > 0 && (
+            <React.Fragment>
+              <h5 className="mt-2">Barang</h5>
+              <table className="table-md table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th className="bg-primary text-white">No</th>
+                    <th className="bg-primary text-white">Name</th>
+                    <th className="bg-primary text-white">Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataSubmitItems.task_items.map((item, index) => (
+                    <tr key={item?.item_id}>
+                      <td>{(index += 1)}</td>
+                      <td>{item?.name}</td>
+                      <td>{item?.qty}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </React.Fragment>
+          )}
+        </div>
+
         <form
           noValidate
           autoComplete="off"
           className="d-flex flex-column"
           onSubmit={formik.handleSubmit}
         >
-          <div className="d-flex align-items-start flex-column mb-5">
-            <h3>
-              {update.update ? (
-                <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.UPDATE" />
-              ) : (
-                <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.CREATE" />
-              )}{" "}
-              <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.TERM" />
-            </h3>
-          </div>
-
           <TextField
             label="Scope of Work"
             variant="outlined"
@@ -464,9 +550,9 @@ export const ContractDetailPage = () => {
             </React.Fragment>
           ) : null}
 
-          <div className="d-flex mt-5">
+          <div className="d-flex">
             <Button
-              // disabled={loading}
+              disabled={loading}
               className="btn btn-primary ml-auto"
               type="submit"
               variant="contained"
@@ -563,153 +649,22 @@ export const ContractDetailPage = () => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        {tabActive === 0 ? (
-          <>
-            <Form className="my-3">
-              <Container>
-                <Row>
-                  <Col>
-                    <Form.Group as={Row}>
-                      <Form.Label column md="4">
-                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />
-                      </Form.Label>
-                      <Col sm="8">
-                        <Form.Control
-                          required
-                          type="text"
-                          placeholder="Nomor Kontrak"
-                          defaultValue={dataContractById?.contract_no}
-                          disabled
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                      <Form.Label column md="4">
-                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />
-                      </Form.Label>
-                      <Col md="8">
-                        <Form.Control
-                          required
-                          type="text"
-                          placeholder="Judul Pengadaan"
-                          defaultValue={dataContractById?.contract_name}
-                          disabled
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId="validationCustom02">
-                      <Form.Label column sm="4">
-                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.AUTHORITY_GROUP" />
-                      </Form.Label>
-                      <Col md="8">
-                        <Form.Control
-                          required
-                          type="text"
-                          placeholder="Kewenangan"
-                          defaultValue={
-                            dataContractById?.authority_group?.alias_name
-                          }
-                          disabled
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId="validationCustom02">
-                      <Form.Label column md="4">
-                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.USER_GROUP" />
-                      </Form.Label>
-                      <Col md="8">
-                        <Form.Control
-                          required
-                          type="text"
-                          placeholder="User"
-                          defaultValue={
-                            dataContractById?.user_group?.alias_name
-                          }
-                          disabled
-                        />
-                      </Col>
-                    </Form.Group>
-                  </Col>
-
-                  <Col>
-                    <Form.Group as={Row}>
-                      <Form.Label column md="4">
-                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />
-                      </Form.Label>
-                      <Col sm="8">
-                        <Form.Control
-                          required
-                          type="text"
-                          placeholder="Nomor PO"
-                          defaultValue={dataContractById?.purch_order_no}
-                          disabled
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                      <Form.Label column md="4">
-                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NAME" />
-                      </Form.Label>
-                      <Col md="8">
-                        <Form.Control
-                          required
-                          type="text"
-                          placeholder="Header Text PO"
-                          defaultValue={dataContractById?.purch_order?.name}
-                          disabled
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                      <Form.Label column sm="4">
-                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PRICE" />
-                      </Form.Label>
-                      <Col md="8">
-                        <Form.Control
-                          required
-                          type="text"
-                          placeholder="Harga Pekerjaan"
-                          defaultValue={rupiah(
-                            parseInt(dataContractById?.total_amount)
-                          )}
-                          disabled
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                      <Form.Label column md="4">
-                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />
-                      </Form.Label>
-                      <Col md="8">
-                        <Form.Control
-                          required
-                          type="text"
-                          placeholder="Penyedia"
-                          defaultValue={
-                            dataContractById?.vendor?.party?.full_name
-                          }
-                          disabled
-                        />
-                      </Col>
-                    </Form.Group>
-                  </Col>
-                </Row>
-              </Container>
-            </Form>
+        {tabActive === 0 && (
+          <React.Fragment>
+            <FormDetail />
+            <Item />
 
             <Container>
               <div className="d-flex justify-content-end w-100">
-                <button
-                  className="btn btn-outline-success btn-sm"
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="medium"
                   onClick={() => handleModal("create")}
                 >
-                  <span className="nav-icon">
-                    <i className="flaticon2-plus"></i>
-                  </span>
-                  <span className="nav-text">
-                    <FormattedMessage id="BUTTON.CREATE" />
-                  </span>
-                </button>
+                  <span className="mr-1">Submit</span>
+                  <Send />
+                </Button>
               </div>
 
               <CustomTable
@@ -719,8 +674,8 @@ export const ContractDetailPage = () => {
                 hecto="hecto-16"
               />
             </Container>
-          </>
-        ) : null}
+          </React.Fragment>
+        )}
         {tabActive === 1 && <ParaPihak />}
         {tabActive === 2 && <DokContract />}
         {tabActive === 3 && <HargaPekerjaan />}

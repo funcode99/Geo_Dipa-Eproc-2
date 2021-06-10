@@ -285,5 +285,8 @@
   "TITLE.INFORMATION_OR_NOTE": "Keterangan/Catatan",
   "TITLE.CEK_OR_GIRO_RECEIVER": "Penerima Cek/Giro",
   "TITLE.APPROVED_BY": "Telah disetujui oleh",
-  "TITLE.APPROVED_CEK_OR_GIRO": "Penanda-tanganan Cek / Giro"
+  "TITLE.APPROVED_CEK_OR_GIRO": "Penanda-tanganan Cek / Giro",
+  "TITLE.ACCEPT_DOCUMENT": "Terima Dokumen",
+  "TITLE.REJECT_DOCUMENT": "Tolak Dokumen",
+  "TITLE.EDIT": "Edit Data"
 }

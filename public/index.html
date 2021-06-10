@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>DIMSY | Delivery & Inventory Monitoring System</title>
+    <title>E-Procurement</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="icon"
@@ -33,6 +33,7 @@
       crossorigin="anonymous"
       src="https://polyfill.io/v3/polyfill.min.js?features=es2017%2Cdefault%2Ces2015%2Ces2016%2CIntl"
     ></script>
+    <script src="%PUBLIC_URL%/pdf.worker.min.js"></script>
   </head>
   <!-- <body id="kt_body" direction="rtl" dir="rtl" style="direction: rtl">  RTL version body -->
   <!-- Standard version of body -->
@@ -42,12 +43,10 @@
     <div id="print-content"></div>
     <div id="modal-react"></div>
     <div id="splash-screen" class="kt-splash-screen">
-      <img
-        src="%PUBLIC_URL%/media/logos/logo-dark.png"
-        alt="Metronic logo"
-      />
+      <img src="%PUBLIC_URL%/media/logos/logo-dark.png" alt="Metronic logo" />
       <svg class="splash-spinner" viewBox="0 0 50 50">
-        <circle class="path"
+        <circle
+          class="path"
           cx="25"
           cy="25"
           r="20"

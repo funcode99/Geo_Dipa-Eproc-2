@@ -1,10 +1,11 @@
-import React from 'react';
-import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
-import { Form, Row, Col } from 'react-bootstrap';
-import { makeStyles, Button } from '@material-ui/core';
-import CustomTable from '../../../../components/tables';
-import { Send } from '@material-ui/icons';
-import Navs from '../../../../components/navs';
+import React from "react";
+import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import { Form, Row, Col } from "react-bootstrap";
+import { makeStyles, Button } from "@material-ui/core";
+import CustomTable from "../../../../components/tables";
+import { Send } from "@material-ui/icons";
+import Navs from "../../../../components/navs";
+import { useSelector, useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   navLink: {
@@ -19,47 +20,49 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const tableHeaderBAPP = [
-  { label: 'Nomor BAPP' },
-  { label: 'Tanggal' },
-  { label: 'Approve By' },
-  { label: 'Lampiran BAPP TTD' },
-  { label: 'Action' },
+  { label: "Nomor BAPP" },
+  { label: "Tanggal" },
+  { label: "Approve By" },
+  { label: "Lampiran BAPP TTD" },
+  { label: "Action" },
 ];
 
 const tableHeaderBAST = [
-  { label: 'Nomor BAST' },
-  { label: 'Tanggal' },
-  { label: 'Approve By' },
-  { label: 'Lampiran BAST TTD' },
-  { label: 'Action' },
+  { label: "Nomor BAST" },
+  { label: "Tanggal" },
+  { label: "Approve By" },
+  { label: "Lampiran BAST TTD" },
+  { label: "Action" },
 ];
 
-const dataBAPP = [
+const tempDataBAPP = [
   {
     id: 1,
-    no_bapp: '012.BA/PST/.30-GDE/IX/2020',
-    tanggal: '01 Januari 2020',
-    approve_by: 'Dian PS',
-    lampiran: '012.BA/PST/.30-GDE/IX/2020.pdf',
+    no_bapp: "012.BA/PST/.30-GDE/IX/2020",
+    tanggal: "01 Januari 2020",
+    approve_by: "Dian PS",
+    lampiran: "012.BA/PST/.30-GDE/IX/2020.pdf",
   },
   {
     id: 1,
-    no_bapp: '012.BA/PST/.30-GDE/IX/2020',
-    tanggal: '02 Januari 2020',
-    approve_by: 'Dian PS',
-    lampiran: '012.BA/PST/.30-GDE/IX/2020.pdf',
+    no_bapp: "012.BA/PST/.30-GDE/IX/2020",
+    tanggal: "02 Januari 2020",
+    approve_by: "Dian PS",
+    lampiran: "012.BA/PST/.30-GDE/IX/2020.pdf",
   },
 ];
 
 const navLists = [
-  { id: 'link-bapp', label: 'BAPP' },
-  { id: 'link-bast', label: 'BAST' },
+  { id: "link-bapp", label: "BAPP" },
+  { id: "link-bast", label: "BAST" },
 ];
 
 export default function BeritaAcara() {
   const classes = useStyles();
+  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [tableContent, setTableContent] = React.useState([]);
+  const [dataBAPP, setDataBAPP] = React.useState(tempDataBAPP);
 
   const generateTableContent = (data) => {
     data.forEach((item) => {
@@ -92,7 +95,7 @@ export default function BeritaAcara() {
   };
 
   React.useEffect(() => {
-    generateTableContent(dataBAPP);
+    generateTableContent(tempDataBAPP);
   }, []);
 
   return (
@@ -116,7 +119,7 @@ export default function BeritaAcara() {
             </Nav.Item>
           </Nav> */}
 
-          {navActive === 'link-bapp' && (
+          {navActive === "link-bapp" && (
             <React.Fragment>
               <Form className="mt-3">
                 <Row>
@@ -162,7 +165,7 @@ export default function BeritaAcara() {
                           type="text"
                           size="sm"
                           disabled
-                          value="judul kontrak"
+                          value={dataContractById?.contract_name}
                         />
                       </Col>
                     </Form.Group>
@@ -179,7 +182,7 @@ export default function BeritaAcara() {
                           type="text"
                           size="sm"
                           disabled
-                          value="Nama PT Pelaksana/SPK nya"
+                          value={`PT ${dataContractById?.vendor?.party?.full_name}`}
                         />
                       </Col>
                     </Form.Group>
@@ -196,7 +199,7 @@ export default function BeritaAcara() {
                           type="text"
                           size="sm"
                           disabled
-                          value="Nomor Kontrak SPK atau Perjanjian"
+                          value={dataContractById?.contract_no}
                         />
                       </Col>
                     </Form.Group>
@@ -207,7 +210,7 @@ export default function BeritaAcara() {
                           type="text"
                           size="sm"
                           disabled
-                          value="Nomor PO"
+                          value={dataContractById?.purch_order_no}
                         />
                       </Col>
                     </Form.Group>
@@ -221,7 +224,7 @@ export default function BeritaAcara() {
                         as="textarea"
                         rows={3}
                         size="sm"
-                        defaultValue="Isikan hasil pekerjaan yang telah diselesaikan"
+                        placeholder="Isikan hasil pekerjaan yang telah diselesaikan"
                       />
                     </Form.Group>
                     <Form.Group as={Col} controlId="file-attachment">
@@ -240,7 +243,7 @@ export default function BeritaAcara() {
             </React.Fragment>
           )}
 
-          {navActive === 'link-bast' && (
+          {navActive === "link-bast" && (
             <React.Fragment>
               <Form className="mt-3">
                 <Row>
@@ -368,14 +371,14 @@ export default function BeritaAcara() {
 
       <Card className="mt-5">
         <CardBody>
-          {navActive === 'link-bapp' && (
+          {navActive === "link-bapp" && (
             <React.Fragment>
               <Button
                 variant="contained"
                 color="secondary"
                 className={classes.button}
                 size="small"
-                onClick={(e) => console.log('tableContent: ', tableContent)}
+                onClick={(e) => console.log("tableContent: ", tableContent)}
               >
                 <i
                   className={`fas fa-eye text-white ${classes.iconButton}`}
@@ -412,14 +415,14 @@ export default function BeritaAcara() {
             </React.Fragment>
           )}
 
-          {navActive === 'link-bast' && (
+          {navActive === "link-bast" && (
             <React.Fragment>
               <Button
                 variant="contained"
                 color="secondary"
                 className={classes.button}
                 size="small"
-                onClick={(e) => console.log('tableContent: ', tableContent)}
+                onClick={(e) => console.log("tableContent: ", tableContent)}
               >
                 <i
                   className={`fas fa-eye text-white ${classes.iconButton}`}

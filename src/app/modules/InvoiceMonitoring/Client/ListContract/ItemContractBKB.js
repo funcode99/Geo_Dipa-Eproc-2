@@ -509,7 +509,7 @@ function ItemContractBKB(props) {
                             paddingBottom: 5,
                           }}
                         >
-                          <QRCodeG value="https://www.geodipa.co.id/" />
+                          <QRCodeG value="http://192.168.0.168:3000/qrcode" />
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
@@ -571,7 +571,7 @@ function ItemContractBKB(props) {
                             paddingBottom: 5,
                           }}
                         >
-                          <QRCodeG value="https://www.geodipa.co.id/" />
+                          <QRCodeG value="http://192.168.0.168:3000/qrcode" />
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
@@ -622,7 +622,10 @@ function ItemContractBKB(props) {
                         paddingBottom: 5,
                       }}
                     >
-                      <QRCodeG value="https://www.geodipa.co.id/" size="60" />
+                      <QRCodeG
+                        value="http://192.168.0.168:3000/qrcode"
+                        size="60"
+                      />
                     </div>
                     <div className="d-flex align-items-end">
                       <div>
