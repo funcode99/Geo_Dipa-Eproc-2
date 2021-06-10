@@ -21,7 +21,7 @@ export default function Navs({
     >
       {navLists.map((item) => (
         <Nav.Item key={item.id}>
-          <Nav.Link eventKey={item.id} style={{ fontWeight: 600 }}>
+          <Nav.Link eventKey={item.id} style={{ fontWeight: 500 }}>
             {item.label}
           </Nav.Link>
         </Nav.Item>
