@@ -7,6 +7,7 @@ import { Dropdown } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import FieldBuilder from "../../../../../components/builder/FieldBuilder";
+import TableBuilder from "../../../../../components/builder/TableBuilder";
 import RenderInput from "../../../../../components/input/RenderInput";
 import TitleField from "../../../../../components/input/TitleField";
 import Navs from "../../../../../components/navs";
@@ -40,12 +41,29 @@ const RowNormal = () => {
     </StyledTableRow>
   );
 };
+const RowBank = () => {
+  return (
+    <StyledTableRow>
+      {[
+        "1",
+        "PT Abyor International",
+        "BNI",
+        "PT Abyor International",
+        "21456378",
+      ].map((el, idx) => (
+        <TableCell key={idx} className="text-dark text-left">
+          {el}
+        </TableCell>
+      ))}
+    </StyledTableRow>
+  );
+};
 
 const RowAdditional = ({ label, value }) => {
   return (
     <StyledTableRow>
       <TableCell colSpan={5} className="text-dark text-right">
-        Subtotal
+        {label}
       </TableCell>
       <TableCell colSpan={2} className="text-dark text-left">
         2.5123.1231
@@ -88,42 +106,27 @@ const HargaPekerjaan = () => {
             <TitleField title={"Rincian Harga Pekerjaan"} />
           </Col>
         </Row>
-        <div
-          className="table-wrapper-scroll-y my-custom-scrollbar"
-          style={{ height: "30vh", marginBottom: 21 }}
-        >
-          <div className="segment-table">
-            <div className="hecto-12">
-              <StyledTable>
-                <StyledTableHead>
-                  <StyledHead>
-                    {[
-                      "No",
-                      "Deskripsi",
-                      "QTY",
-                      "Satuan",
-                      "Harga Satuan",
-                      "Harga Total",
-                      "Keterangan",
-                    ].map((el, id) => (
-                      <TableCell key={id} className="text-white align-middle">
-                        {el}
-                      </TableCell>
-                    ))}
-                  </StyledHead>
-                </StyledTableHead>
-                <TableBody>
-                  <RowNormal />
-                  <RowNormal />
-                  <RowNormal />
-                  <RowAdditional />
-                  <RowAdditional />
-                  <RowAdditional />
-                </TableBody>
-              </StyledTable>
-            </div>
-          </div>
-        </div>
+        <TableBuilder
+          hecto={10}
+          dataHead={[
+            "No",
+            "Deskripsi",
+            "QTY",
+            "Satuan",
+            "Harga Satuan",
+            "Harga Total",
+            "Keterangan",
+          ]}
+          dataBody={[{ name: "oke" }, { name: "oke" }, { name: "oke" }]}
+          renderRowBody={({ item, index }) => <RowNormal key={index} />}
+          footerComponent={
+            <React.Fragment>
+              <RowAdditional label={"Subtotal"} />
+              <RowAdditional label={"PPN 10%"} />
+              <RowAdditional label={"Grand Total"} />
+            </React.Fragment>
+          }
+        />
         <Row>
           <Col md={6}>
             <TitleField title={"Metode Pembayaran"} />
@@ -150,6 +153,30 @@ const HargaPekerjaan = () => {
               </Col>
             </Row>
           ))}
+        <Row>
+          <Col md={12}>
+            <TitleField title={"Referensi Bank Penyedia"} />
+          </Col>
+          <Col md={12}>
+            <TableBuilder
+              hecto={12}
+              dataHead={[
+                "No",
+                "Atas Nama",
+                "Nama Bank",
+                "Alamat Bank",
+                "Nomor Rekening",
+              ]}
+              dataBody={[
+                { name: "oke" },
+                { name: "oke" },
+                { name: "oke" },
+                { name: "oke" },
+              ]}
+              renderRowBody={({ item, index }) => <RowBank key={index} />}
+            />
+          </Col>
+        </Row>
       </CardBody>
     </Card>
   );
