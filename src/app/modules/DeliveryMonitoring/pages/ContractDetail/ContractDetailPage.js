@@ -64,43 +64,43 @@ const useStyles = makeStyles((theme) => ({
 const TabLists = [
   {
     id: "detail",
-    label: "Detail",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
     icon: <FindInPageIcon className="mb-0 mr-2" />,
   },
   {
     id: "para-pihak",
-    label: "Para Pihak",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
     icon: <PeopleAltIcon className="mb-0 mr-2" />,
   },
 
   {
     id: "dokumen-kontrak",
-    label: "Dokumen Kontrak",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
     icon: <AssignmentIcon className="mb-0 mr-2" />,
   },
   {
     id: "harga-pekerjaan",
-    label: "Harga Pekerjaan",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
     icon: <MonetizationOnIcon className="mb-0 mr-2" />,
   },
   {
     id: "jangka-waktu",
-    label: "Jangka Waktu",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
     icon: <QueryBuilderIcon className="mb-0 mr-2" />,
   },
   {
     id: "jaminan",
-    label: "Jaminan",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
     icon: <FeaturedPlayListIcon className="mb-0 mr-2" />,
   },
   {
     id: "denda",
-    label: "Denda",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />,
     icon: <ErrorIcon className="mb-0 mr-2" />,
   },
   {
     id: "para-pihak2",
-    label: "Para Pihak 2",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
     icon: <PeopleAltIcon className="mb-0 mr-2" />,
   },
 ];
