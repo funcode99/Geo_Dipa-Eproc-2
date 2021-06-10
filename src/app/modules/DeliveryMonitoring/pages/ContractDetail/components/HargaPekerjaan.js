@@ -156,7 +156,7 @@ const HargaPekerjaan = () => {
           [1, 2, 3, 4].map((el, id) => (
             <Row key={id}>
               <Col md={6}>
-                <BasicInput name={"namama"} label={"Tahap 1"} />
+                <RenderInput values={{}} name={"namama"} label={"Tahap 1"} />
               </Col>
             </Row>
           ))}
@@ -164,7 +164,7 @@ const HargaPekerjaan = () => {
           [1, 2, 3, 4].map((el, id) => (
             <Row key={id}>
               <Col md={6}>
-                <BasicInput name={"namama"} label={"Tahap 1"} />
+                <RenderInput values={{}} name={"namama"} label={"Tahap 1"} />
               </Col>
             </Row>
           ))}

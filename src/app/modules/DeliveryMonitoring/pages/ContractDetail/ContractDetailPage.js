@@ -126,7 +126,7 @@ export const ContractDetailPage = () => {
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
-  const [tabActive, setTabActive] = React.useState(1);
+  const [tabActive, setTabActive] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
   const [modals, setModals] = React.useState(false);
@@ -432,8 +432,8 @@ export const ContractDetailPage = () => {
           )}{" "}
           <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.TERM" />
         </h3>
-        {dataSubmitItems.task_items.length === 0 &&
-          dataSubmitItems.task_services.length === 0 && (
+        {dataSubmitItems?.task_items?.length === 0 &&
+          dataSubmitItems?.task_services?.length === 0 && (
             <p>Tidak ada item yang dipilih</p>
           )}
         <div className="mb-5">

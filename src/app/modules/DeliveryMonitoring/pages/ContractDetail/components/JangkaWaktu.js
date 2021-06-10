@@ -14,7 +14,7 @@ const InputBulanHari = ({ valueBulan, valueHari }) => (
   <Row>
     <Col md={6}>
       <InputGroup className="mb-3">
-        <FormControl aria-label="Month" value={valueBulan} />
+        <FormControl disabled aria-label="Month" value={valueBulan} />
         <InputGroup.Append>
           <InputGroup.Text>Bulan</InputGroup.Text>
         </InputGroup.Append>
@@ -22,7 +22,7 @@ const InputBulanHari = ({ valueBulan, valueHari }) => (
     </Col>
     <Col md={6}>
       <InputGroup className="mb-3">
-        <FormControl value={valueHari} aria-label="Days" />
+        <FormControl disabled value={valueHari} aria-label="Days" />
         <InputGroup.Append>
           <InputGroup.Text>Hari</InputGroup.Text>
         </InputGroup.Append>
@@ -136,6 +136,7 @@ const Item = ({ title, data }) => {
           <BasicInput
             name={"namama"}
             label={"Mulai"}
+            disabled
             defaultValue={data?.[0]}
           />
         </Col>
@@ -143,12 +144,13 @@ const Item = ({ title, data }) => {
           <BasicInput
             name={"namama"}
             label={"Berakhir"}
+            disabled
             defaultValue={data?.[1]}
           />
         </Col>
         <Col md={2}>
           <InputGroup className="mb-3">
-            <FormControl aria-label="Month" defaultValue={data?.[2]} />
+            <FormControl aria-label="Month" disabled defaultValue={data?.[2]} />
             <InputGroup.Append>
               <InputGroup.Text>Bulan</InputGroup.Text>
             </InputGroup.Append>
@@ -156,7 +158,7 @@ const Item = ({ title, data }) => {
         </Col>
         <Col md={2}>
           <InputGroup className="mb-3">
-            <FormControl defaultValue={data?.[3]} aria-label="Days" />
+            <FormControl disabled defaultValue={data?.[3]} aria-label="Days" />
             <InputGroup.Append>
               <InputGroup.Text>Hari</InputGroup.Text>
             </InputGroup.Append>
