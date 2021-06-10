@@ -287,5 +287,6 @@
   "TITLE.APPROVED_BY": "Telah disetujui oleh",
   "TITLE.APPROVED_CEK_OR_GIRO": "Penanda-tanganan Cek / Giro",
   "TITLE.ACCEPT_DOCUMENT": "Terima Dokumen",
-  "TITLE.REJECT_DOCUMENT": "Tolak Dokumen"
+  "TITLE.REJECT_DOCUMENT": "Tolak Dokumen",
+  "TITLE.EDIT": "Edit Data"
 }
