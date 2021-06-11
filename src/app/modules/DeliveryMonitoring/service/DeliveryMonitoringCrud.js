@@ -17,7 +17,7 @@ export function submitTask(values, update) {
   if (update) {
     return axios.put(`/delivery/task/${update.id}`, values);
   }
-  return axios.post(`/delivery/task`, values);
+  return axios.post(`/delivery/task-item`, values);
 }
 
 export function deleteTask(id) {
@@ -27,11 +27,6 @@ export function deleteTask(id) {
 // Task Item
 export function getTaskById(taskId) {
   return axios.get(`/delivery/task/${taskId}`);
-}
-
-// create task include item
-export function submitTaskIncludeItems(values) {
-  return axios.post(`/delivery/task-item`, values);
 }
 
 export function submitItems(values, taskId) {

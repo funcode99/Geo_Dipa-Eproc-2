@@ -655,7 +655,7 @@ export const ContractDetailPage = () => {
             <Item />
 
             <Container>
-              <div className="d-flex justify-content-end w-100">
+              <div className="d-flex justify-content-end w-100 mt-3">
                 <Button
                   variant="contained"
                   color="secondary"
