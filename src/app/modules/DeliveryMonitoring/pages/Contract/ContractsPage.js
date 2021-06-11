@@ -79,11 +79,6 @@ export const ContractsPage = () => {
               ]}
             />
           ),
-          // (
-          //   <Link to={`/client/delivery-monitoring/contract/${item.id}`}>
-          //     <Icon className="fas fa-search pointer text-primary" />
-          //   </Link>
-          // ),
         },
       ];
       setTableContent((prev) => [...prev, rows]);

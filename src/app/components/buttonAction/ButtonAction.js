@@ -71,7 +71,11 @@ export default function ButtonAction({ data, handleAction, ops }) {
               );
             } else {
               return (
-                <MenuItem key={id} onClick={() => handleChange(el.type, data)}>
+                <MenuItem
+                  key={id}
+                  onClick={() => handleChange(el.type, data)}
+                  disabled={el.disabled}
+                >
                   <ListItemIcon>
                     <i className={el.icon}></i>
                   </ListItemIcon>
@@ -79,19 +83,6 @@ export default function ButtonAction({ data, handleAction, ops }) {
                 </MenuItem>
               );
             }
-
-            // el.to ? (
-            //   <React.Fragment>
-            //     <MenuItem key={id} onClick={() => handleChange(el.type, data)}>
-            //       <ListItemIcon>
-            //         <i className={el.icon}></i>
-            //       </ListItemIcon>
-            //       <ListItemText primary={<FormattedMessage id={el.label} />} />
-            //     </MenuItem>
-            //   </React.Fragment>
-            // ) : (
-            //   <div key={id}>Test</div>
-            // );
           })}
       </Menu>
     </div>
