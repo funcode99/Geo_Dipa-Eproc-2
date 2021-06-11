@@ -145,6 +145,13 @@ function ContractReceiptPage(props) {
         formik.setFieldValue('file', e.currentTarget.files[0])
     }
 
+    const handleDate = (e) => {
+        formik.setFieldValue('from_time', e.target.value)
+        var date = new Date(e.target.value)
+        date.setMonth(date.getMonth() + 1)
+        formik.setFieldValue('thru_time', date.toISOString().split('T')[0])
+    }
+
     useEffect(getContractData, []);
 
     return (
@@ -171,33 +178,21 @@ function ContractReceiptPage(props) {
                                     ) : null}
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="priceContract" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE" /></label>
+                                    <label htmlFor="dateReceipt" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.SPR_DATE" /></label>
                                     <div className="col-sm-8">
-                                        <input type="text" className="form-control" id="priceContract" defaultValue={contractData['contract_value_new']} disabled />
+                                        <input type="date" className="form-control" id="dateReceipt" disabled={loading} onChange={e => handleDate(e)} />
                                     </div>
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="poNumber" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" /></label>
-                                    <div className="col-sm-8">
-                                        <input type="text" className="form-control" id="poNumber" defaultValue={contractData['purch_order_no']} disabled />
-                                    </div>
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="priceStep1" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
-                                    <div className="col-sm-8">
-                                        <input type="text" className="form-control" id="priceStep1" defaultValue="Rp. 1.000.000" disabled />
-                                    </div>
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="numberInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.RECEIPT_DOCUMENT.TOTAL" /></label>
-                                    <div className="col-sm-8">
-                                        <input type="text" className="form-control" id="numberInvoice" disabled={loading} defaultValue="0001010-0121" />
-                                    </div>
-                                    {(formik.touched.invoice_no && formik.errors.invoice_no) ? (
+                                    {(formik.touched.from_time && formik.errors.from_time) ? (
                                         <span className="col-sm-8 offset-sm-4 text-center text-danger" >
-                                            {formik.errors.invoice_no}
+                                            {formik.errors.from_time}
                                         </span>
                                     ) : null}
+                                </div>
+                                <div className="form-group row">
+                                    <label htmlFor="note" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DESCRIPTION" /></label>
+                                    <div className="col-sm-8">
+                                        <textarea rows="4" cols="" className="form-control" id="note" defaultValue="deskripsi"></textarea>
+                                    </div>
                                 </div>
                                 <div className="form-group row">
                                     <label htmlFor="upload" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.RECEIPT_DOCUMENT.RECEIPT_UPLOAD" /></label>
@@ -217,15 +212,27 @@ function ContractReceiptPage(props) {
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group row">
-                                    <label htmlFor="first" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FIRST_PARTY" /></label>
-                                    <div className="col-sm-8">
-                                        <textarea rows="4" cols="" disabled className="form-control" id="first" defaultValue={contractData['full_data_party_1']}></textarea>
+                                    <label htmlFor="priceContract" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE" /></label>
+                                    <div className="col-sm-7">
+                                        <input type="text" className="form-control" id="priceContract" defaultValue={contractData['contract_value_new']} disabled />
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="second" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SECOND_PARTY" /></label>
-                                    <div className="col-sm-8">
-                                        <textarea rows="4" cols="" disabled className="form-control" id="second" defaultValue={contractData['full_data_party_2']}></textarea>
+                                    <label htmlFor="poNumber" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" /></label>
+                                    <div className="col-sm-7">
+                                        <input type="text" className="form-control" id="poNumber" defaultValue={contractData['purch_order_no']} disabled />
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
+                                    <div className="col-sm-7">
+                                        <input type="text" className="form-control" id="priceStep1" defaultValue="Rp. 1.000.000" disabled />
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <label htmlFor="priceTaxReceipt" className="col-sm-5 col-form-label">Harga Pekerjaan Tahap 1 dengan PPN</label>
+                                    <div className="col-sm-7">
+                                        <input type="text" className="form-control" id="priceTaxReceipt" defaultValue="Rp. 1.100.000" disabled />
                                     </div>
                                 </div>
                             </div>

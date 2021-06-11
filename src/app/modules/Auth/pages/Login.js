@@ -39,12 +39,6 @@ function Login(props) {
         })
       ),
     password: Yup.string()
-      .min(8, intl.formatMessage({
-        id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
-      }, {length: 8}))
-      .max(50, intl.formatMessage({
-        id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
-      }, {length: 50}))
       .required(
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",

@@ -1,5 +1,4 @@
-import React from // useState
-"react";
+import React from "react"; // useState
 import { connect } from "react-redux";
 import {
   // FormattedMessage,
@@ -15,11 +14,11 @@ import ItemContractInvoice from "./ItemContractInvoice";
 import ItemContractBKB from "./ItemContractBKB";
 import ItemContractRoutingSlip from "./ItemContractRoutingSlip";
 import ItemContractFormVerification from "./ItemContractFormVerification";
-
+import ContractHardCopyDoc from "./ContractHardCopyDoc";
 const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(2),
-    },
+  paper: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 const TabLists = [
@@ -38,6 +37,16 @@ const TabLists = [
     label: "Document",
     icon: (
       <i className="fas fa-receipt mb-0 mr-2" style={{ color: "inherit" }}></i>
+    ),
+  },
+  {
+    id: "hardCopy",
+    label: "Hard Copy Document",
+    icon: (
+      <i
+        className="fas fa-file-contract mb-0 mr-2"
+        style={{ color: "inherit" }}
+      ></i>
     ),
   },
   {
@@ -67,8 +76,8 @@ const TabLists = [
 ];
 
 const ItemContract = (props) => {
-    const suhbeader = useSubheader();
-    const { intl } = props;
+  const suhbeader = useSubheader();
+  const { intl } = props;
   suhbeader.setTitle(
     intl.formatMessage({
       id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT",
@@ -76,40 +85,41 @@ const ItemContract = (props) => {
       " Term " +
       useParams().id
   );
-    const classes = useStyles();
-    const [tabActive, setTabActive] = React.useState(0);
+  const classes = useStyles();
+  const [tabActive, setTabActive] = React.useState(0);
 
-    function handleChangeTab(event, newTabActive) {
-      setTabActive(newTabActive);
-    }
+  function handleChangeTab(event, newTabActive) {
+    setTabActive(newTabActive);
+  }
 
-    return (
-            <Container className="px-0">
-              <Subheader
-                text="012.PJ/PST.30-GDE/IX/2020-1000014263"
+  return (
+    <Container className="px-0">
+      <Subheader
+        text="012.PJ/PST.30-GDE/IX/2020-1000014263"
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
-              />
-              <Paper className={classes.paper}>
-                  <Container>
-                  <Tabs
-                      tabActive={tabActive}
-                      handleChange={handleChangeTab}
-                      tabLists={TabLists}
-                  />
-                  </Container>
-                  <hr className="p-0 m-0" />
-                  <Container className="p-0">
-                  {tabActive === 0 && <ItemContractSummary {...props} />}
-                  {tabActive === 1 && <ItemContractInvoice {...props} />}
-                  {tabActive === 2 && <ItemContractBKB />}
-                  {tabActive === 3 && <ItemContractFormVerification />}
-                  {tabActive === 4 && <ItemContractRoutingSlip />}
-                  </Container>
-              </Paper>
-            </Container>
-    );
+      />
+      <Paper className={classes.paper}>
+        <Container>
+          <Tabs
+            tabActive={tabActive}
+            handleChange={handleChangeTab}
+            tabLists={TabLists}
+          />
+        </Container>
+        <hr className="p-0 m-0" />
+        <Container className="p-0">
+          {tabActive === 0 && <ItemContractSummary {...props} />}
+          {tabActive === 1 && <ItemContractInvoice {...props} />}
+          {tabActive === 2 && <ContractHardCopyDoc />}
+          {tabActive === 3 && <ItemContractBKB />}
+          {tabActive === 4 && <ItemContractFormVerification />}
+          {tabActive === 5 && <ItemContractRoutingSlip />}
+        </Container>
+      </Paper>
+    </Container>
+  );
 };
 
 export default injectIntl(connect(null, null)(ItemContract));

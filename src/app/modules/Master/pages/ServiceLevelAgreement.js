@@ -230,8 +230,6 @@ const ServiceLevelAgreement = (props) => {
   const handleAction = (type, data) => {
     setDataEdit(data);
     setDialogState(true);
-    console.log("type", type);
-    console.log("data", data);
   };
 
   return (
