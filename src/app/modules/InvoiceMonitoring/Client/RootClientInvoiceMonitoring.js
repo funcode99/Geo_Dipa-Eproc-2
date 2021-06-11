@@ -22,7 +22,7 @@ function RootClientInvoiceMonitoring(props) {
         to="/client/invoice_monitoring/contract"
       />
       <Route
-        path="/client/invoice_monitoring/contract/:id"
+        path="/client/invoice_monitoring/contract/:termin/:contract"
         component={(props) => <ItemContract {...props} />}
         exact={true}
       />
