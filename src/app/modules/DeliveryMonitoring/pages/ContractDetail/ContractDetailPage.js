@@ -10,7 +10,17 @@ import {
   MenuItem,
   InputLabel,
 } from "@material-ui/core";
-import { Send } from "@material-ui/icons";
+import {
+  Send,
+  Assignment,
+  QueryBuilderSharp,
+  FeaturedPlayList,
+  Error,
+  PeopleAlt,
+  Description,
+  FindInPage,
+  MonetizationOn,
+} from "@material-ui/icons";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
@@ -31,13 +41,6 @@ import formatDate from "../../../../libs/date";
 import * as Option from "../../../../service/Option";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { FormDetail, Item } from "./components/Detail";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import FindInPageIcon from "@material-ui/icons/FindInPage";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
-import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import FeaturedPlayListIcon from "@material-ui/icons/FeaturedPlayList";
-import ErrorIcon from "@material-ui/icons/Error";
 import ParaPihak from "./components/ParaPihak";
 import ParaPihak2 from "./components/ParaPihak/ParaPihak2";
 import DokContract from "./components/DokContract";
@@ -65,43 +68,48 @@ const TabLists = [
   {
     id: "detail",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
-    icon: <FindInPageIcon className="mb-0 mr-2" />,
+    icon: <FindInPage className="mb-0 mr-2" />,
   },
   {
     id: "para-pihak",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
-    icon: <PeopleAltIcon className="mb-0 mr-2" />,
+    icon: <PeopleAlt className="mb-0 mr-2" />,
   },
 
   {
     id: "dokumen-kontrak",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
-    icon: <AssignmentIcon className="mb-0 mr-2" />,
+    icon: <Assignment className="mb-0 mr-2" />,
   },
   {
     id: "harga-pekerjaan",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
-    icon: <MonetizationOnIcon className="mb-0 mr-2" />,
+    icon: <MonetizationOn className="mb-0 mr-2" />,
   },
   {
     id: "jangka-waktu",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
-    icon: <QueryBuilderIcon className="mb-0 mr-2" />,
+    icon: <QueryBuilderSharp className="mb-0 mr-2" />,
   },
   {
     id: "jaminan",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
-    icon: <FeaturedPlayListIcon className="mb-0 mr-2" />,
+    icon: <FeaturedPlayList className="mb-0 mr-2" />,
   },
   {
     id: "denda",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />,
-    icon: <ErrorIcon className="mb-0 mr-2" />,
+    icon: <Error className="mb-0 mr-2" />,
   },
   {
     id: "para-pihak2",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
-    icon: <PeopleAltIcon className="mb-0 mr-2" />,
+    icon: <PeopleAlt className="mb-0 mr-2" />,
+  },
+  {
+    id: "bast",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />,
+    icon: <Description className="mb-0 mr-2" />,
   },
 ];
 
@@ -683,6 +691,7 @@ export const ContractDetailPage = () => {
         {tabActive === 5 && <Jaminan />}
         {tabActive === 6 && <Denda />}
         {tabActive === 7 && <ParaPihak2 />}
+        {tabActive === 8 && <div>Test BAST</div>}
       </Paper>
     </React.Fragment>
   );
