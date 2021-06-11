@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { BookmarkBorderOutlined } from '@material-ui/icons';
+import React from "react";
+import styled from "styled-components";
+import { BookmarkBorderOutlined } from "@material-ui/icons";
 
 export const SubWrap = styled.div`
   background: linear-gradient(
@@ -15,8 +15,8 @@ export const SubWrap = styled.div`
 // Note: please use icon from material-ui/icons or icon with component
 
 const StyledSubheader = ({
-  text = '',
-  IconComponent = <BookmarkBorderOutlined style={{ color: 'white' }} />,
+  text = "",
+  IconComponent = <BookmarkBorderOutlined style={{ color: "white" }} />,
 }) => {
   return (
     <div className="d-flex align-items-center flex-wrap mr-1">

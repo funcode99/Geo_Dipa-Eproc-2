@@ -38,7 +38,7 @@ export const DataAsideMenuListClient = [
     title: "MENU.INVOICE_MONITORING",
     subMenu: [
       {
-        rootPath: "/client/invoice_monitoring",
+        rootPath: "/client/invoice_monitoring/contract",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },
@@ -63,14 +63,9 @@ export const DataAsideMenuListClient = [
         ],
       },
       {
-        rootPath: "/client/invoice_monitoring-3/error-v",
+        rootPath: "/client/invoice_monitoring/spt",
         title: "MENU.INVOICE_MONITORING.SPT",
-        subMenu: [
-          {
-            rootPath: "/client/invoice_monitoring-3/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
       {
         rootPath: "/client/invoice_monitoring-4/error-v",

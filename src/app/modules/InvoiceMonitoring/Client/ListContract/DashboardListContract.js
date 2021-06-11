@@ -230,22 +230,38 @@ function DashboardListContract(props) {
                       return (
                         <tr key={index.toString()}>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link
+                              to={
+                                `/client/invoice_monitoring/contract/` + item.id
+                              }
+                            >
                               {item.contract_no}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link
+                              to={
+                                `/client/invoice_monitoring/contract/` + item.id
+                              }
+                            >
                               {item.contract_name}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link
+                              to={
+                                `/client/invoice_monitoring/contract/` + item.id
+                              }
+                            >
                               {item.purch_order_no}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link
+                              to={
+                                `/client/invoice_monitoring/contract/` + item.id
+                              }
+                            >
                               {index === 0
                                 ? 1
                                 : index === 1
@@ -258,12 +274,20 @@ function DashboardListContract(props) {
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link
+                              to={
+                                `/client/invoice_monitoring/contract/` + item.id
+                              }
+                            >
                               80000035434
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/client/invoice_monitoring/` + item.id}>
+                            <Link
+                              to={
+                                `/client/invoice_monitoring/contract/` + item.id
+                              }
+                            >
                               INV0352345
                             </Link>
                           </td>

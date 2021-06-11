@@ -288,5 +288,9 @@
   "TITLE.APPROVED_CEK_OR_GIRO": "Signing Cek/Giro",
   "TITLE.ACCEPT_DOCUMENT": "Accept Document",
   "TITLE.REJECT_DOCUMENT": "Reject Document",
-  "TITLE.EDIT": "Edit Data"
+  "TITLE.EDIT": "Edit Data",
+  "TITLE.SPT_NO": "No SPT",
+  "TITLE.CEK_NO": "No CEK",
+  "TITLE.TOTAL_PAYMENT": "Total Payment",
+  "TITLE.OPEN_DATA": "Open Data"
 }

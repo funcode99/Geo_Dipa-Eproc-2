@@ -5,18 +5,24 @@ import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import { Link } from "react-router-dom";
-import { getContractClient } from "../../_redux/InvoiceMonitoringCrud";
+import { getListSpt } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { TablePagination } from "@material-ui/core";
+import ButtonAction from "../../../../components/buttonAction/ButtonAction";
+import { rupiah } from "../../../../libs/currency";
+import { useHistory } from "react-router-dom";
 
-function DashboardListContract(props) {
+const data_ops = [
+  {
+    label: "TITLE.OPEN_DATA",
+    icon: "fas fa-search text-primary",
+    type: "open",
+  },
+];
+
+function DashboardListSpt(props) {
   const { intl } = props;
-  // const vendor_id = useSelector(
-  //   (state) => state.auth.user.data.vendor_id,
-  //   shallowEqual
-  // );
   const [filterTable, setFilterTable] = useState({});
-  const [contractData, setContractData] = useState([]);
   const [nameStateFilter, setNameStateFilter] = useState("");
   const [Toast, setToast] = useToast();
   const [paginations, setPaginations] = useState({
@@ -28,44 +34,30 @@ function DashboardListContract(props) {
   const [filterData] = useState([
     {
       title: intl.formatMessage({
-        id: "TITLE.CONTRACT_NO",
+        id: "TITLE.SPT_NO",
       }),
-      name: "no_contract",
+      name: "no_spt",
+      type: "text",
+    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: "TITLE.CEK_NO",
+    //   }),
+    //   name: "no_cek",
+    //   type: "text",
+    // },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TOTAL_PAYMENT",
+      }),
+      name: "total_payment",
       type: "text",
     },
     {
       title: intl.formatMessage({
-        id: "TITLE.PROCUREMENT_TITLE",
+        id: "TITLE.ACCOUNT_NUMBER",
       }),
-      name: "procurement_title",
-      type: "text",
-    },
-    {
-      title: intl.formatMessage({
-        id: "TITLE.PO_NUMBER",
-      }),
-      name: "no_po",
-      type: "text",
-    },
-    {
-      title: intl.formatMessage({
-        id: "TITLE.TERMIN",
-      }),
-      name: "termin",
-      type: "text",
-    },
-    {
-      title: intl.formatMessage({
-        id: "TITLE.SA_NUMBER",
-      }),
-      name: "no_sa",
-      type: "text",
-    },
-    {
-      title: intl.formatMessage({
-        id: "TITLE.INVOICE_NO",
-      }),
-      name: "no_invoice",
+      name: "account_number",
       type: "text",
     },
   ]);
@@ -73,15 +65,49 @@ function DashboardListContract(props) {
   const [data, setData] = useState([]);
   const [filterSort, setFilterSort] = useState({ filter: {}, sort: {} });
   const [sortData, setSortData] = useState({
-    name: "no_contract",
+    name: "no_spt",
     order: false,
   });
   const [err, setErr] = useState(false);
   const [dialogState, setDialogState] = useState(false);
+  const history = useHistory();
 
-  useEffect(() => {
-    getListContractData();
-  }, []);
+  const requestFilterSort = useCallback(
+    (updateFilterTable, updateSortTable) => {
+      setLoading(true);
+      setData([]);
+      let pagination = Object.assign({}, paginations);
+      let filterSorts = filterSort;
+      filterSorts.filter = JSON.stringify(
+        updateFilterTable ? updateFilterTable : filterTable
+      );
+      filterSorts.sort = JSON.stringify(
+        updateSortTable ? updateSortTable : sortData
+      );
+      pagination.page = pagination.page + 1;
+      filterSorts = Object.assign({}, filterSorts, pagination);
+      setFilterSort({ ...filterSorts });
+      let params = new URLSearchParams(filterSorts).toString();
+      getListSpt(params)
+        .then((result) => {
+          setLoading(false);
+          setData(result.data.data);
+          setPaginations({ ...paginations, count: result.data.count || 0 });
+        })
+        .catch((err) => {
+          setErr(true);
+          setLoading(false);
+          if (
+            err.response?.status !== 400 &&
+            err.response?.data.message !== "TokenExpiredError"
+          )
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        });
+    },
+    [filterTable, sortData, filterSort, intl, setToast, paginations]
+  );
+
+  useEffect(requestFilterSort, []);
 
   const openFilterTable = (name, index) => {
     let idFilter = "filter-" + index;
@@ -117,7 +143,7 @@ function DashboardListContract(props) {
     ).value;
     setFilterTable({ ...filterTables });
     openFilterTable(property, index);
-    // requestFilterSort();
+    requestFilterSort();
   };
 
   const resetValueFilter = (property) => {
@@ -125,66 +151,16 @@ function DashboardListContract(props) {
     filterTables[property] = "";
     document.getElementById(property).value = "";
     setFilterTable({ ...filterTables });
-    // requestFilterSort();
+    requestFilterSort();
   };
 
   const resetFilter = () => {
     setFilterTable({});
     document.getElementById("filter-form-all").reset();
-    // requestFilterSort({});
-  };
-
-  const requestFilterSort = useCallback(
-    (updateFilterTable, updateSortTable) => {
-      setLoading(true);
-      setData([]);
-      let pagination = Object.assign({}, paginations);
-      let filterSorts = filterSort;
-      filterSorts.filter = JSON.stringify(
-        updateFilterTable ? updateFilterTable : filterTable
-      );
-      filterSorts.sort = JSON.stringify(
-        updateSortTable ? updateSortTable : sortData
-      );
-      pagination.page = pagination.page + 1;
-      filterSorts = Object.assign({}, filterSorts, pagination);
-      setFilterSort({ ...filterSorts });
-      let params = new URLSearchParams(filterSorts).toString();
-      // getSla(params)
-      //   .then((result) => {
-      //     setLoading(false);
-      //     setData(result.data.data);
-      //     setPaginations({ ...paginations, count: result.data.count || 0 });
-      //   })
-      //   .catch((err) => {
-      //     setErr(true);
-      //     setLoading(false);
-      //     if (
-      //       err.response?.status !== 400 &&
-      //       err.response?.data.message !== "TokenExpiredError"
-      //     )
-      //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      //   });
-    },
-    [filterTable, sortData, filterSort, intl, setToast, paginations]
-  );
-
-  const getListContractData = () => {
-    getContractClient()
-      .then((response) => {
-        setContractData(response.data.data);
-      })
-      .catch((error) => {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        )
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      });
+    requestFilterSort({});
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log("newPage", newPage);
     let pagination = paginations;
     pagination.numberColum =
       newPage > pagination.page
@@ -194,7 +170,9 @@ function DashboardListContract(props) {
     setPaginations({
       ...pagination,
     });
+    requestFilterSort();
   };
+
   const handleChangeRowsPerPage = (event) => {
     let pagination = paginations;
     pagination.page = 0;
@@ -203,6 +181,12 @@ function DashboardListContract(props) {
     setPaginations({
       ...pagination,
     });
+    requestFilterSort();
+  };
+
+  const handleAction = (type, data) => {
+    if (type === "open")
+      history.push(`/client/invoice_monitoring/spt/${data.id}`);
   };
 
   return (
@@ -318,19 +302,22 @@ function DashboardListContract(props) {
                 <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
+                      <th className="bg-primary text-white align-middle td-5">
+                        <FormattedMessage id="TITLE.TABLE_HEADER.NO" />
+                      </th>
                       <th
-                        className="bg-primary text-white align-middle td-23 pointer"
-                        id="no_contract"
+                        className="bg-primary text-white align-middle td-25 pointer"
+                        id="no_spt"
                         onClick={(e) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_contract" && (
+                          {sortData.name === "no_spt" && (
                             <span
                               id="iconSort"
                               className="svg-icon svg-icon-sm svg-icon-white ml-1"
@@ -351,11 +338,11 @@ function DashboardListContract(props) {
                             </span>
                           )}
                         </span>
-                        Nomor Kontrak
+                        <FormattedMessage id="TITLE.SPT_NO" />
                       </th>
                       <th
                         className="bg-primary text-white pointer align-middle td-20"
-                        id="procurement_title"
+                        id="no_cek"
                         onClick={(e) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
@@ -365,7 +352,7 @@ function DashboardListContract(props) {
                         }}
                       >
                         <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "procurement_title" && (
+                          {sortData.name === "no_cek" && (
                             <span
                               id="iconSort"
                               className="svg-icon svg-icon-sm svg-icon-white ml-1"
@@ -386,91 +373,21 @@ function DashboardListContract(props) {
                             </span>
                           )}
                         </span>
-                        Judul Pengadaan
-                      </th>
-                      <th
-                        className="bg-primary text-white pointer align-middle td-12"
-                        id="no_po"
-                        onClick={(e) => {
-                          let sortDatas = sortData;
-                          sortDatas.name = e.target.id;
-                          sortDatas.order = sortDatas.order ? false : true;
-                          setSortData({ ...sortDatas });
-                          // requestFilterSort();
-                        }}
-                      >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_po" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
-                        Nomor PO
-                      </th>
-                      <th
-                        className="bg-primary text-white pointer align-middle td-10"
-                        id="termin"
-                        onClick={(e) => {
-                          let sortDatas = sortData;
-                          sortDatas.name = e.target.id;
-                          sortDatas.order = sortDatas.order ? false : true;
-                          setSortData({ ...sortDatas });
-                          // requestFilterSort();
-                        }}
-                      >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "termin" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
-                        Termin
+                        <FormattedMessage id="TITLE.CEK_NO" />
                       </th>
                       <th
                         className="bg-primary text-white pointer align-middle td-15"
-                        id="no_sa"
+                        id="total_payment"
                         onClick={(e) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_sa" && (
+                          {sortData.name === "total_payment" && (
                             <span
                               id="iconSort"
                               className="svg-icon svg-icon-sm svg-icon-white ml-1"
@@ -491,21 +408,21 @@ function DashboardListContract(props) {
                             </span>
                           )}
                         </span>
-                        Nomor SA
+                        <FormattedMessage id="TITLE.TOTAL_PAYMENT" />
                       </th>
                       <th
-                        className="bg-primary text-white pointer align-middle td-17"
-                        id="no_invoice"
+                        className="bg-primary text-white pointer align-middle td-20"
+                        id="account_number"
                         onClick={(e) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_invoice" && (
+                          {sortData.name === "account_number" && (
                             <span
                               id="iconSort"
                               className="svg-icon svg-icon-sm svg-icon-white ml-1"
@@ -526,104 +443,36 @@ function DashboardListContract(props) {
                             </span>
                           )}
                         </span>
-                        Nomor Invoice
+                        <FormattedMessage id="TITLE.ACCOUNT_NUMBER" />
                       </th>
-                      <th className="bg-primary text-white align-middle td-3">
-                        Status
+                      <th className="bg-primary text-white align-middle td-15">
+                        <FormattedMessage id="TITLE.DATE" />
+                      </th>
+                      <th className="bg-primary text-white align-middle td-5">
+                        <FormattedMessage id="TITLE.TABLE_HEADER.ACTION" />
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {contractData.map((item, index) => {
+                    {data.map((item, index) => {
                       return (
                         <tr key={index.toString()}>
+                          <td>{index + 1 + paginations.numberColum}</td>
+                          <td>{item.spt_no}</td>
+                          <td>-----</td>
+                          <td>{rupiah(item.sub_total)}</td>
+                          <td>{item.account_number}</td>
                           <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              {item.contract_no}
-                            </Link>
+                            {window
+                              .moment(new Date(item.createdAt))
+                              .format("DD MMM YYYY")}
                           </td>
                           <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              {item.contract_name}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              {item.purch_order_no}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              {index === 0
-                                ? 1
-                                : index === 1
-                                ? 2
-                                : index === 2
-                                ? 3
-                                : index === 3
-                                ? 4
-                                : 5}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              80000035434
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              INV0352345
-                            </Link>
-                          </td>
-                          <td>
-                            {index === 1 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-info rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting SA
-                              </label>
-                            ) : index === 2 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-warning rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting Invoice
-                              </label>
-                            ) : index === 3 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-primary rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting Document
-                              </label>
-                            ) : index === 4 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-danger rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Document Rejected
-                              </label>
-                            ) : (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-success rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Paid
-                              </label>
-                            )}
+                            <ButtonAction
+                              data={item}
+                              handleAction={handleAction}
+                              ops={data_ops}
+                            />
                           </td>
                         </tr>
                       );
@@ -635,14 +484,18 @@ function DashboardListContract(props) {
             <div className="table-loading-data">
               <div className="text-center font-weight-bold">
                 <div className="table-loading-data-potition">
-                  {/* <span>
+                  {loading && (
+                    <span>
                       <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
                       <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
                     </span>
-                    <span>
-                      <i className="far fa-frown text-dark mr-1"></i>
-                      <FormattedMessage id="TITLE.TABLE.NO_DATA_AVAILABLE" />
-                    </span> */}
+                  )}
+                  {err && (
+                    <span className="text-danger">
+                      <i className="far fa-frown text-danger mr-1"></i>
+                      <FormattedMessage id="TITLE.ERROR_REQUEST" />
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -665,4 +518,4 @@ function DashboardListContract(props) {
   );
 }
 
-export default injectIntl(connect(null, null)(DashboardListContract));
+export default injectIntl(connect(null, null)(DashboardListSpt));

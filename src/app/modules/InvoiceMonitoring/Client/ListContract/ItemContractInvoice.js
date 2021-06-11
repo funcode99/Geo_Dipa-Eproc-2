@@ -8,7 +8,6 @@ import ContractInvoicePage from "./ContractBillingDocument/ContractInvoicePage";
 import ContractSprPage from "./ContractBillingDocument/ContractSprPage";
 import ContractReceiptPage from "./ContractBillingDocument/ContractReceiptPage";
 import ContractTaxPage from "./ContractBillingDocument/ContractTaxPage";
-import ContractHardCopyDoc from "./ContractBillingDocument/ContractHardCopyDoc";
 
 function ItemContractInvoice(props) {
   const navLists = [
@@ -27,10 +26,6 @@ function ItemContractInvoice(props) {
     {
       id: "Faktur",
       label: "Faktur Pajak",
-    },
-    {
-      id: "HardCopy",
-      label: "Hard Copy Document",
     },
   ];
 
@@ -66,12 +61,6 @@ function ItemContractInvoice(props) {
           {navActive === "Faktur" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
               <ContractTaxPage {...props} />
-            </div>
-          )}
-
-          {navActive === "HardCopy" && (
-            <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractHardCopyDoc {...props} />
             </div>
           )}
         </CardBody>

@@ -41,3 +41,9 @@ export async function getInvoice(contract_id, termin) {
     `/invoice/get_invoice?contract_id=${contract_id}&term=${termin}`
   );
 }
+export async function getListSpt(params) {
+  return axios.get(`/invoice/list_spt${params ? "?" + params : ""}`);
+}
+export async function getItemSpt(id) {
+  return axios.get(`/invoice/get_spt/${id}`);
+}
