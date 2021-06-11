@@ -48,6 +48,7 @@ import HargaPekerjaan from "./components/HargaPekerjaan";
 import JangkaWaktu from "./components/JangkaWaktu";
 import Jaminan from "./components/Jaminan";
 import Denda from "./components/Denda";
+import BAST from "./components/BAST";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -691,7 +692,7 @@ export const ContractDetailPage = () => {
         {tabActive === 5 && <Jaminan />}
         {tabActive === 6 && <Denda />}
         {tabActive === 7 && <ParaPihak2 />}
-        {tabActive === 8 && <div>Test BAST</div>}
+        {tabActive === 8 && <BAST />}
       </Paper>
     </React.Fragment>
   );
