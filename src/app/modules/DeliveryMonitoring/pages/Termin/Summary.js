@@ -475,7 +475,7 @@ export default function Summary({ taskId = "" }) {
         error.response?.status !== 400 &&
         error.response?.data.message !== "TokenExpiredError"
       ) {
-        setToast("Error API, Please contact developer!", 5000);
+        setToast(error.response?.data.message, 5000);
       }
     } finally {
       disableLoading();
@@ -956,13 +956,13 @@ export default function Summary({ taskId = "" }) {
                                     type="number"
                                     size="sm"
                                     min={1}
-                                    max={item.item.qty_available}
+                                    max={item.item.qty}
                                     disabled={!item.checked}
                                     defaultValue={item.qty}
                                     onChange={(e) =>
                                       addSubmitBarang(
                                         e.target.value,
-                                        item.item.qty_available,
+                                        item.item.qty,
                                         item.item.id,
                                         item.item.desc
                                       )

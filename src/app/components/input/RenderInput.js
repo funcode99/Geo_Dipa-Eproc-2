@@ -21,6 +21,10 @@ const RenderInput = ({
   children,
   ChildrenProps,
   label,
+  values,
+  errors,
+  handleSubmit,
+  readOnly,
   ...otherProps
 }) => {
   const Component = inputs[typeInput || "BasicInput"];
@@ -34,7 +38,7 @@ const RenderInput = ({
             <div className="col-sm-8">
               <Component
                 // labelClass="mb-1"
-                //   value={values[name]}
+                value={values[name]}
                 //   onChange={trigger ? this._triggerChange : handleChange(name)}
                 //   onFocus={() => setFieldTouched(name)}
                 //   className={classNames("pl-4", className)}

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 // import { DEV_NODE, DEV_RUBY } from '../../../../redux/BaseHost';
 export const URL = `http://172.18.1.112:3000/api/get-docs-deliverable/1/8000003554`;
 
@@ -17,7 +17,7 @@ export function submitTask(values, update) {
   if (update) {
     return axios.put(`/delivery/task/${update.id}`, values);
   }
-  return axios.post(`/delivery/task`, values);
+  return axios.post(`/delivery/task-item`, values);
 }
 
 export function deleteTask(id) {

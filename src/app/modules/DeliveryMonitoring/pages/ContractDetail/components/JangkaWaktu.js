@@ -2,8 +2,10 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { FormControl } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import FieldBuilder from "../../../../../components/builder/FieldBuilder";
+import BasicInput from "../../../../../components/input/BasicInput";
 import RenderInput from "../../../../../components/input/RenderInput";
 import TitleField from "../../../../../components/input/TitleField";
 import withBox from "./withBox";
@@ -12,7 +14,7 @@ const InputBulanHari = ({ valueBulan, valueHari }) => (
   <Row>
     <Col md={6}>
       <InputGroup className="mb-3">
-        <FormControl aria-label="Month" value={valueBulan} />
+        <FormControl disabled aria-label="Month" value={valueBulan} />
         <InputGroup.Append>
           <InputGroup.Text>Bulan</InputGroup.Text>
         </InputGroup.Append>
@@ -20,7 +22,7 @@ const InputBulanHari = ({ valueBulan, valueHari }) => (
     </Col>
     <Col md={6}>
       <InputGroup className="mb-3">
-        <FormControl value={valueHari} aria-label="Days" />
+        <FormControl disabled value={valueHari} aria-label="Days" />
         <InputGroup.Append>
           <InputGroup.Text>Hari</InputGroup.Text>
         </InputGroup.Append>
@@ -124,20 +126,31 @@ const formData1 = [
   ],
 ];
 
-const Item = ({ title }) => {
+const Item = ({ title, data }) => {
+  // console.log(`dataContraacct`, dataContractById);
   return (
     <React.Fragment>
       <TitleField title={title} />
       <Row>
         <Col md={4}>
-          <RenderInput name={"namama"} label={"Mulai"} />
+          <BasicInput
+            name={"namama"}
+            label={"Mulai"}
+            disabled
+            defaultValue={data?.[0]}
+          />
         </Col>
         <Col md={4}>
-          <RenderInput name={"namama"} label={"Berakhir"} />
+          <BasicInput
+            name={"namama"}
+            label={"Berakhir"}
+            disabled
+            defaultValue={data?.[1]}
+          />
         </Col>
         <Col md={2}>
           <InputGroup className="mb-3">
-            <FormControl aria-label="Month" value={"5"} />
+            <FormControl aria-label="Month" disabled defaultValue={data?.[2]} />
             <InputGroup.Append>
               <InputGroup.Text>Bulan</InputGroup.Text>
             </InputGroup.Append>
@@ -145,7 +158,7 @@ const Item = ({ title }) => {
         </Col>
         <Col md={2}>
           <InputGroup className="mb-3">
-            <FormControl value={"21"} aria-label="Days" />
+            <FormControl disabled defaultValue={data?.[3]} aria-label="Days" />
             <InputGroup.Append>
               <InputGroup.Text>Hari</InputGroup.Text>
             </InputGroup.Append>
@@ -157,14 +170,33 @@ const Item = ({ title }) => {
 };
 
 const JangkaWaktu = () => {
+  const {
+    from_time,
+    thru_time,
+    worked_start_date,
+    worked_end_date,
+    maintenance_end_date,
+    maintenance_start_date,
+    guarantee_end_date,
+    guarantee_start_date,
+  } = useSelector((state) => state.deliveryMonitoring.dataContractById);
   return (
     <Card>
       <CardBody>
         {/* <FieldBuilder formData={formData1} /> */}
-        <Item title={"Jangka Waktu Perjanjian"} />
-        <Item title={"Jangka Waktu Pelaksanaan Pekerjaan"} />
-        <Item title={"Jangka Waktu Masa Garansi"} />
-        <Item title={"Jangka Waktu Masa Pemeliharaan"} />
+        <Item title={"Jangka Waktu Perjanjian"} data={[from_time, thru_time]} />
+        <Item
+          title={"Jangka Waktu Pelaksanaan Pekerjaan"}
+          data={[worked_start_date, worked_end_date]}
+        />
+        <Item
+          title={"Jangka Waktu Masa Garansi"}
+          data={[guarantee_start_date, guarantee_end_date]}
+        />
+        <Item
+          title={"Jangka Waktu Masa Pemeliharaan"}
+          data={[maintenance_start_date, maintenance_end_date]}
+        />
       </CardBody>
     </Card>
   );

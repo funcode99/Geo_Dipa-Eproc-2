@@ -5,8 +5,11 @@ import { FormControl } from "react-bootstrap";
 import { Row } from "react-bootstrap";
 import { Dropdown } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import FieldBuilder from "../../../../../components/builder/FieldBuilder";
+import TableBuilder from "../../../../../components/builder/TableBuilder";
+import BasicInput from "../../../../../components/input/BasicInput";
 import RenderInput from "../../../../../components/input/RenderInput";
 import TitleField from "../../../../../components/input/TitleField";
 import Navs from "../../../../../components/navs";
@@ -40,15 +43,32 @@ const RowNormal = () => {
     </StyledTableRow>
   );
 };
+const RowBank = ({ data }) => {
+  return (
+    <StyledTableRow>
+      {[
+        "1",
+        "PT Abyor International",
+        "BNI",
+        "PT Abyor International",
+        "21456378",
+      ].map((el, idx) => (
+        <TableCell key={idx} className="text-dark text-left">
+          {el}
+        </TableCell>
+      ))}
+    </StyledTableRow>
+  );
+};
 
 const RowAdditional = ({ label, value }) => {
   return (
     <StyledTableRow>
       <TableCell colSpan={5} className="text-dark text-right">
-        Subtotal
+        {label}
       </TableCell>
       <TableCell colSpan={2} className="text-dark text-left">
-        2.5123.1231
+        {value}
       </TableCell>
       {/* <TableCell className="text-dark text-right"></TableCell> */}
     </StyledTableRow>
@@ -57,6 +77,9 @@ const RowAdditional = ({ label, value }) => {
 
 const HargaPekerjaan = () => {
   const [navActive, setNavActive] = React.useState(navLists[0].id);
+  const { contract_value, data_bank } = useSelector(
+    (state) => state.deliveryMonitoring.dataContractById
+  );
 
   return (
     <Card>
@@ -78,7 +101,11 @@ const HargaPekerjaan = () => {
                   <Dropdown.Item href="#">IDR</Dropdown.Item>
                   <Dropdown.Item href="#">USD</Dropdown.Item>
                 </DropdownButton>
-                <FormControl disabled aria-describedby="basic-addon1" />
+                <FormControl
+                  disabled
+                  defaultValue={contract_value}
+                  aria-describedby="basic-addon1"
+                />
               </InputGroup>
             </div>
           </Col>
@@ -88,42 +115,33 @@ const HargaPekerjaan = () => {
             <TitleField title={"Rincian Harga Pekerjaan"} />
           </Col>
         </Row>
-        <div
-          className="table-wrapper-scroll-y my-custom-scrollbar"
-          style={{ height: "30vh", marginBottom: 21 }}
-        >
-          <div className="segment-table">
-            <div className="hecto-12">
-              <StyledTable>
-                <StyledTableHead>
-                  <StyledHead>
-                    {[
-                      "No",
-                      "Deskripsi",
-                      "QTY",
-                      "Satuan",
-                      "Harga Satuan",
-                      "Harga Total",
-                      "Keterangan",
-                    ].map((el, id) => (
-                      <TableCell key={id} className="text-white align-middle">
-                        {el}
-                      </TableCell>
-                    ))}
-                  </StyledHead>
-                </StyledTableHead>
-                <TableBody>
-                  <RowNormal />
-                  <RowNormal />
-                  <RowNormal />
-                  <RowAdditional />
-                  <RowAdditional />
-                  <RowAdditional />
-                </TableBody>
-              </StyledTable>
-            </div>
-          </div>
-        </div>
+        <TableBuilder
+          hecto={10}
+          dataHead={[
+            "No",
+            "Deskripsi",
+            "QTY",
+            "Satuan",
+            "Harga Satuan",
+            "Harga Total",
+            "Keterangan",
+          ]}
+          dataBody={[
+            { value: "oke" },
+            { value: "oke" },
+            { value: contract_value },
+          ]}
+          renderRowBody={({ item, index }) => (
+            <RowNormal key={index} {...item} />
+          )}
+          footerComponent={
+            <React.Fragment>
+              <RowAdditional label={"Subtotal"} />
+              <RowAdditional label={"PPN 10%"} />
+              <RowAdditional label={"Grand Total"} value={contract_value} />
+            </React.Fragment>
+          }
+        />
         <Row>
           <Col md={6}>
             <TitleField title={"Metode Pembayaran"} />
@@ -134,22 +152,62 @@ const HargaPekerjaan = () => {
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
           style={{ marginBottom: 21 }}
         />
-        {navActive === "pertama" &&
+        {/* {navActive === "pertama" &&
           [1, 2, 3, 4].map((el, id) => (
             <Row key={id}>
               <Col md={6}>
-                <RenderInput name={"namama"} label={"Tahap 1"} />
+                <RenderInput
+                  disabled
+                  values={{}}
+                  name={"namama"}
+                  label={"Tahap 1"}
+                />
               </Col>
             </Row>
-          ))}
+          ))} */}
         {navActive === "kedua" &&
           [1, 2, 3, 4].map((el, id) => (
             <Row key={id}>
               <Col md={6}>
-                <RenderInput name={"namama"} label={"Tahap 1"} />
+                <RenderInput
+                  disabled
+                  values={{}}
+                  name={"namama"}
+                  label={"Tahap 1"}
+                />
               </Col>
             </Row>
           ))}
+        <Row>
+          <Col md={12}>
+            <TitleField title={"Referensi Bank Penyedia"} />
+          </Col>
+          <Col md={12}>
+            <TableBuilder
+              hecto={12}
+              dataHead={[
+                "No",
+                "Atas Nama",
+                "Nama Bank",
+                "Alamat Bank",
+                "Nomor Rekening",
+              ]}
+              dataBody={data_bank}
+              renderRowBody={({ item, index }) => (
+                <RowBank
+                  key={index}
+                  data={[
+                    index + 1,
+                    item?.account_holder_name,
+                    item?.bank?.full_name,
+                    item?.address?.postal_address,
+                    item?.account_number,
+                  ]}
+                />
+              )}
+            />
+          </Col>
+        </Row>
       </CardBody>
     </Card>
   );

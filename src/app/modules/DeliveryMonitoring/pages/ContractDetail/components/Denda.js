@@ -17,7 +17,7 @@ const RowNormal = () => {
         <TableCell key={idx} className="text-dark text-left">
           {Array.isArray(el) ? (
             <InputGroup className="mb-3">
-              <FormControl value={el[0]} aria-label="Days" />
+              <FormControl defaultValue={el[0]} aria-label="Days" />
               <InputGroup.Append>
                 <InputGroup.Text>{el[1]}</InputGroup.Text>
               </InputGroup.Append>

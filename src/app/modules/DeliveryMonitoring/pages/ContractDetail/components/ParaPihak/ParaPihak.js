@@ -28,8 +28,12 @@ const ParaPihak = () => {
           navLists={navLists}
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
         />
-        {navActive === "pertama" && <FieldBuilder formData={formData1} />}
-        {navActive === "kedua" && <FieldBuilder formData={formData2} />}
+        {navActive === "pertama" && (
+          <FieldBuilder readOnly formData={formData1} />
+        )}
+        {navActive === "kedua" && (
+          <FieldBuilder readOnly formData={formData2} />
+        )}
       </CardBody>
     </Card>
   );
