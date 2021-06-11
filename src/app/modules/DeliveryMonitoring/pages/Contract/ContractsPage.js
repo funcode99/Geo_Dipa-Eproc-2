@@ -8,6 +8,7 @@ import Subheader from "../../../../components/subheader";
 import CustomTable from "../../../../components/tables";
 import formatDate from "../../../../libs/date";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,15 +23,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const tableHeaderContracts = [
-  { label: "No Kontrak", props: { align: "left" } },
-  { label: "No PO" },
-  { label: "Judul Pengadaan", props: { align: "left" } },
-  { label: "Tanggal PO" },
-  { label: "Tanggal Kontrak" },
-  { label: "Group" },
-  { label: "Penyedia" },
-  { label: "Status" },
-  { label: "Action" },
+  {
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
+    props: { align: "left" },
+  },
+  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" /> },
+  {
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
+    props: { align: "left" },
+  },
+  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" /> },
+  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" /> },
+  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" /> },
+  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" /> },
+  { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" /> },
+  { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" /> },
 ];
 
 export const ContractsPage = () => {
@@ -67,7 +74,7 @@ export const ContractsPage = () => {
               handleAction={handleAction("detail")}
               ops={[
                 {
-                  label: "TITLE.CONTRACT_DETAILS",
+                  label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
                   icon: "fas fa-search text-primary pointer",
                   to: {
                     url: `/client/delivery-monitoring/contract/${item.id}`,
