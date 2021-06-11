@@ -10,7 +10,17 @@ import {
   MenuItem,
   InputLabel,
 } from "@material-ui/core";
-import { Send } from "@material-ui/icons";
+import {
+  Send,
+  Assignment,
+  QueryBuilderSharp,
+  FeaturedPlayList,
+  Error,
+  PeopleAlt,
+  Description,
+  FindInPage,
+  MonetizationOn,
+} from "@material-ui/icons";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
@@ -31,13 +41,6 @@ import formatDate from "../../../../libs/date";
 import * as Option from "../../../../service/Option";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { FormDetail, Item } from "./components/Detail";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import FindInPageIcon from "@material-ui/icons/FindInPage";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
-import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import FeaturedPlayListIcon from "@material-ui/icons/FeaturedPlayList";
-import ErrorIcon from "@material-ui/icons/Error";
 import ParaPihak from "./components/ParaPihak";
 import ParaPihak2 from "./components/ParaPihak/ParaPihak2";
 import DokContract from "./components/DokContract";
@@ -45,6 +48,8 @@ import HargaPekerjaan from "./components/HargaPekerjaan";
 import JangkaWaktu from "./components/JangkaWaktu";
 import Jaminan from "./components/Jaminan";
 import Denda from "./components/Denda";
+import BAST from "./components/BAST";
+import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,43 +70,48 @@ const TabLists = [
   {
     id: "detail",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
-    icon: <FindInPageIcon className="mb-0 mr-2" />,
+    icon: <FindInPage className="mb-0 mr-2" />,
   },
   {
     id: "para-pihak",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
-    icon: <PeopleAltIcon className="mb-0 mr-2" />,
+    icon: <PeopleAlt className="mb-0 mr-2" />,
   },
 
   {
     id: "dokumen-kontrak",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
-    icon: <AssignmentIcon className="mb-0 mr-2" />,
+    icon: <Assignment className="mb-0 mr-2" />,
   },
   {
     id: "harga-pekerjaan",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
-    icon: <MonetizationOnIcon className="mb-0 mr-2" />,
+    icon: <MonetizationOn className="mb-0 mr-2" />,
   },
   {
     id: "jangka-waktu",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
-    icon: <QueryBuilderIcon className="mb-0 mr-2" />,
+    icon: <QueryBuilderSharp className="mb-0 mr-2" />,
   },
   {
     id: "jaminan",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
-    icon: <FeaturedPlayListIcon className="mb-0 mr-2" />,
+    icon: <FeaturedPlayList className="mb-0 mr-2" />,
   },
   {
     id: "denda",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />,
-    icon: <ErrorIcon className="mb-0 mr-2" />,
+    icon: <Error className="mb-0 mr-2" />,
   },
   {
     id: "para-pihak2",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
-    icon: <PeopleAltIcon className="mb-0 mr-2" />,
+    icon: <PeopleAlt className="mb-0 mr-2" />,
+  },
+  {
+    id: "bast",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />,
+    icon: <Description className="mb-0 mr-2" />,
   },
 ];
 
@@ -113,7 +123,6 @@ const tableHeaderTermin = [
   { label: "Harga Pekerjaan" },
   { label: "Project Progress" },
   { label: "Document Progress" },
-  { label: "Deliverables Document" },
   { label: "Status" },
   { label: "Action" },
 ];
@@ -212,6 +221,16 @@ export const ContractDetailPage = () => {
     setLoading(false);
   };
 
+  const handleAction = (type, data) => {
+    if (type === "update") {
+      handleModal("update", data);
+    }
+
+    if (type === "delete") {
+      setConfirm({ show: true, id: data.id });
+    }
+  };
+
   // generate isi table task
   const generateTableContent = (data) => {
     setTableContent([]);
@@ -227,41 +246,40 @@ export const ContractDetailPage = () => {
         { content: "" },
         { content: item.progress },
         { content: "" },
-        {
-          content: (
-            <Link
-              to={{
-                pathname: `/client/delivery-monitoring/contract/task/${item.id}`,
-              }}
-            >
-              <span>
-                <FormattedMessage id="CONTRACT_DETAIL.TABLE_CONTENT.URL" />
-              </span>
-            </Link>
-          ),
-        },
         { content: item?.task_status?.name },
         {
           content: (
-            <div className="d-flex flex-row justify-content-center">
-              <button
-                disabled={
-                  item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
-                    ? true
-                    : false
-                }
-                className="btn btn-sm p-1"
-                onClick={() => handleModal("update", item)}
-              >
-                <Icon className="fas fa-edit text-primary" />
-              </button>
-              <button
-                className="btn btn-sm p-1 mr-2"
-                onClick={() => setConfirm({ show: true, id: item.id })}
-              >
-                <Icon className="fas fa-trash text-danger" />
-              </button>
-            </div>
+            <ButtonAction
+              data={item}
+              handleAction={handleAction}
+              ops={[
+                {
+                  label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
+                  icon: "fas fa-search",
+                  to: {
+                    url: `/client/delivery-monitoring/contract/task/${item.id}`,
+                    style: {
+                      color: "black",
+                    },
+                  },
+                },
+                {
+                  label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
+                  icon: "fas fa-edit text-primary",
+                  disabled:
+                    item.task_status_id ===
+                    "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+                      ? true
+                      : false,
+                  type: "update",
+                },
+                {
+                  label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
+                  icon: "fas fa-trash text-danger",
+                  type: "delete",
+                },
+              ]}
+            />
           ),
         },
       ];
@@ -424,7 +442,7 @@ export const ContractDetailPage = () => {
         minWidth="40vw"
         maxwidth="70vw"
       >
-        <h3 className="mb-5">
+        <h3 className={update.update ? "mb-7" : "mb-5"}>
           {update.update ? (
             <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.UPDATE" />
           ) : (
@@ -432,58 +450,63 @@ export const ContractDetailPage = () => {
           )}{" "}
           <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.TERM" />
         </h3>
-        {dataSubmitItems?.task_items?.length === 0 &&
+
+        {!update.update &&
+          dataSubmitItems?.task_items?.length === 0 &&
           dataSubmitItems?.task_services?.length === 0 && (
             <p>Tidak ada item yang dipilih</p>
           )}
-        <div className="mb-5">
-          {dataSubmitItems && dataSubmitItems.task_services.length > 0 && (
-            <React.Fragment>
-              <h5>Jasa</h5>
-              <table className="table-md table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th className="bg-primary text-white">No</th>
-                    <th className="bg-primary text-white">Name</th>
-                    <th className="bg-primary text-white">Quantity</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dataSubmitItems.task_services.map((item, index) => (
-                    <tr key={item?.service_id}>
-                      <td>{(index += 1)}</td>
-                      <td>{item?.name}</td>
-                      <td>{item?.qty}</td>
+
+        {!update.update && (
+          <div className="mb-5">
+            {dataSubmitItems && dataSubmitItems.task_services.length > 0 && (
+              <React.Fragment>
+                <h5>Jasa</h5>
+                <table className="table-md table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th className="bg-primary text-white">No</th>
+                      <th className="bg-primary text-white">Name</th>
+                      <th className="bg-primary text-white">Quantity</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </React.Fragment>
-          )}
-          {dataSubmitItems && dataSubmitItems.task_items.length > 0 && (
-            <React.Fragment>
-              <h5 className="mt-2">Barang</h5>
-              <table className="table-md table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th className="bg-primary text-white">No</th>
-                    <th className="bg-primary text-white">Name</th>
-                    <th className="bg-primary text-white">Quantity</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dataSubmitItems.task_items.map((item, index) => (
-                    <tr key={item?.item_id}>
-                      <td>{(index += 1)}</td>
-                      <td>{item?.name}</td>
-                      <td>{item?.qty}</td>
+                  </thead>
+                  <tbody>
+                    {dataSubmitItems.task_services.map((item, index) => (
+                      <tr key={item?.service_id}>
+                        <td>{(index += 1)}</td>
+                        <td>{item?.name}</td>
+                        <td>{item?.qty}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </React.Fragment>
+            )}
+            {dataSubmitItems && dataSubmitItems.task_items.length > 0 && (
+              <React.Fragment>
+                <h5 className="mt-2">Barang</h5>
+                <table className="table-md table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th className="bg-primary text-white">No</th>
+                      <th className="bg-primary text-white">Name</th>
+                      <th className="bg-primary text-white">Quantity</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </React.Fragment>
-          )}
-        </div>
+                  </thead>
+                  <tbody>
+                    {dataSubmitItems.task_items.map((item, index) => (
+                      <tr key={item?.item_id}>
+                        <td>{(index += 1)}</td>
+                        <td>{item?.name}</td>
+                        <td>{item?.qty}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </React.Fragment>
+            )}
+          </div>
+        )}
 
         <form
           noValidate
@@ -683,6 +706,7 @@ export const ContractDetailPage = () => {
         {tabActive === 5 && <Jaminan />}
         {tabActive === 6 && <Denda />}
         {tabActive === 7 && <ParaPihak2 />}
+        {tabActive === 8 && <BAST />}
       </Paper>
     </React.Fragment>
   );
