@@ -232,7 +232,8 @@ function DashboardListContract(props) {
                           <td>
                             <Link
                               to={
-                                `/client/invoice_monitoring/contract/` + item.id
+                                `/client/invoice_monitoring/contract/1/` +
+                                item.id
                               }
                             >
                               {item.contract_no}
@@ -241,7 +242,8 @@ function DashboardListContract(props) {
                           <td>
                             <Link
                               to={
-                                `/client/invoice_monitoring/contract/` + item.id
+                                `/client/invoice_monitoring/contract/1/` +
+                                item.id
                               }
                             >
                               {item.contract_name}
@@ -250,7 +252,8 @@ function DashboardListContract(props) {
                           <td>
                             <Link
                               to={
-                                `/client/invoice_monitoring/contract/` + item.id
+                                `/client/invoice_monitoring/contract/1/` +
+                                item.id
                               }
                             >
                               {item.purch_order_no}
@@ -259,7 +262,8 @@ function DashboardListContract(props) {
                           <td>
                             <Link
                               to={
-                                `/client/invoice_monitoring/contract/` + item.id
+                                `/client/invoice_monitoring/contract/1/` +
+                                item.id
                               }
                             >
                               {index === 0
@@ -276,7 +280,8 @@ function DashboardListContract(props) {
                           <td>
                             <Link
                               to={
-                                `/client/invoice_monitoring/contract/` + item.id
+                                `/client/invoice_monitoring/contract/1/` +
+                                item.id
                               }
                             >
                               80000035434
@@ -285,7 +290,8 @@ function DashboardListContract(props) {
                           <td>
                             <Link
                               to={
-                                `/client/invoice_monitoring/contract/` + item.id
+                                `/client/invoice_monitoring/contract/1/` +
+                                item.id
                               }
                             >
                               INV0352345
