@@ -6,6 +6,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { FormattedMessage } from "react-intl";
+import { Link } from "react-router-dom";
 
 export default function ButtonAction({ data, handleAction, ops }) {
   const [exclude, setExclude] = React.useState([]);
@@ -54,14 +55,44 @@ export default function ButtonAction({ data, handleAction, ops }) {
       >
         {listUsed
           .filter((el) => !exclude.includes(el.type))
-          .map((el, id) => (
-            <MenuItem key={id} onClick={() => handleChange(el.type, data)}>
-              <ListItemIcon>
-                <i className={el.icon}></i>
-              </ListItemIcon>
-              <ListItemText primary={<FormattedMessage id={el.label} />} />
-            </MenuItem>
-          ))}
+          .map((el, id) => {
+            if (el.to) {
+              return (
+                <Link key={id} to={el.to?.url} style={el.to?.style}>
+                  <MenuItem>
+                    <ListItemIcon>
+                      <i className={el.icon}></i>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={<FormattedMessage id={el.label} />}
+                    />
+                  </MenuItem>
+                </Link>
+              );
+            } else {
+              return (
+                <MenuItem key={id} onClick={() => handleChange(el.type, data)}>
+                  <ListItemIcon>
+                    <i className={el.icon}></i>
+                  </ListItemIcon>
+                  <ListItemText primary={<FormattedMessage id={el.label} />} />
+                </MenuItem>
+              );
+            }
+
+            // el.to ? (
+            //   <React.Fragment>
+            //     <MenuItem key={id} onClick={() => handleChange(el.type, data)}>
+            //       <ListItemIcon>
+            //         <i className={el.icon}></i>
+            //       </ListItemIcon>
+            //       <ListItemText primary={<FormattedMessage id={el.label} />} />
+            //     </MenuItem>
+            //   </React.Fragment>
+            // ) : (
+            //   <div key={id}>Test</div>
+            // );
+          })}
       </Menu>
     </div>
   );

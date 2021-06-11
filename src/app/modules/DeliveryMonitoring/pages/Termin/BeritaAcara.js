@@ -27,14 +27,6 @@ const tableHeaderBAPP = [
   { label: "Action" },
 ];
 
-const tableHeaderBAST = [
-  { label: "Nomor BAST" },
-  { label: "Tanggal" },
-  { label: "Approve By" },
-  { label: "Lampiran BAST TTD" },
-  { label: "Action" },
-];
-
 const tempDataBAPP = [
   {
     id: 1,
@@ -102,270 +94,128 @@ export default function BeritaAcara() {
     <React.Fragment>
       <Card>
         <CardBody>
-          <Navs
+          {/* <Navs
             navLists={navLists}
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
-          />
-          {/* <Nav variant="pills" defaultActiveKey="link-bapp">
-            <Nav.Item onClick={() => setNavActive('BAPP')}>
-              <Nav.Link eventKey="link-bapp" className={classes.navLink}>
-                BAPP
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item onClick={() => setNavActive('BAST')}>
-              <Nav.Link eventKey="link-bast" className={classes.navLink}>
-                BAST
-              </Nav.Link>
-            </Nav.Item>
-          </Nav> */}
+          /> */}
 
-          {navActive === "link-bapp" && (
-            <React.Fragment>
-              <Form className="mt-3">
-                <Row>
-                  <Col>
-                    <Form.Group
-                      as={Row}
-                      controlId="nomor-bapp"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Nomor BAPP
-                      </Form.Label>
-                      <Col sm="8">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          placeholder="Nomor BAPP..."
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      controlId="tanggal-bapp"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Tanggal BAPP
-                      </Form.Label>
-                      <Col sm="8">
-                        <Form.Control type="text" size="sm" />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      controlId="jenis-pekerjaan"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Jenis Pekerjaan
-                      </Form.Label>
-                      <Col sm="8">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          disabled
-                          value={dataContractById?.contract_name}
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      controlId="pelaksana-pekerjaan"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Pelaksana Pekerjaan
-                      </Form.Label>
-                      <Col sm="8" className="d-flex align-items-center">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          disabled
-                          value={`PT ${dataContractById?.vendor?.party?.full_name}`}
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      controlId="dasar-pelaksanaan"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Dasar Pelaksanaan
-                      </Form.Label>
-                      <Col sm="8" className="mb-2 d-flex align-items-center">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          disabled
-                          value={dataContractById?.contract_no}
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId="nomor-po" className="mb-2">
-                      <Col sm="4"></Col>
-                      <Col sm="8">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          disabled
-                          value={dataContractById?.purch_order_no}
-                        />
-                      </Col>
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    <Form.Group as={Col} controlId="hasil-pekerjaan">
-                      <Form.Label>
-                        Hasil pekerjaan yang telah diselesaikan
-                      </Form.Label>
+          <React.Fragment>
+            <Form className="mt-3">
+              <Row>
+                <Col>
+                  <Form.Group as={Row} controlId="nomor-bapp" className="mb-2">
+                    <Form.Label column sm="4">
+                      Nomor BAPP
+                    </Form.Label>
+                    <Col sm="8">
                       <Form.Control
-                        as="textarea"
-                        rows={3}
+                        type="text"
                         size="sm"
-                        placeholder="Isikan hasil pekerjaan yang telah diselesaikan"
+                        placeholder="Nomor BAPP..."
                       />
-                    </Form.Group>
-                    <Form.Group as={Col} controlId="file-attachment">
-                      <Form.Label>Attachment</Form.Label>
-                      <Form.File size="sm" />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <div className="d-flex justify-content-end w-100">
-                  <Button variant="contained" color="secondary" size="medium">
-                    <span className="mr-1">Submit</span>
-                    <Send />
-                  </Button>
-                </div>
-              </Form>
-            </React.Fragment>
-          )}
-
-          {navActive === "link-bast" && (
-            <React.Fragment>
-              <Form className="mt-3">
-                <Row>
-                  <Col>
-                    <Form.Group
-                      as={Row}
-                      controlId="nomor-bast"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Nomor BAST
-                      </Form.Label>
-                      <Col sm="8">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          placeholder="Nomor BAST..."
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      controlId="tanggal-bast"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Tanggal BAST
-                      </Form.Label>
-                      <Col sm="8">
-                        <Form.Control type="text" size="sm" />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      controlId="jenis-pekerjaan"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Jenis Pekerjaan
-                      </Form.Label>
-                      <Col sm="8">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          disabled
-                          value="judul kontrak"
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      controlId="pelaksana-pekerjaan"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Pelaksana Pekerjaan
-                      </Form.Label>
-                      <Col sm="8" className="d-flex align-items-center">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          disabled
-                          value="Nama PT Pelaksana/SPK nya"
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group
-                      as={Row}
-                      controlId="dasar-pelaksanaan"
-                      className="mb-2"
-                    >
-                      <Form.Label column sm="4">
-                        Dasar Pelaksanaan
-                      </Form.Label>
-                      <Col sm="8" className="mb-2 d-flex align-items-center">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          disabled
-                          value="Nomor Kontrak SPK atau Perjanjian"
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId="nomor-po" className="mb-2">
-                      <Col sm="4"></Col>
-                      <Col sm="8">
-                        <Form.Control
-                          type="text"
-                          size="sm"
-                          disabled
-                          value="Nomor PO"
-                        />
-                      </Col>
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    <Form.Group as={Col} controlId="hasil-pekerjaan">
-                      <Form.Label>
-                        Hasil pekerjaan yang telah diselesaikan
-                      </Form.Label>
+                    </Col>
+                  </Form.Group>
+                  <Form.Group
+                    as={Row}
+                    controlId="tanggal-bapp"
+                    className="mb-2"
+                  >
+                    <Form.Label column sm="4">
+                      Tanggal BAPP
+                    </Form.Label>
+                    <Col sm="8">
+                      <Form.Control type="text" size="sm" />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group
+                    as={Row}
+                    controlId="jenis-pekerjaan"
+                    className="mb-2"
+                  >
+                    <Form.Label column sm="4">
+                      Jenis Pekerjaan
+                    </Form.Label>
+                    <Col sm="8">
                       <Form.Control
-                        as="textarea"
-                        rows={3}
+                        type="text"
                         size="sm"
-                        defaultValue="Isikan hasil pekerjaan yang telah diselesaikan"
+                        disabled
+                        value={dataContractById?.contract_name}
                       />
-                    </Form.Group>
-                    <Form.Group as={Col} controlId="file-attachment">
-                      <Form.Label>Attachment</Form.Label>
-                      <Form.File size="sm" />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <div className="d-flex justify-content-end w-100">
-                  <Button variant="contained" color="secondary" size="medium">
-                    <span className="mr-1">Submit</span>
-                    <Send />
-                  </Button>
-                </div>
-              </Form>
-            </React.Fragment>
-          )}
+                    </Col>
+                  </Form.Group>
+                  <Form.Group
+                    as={Row}
+                    controlId="pelaksana-pekerjaan"
+                    className="mb-2"
+                  >
+                    <Form.Label column sm="4">
+                      Pelaksana Pekerjaan
+                    </Form.Label>
+                    <Col sm="8" className="d-flex align-items-center">
+                      <Form.Control
+                        type="text"
+                        size="sm"
+                        disabled
+                        value={`PT ${dataContractById?.vendor?.party?.full_name}`}
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group
+                    as={Row}
+                    controlId="dasar-pelaksanaan"
+                    className="mb-2"
+                  >
+                    <Form.Label column sm="4">
+                      Dasar Pelaksanaan
+                    </Form.Label>
+                    <Col sm="8" className="mb-2 d-flex align-items-center">
+                      <Form.Control
+                        type="text"
+                        size="sm"
+                        disabled
+                        value={dataContractById?.contract_no}
+                      />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row} controlId="nomor-po" className="mb-2">
+                    <Col sm="4"></Col>
+                    <Col sm="8">
+                      <Form.Control
+                        type="text"
+                        size="sm"
+                        disabled
+                        value={dataContractById?.purch_order_no}
+                      />
+                    </Col>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group as={Col} controlId="hasil-pekerjaan">
+                    <Form.Label>
+                      Hasil pekerjaan yang telah diselesaikan
+                    </Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      size="sm"
+                      placeholder="Isikan hasil pekerjaan yang telah diselesaikan"
+                    />
+                  </Form.Group>
+                  <Form.Group as={Col} controlId="file-attachment">
+                    <Form.Label>Attachment</Form.Label>
+                    <Form.File size="sm" />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <div className="d-flex justify-content-end w-100">
+                <Button variant="contained" color="secondary" size="medium">
+                  <span className="mr-1">Submit</span>
+                  <Send />
+                </Button>
+              </div>
+            </Form>
+          </React.Fragment>
         </CardBody>
       </Card>
 
@@ -409,50 +259,6 @@ export default function BeritaAcara() {
               </Button>
               <CustomTable
                 tableHeader={tableHeaderBAPP}
-                tableContent={tableContent}
-                marginY="my-3"
-              />
-            </React.Fragment>
-          )}
-
-          {navActive === "link-bast" && (
-            <React.Fragment>
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                size="small"
-                onClick={(e) => console.log("tableContent: ", tableContent)}
-              >
-                <i
-                  className={`fas fa-eye text-white ${classes.iconButton}`}
-                ></i>
-                preview
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                size="small"
-              >
-                <i
-                  className={`fas fa-upload text-white ${classes.iconButton}`}
-                ></i>
-                upload
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                size="small"
-              >
-                <i
-                  className={`fas fa-print text-white ${classes.iconButton}`}
-                ></i>
-                print BAPP
-              </Button>
-              <CustomTable
-                tableHeader={tableHeaderBAST}
                 tableContent={tableContent}
                 marginY="my-3"
               />

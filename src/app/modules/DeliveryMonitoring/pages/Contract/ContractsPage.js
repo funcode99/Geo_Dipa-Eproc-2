@@ -1,19 +1,19 @@
-import React from 'react';
-import { Paper, makeStyles, Icon } from '@material-ui/core';
-import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
-import { Link } from 'react-router-dom';
-import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
-import useToast from '../../../../components/toast';
-import Subheader from '../../../../components/subheader';
-import CustomTable from '../../../../components/tables';
-import formatDate from '../../../../libs/date';
+import React from "react";
+import { Paper, makeStyles, Icon } from "@material-ui/core";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+import useToast from "../../../../components/toast";
+import Subheader from "../../../../components/subheader";
+import CustomTable from "../../../../components/tables";
+import formatDate from "../../../../libs/date";
+import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(1),
-    overflowX: 'auto',
+    overflowX: "auto",
     padding: theme.spacing(2),
   },
   table: {
@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const tableHeaderContracts = [
-  { label: 'No Kontrak', props: { align: 'left' } },
-  { label: 'No PO' },
-  { label: 'Judul Pengadaan', props: { align: 'left' } },
-  { label: 'Tanggal PO' },
-  { label: 'Tanggal Kontrak' },
-  { label: 'Group' },
-  { label: 'Penyedia' },
-  { label: 'Status' },
-  { label: 'Action' },
+  { label: "No Kontrak", props: { align: "left" } },
+  { label: "No PO" },
+  { label: "Judul Pengadaan", props: { align: "left" } },
+  { label: "Tanggal PO" },
+  { label: "Tanggal Kontrak" },
+  { label: "Group" },
+  { label: "Penyedia" },
+  { label: "Status" },
+  { label: "Action" },
 ];
 
 export const ContractsPage = () => {
@@ -42,9 +42,9 @@ export const ContractsPage = () => {
   const generateTableContent = (data) => {
     data.forEach((item) => {
       const rows = [
-        { content: item?.contract_no, props: { align: 'left' } },
+        { content: item?.contract_no, props: { align: "left" } },
         { content: item?.purch_order_no },
-        { content: item?.contract_name, props: { align: 'left' } },
+        { content: item?.contract_name, props: { align: "left" } },
         {
           content:
             item?.issued_date !== null
@@ -62,14 +62,37 @@ export const ContractsPage = () => {
         { content: item?.state },
         {
           content: (
-            <Link to={`/client/delivery-monitoring/contract/${item.id}`}>
-              <Icon className="fas fa-search pointer text-primary" />
-            </Link>
+            <ButtonAction
+              data={"1"}
+              handleAction={handleAction("detail")}
+              ops={[
+                {
+                  label: "TITLE.CONTRACT_DETAILS",
+                  icon: "fas fa-search text-primary pointer",
+                  to: {
+                    url: `/client/delivery-monitoring/contract/${item.id}`,
+                    style: {
+                      color: "black",
+                    },
+                  },
+                },
+              ]}
+            />
           ),
+          // (
+          //   <Link to={`/client/delivery-monitoring/contract/${item.id}`}>
+          //     <Icon className="fas fa-search pointer text-primary" />
+          //   </Link>
+          // ),
         },
       ];
       setTableContent((prev) => [...prev, rows]);
     });
+  };
+
+  const handleAction = (type, data) => {
+    console.log("type", type);
+    console.log("data", data);
   };
 
   const getDataContracts = async () => {
@@ -82,9 +105,9 @@ export const ContractsPage = () => {
     } catch (error) {
       if (
         error.response?.status !== 400 &&
-        error.response?.data.message !== 'TokenExpiredError'
+        error.response?.data.message !== "TokenExpiredError"
       ) {
-        setToast('Error API, please contact developer!');
+        setToast("Error API, please contact developer!");
       }
     } finally {
       setLoading(false);
@@ -103,8 +126,8 @@ export const ContractsPage = () => {
         text="Daftar Kontrak & PO"
         IconComponent={
           <SVG
-            src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')}
-            style={{ color: 'white' }}
+            src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")}
+            style={{ color: "white" }}
           />
         }
       />
