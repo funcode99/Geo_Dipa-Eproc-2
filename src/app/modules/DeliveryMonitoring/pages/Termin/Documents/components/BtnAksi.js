@@ -66,13 +66,13 @@ export default function BtnAksi({ item, handleAction }) {
       //     params: { edit_id: item?.id },
       //   },
       {
-        label: "Resend Draft (SOON)",
+        label: "Resend Draft",
         icon: "fas fa-redo text-warning",
         type: "resend",
         params: { resend_id: item?.id },
       },
       {
-        label: "Submit Document  (SOON)",
+        label: "Submit Document",
         icon: "fas fa-check-circle text-success",
         type: "submit",
         params: { submit_id: item?.id },
@@ -83,13 +83,13 @@ export default function BtnAksi({ item, handleAction }) {
   const adminMenu = React.useMemo(
     () => [
       {
-        label: "Accept Document (SOON)",
+        label: "Accept Document",
         icon: "fas fa-check-circle text-success",
         type: "accept",
         params: { accept_id: item?.id },
       },
       {
-        label: "Reject Document (SOON)",
+        label: "Reject Document",
         icon: "fas fa-times-circle text-warning",
         type: "reject",
         params: { reject_id: item?.id },
@@ -106,7 +106,10 @@ export default function BtnAksi({ item, handleAction }) {
 
   const listUsed = status === "client" ? adminMenu : vendorMenu;
   React.useEffect(() => {
-    setExclude(["resend"]);
+    if (item?.url === null)
+      setExclude(["accept", "reject", "submit", "resend"]);
+    else if (item?.url !== null) setExclude(["upload"]);
+    else setExclude([]);
   }, [item]);
   return (
     <div>

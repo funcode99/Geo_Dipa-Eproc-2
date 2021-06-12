@@ -38,6 +38,18 @@ export async function deleteDocId(document_id) {
   // console.log(`api`, `delivery/task-document/${document_id}`);
   return axios.delete(`delivery/task-document/${document_id}`);
 }
+export async function acceptDocId(document_id) {
+  // console.log(`api create`, `delivery/task-document/${document_id}`);
+  return axios.post(`delivery/task-document/${document_id}/approve`);
+}
+export async function rejectDocId(document_id) {
+  // console.log(`api`, `delivery/task-document/${document_id}`);
+  return axios.post(`delivery/task-document/${document_id}/reject`);
+}
+export async function submitDocId(document_id) {
+  // console.log(`api`, `delivery/task-document/${document_id}`);
+  return axios.post(`delivery/task-document/${document_id}/submit`);
+}
 export async function postCreateDoc(task_id, params) {
   // console.log(`api post`, `delivery/task-document/${task_id}`, params);
   return axios.post(`delivery/task-document/${task_id}`, params);

@@ -40,9 +40,22 @@ const Documents = ({ taskId }) => {
     tempParams: {},
   });
   const [Toast, setToast] = useToast();
-  const handleError = React.useCallback(() => {
-    setToast("Error API, please contact developer!");
-  }, [setToast]);
+  const handleError = React.useCallback(
+    (err) => {
+      console.log(`err`, err);
+      setToast("Error API, please contact developer!");
+    },
+    [setToast]
+  );
+  const handleSuccess = React.useCallback(
+    (res) => {
+      if (res?.data?.status === true) {
+        fetchData();
+        setToast(res?.data?.message);
+      }
+    },
+    [setToast, fetchData]
+  );
 
   // untuk buka / tutup modal
   const handleVisible = (key, tempParams = {}) => {
@@ -110,14 +123,15 @@ const Documents = ({ taskId }) => {
         case "delete":
           deliveryMonitoring
             .deleteDocId(open?.tempParams?.delete_id)
-            .then((res) => {
-              //   console.log(`res`, res);
-              if (res?.data?.status === true) {
-                fetchData();
-                setToast("Berhasil hapus data");
-              }
-            })
-            .catch((err) => handleError())
+            .then(handleSuccess)
+            // .then((res) => {
+            //   //   console.log(`res`, res);
+            //   if (res?.data?.status === true) {
+            //     fetchData();
+            //     setToast("Berhasil hapus data");
+            //   }
+            // })
+            .catch(handleError)
             .finally(() => {
               handleLoading(type, false);
               handleVisible(type);
@@ -125,6 +139,7 @@ const Documents = ({ taskId }) => {
           break;
         case "create":
           console.log(`params`, params);
+          // handle multi create document
           if (Array.isArray(params)) {
             let mappedParams = params?.map((el) => {
               let val = JSON.parse(el.value);
@@ -133,33 +148,22 @@ const Documents = ({ taskId }) => {
             console.log(`type`, type, params, mappedParams);
             deliveryMonitoring
               .postCreateDocArr(taskId, mappedParams)
-              .then((res) => {
-                // console.log(`resarr`, res);
-                if (res?.data?.status === true) {
-                  setToast("Berhasil tambah data");
-                  fetchData();
-                }
-              })
-              .catch((err) => handleError())
+              .then(handleSuccess)
+              .catch(handleError)
               .finally(() => {
                 handleLoading(type, false);
                 handleVisible(type);
               });
           } else {
+            // handle single create document
             let val = JSON.parse(params.value);
             deliveryMonitoring
               .postCreateDoc(taskId, {
                 document_id: val.id,
                 document_custom_name: params.remarks,
               })
-              .then((res) => {
-                // console.log(`resobj`, res);
-                if (res?.data?.status === true) {
-                  setToast("Berhasil tambah data");
-                  fetchData();
-                }
-              })
-              .catch((err) => handleError())
+              .then(handleSuccess)
+              .catch(handleError)
               .finally(() => {
                 handleLoading(type, false);
                 handleVisible(type);
@@ -169,20 +173,57 @@ const Documents = ({ taskId }) => {
         case "upload":
           deliveryMonitoring
             .postUploadDoc(open?.tempParams?.upload_id, params)
-            .then((res) => {
-              //   console.log(`res`, res);
-              if (res?.data?.status === true) {
-                setToast("Berhasil upload berkas");
-                fetchData();
-              }
-            })
-            .catch((err) => handleError())
+            .then(handleSuccess)
+            .catch(handleError)
             .finally(() => {
               handleLoading(type, false);
               handleVisible(type);
             });
           break;
-
+        case "resend":
+          // RESEND MASIH PAKE API UPLOAD
+          deliveryMonitoring
+            .postUploadDoc(open?.tempParams?.resend_id, params)
+            .then(handleSuccess)
+            .catch(handleError)
+            .finally(() => {
+              handleLoading(type, false);
+              handleVisible(type);
+            });
+          break;
+        case "accept":
+          // console.log(`accept`, type, open?.tempParams?.accept_id);
+          deliveryMonitoring
+            .acceptDocId(open?.tempParams?.accept_id)
+            .then(handleSuccess)
+            .catch(handleError)
+            .finally(() => {
+              handleLoading(type, false);
+              handleVisible(type);
+            });
+          break;
+        case "reject":
+          // console.log(`reject`, type, open?.tempParams?.reject_id);
+          deliveryMonitoring
+            .rejectDocId(open?.tempParams?.reject_id)
+            .then(handleSuccess)
+            .catch(handleError)
+            .finally(() => {
+              handleLoading(type, false);
+              handleVisible(type);
+            });
+          break;
+        case "submit":
+          // console.log(`submit`, type, open?.tempParams?.submit_id);
+          deliveryMonitoring
+            .submitDocId(open?.tempParams?.submit_id)
+            .then(handleSuccess)
+            .catch(handleError)
+            .finally(() => {
+              handleLoading(type, false);
+              handleVisible(type);
+            });
+          break;
         default:
           break;
       }

@@ -10,6 +10,9 @@ const ModalConfirmation = ({
   textYes,
   textNo,
 }) => {
+  const _handleSubmit = React.useCallback(() => visible && onSubmit(), [
+    onSubmit,
+  ]);
   return (
     <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
       <div className="d-flex align-items-center flex-column">
@@ -35,4 +38,4 @@ ModalConfirmation.defaultProps = {
   textNo: "Batalkan",
 };
 
-export default React.memo(ModalConfirmation);
+export default ModalConfirmation;

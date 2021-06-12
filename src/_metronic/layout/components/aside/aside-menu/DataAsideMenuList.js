@@ -126,6 +126,38 @@ export const DataAsideMenuListClient = [
 // Menu Vendor / External
 export const DataAsideMenuListVendor = [
   {
+    rootPath: "/client/delivery-monitoring",
+    icon: "/All/route-solid.svg",
+    title: "MENU.DELIVERY_MONITORING",
+    subMenu: [
+      {
+        rootPath: "/client/delivery-monitoring",
+        title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+        subMenu: null,
+      },
+      {
+        rootPath: "/client/delivery-monitoring-1/error-v",
+        title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
+        subMenu: [
+          {
+            rootPath: "/client/delivery-monitoring-1/error-v/1",
+            title: "TITLE.TEST",
+          },
+        ],
+      },
+      {
+        rootPath: "/client/delivery-monitoring-2/error-v",
+        title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
+        subMenu: [
+          {
+            rootPath: "/client/delivery-monitoring-2/error-v/1",
+            title: "TITLE.TEST",
+          },
+        ],
+      },
+    ],
+  },
+  {
     rootPath: "/vendor/invoice_monitoring",
     icon: "/All/file-invoice-dollar-solid.svg",
     title: "MENU.INVOICE_MONITORING",
