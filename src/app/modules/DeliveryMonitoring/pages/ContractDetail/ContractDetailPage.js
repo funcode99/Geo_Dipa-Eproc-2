@@ -135,7 +135,7 @@ export const ContractDetailPage = () => {
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
-  const [tabActive, setTabActive] = React.useState(0);
+  const [tabActive, setTabActive] = React.useState(8);
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
   const [modals, setModals] = React.useState(false);

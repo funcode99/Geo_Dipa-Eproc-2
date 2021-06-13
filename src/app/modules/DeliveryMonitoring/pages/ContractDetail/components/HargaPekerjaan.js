@@ -1,24 +1,20 @@
-import { TableBody, TableCell } from "@material-ui/core";
+import { TableCell } from "@material-ui/core";
 import React from "react";
-import { Col, DropdownButton } from "react-bootstrap";
-import { FormControl } from "react-bootstrap";
-import { Row } from "react-bootstrap";
-import { Dropdown } from "react-bootstrap";
-import { InputGroup } from "react-bootstrap";
+import {
+  Col,
+  Dropdown,
+  DropdownButton,
+  FormControl,
+  InputGroup,
+  Row,
+} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
-import FieldBuilder from "../../../../../components/builder/FieldBuilder";
 import TableBuilder from "../../../../../components/builder/TableBuilder";
-import BasicInput from "../../../../../components/input/BasicInput";
 import RenderInput from "../../../../../components/input/RenderInput";
 import TitleField from "../../../../../components/input/TitleField";
 import Navs from "../../../../../components/navs";
-import {
-  StyledHead,
-  StyledTable,
-  StyledTableHead,
-  StyledTableRow,
-} from "../../Termin/style";
+import { StyledTableRow } from "../../Termin/style";
 import withBox from "./withBox";
 
 const navLists = [

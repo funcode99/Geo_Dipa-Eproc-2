@@ -1,4 +1,4 @@
-import { ErrorMessage } from "formik";
+import { connect, ErrorMessage } from "formik";
 import React from "react";
 import BasicInput from "./BasicInput";
 import SelectDateInput from "./SelectDateInput";
@@ -21,14 +21,20 @@ const RenderInput = ({
   children,
   ChildrenProps,
   label,
-  values,
-  errors,
+  // values,
+  // errors,
   handleSubmit,
   readOnly,
+  formik,
+  disabledFields = [],
+  listOptions,
   ...otherProps
 }) => {
   const Component = inputs[typeInput || "BasicInput"];
-
+  const { values, errors, setFieldValue, setFieldTouched } = formik;
+  // React.useEffect(() => {
+  // console.log(`formik`, formik);
+  // }, [formik]);
   return (
     <div>
       {name && (
@@ -39,14 +45,20 @@ const RenderInput = ({
               <Component
                 // labelClass="mb-1"
                 value={values[name]}
+                // onChange={handleChange(name)}
+                onChange={(val) => setFieldValue(name, val, true)}
+                onFocus={() => setFieldTouched(name)}
+                disabled={readOnly || disabledFields.includes(name)}
                 //   onChange={trigger ? this._triggerChange : handleChange(name)}
                 //   onFocus={() => setFieldTouched(name)}
                 //   className={classNames("pl-4", className)}
+                options={listOptions[name]}
                 {...otherProps}
               />
+              {/* <ErrorMessage name={name} /> */}
+              <span className={"text-danger mt-2"}>{errors[name]}</span>
             </div>
           </div>
-          <span>{/* <ErrorMessage name={name} /> */}</span>
         </div>
       )}
       {Child ? (
@@ -60,4 +72,4 @@ const RenderInput = ({
   );
 };
 
-export default RenderInput;
+export default connect(RenderInput);

@@ -6,6 +6,7 @@ import {
   CardBody,
 } from "../../../../../../../_metronic/_partials/controls";
 import FieldBuilder from "../../../../../../components/builder/FieldBuilder";
+import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import Navs from "../../../../../../components/navs";
 import { formData4, formData3 } from "./fieldData";
 
@@ -28,14 +29,23 @@ const ParaPihak2 = () => {
   return (
     <Card>
       <CardBody>
-        <Row>
-          <Col>
-            <FieldBuilder values={values} readOnly formData={formData3} />
-          </Col>
-          <Col>
-            <FieldBuilder values={values} readOnly formData={formData4} />
-          </Col>
-        </Row>
+        <FormBuilder
+          // onSubmit={_handleSubmit}
+          // formData={formData3}
+          initial={values}
+          // validation={validationSchema}
+        >
+          {({}) => (
+            <Row>
+              <Col>
+                <FieldBuilder readOnly formData={formData3} />
+              </Col>
+              <Col>
+                <FieldBuilder readOnly formData={formData4} />
+              </Col>
+            </Row>
+          )}
+        </FormBuilder>
       </CardBody>
     </Card>
   );

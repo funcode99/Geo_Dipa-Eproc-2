@@ -1,14 +1,9 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
-import { FormControl } from "react-bootstrap";
-import { InputGroup } from "react-bootstrap";
+import { Col, FormControl, InputGroup, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
-import FieldBuilder from "../../../../../components/builder/FieldBuilder";
 import BasicInput from "../../../../../components/input/BasicInput";
-import RenderInput from "../../../../../components/input/RenderInput";
 import TitleField from "../../../../../components/input/TitleField";
-import withBox from "./withBox";
 
 const InputBulanHari = ({ valueBulan, valueHari }) => (
   <Row>

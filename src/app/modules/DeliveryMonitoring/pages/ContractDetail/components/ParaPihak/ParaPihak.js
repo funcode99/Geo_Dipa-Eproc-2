@@ -4,6 +4,7 @@ import {
   CardBody,
 } from "../../../../../../../_metronic/_partials/controls";
 import FieldBuilder from "../../../../../../components/builder/FieldBuilder";
+import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import Navs from "../../../../../../components/navs";
 import { formData1, formData2 } from "./fieldData";
 
@@ -28,12 +29,20 @@ const ParaPihak = () => {
           navLists={navLists}
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
         />
-        {navActive === "pertama" && (
-          <FieldBuilder readOnly formData={formData1} />
-        )}
-        {navActive === "kedua" && (
-          <FieldBuilder readOnly formData={formData2} />
-        )}
+        <FormBuilder>
+          {({}) => {
+            return (
+              <React.Fragment>
+                {navActive === "pertama" && (
+                  <FieldBuilder readOnly formData={formData1} />
+                )}
+                {navActive === "kedua" && (
+                  <FieldBuilder readOnly formData={formData2} />
+                )}
+              </React.Fragment>
+            );
+          }}
+        </FormBuilder>
       </CardBody>
     </Card>
   );

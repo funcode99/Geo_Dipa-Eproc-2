@@ -1,23 +1,22 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
-import DUMMY_FIELD from "./DUMMY_FIELD.js";
-import RenderInput from "../input/RenderInput.js";
 import { Col, Row } from "react-bootstrap";
+import RenderInput from "../input/RenderInput";
 
 const FieldBuilder = ({
   formData,
-  values = {},
-  errors,
+  // values = {},
+  // errors,
   handleSubmit,
-  readOnly,
+  ...other
 }) => {
   const formProps = {
-    values,
-    errors,
+    // values,
+    // errors,
     handleSubmit,
-    readOnly,
-    onChange: readOnly ? () => {} : undefined,
-    disabled: readOnly,
+    // readOnly,
+    // onChange: readOnly ? () => {} : undefined,
+    // disabled: readOnly,
+    ...other,
   };
   return (
     <Row className={"mt-9"}>

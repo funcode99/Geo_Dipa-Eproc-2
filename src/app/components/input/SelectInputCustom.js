@@ -51,13 +51,13 @@ const formatGroupLabel = (data) => (
   </div>
 );
 
-const SelectInputCustom = ({ ...other }) => {
+const SelectInputCustom = ({ options, ...other }) => {
   return (
     <Select
       // isMulti
       value={"optionSelected"}
       // onChange={(e) => handleSelectChange(e)}
-      // options={groupedOptions}
+      options={options}
       formatGroupLabel={formatGroupLabel}
       menuPosition={"fixed"}
       {...other}
