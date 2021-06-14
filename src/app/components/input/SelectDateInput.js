@@ -18,7 +18,7 @@ const SelectDateInput = ({ onChange, value, ...other }) => {
       type="date"
       onChange={_handleChange}
       className="form-control"
-      value={value}
+      defaultValue={value}
       {...other}
     />
   );

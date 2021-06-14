@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import { Formik } from "formik";
 import React from "react";
 import FieldBuilder from "./FieldBuilder";
@@ -11,6 +11,7 @@ const FormBuilder = ({
   validation,
   children,
   fieldProps,
+  loading = false,
 }) => {
   const formikRef = React.useRef();
   const _handleSubmit = React.useCallback(
@@ -40,9 +41,14 @@ const FormBuilder = ({
                 color="secondary"
                 size="medium"
                 onClick={handleSubmit}
+                disabled={loading}
               >
                 <span className="mr-1">Submit</span>
-                <Send />
+                {loading ? (
+                  <CircularProgress size="0.875rem" color="inherit" />
+                ) : (
+                  <Send />
+                )}
               </Button>
             </div>
           </React.Fragment>

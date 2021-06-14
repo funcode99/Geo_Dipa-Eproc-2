@@ -14,6 +14,14 @@ const inputs = {
   UploadInput,
 };
 
+const optionsList = {
+  select_example: [
+    { value: 1, label: "data1" },
+    { value: 2, label: "data2" },
+    { value: 3, label: "data3" },
+  ],
+};
+
 const RenderInput = ({
   typeInput,
   name,
@@ -27,7 +35,7 @@ const RenderInput = ({
   readOnly,
   formik,
   disabledFields = [],
-  listOptions,
+  listOptions = optionsList["select_example"],
   ...otherProps
 }) => {
   const Component = inputs[typeInput || "BasicInput"];
