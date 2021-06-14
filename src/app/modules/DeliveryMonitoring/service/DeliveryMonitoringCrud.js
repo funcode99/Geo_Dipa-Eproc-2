@@ -66,3 +66,9 @@ export async function postUploadDoc(document_id, oldParams) {
   // console.log(`api post`, `delivery/task-document/${document_id}`, params);
   return axios.post(`delivery/task-document-upload/${document_id}`, params);
 }
+
+// Berita Acara
+export async function postCreateBeritaAcara(taskId, values) {
+  // console.log(`create berita acara ${taskId}`, values);
+  return axios.post(`delivery/task-news/${taskId}`, values);
+}

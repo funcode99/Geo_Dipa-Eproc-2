@@ -14,7 +14,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import BtnAksi from "./BtnAksi";
-import formatDate from "../../../../../../libs/date";
+import { formatDate } from "../../../../../../libs/date";
 
 const theadDocuments = [
   { id: "action", label: "" },

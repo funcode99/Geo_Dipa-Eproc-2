@@ -6,7 +6,7 @@ import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
 import Subheader from "../../../../components/subheader";
 import CustomTable from "../../../../components/tables";
-import formatDate from "../../../../libs/date";
+import { formatDate } from "../../../../libs/date";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { FormattedMessage } from "react-intl";
 
