@@ -7,7 +7,8 @@ import { object } from "yup";
 import { Row, Col } from "react-bootstrap";
 import TitleField from "../../../../../components/input/TitleField";
 import TableBuilder from "../../../../../components/builder/TableBuilder";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import { formatInitialDate } from "../../../../../libs/date";
 import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../../components/toast";
@@ -28,10 +29,13 @@ const RowNormal = ({ data }) => {
 
 const BappPage = ({ status, taskId }) => {
   const [Toast, setToast] = useToast();
+  const dispatch = useDispatch();
   let contract = useSelector(
     (state) => state.deliveryMonitoring.dataContractById
   );
-  const [content, setContent] = React.useState([]);
+  let taskNews = useSelector(
+    (state) => state.deliveryMonitoring?.dataTask?.task_news
+  );
   const [loading, setLoading] = React.useState({
     get: false,
     submit: false,
@@ -53,18 +57,18 @@ const BappPage = ({ status, taskId }) => {
   });
 
   const validationVendor = object().shape({
-    nomor_bapp: validation.require("Nomor BAST"),
-    tanggal_bapp: validation.require("Tanggal BAST"),
+    nomor_bapp: validation.require("Nomor BAPP"),
+    tanggal_bapp: validation.require("Tanggal BAPP"),
   });
 
   const initialValues = {
-    nomor_bapp: "",
-    tanggal_bapp: formatInitialDate(),
+    nomor_bapp: taskNews?.no || "",
+    tanggal_bapp: taskNews?.date || formatInitialDate(),
     jenis: contract?.contract_name,
     pelaksana: contract?.vendor?.party?.full_name,
     nomor_contract: contract?.contract_no,
     nomor_po: contract?.purch_order_no,
-    hasil_pekerjaan: "",
+    hasil_pekerjaan: taskNews?.review_text || "",
   };
 
   const disabledInputClient = [
@@ -96,17 +100,8 @@ const BappPage = ({ status, taskId }) => {
         err.response?.code !== 400 &&
         err.response?.data.message !== "TokenExpiredError"
       ) {
+        console.log("handle error");
         setToast(err.response?.data.message, 5000);
-      }
-    },
-    [setToast]
-  );
-
-  const handleSuccess = React.useCallback(
-    (res) => {
-      if (res?.data?.status === true) {
-        fetchData();
-        setToast(res?.data?.message);
       }
     },
     [setToast]
@@ -117,42 +112,83 @@ const BappPage = ({ status, taskId }) => {
     [setLoading]
   );
 
-  const fetchData = React.useCallback(() => {
-    handleLoading("get", true);
-    // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
-    deliveryMonitoring
-      .getTaskById(taskId)
-      .then((res) => {
-        console.log(`res`, res);
-        handleLoading("get", false);
-        if (res.data.status === true) {
-          const histories = res?.data?.data?.task_news?.task_news_histories;
-          setContent(histories);
-        }
-      })
-      .catch((err) => console.log("err", err));
-  }, [taskId]);
+  const fetchData = React.useCallback(
+    (toast = { visible: false, message: "" }) => {
+      handleLoading("get", true);
+      // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
+      deliveryMonitoring
+        .getTaskById(taskId)
+        .then((res) => {
+          // console.log(`res`, res);
+          handleLoading("get", false);
+          if (res.data.status === true) {
+            dispatch({
+              type: actionTypes.SetDataTask,
+              payload: res?.data?.data,
+            });
+            if (toast.visible === true) {
+              setToast(toast.message, 5000);
+            }
+          }
+        })
+        .catch((err) => console.log("err", err));
+    },
+    [taskId, handleLoading, dispatch]
+  );
 
-  const _handleSubmit = (data) => {
+  const handleSuccess = React.useCallback(
+    (res) => {
+      if (res?.data?.status === true) {
+        fetchData({ visible: true, message: res?.data?.message });
+      }
+    },
+    [setToast, fetchData]
+  );
+
+  const submitVendor = React.useCallback(
+    (data) => {
+      const requestData = {
+        no: data.nomor_bapp,
+        date: data.tanggal_bapp,
+        type: "bapp",
+      };
+
+      deliveryMonitoring
+        .postCreateNewsVendor(taskId, requestData)
+        .then((res) => handleSuccess(res))
+        .catch((err) => handleError(err))
+        .finally(handleLoading("submit", false));
+    },
+    [taskId, handleError]
+  );
+
+  const submitClient = (data) => {
     const requestData = {
-      no: data.nomor_bapp,
-      date: data.tanggal_bapp,
-      type: "bapp",
+      review_text: data.hasil_pekerjaan,
     };
 
-    // console.log(requestData);
-
-    handleLoading("submit", true);
     deliveryMonitoring
-      .postCreateBeritaAcara(taskId, requestData)
+      .postCreateNewsClient(taskNews?.id, requestData)
       .then((res) => handleSuccess(res))
       .catch((err) => handleError(err))
       .finally(handleLoading("submit", false));
   };
 
+  const _handleSubmit = (data) => {
+    handleLoading("submit", true);
+
+    if (status === "vendor") {
+      submitVendor(data);
+    }
+
+    if (status === "client") {
+      submitClient(data);
+    }
+  };
+
   React.useEffect(() => {
     if (taskId !== "") fetchData();
-  }, [taskId]);
+  }, [taskId, fetchData]);
 
   // const optionsList = {
   //   select_example: [
@@ -203,7 +239,7 @@ const BappPage = ({ status, taskId }) => {
                   "Dokumen",
                   "Aksi",
                 ]}
-                dataBody={content}
+                dataBody={taskNews?.task_news_histories}
                 renderRowBody={({ item, index }) => (
                   <RowNormal
                     key={index}
