@@ -11,30 +11,42 @@ import TitleField from "../../../../../../components/input/TitleField";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
+import { useSelector } from "react-redux";
 
 const validationSchema = object().shape({
   nomor_bast: validation.require("Nomor BAST"),
   tanggal_bast: validation.require("Tanggal BAST"),
   hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
-  file_attachment: validation.require("File"),
+  // file_attachment: validation.require("File"),
 });
 
 const BastPage = () => {
-  const initialValues = {
-    nomor_bast: "",
-    // tanggal_bast: "2021-06-15",
-    tanggal_bast: "",
-    jenis: "Pekerjaan",
-    pelaksana: "Pelaksana",
-    nomor_contract: "Dasar pekerjaan",
-    // nomor_po: "NAOSDIASD",
-    // hasil_pekerjaan: "NAOSDIASD",
-    file_attachment: "",
-    // select_example: {
-    //   label: "isi",
-    //   value: "value",
-    // },
-  };
+  const formikRef = React.useRef();
+  const {
+    news,
+    contract_name,
+    vendor,
+    contract_no,
+    purch_order_no,
+  } = useSelector((state) => state.deliveryMonitoring.dataContractById);
+  const initialValues = React.useMemo(
+    () => ({
+      nomor_bast: "",
+      tanggal_bast: news?.date,
+      // tanggal_bast: "",
+      jenis: contract_name,
+      pelaksana: vendor?.party?.full_name,
+      nomor_contract: contract_no,
+      nomor_po: purch_order_no,
+      hasil_pekerjaan: "",
+      // file_attachment: "",
+      // select_example: {
+      //   label: "isi",
+      //   value: "value",
+      // },
+    }),
+    [news, contract_name, vendor, contract_no, purch_order_no]
+  );
 
   const _handleSubmit = (data) => {
     console.log(`data`, data);
@@ -52,18 +64,11 @@ const BastPage = () => {
   return (
     <Card>
       <CardBody>
-        {/* <Row>
-          <Col>
-            <FieldBuilder readOnly formData={formData1} />
-          </Col>
-          <Col>
-            <FieldBuilder readOnly formData={formData2} />
-          </Col>
-        </Row> */}
         {/* <FieldBuilder readOnly formData={formData3} /> */}
         <FormBuilder
+          ref={formikRef}
           onSubmit={_handleSubmit}
-          formData={formData3}
+          // formData={formData3}
           initial={initialValues}
           validation={validationSchema}
           fieldProps={{
@@ -71,7 +76,18 @@ const BastPage = () => {
             disabledFields: disabledInput,
             listOptions: optionsList,
           }}
-        />
+        >
+          {() => (
+            <Row>
+              <Col>
+                <FieldBuilder formData={formData1} />
+              </Col>
+              <Col>
+                <FieldBuilder formData={formData2} />
+              </Col>
+            </Row>
+          )}
+        </FormBuilder>
         <Row>
           <Col md={12}>
             <TitleField title={"History"} />
@@ -80,10 +96,11 @@ const BastPage = () => {
         <Row>
           <Col md={12}>
             <TableBuilder
-              hecto={5}
+              hecto={10}
               dataHead={[
                 "No BAST",
                 "Tanggal",
+                "Status",
                 "Approved by",
                 "Dokumen",
                 "Aksi",

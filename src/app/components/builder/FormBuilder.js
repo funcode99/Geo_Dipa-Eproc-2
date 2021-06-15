@@ -4,20 +4,17 @@ import React from "react";
 import FieldBuilder from "./FieldBuilder";
 import { Send } from "@material-ui/icons";
 
-const FormBuilder = ({
-  onSubmit,
-  formData,
-  initial = {},
-  validation,
-  children,
-  fieldProps,
-  loading = false,
-}) => {
+const FormBuilder = (
+  { onSubmit, formData, initial = {}, validation, children, fieldProps },
+  ref
+) => {
   const formikRef = React.useRef();
   const _handleSubmit = React.useCallback(
     (data) => typeof onSubmit === "function" && onSubmit(data),
     [onSubmit]
   );
+
+  React.useImperativeHandle(ref, () => formikRef.current);
 
   return (
     <Formik
@@ -58,4 +55,4 @@ const FormBuilder = ({
   );
 };
 
-export default FormBuilder;
+export default React.forwardRef(FormBuilder);

@@ -60,7 +60,7 @@ const RenderInput = ({
                 //   onChange={trigger ? this._triggerChange : handleChange(name)}
                 //   onFocus={() => setFieldTouched(name)}
                 //   className={classNames("pl-4", className)}
-                options={listOptions[name]}
+                options={listOptions?.[name]}
                 {...otherProps}
               />
               {/* <ErrorMessage name={name} /> */}
