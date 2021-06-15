@@ -13,9 +13,11 @@ import Documents from "./Documents";
 import BeritaAcara from "./BeritaAcara";
 import BAPP from "./BAPP";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { useHistory, useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
+import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,14 +46,16 @@ const TabLists = [
 const TerminPage = (props) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
-  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
+  const dispatch = useDispatch();
+  const { dataContractById, dataTask } = useSelector(
+    (state) => state.deliveryMonitoring
+  );
   let status = useSelector(
     (state) => state.auth.user.data.status,
     shallowEqual
   );
   const history = useHistory();
   const { task_id } = useParams();
-  // const { state } = useLocation();
 
   const getTask = React.useCallback(
     (taskId) => {
@@ -61,9 +65,29 @@ const TerminPage = (props) => {
     [task_id]
   );
 
+  const getDataTask = React.useCallback(() => {
+    // handleLoading("get", true);
+    // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
+    deliveryMonitoring
+      .getTaskById(task_id)
+      .then((res) => {
+        // console.log(`res`, res);
+        // handleLoading("get", false);
+        if (res.data.status === true) {
+          dispatch({
+            type: actionTypes.SetDataTask,
+            payload: res?.data?.data,
+          });
+        }
+      })
+      .catch((err) => console.log("err", err));
+  }, [task_id, dispatch]);
+
   React.useEffect(() => {
     if (!task_id) {
       history.goBack();
+    } else {
+      getDataTask();
     }
     // eslint-disable-next-line
   }, []);
@@ -71,11 +95,6 @@ const TerminPage = (props) => {
   function handleChangeTab(e, newTabActive) {
     setTabActive(newTabActive);
   }
-
-  // console.log(task_id);
-  // console.log(`state`, state);
-
-  // if (!state) return <div />;
 
   return (
     <Container>

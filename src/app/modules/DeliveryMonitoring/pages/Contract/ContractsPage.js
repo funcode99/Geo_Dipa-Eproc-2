@@ -71,7 +71,7 @@ export const ContractsPage = () => {
           content: (
             <ButtonAction
               data={"1"}
-              handleAction={handleAction("detail")}
+              handleAction={console.log(null)}
               ops={[
                 {
                   label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
@@ -90,11 +90,6 @@ export const ContractsPage = () => {
       ];
       setTableContent((prev) => [...prev, rows]);
     });
-  };
-
-  const handleAction = (type, data) => {
-    console.log("type", type);
-    console.log("data", data);
   };
 
   const getDataContracts = async () => {
