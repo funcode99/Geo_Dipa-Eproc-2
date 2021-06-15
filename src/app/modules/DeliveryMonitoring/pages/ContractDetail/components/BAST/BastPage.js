@@ -21,6 +21,7 @@ const validationSchema = object().shape({
 });
 
 const BastPage = () => {
+  const formikRef = React.useRef();
   const {
     news,
     contract_name,
@@ -65,6 +66,7 @@ const BastPage = () => {
       <CardBody>
         {/* <FieldBuilder readOnly formData={formData3} /> */}
         <FormBuilder
+          ref={formikRef}
           onSubmit={_handleSubmit}
           // formData={formData3}
           initial={initialValues}
