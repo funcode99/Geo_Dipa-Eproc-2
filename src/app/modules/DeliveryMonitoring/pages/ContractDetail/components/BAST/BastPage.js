@@ -11,35 +11,57 @@ import TitleField from "../../../../../../components/input/TitleField";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
+import { StyledTableRow } from "../../../../../../components/builder/TableBuilder/styledComponent";
+import { TableCell } from "@material-ui/core";
+import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
+import useToast from "../../../../../../components/toast";
+import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { formatDate } from "../../../../../../libs/date";
 
-const validationSchema = object().shape({
-  nomor_bast: validation.require("Nomor BAST"),
-  tanggal_bast: validation.require("Tanggal BAST"),
+const validationClient = object().shape({
   hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
-  // file_attachment: validation.require("File"),
 });
 
-const BastPage = () => {
+const validationVendor = object().shape({
+  nomor_bast: validation.require("Nomor BAPP"),
+  tanggal_bast: validation.require("Tanggal BAPP"),
+});
+
+const RowNormal = ({ data }) => {
+  return (
+    <StyledTableRow>
+      {data.map((el, idx) => (
+        <TableCell key={idx} className="text-dark text-left">
+          {el}
+        </TableCell>
+      ))}
+    </StyledTableRow>
+  );
+};
+
+const BastPage = ({ status, contract, saveContract }) => {
   const formikRef = React.useRef();
-  const {
-    news,
-    contract_name,
-    vendor,
-    contract_no,
-    purch_order_no,
-  } = useSelector((state) => state.deliveryMonitoring.dataContractById);
+  const [Toast, setToast] = useToast();
+  const isClient = status === "client";
+  const [loadings, setLoadings] = React.useState({
+    fetch: false,
+    post: false,
+  });
+  const handleLoading = React.useCallback(
+    (key, state) => setLoadings((prev) => ({ ...prev, [key]: state })),
+    [setLoadings]
+  );
+  const { news, contract_name, vendor, contract_no, purch_order_no } = contract;
   const initialValues = React.useMemo(
     () => ({
       nomor_bast: "",
       tanggal_bast: news?.date,
-      // tanggal_bast: "",
       jenis: contract_name,
       pelaksana: vendor?.party?.full_name,
       nomor_contract: contract_no,
       nomor_po: purch_order_no,
       hasil_pekerjaan: "",
-      // file_attachment: "",
       select_example: {
         label: "isi",
         value: "value",
@@ -48,18 +70,69 @@ const BastPage = () => {
     [news, contract_name, vendor, contract_no, purch_order_no]
   );
 
+  const handleError = React.useCallback(
+    (err) => {
+      if (
+        err.response?.code !== 400 &&
+        err.response?.data.message !== "TokenExpiredError"
+      ) {
+        console.log("handle error");
+        setToast(err.response?.data.message, 5000);
+      }
+    },
+    [setToast]
+  );
+
+  const handleSuccess = React.useCallback(
+    async (res) => {
+      if (res?.data?.status === true) {
+        const {
+          data: { data },
+        } = await deliveryMonitoring.getContractById(contract?.id);
+        saveContract(data);
+      }
+    },
+    [setToast]
+  );
+
   const _handleSubmit = (data) => {
-    console.log(`data`, data);
+    // console.log(`data`, data);
+    handleLoading("post", true);
+    let params = {};
+    switch (status) {
+      case "vendor":
+        params = {
+          url: `delivery/task-news/${contract?.id}/bast`,
+          no: data.nomor_bast,
+          date: data.tanggal_bast,
+        };
+        break;
+      case "client":
+        params = {
+          url: `delivery/task-news/${contract?.news?.id}/review`,
+          review_text: data.hasil_pekerjaan,
+        };
+        break;
+      default:
+        break;
+    }
+    // console.log(`params`, params);
+    handleLoading("post", true);
+
+    deliveryMonitoring
+      .postCreateBAST(params)
+      .then(handleSuccess)
+      .catch(handleError)
+      .finally(() => {
+        setTimeout(() => {
+          handleLoading("post", false);
+        }, 3000);
+      });
   };
 
-  const disabledInput = ["jenis", "pelaksana", "nomor_contract", "nomor_po"];
-  const optionsList = {
-    select_example: [
-      { value: 1, label: "data1" },
-      { value: 2, label: "data2" },
-      { value: 3, label: "data3" },
-    ],
-  };
+  let disabledInput = Object.keys(initialValues);
+  let allowedClient = ["hasil_pekerjaan"];
+  let allowedVendor = ["nomor_bast", "tanggal_bast"];
 
   return (
     <Card>
@@ -69,12 +142,17 @@ const BastPage = () => {
           // ref={formikRef}
           onSubmit={_handleSubmit}
           // formData={formData3}
+          loading={loadings.post}
           initial={initialValues}
-          validation={validationSchema}
+          validation={isClient ? validationClient : validationVendor}
           fieldProps={{
             readOnly: false,
-            disabledFields: disabledInput,
-            listOptions: optionsList,
+            // disabledFields: disabledInput,
+            disabledFields: disabledInput.filter((el) =>
+              isClient
+                ? !allowedClient.includes(el)
+                : !allowedVendor.includes(el)
+            ),
           }}
         >
           {({ fieldProps }) => (
@@ -105,25 +183,37 @@ const BastPage = () => {
                 "Dokumen",
                 "Aksi",
               ]}
-              // dataBody={data_bank}
-              // renderRowBody={({ item, index }) => (
-              //   <RowBank
-              //     key={index}
-              //     data={[
-              //       index + 1,
-              //       item?.account_holder_name,
-              //       item?.bank?.full_name,
-              //       item?.address?.postal_address,
-              //       item?.account_number,
-              //     ]}
-              //   />
-              // )}
+              dataBody={news?.task_news_histories}
+              renderRowBody={({ item, index }) => (
+                <RowNormal
+                  key={index}
+                  data={[
+                    item?.history?.no,
+                    formatDate(new Date(item?.updatedAt)),
+                    "",
+                    "",
+                    "",
+                    "",
+                  ]}
+                />
+              )}
             />
           </Col>
         </Row>
       </CardBody>
+      <Toast />
     </Card>
   );
 };
 
-export default BastPage;
+const mapState = ({ auth, deliveryMonitoring }) => ({
+  status: auth.user.data.status,
+  contract: deliveryMonitoring.dataContractById,
+});
+
+export default connect(mapState, {
+  saveContract: (payload) => ({
+    type: actionTypes.SetContractById,
+    payload: payload,
+  }),
+})(BastPage);

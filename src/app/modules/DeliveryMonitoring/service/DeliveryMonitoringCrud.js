@@ -77,3 +77,9 @@ export async function postCreateNewsClient(newsId, values) {
   // console.log(`create berita acara ${taskId}`, values);
   return axios.post(`delivery/task-news/${newsId}/review`, values);
 }
+
+// BAST
+export async function postCreateBAST({ url, ...params }) {
+  // console.log(`params`, params, url);
+  return axios.post(url, params);
+}
