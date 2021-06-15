@@ -14,14 +14,6 @@ const inputs = {
   UploadInput,
 };
 
-const optionsList = {
-  select_example: [
-    { value: 1, label: "data1" },
-    { value: 2, label: "data2" },
-    { value: 3, label: "data3" },
-  ],
-};
-
 const RenderInput = ({
   typeInput,
   name,
@@ -29,20 +21,17 @@ const RenderInput = ({
   children,
   ChildrenProps,
   label,
-  // values,
-  // errors,
   handleSubmit,
   readOnly,
   formik,
   disabledFields = [],
-  listOptions = optionsList["select_example"],
+  listOptions,
   ...otherProps
 }) => {
+  const isSelect = typeInput === "SelectInputCustom";
   const Component = inputs[typeInput || "BasicInput"];
   const { values, errors, setFieldValue, setFieldTouched } = formik;
-  // React.useEffect(() => {
-  // console.log(`formik`, formik);
-  // }, [formik]);
+  const selectProps = isSelect ? { listOptions } : {};
   return (
     <div>
       {name && (
@@ -53,6 +42,7 @@ const RenderInput = ({
               <Component
                 // labelClass="mb-1"
                 value={values[name]}
+                name={name}
                 // onChange={handleChange(name)}
                 onChange={(val) => setFieldValue(name, val, true)}
                 onFocus={() => setFieldTouched(name)}
@@ -60,7 +50,9 @@ const RenderInput = ({
                 //   onChange={trigger ? this._triggerChange : handleChange(name)}
                 //   onFocus={() => setFieldTouched(name)}
                 //   className={classNames("pl-4", className)}
-                options={listOptions?.[name]}
+                // options={listOptions[name]}
+                // listOptions={listOptions}
+                {...selectProps}
                 {...otherProps}
               />
               {/* <ErrorMessage name={name} /> */}

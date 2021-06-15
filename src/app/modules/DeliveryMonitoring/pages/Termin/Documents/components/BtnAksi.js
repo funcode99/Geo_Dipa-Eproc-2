@@ -29,7 +29,7 @@ const ITEM_HEIGHT = 48;
 
 const Item = {};
 
-export default function BtnAksi({ item, handleAction }) {
+export default function BtnAksi({ item, isPeriodic, handleAction }) {
   const [exclude, setExclude] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -57,7 +57,7 @@ export default function BtnAksi({ item, handleAction }) {
         label: "Upload Draft",
         icon: "fas fa-upload text-primary",
         type: "upload",
-        params: { upload_id: item?.id },
+        params: { upload_id: item?.id, isPeriodic },
       },
       //   {
       //     label: "Edit Draft",
@@ -86,7 +86,7 @@ export default function BtnAksi({ item, handleAction }) {
         label: "Accept Document",
         icon: "fas fa-check-circle text-success",
         type: "accept",
-        params: { accept_id: item?.id },
+        params: { accept_id: item?.id, percentage: "20%", isPeriodic },
       },
       {
         label: "Reject Document",
@@ -104,6 +104,7 @@ export default function BtnAksi({ item, handleAction }) {
     [item]
   );
 
+  // console.log(`isPeriodic`, isPeriodic);
   const listUsed = status === "client" ? adminMenu : vendorMenu;
   React.useEffect(() => {
     if (item?.url === null)

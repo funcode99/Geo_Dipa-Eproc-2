@@ -35,6 +35,12 @@ export const formData2 = [
     label: "Hasil pekerjaan yang telah diselesaikan",
     typeInput: "TextAreaInput",
   },
+  // {
+  //   name: "select_example",
+  //   label: "PROVINSI",
+  //   typeInput: "SelectInputCustom",
+  //   isMulti: true,
+  // },
 ];
 
 export const formData3 = [

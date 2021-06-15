@@ -20,7 +20,7 @@ export default function ButtonAction({ data, handleAction, ops }) {
   }
   const handleChange = React.useCallback(
     (type, data) => {
-      handleAction(type, data);
+      if (typeof handleAction === "function") handleAction(type, data);
       handleClose();
     },
     [handleAction, handleClose]

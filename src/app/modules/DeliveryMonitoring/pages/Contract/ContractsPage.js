@@ -71,7 +71,7 @@ export const ContractsPage = () => {
           content: (
             <ButtonAction
               data={"1"}
-              handleAction={console.log(null)}
+              // handleAction={console.log(null)}
               ops={[
                 {
                   label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",

@@ -5,7 +5,15 @@ import FieldBuilder from "./FieldBuilder";
 import { Send } from "@material-ui/icons";
 
 const FormBuilder = (
-  { onSubmit, formData, initial = {}, validation, children, fieldProps },
+  {
+    onSubmit,
+    formData,
+    initial = {},
+    validation,
+    children,
+    fieldProps,
+    loading = false,
+  },
   ref
 ) => {
   const formikRef = React.useRef();
@@ -13,9 +21,9 @@ const FormBuilder = (
     (data) => typeof onSubmit === "function" && onSubmit(data),
     [onSubmit]
   );
+  // console.log(`formProps`, fieldProps);
 
   React.useImperativeHandle(ref, () => formikRef.current);
-
   return (
     <Formik
       innerRef={formikRef}
@@ -28,7 +36,7 @@ const FormBuilder = (
         return (
           <React.Fragment>
             {typeof children === "function" ? (
-              children(formikProps)
+              children({ ...formikProps, fieldProps })
             ) : (
               <FieldBuilder formData={formData} {...fieldProps} />
             )}

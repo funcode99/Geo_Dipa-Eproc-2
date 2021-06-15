@@ -262,6 +262,7 @@ const Documents = ({ taskId }) => {
         visible={open.upload}
         onClose={() => handleVisible("upload")}
         onSubmit={(params) => handleApi("upload", params)}
+        additionalParams={open.tempParams}
       />
       {/* <ModalEditDraft
         visible={open.edit}
@@ -277,8 +278,10 @@ const Documents = ({ taskId }) => {
         <ModalConfirmation
           key={id}
           visible={open[type]}
+          type={type}
           onClose={() => handleVisible(type)}
           onSubmit={(params) => handleApi(type, params)}
+          additionalParams={open.tempParams}
           {...other}
         />
       ))}

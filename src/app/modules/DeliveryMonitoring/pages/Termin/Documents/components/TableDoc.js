@@ -60,7 +60,7 @@ const BtnLihat = ({ url }) => {
   }, [url]);
   return (
     <div className={"d-flex flex-row align-items-center"}>
-      <Typography>{url}</Typography>
+      {/* <Typography>{url}</Typography> */}
       {url && (
         <Button onClick={handleOpen} href="#text-buttons">
           Lihat Dokumen
@@ -137,6 +137,7 @@ const TableDoc = ({}) => {
                                         <BtnAksi
                                           item={els}
                                           handleAction={handleAction}
+                                          isPeriodic={isPeriodic}
                                         />,
                                       ]}
                                     />

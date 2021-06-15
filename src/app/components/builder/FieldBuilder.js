@@ -6,18 +6,20 @@ const FieldBuilder = ({
   formData,
   // values = {},
   // errors,
-  handleSubmit,
+  // handleSubmit,
   ...other
 }) => {
   const formProps = {
     // values,
     // errors,
-    handleSubmit,
+    // handleSubmit,
     // readOnly,
     // onChange: readOnly ? () => {} : undefined,
     // disabled: readOnly,
     ...other,
   };
+
+  // console.log(`formProps`, formProps);
   return (
     <Row className={"mt-9"}>
       {formData &&

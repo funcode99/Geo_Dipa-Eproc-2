@@ -3,8 +3,10 @@ import { StyledModal } from "../../../../../../components/modals";
 import useToast from "../../../../../../components/toast";
 import * as documentOption from "../../../../../../service/Document";
 import { Form, Row, Col } from "react-bootstrap";
+import { InputGroup } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
 
-const ModalUploadDoc = ({ visible, onClose, onSubmit }) => {
+const ModalUploadDoc = ({ visible, onClose, additionalParams, onSubmit }) => {
   const [file, setFile] = React.useState(false);
   const [remarks, setRemarks] = React.useState(false);
   const [Toast, setToast] = useToast();
@@ -39,6 +41,18 @@ const ModalUploadDoc = ({ visible, onClose, onSubmit }) => {
               placeholder="Masukkan Keterangan"
             />
           </Form.Group>
+          {additionalParams?.isPeriodic && (
+            <InputGroup className="mb-3">
+              <FormControl
+                // onChange={}
+                placeholder={"Masukkan Persentase"}
+                aria-label="Amount (to the nearest dollar)"
+              />
+              <InputGroup.Append>
+                <InputGroup.Text>%</InputGroup.Text>
+              </InputGroup.Append>
+            </InputGroup>
+          )}
           <Form.Group controlId="file-attachment">
             <Form.Label>File Dokumen</Form.Label>
             <Form.File onChange={handleSelectChange} size="sm" />

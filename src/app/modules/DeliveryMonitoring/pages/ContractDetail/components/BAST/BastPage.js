@@ -40,10 +40,10 @@ const BastPage = () => {
       nomor_po: purch_order_no,
       hasil_pekerjaan: "",
       // file_attachment: "",
-      // select_example: {
-      //   label: "isi",
-      //   value: "value",
-      // },
+      select_example: {
+        label: "isi",
+        value: "value",
+      },
     }),
     [news, contract_name, vendor, contract_no, purch_order_no]
   );
@@ -66,7 +66,7 @@ const BastPage = () => {
       <CardBody>
         {/* <FieldBuilder readOnly formData={formData3} /> */}
         <FormBuilder
-          ref={formikRef}
+          // ref={formikRef}
           onSubmit={_handleSubmit}
           // formData={formData3}
           initial={initialValues}
@@ -77,13 +77,13 @@ const BastPage = () => {
             listOptions: optionsList,
           }}
         >
-          {() => (
+          {({ fieldProps }) => (
             <Row>
               <Col>
-                <FieldBuilder formData={formData1} />
+                <FieldBuilder formData={formData1} {...fieldProps} />
               </Col>
               <Col>
-                <FieldBuilder formData={formData2} />
+                <FieldBuilder formData={formData2} {...fieldProps} />
               </Col>
             </Row>
           )}
