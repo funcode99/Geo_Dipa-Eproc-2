@@ -73,19 +73,19 @@ export const formData3 = [
       typeInput: "TextAreaInput",
     },
   ],
-  [
-    {
-      name: "file_attachment",
-      label: "File",
-      typeInput: "UploadInput",
-    },
-    {
-      name: "select_example",
-      label: "PROVINSI",
-      typeInput: "SelectInputCustom",
-      isMulti: true,
-    },
-  ],
+  // [
+  //   {
+  //     name: "file_attachment",
+  //     label: "File",
+  //     typeInput: "UploadInput",
+  //   },
+  //   {
+  //     name: "select_example",
+  //     label: "PROVINSI",
+  //     typeInput: "SelectInputCustom",
+  //     isMulti: true,
+  //   },
+  // ],
 ];
 
 export const valSchemaPihakPertama = object().shape({
