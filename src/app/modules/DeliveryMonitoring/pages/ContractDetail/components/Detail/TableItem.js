@@ -13,7 +13,7 @@ const theadItems = [
   { id: "due-date", label: "Due Date" },
   { id: "qty", label: "Qty" },
   { id: "uom", label: "Uom" },
-  { id: "net-value", label: "Net Value" },
+  { id: "unit-price", label: "Unit Price" },
   // { id: 'wbs', label: 'WBS' },
 ];
 
