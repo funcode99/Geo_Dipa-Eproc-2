@@ -2,16 +2,21 @@ import React from "react";
 import {
   Paper,
   makeStyles,
-  Icon,
   CircularProgress,
   TextField,
   Button,
   Select,
   MenuItem,
   InputLabel,
+  Tooltip,
+  Fab,
+  Card,
+  CardContent,
+  Table,
+  TableCell,
+  TableBody,
 } from "@material-ui/core";
 import {
-  Send,
   Assignment,
   QueryBuilderSharp,
   FeaturedPlayList,
@@ -20,11 +25,13 @@ import {
   Description,
   FindInPage,
   MonetizationOn,
+  Visibility,
+  VisibilityOff,
 } from "@material-ui/icons";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
-import { Link, useParams, withRouter } from "react-router-dom";
+import { useParams, withRouter } from "react-router-dom";
 import Tabs from "../../../../components/tabs";
 import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
@@ -50,6 +57,9 @@ import Jaminan from "./components/Jaminan";
 import Denda from "./components/Denda";
 import BAST from "./components/BAST";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
+import { TableHead } from "@material-ui/core";
+import { TableRow } from "@material-ui/core";
+import { rupiah } from "../../../../libs/currency";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,8 +71,8 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 650,
   },
   textField: {
-    width: "75%",
-    marginBottom: theme.spacing(2),
+    width: "100%",
+    // marginBottom: theme.spacing(2),
   },
 }));
 
@@ -142,13 +152,18 @@ export const ContractDetailPage = () => {
   const [update, setUpdate] = React.useState({ id: "", update: false });
   const [confirm, setConfirm] = React.useState({ show: false, id: "" });
   const [options, setOptions] = React.useState();
+  const [show, setShow] = React.useState(true);
+
+  const handleShow = React.useCallback(() => setShow((prev) => !prev), [
+    setShow,
+  ]);
 
   const FormSchema = Yup.object().shape({
     name: Yup.string()
       .min(3, "Input minimal 3 karakter")
-      .required("Field ini wajib diisi"),
+      .required("Scope of work can not empty"),
     due_date: Yup.date()
-      .required("Field ini wajib diisi")
+      .required("Date can not empty")
       .nullable(),
   });
 
@@ -287,12 +302,6 @@ export const ContractDetailPage = () => {
     });
   };
 
-  const sortTerminByPaymentMethod = (data) => {
-    data.sort((a, b) => {
-      return a.payment - b.payment;
-    });
-  };
-
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
       data.map((services) => {
@@ -408,6 +417,25 @@ export const ContractDetailPage = () => {
         status: items.task_status_id,
       });
     } else if (type === "create") {
+      const tempSubmitItems = dataSubmitItems;
+      // console.log(tempSubmitItems);
+      let totalPrice = 0;
+
+      tempSubmitItems.task_services.forEach((item) => {
+        totalPrice += parseFloat(item?.price);
+      });
+
+      tempSubmitItems.task_items.forEach((item) => {
+        totalPrice += parseFloat(item?.price);
+      });
+
+      tempSubmitItems.total_price = totalPrice;
+
+      dispatch({
+        type: actionTypes.SetSubmitItemsByContractId,
+        payload: tempSubmitItems,
+      });
+
       formik.setValues(initialValues);
       setUpdate({ id: "", update: false });
     }
@@ -462,48 +490,67 @@ export const ContractDetailPage = () => {
             {dataSubmitItems && dataSubmitItems.task_services.length > 0 && (
               <React.Fragment>
                 <h5>Jasa</h5>
-                <table className="table-md table-bordered table-hover">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white">No</th>
-                      <th className="bg-primary text-white">Name</th>
-                      <th className="bg-primary text-white">Quantity</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      {["No", "Name", "Quantity", "Unit Price"].map(
+                        (item, index) => (
+                          <TableCell className="bg-white" key={index}>
+                            {item}
+                          </TableCell>
+                        )
+                      )}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
                     {dataSubmitItems.task_services.map((item, index) => (
-                      <tr key={item?.service_id}>
-                        <td>{(index += 1)}</td>
-                        <td>{item?.name}</td>
-                        <td>{item?.qty}</td>
-                      </tr>
+                      <TableRow key={item?.service_id}>
+                        <TableCell>{(index += 1)}</TableCell>
+                        <TableCell>{item?.name}</TableCell>
+                        <TableCell>{item?.qty}</TableCell>
+                        <TableCell>{rupiah(item?.price)}</TableCell>
+                      </TableRow>
                     ))}
-                  </tbody>
-                </table>
+                  </TableBody>
+                </Table>
               </React.Fragment>
             )}
             {dataSubmitItems && dataSubmitItems.task_items.length > 0 && (
               <React.Fragment>
-                <h5 className="mt-2">Barang</h5>
-                <table className="table-md table-bordered table-hover">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white">No</th>
-                      <th className="bg-primary text-white">Name</th>
-                      <th className="bg-primary text-white">Quantity</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <h5 className="mt-4">Barang</h5>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      {["No", "Name", "Quantity", "Unit Price"].map(
+                        (item, index) => (
+                          <TableCell className="bg-white" key={index}>
+                            {item}
+                          </TableCell>
+                        )
+                      )}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
                     {dataSubmitItems.task_items.map((item, index) => (
-                      <tr key={item?.item_id}>
-                        <td>{(index += 1)}</td>
-                        <td>{item?.name}</td>
-                        <td>{item?.qty}</td>
-                      </tr>
+                      <TableRow key={item?.item_id}>
+                        <TableCell>{(index += 1)}</TableCell>
+                        <TableCell>{item?.name}</TableCell>
+                        <TableCell>{item?.qty}</TableCell>
+                        <TableCell>{rupiah(item?.price)}</TableCell>
+                      </TableRow>
                     ))}
-                  </tbody>
-                </table>
+                  </TableBody>
+                </Table>
               </React.Fragment>
+            )}
+            {dataSubmitItems.total_price > 0 && (
+              <p className="mt-4">
+                Total harga adalah
+                <span className="text-primary">
+                  {" "}
+                  {rupiah(dataSubmitItems?.total_price)}.
+                </span>
+              </p>
             )}
           </div>
         )}
@@ -675,27 +722,31 @@ export const ContractDetailPage = () => {
         {tabActive === 0 && (
           <React.Fragment>
             <FormDetail />
-            <Item />
+            <Item handleClick={() => handleModal("create")} />
 
             <Container>
-              <div className="d-flex justify-content-end w-100 mt-3">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="medium"
-                  onClick={() => handleModal("create")}
-                >
-                  <span className="mr-1">Submit</span>
-                  <Send />
-                </Button>
-              </div>
+              <Tooltip
+                title={show ? "Hide" : "Show"}
+                placement="right"
+                className="my-5"
+              >
+                <Fab size="small" variant="extended" onClick={handleShow}>
+                  {show ? <VisibilityOff /> : <Visibility />}
+                </Fab>
+              </Tooltip>
 
-              <CustomTable
-                tableHeader={tableHeaderTermin}
-                tableContent={tableContent}
-                marginY="my-5"
-                hecto="hecto-16"
-              />
+              {show && (
+                <Card>
+                  <CardContent>
+                    <CustomTable
+                      tableHeader={tableHeaderTermin}
+                      tableContent={tableContent}
+                      marginY="my-5"
+                      hecto="hecto-16"
+                    />
+                  </CardContent>
+                </Card>
+              )}
             </Container>
           </React.Fragment>
         )}

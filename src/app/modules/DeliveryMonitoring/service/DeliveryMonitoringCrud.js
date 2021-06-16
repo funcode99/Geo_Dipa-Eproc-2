@@ -68,14 +68,9 @@ export async function postUploadDoc(document_id, oldParams) {
 }
 
 // Berita Acara
-export async function postCreateNewsVendor(taskId, values) {
-  // console.log(`create berita acara ${taskId}`, values);
-  return axios.post(`delivery/task-news/${taskId}`, values);
-}
-
-export async function postCreateNewsClient(newsId, values) {
-  // console.log(`create berita acara ${taskId}`, values);
-  return axios.post(`delivery/task-news/${newsId}/review`, values);
+export async function postCreateBAPP({ url, ...params }) {
+  // console.log(`params`, params, url);
+  return axios.post(url, params);
 }
 
 // BAST

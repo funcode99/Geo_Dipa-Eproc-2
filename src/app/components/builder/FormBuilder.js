@@ -13,6 +13,7 @@ const FormBuilder = (
     children,
     fieldProps,
     loading = false,
+    disabledButton = false,
   },
   ref
 ) => {
@@ -46,7 +47,7 @@ const FormBuilder = (
                 color="secondary"
                 size="medium"
                 onClick={handleSubmit}
-                disabled={loading}
+                disabled={loading || disabledButton}
               >
                 <span className="mr-1">Submit</span>
                 {loading ? (
