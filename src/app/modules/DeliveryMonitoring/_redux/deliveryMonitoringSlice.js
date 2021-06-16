@@ -13,6 +13,7 @@ const initialDelivMonitoringState = {
     task_services: [],
   },
   dataTask: {},
+  dataOrderItems: [],
 };
 
 export const reducer = persistReducer(
@@ -63,6 +64,13 @@ export const reducer = persistReducer(
         return {
           ...state,
           dataTask: action.payload,
+        };
+      }
+
+      case actionTypes.SetDataOrderItems: {
+        return {
+          ...state,
+          dataOrderItems: action.payload,
         };
       }
 

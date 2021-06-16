@@ -7,13 +7,14 @@ import {
   DescriptionOutlined,
   AssignmentOutlined,
   BookmarkBorderOutlined,
+  LocalShipping,
 } from "@material-ui/icons";
 import ServAccGR from "../ServiceAccGR/pages/ServiceAccDetail";
 import Documents from "./Documents";
-import BeritaAcara from "./BeritaAcara";
 import BAPP from "./BAPP";
+import DeliveryOrder from "./DeliveryOrder.js";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { useSelector, shallowEqual, useDispatch, connect } from "react-redux";
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { useHistory, useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
@@ -25,27 +26,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TabLists = [
-  {
-    id: "summary",
-    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.SUMMARY" />,
-    icon: <DescriptionOutlined className="mb-0 mr-2" />,
-  },
-  {
-    id: "berita-acara",
-    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.OFFICIAL_REPORT" />,
-    icon: <AssignmentOutlined className="mb-0 mr-2" />,
-  },
-  {
-    id: "sa-gr",
-    label: "SA / GR",
-    icon: <BookmarkBorderOutlined className="mb-0 mr-2" />,
-  },
-];
-
-const TerminPage = (props) => {
+const TerminPage = ({ items }) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
+  // const [tabList, setTabList] = React.useState(TabLists);
   const dispatch = useDispatch();
   const { dataContractById, dataTask } = useSelector(
     (state) => state.deliveryMonitoring
@@ -56,6 +40,33 @@ const TerminPage = (props) => {
   );
   const history = useHistory();
   const { task_id } = useParams();
+  const isItemExists = typeof items && items.length > 0;
+
+  const TabLists = React.useMemo(
+    () => [
+      {
+        id: "summary",
+        label: <FormattedMessage id="CONTRACT_DETAIL.TAB.SUMMARY" />,
+        icon: <DescriptionOutlined className="mb-0 mr-2" />,
+      },
+      {
+        id: "delivery-order",
+        label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DELIVERY_ORDER" />,
+        icon: <LocalShipping className="mb-0 mr-2" />,
+      },
+      {
+        id: "berita-acara",
+        label: <FormattedMessage id="CONTRACT_DETAIL.TAB.OFFICIAL_REPORT" />,
+        icon: <AssignmentOutlined className="mb-0 mr-2" />,
+      },
+      {
+        id: "sa-gr",
+        label: "SA / GR",
+        icon: <BookmarkBorderOutlined className="mb-0 mr-2" />,
+      },
+    ],
+    []
+  );
 
   const getTask = React.useCallback(
     (taskId) => {
@@ -93,8 +104,11 @@ const TerminPage = (props) => {
   }, []);
 
   function handleChangeTab(e, newTabActive) {
+    // console.log(newTabActive);
     setTabActive(newTabActive);
   }
+
+  // console.log(TabLists);
 
   return (
     <Container>
@@ -126,15 +140,26 @@ const TerminPage = (props) => {
           <Tabs
             tabActive={tabActive}
             handleChange={handleChangeTab}
-            tabLists={TabLists}
+            tabLists={
+              isItemExists
+                ? TabLists
+                : TabLists.filter((item) => item.id !== "delivery-order")
+            }
           />
         </Container>
         <hr className="p-0 m-0" />
         {/* {state.hasOwnProperty('task_id') && ( */}
         <Container style={{ marginTop: 20, paddingBottom: 20 }}>
           {tabActive === 0 && <Summary taskId={task_id} />}
-          {tabActive === 1 && <BAPP status={status} taskId={task_id} />}
-          {tabActive === 2 && <ServAccGR />}
+
+          {isItemExists && tabActive === 1 && <DeliveryOrder />}
+          {!isItemExists && tabActive === 1 && <BAPP />}
+
+          {isItemExists && tabActive === 2 && <BAPP />}
+          {!isItemExists && tabActive === 2 && <ServAccGR />}
+
+          {isItemExists && tabActive === 3 && <ServAccGR />}
+
           {tabActive === 0 && <Documents taskId={task_id} />}
         </Container>
         {/* )} */}
@@ -143,4 +168,9 @@ const TerminPage = (props) => {
   );
 };
 
-export default TerminPage;
+const mapState = ({ deliveryMonitoring }) => ({
+  items: deliveryMonitoring.dataContractById?.items,
+});
+
+export default connect(mapState, null)(TerminPage);
+// export default TerminPage;

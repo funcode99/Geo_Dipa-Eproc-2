@@ -12,6 +12,7 @@ const ModalConfirmation = ({
   textYes,
   textNo,
   additionalParams,
+  children,
   ...other
 }) => {
   const _handleSubmit = React.useCallback(() => visible && onSubmit(), [
@@ -39,6 +40,7 @@ const ModalConfirmation = ({
           </React.Fragment>
         )}
       </div>
+      {children}
       <div className="d-flex justify-content-center mt-9">
         <button className="btn btn-primary  mr-8" onClick={onSubmit}>
           {textYes}
