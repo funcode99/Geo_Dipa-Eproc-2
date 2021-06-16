@@ -8,7 +8,16 @@ import Navs from "../../../../../../components/navs";
 import useToast from "../../../../../../components/toast";
 import TableItem from "./TableItem";
 import { StyledTableRow } from "../../../../../../components/tables/style";
-import { TableCell, Checkbox } from "@material-ui/core";
+import {
+  TableCell,
+  Checkbox,
+  Button,
+  Tooltip,
+  Fab,
+  Card,
+  CardContent,
+} from "@material-ui/core";
+import { Send, Visibility, VisibilityOff } from "@material-ui/icons";
 import RowAccordion from "./RowAccordion";
 
 const navLists = [
@@ -16,7 +25,7 @@ const navLists = [
   { id: "link-barang", label: <FormattedMessage id="SUMMARY.NAV.ITEM" /> },
 ];
 
-const Item = () => {
+const Item = ({ handleClick }) => {
   const { dataContractById, dataSubmitItems } = useSelector(
     (state) => state.deliveryMonitoring
   );
@@ -24,6 +33,11 @@ const Item = () => {
   const [Toast, setToast] = useToast();
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [loading, setLoading] = React.useState(false);
+  const [show, setShow] = React.useState(true);
+
+  const handleShow = React.useCallback(() => setShow((prev) => !prev), [
+    setShow,
+  ]);
 
   const changeChecked = (item) => {
     item.checked = !item.checked;
@@ -101,6 +115,7 @@ const Item = () => {
                     service_id: items.id,
                     qty: items.qty_available,
                     name: items.short_text,
+                    price: items.net_value,
                   },
                   "jasa"
                 );
@@ -126,6 +141,7 @@ const Item = () => {
                 item_id: items.id,
                 qty: items.qty_available,
                 name: items.desc,
+                price: items.unit_price,
               },
               "barang"
             );
@@ -227,114 +243,148 @@ const Item = () => {
     <Container>
       <Toast />
 
-      <div className="mb-5">
-        <Navs
-          navLists={navLists}
-          handleSelect={(selectedKey) => setNavActive(selectedKey)}
-        />
-      </div>
-      {navActive === "link-jasa" && (
-        <TableItem data={dataContractById.services} loading={loading}>
-          {dataContractById.services?.map((el) => {
-            return (
-              <RowAccordion
-                key={el.id}
-                data={["accordIcon", el.desc, "", "", "", ""]}
-                dataAll={el.item_services}
-              >
-                {(item) => {
-                  return item?.map((item2) => {
-                    return (
-                      <StyledTableRow key={item2?.id}>
-                        <TableCell>
-                          <Checkbox
-                            name={`checkbox-${item2.id}`}
-                            id={`checkbox-${item2.id}`}
-                            color="secondary"
-                            onChange={
-                              (e) =>
-                                handleChecklist(e, item2, {
-                                  id: el.id,
-                                  type: "jasa",
-                                })
-                              // console.log(e)
-                            }
-                            size="small"
-                            checked={item2.checked}
-                            disabled={item2.qty_available === 0 ? true : false}
-                          />
-                        </TableCell>
-                        <TableCell>{item2?.short_text}</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell>
-                          <Form.Control
-                            type="number"
-                            size="sm"
-                            min="0.1"
-                            step="0.1"
-                            max={item2?.qty_available}
-                            disabled={!item2.checked ? true : false}
-                            defaultValue={item2.qty_available}
-                            onChange={(e) =>
-                              handleInputQty(e.target.value, item2, "jasa")
-                            }
-                          />
-                        </TableCell>
-                        <TableCell></TableCell>
-                        <TableCell>{rupiah(item2?.net_value)}</TableCell>
-                      </StyledTableRow>
-                    );
-                  });
-                }}
-              </RowAccordion>
-            );
-          })}
-        </TableItem>
-      )}
+      <Tooltip
+        title={show ? "Hide" : "Show"}
+        placement="right"
+        className="mb-5"
+      >
+        <Fab size="small" variant="extended" onClick={handleShow}>
+          {show ? <VisibilityOff /> : <Visibility />}
+        </Fab>
+      </Tooltip>
 
-      {navActive === "link-barang" && (
-        <TableItem data={dataContractById.items} loading={loading}>
-          {dataContractById.items?.map((item) => {
-            return (
-              <StyledTableRow key={item?.id}>
-                <TableCell>
-                  <Checkbox
-                    name={`checkbox-${item.id}`}
-                    id={`checkbox-${item.id}`}
-                    color="secondary"
-                    onChange={(e) =>
-                      handleChecklist(e, item, {
-                        id: item.id,
-                        type: "barang",
-                      })
-                    }
-                    size="small"
-                    checked={item.checked}
-                    disabled={item.qty_available === 0 ? true : false}
-                  />
-                </TableCell>
-                <TableCell>{item?.desc}</TableCell>
-                <TableCell></TableCell>
-                <TableCell>
-                  <Form.Control
-                    type="number"
-                    size="sm"
-                    min="1"
-                    step="1"
-                    max={item?.qty_available}
-                    disabled={!item.checked ? true : false}
-                    defaultValue={item.qty_available}
-                    onChange={(e) =>
-                      handleInputQty(e.target.value, item, "barang")
-                    }
-                  />
-                </TableCell>
-                <TableCell></TableCell>
-                <TableCell>{rupiah(item?.unit_price)}</TableCell>
-              </StyledTableRow>
-            );
-          })}
-        </TableItem>
+      {show && (
+        <Card>
+          <CardContent>
+            <div className="mb-5">
+              <Navs
+                navLists={navLists}
+                handleSelect={(selectedKey) => setNavActive(selectedKey)}
+              />
+            </div>
+            {navActive === "link-jasa" && (
+              <TableItem data={dataContractById.services} loading={loading}>
+                {dataContractById.services?.map((el) => {
+                  return (
+                    <RowAccordion
+                      key={el.id}
+                      data={["accordIcon", el.desc, "", "", "", ""]}
+                      dataAll={el.item_services}
+                    >
+                      {(item) => {
+                        return item?.map((item2) => {
+                          return (
+                            <StyledTableRow key={item2?.id}>
+                              <TableCell>
+                                <Checkbox
+                                  name={`checkbox-${item2.id}`}
+                                  id={`checkbox-${item2.id}`}
+                                  color="secondary"
+                                  onChange={
+                                    (e) =>
+                                      handleChecklist(e, item2, {
+                                        id: el.id,
+                                        type: "jasa",
+                                      })
+                                    // console.log(e)
+                                  }
+                                  size="small"
+                                  checked={item2.checked}
+                                  disabled={
+                                    item2.qty_available === 0 ? true : false
+                                  }
+                                />
+                              </TableCell>
+                              <TableCell>{item2?.short_text}</TableCell>
+                              <TableCell></TableCell>
+                              <TableCell>
+                                <Form.Control
+                                  type="number"
+                                  size="sm"
+                                  min="0.1"
+                                  step="0.1"
+                                  max={item2?.qty_available}
+                                  disabled={!item2.checked ? true : false}
+                                  defaultValue={item2.qty_available}
+                                  onChange={(e) =>
+                                    handleInputQty(
+                                      e.target.value,
+                                      item2,
+                                      "jasa"
+                                    )
+                                  }
+                                />
+                              </TableCell>
+                              <TableCell></TableCell>
+                              <TableCell>{rupiah(item2?.net_value)}</TableCell>
+                            </StyledTableRow>
+                          );
+                        });
+                      }}
+                    </RowAccordion>
+                  );
+                })}
+              </TableItem>
+            )}
+
+            {navActive === "link-barang" && (
+              <TableItem data={dataContractById.items} loading={loading}>
+                {dataContractById.items?.map((item) => {
+                  return (
+                    <StyledTableRow key={item?.id}>
+                      <TableCell>
+                        <Checkbox
+                          name={`checkbox-${item.id}`}
+                          id={`checkbox-${item.id}`}
+                          color="secondary"
+                          onChange={(e) =>
+                            handleChecklist(e, item, {
+                              id: item.id,
+                              type: "barang",
+                            })
+                          }
+                          size="small"
+                          checked={item.checked}
+                          disabled={item.qty_available === 0 ? true : false}
+                        />
+                      </TableCell>
+                      <TableCell>{item?.desc}</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>
+                        <Form.Control
+                          type="number"
+                          size="sm"
+                          min="1"
+                          step="1"
+                          max={item?.qty_available}
+                          disabled={!item.checked ? true : false}
+                          defaultValue={item.qty_available}
+                          onChange={(e) =>
+                            handleInputQty(e.target.value, item, "barang")
+                          }
+                        />
+                      </TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>{rupiah(item?.unit_price)}</TableCell>
+                    </StyledTableRow>
+                  );
+                })}
+              </TableItem>
+            )}
+
+            <div className="d-flex justify-content-end w-100 mt-3">
+              <Button
+                variant="contained"
+                color="secondary"
+                size="medium"
+                onClick={handleClick}
+              >
+                <span className="mr-1">Submit</span>
+                <Send />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </Container>
   );
