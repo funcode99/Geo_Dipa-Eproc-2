@@ -4,6 +4,12 @@ import React, {
     useCallback
 } from 'react';
 import {
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogActions
+} from "@material-ui/core";
+import {
     connect, shallowEqual, useSelector
 } from "react-redux";
 import {
@@ -15,11 +21,17 @@ import {
     CardBody,
     CardFooter
 } from "../../../../../../_metronic/_partials/controls";
-import { getContractSummary, saveInvoice, getInvoice } from '../../../_redux/InvoiceMonitoringCrud';
+import { getContractSummary, saveInvoice, getInvoice, updateInvoice, getAllRejectedInvoice, getFileInvoice, getAllApprovedInvoice } from '../../../_redux/InvoiceMonitoringCrud';
 import useToast from '../../../../../components/toast';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { rupiah } from '../../../../../libs/currency';
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import { Document, Page, pdfjs } from 'react-pdf';
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { DialogTitleFile } from '../ItemContractInvoice';
+import moment from 'moment';
 
 function ContractInvoicePage(props) {
 
@@ -28,16 +40,24 @@ function ContractInvoicePage(props) {
     const [uploadFilename, setUploadFilename] = useState('Pilih File')
     const [invoiceStatus, setInvoiceStatus] = useState(false)
     const [invoiceData, setInvoiceData] = useState({})
+    const [invoiceUpdate, setInvoiceUpdate] = useState(false)
+    const [invoiceId, setInvoiceId] = useState('')
+    const [dialogState, setDialogState] = useState(false)
+    const [pageNumber, setPageNumber] = useState(1)
+    const [numPages, setNumPages] = useState(null)
+    const [historyInvoiceData, setHistoryInvoiceData] = useState([])
+    const [modalHistory, setModalHistory] = useState(false)
+    const [modalHistoryData, setModalHistoryData] = useState({})
 
     const [Toast, setToast] = useToast();
 
     const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
     const contract_id = props.match.params.contract;
     const termin = props.match.params.termin;
-    const { intl } = props;
+    const { intl, classes } = props;
 
     const initialValues = {
-        invoice_no: '11111111',
+        invoice_no: '',
         from_time: '',
         thru_time: '',
         purch_order_no: '',
@@ -104,17 +124,30 @@ function ContractInvoicePage(props) {
             for (var key in values) {
                 data.append(key, values[key])
             }
-            saveInvoice(data)
-                .then(response => {
-                    setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-                    getInvoiceData()
-                    setLoading(false)
-                })
-                .catch((error) => {
-                    if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
-                    setLoading(false);
-                    setInvoiceStatus(false)
-                });
+            if (invoiceUpdate) {
+                updateInvoice(invoiceId, data)
+                    .then(response => {
+                        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                        setLoading(false)
+                        setInvoiceStatus(false)
+                    });
+            } else {
+                saveInvoice(data)
+                    .then(response => {
+                        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+                        getInvoiceData()
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                        setLoading(false);
+                        setInvoiceStatus(false)
+                    });
+            }
         },
     });
 
@@ -157,16 +190,21 @@ function ContractInvoicePage(props) {
             });
     }, [contract_id, formik, intl, setToast, user_id])
 
-    const getInvoiceData = useCallback(() => {
-        getInvoice(contract_id, termin)
-            .then(response => {
-                if (!response.data.data) {
-                    setInvoiceStatus(false)
-                } else {
-                    formik.setFieldValue('description', response.data.data ? response.data.data.description : null)
-                    setInvoiceStatus(true)
-                }
-                setInvoiceData(response.data.data)
+    const gethistoryInvoiceData = useCallback((invoice_id) => {
+        getAllRejectedInvoice(invoice_id)
+            .then(responseReject => {
+                getAllApprovedInvoice(invoice_id)
+                    .then(responseApprove => {
+                        setHistoryInvoiceData([...responseReject['data']['data'], ...responseApprove['data']['data']])
+                    })
+                    .catch((error) => {
+                        if (
+                            error.response?.status !== 400 &&
+                            error.response?.data.message !== "TokenExpiredError"
+                        )
+                            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                    });
+                // setHistoryInvoiceData(response['data']['data'])
             })
             .catch((error) => {
                 if (
@@ -175,15 +213,46 @@ function ContractInvoicePage(props) {
                 )
                     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
-    }, [contract_id, formik, intl, setToast])
+    }, [intl, setToast])
 
-    useEffect(() => {
-        getContractData();
-        getInvoiceData();
-    }, []);
+    const getInvoiceData = useCallback(() => {
+        getInvoice(contract_id, termin)
+            .then(response => {
+                if (!response['data']['data']) {
+                    setInvoiceStatus(false)
+                } else {
+                    gethistoryInvoiceData(response['data']['data']['id'])
+                    setInvoiceId(response['data']['data']['id'])
+                    if (response['data']['data']['state'] === 'REJECTED') {
+                        setInvoiceStatus(false)
+                        setInvoiceUpdate(true)
+                    } else {
+                        setInvoiceStatus(true)
+                        formik.setFieldValue('invoice_no', response['data']['data']['invoice_no'])
+                        formik.setFieldValue('invoice_date', response['data']['data']['invoice_date'])
+                        formik.setFieldValue('description', response['data']['data']['description'])
+                        formik.setFieldValue('file_name', response['data']['data']['file_name'])
+                        setUploadFilename(response['data']['data']['file_name'])
+                        setInvoiceData(response['data']['data'])
+                    }
+                }
+            })
+            .catch((error) => {
+                if (
+                    error.response?.status !== 400 &&
+                    error.response?.data.message !== "TokenExpiredError"
+                )
+                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+            });
+    }, [contract_id, termin, gethistoryInvoiceData, formik, intl, setToast])
+
+    const onDocumentLoadSuccess = ({ numPages }) => {
+        setNumPages(numPages);
+    };
 
     const handleUpload = (e) => {
         setUploadFilename(e.currentTarget.files[0].name)
+        console.log('asd')
         formik.setFieldValue('file_name', e.currentTarget.files[0].name)
         formik.setFieldValue('file', e.currentTarget.files[0])
     }
@@ -195,9 +264,136 @@ function ContractInvoicePage(props) {
         formik.setFieldValue('thru_time', date.toISOString().split('T')[0])
     }
 
+    const handleHistory = (index) => {
+        setModalHistoryData(historyInvoiceData[index])
+        setModalHistory(true)
+    }
+
+    useEffect(getContractData, []);
+    useEffect(getInvoiceData, []);
+
     return (
         <React.Fragment>
             <Toast />
+            <Dialog
+                open={dialogState}
+                // keepMounted
+                maxWidth={false}
+                fullWidth={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                PaperProps={{
+                    style: {
+                        backgroundColor: 'transparent',
+                        boxShadow: "none",
+                    },
+                }}
+            >
+                <DialogTitleFile
+                    id="alert-dialog-description"
+                    onClose={() => {
+                        setDialogState(false);
+                    }}
+                >
+                </DialogTitleFile>
+                <PerfectScrollbar>
+                    <DialogContent>
+                        <div className="react-component">
+                            <Document file={invoiceData?.file} onLoadSuccess={onDocumentLoadSuccess}>
+                                <Page pageNumber={pageNumber} renderMode="svg" />
+                                <div className="page-controls">
+                                    <button
+                                        type="button"
+                                        disabled={pageNumber === 1}
+                                        onClick={() => {
+                                            setPageNumber(pageNumber - 1);
+                                        }}
+                                    >
+                                        <span><i className={`fas fa-chevron-left ${pageNumber === 1 ? '' : 'text-secondary'}`}></i></span>
+                                    </button>
+                                    <span>{pageNumber} of {numPages}</span>
+                                    <button
+                                        type="button"
+                                        disabled={pageNumber === numPages}
+                                        onClick={() => {
+                                            setPageNumber(pageNumber + 1);
+                                        }}
+                                    >
+                                        <span><i className={`fas fa-chevron-right ${pageNumber === numPages ? '' : 'text-secondary'}`}></i></span>
+                                    </button>
+                                </div>
+                            </Document>
+                        </div>
+                    </DialogContent>
+                </PerfectScrollbar>
+            </Dialog>
+            <Dialog
+                open={modalHistory}
+                // keepMounted
+                maxWidth='sm'
+                fullWidth={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle>
+                    <span>Detail Riwayat</span>
+                </DialogTitle>
+                <PerfectScrollbar>
+                    <DialogContent>
+                        <div className="form-group row mb-0">
+                            <label className="col-sm-3 col-form-label">Nomor Invoice</label>
+                            <div className="col-sm-9">
+                                <span className="form-control-plaintext">: {modalHistoryData['invoice_no']}</span>
+                            </div>
+                        </div>
+                        <div className="form-group row mb-0">
+                            <label className="col-sm-3 col-form-label">Tanggal Invoice</label>
+                            <div className="col-sm-9">
+                                <span className="form-control-plaintext">: {moment(new Date(modalHistoryData['from_time'])).format("YYYY-MM-DD")}</span>
+                            </div>
+                        </div>
+                        <div className="form-group row mb-0">
+                            <label className="col-sm-3 col-form-label">Dikirim Oleh</label>
+                            <div className="col-sm-9">
+                                <span className="form-control-plaintext">: {modalHistoryData['created_by_name']}</span>
+                            </div>
+                        </div>
+                        <div className="form-group row mb-0">
+                            <label className="col-sm-3 col-form-label">Tanggal Dikirim</label>
+                            <div className="col-sm-9">
+                                <span className="form-control-plaintext">: {moment(new Date(modalHistoryData['created_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
+                            </div>
+                        </div>
+                        <div className="form-group row mb-0">
+                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? 'Ditolak Oleh' : 'Disetujui Oleh'}</label>
+                            <div className="col-sm-9">
+                                <span className="form-control-plaintext">: {modalHistoryData['state'] == 'REJECTED' ? modalHistoryData['rejected_by_name'] : modalHistoryData['approved_by_name']}</span>
+                            </div>
+                        </div>
+                        <div className="form-group row mb-0">
+                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? 'Tanggal Ditolak' : 'Tanggal Disetujui'}</label>
+                            <div className="col-sm-9">
+                                <span className="form-control-plaintext">: {modalHistoryData['state'] == 'REJECTED' ? moment(new Date(modalHistoryData['rejected_at'])).format("YYYY-MM-DD HH:mm:ss") : moment(new Date(modalHistoryData['approved_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
+                            </div>
+                        </div>
+                        {modalHistoryData['state'] == 'REJECTED' && <div className="form-group row mb-0">
+                            <label className="col-sm-12 col-form-label">Alasan Penolakan Dokumen</label>
+                            <div className="col-sm-12">
+                                <textarea disabled className="form-control" defaultValue={modalHistoryData['rejected_remark']}></textarea>
+                            </div>
+                        </div>}
+                    </DialogContent>
+                </PerfectScrollbar>
+                <DialogActions>
+                    <button
+                        className="btn btn-secondary"
+                        onClick={() => setModalHistory(false)}
+                        disabled={loading}
+                    >
+                        <span>Kembali</span>
+                    </button>
+                </DialogActions>
+            </Dialog>
             <Card>
                 <form
                     noValidate
@@ -242,11 +438,15 @@ function ContractInvoicePage(props) {
                                 </div>
                                 <div className="form-group row">
                                     <label htmlFor="upload" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_UPLOAD" /></label>
-                                    <label htmlFor="upload" className="input-group mb-3 col-sm-8 pointer">
-                                        <div className="input-group-prepend">
+                                    <label htmlFor="upload" className={`input-group mb-3 col-sm-8 ${!invoiceStatus ? 'pointer' : ''}`}>
+                                        {!invoiceStatus && <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fas fa-file-upload"></i></span>
-                                        </div>
-                                        <span className="form-control">{invoiceData ? invoiceData['file_name'] : uploadFilename}</span>
+                                        </div>}
+                                        <span className={`form-control text-truncate ${classes.textDisabled}`}>{uploadFilename}</span>
+                                        {invoiceStatus && <div className="input-group-append pointer">
+                                            <span className={`input-group-text ${classes.textHover}`}><a download={invoiceData?.file_name} href={invoiceData?.file}><i className="fas fa-download"></i></a></span>
+                                            <span className={`input-group-text ${classes.textHover}`} onClick={() => setDialogState(true)}><i className="fas fa-eye"></i></span>
+                                        </div>}
                                     </label>
                                     {(formik.touched.file && formik.errors.file) ? (
                                         <span className="col-sm-8 offset-sm-4 text-center text-danger" >
@@ -291,6 +491,65 @@ function ContractInvoicePage(props) {
                         </button>
                     </CardFooter>
                 </form>
+            </Card>
+            <Card className="mt-5">
+                <CardBody>
+                    <div className="my-5 text-center">
+                        <h6>Riwayat Dokumen Invoice</h6>
+                    </div>
+                    {/* begin: Table */}
+                    <div className="table-wrapper-scroll-y my-custom-scrollbar">
+                        <div className="segment-table">
+                            <div className="hecto-10">
+                                <table className="table-bordered overflow-auto">
+                                    <thead>
+                                        <tr>
+                                            <th className="bg-primary text-white align-middle"><span>No</span></th>
+                                            <th className="bg-primary text-white align-middle">
+                                                <span>Nomor Invoice</span>
+                                            </th>
+                                            <th className="bg-primary text-white align-middle">
+                                                <span>Tanggal Invoice</span>
+                                            </th>
+                                            <th className="bg-primary text-white align-middle">
+                                                <span>File</span>
+                                            </th>
+                                            <th className="bg-primary text-white align-middle">
+                                                <span>Dikirim Oleh</span>
+                                            </th>
+                                            <th className="bg-primary text-white align-middle">
+                                                <span>Tanggal Dikirim</span>
+                                            </th>
+                                            <th className="bg-primary text-white align-middle">
+                                                <span>Status</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {historyInvoiceData?.map((item, index) => {
+                                            return (
+                                                <tr key={index.toString()}>
+                                                    <td className="align-middle text-center">
+                                                        {index + 1}
+                                                    </td>
+                                                    <td>{item.invoice_no}</td>
+                                                    <td>{item.from_time}</td>
+                                                    <td className="align-middle text-center">
+                                                        <a href={getFileInvoice + item.file_name}>{item.file_name}</a>
+                                                    </td>
+                                                    <td className="align-middle">{item.created_by_name}</td>
+                                                    <td className="align-middle">{moment(new Date(item.created_at)).format("YYYY-MM-DD HH:mm:ss")}</td>
+                                                    <td className="align-middle"><span className={`${item.state === 'REJECTED' ? 'text-danger' : 'text-success'} pointer font-weight-bold`} onClick={() => handleHistory(index)}>{item.state === 'REJECTED' ? 'DITOLAK' : 'DISETUJUI'} <i className="fas fa-caret-down"></i></span></td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {/* end: Table */}
+                </CardBody>
             </Card>
         </React.Fragment>
     )
