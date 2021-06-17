@@ -8,13 +8,14 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Tooltip,
-  Fab,
   Card,
   CardContent,
   Table,
   TableCell,
   TableBody,
+  FormControlLabel,
+  Switch,
+  Collapse,
 } from "@material-ui/core";
 import {
   Assignment,
@@ -25,8 +26,6 @@ import {
   Description,
   FindInPage,
   MonetizationOn,
-  Visibility,
-  VisibilityOff,
 } from "@material-ui/icons";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
@@ -46,7 +45,7 @@ import * as Yup from "yup";
 import { format } from "date-fns";
 import { formatDate } from "../../../../libs/date";
 import * as Option from "../../../../service/Option";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { FormDetail, Item } from "./components/Detail";
 import ParaPihak from "./components/ParaPihak";
 import ParaPihak2 from "./components/ParaPihak/ParaPihak2";
@@ -725,17 +724,12 @@ export const ContractDetailPage = () => {
             <Item handleClick={() => handleModal("create")} />
 
             <Container>
-              <Tooltip
-                title={show ? "Hide" : "Show"}
-                placement="right"
-                className="my-5"
-              >
-                <Fab size="small" variant="extended" onClick={handleShow}>
-                  {show ? <VisibilityOff /> : <Visibility />}
-                </Fab>
-              </Tooltip>
+              <FormControlLabel
+                control={<Switch checked={show} onChange={handleShow} />}
+                label="Show"
+              />
 
-              {show && (
+              <Collapse in={show}>
                 <Card>
                   <CardContent>
                     <CustomTable
@@ -746,7 +740,7 @@ export const ContractDetailPage = () => {
                     />
                   </CardContent>
                 </Card>
-              )}
+              </Collapse>
             </Container>
           </React.Fragment>
         )}
