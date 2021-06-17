@@ -35,6 +35,8 @@ import moment from 'moment';
 
 function ContractSprPage(props) {
 
+    const { intl, classes } = props;
+
     const [loading, setLoading] = useState(false);
     const [contractData, setContractData] = useState({})
     const [sppData, setSppData] = useState({})
@@ -60,7 +62,6 @@ function ContractSprPage(props) {
     // const vendor_id = useSelector((state) => state.auth.user.data.vendor_id, shallowEqual);
     const contract_id = props.match.params.contract;
     const termin = props.match.params.termin;
-    const { intl, classes } = props;
 
     const initialValues = {
         spr_no: '',
