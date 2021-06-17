@@ -160,14 +160,16 @@ export default function TablePaginationCustom() {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <ExpansionPanel defaultExpanded>
+        <ExpansionPanel defaultExpanded={false}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1c-content"
             id="panel1c-header"
           >
             <div className={classes.column}>
-              <Typography className={classes.heading}>Judul Tabel</Typography>
+              <Typography className={classes.heading}>
+                Judul Tabel (dalam pengembangan)
+              </Typography>
             </div>
             {/* <div className={classes.column}>
               <Typography className={classes.secondaryHeading}>

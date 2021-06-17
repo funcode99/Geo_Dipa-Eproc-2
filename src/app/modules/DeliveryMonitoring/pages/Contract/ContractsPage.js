@@ -130,6 +130,7 @@ export const ContractsPage = () => {
         }
       />
 
+      <TablePaginationCustom />
       <Paper className={classes.root}>
         <CustomTable
           tableHeader={tableHeaderContracts}
@@ -138,9 +139,6 @@ export const ContractsPage = () => {
           hecto="hecto-15"
           loading={loading}
         />
-      </Paper>
-      <Paper className={classes.root}>
-        <TablePaginationCustom />
       </Paper>
     </>
   );
