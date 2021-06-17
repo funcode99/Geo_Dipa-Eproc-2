@@ -14,7 +14,7 @@ import { useHistory } from "react-router-dom";
 
 const data_ops = [
   {
-    label: "TITLE.OPEN_DATA",
+    label: "TITLE.OPEN_SPT",
     icon: "fas fa-search text-primary",
     type: "open",
   },
@@ -39,13 +39,13 @@ function DashboardListSpt(props) {
       name: "no_spt",
       type: "text",
     },
-    // {
-    //   title: intl.formatMessage({
-    //     id: "TITLE.CEK_NO",
-    //   }),
-    //   name: "no_cek",
-    //   type: "text",
-    // },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.CEK_NO",
+      }),
+      name: "no_cek",
+      type: "text",
+    },
     {
       title: intl.formatMessage({
         id: "TITLE.TOTAL_PAYMENT",
@@ -74,6 +74,7 @@ function DashboardListSpt(props) {
 
   const requestFilterSort = useCallback(
     (updateFilterTable, updateSortTable) => {
+      setErr(false);
       setLoading(true);
       setData([]);
       let pagination = Object.assign({}, paginations);
@@ -97,11 +98,7 @@ function DashboardListSpt(props) {
         .catch((err) => {
           setErr(true);
           setLoading(false);
-          if (
-            err.response?.status !== 400 &&
-            err.response?.data.message !== "TokenExpiredError"
-          )
-            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     },
     [filterTable, sortData, filterSort, intl, setToast, paginations]
@@ -348,7 +345,7 @@ function DashboardListSpt(props) {
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
@@ -459,12 +456,12 @@ function DashboardListSpt(props) {
                         <tr key={index.toString()}>
                           <td>{index + 1 + paginations.numberColum}</td>
                           <td>{item.spt_no}</td>
-                          <td>-----</td>
+                          <td>{item.cek_giro}</td>
                           <td>{rupiah(item.sub_total)}</td>
                           <td>{item.account_number}</td>
                           <td>
                             {window
-                              .moment(new Date(item.createdAt))
+                              .moment(new Date(item.created_at))
                               .format("DD MMM YYYY")}
                           </td>
                           <td>
