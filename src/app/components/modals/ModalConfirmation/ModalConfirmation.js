@@ -13,6 +13,7 @@ const ModalConfirmation = ({
   textNo,
   additionalParams,
   children,
+  submitColor = "primary",
   ...other
 }) => {
   const _handleSubmit = React.useCallback(() => visible && onSubmit(), [
@@ -42,7 +43,7 @@ const ModalConfirmation = ({
       </div>
       {children}
       <div className="d-flex justify-content-center mt-9">
-        <button className="btn btn-primary  mr-8" onClick={onSubmit}>
+        <button className={`btn btn-${submitColor} mr-8`} onClick={onSubmit}>
           {textYes}
         </button>
         <button className="btn btn-light" onClick={onClose}>
