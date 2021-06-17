@@ -201,6 +201,7 @@ function DashboardListContract(props) {
 
   const handleAction = (type, data) => {
     console.log("type: ", type, " - ", "data: ", data);
+    history.push(`/client/invoice_monitoring/contract/1/${data.id}`);
   };
 
   return (
