@@ -16,7 +16,7 @@ import { useHistory } from "react-router-dom";
 
 const data_ops = [
   {
-    label: "TITLE.OPEN_SPT",
+    label: "TITLE.OPEN_INVOICE",
     icon: "fas fa-search text-primary",
     type: "open",
   },
