@@ -12,12 +12,13 @@ import {
   TableCell,
   Checkbox,
   Button,
-  Tooltip,
-  Fab,
   Card,
   CardContent,
+  FormControlLabel,
+  Switch,
+  Collapse,
 } from "@material-ui/core";
-import { Send, Visibility, VisibilityOff } from "@material-ui/icons";
+import { Send } from "@material-ui/icons";
 import RowAccordion from "./RowAccordion";
 
 const navLists = [
@@ -243,17 +244,12 @@ const Item = ({ handleClick }) => {
     <Container>
       <Toast />
 
-      <Tooltip
-        title={show ? "Hide" : "Show"}
-        placement="right"
-        className="mb-5"
-      >
-        <Fab size="small" variant="extended" onClick={handleShow}>
-          {show ? <VisibilityOff /> : <Visibility />}
-        </Fab>
-      </Tooltip>
+      <FormControlLabel
+        control={<Switch checked={show} onChange={handleShow} />}
+        label="Show"
+      />
 
-      {show && (
+      <Collapse in={show}>
         <Card>
           <CardContent>
             <div className="mb-5">
@@ -385,7 +381,7 @@ const Item = ({ handleClick }) => {
             </div>
           </CardContent>
         </Card>
-      )}
+      </Collapse>
     </Container>
   );
 };
