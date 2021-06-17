@@ -81,7 +81,7 @@ function DashboardListContract(props) {
       title: intl.formatMessage({
         id: "TITLE.CONTRACT_NO",
       }),
-      name: "no_contract",
+      name: "contract_no",
       type: "text",
     },
     {
@@ -124,7 +124,7 @@ function DashboardListContract(props) {
   const [data, setData] = useState([]);
   const [filterSort, setFilterSort] = useState({ filter: {}, sort: {} });
   const [sortData, setSortData] = useState({
-    name: "no_contract",
+    name: "contract_no",
     order: false,
   });
   const [err, setErr] = useState(false);
@@ -434,7 +434,7 @@ function DashboardListContract(props) {
                     <tr>
                       <th
                         className="bg-primary text-white align-middle td-23 pointer"
-                        id="no_contract"
+                        id="contract_no"
                         onClick={(e) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
@@ -443,28 +443,26 @@ function DashboardListContract(props) {
                           // requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_contract" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "contract_no" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         Nomor Kontrak
                       </th>
                       <th
@@ -478,28 +476,26 @@ function DashboardListContract(props) {
                           // requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "procurement_title" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "procurement_title" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         Judul Pengadaan
                       </th>
                       <th
@@ -513,28 +509,26 @@ function DashboardListContract(props) {
                           // requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_po" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "no_po" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         Nomor PO
                       </th>
                       <th
@@ -548,28 +542,26 @@ function DashboardListContract(props) {
                           // requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "termin" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "termin" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         Termin
                       </th>
                       <th
@@ -583,28 +575,26 @@ function DashboardListContract(props) {
                           // requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_sa" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "no_sa" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         Nomor SA
                       </th>
                       <th
@@ -618,28 +608,26 @@ function DashboardListContract(props) {
                           // requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_invoice" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "no_invoice" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         Nomor Invoice
                       </th>
                       <th className="bg-primary text-white align-middle td-3">
@@ -652,40 +640,52 @@ function DashboardListContract(props) {
                       return (
                         <tr key={index.toString()}>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               {item.contract_no}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               {item.contract_name}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               {item.purch_order_no}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               {index === 0
                                 ? 1
                                 : index === 1
-                                  ? 2
-                                  : index === 2
-                                    ? 3
-                                    : index === 3
-                                      ? 4
-                                      : 5}
+                                ? 2
+                                : index === 2
+                                ? 3
+                                : index === 3
+                                ? 4
+                                : 5}
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               80000035434
                             </Link>
                           </td>
                           <td>
-                            <Link to={`/vendor/invoice_monitoring/1/` + item.id}>
+                            <Link
+                              to={`/vendor/invoice_monitoring/1/` + item.id}
+                            >
                               INV0352345
                             </Link>
                           </td>

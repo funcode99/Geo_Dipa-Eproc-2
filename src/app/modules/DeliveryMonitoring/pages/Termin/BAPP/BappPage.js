@@ -234,6 +234,7 @@ const mapState = ({ auth, deliveryMonitoring }) => ({
   status: auth.user.data.status,
   contract: deliveryMonitoring.dataContractById,
   taskNews: deliveryMonitoring.dataTask?.task_news,
+  taskId: deliveryMonitoring.dataTask?.id,
 });
 
 const mapDispatch = (dispatch) => ({

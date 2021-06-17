@@ -41,6 +41,7 @@ const ItemSpt = (props) => {
   };
 
   const getDataSpt = () => {
+    console.log("result", data);
     getItemSpt(match.params.id)
       .then((result) => {
         setLoading(false);
@@ -50,11 +51,7 @@ const ItemSpt = (props) => {
       .catch((err) => {
         //   setErr(true);
         setLoading(false);
-        if (
-          err.response?.status !== 400 &&
-          err.response?.data.message !== "TokenExpiredError"
-        )
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
 
@@ -97,7 +94,7 @@ const ItemSpt = (props) => {
                 </div>
               </div>
               <div className="row mt-5">
-                <table className="table table-bordered mt-5">
+                <table className="table table-bordered table-responsive mt-5">
                   <thead>
                     <tr>
                       <td>No</td>
@@ -110,17 +107,17 @@ const ItemSpt = (props) => {
                     </tr>
                   </thead>
                   {data &&
-                    data.data_account_number &&
-                    data.data_account_number.map((item, index) => {
+                    data.list &&
+                    data.list.map((item, index) => {
                       return item.data && item.data.length === 1 ? (
                         <tbody key={index.toString()}>
                           <tr>
                             <td>{index + 1}</td>
-                            <td>-------</td>
+                            <td>{item.data[0].vendor_name}</td>
                             <td>{item.data[0].transfer_news}</td>
                             <td>{rupiah(item.data[0].sub_total)}</td>
-                            <td>{item.account_number}</td>
-                            <td>-----</td>
+                            <td>{item.data[0].account_number}</td>
+                            <td>{item.data[0].bank_name}</td>
                             <td>{item.data[0].no_doc_sap}</td>
                           </tr>
                         </tbody>
@@ -128,13 +125,17 @@ const ItemSpt = (props) => {
                         <tbody key={index.toString()}>
                           <tr>
                             <td rowSpan={item.data.length}>{index + 1}</td>
-                            <td rowSpan={item.data.length}>-------</td>
+                            <td rowSpan={item.data.length}>
+                              {item.data[0].vendor_name}
+                            </td>
                             <td>{item.data[0].transfer_news}</td>
                             <td>{rupiah(item.data[0].sub_total)} </td>
                             <td rowSpan={item.data.length}>
                               {item.account_number}
                             </td>
-                            <td rowSpan={item.data.length}>-----</td>
+                            <td rowSpan={item.data.length}>
+                              {item.data[0].bank_name}
+                            </td>
                             <td>{item.data[0].no_doc_sap}</td>
                           </tr>
                           {item.data.slice(1).map((items, indexs) => {

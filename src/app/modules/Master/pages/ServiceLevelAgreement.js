@@ -108,11 +108,7 @@ const ServiceLevelAgreement = (props) => {
         .catch((err) => {
           setErr(true);
           setLoading(false);
-          if (
-            err.response?.status !== 400 &&
-            err.response?.data.message !== "TokenExpiredError"
-          )
-            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     },
     [filterTable, sortData, filterSort, intl, setToast, paginations]
@@ -192,13 +188,8 @@ const ServiceLevelAgreement = (props) => {
         }, 2000);
       })
       .catch((err) => {
-        if (
-          err.response?.status !== 400 &&
-          err.response?.data.message !== "TokenExpiredError"
-        ) {
-          setOnSubmit(false);
-          setErrOnSubmit(true);
-        }
+        setOnSubmit(false);
+        setErrOnSubmit(true);
       });
   };
 
