@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
@@ -8,68 +8,178 @@ import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import { Link } from "react-router-dom";
 import { getContractClient } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
+import { getListSpt } from "../../_redux/InvoiceMonitoringCrud";
+import { TablePagination } from "@material-ui/core";
+import ButtonAction from "../../../../components/buttonAction/ButtonAction";
+import { rupiah } from "../../../../libs/currency";
+import { useHistory } from "react-router-dom";
+
+const data_ops = [
+  {
+    label: "TITLE.OPEN_SPT",
+    icon: "fas fa-search text-primary",
+    type: "open",
+  },
+];
 
 function DashboardListContract(props) {
   const { intl } = props;
-
-  const openFilterTable = (index) => {
-    // let idFilter = "filter-" + "asd";
-    // let idInputFilter = "loop-value-" + index;
-    // let status = document.getElementById(idFilter).getAttribute("status");
-    // if (nameStateFilter === "") {
-    //   nameStateFilter = idFilter;
-    //   this.setState({ nameStateFilter }, () => {
-    //     document.getElementById(idFilter).setAttribute("status", "open");
-    //     document.getElementById(idFilter).classList.add("open");
-    //   });
-    // } else if (nameStateFilter === idFilter) {
-    //   if (status === "closed") {
-    //     document.getElementById(idFilter).setAttribute("status", "open");
-    //     document.getElementById(idFilter).classList.add("open");
-    //   } else {
-    //     document.getElementById(idFilter).setAttribute("status", "closed");
-    //     document.getElementById(idFilter).classList.remove("open");
-    //     document.getElementById(idInputFilter).value =
-    //       filterTable[idInputFilter] || "";
-    //   }
-    // } else {
-    //   document.getElementById(nameStateFilter).setAttribute("status", "closed");
-    //   document.getElementById(nameStateFilter).classList.remove("open");
-    //   nameStateFilter = idFilter;
-    //   this.setState({ nameStateFilter }, () => {
-    //     document.getElementById(idFilter).setAttribute("status", "open");
-    //     document.getElementById(idFilter).classList.add("open");
-    //   });
-    // }
-  };
-
-  const updateValueFilter = (property) => {
-    // let filterTable = this.state.filterTable;
-    // filterTable[property] = document.getElementById(property).value;
-    // this.setState({ filterTable });
-  };
-
-  const resetValueFilter = (property) => {
-    // let filterTable = this.state.filterTable;
-    // filterTable[property] = "";
-    // document.getElementById(property).value = "";
-    // this.setState({ filterTable });
-  };
-
-  const resetFilter = () => {
-    // let filterTable = {};
-    // this.setState({ filterTable });
-  };
-
   const vendor_id = useSelector(
     (state) => state.auth.user.data.vendor_id,
     shallowEqual
   );
-
-  const [filterTable, setFilterTable] = useState({});
   const [contractData, setContractData] = useState([]);
-  const [nameStateFilter, setNameStateFilter] = useState([]);
   const [Toast, setToast] = useToast();
+  const [filterTable, setFilterTable] = useState({});
+  const [nameStateFilter, setNameStateFilter] = useState("");
+  const [paginations, setPaginations] = useState({
+    numberColum: 0,
+    page: 0,
+    count: 15,
+    rowsPerPage: 10,
+  });
+  const [filterData] = useState([
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER",
+      }),
+      name: "contract_no",
+      type: "text",
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.PROCUREMENT_TITLE",
+      }),
+      name: "procurement_title",
+      type: "text",
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.PO_NUMBER",
+      }),
+      name: "po_no",
+      type: "text",
+    },
+  ]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [filterSort, setFilterSort] = useState({ filter: {}, sort: {} });
+  const [sortData, setSortData] = useState({
+    name: "contract_no",
+    order: false,
+  });
+  const [err, setErr] = useState(false);
+  const [dialogState, setDialogState] = useState(false);
+  const history = useHistory();
+
+  const requestFilterSort = useCallback(
+    (updateFilterTable, updateSortTable) => {
+      setErr(false);
+      setLoading(true);
+      setData([]);
+      let pagination = Object.assign({}, paginations);
+      let filterSorts = filterSort;
+      filterSorts.filter = JSON.stringify(
+        updateFilterTable ? updateFilterTable : filterTable
+      );
+      filterSorts.sort = JSON.stringify(
+        updateSortTable ? updateSortTable : sortData
+      );
+      pagination.page = pagination.page + 1;
+      filterSorts = Object.assign({}, filterSorts, pagination);
+      setFilterSort({ ...filterSorts });
+      let params = new URLSearchParams(filterSorts).toString();
+      getListSpt(params)
+        .then((result) => {
+          setLoading(false);
+          setData(result.data.data);
+          setPaginations({ ...paginations, count: result.data.count || 0 });
+        })
+        .catch((err) => {
+          setErr(true);
+          setLoading(false);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    },
+    [filterTable, sortData, filterSort, intl, setToast, paginations]
+  );
+
+  // useEffect(requestFilterSort, []);
+
+  const openFilterTable = (name, index) => {
+    let idFilter = "filter-" + index;
+    let idInputFilter = "filter-" + name;
+    let status = document.getElementById(idFilter).getAttribute("status");
+    if (nameStateFilter === "") {
+      setNameStateFilter(idFilter);
+      document.getElementById(idFilter).setAttribute("status", "open");
+      document.getElementById(idFilter).classList.add("open");
+    } else if (nameStateFilter === idFilter) {
+      if (status === "closed") {
+        document.getElementById(idFilter).setAttribute("status", "open");
+        document.getElementById(idFilter).classList.add("open");
+      } else {
+        document.getElementById(idFilter).setAttribute("status", "closed");
+        document.getElementById(idFilter).classList.remove("open");
+        document.getElementById(idInputFilter).value =
+          filterTable[idInputFilter] || "";
+      }
+    } else {
+      document.getElementById(nameStateFilter).setAttribute("status", "closed");
+      document.getElementById(nameStateFilter).classList.remove("open");
+      setNameStateFilter(idFilter);
+      document.getElementById(idFilter).setAttribute("status", "open");
+      document.getElementById(idFilter).classList.add("open");
+    }
+  };
+
+  const updateValueFilter = (property, index) => {
+    let filterTables = filterTable;
+    filterTables["filter-" + property] = document.getElementById(
+      "filter-" + property
+    ).value;
+    setFilterTable({ ...filterTables });
+    openFilterTable(property, index);
+    // requestFilterSort();
+  };
+
+  const resetValueFilter = (property) => {
+    let filterTables = filterTable;
+    filterTables[property] = "";
+    document.getElementById(property).value = "";
+    setFilterTable({ ...filterTables });
+    // requestFilterSort();
+  };
+
+  const resetFilter = () => {
+    setFilterTable({});
+    document.getElementById("filter-form-all").reset();
+    // requestFilterSort({});
+  };
+
+  const handleChangePage = (event, newPage) => {
+    let pagination = paginations;
+    pagination.numberColum =
+      newPage > pagination.page
+        ? pagination.numberColum + pagination.rowsPerPage
+        : pagination.numberColum - pagination.rowsPerPage;
+    pagination.page = newPage;
+    setPaginations({
+      ...pagination,
+    });
+    // requestFilterSort();
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    let pagination = paginations;
+    pagination.page = 0;
+    pagination.rowsPerPage = parseInt(event.target.value, 10);
+    pagination.numberColum = 0;
+    setPaginations({
+      ...pagination,
+    });
+    // requestFilterSort();
+  };
 
   const getListContractData = () => {
     getContractClient()
@@ -89,18 +199,22 @@ function DashboardListContract(props) {
     getListContractData();
   }, []);
 
+  const handleAction = (type, data) => {
+    console.log("type: ", type, " - ", "data: ", data);
+  };
+
   return (
     <React.Fragment>
       <Card>
         <CardBody>
           {/* begin: Filter Table */}
-          <div className="panel-filter-table mb-1">
+          <form id="filter-form-all" className="panel-filter-table mb-1">
             <span className="mr-2 mt-2 float-left">
               <FormattedMessage id="TITLE.FILTER.TABLE" />
             </span>
             <div className="d-block">
-              <div className="float-left">
-                {contractData.map((item, index) => {
+              <div className="">
+                {filterData.map((item, index) => {
                   return (
                     <div
                       key={index.toString()}
@@ -112,18 +226,20 @@ function DashboardListContract(props) {
                         className="btn btn-sm dropdown-toggle"
                         data-toggle="dropdown"
                         aria-expanded="false"
-                        onClick={openFilterTable(index)}
+                        onClick={() => {
+                          openFilterTable(item.name, index);
+                        }}
                       >
-                        <span>Nomor Kontrak:</span>
+                        <span>{item.title}:</span>
                         <strong style={{ paddingRight: 1, paddingLeft: 1 }}>
                           <span
                             className="filter-label"
                             id={"filter-span-" + index}
                           >
-                            {filterTable["loop-value-" + index]}
+                            {filterTable["filter-" + item.name]}
                           </span>
                         </strong>
-                        {filterTable["loop-value-" + index] ? null : (
+                        {filterTable["filter-" + item.name] ? null : (
                           <span style={{ color: "#777777" }}>
                             <FormattedMessage id="TITLE.ALL" />
                           </span>
@@ -135,15 +251,16 @@ function DashboardListContract(props) {
                         style={{ zIndex: 90 }}
                       >
                         <li style={{ width: 360, padding: 5 }}>
-                          <form className="clearfix">
+                          <div className="clearfix">
                             <div className="float-left">
                               <input
-                                type="text"
+                                type={item.type}
                                 className="form-control form-control-sm"
-                                name={"loop-value-" + index}
-                                id={"loop-value-" + index}
+                                min="0"
+                                name={"filter-" + item.name}
+                                id={"filter-" + item.name}
                                 defaultValue={
-                                  filterTable["loop-value-" + index] || ""
+                                  filterTable["filter-" + item.name] || ""
                                 }
                                 placeholder={intl.formatMessage({
                                   id: "TITLE.ALL",
@@ -153,193 +270,178 @@ function DashboardListContract(props) {
                             <button
                               type="button"
                               className="ml-2 float-left btn btn-sm btn-primary"
-                              onClick={updateValueFilter.bind(
-                                "loop-value-" + index
-                              )}
+                              onClick={() => {
+                                updateValueFilter(item.name, index);
+                              }}
                             >
                               Perbaharui
                             </button>
                             <button
                               type="button"
                               className="float-right btn btn-sm btn-light"
-                              onClick={resetValueFilter.bind(
-                                "loop-value-" + index
-                              )}
+                              onClick={() => {
+                                resetValueFilter("filter-" + item.name);
+                              }}
                             >
                               <i className="fas fa-redo fa-right"></i>
                               <span>
                                 <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
                               </span>
                             </button>
-                          </form>
+                          </div>
                         </li>
                       </ul>
                     </div>
                   );
                 })}
+                <button
+                  type="button"
+                  className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit"
+                  onClick={() => {
+                    resetFilter();
+                  }}
+                >
+                  <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
+                </button>
               </div>
             </div>
-            <button
-              type="button"
-              className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit float-left"
-              onClick={resetFilter}
-            >
-              <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
-            </button>
-          </div>
+          </form>
           {/* end: Filter Table */}
 
           {/* begin: Table */}
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">
               <div className="hecto-8">
-                <Table className="overflow-auto">
+                <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
-                      <th className="text-primary align-middle td-25">
-                        <span className="svg-icon svg-icon-sm svg-icon-primary ml-1">
-                          <SVG
-                            src={toAbsoluteUrl(
-                              "/media/svg/icons/Navigation/Down-2.svg"
+                      <th
+                        className="bg-primary text-white align-middle pointer"
+                        id="contract_no"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
+                        {sortData.name === "contract_no" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
                             )}
-                          />
-                        </span>
+                          </span>
+                        )}
                         Nomor Kontrak
-                        {/* <span className="svg-icon svg-icon-sm svg-icon-primary ml-1">
-                                                <SVG src={toAbsoluteUrl("/media/svg/icons/Navigation/Up-2.svg")}/>
-                                            </span> */}
                       </th>
-                      <th className="text-muted align-middle td-20">
+                      <th
+                        className="bg-primary text-white align-middle pointer"
+                        id="procurement_title"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
+                        {sortData.name === "procurement_title" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         Judul Pengadaan
                       </th>
-                      <th className="text-muted align-middle td-10">
+                      <th
+                        className="bg-primary text-white align-middle pointer"
+                        id="po_no"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          // requestFilterSort();
+                        }}
+                      >
+                        {sortData.name === "po_no" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         Nomor PO
                       </th>
-                      <th className="text-muted align-middle td-10">Termin</th>
-                      <th className="text-muted align-middle td-15">
-                        Nomor SA
+                      <th className="bg-primary text-white align-middle">
+                        Status
                       </th>
-                      <th className="text-muted align-middle td-17">
-                        Nomor Invoice
+                      <th className="bg-primary text-white align-middle">
+                        Aksi
                       </th>
-                      <th className="text-muted align-middle td-3">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {contractData.map((item, index) => {
                       return (
                         <tr key={index.toString()}>
+                          <td>{item.contract_no}</td>
+                          <td>{item.contract_name}</td>
+                          <td>{item.purch_order_no}</td>
+                          <td></td>
                           <td>
-                            <Link
-                              to={
-                                `/client/invoice_monitoring/contract/1/` +
-                                item.id
-                              }
-                            >
-                              {item.contract_no}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={
-                                `/client/invoice_monitoring/contract/1/` +
-                                item.id
-                              }
-                            >
-                              {item.contract_name}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={
-                                `/client/invoice_monitoring/contract/1/` +
-                                item.id
-                              }
-                            >
-                              {item.purch_order_no}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={
-                                `/client/invoice_monitoring/contract/1/` +
-                                item.id
-                              }
-                            >
-                              {index === 0
-                                ? 1
-                                : index === 1
-                                ? 2
-                                : index === 2
-                                ? 3
-                                : index === 3
-                                ? 4
-                                : 5}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={
-                                `/client/invoice_monitoring/contract/1/` +
-                                item.id
-                              }
-                            >
-                              80000035434
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={
-                                `/client/invoice_monitoring/contract/1/` +
-                                item.id
-                              }
-                            >
-                              INV0352345
-                            </Link>
-                          </td>
-                          <td>
-                            {index === 1 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-info rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting SA
-                              </label>
-                            ) : index === 2 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-warning rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting Invoice
-                              </label>
-                            ) : index === 3 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-primary rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting Document
-                              </label>
-                            ) : index === 4 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-danger rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Document Rejected
-                              </label>
-                            ) : (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-success rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Paid
-                              </label>
-                            )}
+                            <ButtonAction
+                              data={item}
+                              handleAction={handleAction}
+                              ops={data_ops}
+                            />
                           </td>
                         </tr>
                       );
                     })}
                   </tbody>
-                </Table>
+                </table>
               </div>
             </div>
             <div className="table-loading-data">
@@ -360,37 +462,14 @@ function DashboardListContract(props) {
           {/* end: Table */}
 
           {/* begin: Pagination Table */}
-          <div className="mt-3">
-            <span>
-              <FormattedMessage id="TITLE.COUNT_DATA.TABLE" /> 5/5
-            </span>
-          </div>
-          <div className="d-flex mt-4">
-            <select
-              className="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light mr-1"
-              style={{ width: 75 }}
-              defaultValue={5}
-            >
-              {["5", "10", "20", "50", "100"].map((item, index) => {
-                return (
-                  <option key={index.toString()} value={item}>
-                    {item}
-                  </option>
-                );
-              })}
-            </select>
-            <Pagination>
-              <Pagination.First />
-              <Pagination.Prev />
-
-              <Pagination.Item>{11}</Pagination.Item>
-              <Pagination.Item active>{12}</Pagination.Item>
-              <Pagination.Item disabled>{13}</Pagination.Item>
-
-              <Pagination.Next disabled />
-              <Pagination.Last disabled />
-            </Pagination>
-          </div>
+          <TablePagination
+            component="div"
+            count={paginations.count}
+            page={paginations.page}
+            onChangePage={handleChangePage}
+            rowsPerPage={paginations.rowsPerPage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
           {/* end: Pagination Table */}
         </CardBody>
       </Card>

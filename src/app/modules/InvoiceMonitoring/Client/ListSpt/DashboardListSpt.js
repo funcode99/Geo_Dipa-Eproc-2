@@ -4,7 +4,6 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
-import { Link } from "react-router-dom";
 import { getListSpt } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { TablePagination } from "@material-ui/core";
@@ -313,28 +312,26 @@ function DashboardListSpt(props) {
                           requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_spt" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "no_spt" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         <FormattedMessage id="TITLE.SPT_NO" />
                       </th>
                       <th
@@ -348,28 +345,26 @@ function DashboardListSpt(props) {
                           requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "no_cek" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "no_cek" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         <FormattedMessage id="TITLE.CEK_NO" />
                       </th>
                       <th
@@ -383,28 +378,26 @@ function DashboardListSpt(props) {
                           requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "total_payment" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "total_payment" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         <FormattedMessage id="TITLE.TOTAL_PAYMENT" />
                       </th>
                       <th
@@ -418,28 +411,26 @@ function DashboardListSpt(props) {
                           requestFilterSort();
                         }}
                       >
-                        <span className="svg-icon svg-icon-sm svg-icon-white ml-1">
-                          {sortData.name === "account_number" && (
-                            <span
-                              id="iconSort"
-                              className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                            >
-                              {sortData.order ? (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Up-2.svg"
-                                  )}
-                                />
-                              ) : (
-                                <SVG
-                                  src={toAbsoluteUrl(
-                                    "/media/svg/icons/Navigation/Down-2.svg"
-                                  )}
-                                />
-                              )}
-                            </span>
-                          )}
-                        </span>
+                        {sortData.name === "account_number" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         <FormattedMessage id="TITLE.ACCOUNT_NUMBER" />
                       </th>
                       <th className="bg-primary text-white align-middle td-15">
