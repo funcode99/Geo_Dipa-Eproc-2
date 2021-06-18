@@ -1,11 +1,12 @@
-import React from "react"; // useState
+import React, { useState, useEffect } from "react"; // useState
 import { connect } from "react-redux";
+import { FormattedMessage, injectIntl } from "react-intl";
 import {
-  // FormattedMessage,
-  injectIntl,
-} from "react-intl";
-import { Container, makeStyles, Paper } from "@material-ui/core";
-import { FormattedMessage } from "react-intl";
+  Container,
+  makeStyles,
+  Paper,
+  LinearProgress,
+} from "@material-ui/core";
 import { rupiah } from "../../../../libs/currency";
 import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
@@ -13,6 +14,8 @@ import { useSubheader } from "../../../../../_metronic/layout";
 import { Form, Row, Col } from "react-bootstrap";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { useHistory, useParams } from "react-router-dom";
+import { getTermContract } from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,22 +34,38 @@ const data_ops = [
 const ListTermContract = (props) => {
   const suhbeader = useSubheader();
   const { intl } = props;
-  const { contract } = useParams();
   suhbeader.setTitle(
     intl.formatMessage({
       id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT",
     })
   );
+  const { contract } = useParams();
   const classes = useStyles();
   const history = useHistory();
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [Toast, setToast] = useToast();
 
   const handleAction = (type, data) => {
-    console.log("type: ", type, " - ", "data: ", data);
     history.push(`/client/invoice_monitoring/contract/${contract}/1`);
   };
 
+  const getData = () => {
+    setLoading(true);
+    getTermContract(contract)
+      .then((result) => {
+        setLoading(false);
+        setData(result.data.data);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+  useEffect(getData, []);
+
   return (
     <Container className="px-0">
+      <Toast />
       <Subheader
         text="012.PJ/PST.30-GDE/IX/2020-1000014263"
         IconComponent={
@@ -57,11 +76,18 @@ const ListTermContract = (props) => {
       <SubBreadcrumbs
         items={[
           {
+            label: intl.formatMessage({
+              id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+            }),
+            to: `/client/invoice_monitoring/contract`,
+          },
+          {
             label: `Contract Item`,
             to: "/",
           },
         ]}
       />
+      {loading && <LinearProgress color="secondary" className="rounded" />}
       <Paper className={classes.paper} className="py-5 px-5">
         <Form>
           <Row>
@@ -74,8 +100,10 @@ const ListTermContract = (props) => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="Nomor Kontrak"
-                    defaultValue="0848/SPK/V/2021"
+                    placeholder={intl.formatMessage({
+                      id: "CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER",
+                    })}
+                    defaultValue={data?.contract_no}
                     disabled
                   />
                 </Col>
@@ -88,8 +116,10 @@ const ListTermContract = (props) => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="Judul Pengadaan"
-                    defaultValue="Pengadaan SPK Jasa"
+                    placeholder={intl.formatMessage({
+                      id: "CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE",
+                    })}
+                    defaultValue={data?.contract_name}
                     disabled
                   />
                 </Col>
@@ -102,8 +132,10 @@ const ListTermContract = (props) => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="Kewenangan"
-                    defaultValue="Procurement Manager"
+                    placeholder={intl.formatMessage({
+                      id: "CONTRACT_DETAIL.LABEL.AUTHORITY_GROUP",
+                    })}
+                    defaultValue={data?.alias_name_1}
                     disabled
                   />
                 </Col>
@@ -116,8 +148,10 @@ const ListTermContract = (props) => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="User"
-                    defaultValue="Procurement Superintendent"
+                    placeholder={intl.formatMessage({
+                      id: "CONTRACT_DETAIL.LABEL.USER_GROUP",
+                    })}
+                    defaultValue={data?.alias_name_2}
                     disabled
                   />
                 </Col>
@@ -133,8 +167,10 @@ const ListTermContract = (props) => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="Nomor PO"
-                    defaultValue="8000003579"
+                    placeholder={intl.formatMessage({
+                      id: "CONTRACT_DETAIL.LABEL.PO_NUMBER",
+                    })}
+                    defaultValue={data?.purch_order_no}
                     disabled
                   />
                 </Col>
@@ -147,8 +183,10 @@ const ListTermContract = (props) => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="Header Text PO"
-                    defaultValue=""
+                    placeholder={intl.formatMessage({
+                      id: "CONTRACT_DETAIL.LABEL.PO_NAME",
+                    })}
+                    defaultValue={data?.header_po}
                     disabled
                   />
                 </Col>
@@ -161,8 +199,12 @@ const ListTermContract = (props) => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="Harga Pekerjaan"
-                    defaultValue={rupiah(parseInt(0))}
+                    placeholder={intl.formatMessage({
+                      id: "CONTRACT_DETAIL.LABEL.PRICE",
+                    })}
+                    defaultValue={rupiah(
+                      parseInt(data.total_amount ? data.total_amount : 0)
+                    )}
                     disabled
                   />
                 </Col>
@@ -175,8 +217,10 @@ const ListTermContract = (props) => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="Penyedia"
-                    defaultValue="Abyor International"
+                    placeholder={intl.formatMessage({
+                      id: "CONTRACT_DETAIL.LABEL.VENDOR",
+                    })}
+                    defaultValue={data?.full_name}
                     disabled
                   />
                 </Col>
@@ -220,23 +264,35 @@ const ListTermContract = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="align-middle text-center">1</td>
-                    <td>----</td>
-                    <td>----</td>
-                    <td className="align-middle text-center">----</td>
-                    <td className="align-middle">----</td>
-                    <td className="align-middle">----</td>
-                    <td className="align-middle">----</td>
-                    <td className="align-middle">----</td>
-                    <td className="align-middle">
-                      <ButtonAction
-                        data={[]}
-                        handleAction={handleAction}
-                        ops={data_ops}
-                      />
-                    </td>
-                  </tr>
+                  {data &&
+                    data.data_termin &&
+                    data.data_termin.map((value, index) => {
+                      return (
+                        <tr key={index.toString()}>
+                          <td className="align-middle text-center">
+                            {index + 1}
+                          </td>
+                          <td>{value.task_name}</td>
+                          <td>
+                            {window
+                              .moment(new Date(value.due_date))
+                              .format("DD MMM YYYY")}
+                          </td>
+                          <td>bobot</td>
+                          <td>price</td>
+                          <td>{value.progress}</td>
+                          <td>Doc Progress</td>
+                          <td>{value.name}</td>
+                          <td className="align-middle">
+                            <ButtonAction
+                              data={value}
+                              handleAction={handleAction}
+                              ops={data_ops}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>

@@ -100,3 +100,6 @@ export async function getListSpt(params) {
 export async function getItemSpt(id) {
   return axios.get(`/invoice/get_spt/${id}`);
 }
+export async function getTermContract(id) {
+  return axios.get(`/invoice/contract_all_term/${id}`);
+}
