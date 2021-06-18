@@ -172,7 +172,7 @@ function DashboardListContract(props) {
   };
 
   const handleAction = (type, data) => {
-    history.push(`/client/invoice_monitoring/contract/${data.id}`);
+    history.push(`/client/invoice_monitoring/contract/${data.contract_id}`);
   };
 
   return (
@@ -416,17 +416,19 @@ function DashboardListContract(props) {
                           <td>{item.contract_name}</td>
                           <td className="text-center">
                             {window
-                              .moment(new Date(item.from_time))
+                              .moment(new Date(item.po_date))
                               .format("DD MMM YYYY")}
                           </td>
                           <td className="text-center">
                             {window
-                              .moment(new Date(new Date()))
+                              .moment(new Date(new Date(item.contract_date)))
                               .format("DD MMM YYYY")}
                           </td>
-                          <td className="text-center"></td>
-                          <td className="text-center"></td>
-                          <td className="text-center"></td>
+                          <td className="text-center">
+                            {item.purch_group_name}
+                          </td>
+                          <td className="text-center">{item.vendor_name}</td>
+                          <td className="text-center">------</td>
                           <td>
                             <ButtonAction
                               data={item}
