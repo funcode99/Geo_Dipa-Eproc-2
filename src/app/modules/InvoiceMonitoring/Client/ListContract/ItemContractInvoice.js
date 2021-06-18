@@ -108,7 +108,7 @@ function ItemContractInvoice(props) {
 
                     {navActive === 'SPR' && (
                         <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-                            <ContractSprPage {...props} />
+                            <ContractSprPage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} />
                         </div>
                     )}
 

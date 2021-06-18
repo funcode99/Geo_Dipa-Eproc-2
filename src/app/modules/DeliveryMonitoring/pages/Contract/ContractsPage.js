@@ -9,6 +9,7 @@ import CustomTable from "../../../../components/tables";
 import { formatDate } from "../../../../libs/date";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { FormattedMessage } from "react-intl";
+import TablePaginationCustom from "../../../../components/tables/TablePagination";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -129,6 +130,7 @@ export const ContractsPage = () => {
         }
       />
 
+      <TablePaginationCustom />
       <Paper className={classes.root}>
         <CustomTable
           tableHeader={tableHeaderContracts}

@@ -26,7 +26,7 @@ import {
     Slide,
     IconButton
 } from "@material-ui/core";
-import { getContractSummary, getSpp, rejectSpp, approveSpp, rejectSppStatus, getAllRejectedSpp } from '../../../_redux/InvoiceMonitoringCrud';
+import { getContractSummary, getSpp, rejectSpp, approveSpp, rejectSppStatus, getAllRejectedSpp, getAllApprovedSpp, getFileSpp, getFileBank } from '../../../_redux/InvoiceMonitoringCrud';
 import useToast from '../../../../../components/toast';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -37,7 +37,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import moment from'moment';
+import moment from 'moment';
 
 const styles = (theme) => ({
     root: {
@@ -100,22 +100,23 @@ function ContractSprPage(props) {
     const [modalReject, setModalReject] = useState(false);
     const [modalApprove, setModalApprove] = useState(false);
     const [isSubmit, setIsSubmit] = useState(false);
-    const classes = useStyles()
     const [sppData, setSppData] = useState(null)
-    const [allRejectedSppData, setAllRejectedSppData] = useState([])
+    const [historySppData, setHistorySppData] = useState([])
+    const [modalHistory, setModalHistory] = useState(false)
+    const [modalHistoryData, setModalHistoryData] = useState({})
 
     const [Toast, setToast] = useToast();
 
     const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
     const contract_id = props.match.params.contract;
     const termin = props.match.params.termin;
-    const { intl } = props;
+    const { intl, classes } = props;
 
     const initialValues = {
         rejected_remark: ''
     }
 
-    const InvoiceSchema = Yup.object().shape({
+    const SppSchema = Yup.object().shape({
         rejected_remark: Yup
             .string()
             .required(
@@ -125,61 +126,9 @@ function ContractSprPage(props) {
             )
     });
 
-    const [data] = useState([
-        {
-            name: "BAPP",
-            status: "Approved",
-            approvedBy: "Dian",
-            date: "30 Jan 2021",
-            nameDoc: "BAPP.pdf",
-        },
-        {
-            name: "User Manual",
-            status: "Approved",
-            approvedBy: "Dian",
-            date: "30 Jan 2021",
-            nameDoc: "BAPP.pdf",
-        },
-        {
-            name: "Timesheet",
-            status: "Waiting",
-            approvedBy: null,
-            date: null,
-            nameDoc: null,
-        },
-        {
-            name: "Invoice",
-            status: "Waiting",
-            approvedBy: null,
-            date: null,
-            nameDoc: null,
-        },
-        {
-            name: "Faktur Pajak",
-            status: "Waiting",
-            approvedBy: null,
-            date: null,
-            nameDoc: null,
-        },
-        {
-            name: "Surat Permohonan Pajak",
-            status: "Waiting",
-            approvedBy: null,
-            date: null,
-            nameDoc: null,
-        },
-        {
-            name: "Kuitansi",
-            status: "Waiting",
-            approvedBy: null,
-            date: null,
-            nameDoc: null,
-        },
-    ]);
-
     const formik = useFormik({
         initialValues,
-        validationSchema: InvoiceSchema,
+        validationSchema: SppSchema,
         onSubmit: async (values, { setStatus, setSubmitting }) => {
             setLoading(true)
             var data = Object.assign({}, sppData)
@@ -191,11 +140,11 @@ function ContractSprPage(props) {
                 .then(response => {
                     rejectSppStatus(sppData.id)
                         .then(responses => {
-                            rejectSppStatus(sppData.id)
                             setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
                             setLoading(false)
                             setModalReject(false)
                             setIsSubmit(true)
+                            getHistorySppData(sppData.id)
                         })
                         .catch((error) => {
                             if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
@@ -235,21 +184,7 @@ function ContractSprPage(props) {
         getSpp(contract_id, termin)
             .then(response => {
                 setSppData(response['data']['data'])
-                getAllRejectedSppData(response['data']['data']['id'])
-            })
-            .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-            });
-    }, [contract_id, termin, formik, intl, setToast, user_id])
-
-    const getAllRejectedSppData = useCallback((spr_id) => {
-        getAllRejectedSpp(spr_id)
-            .then(response => {
-                setAllRejectedSppData(response['data']['data'])
+                getHistorySppData(response['data']['data']['id'])
             })
             .catch((error) => {
                 if (
@@ -279,6 +214,7 @@ function ContractSprPage(props) {
                 setLoading(false)
                 setModalApprove(false)
                 setIsSubmit(true)
+                getHistorySppData(sppData.id)
             })
             .catch((error) => {
                 if (
@@ -290,10 +226,36 @@ function ContractSprPage(props) {
             });
     };
 
-    const downloadFile = (data) => {
-        const newWindow = window.open(data, '_blank', 'noopener,noreferrer')
-        if (newWindow) newWindow.opener = null
-    };
+    const getHistorySppData = useCallback((spp_id) => {
+        getAllRejectedSpp(spp_id)
+            .then(responseReject => {
+                getAllApprovedSpp(spp_id)
+                    .then(responseApprove => {
+                        setHistorySppData([...responseReject['data']['data'], ...responseApprove['data']['data']])
+                    })
+                    .catch((error) => {
+                        if (
+                            error.response?.status !== 400 &&
+                            error.response?.data.message !== "TokenExpiredError"
+                        )
+                            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                    });
+                // setHistorySppData(response['data']['data'])
+            })
+            .catch((error) => {
+                if (
+                    error.response?.status !== 400 &&
+                    error.response?.data.message !== "TokenExpiredError"
+                )
+                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+            });
+    }, [intl, setToast])
+
+    const handleHistory = (index) => {
+        setModalHistoryData(historySppData[index])
+        setModalHistory(true)
+    }
+
 
     useEffect(getContractData, []);
     useEffect(getSppData, []);
@@ -310,10 +272,10 @@ function ContractSprPage(props) {
                 maxWidth="xs"
                 fullWidth={true}
             >
-                <DialogTitle id="alert-dialog-slide-title">Setujui Dokumen SPP</DialogTitle>
+                <DialogTitle id="alert-dialog-slide-title"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.APPROVED.APPROVE_TITLE" /></DialogTitle>
                 <DialogContent>
                     <p>
-                        <span>Apa anda yakin menyetujui dokumen SPP?</span>
+                        <span><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.APPROVED.APPROVE_BODY" /></span>
                     </p>
                 </DialogContent>
                 <DialogActions>
@@ -322,14 +284,14 @@ function ContractSprPage(props) {
                         onClick={() => setModalApprove(false)}
                         disabled={loading}
                     >
-                        <span>Kembali</span>
+                        <span><FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" /></span>
                     </button>
                     <button
                         className="btn btn-primary"
                         disabled={loading}
                         onClick={approveSppData}
                     >
-                        <span>Setujui</span>
+                        <span><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.APPROVED.APPROVE_SUBMIT" /></span>
                         {loading && (
                             <span
                                 className="spinner-border spinner-border-sm ml-1"
@@ -353,10 +315,10 @@ function ContractSprPage(props) {
                     autoComplete="off"
                     onSubmit={formik.handleSubmit}
                 >
-                    <DialogTitle id="alert-dialog-slide-title">Tolak Dokumen SPP</DialogTitle>
+                    <DialogTitle id="alert-dialog-slide-title"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_TITLE" /></DialogTitle>
                     <DialogContent>
                         <p>
-                            <span>Komentar</span>
+                            <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY" />
                         </p>
                         <textarea rows="2" cols="" className="form-control" placeholder="komentar" disabled={loading} {...formik.getFieldProps('rejected_remark')}></textarea>
                         {(formik.touched.rejected_remark && formik.errors.rejected_remark) ? (
@@ -368,16 +330,18 @@ function ContractSprPage(props) {
                     <DialogActions>
                         <button
                             className="btn btn-secondary"
+                            type="button"
                             onClick={() => setModalReject(false)}
                             disabled={loading}
                         >
-                            <span>Kembali</span>
+                            <span><FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" /></span>
                         </button>
                         <button
                             className="btn btn-danger"
+                            type="submit"
                             disabled={loading || (formik.touched && !formik.isValid) || !formik.dirty}
                         >
-                            <span>Tolak</span>
+                            <span><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" /></span>
                             {loading && (
                                 <span
                                     className="spinner-border spinner-border-sm ml-1"
@@ -408,7 +372,6 @@ function ContractSprPage(props) {
                         setDialogState(false);
                     }}
                 >
-                    <span>Modal title</span>
                 </DialogTitleFile>
                 <PerfectScrollbar>
                     <DialogContent>
@@ -425,7 +388,7 @@ function ContractSprPage(props) {
                                     >
                                         <span><i className={`fas fa-chevron-left ${pageNumber === 1 ? '' : 'text-secondary'}`}></i></span>
                                     </button>
-                                    <span>{pageNumber} of {numPages}</span>
+                                    <span>{pageNumber} <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.PDF.OF" /> {numPages}</span>
                                     <button
                                         type="button"
                                         disabled={pageNumber === numPages}
@@ -477,7 +440,7 @@ function ContractSprPage(props) {
                                     >
                                         <span><i className={`fas fa-chevron-left ${pageNumberBank === 1 ? '' : 'text-secondary'}`}></i></span>
                                     </button>
-                                    <span>{pageNumberBank} of {numPagesBank}</span>
+                                    <span>{pageNumberBank} <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.PDF.OF" /> {numPagesBank}</span>
                                     <button
                                         type="button"
                                         disabled={pageNumberBank === numPagesBank}
@@ -493,18 +456,127 @@ function ContractSprPage(props) {
                     </DialogContent>
                 </PerfectScrollbar>
             </Dialog>
+            <Dialog
+                open={modalHistory}
+                // keepMounted
+                maxWidth='md'
+                fullWidth={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle>
+                    <span><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.DETAIL_HISTORY" /></span>
+                </DialogTitle>
+                <PerfectScrollbar>
+                    <DialogContent>
+                        <div className="form-group row mb-0">
+                            <div className="col-md-6">
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_NUMBER" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {modalHistoryData['spr_no']}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_DATE" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {moment(new Date(modalHistoryData['spr_date'])).format("YYYY-MM-DD")}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SEND_BY" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {modalHistoryData['created_by_name']}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SEND_DATE" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {moment(new Date(modalHistoryData['created_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED_BY" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.APPROVED_BY" />}</label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {modalHistoryData['state'] == 'REJECTED' ? modalHistoryData['rejected_by_name'] : modalHistoryData['approved_by_name']}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED_DATE" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.APPROVED_DATE" />}</label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {modalHistoryData['state'] == 'REJECTED' ? moment(new Date(modalHistoryData['rejected_at'])).format("YYYY-MM-DD HH:mm:ss") : moment(new Date(modalHistoryData['approved_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
+                                    </div>
+                                </div>
+                                {modalHistoryData['state'] == 'REJECTED' && <div className="form-group row mb-0">
+                                    <label className="col-sm-12 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED_DESC" /></label>
+                                    <div className="col-sm-12">
+                                        <textarea disabled className="form-control" defaultValue={modalHistoryData['rejected_remark']}></textarea>
+                                    </div>
+                                </div>}
+                            </div>
+                            <div className="col-md-6">
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {modalHistoryData['bank_refference'] ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE_TRUE" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE_FALSE" />}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.MAIL_BANK" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: <a href={getFileBank + modalHistoryData['new_bank_file']}>{modalHistoryData['new_bank_file']}</a></span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NUMBER" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {modalHistoryData['bank_account_no']}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NAME" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {modalHistoryData['bank_account_name']}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_NAME" /></label>
+                                    <div className="col-sm-8">
+                                        <span className="form-control-plaintext">: {modalHistoryData['bank_name']}</span>
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <label className="col-sm-12 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_ADDRESS" /></label>
+                                    <div className="col-sm-12">
+                                        <textarea disabled className="form-control" defaultValue={modalHistoryData['bank_address']}></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </PerfectScrollbar>
+                <DialogActions>
+                    <button
+                        className="btn btn-secondary"
+                        onClick={() => setModalHistory(false)}
+                        disabled={loading}
+                    >
+                        <span>Kembali</span>
+                    </button>
+                </DialogActions>
+            </Dialog>
             <Card>
                 <CardBody>
                     <div className="row">
                         <div className="col-md-6">
                             <div className="form-group row">
-                                <label htmlFor="numberSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.SPR_NUMBER" /></label>
+                                <label htmlFor="numberSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_NUMBER" /></label>
                                 <div className="col-sm-8">
                                     <input type="text" className="form-control" id="numberSpp" disabled defaultValue={sppData?.spr_no} />
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="dateSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.SPR_DATE" /></label>
+                                <label htmlFor="dateSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_DATE" /></label>
                                 <div className="col-sm-8">
                                     <input type="date" className="form-control" id="dateSpp" disabled defaultValue={sppData?.spr_date} />
                                 </div>
@@ -516,9 +588,9 @@ function ContractSprPage(props) {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.SPR_UPLOAD" /></label>
+                                <label className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_UPLOAD" /></label>
                                 <label className="input-group mb-3 col-sm-8">
-                                    <span className={`form-control ${classes.textDisabled}`}>{sppData ? sppData?.file_name : 'Pilih File'}</span>
+                                    <span className={`form-control text-truncate ${classes.textDisabled}`}>{sppData ? sppData?.file_name : 'Pilih File'}</span>
                                     <div className="input-group-append pointer">
                                         <span className={`input-group-text ${classes.textHover}`}><a download={sppData?.file_name} href={sppData?.file}><i className="fas fa-download"></i></a></span>
                                         <span className={`input-group-text ${classes.textHover}`} onClick={() => setDialogState(true)}><i className="fas fa-eye"></i></span>
@@ -526,46 +598,46 @@ function ContractSprPage(props) {
                                 </label>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="accountNumberSpp" className="col-sm-4 col-form-label">Referensi Data Bank</label>
+                                <label htmlFor="accountNumberSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE" /></label>
                                 <div className="col-sm-8 col-form-label">
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="radio" disabled name="RadioOptions" defaultChecked={sppData?.bank_refference} />
-                                        <label className="form-check-label">Gunakan Data Referensi</label>
+                                        <label className="form-check-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE_TRUE" /></label>
                                     </div>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="radio" disabled name="RadioOptions" defaultChecked={!sppData?.bank_refference} />
-                                        <label className="form-check-label">Masukkan Sendiri</label>
+                                        <label className="form-check-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE_FALSE" /></label>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="accountNumberSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPR_DOCUMENT.ACCOUNT_NUMBER" /></label>
+                                <label htmlFor="accountNumberSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NUMBER" /></label>
                                 <div className="col-sm-8">
                                     <input type="text" className="form-control" id="accountNumberSpp" disabled defaultValue={sppData?.bank_account_no} />
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="accountNameSpp" className="col-sm-4 col-form-label">Nama Rekening</label>
+                                <label htmlFor="accountNameSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NAME" /></label>
                                 <div className="col-sm-8">
                                     <input type="text" className="form-control" id="accountNameSpp" disabled defaultValue={sppData?.bank_account_name} />
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="bankNameSpp" className="col-sm-4 col-form-label">Nama Bank</label>
+                                <label htmlFor="bankNameSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_NAME" /></label>
                                 <div className="col-sm-8">
                                     <input type="text" className="form-control" id="bankNameSpp" disabled defaultValue={sppData?.bank_name} />
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="bankAddressSpp" className="col-sm-4 col-form-label">Alamat Bank</label>
+                                <label htmlFor="bankAddressSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_ADDRESS" /></label>
                                 <div className="col-sm-8">
                                     <textarea rows="4" className="form-control" id="bankAddressSpp" disabled defaultValue={sppData?.bank_address}></textarea>
                                 </div>
                             </div>
                             {!sppData?.bank_refference && <div className="form-group row">
-                                <label htmlFor="upload_bank" className="col-sm-4 col-form-label">Upload Surat Ganti Bank</label>
+                                <label htmlFor="upload_bank" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_UPLOAD" /></label>
                                 <label htmlFor="upload_bank" className="input-group mb-3 col-sm-8 pointer">
-                                    <span className={`form-control ${classes.textDisabled}`}>{sppData ? sppData?.new_bank_file : 'Pilih File'}</span>
+                                    <span className={`form-control text-truncate h-100 ${classes.textDisabled}`}>{sppData ? sppData?.new_bank_file : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" />}</span>
                                     <div className="input-group-append pointer">
                                         <span className={`input-group-text ${classes.textHover}`}><a download={sppData?.new_bank_file} href={sppData?.file_bank}><i className="fas fa-download"></i></a></span>
                                         <span className={`input-group-text ${classes.textHover}`} onClick={() => setDialogStateBank(true)}><i className="fas fa-eye"></i></span>
@@ -587,13 +659,13 @@ function ContractSprPage(props) {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: 1 }} /></label>
+                                <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
                                 <div className="col-sm-7">
                                     <input type="text" className="form-control" id="priceStep1" defaultValue="Rp. 1.000.000" disabled />
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="priceTaxSpp" className="col-sm-5 col-form-label">Harga Pekerjaan Tahap 1 dengan PPN</label>
+                                <label htmlFor="priceTaxSpp" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: termin }} /></label>
                                 <div className="col-sm-7">
                                     <input type="text" className="form-control" id="priceTaxSpp" defaultValue="Rp. 1.100.000" disabled />
                                 </div>
@@ -602,48 +674,45 @@ function ContractSprPage(props) {
                     </div>
                 </CardBody>
                 <CardFooter className="text-right">
-                    <button type="button" onClick={() => setModalApprove(true)} disabled={isSubmit || sppData?.state === 'REJECTED' || sppData?.state === 'APPROVED' || sppData === null} className="btn btn-primary mx-1">Terima</button>
-                    <button type="button" onClick={() => setModalReject(true)} disabled={isSubmit || sppData?.state === 'REJECTED' || sppData?.state === 'APPROVED' || sppData === null} className="btn btn-danger mx-1">Tolak</button>
+                    <button type="button" onClick={() => setModalApprove(true)} disabled={isSubmit || sppData?.state === 'REJECTED' || sppData?.state === 'APPROVED' || sppData === null} className="btn btn-primary mx-1"><FormattedMessage id="TITLE.ACCEPT_DOCUMENT" /></button>
+                    <button type="button" onClick={() => setModalReject(true)} disabled={isSubmit || sppData?.state === 'REJECTED' || sppData?.state === 'APPROVED' || sppData === null} className="btn btn-danger mx-1"><FormattedMessage id="TITLE.REJECT_DOCUMENT" /></button>
                 </CardFooter>
             </Card>
             <Card className="mt-5">
                 <CardBody>
                     <div className="my-5 text-center">
-                        <h6>Riwayat Dokumen SPP</h6>
+                        <h6><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.HISTORY" /></h6>
                     </div>
                     {/* begin: Table */}
                     <div className="table-wrapper-scroll-y my-custom-scrollbar">
                         <div className="segment-table">
                             <div className="hecto-10">
-                                <Table className="table-bordered overflow-auto">
+                                <table className="table-bordered overflow-auto">
                                     <thead>
                                         <tr>
-                                            <th className="bg-primary text-white align-middle"><span>No</span></th>
+                                            <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.NO" /></th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Nomor SPP</span>
+                                                <span><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_NUMBER" /></span>
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Tanggal SPP</span>
+                                                <span><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_DATE" /></span>
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>File</span>
+                                                <span><FormattedMessage id="TITLE.FILE" /></span>
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Dikirim Oleh</span>
+                                                <span><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SEND_BY" /></span>
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Tanggal Dikirim</span>
+                                                <span><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SEND_DATE" /></span>
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Ditolak Oleh</span>
-                                            </th>
-                                            <th className="bg-primary text-white align-middle">
-                                                <span>Tanggal Ditolak</span>
+                                                <span><FormattedMessage id="TITLE.STATUS" /></span>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {allRejectedSppData?.map((item, index) => {
+                                        {historySppData?.map((item, index) => {
                                             return (
                                                 <tr key={index.toString()}>
                                                     <td className="align-middle text-center">
@@ -652,17 +721,16 @@ function ContractSprPage(props) {
                                                     <td>{item.spr_no}</td>
                                                     <td>{item.spr_date}</td>
                                                     <td className="align-middle text-center">
-                                                        {item.file_name}
+                                                        <a href={getFileSpp + item.file_name}>{item.file_name}</a>
                                                     </td>
-                                                    <td className="align-middle">{item.created_by_id}</td>
+                                                    <td className="align-middle">{item.created_by_name}</td>
                                                     <td className="align-middle">{moment(new Date(item.created_at)).format("YYYY-MM-DD HH:mm:ss")}</td>
-                                                    <td className="align-middle">{item['user']['party']['full_name']}</td>
-                                                    <td className="align-middle">{moment(new Date(item.rejected_at)).format("YYYY-MM-DD HH:mm:ss")}</td>
+                                                    <td className="align-middle"><span className={`${item.state === 'REJECTED' ? 'text-danger' : 'text-success'} pointer font-weight-bold`} onClick={() => handleHistory(index)}>{item.state === 'REJECTED' ? 'DITOLAK' : 'DISETUJUI'} <i className="fas fa-caret-down"></i></span></td>
                                                 </tr>
                                             );
                                         })}
                                     </tbody>
-                                </Table>
+                                </table>
                             </div>
                         </div>
                     </div>
