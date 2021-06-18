@@ -105,6 +105,12 @@ const ItemContract = (props) => {
       <SubBreadcrumbs
         items={[
           {
+            label: intl.formatMessage({
+              id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+            }),
+            to: `/client/invoice_monitoring/contract`,
+          },
+          {
             label: "Contract Item",
             to: `/client/invoice_monitoring/contract/${useParams().contract}`,
           },

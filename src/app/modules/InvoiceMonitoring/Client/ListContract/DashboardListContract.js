@@ -284,12 +284,12 @@ function DashboardListContract(props) {
           {/* begin: Table */}
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">
-              <div className="hecto-8">
+              <div className="hecto-14">
                 <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
                       <th
-                        className="bg-primary text-white align-middle pointer"
+                        className="bg-primary text-white align-middle pointer td-15"
                         id="contract_no"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -319,43 +319,10 @@ function DashboardListContract(props) {
                             )}
                           </span>
                         )}
-                        Nomor Kontrak
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />
                       </th>
                       <th
-                        className="bg-primary text-white align-middle pointer"
-                        id="procurement_title"
-                        onClick={(e) => {
-                          let sortDatas = sortData;
-                          sortDatas.name = e.target.id;
-                          sortDatas.order = sortDatas.order ? false : true;
-                          setSortData({ ...sortDatas });
-                          requestFilterSort();
-                        }}
-                      >
-                        {sortData.name === "procurement_title" && (
-                          <span
-                            id="iconSort"
-                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                          >
-                            {sortData.order ? (
-                              <SVG
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/Navigation/Up-2.svg"
-                                )}
-                              />
-                            ) : (
-                              <SVG
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/Navigation/Down-2.svg"
-                                )}
-                              />
-                            )}
-                          </span>
-                        )}
-                        Judul Pengadaan
-                      </th>
-                      <th
-                        className="bg-primary text-white align-middle pointer"
+                        className="bg-primary text-white text-center align-middle pointer td-10"
                         id="po_no"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -385,16 +352,58 @@ function DashboardListContract(props) {
                             )}
                           </span>
                         )}
-                        Nomor PO
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />
                       </th>
-                      <th className="bg-primary text-white align-middle">
-                        Tanggal
+                      <th
+                        className="bg-primary text-white align-middle pointer td-20"
+                        id="procurement_title"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          requestFilterSort();
+                        }}
+                      >
+                        {sortData.name === "procurement_title" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />
                       </th>
-                      <th className="bg-primary text-white align-middle">
-                        Status
+                      <th className="bg-primary text-white text-center align-middle td-8">
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />
                       </th>
-                      <th className="bg-primary text-white align-middle">
-                        Aksi
+                      <th className="bg-primary text-white text-center align-middle td-10">
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />
+                      </th>
+                      <th className="bg-primary text-white text-center align-middle td-12">
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />
+                      </th>
+                      <th className="bg-primary text-white text-center align-middle td-12">
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />
+                      </th>
+                      <th className="bg-primary text-white text-center align-middle td-8">
+                        <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />
+                      </th>
+                      <th className="bg-primary text-white text-center align-middle td-5">
+                        <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
                       </th>
                     </tr>
                   </thead>
@@ -403,14 +412,21 @@ function DashboardListContract(props) {
                       return (
                         <tr key={index.toString()}>
                           <td>{item.contract_no}</td>
+                          <td className="text-center">{item.purch_order_no}</td>
                           <td>{item.contract_name}</td>
-                          <td>{item.purch_order_no}</td>
-                          <td>
+                          <td className="text-center">
                             {window
                               .moment(new Date(item.from_time))
                               .format("DD MMM YYYY")}
                           </td>
-                          <td></td>
+                          <td className="text-center">
+                            {window
+                              .moment(new Date(new Date()))
+                              .format("DD MMM YYYY")}
+                          </td>
+                          <td className="text-center"></td>
+                          <td className="text-center"></td>
+                          <td className="text-center"></td>
                           <td>
                             <ButtonAction
                               data={item}
