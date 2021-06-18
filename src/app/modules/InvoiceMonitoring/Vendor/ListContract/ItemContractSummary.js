@@ -236,21 +236,8 @@ function ItemContractSummary(props) {
   };
 
   const handlePic = (e) => {
+    console.log(e)
     setPicContractData(e);
-  };
-
-  const picUnselect = (e) => {
-    var value = e.params.data.id;
-    var temp = JSON.parse(JSON.stringify(picContractData));
-    var index = temp.indexOf(value);
-    temp.splice(index, 1);
-    setPicContractData(temp);
-  };
-
-  const picSelect = (e) => {
-    var value = e.params.data.id;
-    var temp = [...picContractData, value];
-    setPicContractData(temp);
   };
 
   const initialValuesUpdate = {
@@ -884,7 +871,7 @@ function ItemContractSummary(props) {
                   Email PIC
                 </label>
                 <div className="input-group col-sm-8">
-                  <StyledSelect options={picVendorData} value={picContractData} onchange={handlePic}></StyledSelect>
+                  <StyledSelect isDisabled={!role.main_vendor} options={picVendorData} value={picContractData} onchange={handlePic}></StyledSelect>
                   {role.main_vendor && (
                     <div className="input-group-prepend">
                       <span
