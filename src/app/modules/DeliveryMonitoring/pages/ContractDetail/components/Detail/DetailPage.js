@@ -22,6 +22,7 @@ import ModalTerm from "./ModalTerm";
 import { FormattedMessage } from "react-intl";
 import ModalConfirmation from "../../../../../../components/modals/ModalConfirmation";
 import * as Option from "../../../../../../service/Option";
+import { rupiah } from "../../../../../../libs/currency";
 
 const tableHeaderTermin = [
   { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.NO" /> },
@@ -180,11 +181,11 @@ const DetailPage = ({
         let totalPrice = 0;
 
         tempSubmitItems.task_services.forEach((item) => {
-          totalPrice += parseFloat(item?.price);
+          totalPrice += parseFloat(item?.price * item.qty);
         });
 
         tempSubmitItems.task_items.forEach((item) => {
-          totalPrice += parseFloat(item?.price);
+          totalPrice += parseFloat(item?.price * item.qty);
         });
 
         tempSubmitItems.total_price = totalPrice;
@@ -232,7 +233,7 @@ const DetailPage = ({
                 : null,
           },
           { content: `${item.weight}%` },
-          { content: "" },
+          { content: rupiah(item.nett_amount) },
           { content: item.progress },
           { content: "" },
           { content: item?.task_status?.name },
