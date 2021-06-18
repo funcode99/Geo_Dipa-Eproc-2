@@ -87,7 +87,7 @@ const ItemContract = (props) => {
       useParams().termin
   );
   const classes = useStyles();
-  const [tabActive, setTabActive] = React.useState(0);
+  const [tabActive, setTabActive] = React.useState(1);
 
   function handleChangeTab(event, newTabActive) {
     setTabActive(newTabActive);

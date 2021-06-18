@@ -28,8 +28,8 @@ export async function getContractSummary(id) {
 export async function checkRole(id) {
   return axios.get(`/invoice/check_role/${id}`);
 }
-export async function getContractClient() {
-  return axios.get(`/invoice/contract_invoice/`);
+export async function getContractClient(params) {
+  return axios.get(`/invoice/contract_invoice${params ? "?" + params : ""}`);
 }
 export async function getContractVendor(id) {
   return axios.get(`/invoice/contract_by_vendors/${id}`);
@@ -58,8 +58,8 @@ export async function getAllRejectedSpp(id) {
 export async function getAllApprovedSpp(id) {
   return axios.get(`/invoice/get_invoice_spr_approved/${id}`);
 }
-export const getFileSpp = `${DEV_NODE}/invoice/get_file_spp/`
-export const getFileBank = `${DEV_NODE}/invoice/get_file_bank/`
+export const getFileSpp = `${DEV_NODE}/invoice/get_file_spp/`;
+export const getFileBank = `${DEV_NODE}/invoice/get_file_bank/`;
 export async function approveSpp(id, data) {
   return axios.post(`/invoice/invoice_spr_approved/${id}`, data);
 }
@@ -86,7 +86,7 @@ export async function getAllRejectedInvoice(id) {
 export async function getAllApprovedInvoice(id) {
   return axios.get(`/invoice/get_invoice_approved/${id}`);
 }
-export const getFileInvoice = `${DEV_NODE}/invoice/get_file_invoice/`
+export const getFileInvoice = `${DEV_NODE}/invoice/get_file_invoice/`;
 export async function approveInvoice(id, data) {
   return axios.post(`/invoice/invoice_approved/${id}`, data);
 }
