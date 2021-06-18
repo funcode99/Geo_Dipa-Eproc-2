@@ -12,8 +12,8 @@ import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import { formatDate, formatInitialDate } from "../../../../../libs/date";
 import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../../components/toast";
-import { TableCell } from "@material-ui/core";
-import { StyledTableRow } from "../style";
+import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
+import { RowNormal } from "./components";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const validationClient = object().shape({
@@ -25,29 +25,18 @@ const validationVendor = object().shape({
   tanggal_bapp: validation.require("Tanggal BAPP"),
 });
 
-const RowNormal = ({ data }) => {
-  return (
-    <StyledTableRow>
-      {data.map((el, idx) => (
-        <TableCell key={idx} className="text-dark text-left">
-          {el}
-        </TableCell>
-      ))}
-    </StyledTableRow>
-  );
-};
-
 const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = React.useState({
     get: false,
     submit: false,
   });
-  const isClient = status === "client";
+  const [exclude, setExclude] = React.useState([]);
   // const [open, setOpen] = React.useState({
   //   submit: false,
   //   tempParams: {},
   // });
+  const isClient = status === "client";
 
   const initialValues = React.useMemo(
     () => ({
@@ -62,6 +51,49 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
     [taskNews, contract]
   );
 
+  const clientMenu = React.useMemo(
+    () => [
+      {
+        label: "TITLE.PREVIEW",
+        icon: "far fa-file-pdf text-danger pointer",
+        type: "preview",
+        params: "",
+      },
+      {
+        label: "TITLE.UPLOAD",
+        icon: "fas fa-file-upload text-primary pointer",
+        type: "upload",
+        params: "",
+      },
+      {
+        label: "TITLE.APPROVE",
+        icon: "fas fa-check-circle text-success pointer",
+        type: "approve",
+        params: "",
+      },
+    ],
+    []
+  );
+
+  const vendorMenu = React.useMemo(
+    () => [
+      {
+        label: "TITLE.PREVIEW",
+        icon: "far fa-file-pdf text-danger pointer",
+        type: "preview",
+        params: "",
+      },
+      {
+        label: "TITLE.UPLOAD",
+        icon: "fas fa-file-upload text-primary pointer",
+        type: "upload",
+        params: "",
+      },
+    ],
+    []
+  );
+
+  const listUsed = status === "client" ? clientMenu : vendorMenu;
   const isDisabled = React.useMemo(() => isClient && !taskNews, [
     taskNews,
     isClient,
@@ -89,7 +121,6 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
     (toast = { visible: false, message: "" }) => {
       handleLoading("get", true);
       // console.log();
-      // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
       deliveryMonitoring
         .getTaskById(taskId)
         .then((res) => {
@@ -107,13 +138,20 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
     [taskId, handleLoading, saveTask, setToast]
   );
 
+  const updateExclude = () => {
+    if (!taskNews?.review_text) {
+      setExclude((prev) => [...prev, "approve"]);
+    }
+  };
+
   const handleSuccess = React.useCallback(
     (res) => {
       if (res?.data?.status === true) {
         fetchData({ visible: true, message: res?.data?.message });
+        updateExclude();
       }
     },
-    [fetchData]
+    [fetchData, updateExclude]
   );
 
   const _handleSubmit = (data) => {
@@ -146,7 +184,11 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
   };
 
   React.useEffect(() => {
-    if (taskId !== "") fetchData();
+    if (taskId !== "") {
+      fetchData();
+    }
+
+    updateExclude();
   }, [taskId, fetchData]);
 
   let disabledInput = Object.keys(initialValues);
@@ -161,6 +203,25 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
   //   }));
   // };
 
+  const handleAction = (type, params) => {
+    // console.log(`type`, type);
+    // console.log(`params`, params);
+
+    switch (type) {
+      case "preview":
+        window.open(params?.file, "_blank");
+        break;
+      case "upload":
+        console.log(`type`, type);
+        break;
+      case "approve":
+        console.log(`type`, type);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <React.Fragment>
       <Toast />
@@ -174,6 +235,19 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
 
       <Card>
         <CardBody>
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <h2 className="mb-0">Berita Acara Pelaksanaan Pekerjaan</h2>
+            {taskNews && (
+              <ButtonAction
+                label="TITLE.MORE"
+                data={taskNews}
+                ops={listUsed}
+                handleAction={handleAction}
+                exclude={exclude}
+              />
+            )}
+          </div>
+
           <FormBuilder
             onSubmit={_handleSubmit}
             formData={formData}
@@ -199,14 +273,7 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
             <Col md={12}>
               <TableBuilder
                 hecto={5}
-                dataHead={[
-                  "No",
-                  "Tanggal",
-                  "User",
-                  "Aktivitas",
-                  "Dokumen",
-                  "Aksi",
-                ]}
+                dataHead={["No", "Tanggal", "User", "Aktivitas", "Aksi"]}
                 dataBody={taskNews?.task_news_histories}
                 renderRowBody={({ item, index }) => (
                   <RowNormal
@@ -216,7 +283,6 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
                       formatDate(new Date(item?.createdAt)),
                       item?.vendor?.username || item?.user?.username,
                       item?.action,
-                      "",
                       "",
                     ]}
                   />

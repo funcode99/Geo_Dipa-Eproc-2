@@ -68,13 +68,10 @@ const TerminPage = ({ items }) => {
     []
   );
 
-  const getTask = React.useCallback(
-    (taskId) => {
-      const task = dataContractById?.tasks?.find((item) => item.id === taskId);
-      return task.name;
-    },
-    [task_id]
-  );
+  const getTask = React.useCallback(() => {
+    const task = dataContractById?.tasks?.find((item) => item.id === task_id);
+    return task.name;
+  }, [dataContractById, task_id]);
 
   const getDataTask = React.useCallback(() => {
     // handleLoading("get", true);

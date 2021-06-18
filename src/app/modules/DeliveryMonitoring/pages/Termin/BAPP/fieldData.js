@@ -35,7 +35,7 @@ const formData = [
   [
     {
       name: "hasil_pekerjaan",
-      label: "Hasil pekerjaan yang telah diselesaikan",
+      label: "Hasil pelaksanaan pekerjaan yang telah diselesaikan",
       typeInput: "TextAreaInput",
     },
   ],

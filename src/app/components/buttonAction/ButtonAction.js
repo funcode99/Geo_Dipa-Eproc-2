@@ -1,15 +1,32 @@
 import React from "react";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import {
+  IconButton,
+  Tooltip,
+  withStyles,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
+import { MoreVert } from "@material-ui/icons";
 import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 
-export default function ButtonAction({ data, handleAction, ops }) {
-  const [exclude, setExclude] = React.useState([]);
+const CustomTooltip = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    fontSize: "0.875rem",
+    marginTop: "0.25rem",
+  },
+}))(Tooltip);
+
+export default function ButtonAction({
+  data,
+  handleAction,
+  ops,
+  label = null,
+  exclude = [],
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   function handleClick(event) {
@@ -27,19 +44,33 @@ export default function ButtonAction({ data, handleAction, ops }) {
   );
 
   const listUsed = ops;
-  React.useEffect(() => {
-    setExclude(["resend"]);
-  }, [data]);
+
   return (
     <div>
-      <IconButton
-        aria-label="More"
-        aria-controls="long-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      {label ? (
+        <CustomTooltip
+          title={<FormattedMessage id={label} />}
+          placement="bottom"
+        >
+          <IconButton
+            aria-label="More"
+            aria-controls="long-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+          >
+            <MoreVert />
+          </IconButton>
+        </CustomTooltip>
+      ) : (
+        <IconButton
+          aria-label="More"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <MoreVert />
+        </IconButton>
+      )}
       <Menu
         id="long-menu"
         anchorEl={anchorEl}
@@ -86,5 +117,6 @@ export default function ButtonAction({ data, handleAction, ops }) {
           })}
       </Menu>
     </div>
+    // </LightTooltip>
   );
 }
