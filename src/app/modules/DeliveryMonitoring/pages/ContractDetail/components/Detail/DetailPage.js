@@ -401,7 +401,7 @@ const DetailPage = ({
         submitColor="danger"
       />
 
-      <FormDetail />
+      <FormDetail contractId={contractId} />
       <Item handleClick={() => handleModal("create")} />
 
       <Container>
