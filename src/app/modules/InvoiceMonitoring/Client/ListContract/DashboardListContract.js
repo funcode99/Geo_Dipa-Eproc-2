@@ -2,16 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
-import { Table, Pagination } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
-import { Link } from "react-router-dom";
 import { getContractClient } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
-import { getListSpt } from "../../_redux/InvoiceMonitoringCrud";
 import { TablePagination } from "@material-ui/core";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
-import { rupiah } from "../../../../libs/currency";
 import { useHistory } from "react-router-dom";
 
 const data_ops = [
@@ -24,11 +20,6 @@ const data_ops = [
 
 function DashboardListContract(props) {
   const { intl } = props;
-  const vendor_id = useSelector(
-    (state) => state.auth.user.data.vendor_id,
-    shallowEqual
-  );
-  const [contractData, setContractData] = useState([]);
   const [Toast, setToast] = useToast();
   const [filterTable, setFilterTable] = useState({});
   const [nameStateFilter, setNameStateFilter] = useState("");
@@ -65,11 +56,10 @@ function DashboardListContract(props) {
   const [data, setData] = useState([]);
   const [filterSort, setFilterSort] = useState({ filter: {}, sort: {} });
   const [sortData, setSortData] = useState({
-    name: "contract_no",
+    name: "",
     order: false,
   });
   const [err, setErr] = useState(false);
-  const [dialogState, setDialogState] = useState(false);
   const history = useHistory();
 
   const requestFilterSort = useCallback(
@@ -89,7 +79,7 @@ function DashboardListContract(props) {
       filterSorts = Object.assign({}, filterSorts, pagination);
       setFilterSort({ ...filterSorts });
       let params = new URLSearchParams(filterSorts).toString();
-      getListSpt(params)
+      getContractClient(params)
         .then((result) => {
           setLoading(false);
           setData(result.data.data);
@@ -104,7 +94,7 @@ function DashboardListContract(props) {
     [filterTable, sortData, filterSort, intl, setToast, paginations]
   );
 
-  // useEffect(requestFilterSort, []);
+  useEffect(requestFilterSort, []);
 
   const openFilterTable = (name, index) => {
     let idFilter = "filter-" + index;
@@ -140,7 +130,7 @@ function DashboardListContract(props) {
     ).value;
     setFilterTable({ ...filterTables });
     openFilterTable(property, index);
-    // requestFilterSort();
+    requestFilterSort();
   };
 
   const resetValueFilter = (property) => {
@@ -148,13 +138,13 @@ function DashboardListContract(props) {
     filterTables[property] = "";
     document.getElementById(property).value = "";
     setFilterTable({ ...filterTables });
-    // requestFilterSort();
+    requestFilterSort();
   };
 
   const resetFilter = () => {
     setFilterTable({});
     document.getElementById("filter-form-all").reset();
-    // requestFilterSort({});
+    requestFilterSort({});
   };
 
   const handleChangePage = (event, newPage) => {
@@ -167,7 +157,7 @@ function DashboardListContract(props) {
     setPaginations({
       ...pagination,
     });
-    // requestFilterSort();
+    requestFilterSort();
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -178,36 +168,16 @@ function DashboardListContract(props) {
     setPaginations({
       ...pagination,
     });
-    // requestFilterSort();
+    requestFilterSort();
   };
-
-  const getListContractData = () => {
-    setErr(false);
-    setLoading(true);
-    getContractClient()
-      .then((response) => {
-        setContractData(response.data.data);
-        setErr(false);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setErr(true);
-        setLoading(false);
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      });
-  };
-
-  useEffect(() => {
-    getListContractData();
-  }, []);
 
   const handleAction = (type, data) => {
-    console.log("type: ", type, " - ", "data: ", data);
     history.push(`/client/invoice_monitoring/contract/${data.id}`);
   };
 
   return (
     <React.Fragment>
+      <Toast />
       <Card>
         <CardBody>
           {/* begin: Filter Table */}
@@ -326,7 +296,7 @@ function DashboardListContract(props) {
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         {sortData.name === "contract_no" && (
@@ -359,7 +329,7 @@ function DashboardListContract(props) {
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         {sortData.name === "procurement_title" && (
@@ -392,7 +362,7 @@ function DashboardListContract(props) {
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         {sortData.name === "po_no" && (
@@ -429,7 +399,7 @@ function DashboardListContract(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {contractData.map((item, index) => {
+                    {data.map((item, index) => {
                       return (
                         <tr key={index.toString()}>
                           <td>{item.contract_no}</td>
