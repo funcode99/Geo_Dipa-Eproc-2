@@ -33,6 +33,7 @@ import {
 import useToast from "../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import StyledSelect from "../../../../components/select-multiple";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -234,7 +235,9 @@ function ItemContractSummary(props) {
     });
   };
 
-  useEffect(getContractData, []);
+  const handlePic = (e) => {
+    setPicContractData(e);
+  };
 
   const picUnselect = (e) => {
     var value = e.params.data.id;
@@ -490,6 +493,8 @@ function ItemContractSummary(props) {
       });
   };
 
+  useEffect(getContractData, []);
+
   return (
     <React.Fragment>
       <Toast />
@@ -650,7 +655,7 @@ function ItemContractSummary(props) {
                   return (
                     <li className="list-group-item" key={index.toString()}>
                       <div className="row">
-                        <span className="col-md">{item.text}</span>
+                        <span className="col-md">{item.label}</span>
                         <div className="col-md text-right-md">
                           <span>
                             Status:{" "}
@@ -879,18 +884,7 @@ function ItemContractSummary(props) {
                   Email PIC
                 </label>
                 <div className="input-group col-sm-8">
-                  <Select2
-                    disabled={!role.main_vendor}
-                    multiple
-                    defaultValue={picContractData}
-                    data={picVendorData}
-                    onUnselect={picUnselect}
-                    onSelect={picSelect}
-                    options={{
-                      placeholder: "search by tags",
-                    }}
-                    className="form-control"
-                  />
+                  <StyledSelect options={picVendorData} value={picContractData} onchange={handlePic}></StyledSelect>
                   {role.main_vendor && (
                     <div className="input-group-prepend">
                       <span

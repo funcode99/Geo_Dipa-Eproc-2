@@ -9,10 +9,6 @@ import {
   Card,
   CardBody
 } from "../../../../../_metronic/_partials/controls";
-import {
-  Table
-} from "react-bootstrap";
-import Select2 from "react-select2-wrapper";
 import "react-select2-wrapper/css/select2.css";
 import {
   getPicContract,
@@ -20,6 +16,7 @@ import {
   getContractSummary
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
+import StyledSelect from "../../../../components/select-multiple";
 
 function ItemContractSummary(props) {
   const { intl } = props;
@@ -376,16 +373,7 @@ function ItemContractSummary(props) {
                   Email PIC
                 </label>
                 <div className="input-group col-sm-8">
-                  <Select2
-                    disabled={true}
-                    multiple
-                    defaultValue={picContractData}
-                    data={picVendorData}
-                    options={{
-                      placeholder: "search by tags",
-                    }}
-                    className="form-control"
-                  />
+                  <StyledSelect isDisabled={true} options={picVendorData} value={picContractData}></StyledSelect>
                 </div>
                 <div className="col-sm-8"></div>
               </div>
