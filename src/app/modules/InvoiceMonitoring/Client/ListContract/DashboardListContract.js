@@ -182,15 +182,17 @@ function DashboardListContract(props) {
   };
 
   const getListContractData = () => {
+    setErr(false);
+    setLoading(true);
     getContractClient()
       .then((response) => {
         setContractData(response.data.data);
+        setErr(false);
+        setLoading(false);
       })
       .catch((error) => {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        )
+        setErr(true);
+        setLoading(false);
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   };
@@ -201,7 +203,7 @@ function DashboardListContract(props) {
 
   const handleAction = (type, data) => {
     console.log("type: ", type, " - ", "data: ", data);
-    history.push(`/client/invoice_monitoring/contract/1/${data.id}`);
+    history.push(`/client/invoice_monitoring/contract/${data.id}`);
   };
 
   return (
@@ -416,6 +418,9 @@ function DashboardListContract(props) {
                         Nomor PO
                       </th>
                       <th className="bg-primary text-white align-middle">
+                        Tanggal
+                      </th>
+                      <th className="bg-primary text-white align-middle">
                         Status
                       </th>
                       <th className="bg-primary text-white align-middle">
@@ -430,6 +435,11 @@ function DashboardListContract(props) {
                           <td>{item.contract_no}</td>
                           <td>{item.contract_name}</td>
                           <td>{item.purch_order_no}</td>
+                          <td>
+                            {window
+                              .moment(new Date(item.from_time))
+                              .format("DD MMM YYYY")}
+                          </td>
                           <td></td>
                           <td>
                             <ButtonAction
@@ -448,14 +458,18 @@ function DashboardListContract(props) {
             <div className="table-loading-data">
               <div className="text-center font-weight-bold">
                 <div className="table-loading-data-potition">
-                  {/* <span>
+                  {loading && (
+                    <span>
                       <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
                       <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
                     </span>
-                    <span>
-                      <i className="far fa-frown text-dark mr-1"></i>
-                      <FormattedMessage id="TITLE.TABLE.NO_DATA_AVAILABLE" />
-                    </span> */}
+                  )}
+                  {err && (
+                    <span className="text-danger">
+                      <i className="far fa-frown text-danger mr-1"></i>
+                      <FormattedMessage id="TITLE.ERROR_REQUEST" />
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

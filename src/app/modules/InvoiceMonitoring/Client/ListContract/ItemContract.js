@@ -8,6 +8,7 @@ import { Container, makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import Tabs from "../../../../components/tabs";
 import Subheader from "../../../../components/subheader";
+import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from "./ItemContractSummary";
 import ItemContractInvoice from "./ItemContractInvoice";
@@ -83,7 +84,7 @@ const ItemContract = (props) => {
       id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT",
     }) +
       " Term " +
-      useParams().id
+      useParams().termin
   );
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
@@ -99,6 +100,19 @@ const ItemContract = (props) => {
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
+      />
+
+      <SubBreadcrumbs
+        items={[
+          {
+            label: "Contract Item",
+            to: `/client/invoice_monitoring/contract/${useParams().contract}`,
+          },
+          {
+            label: `Contract Term 1`,
+            to: "/",
+          },
+        ]}
       />
       <Paper className={classes.paper}>
         <Container>
