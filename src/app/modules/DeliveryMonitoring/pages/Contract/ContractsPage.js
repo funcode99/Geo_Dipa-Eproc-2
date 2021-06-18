@@ -71,6 +71,7 @@ export const ContractsPage = () => {
         {
           content: (
             <ButtonAction
+              hoverLabel="More"
               data={"1"}
               // handleAction={console.log(null)}
               ops={[

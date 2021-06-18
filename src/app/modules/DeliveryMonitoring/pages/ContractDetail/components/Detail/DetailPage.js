@@ -368,9 +368,12 @@ const DetailPage = ({
   };
 
   React.useEffect(() => {
+    getContractById(contractId);
+
     if (tasks && tasks.length > 0) {
       generateTableContent(tasks);
     }
+
     getOptions();
     // eslint-disable-next-line
   }, [contractId]);
