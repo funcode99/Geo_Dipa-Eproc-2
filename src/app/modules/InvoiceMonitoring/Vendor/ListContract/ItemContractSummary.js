@@ -364,8 +364,8 @@ function ItemContractSummary(props) {
   const handleUpdate = (index) => {
     setEditEmail(true);
     formikUpdate.setValues({
-      email: picVendorData[index].text,
-      id: picVendorData[index].id,
+      email: picVendorData[index].label,
+      id: picVendorData[index].value,
       user_id: user_id,
       vendor_id: vendor_id,
       monitoring_type: "INVOICE",
@@ -511,7 +511,7 @@ function ItemContractSummary(props) {
           <button
             className="btn btn-danger"
             disabled={loading}
-            onClick={() => deletePic(tempPic.id)}
+            onClick={() => deletePic(tempPic.value)}
           >
             Batalkan
             {loading && (
