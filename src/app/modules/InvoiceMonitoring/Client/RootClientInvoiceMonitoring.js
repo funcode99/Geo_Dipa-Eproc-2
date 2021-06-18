@@ -5,6 +5,7 @@ import DashboardListContract from "./ListContract/DashboardListContract";
 import ItemContract from "./ListContract/ItemContract";
 import DashboardListSpt from "./ListSpt/DashboardListSpt";
 import ItemSpt from "./ListSpt/ItemSpt";
+import ListTermContract from "./ListContract/ListTermContract";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -22,8 +23,13 @@ function RootClientInvoiceMonitoring(props) {
         to="/client/invoice_monitoring/contract"
       />
       <Route
-        path="/client/invoice_monitoring/contract/:termin/:contract"
+        path="/client/invoice_monitoring/contract/:contract/:termin"
         component={(props) => <ItemContract {...props} />}
+        exact={true}
+      />
+      <Route
+        path="/client/invoice_monitoring/contract/:contract"
+        component={(props) => <ListTermContract {...props} />}
         exact={true}
       />
       <Route
