@@ -117,7 +117,7 @@ function ItemContractSummary(props) {
   const contract_id = props.match.params.contract;
 
   const getPicContractData = useCallback(() => {
-    getPicContract({ id: contract_id, vendor_id: vendor_id })
+    getPicContract({ id: contract_id, vendor_id: vendor_id, monitoring_type: monitoring_type })
       .then((response) => {
         setPicContractData(response.data.data);
       })
@@ -243,11 +243,13 @@ function ItemContractSummary(props) {
     id: "",
   };
 
+  const monitoring_type = "INVOICE";
+
   const initialValues = {
     email: "",
     user_id: user_id,
     vendor_id: vendor_id,
-    monitoring_type: "INVOICE",
+    monitoring_type: monitoring_type
   };
 
   Yup.addMethod(Yup.string, "checkAvailabilityEmail", function (errorMessage) {
@@ -368,7 +370,7 @@ function ItemContractSummary(props) {
       id: picVendorData[index].value,
       user_id: user_id,
       vendor_id: vendor_id,
-      monitoring_type: "INVOICE",
+      monitoring_type: monitoring_type,
     });
     updateEmailRef.current.scrollIntoView({ behavior: "smooth" });
   };
@@ -457,7 +459,7 @@ function ItemContractSummary(props) {
     var data = {
       contract_id: contract_id,
       data: picContractData,
-      monitoring_type: "INVOICE",
+      monitoring_type: monitoring_type,
       user_id: user_id,
     };
     assignUser(data)

@@ -1,14 +1,84 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Form, Row, Col, Container } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../../../libs/currency";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
+import StyledSelect from "../../../../../../components/select-multiple";
+import {
+  getPicContract,
+  getPicVendor,
+  assignUser
+} from "../../../../../InvoiceMonitoring/_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../../../components/toast";
 
-const FormDetail = () => {
+const FormDetail = (props) => {
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
+  const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
+
+  const contract_id = props.contractId;
+  const monitoring_type = "DELIVERY";
+  const vendor_id = dataContractById?.vendor?.id
+
+  const [Toast, setToast] = useToast();
+  const [picVendorData, setPicVendorData] = useState([]);
+  const [picContractData, setPicContractData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getPicContractData = useCallback(() => {
+    getPicContract({ id: contract_id, vendor_id: vendor_id, monitoring_type: monitoring_type })
+      .then((response) => {
+        setPicContractData(response.data.data);
+      })
+      .catch((error) => {
+        // setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, setToast]);
+
+  const getPicVendorData = useCallback(() => {
+    getPicVendor(vendor_id)
+      .then((response) => {
+        setPicVendorData(response.data.data);
+      })
+      .catch((error) => {
+
+      });
+  }, [setToast]);
+
+  const assignPic = () => {
+    setLoading(true);
+    var data = {
+      contract_id: contract_id,
+      data: picContractData,
+      monitoring_type: monitoring_type,
+      user_id: user_id,
+    };
+    assignUser(data)
+      .then((response) => {
+        setToast(
+          <FormattedMessage id="REQ.ASSIGN_ACCOUNT_SUCCESS" />
+        );
+        setLoading(false);
+      })
+      .catch((error) => {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        )
+          setToast(<FormattedMessage id="REQ.REQUEST_FAILED" />, 10000);
+        setLoading(false);
+      });
+  };
+
+  const handlePic = (e) => {
+    setPicContractData(e);
+  };
+
+  useEffect(getPicContractData, []);
+  useEffect(getPicVendorData, []);
 
   return (
     <Form className="my-3">
+      <Toast />
       <Container>
         <Row>
           <Col>
@@ -129,8 +199,30 @@ const FormDetail = () => {
                 />
               </Col>
             </Form.Group>
+            <Form.Group as={Row}>
+              <Form.Label column md="4">
+                PIC
+              </Form.Label>
+              <Col md="8">
+                <StyledSelect options={picVendorData} value={picContractData} onChange={handlePic}></StyledSelect>
+              </Col>
+            </Form.Group>
           </Col>
         </Row>
+        <button
+          type="button"
+          className="btn btn-primary mx-1 float-right"
+          onClick={assignPic}
+          disabled={loading}
+        >
+          Simpan
+          {loading && (
+            <span
+              className="spinner-border spinner-border-sm ml-1"
+              aria-hidden="true"
+            ></span>
+          )}
+        </button>
       </Container>
     </Form>
   );
