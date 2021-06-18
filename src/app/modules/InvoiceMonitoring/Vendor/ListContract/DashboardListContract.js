@@ -6,7 +6,6 @@ import {
   CardBody,
   CardHeader,
 } from "../../../../../_metronic/_partials/controls";
-import { Table } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import { Link } from "react-router-dom";
@@ -26,39 +25,6 @@ import { Document, Page, pdfjs } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-
-const styles = (theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(3),
-    top: theme.spacing(0),
-    backgroundColor: "#187de4",
-    "&:hover": {
-      background: "#f00",
-    },
-  },
-});
-
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <i className="fas fa-times text-light"></i>
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
 
 function DashboardListContract(props) {
   const { intl } = props;
@@ -267,61 +233,8 @@ function DashboardListContract(props) {
   return (
     <React.Fragment>
       <Toast />
-      <Dialog
-        open={dialogState}
-        // keepMounted
-        maxWidth={false}
-        fullWidth={true}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        PaperProps={{
-          style: {
-            backgroundColor: "transparent",
-            boxShadow: "none",
-          },
-        }}
-      >
-        <DialogTitle
-          id="alert-dialog-description"
-          onClose={() => {
-            setDialogState(false);
-          }}
-        >
-          Modal title
-        </DialogTitle>
-        <PerfectScrollbar>
-          <DialogContent>
-            <div className="react-component">
-              <Document file="" onLoadSuccess={onDocumentLoadSuccess}>
-                <Page pageNumber={pageNumber} renderMode="svg" />
-                <div className="page-controls">
-                  <button type="button" disabled="">
-                    ‹
-                  </button>
-                  <span>1 of 4</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPageNumber(2);
-                    }}
-                  >
-                    ›
-                  </button>
-                </div>
-              </Document>
-            </div>
-          </DialogContent>
-        </PerfectScrollbar>
-      </Dialog>
       <Card>
         <CardHeader>
-          <button
-            onClick={() => {
-              setDialogState(true);
-            }}
-          >
-            Open
-          </button>
         </CardHeader>
         <CardBody>
           {/* begin: Filter Table */}
