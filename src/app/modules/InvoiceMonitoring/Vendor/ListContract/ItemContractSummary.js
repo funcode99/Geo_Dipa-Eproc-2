@@ -17,7 +17,6 @@ import {
   DialogTitle,
   Slide,
 } from "@material-ui/core";
-import Select2 from "react-select2-wrapper";
 import "react-select2-wrapper/css/select2.css";
 import {
   getPicContract,
@@ -236,7 +235,6 @@ function ItemContractSummary(props) {
   };
 
   const handlePic = (e) => {
-    console.log(e)
     setPicContractData(e);
   };
 
@@ -871,7 +869,7 @@ function ItemContractSummary(props) {
                   Email PIC
                 </label>
                 <div className="input-group col-sm-8">
-                  <StyledSelect isDisabled={!role.main_vendor} options={picVendorData} value={picContractData} onchange={handlePic}></StyledSelect>
+                  <StyledSelect isDisabled={!role.main_vendor} options={picVendorData} value={picContractData} onChange={handlePic}></StyledSelect>
                   {role.main_vendor && (
                     <div className="input-group-prepend">
                       <span
