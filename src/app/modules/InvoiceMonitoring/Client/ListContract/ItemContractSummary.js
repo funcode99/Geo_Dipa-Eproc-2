@@ -5,15 +5,12 @@ import {
   // FormattedMessage,
   injectIntl,
 } from "react-intl";
-import {
-  Card,
-  CardBody
-} from "../../../../../_metronic/_partials/controls";
-import "react-select2-wrapper/css/select2.css";
+import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+// import "react-select2-wrapper/css/select2.css";
 import {
   getPicContract,
   getPicVendor,
-  getContractSummary
+  getContractSummary,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
@@ -80,8 +77,13 @@ function ItemContractSummary(props) {
   const contract_id = props.match.params.contract;
   const monitoring_type = "INVOICE";
 
-  const getPicContractData = useCallback((vendor_id) => {
-    getPicContract({ id: contract_id, vendor_id: vendor_id, monitoring_type: monitoring_type })
+  const getPicContractData = useCallback(
+    (vendor_id) => {
+      getPicContract({
+        id: contract_id,
+        vendor_id: vendor_id,
+        monitoring_type: monitoring_type,
+      })
         .then((response) => {
           setPicContractData(response.data.data);
         })
@@ -92,9 +94,12 @@ function ItemContractSummary(props) {
           )
             setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
         });
-  }, [contract_id, intl, setToast]);
+    },
+    [contract_id, intl, setToast]
+  );
 
-  const getPicVendorData = useCallback((vendor_id) => {
+  const getPicVendorData = useCallback(
+    (vendor_id) => {
       getPicVendor(vendor_id)
         .then((response) => {
           setPicVendorData(response.data.data);
@@ -106,7 +111,9 @@ function ItemContractSummary(props) {
           )
             setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
         });
-  }, [intl, setToast]);
+    },
+    [intl, setToast]
+  );
 
   const getContractData = useCallback(() => {
     getContractSummary(contract_id)
@@ -123,27 +130,35 @@ function ItemContractSummary(props) {
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
+        response["data"]["data"]["full_address_party_2"] = `${
+          response["data"]["data"]["data"]["address"]["postal_address"]
             ? response["data"]["data"]["data"]["address"]["postal_address"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["sub_district"]
+        } ${
+          response["data"]["data"]["data"]["address"]["sub_district"]
             ? response["data"]["data"]["data"]["address"]["sub_district"][
                 "name"
               ]
             : null
-          } ${response["data"]["data"]["data"]["address"]["district"]
+        } ${
+          response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["province"]
+        } ${
+          response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["postal_code"]
+        } ${
+          response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
         }`;
-        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
-          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
-          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
+        response["data"]["data"]["full_data_party_2"] = `${
+          response["data"]["data"]["full_name"]
+        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
+          response["data"]["data"]["data"]["phone_number"]["number"]
+        } ${
+          response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
                 response["data"]["data"]["data"]["phone_number"]["ext"]
               )
@@ -157,8 +172,8 @@ function ItemContractSummary(props) {
           response.data.data.from_time,
           response.data.data.thru_time
         );
-        getPicContractData(response.data.data.vendor_id)
-        getPicVendorData(response.data.data.vendor_id)
+        getPicContractData(response.data.data.vendor_id);
+        getPicVendorData(response.data.data.vendor_id);
       })
       .catch((error) => {
         if (
@@ -374,7 +389,11 @@ function ItemContractSummary(props) {
                   Email PIC
                 </label>
                 <div className="input-group col-sm-8">
-                  <StyledSelect isDisabled={true} options={picVendorData} value={picContractData}></StyledSelect>
+                  <StyledSelect
+                    isDisabled={true}
+                    options={picVendorData}
+                    value={picContractData}
+                  ></StyledSelect>
                 </div>
                 <div className="col-sm-8"></div>
               </div>
