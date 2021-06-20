@@ -1,16 +1,14 @@
+import { makeStyles, Paper } from "@material-ui/core";
 import React from "react";
-import { Paper, makeStyles, Icon } from "@material-ui/core";
 import SVG from "react-inlinesvg";
-import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
-import useToast from "../../../../components/toast";
-import Subheader from "../../../../components/subheader";
-import CustomTable from "../../../../components/tables";
-import { formatDate } from "../../../../libs/date";
-import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { FormattedMessage } from "react-intl";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import ButtonAction from "../../../../components/buttonAction/ButtonAction";
+import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
-import FullCustomTable from "../../../../components/tables/FullCustomTable";
+import useToast from "../../../../components/toast";
+import { formatDate } from "../../../../libs/date";
+import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 
 const useStyles = makeStyles((theme) => ({
   root: {
