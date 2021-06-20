@@ -10,6 +10,7 @@ import { formatDate } from "../../../../libs/date";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { FormattedMessage } from "react-intl";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
+import FullCustomTable from "../../../../components/tables/FullCustomTable";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,15 +41,91 @@ const tableHeaderContracts = [
   { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" /> },
   { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" /> },
 ];
+const tableHeaderContractsNew = [
+  {
+    id: "contract_no",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
+  },
+  {
+    id: "po_number",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
+  },
+  {
+    id: "procurement_title",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
+  },
+  {
+    id: "po_date",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
+  },
+  {
+    id: "contract_date",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />,
+  },
+  {
+    id: "group",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />,
+  },
+  {
+    id: "vendor",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />,
+  },
+  {
+    id: "status",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
+  },
+  {
+    id: "action",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
+    sortable: false,
+  },
+];
 
 export const ContractsPage = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
+  const [newContent, setNewContent] = React.useState([]);
 
   const generateTableContent = (data) => {
+    let dataArr = [];
     data.forEach((item) => {
+      let objData = {
+        contract_no: item?.contract_no,
+        po_number: item?.purch_order_no,
+        procurement_title: item?.contract_name,
+        po_date:
+          item?.issued_date !== null
+            ? formatDate(new Date(item?.issued_date))
+            : null,
+        contract_date:
+          item?.issued_date !== null
+            ? formatDate(new Date(item?.issued_date))
+            : null,
+        group: item?.purch_order?.purch_group?.alias_name,
+        vendor: item?.vendor.party?.full_name,
+        status: item?.state,
+        action: (
+          <ButtonAction
+            hoverLabel="More"
+            data={"1"}
+            // handleAction={console.log(null)}
+            ops={[
+              {
+                label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
+                icon: "fas fa-search text-primary pointer",
+                to: {
+                  url: `/client/delivery-monitoring/contract/${item.id}`,
+                  style: {
+                    color: "black",
+                  },
+                },
+              },
+            ]}
+          />
+        ),
+      };
       const rows = [
         { content: item?.contract_no, props: { align: "left" } },
         { content: item?.purch_order_no },
@@ -91,7 +168,10 @@ export const ContractsPage = () => {
         },
       ];
       setTableContent((prev) => [...prev, rows]);
+      dataArr.push(objData);
     });
+    console.log(`objData`, dataArr);
+    setNewContent(dataArr);
   };
 
   const getDataContracts = async () => {
@@ -131,15 +211,20 @@ export const ContractsPage = () => {
         }
       />
 
-      <TablePaginationCustom />
       <Paper className={classes.root}>
-        <CustomTable
+        <TablePaginationCustom
+          headerRows={tableHeaderContractsNew}
+          rows={newContent}
+          width={1500}
+          loading={false}
+        />
+        {/* <CustomTable
           tableHeader={tableHeaderContracts}
           tableContent={tableContent}
           marginY="my-1"
           hecto="hecto-15"
           loading={loading}
-        />
+        /> */}
       </Paper>
     </>
   );

@@ -26,6 +26,7 @@ const headRows = [
     numeric: false,
     disablePadding: true,
     label: "Judul 1",
+    width: 200,
   },
   { id: "calories", numeric: true, disablePadding: false, label: "Judul 2" },
   { id: "fat", numeric: true, disablePadding: false, label: "Judul 3" },
@@ -41,6 +42,7 @@ function HeaderTable(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    rows,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -49,28 +51,34 @@ function HeaderTable(props) {
   return (
     <TableHead>
       <TableRow style={{ backgroundColor: "#eff7ff" }}>
-        <TableCell padding="checkbox">
-          {/* <Checkbox
+        {/* <TableCell width={"200px"}>
+          <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ "aria-label": "Select all desserts" }}
-          /> */}
-        </TableCell>
-        {headRows.map((row) => (
+          />
+        </TableCell> */}
+        {rows.map((row) => (
           <TableCell
             key={row.id}
-            align={row.numeric ? "right" : "left"}
-            padding={row.disablePadding ? "none" : "default"}
+            align={"left"}
+            className={"bg-primary text-white"}
+            // align={row.numeric ? "right" : "left"}
+            padding={"default"}
             sortDirection={orderBy === row.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === row.id}
-              direction={order}
-              onClick={createSortHandler(row.id)}
-            >
-              {row.label}
-            </TableSortLabel>
+            {row?.sortable === false ? (
+              row.label
+            ) : (
+              <TableSortLabel
+                active={orderBy === row.id}
+                direction={order}
+                onClick={createSortHandler(row.id)}
+              >
+                {row.label}
+              </TableSortLabel>
+            )}
           </TableCell>
         ))}
       </TableRow>
