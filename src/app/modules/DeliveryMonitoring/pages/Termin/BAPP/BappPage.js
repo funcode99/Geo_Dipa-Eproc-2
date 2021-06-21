@@ -117,6 +117,16 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
     [setLoading]
   );
 
+  const updateExclude = () => {
+    if (taskNews && taskNews?.review_text !== null) {
+      // console.log(`review ada isinya`);
+      setExclude([""]);
+    } else if (taskNews && taskNews?.review_text === null) {
+      // console.log(`review kosong`);
+      setExclude(["approve"]);
+    }
+  };
+
   const fetchData = React.useCallback(
     (toast = { visible: false, message: "" }) => {
       handleLoading("get", true);
@@ -128,6 +138,9 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
           handleLoading("get", false);
           if (res.data.status === true) {
             saveTask(res?.data?.data);
+
+            updateExclude();
+
             if (toast.visible === true) {
               setToast(toast.message, 5000);
             }
@@ -138,20 +151,14 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
     [taskId, handleLoading, saveTask, setToast]
   );
 
-  const updateExclude = () => {
-    if (!taskNews?.review_text) {
-      setExclude((prev) => [...prev, "approve"]);
-    }
-  };
-
   const handleSuccess = React.useCallback(
     (res) => {
       if (res?.data?.status === true) {
         fetchData({ visible: true, message: res?.data?.message });
-        updateExclude();
+        // updateExclude();
       }
     },
-    [fetchData, updateExclude]
+    [fetchData]
   );
 
   const _handleSubmit = (data) => {
@@ -185,10 +192,9 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
 
   React.useEffect(() => {
     if (taskId !== "") {
+      // console.log(`masuk sini`);
       fetchData();
     }
-
-    updateExclude();
   }, [taskId, fetchData]);
 
   let disabledInput = Object.keys(initialValues);
@@ -273,16 +279,16 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
             <Col md={12}>
               <TableBuilder
                 hecto={5}
-                dataHead={["No", "Tanggal", "User", "Aktivitas", "Aksi"]}
-                dataBody={taskNews?.task_news_histories}
+                dataHead={["No", "User", "Tanggal", "Aktivitas", "Aksi"]}
+                dataBody={taskNews?.news_histories}
                 renderRowBody={({ item, index }) => (
                   <RowNormal
                     key={index}
                     data={[
                       (index += 1),
-                      formatDate(new Date(item?.createdAt)),
                       item?.vendor?.username || item?.user?.username,
-                      item?.action,
+                      formatDate(new Date(item?.createdAt)),
+                      item?.description,
                       "",
                     ]}
                   />
@@ -299,7 +305,7 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
 const mapState = ({ auth, deliveryMonitoring }) => ({
   status: auth.user.data.status,
   contract: deliveryMonitoring.dataContractById,
-  taskNews: deliveryMonitoring.dataTask?.task_news,
+  taskNews: deliveryMonitoring.dataTask?.news,
   taskId: deliveryMonitoring.dataTask?.id,
 });
 
