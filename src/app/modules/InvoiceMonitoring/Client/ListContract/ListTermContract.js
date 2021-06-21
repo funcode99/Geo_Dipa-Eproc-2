@@ -67,7 +67,7 @@ const ListTermContract = (props) => {
     <Container className="px-0">
       <Toast />
       <Subheader
-        text="012.PJ/PST.30-GDE/IX/2020-1000014263"
+        text={(data?.contract_no || "") + " - " + (data.purch_order_no || "")}
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
@@ -236,30 +236,32 @@ const ListTermContract = (props) => {
               <table className="table-bordered overflow-auto">
                 <thead>
                   <tr>
-                    <th className="bg-primary text-white align-middle">No</th>
                     <th className="bg-primary text-white align-middle">
-                      Scope of Work
+                      <FormattedMessage id="TITLE.TABLE_HEADER.NO" />
                     </th>
                     <th className="bg-primary text-white align-middle">
-                      Due Date
+                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK" />
                     </th>
                     <th className="bg-primary text-white align-middle">
-                      Bobot
+                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />
                     </th>
                     <th className="bg-primary text-white align-middle">
-                      Harga Pekerjaan
+                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.WEIGHT" />
                     </th>
                     <th className="bg-primary text-white align-middle">
-                      Project Progress
+                      <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />
                     </th>
                     <th className="bg-primary text-white align-middle">
-                      Document Progress
+                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS" />
                     </th>
                     <th className="bg-primary text-white align-middle">
-                      Status
+                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS" />
                     </th>
                     <th className="bg-primary text-white align-middle">
-                      Action
+                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />
+                    </th>
+                    <th className="bg-primary text-white align-middle">
+                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
                     </th>
                   </tr>
                 </thead>
