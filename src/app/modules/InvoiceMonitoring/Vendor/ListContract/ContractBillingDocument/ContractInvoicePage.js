@@ -28,7 +28,7 @@ import * as Yup from 'yup';
 import { rupiah } from '../../../../../libs/currency';
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from '../ItemContractInvoice';
 import moment from 'moment';
@@ -102,11 +102,6 @@ function ContractInvoicePage(props) {
             ),
         invoice_no: Yup
             .string()
-            .matches(/^[0-9]*$/,
-                intl.formatMessage({
-                    id: "AUTH.VALIDATION.NUMBER_ONLY",
-                })
-            )
             .required(
                 intl.formatMessage({
                     id: "AUTH.VALIDATION.REQUIRED_FIELD",
@@ -162,7 +157,6 @@ function ContractInvoicePage(props) {
                 response['data']['data']['full_data_party_1'] = `PT. GEO DIPA ENERGI \n\n${response['data']['data']['name']} \n${response['data']['data']['address']}`
                 setContractData(response.data.data)
                 formik.setValues({
-                    invoice_no: '10000014264',
                     purch_order_no: response['data']['data']['purch_order_no'],
                     contract_id: response['data']['data']['id'],
                     plant_id: response['data']['data']['plant_id'],
@@ -172,13 +166,7 @@ function ContractInvoicePage(props) {
                     vendor_id: response['data']['data']['vendor_id'],
                     contract_value: response['data']['data']['contract_value'],
                     currency_id: response['data']['data']['currency_id'],
-                    invoice_term: 1,
-                    invoice_value: 0,
-                    created_by_id: user_id,
-                    file: '',
-                    from_time: '',
-                    thru_time: '',
-                    description: ''
+                    created_by_id: user_id
                 })
             })
             .catch((error) => {
@@ -311,7 +299,7 @@ function ContractInvoicePage(props) {
                                     >
                                         <span><i className={`fas fa-chevron-left ${pageNumber === 1 ? '' : 'text-secondary'}`}></i></span>
                                     </button>
-                                    <span>{pageNumber} of {numPages}</span>
+                                    <span>{pageNumber} <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PDF.OF" /> {numPages}</span>
                                     <button
                                         type="button"
                                         disabled={pageNumber === numPages}
@@ -336,48 +324,48 @@ function ContractInvoicePage(props) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle>
-                    <span>Detail Riwayat</span>
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DETAIL_HISTORY" />
                 </DialogTitle>
                 <PerfectScrollbar>
                     <DialogContent>
                         <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">Nomor Invoice</label>
+                            <label className="col-sm-3 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" /></label>
                             <div className="col-sm-9">
                                 <span className="form-control-plaintext">: {modalHistoryData['invoice_no']}</span>
                             </div>
                         </div>
                         <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">Tanggal Invoice</label>
+                            <label className="col-sm-3 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" /></label>
                             <div className="col-sm-9">
                                 <span className="form-control-plaintext">: {moment(new Date(modalHistoryData['from_time'])).format("YYYY-MM-DD")}</span>
                             </div>
                         </div>
                         <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">Dikirim Oleh</label>
+                            <label className="col-sm-3 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" /></label>
                             <div className="col-sm-9">
                                 <span className="form-control-plaintext">: {modalHistoryData['created_by_name']}</span>
                             </div>
                         </div>
                         <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">Tanggal Dikirim</label>
+                            <label className="col-sm-3 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" /></label>
                             <div className="col-sm-9">
                                 <span className="form-control-plaintext">: {moment(new Date(modalHistoryData['created_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
                             </div>
                         </div>
                         <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? 'Ditolak Oleh' : 'Disetujui Oleh'}</label>
+                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_BY" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />}</label>
                             <div className="col-sm-9">
                                 <span className="form-control-plaintext">: {modalHistoryData['state'] == 'REJECTED' ? modalHistoryData['rejected_by_name'] : modalHistoryData['approved_by_name']}</span>
                             </div>
                         </div>
                         <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? 'Tanggal Ditolak' : 'Tanggal Disetujui'}</label>
+                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DATE" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />}</label>
                             <div className="col-sm-9">
                                 <span className="form-control-plaintext">: {modalHistoryData['state'] == 'REJECTED' ? moment(new Date(modalHistoryData['rejected_at'])).format("YYYY-MM-DD HH:mm:ss") : moment(new Date(modalHistoryData['approved_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
                             </div>
                         </div>
                         {modalHistoryData['state'] == 'REJECTED' && <div className="form-group row mb-0">
-                            <label className="col-sm-12 col-form-label">Alasan Penolakan Dokumen</label>
+                            <label className="col-sm-12 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DESC" /></label>
                             <div className="col-sm-12">
                                 <textarea disabled className="form-control" defaultValue={modalHistoryData['rejected_remark']}></textarea>
                             </div>
@@ -390,7 +378,7 @@ function ContractInvoicePage(props) {
                         onClick={() => setModalHistory(false)}
                         disabled={loading}
                     >
-                        <span>Kembali</span>
+                        <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
                     </button>
                 </DialogActions>
             </Dialog>
@@ -426,7 +414,7 @@ function ContractInvoicePage(props) {
                                     ) : null}
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="note" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DESCRIPTION" /></label>
+                                    <label htmlFor="note" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DESCRIPTION" /></label>
                                     <div className="col-sm-8">
                                         <textarea rows="4" cols="" className="form-control" id="note" disabled={loading || invoiceStatus} {...formik.getFieldProps('description')}></textarea>
                                     </div>
@@ -442,7 +430,7 @@ function ContractInvoicePage(props) {
                                         {!invoiceStatus && <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fas fa-file-upload"></i></span>
                                         </div>}
-                                        <span className={`form-control text-truncate ${classes.textDisabled}`}>{uploadFilename}</span>
+                                        <span className={`form-control text-truncate ${invoiceStatus ? classes.textDisabled : ''}`}>{uploadFilename}</span>
                                         {invoiceStatus && <div className="input-group-append pointer">
                                             <span className={`input-group-text ${classes.textHover}`}><a download={invoiceData?.file_name} href={invoiceData?.file}><i className="fas fa-download"></i></a></span>
                                             <span className={`input-group-text ${classes.textHover}`} onClick={() => setDialogState(true)}><i className="fas fa-eye"></i></span>
@@ -472,13 +460,13 @@ function ContractInvoicePage(props) {
                                 <div className="form-group row">
                                     <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
                                     <div className="col-sm-7">
-                                        <input type="text" className="form-control" id="priceStep1" defaultValue="Rp. 1.000.000" disabled />
+                                        <input type="text" className="form-control" id="priceStep1" disabled />
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="priceTaxInvoice" className="col-sm-5 col-form-label">Harga Pekerjaan Tahap 1 dengan PPN</label>
+                                    <label htmlFor="priceTaxInvoice" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: termin }} /></label>
                                     <div className="col-sm-7">
-                                        <input type="text" className="form-control" id="priceTaxInvoice" defaultValue="Rp. 1.100.000" disabled />
+                                        <input type="text" className="form-control" id="priceTaxInvoice" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -495,7 +483,7 @@ function ContractInvoicePage(props) {
             <Card className="mt-5">
                 <CardBody>
                     <div className="my-5 text-center">
-                        <h6>Riwayat Dokumen Invoice</h6>
+                        <h6><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.HISTORY" /></h6>
                     </div>
                     {/* begin: Table */}
                     <div className="table-wrapper-scroll-y my-custom-scrollbar">
@@ -504,24 +492,24 @@ function ContractInvoicePage(props) {
                                 <table className="table-bordered overflow-auto">
                                     <thead>
                                         <tr>
-                                            <th className="bg-primary text-white align-middle"><span>No</span></th>
+                                            <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.NO" /></th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Nomor Invoice</span>
+                                                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" />
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Tanggal Invoice</span>
+                                                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" />
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>File</span>
+                                                <FormattedMessage id="TITLE.FILE" />
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Dikirim Oleh</span>
+                                                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" />
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Tanggal Dikirim</span>
+                                                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
                                             </th>
                                             <th className="bg-primary text-white align-middle">
-                                                <span>Status</span>
+                                                <FormattedMessage id="TITLE.STATUS" />
                                             </th>
                                         </tr>
                                     </thead>
@@ -539,7 +527,7 @@ function ContractInvoicePage(props) {
                                                     </td>
                                                     <td className="align-middle">{item.created_by_name}</td>
                                                     <td className="align-middle">{moment(new Date(item.created_at)).format("YYYY-MM-DD HH:mm:ss")}</td>
-                                                    <td className="align-middle"><span className={`${item.state === 'REJECTED' ? 'text-danger' : 'text-success'} pointer font-weight-bold`} onClick={() => handleHistory(index)}>{item.state === 'REJECTED' ? 'DITOLAK' : 'DISETUJUI'} <i className="fas fa-caret-down"></i></span></td>
+                                                    <td className="align-middle"><span className={`${item.state === 'REJECTED' ? 'text-danger' : 'text-success'} pointer font-weight-bold`} onClick={() => handleHistory(index)}>{item.state === 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />} <i className="fas fa-caret-down"></i></span></td>
                                                 </tr>
                                             );
                                         })}

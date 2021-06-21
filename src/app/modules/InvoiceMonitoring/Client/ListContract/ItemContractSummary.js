@@ -358,12 +358,15 @@ function ItemContractSummary(props) {
                   Authorization Invoice
                 </label>
                 <div className="col-sm-8">
-                  <select className="custom-select custom-select-sm">
-                    <option selected hidden>
+                  <select
+                    className="custom-select custom-select-sm"
+                    defaultValue={0}
+                  >
+                    <option value="0" hidden>
                       Pilih
                     </option>
-                    <option className="1">Pusat</option>
-                    <option className="2">Unit</option>
+                    <option value="1">Pusat</option>
+                    <option value="2">Unit</option>
                   </select>
                 </div>
               </div>
