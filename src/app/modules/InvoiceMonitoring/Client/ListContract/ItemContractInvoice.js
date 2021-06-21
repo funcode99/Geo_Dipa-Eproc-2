@@ -31,6 +31,7 @@ import BtnAksi from "../../../DeliveryMonitoring/pages/Termin/Documents/componen
 import { getDeliverableInInvoive } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
+import { getContractSoftCopy } from "../../_redux/InvoiceMonitoringCrud";
 
 const styles = (theme) => ({
   root: {
@@ -145,8 +146,9 @@ function ItemContractInvoice(props) {
   const { intl } = props;
   const [navActive, setNavActive] = useState(navLists[0].id);
   const [dataDeliverables, setDataDeliverables] = useState([]);
+  const [dataSoftCopy, setDataSoftCopy] = useState({});
   const classes = useStyles();
-  const { termin } = useParams();
+  const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
   const [loadingRequest, setLoadingRequest] = useState(false);
@@ -222,7 +224,21 @@ function ItemContractInvoice(props) {
       });
   };
 
+  const callApiContractSoftCopy = () => {
+    setLoading(true);
+    getContractSoftCopy(contract)
+      .then((result) => {
+        setLoading(false);
+        setDataSoftCopy(result.data.data);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
   useEffect(callApi, []);
+  useEffect(callApiContractSoftCopy, []);
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
@@ -368,7 +384,7 @@ function ItemContractInvoice(props) {
                       <td>
                         <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT" />
                       </td>
-                      <td></td>
+                      <td>{dataSoftCopy?.contract_number}</td>
                       <td className="align-middle"></td>
                       <td className="align-middle">
                         <ButtonAction
@@ -381,7 +397,7 @@ function ItemContractInvoice(props) {
                     <tr>
                       <td className="align-middle">2</td>
                       <td>Purch Order</td>
-                      <td></td>
+                      <td>{dataSoftCopy?.po_number}</td>
                       <td className="align-middle"></td>
                       <td className="align-middle">
                         <ButtonAction
@@ -426,7 +442,7 @@ function ItemContractInvoice(props) {
                       <td>
                         <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
                       </td>
-                      <td></td>
+                      <td>{dataSoftCopy?.npwp_number}</td>
                       <td className="align-middle"></td>
                       <td className="align-middle">
                         <ButtonAction
