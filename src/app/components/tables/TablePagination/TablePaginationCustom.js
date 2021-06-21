@@ -11,39 +11,8 @@ import React from "react";
 import HeaderTable from "./components/HeaderTable";
 import PaginationTable from "./components/PaginationTable";
 import Skeleton from "@material-ui/lab/Skeleton";
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, proteins: protein };
-}
-
-// const rows = [
-//   createData("Cupcake", 305, 3.7, 67, 4.3),
-//   createData("Donut", 452, 25.0, 51, 4.9),
-//   createData("Eclair", 262, 16.0, 24, 6.0),
-//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-//   createData("Gingerbread", 356, 16.0, 49, 3.9),
-//   createData("Honeycomb", 408, 3.2, 87, 6.5),
-//   createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-//   createData("Jelly Bean", 375, 0.0, 94, 0.0),
-//   createData("KitKat", 518, 26.0, 65, 7.0),
-//   createData("Lollipop", 392, 0.2, 98, 0.0),
-//   createData("Marshmallow", 318, 0, 81, 2.0),
-//   createData("Nougat", 360, 19.0, 9, 37.0),
-//   createData("Oreo", 437, 18.0, 63, 4.0),
-// ];
-
-const headRows = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "Judul 1",
-  },
-  { id: "calories", numeric: true, disablePadding: false, label: "Judul 2" },
-  { id: "fat", numeric: true, disablePadding: false, label: "Judul 3" },
-  { id: "carbs", numeric: true, disablePadding: false, label: "Judul 4" },
-  { id: "protein", numeric: true, disablePadding: false, label: "Judul 5" },
-];
+import SearchBox from "./components/SearchBox";
+import "./styles.scss";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -69,6 +38,22 @@ function getSorting(order, orderBy) {
   return order === "desc"
     ? (a, b) => desc(a, b, orderBy)
     : (a, b) => -desc(a, b, orderBy);
+}
+
+function searchFind(rows, query) {
+  const columns = rows[0] && Object.keys(rows[0]);
+  // (row) => row.procurement_title.toLowerCase().indexOf(query) > -1
+  return rows.filter((row) =>
+    columns.some((column) => {
+      if (row[column] !== null)
+        return (
+          row[column]
+            .toString()
+            .toLowerCase()
+            .indexOf(query) > -1
+        );
+    })
+  );
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -108,6 +93,7 @@ export default function TablePaginationCustom({
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [query, setQuery] = React.useState("");
 
   function handleRequestSort(event, property) {
     const isDesc = orderBy === property && order === "desc";
@@ -152,11 +138,21 @@ export default function TablePaginationCustom({
     setRowsPerPage(+event.target.value);
   }
 
+  function handleChangeQuery(event) {
+    setQuery(event.target.value);
+  }
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
+
+  console.log(
+    `rows`,
+    searchFind(stableSort(rows, getSorting(order, orderBy)), query)
+  );
 
   const emptyRows = 0;
   return (
     <div className={classes.root}>
+      <SearchBox onChange={handleChangeQuery} />
       <Paper className={classes.paper}>
         <div className={classes.tableBox}>
           <TableContainer className={classes.table}>
@@ -186,7 +182,8 @@ export default function TablePaginationCustom({
                 rowCount={rows.length}
               />
               <TableBody style={{ maxHeight: 500 }}>
-                {stableSort(rows, getSorting(order, orderBy))
+                {/* stableSort(rows, getSorting(order, orderBy)) */}
+                {searchFind(stableSort(rows, getSorting(order, orderBy)), query)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name);

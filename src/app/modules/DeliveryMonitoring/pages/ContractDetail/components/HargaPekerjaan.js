@@ -11,6 +11,7 @@ import {
 import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import TableBuilder from "../../../../../components/builder/TableBuilder";
+import BasicInput from "../../../../../components/input/BasicInput";
 import RenderInput from "../../../../../components/input/RenderInput";
 import TitleField from "../../../../../components/input/TitleField";
 import Navs from "../../../../../components/navs";
@@ -165,7 +166,7 @@ const HargaPekerjaan = () => {
           [1, 2, 3, 4].map((el, id) => (
             <Row key={id}>
               <Col md={6}>
-                <RenderInput
+                <BasicInput
                   disabled
                   values={{}}
                   name={"namama"}
