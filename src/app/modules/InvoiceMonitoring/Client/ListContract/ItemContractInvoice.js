@@ -260,7 +260,6 @@ function ItemContractInvoice(props) {
     <React.Fragment>
       <Toast />
       {loading && <LinearProgress color="secondary" className="rounded" />}
-
       <Dialog
         open={modalReject}
         TransitionComponent={Transition}

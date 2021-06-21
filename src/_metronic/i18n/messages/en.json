@@ -376,5 +376,7 @@
   "TITLE.OPEN_SPT": "Open SPT",
   "TITLE.OPEN_INVOICE": "Open Invoice",
   "TITLE.DOCUMENT_NAME": "Document Name",
-  "TITLE.REMARKS": "Remarks"
+  "TITLE.REMARKS": "Remarks",
+  "TITLE.SEND": "Send",
+  "TITLE.FOUND_SOMETHING": "Find Something?"
 }
