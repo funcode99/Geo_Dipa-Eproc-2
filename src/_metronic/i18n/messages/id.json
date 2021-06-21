@@ -376,5 +376,7 @@
   "TITLE.OPEN_SPT": "Lihat SPT",
   "TITLE.OPEN_INVOICE": "Lihat Invoice",
   "TITLE.DOCUMENT_NAME": "Nama Dokumen",
-  "TITLE.REMARKS": "Catatan"
+  "TITLE.REMARKS": "Catatan",
+  "TITLE.SEND": "Kirim",
+  "TITLE.FOUND_SOMETHING": "Menemukan Sesuatu?"
 }
