@@ -51,6 +51,13 @@ function DashboardListContract(props) {
       name: "po_no",
       type: "text",
     },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.LABEL.VENDOR",
+      }),
+      name: "vendor_name",
+      type: "text",
+    },
   ]);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -396,7 +403,37 @@ function DashboardListContract(props) {
                       <th className="bg-primary text-white text-center align-middle td-12">
                         <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />
                       </th>
-                      <th className="bg-primary text-white text-center align-middle td-12">
+                      <th
+                        className="bg-primary text-white text-center align-middle pointer td-12"
+                        id="vendor_name"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          requestFilterSort();
+                        }}
+                      >
+                        {sortData.name === "vendor_name" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
                         <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />
                       </th>
                       <th className="bg-primary text-white text-center align-middle td-8">
