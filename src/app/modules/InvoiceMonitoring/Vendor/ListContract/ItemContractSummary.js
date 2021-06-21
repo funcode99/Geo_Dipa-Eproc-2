@@ -17,7 +17,6 @@ import {
   DialogTitle,
   Slide,
 } from "@material-ui/core";
-// import "react-select2-wrapper/css/select2.css";
 import {
   getPicContract,
   getPicVendor,

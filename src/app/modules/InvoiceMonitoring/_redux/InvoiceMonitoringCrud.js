@@ -103,3 +103,6 @@ export async function getItemSpt(id) {
 export async function getTermContract(id) {
   return axios.get(`/invoice/contract_all_term/${id}`);
 }
+export async function getDeliverableInInvoive(id) {
+  return axios.get(`/delivery/task/${id}`);
+}

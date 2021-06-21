@@ -345,5 +345,7 @@
   "TITLE.CEK_NO": "No CEK",
   "TITLE.TOTAL_PAYMENT": "Total Payment",
   "TITLE.OPEN_SPT": "Open SPT",
-  "TITLE.OPEN_INVOICE": "Open Invoice"
+  "TITLE.OPEN_INVOICE": "Open Invoice",
+  "TITLE.DOCUMENT_NAME": "Document Name",
+  "TITLE.REMARKS": "Remarks"
 }

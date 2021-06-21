@@ -47,7 +47,9 @@ const ListTermContract = (props) => {
   const [Toast, setToast] = useToast();
 
   const handleAction = (type, data) => {
-    history.push(`/client/invoice_monitoring/contract/${contract}/1`);
+    history.push(
+      `/client/invoice_monitoring/contract/${contract}/${data.task_id}`
+    );
   };
 
   const getData = () => {

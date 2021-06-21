@@ -345,5 +345,7 @@
   "TITLE.CEK_NO": "No CEK",
   "TITLE.TOTAL_PAYMENT": "Total Payment",
   "TITLE.OPEN_SPT": "Lihat SPT",
-  "TITLE.OPEN_INVOICE": "Lihat Invoice"
+  "TITLE.OPEN_INVOICE": "Lihat Invoice",
+  "TITLE.DOCUMENT_NAME": "Nama Dokumen",
+  "TITLE.REMARKS": "Catatan"
 }
