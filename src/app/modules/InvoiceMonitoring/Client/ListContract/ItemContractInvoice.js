@@ -77,9 +77,14 @@ const useStyles = makeStyles((theme) => ({
 
 const data_ops = [
   {
-    label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
-    icon: "fas fa-search text-primary",
-    type: "open",
+    label: "TITLE.ACCEPT_DOCUMENT",
+    icon: "fas fa-check text-primary",
+    type: "approved",
+  },
+  {
+    label: "TITLE.REJECT_DOCUMENT",
+    icon: "fas fa-times-circle text-danger",
+    type: "rejected",
   },
 ];
 
@@ -188,6 +193,10 @@ function ItemContractInvoice(props) {
   const [dataReject, setDataReject] = useState({});
 
   const handleAction = (type, data) => {
+    if (type == "rejected") {
+      setDataReject(data);
+      setModalReject(true);
+    }
     console.log("type: ", type, " - ", "data: ", data);
     // history.push(`/client/invoice_monitoring/contract/${contract}/1`);
   };
@@ -251,10 +260,12 @@ function ItemContractInvoice(props) {
             <span className="text-danger">
               {" " +
                 (dataReject.document?.name || "") +
-                " - " +
-                (window
+                (dataReject?.due_date
+                  ? " - " +
+                    window
                   .moment(new Date(dataReject?.due_date))
-                  .format("DD MMM YYYY") || "")}
+                      .format("DD MMM YYYY")
+                  : "")}
             </span>
           </DialogTitle>
           <DialogContent>
@@ -353,13 +364,73 @@ function ItemContractInvoice(props) {
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="align-middle text-center">1</td>
-                      <td>----</td>
-                      <td>----</td>
-                      <td className="align-middle text-center">----</td>
+                      <td className="align-middle">1</td>
+                      <td>
+                        <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT" />
+                      </td>
+                      <td></td>
+                      <td className="align-middle"></td>
                       <td className="align-middle">
                         <ButtonAction
-                          data={[]}
+                          data={{ document: { name: "Contract" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="align-middle">2</td>
+                      <td>Purch Order</td>
+                      <td></td>
+                      <td className="align-middle"></td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "Purch Order" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="align-middle">3</td>
+                      <td>
+                        <FormattedMessage id="CONTRACT_DETAIL.TAB.OFFICIAL_REPORT" />
+                      </td>
+                      <td></td>
+                      <td className="align-middle"></td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "BAPP" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="align-middle">4</td>
+                      <td>
+                        <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />
+                      </td>
+                      <td></td>
+                      <td className="align-middle"></td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "BAST" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="align-middle">5</td>
+                      <td>
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
+                      </td>
+                      <td></td>
+                      <td className="align-middle"></td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "NPWP" } }}
                           handleAction={handleAction}
                           ops={data_ops}
                         />
