@@ -50,7 +50,7 @@ function searchFind(rows, query) {
           row[column]
             .toString()
             .toLowerCase()
-            .indexOf(query) > -1
+            .indexOf(query.toLowerCase()) > -1
         );
     })
   );
@@ -58,16 +58,19 @@ function searchFind(rows, query) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // width: "100%",
-    // marginTop: theme.spacing(3),
+    width: "100%",
+    marginTop: theme.spacing(1),
+    overflowX: "auto",
+    // padding: theme.spacing(2),
   },
   paper: {
     // width: "100%",
-    marginBottom: theme.spacing(2),
+    // marginBottom: theme.spacing(2),
     overflowX: "auto",
   },
   table: {
     minWidth: 750,
+    border: 1,
   },
   tableBox: {
     // width: "100%",
@@ -86,6 +89,7 @@ export default function TablePaginationCustom({
   rows,
   loading,
   width,
+  withSearch = true,
 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -144,15 +148,15 @@ export default function TablePaginationCustom({
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  console.log(
-    `rows`,
-    searchFind(stableSort(rows, getSorting(order, orderBy)), query)
-  );
+  // console.log(
+  //   `rows`,
+  //   searchFind(stableSort(rows, getSorting(order, orderBy)), query)
+  // );
 
   const emptyRows = 0;
   return (
     <div className={classes.root}>
-      <SearchBox onChange={handleChangeQuery} />
+      {withSearch && <SearchBox onChange={handleChangeQuery} />}
       <Paper className={classes.paper}>
         <div className={classes.tableBox}>
           <TableContainer className={classes.table}>
@@ -222,7 +226,10 @@ export default function TablePaginationCustom({
                         </TableCell>
                       </TableRow>
                     ))
-                  : rows.length === 0 && (
+                  : searchFind(
+                      stableSort(rows, getSorting(order, orderBy)),
+                      query
+                    ).length === 0 && (
                       <TableRow style={{ height: 49 }}>
                         <TableCell colSpan={headerRows.length} align={"center"}>
                           No Data ...

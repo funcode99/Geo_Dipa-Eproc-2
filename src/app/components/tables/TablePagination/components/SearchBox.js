@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import DirectionsIcon from "@material-ui/icons/Directions";
+import { Card } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -36,7 +37,7 @@ export default function SearchBox({ onChange }) {
   const classes = useStyles();
 
   return (
-    <Paper className={classes.root}>
+    <Card className={classes.root}>
       <InputBase
         className={classes.input}
         placeholder="Search ..."
@@ -46,6 +47,6 @@ export default function SearchBox({ onChange }) {
       <IconButton className={classes.iconButton} aria-label="Search">
         <SearchIcon />
       </IconButton>
-    </Paper>
+    </Card>
   );
 }

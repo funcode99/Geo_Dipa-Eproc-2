@@ -5,6 +5,7 @@ import {
   Collapse,
   Container,
   FormControlLabel,
+  Paper,
   Switch,
 } from "@material-ui/core";
 import { Card } from "@material-ui/core";
@@ -23,6 +24,8 @@ import { FormattedMessage } from "react-intl";
 import ModalConfirmation from "../../../../../../components/modals/ModalConfirmation";
 import * as Option from "../../../../../../service/Option";
 import { rupiah } from "../../../../../../libs/currency";
+import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
+import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
 
 const tableHeaderTermin = [
   { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.NO" /> },
@@ -47,6 +50,47 @@ const tableHeaderTermin = [
   { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" /> },
 ];
 
+const tableHeaderTerminNew = [
+  {
+    id: "number",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.NO" />,
+  },
+  {
+    id: "scope_of_work",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK" />,
+  },
+  {
+    id: "due_date",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />,
+  },
+  { id: "bobot", label: "Bobot" },
+  {
+    id: "price",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
+  },
+  {
+    id: "project_progress",
+    label: (
+      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS" />
+    ),
+  },
+  {
+    id: "document_progress",
+    label: (
+      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS" />
+    ),
+  },
+  {
+    id: "status",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
+  },
+  {
+    id: "action",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
+    sortable: false,
+  },
+];
+
 const DetailPage = ({
   contractId,
   contract,
@@ -55,6 +99,7 @@ const DetailPage = ({
   saveContractById,
 }) => {
   const [tableContent, setTableContent] = React.useState([]);
+  const [newContent, setNewContent] = React.useState([]);
   const [confirm, setConfirm] = React.useState({ show: false, id: "" });
   const [modals, setModals] = React.useState(false);
   const [update, setUpdate] = React.useState({ id: "", update: false });
@@ -369,11 +414,55 @@ const DetailPage = ({
 
   React.useEffect(() => {
     getContractById(contractId);
-
+    let arrData = [];
     if (tasks && tasks.length > 0) {
       generateTableContent(tasks);
+      arrData = tasks.map((item, index) => ({
+        number: (index += 1),
+        scope_of_work: item.name,
+        due_date:
+          item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
+        bobot: `${item.weight}%`,
+        price: rupiah(item.nett_amount),
+        project_progress: item.progress,
+        document_progress: "",
+        status: item?.task_status?.name,
+        action: (
+          <ButtonAction
+            data={item}
+            handleAction={handleAction}
+            ops={[
+              {
+                label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
+                icon: "fas fa-search",
+                to: {
+                  url: `/client/delivery-monitoring/contract/task/${item.id}`,
+                  style: {
+                    color: "black",
+                  },
+                },
+              },
+              {
+                label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
+                icon: "fas fa-edit text-primary",
+                disabled:
+                  item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+                    ? true
+                    : false,
+                type: "update",
+              },
+              {
+                label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
+                icon: "fas fa-trash text-danger",
+                type: "delete",
+              },
+            ]}
+          />
+        ),
+      }));
     }
 
+    setNewContent(arrData);
     getOptions();
     // eslint-disable-next-line
   }, [contractId]);
@@ -403,12 +492,19 @@ const DetailPage = ({
         onSubmit={() => handleDelete()}
         submitColor="danger"
       />
-
       <FormDetail contractId={contractId} />
       <Item handleClick={() => handleModal("create")} />
-
       <Container>
-        <FormControlLabel
+        <ExpansionBox title={"Tabel Termin"}>
+          <TablePaginationCustom
+            headerRows={tableHeaderTerminNew}
+            rows={newContent}
+            width={1500}
+            loading={false}
+            withSearch={false}
+          />
+        </ExpansionBox>
+        {/* <FormControlLabel
           control={<Switch checked={show} onChange={handleShow} />}
           label="Show"
         />
@@ -424,7 +520,7 @@ const DetailPage = ({
               />
             </CardContent>
           </Card>
-        </Collapse>
+        </Collapse> */}
       </Container>
     </React.Fragment>
   );
