@@ -452,7 +452,7 @@ function DashboardListSpt(props) {
                           <td>{item.account_number}</td>
                           <td>
                             {window
-                              .moment(new Date(item.created_at))
+                              .moment(new Date(item.date))
                               .format("DD MMM YYYY")}
                           </td>
                           <td>

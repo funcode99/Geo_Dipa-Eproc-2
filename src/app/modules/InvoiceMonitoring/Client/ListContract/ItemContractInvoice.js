@@ -60,6 +60,10 @@ const useStyles = makeStyles((theme) => ({
   ExpansionPanelHeader: {
     "border-bottom": "1px solid #ebedf3",
   },
+  ExpansionPanelHeaderSpan: {
+    color: "rgba(0, 0, 0, 0.54)",
+    fontWeight: 500,
+  },
 }));
 
 const data_ops = [
@@ -310,7 +314,9 @@ function ItemContractInvoice(props) {
           className={classes.ExpansionPanelHeader}
         >
           <div className={classes.column}>
-            <h6>Dokumen Pendukung</h6>
+            <span className={classes.ExpansionPanelHeaderSpan}>
+              Dokumen Pendukung
+            </span>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
@@ -370,7 +376,9 @@ function ItemContractInvoice(props) {
           className={classes.ExpansionPanelHeader}
         >
           <div className={classes.column}>
-            <h6>Deliverables Document</h6>
+            <span className={classes.ExpansionPanelHeaderSpan}>
+              Deliverables Document
+            </span>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
