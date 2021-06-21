@@ -148,8 +148,6 @@ export async function getFile() {
   return axios.get(`/invoice/get_file`);
 }
 
-
-
 export async function getListSpt(params) {
   return axios.get(`/invoice/list_spt${params ? "?" + params : ""}`);
 }

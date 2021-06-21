@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Slide, IconButton } from "@material-ui/core";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
@@ -17,6 +16,12 @@ import {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   LinearProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slide,
+  IconButton,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
@@ -78,6 +83,19 @@ const data_ops = [
   },
 ];
 
+const data_opsDeliverable = [
+  {
+    label: "TITLE.ACCEPT_DOCUMENT",
+    icon: "fas fa-check text-primary",
+    type: "approved",
+  },
+  {
+    label: "TITLE.REJECT_DOCUMENT",
+    icon: "fas fa-times-circle text-danger",
+    type: "rejected",
+  },
+];
+
 export const DialogTitleFile = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
@@ -126,6 +144,7 @@ function ItemContractInvoice(props) {
   const { termin } = useParams();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const [theadDocuments] = useState([
     { id: "action", label: "" },
     {
@@ -165,10 +184,20 @@ function ItemContractInvoice(props) {
       }),
     },
   ]);
+  const [modalReject, setModalReject] = useState(false);
+  const [dataReject, setDataReject] = useState({});
 
   const handleAction = (type, data) => {
     console.log("type: ", type, " - ", "data: ", data);
     // history.push(`/client/invoice_monitoring/contract/${contract}/1`);
+  };
+
+  const handleActionDeliverable = (type, data) => {
+    if (type == "rejected") {
+      setDataReject(data);
+      setModalReject(true);
+    }
+    console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
 
   const callApi = () => {
@@ -206,6 +235,82 @@ function ItemContractInvoice(props) {
     <React.Fragment>
       <Toast />
       {loading && <LinearProgress color="secondary" className="rounded" />}
+
+      <Dialog
+        open={modalReject}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <form noValidate autoComplete="off">
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
+            <span className="text-danger">
+              {" " +
+                (dataReject.document?.name || "") +
+                " - " +
+                (window
+                  .moment(new Date(dataReject?.due_date))
+                  .format("DD MMM YYYY") || "")}
+            </span>
+          </DialogTitle>
+          <DialogContent>
+            <p>
+              <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY" />
+            </p>
+            <textarea
+              rows="2"
+              cols=""
+              className="form-control"
+              placeholder={intl.formatMessage({
+                id:
+                  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY",
+              })}
+              disabled={loadingRequest}
+              // {...formik.getFieldProps("rejected_remark")}
+            ></textarea>
+            {/* {formik.touched.rejected_remark && formik.errors.rejected_remark ? (
+              <span className="text-center text-danger">
+                {formik.errors.rejected_remark}
+              </span>
+            ) : null} */}
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => setModalReject(false)}
+              disabled={loadingRequest}
+            >
+              <span>
+                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+              </span>
+            </button>
+            <button
+              className="btn btn-danger"
+              type="submit"
+              // disabled={
+              //   loadingRequest ||
+              //   (formik.touched && !formik.isValid) ||
+              //   !formik.dirty
+              // }
+            >
+              <span>
+                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" />
+              </span>
+              {loadingRequest && (
+                <span
+                  className="spinner-border spinner-border-sm ml-1"
+                  aria-hidden="true"
+                ></span>
+              )}
+            </button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <ExpansionPanel
         defaultExpanded={false}
         className={classes.ExpansionPanelCard}
@@ -347,10 +452,12 @@ function ItemContractInvoice(props) {
                                               : "AVAILABLE",
                                             <BtnLihat url={els?.url} />,
                                             els?.remarks,
-                                            <BtnAksi
-                                              item={els}
-                                              handleAction={handleAction}
-                                              isPeriodic={isPeriodic}
+                                            <ButtonAction
+                                              data={els}
+                                              handleAction={
+                                                handleActionDeliverable
+                                              }
+                                              ops={data_opsDeliverable}
                                             />,
                                           ]}
                                         />
@@ -373,11 +480,11 @@ function ItemContractInvoice(props) {
                                         : "AVAILABLE",
                                       <BtnLihat url={el?.url} />,
                                       el?.remarks,
-                                      <BtnAksi
-                                        item={el}
-                                        handleAction={handleAction}
+                                      <ButtonAction
+                                        data={el}
+                                        handleAction={handleActionDeliverable}
+                                        ops={data_opsDeliverable}
                                       />,
-                                      //   "aksi",
                                     ]}
                                   />
                                 ));
@@ -385,19 +492,6 @@ function ItemContractInvoice(props) {
                         </RowAccordion>
                       );
                     })}
-                    {/* <tr>
-                      <td className="align-middle text-center">1</td>
-                      <td>----</td>
-                      <td>----</td>
-                      <td className="align-middle text-center">----</td>
-                      <td className="align-middle">
-                        <ButtonAction
-                          data={[]}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr> */}
                   </tbody>
                 </table>
               </div>
@@ -438,7 +532,6 @@ function ItemContractInvoice(props) {
           {navActive === "Kwitansi" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
               <ContractReceiptPage {...props}
-                {...props}
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
