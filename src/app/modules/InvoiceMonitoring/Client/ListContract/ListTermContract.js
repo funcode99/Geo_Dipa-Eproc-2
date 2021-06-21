@@ -67,7 +67,7 @@ const ListTermContract = (props) => {
     <Container className="px-0">
       <Toast />
       <Subheader
-        text={(data?.contract_no || "") + " - " + (data.purch_order_no || "")}
+        text={(data?.contract_no || "") + " - " + (data.contract_name || "")}
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
