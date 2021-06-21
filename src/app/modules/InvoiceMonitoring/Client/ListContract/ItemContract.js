@@ -16,13 +16,30 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Slide,
   Container,
   makeStyles,
   Paper,
 } from "@material-ui/core";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import StyledSelect from "../../../../components/select-multiple";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
@@ -87,6 +104,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root}>
+      <h6>{children}</h6>
+      {onClose ? (
+        <IconButton
+          aria-label="Close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
 const ItemContract = (props) => {
   const suhbeader = useSubheader();
   const { intl } = props;
@@ -123,7 +158,12 @@ const ItemContract = (props) => {
         fullWidth={true}
       >
         <form noValidate autoComplete="off">
-          <DialogTitle id="alert-dialog-slide-title">
+          <DialogTitle
+            id="alert-dialog-slide-title"
+            onClose={() => {
+              setDialogLeader(false);
+            }}
+          >
             <FormattedMessage id="TITLE.FOUND_SOMETHING" />
           </DialogTitle>
           <DialogContent>
