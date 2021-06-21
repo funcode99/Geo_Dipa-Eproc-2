@@ -26,7 +26,7 @@ export default function setupAxios(axios, store) {
     },
     function(error) {
       if (
-        error.response?.status === 401 &&
+        error.response?.status === 400 &&
         (error.response?.data.message === "TokenExpiredError" ||
           error.response?.data.message === "UNAUTORIZED")
       ) {
