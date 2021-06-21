@@ -1,15 +1,28 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardHeaderToolbar,
+} from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import { getListSpt } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
-import { TablePagination } from "@material-ui/core";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { rupiah } from "../../../../libs/currency";
 import { useHistory } from "react-router-dom";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slide,
+  makeStyles,
+  TablePagination,
+} from "@material-ui/core";
 
 const data_ops = [
   {
@@ -18,6 +31,10 @@ const data_ops = [
     type: "open",
   },
 ];
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function DashboardListSpt(props) {
   const { intl } = props;
@@ -70,6 +87,7 @@ function DashboardListSpt(props) {
   const [err, setErr] = useState(false);
   const [dialogState, setDialogState] = useState(false);
   const history = useHistory();
+  const [dialogSync, setDialogSync] = useState(false);
 
   const requestFilterSort = useCallback(
     (updateFilterTable, updateSortTable) => {
@@ -188,7 +206,34 @@ function DashboardListSpt(props) {
   return (
     <React.Fragment>
       <Toast />
+      <Dialog
+        open={dialogSync}
+        keepMounted
+        maxWidth={"sm"}
+        fullWidth={true}
+        TransitionComponent={Transition}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Edit <FormattedMessage id="TITLE.SERVICE_LEVEL_AGREEMENT" />
+        </DialogTitle>
+        <DialogContent>asdd</DialogContent>
+        <DialogActions>
+          <button className="btn btn-sm btn-danger">
+            <FormattedMessage id="TITLE.CANCEL" />
+          </button>
+        </DialogActions>
+      </Dialog>
       <Card>
+        <CardHeader title="">
+          <CardHeaderToolbar>
+            <button type="button" className="btn btn-sm btn-primary">
+              <i className="fas fa-sync-alt fa-spin p-0"></i>
+              <span className="ml-2">Syncronice</span>
+            </button>
+          </CardHeaderToolbar>
+        </CardHeader>
         <CardBody>
           {/* begin: Filter Table */}
           <form id="filter-form-all" className="panel-filter-table mb-1">
@@ -452,7 +497,7 @@ function DashboardListSpt(props) {
                           <td>{item.account_number}</td>
                           <td>
                             {window
-                              .moment(new Date(item.created_at))
+                              .moment(new Date(item.date))
                               .format("DD MMM YYYY")}
                           </td>
                           <td>

@@ -45,6 +45,8 @@ export default function ButtonAction({
 
   const listUsed = ops;
 
+  console.log(`exclude`, exclude);
+
   return (
     <div>
       {label ? (

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Slide, IconButton } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { injectIntl } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import Navs from "../../../../components/navs";
 import ContractInvoicePage from "./ContractBillingDocument/ContractInvoicePage";
@@ -16,12 +15,23 @@ import {
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
+  LinearProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slide,
+  IconButton,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/components/RowAccordion";
 import { formatDate } from "../../../../libs/date";
 import BtnAksi from "../../../DeliveryMonitoring/pages/Termin/Documents/components/BtnAksi";
+import { getDeliverableInInvoive } from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
+import { useHistory, useParams } from "react-router-dom";
+import { getContractSoftCopy } from "../../_redux/InvoiceMonitoringCrud";
 
 const styles = (theme) => ({
   root: {
@@ -60,24 +70,36 @@ const useStyles = makeStyles((theme) => ({
   ExpansionPanelHeader: {
     "border-bottom": "1px solid #ebedf3",
   },
+  ExpansionPanelHeaderSpan: {
+    color: "rgba(0, 0, 0, 0.54)",
+    fontWeight: 500,
+  },
 }));
 
 const data_ops = [
   {
-    label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
-    icon: "fas fa-search text-primary",
-    type: "open",
+    label: "TITLE.ACCEPT_DOCUMENT",
+    icon: "fas fa-check text-primary",
+    type: "approved",
+  },
+  {
+    label: "TITLE.REJECT_DOCUMENT",
+    icon: "fas fa-times-circle text-danger",
+    type: "rejected",
   },
 ];
 
-const theadDocuments = [
-  { id: "action", label: "" },
-  { id: "doc-name", label: "Document Name" },
-  { id: "due-date", label: "Due Date" },
-  { id: "dokumen-progress", label: "Document Progress" },
-  { id: "deliv-dokumen", label: "Deliverable Document" },
-  { id: "remarks", label: "Remarks" },
-  { id: "aksi", label: "Action" },
+const data_opsDeliverable = [
+  {
+    label: "TITLE.ACCEPT_DOCUMENT",
+    icon: "fas fa-check text-primary",
+    type: "approved",
+  },
+  {
+    label: "TITLE.REJECT_DOCUMENT",
+    icon: "fas fa-times-circle text-danger",
+    type: "rejected",
+  },
 ];
 
 export const DialogTitleFile = withStyles(styles)((props) => {
@@ -120,168 +142,103 @@ const navLists = [
   },
 ];
 
-const dataTemp = [
-  {
-    id: "8733b2b0-de33-4a83-a907-ebeb0e701c31",
-    name: "Dokumen Sertifikat Pelaksana Pekerjaan",
-    is_periodic: false,
-    createdAt: "2021-06-17T16:05:13.292Z",
-    updatedAt: "2021-06-17T16:05:13.292Z",
-    documents: [
-      {
-        url: null,
-        id: "e5df93f0-fff2-4b48-ab63-587807c5dfc8",
-        task_id: "2c192520-10a3-4bb5-956f-fa56cac0690d",
-        document_id: "30053134-361b-4316-a655-1088a2deb957",
-        due_date: "2021-06-17",
-        document_custom_name: null,
-        is_submited: null,
-        document_status_id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-        invoice_document_status_id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-        progress: null,
-        remarks: null,
-        createdAt: "2021-06-17T18:15:56.920Z",
-        updatedAt: "2021-06-17T18:15:56.920Z",
-        document: {
-          id: "30053134-361b-4316-a655-1088a2deb957",
-          name: "Sertifikat Kepersertaan BPJS",
-          document_type_id: "8733b2b0-de33-4a83-a907-ebeb0e701c31",
-          periode_id: null,
-          is_custom: null,
-          createdAt: "2021-06-17T16:05:13.429Z",
-          updatedAt: "2021-06-17T16:05:13.429Z",
-        },
-        document_status: {
-          id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-          name: "WAITING",
-          code: "waiting",
-          createdAt: "2021-06-17T16:05:13.295Z",
-          updatedAt: "2021-06-17T16:05:13.295Z",
-        },
-      },
-    ],
-  },
-  {
-    id: "90627407-6aee-461f-b084-b0b97d44ad56",
-    name: "Laporan Pekerjaan",
-    is_periodic: true,
-    createdAt: "2021-06-17T16:05:13.292Z",
-    updatedAt: "2021-06-17T16:05:13.292Z",
-    periodes: [
-      {
-        id: "f204baea-5e14-4ae8-abe7-b482b8a08da2",
-        name: "MINGGUAN",
-        value: 7,
-        createdAt: "2021-06-17T16:05:13.280Z",
-        updatedAt: "2021-06-17T16:05:13.280Z",
-        documents: [
-          {
-            url: null,
-            id: "1ddfd5f2-0982-4878-b683-6ca9ddb5fd69",
-            task_id: "2c192520-10a3-4bb5-956f-fa56cac0690d",
-            document_id: "eb6eab4b-7baa-4bb8-a2b1-2059e594ed33",
-            due_date: "2021-05-24",
-            document_custom_name: null,
-            is_submited: null,
-            document_status_id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-            invoice_document_status_id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-            progress: null,
-            remarks: null,
-            createdAt: "2021-06-17T16:10:39.385Z",
-            updatedAt: "2021-06-17T16:10:39.385Z",
-            document: {
-              id: "eb6eab4b-7baa-4bb8-a2b1-2059e594ed33",
-              name: "Weekly Report",
-              document_type_id: "90627407-6aee-461f-b084-b0b97d44ad56",
-              periode_id: "f204baea-5e14-4ae8-abe7-b482b8a08da2",
-              is_custom: null,
-              createdAt: "2021-06-17T16:05:13.429Z",
-              updatedAt: "2021-06-17T16:05:13.429Z",
-            },
-            document_status: {
-              id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-              name: "WAITING",
-              code: "waiting",
-              createdAt: "2021-06-17T16:05:13.295Z",
-              updatedAt: "2021-06-17T16:05:13.295Z",
-            },
-          },
-          {
-            url: null,
-            id: "7672211a-bf42-4383-89db-fa0df4d2a875",
-            task_id: "2c192520-10a3-4bb5-956f-fa56cac0690d",
-            document_id: "eb6eab4b-7baa-4bb8-a2b1-2059e594ed33",
-            due_date: "2021-05-31",
-            document_custom_name: null,
-            is_submited: null,
-            document_status_id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-            invoice_document_status_id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-            progress: null,
-            remarks: null,
-            createdAt: "2021-06-17T16:10:39.389Z",
-            updatedAt: "2021-06-17T16:10:39.389Z",
-            document: {
-              id: "eb6eab4b-7baa-4bb8-a2b1-2059e594ed33",
-              name: "Weekly Report",
-              document_type_id: "90627407-6aee-461f-b084-b0b97d44ad56",
-              periode_id: "f204baea-5e14-4ae8-abe7-b482b8a08da2",
-              is_custom: null,
-              createdAt: "2021-06-17T16:05:13.429Z",
-              updatedAt: "2021-06-17T16:05:13.429Z",
-            },
-            document_status: {
-              id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-              name: "WAITING",
-              code: "waiting",
-              createdAt: "2021-06-17T16:05:13.295Z",
-              updatedAt: "2021-06-17T16:05:13.295Z",
-            },
-          },
-          {
-            url: null,
-            id: "fcbfdb86-7644-45b6-b29a-020c9f424ad7",
-            task_id: "2c192520-10a3-4bb5-956f-fa56cac0690d",
-            document_id: "eb6eab4b-7baa-4bb8-a2b1-2059e594ed33",
-            due_date: "2021-06-07",
-            document_custom_name: null,
-            is_submited: null,
-            document_status_id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-            invoice_document_status_id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-            progress: null,
-            remarks: null,
-            createdAt: "2021-06-17T16:10:39.392Z",
-            updatedAt: "2021-06-17T16:10:39.392Z",
-            document: {
-              id: "eb6eab4b-7baa-4bb8-a2b1-2059e594ed33",
-              name: "Weekly Report",
-              document_type_id: "90627407-6aee-461f-b084-b0b97d44ad56",
-              periode_id: "f204baea-5e14-4ae8-abe7-b482b8a08da2",
-              is_custom: null,
-              createdAt: "2021-06-17T16:05:13.429Z",
-              updatedAt: "2021-06-17T16:05:13.429Z",
-            },
-            document_status: {
-              id: "fab6cae1-dfb5-4e56-a849-1443b9fb405a",
-              name: "WAITING",
-              code: "waiting",
-              createdAt: "2021-06-17T16:05:13.295Z",
-              updatedAt: "2021-06-17T16:05:13.295Z",
-            },
-          },
-        ],
-      },
-    ],
-  },
-];
-
 function ItemContractInvoice(props) {
+  const { intl } = props;
   const [navActive, setNavActive] = useState(navLists[0].id);
+  const [dataDeliverables, setDataDeliverables] = useState([]);
+  const [dataSoftCopy, setDataSoftCopy] = useState({});
   const classes = useStyles();
+  const { contract, termin } = useParams();
+  const [Toast, setToast] = useToast();
+  const [loading, setLoading] = useState(false);
+  const [loadingRequest, setLoadingRequest] = useState(false);
+  const [theadDocuments] = useState([
+    { id: "action", label: "" },
+    {
+      id: "doc-name",
+      label: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+    },
+    {
+      id: "due-date",
+      label: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE",
+      }),
+    },
+    {
+      id: "dokumen-progress",
+      label: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS",
+      }),
+    },
+    {
+      id: "deliv-dokumen",
+      label: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.DELIVERABLES_DOCUMENT",
+      }),
+    },
+    {
+      id: "remarks",
+      label: intl.formatMessage({
+        id: "TITLE.REMARKS",
+      }),
+    },
+    {
+      id: "aksi",
+      label: intl.formatMessage({
+        id: "MENU.ACTIONS",
+      }),
+    },
+  ]);
+  const [modalReject, setModalReject] = useState(false);
+  const [dataReject, setDataReject] = useState({});
 
   const handleAction = (type, data) => {
+    if (type == "rejected") {
+      setDataReject(data);
+      setModalReject(true);
+    }
     console.log("type: ", type, " - ", "data: ", data);
     // history.push(`/client/invoice_monitoring/contract/${contract}/1`);
   };
+
+  const handleActionDeliverable = (type, data) => {
+    if (type == "rejected") {
+      setDataReject(data);
+      setModalReject(true);
+    }
+    console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
+  };
+
+  const callApi = () => {
+    setLoading(true);
+    getDeliverableInInvoive(termin)
+      .then((result) => {
+        setLoading(false);
+        setDataDeliverables(result.data.data.task_documents);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  const callApiContractSoftCopy = () => {
+    setLoading(true);
+    getContractSoftCopy(contract)
+      .then((result) => {
+        setLoading(false);
+        setDataSoftCopy(result.data.data);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  useEffect(callApi, []);
+  useEffect(callApiContractSoftCopy, []);
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
@@ -301,6 +258,85 @@ function ItemContractInvoice(props) {
 
   return (
     <React.Fragment>
+      <Toast />
+      {loading && <LinearProgress color="secondary" className="rounded" />}
+      <Dialog
+        open={modalReject}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <form noValidate autoComplete="off">
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
+            <span className="text-danger">
+              {" " +
+                (dataReject.document?.name || "") +
+                (dataReject?.due_date
+                  ? " - " +
+                    window
+                  .moment(new Date(dataReject?.due_date))
+                      .format("DD MMM YYYY")
+                  : "")}
+            </span>
+          </DialogTitle>
+          <DialogContent>
+            <p>
+              <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY" />
+            </p>
+            <textarea
+              rows="2"
+              cols=""
+              className="form-control"
+              placeholder={intl.formatMessage({
+                id:
+                  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY",
+              })}
+              disabled={loadingRequest}
+              // {...formik.getFieldProps("rejected_remark")}
+            ></textarea>
+            {/* {formik.touched.rejected_remark && formik.errors.rejected_remark ? (
+              <span className="text-center text-danger">
+                {formik.errors.rejected_remark}
+              </span>
+            ) : null} */}
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => setModalReject(false)}
+              disabled={loadingRequest}
+            >
+              <span>
+                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+              </span>
+            </button>
+            <button
+              className="btn btn-danger"
+              type="submit"
+              // disabled={
+              //   loadingRequest ||
+              //   (formik.touched && !formik.isValid) ||
+              //   !formik.dirty
+              // }
+            >
+              <span>
+                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" />
+              </span>
+              {loadingRequest && (
+                <span
+                  className="spinner-border spinner-border-sm ml-1"
+                  aria-hidden="true"
+                ></span>
+              )}
+            </button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <ExpansionPanel
         defaultExpanded={false}
         className={classes.ExpansionPanelCard}
@@ -310,7 +346,9 @@ function ItemContractInvoice(props) {
           className={classes.ExpansionPanelHeader}
         >
           <div className={classes.column}>
-            <h6>Dokumen Pendukung</h6>
+            <span className={classes.ExpansionPanelHeaderSpan}>
+              Dokumen Pendukung
+            </span>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
@@ -341,13 +379,73 @@ function ItemContractInvoice(props) {
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="align-middle text-center">1</td>
-                      <td>----</td>
-                      <td>----</td>
-                      <td className="align-middle text-center">----</td>
+                      <td className="align-middle">1</td>
+                      <td>
+                        <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT" />
+                      </td>
+                      <td>{dataSoftCopy?.contract_number}</td>
+                      <td className="align-middle"></td>
                       <td className="align-middle">
                         <ButtonAction
-                          data={[]}
+                          data={{ document: { name: "Contract" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="align-middle">2</td>
+                      <td>Purch Order</td>
+                      <td>{dataSoftCopy?.po_number}</td>
+                      <td className="align-middle"></td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "Purch Order" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="align-middle">3</td>
+                      <td>
+                        <FormattedMessage id="CONTRACT_DETAIL.TAB.OFFICIAL_REPORT" />
+                      </td>
+                      <td></td>
+                      <td className="align-middle"></td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "BAPP" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="align-middle">4</td>
+                      <td>
+                        <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />
+                      </td>
+                      <td></td>
+                      <td className="align-middle"></td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "BAST" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="align-middle">5</td>
+                      <td>
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
+                      </td>
+                      <td>{dataSoftCopy?.npwp_number}</td>
+                      <td className="align-middle"></td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "NPWP" } }}
                           handleAction={handleAction}
                           ops={data_ops}
                         />
@@ -370,7 +468,9 @@ function ItemContractInvoice(props) {
           className={classes.ExpansionPanelHeader}
         >
           <div className={classes.column}>
-            <h6>Deliverables Document</h6>
+            <span className={classes.ExpansionPanelHeaderSpan}>
+              <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DELIVERABLES_DOCUMENT" />
+            </span>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
@@ -395,7 +495,7 @@ function ItemContractInvoice(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {dataTemp?.map((el, id) => {
+                    {dataDeliverables?.map((el, id) => {
                       // Jenis Dokumen
                       return (
                         <RowAccordion
@@ -438,10 +538,12 @@ function ItemContractInvoice(props) {
                                               : "AVAILABLE",
                                             <BtnLihat url={els?.url} />,
                                             els?.remarks,
-                                            <BtnAksi
-                                              item={els}
-                                              handleAction={handleAction}
-                                              isPeriodic={isPeriodic}
+                                            <ButtonAction
+                                              data={els}
+                                              handleAction={
+                                                handleActionDeliverable
+                                              }
+                                              ops={data_opsDeliverable}
                                             />,
                                           ]}
                                         />
@@ -464,11 +566,11 @@ function ItemContractInvoice(props) {
                                         : "AVAILABLE",
                                       <BtnLihat url={el?.url} />,
                                       el?.remarks,
-                                      <BtnAksi
-                                        item={el}
-                                        handleAction={handleAction}
+                                      <ButtonAction
+                                        data={el}
+                                        handleAction={handleActionDeliverable}
+                                        ops={data_opsDeliverable}
                                       />,
-                                      //   "aksi",
                                     ]}
                                   />
                                 ));
@@ -476,19 +578,6 @@ function ItemContractInvoice(props) {
                         </RowAccordion>
                       );
                     })}
-                    {/* <tr>
-                      <td className="align-middle text-center">1</td>
-                      <td>----</td>
-                      <td>----</td>
-                      <td className="align-middle text-center">----</td>
-                      <td className="align-middle">
-                        <ButtonAction
-                          data={[]}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr> */}
                   </tbody>
                 </table>
               </div>
@@ -528,13 +617,22 @@ function ItemContractInvoice(props) {
 
           {navActive === "Kwitansi" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractReceiptPage {...props} />
+              <ContractReceiptPage {...props}
+                classes={classes}
+                dialogTitleFile={DialogTitleFile}
+                transition={Transition}
+              />
             </div>
           )}
 
           {navActive === "Faktur" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractTaxPage {...props} />
+              <ContractTaxPage
+                {...props}
+                classes={classes}
+                dialogTitleFile={DialogTitleFile}
+                transition={Transition}
+              />
             </div>
           )}
         </CardBody>

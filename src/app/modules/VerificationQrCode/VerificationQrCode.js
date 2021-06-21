@@ -171,7 +171,7 @@ function VerificationQrCode(props) {
                     style={{ fontSize: styles.fontSizeItalicHeader }}
                   >
                     If you wish to check the validity of this statement, please
-                    ensure the URL of your browser is https:///geodipa.co.id/
+                    ensure the URL of your browser is https://geodipa.co.id/
                   </span>
                 </div>
               </CardBody>

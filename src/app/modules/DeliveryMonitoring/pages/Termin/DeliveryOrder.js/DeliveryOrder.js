@@ -19,6 +19,7 @@ import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 import { Send } from "@material-ui/icons";
+import ModalCreate from "./components/ModalCreate";
 
 const DeliveryOrder = ({ items, orderItems, setOrderItems }) => {
   const [open, setOpen] = React.useState({
@@ -34,11 +35,12 @@ const DeliveryOrder = ({ items, orderItems, setOrderItems }) => {
     }));
   };
 
-  console.log(orderItems);
-
   const setInitialOrderItems = React.useCallback(() => {
-    const tempOrder = items.filter((item) => item.checked === true);
-    setOrderItems(tempOrder);
+    // const tempOrder = items.filter((item) => item.checked === true);
+
+    // console.log(items);
+
+    setOrderItems(items);
   }, [items, setOrderItems]);
 
   React.useEffect(() => {
@@ -82,141 +84,103 @@ const DeliveryOrder = ({ items, orderItems, setOrderItems }) => {
 
   return (
     <React.Fragment>
-      <ModalConfirmation
+      <ModalCreate
         visible={open.submit}
         onClose={() => handleVisible("submit")}
         onSubmit={(params) => handleApi("submit", params)}
         additionalParams={open.tempParams}
-        title="Yakin ingin order barang tersebut?"
-        subTitle="Pastikan barang yang dikirimkan telah sesuai !"
-      >
-        <React.Fragment>
-          <h5 className="mt-5">Barang</h5>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                {["No", "Name", "Quantity", "Unit Price"].map((item, index) => (
-                  <TableCell className="bg-white" key={index}>
-                    {item}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orderItems?.map((item, index) => (
-                <TableRow key={item?.item_id}>
-                  <TableCell>{(index += 1)}</TableCell>
-                  <TableCell>{item?.desc}</TableCell>
-                  <TableCell>{item?.qty}</TableCell>
-                  <TableCell>{rupiah(item?.price)}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-
-          <p className="mt-4 mb-8">
-            Total harga adalah
-            <span className="text-primary"> Rp. 200.000.000,00</span>.
-          </p>
-
-          <TextField
-            label="Tanggal Order"
-            variant="outlined"
-            name="due_date"
-            className="w-100"
-            size="small"
-            type="date"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            // {...formik.getFieldProps("due_date")}
-          />
-          <p style={{ color: "red" }}>
-            {/* {formik.touched.due_date && formik.errors.due_date
-              ? formik.errors.due_date
-              : null} */}
-            Wajib isi tanggal
-          </p>
-        </React.Fragment>
-      </ModalConfirmation>
+        orderItems={items}
+      />
 
       <Card>
         <CardContent>
-          <TableBuilder
-            hecto={5}
-            dataHead={["", "Keterangan", "Due Date", "Qty", "Uom", "Net Value"]}
-            dataBody={items}
-            renderRowBody={({ item, index }) => (
-              <RowNormal
-                key={index}
-                data={
-                  item.item
-                    ? [
-                        <Checkbox
-                          name={`checkbox-${item?.item?.id}`}
-                          color="secondary"
-                          onChange={(e) => handleChecklist(item?.item)}
-                          size="small"
-                          width={50}
-                          variant="body"
-                          checked={item?.checked}
-                          disabled={item.qty_available === 0 ? true : false}
-                        />,
-                        item?.item?.desc,
-                        "",
-                        <Form.Control
-                          type="number"
-                          size="sm"
-                          min={1}
-                          max={item?.item?.qty}
-                          disabled={!item.checked}
-                          defaultValue={item.qty}
-                          onChange={(e) => handleChange(e, item.item)}
-                        />,
-                        "",
-                        rupiah(item?.item?.unit_price),
-                      ]
-                    : [
-                        <Checkbox
-                          name={`checkbox-${item?.id}`}
-                          color="secondary"
-                          onChange={(e) => handleChecklist(item)}
-                          size="small"
-                          width={50}
-                          variant="body"
-                          checked={item?.checked}
-                          disabled={item.qty_available === 0 ? true : false}
-                        />,
-                        item?.desc,
-                        "",
-                        <Form.Control
-                          type="number"
-                          size="sm"
-                          min={1}
-                          max={item?.qty_available}
-                          disabled={!item.checked}
-                          defaultValue={item?.qty_available}
-                          onChange={(e) => handleChange(e, item)}
-                        />,
-                        "",
-                        rupiah(item?.unit_price),
-                      ]
-                }
-              />
-            )}
-          />
-
-          <div className="d-flex justify-content-end w-100 mt-3">
+          {/* <div className="d-flex justify-content-end w-100 mt-3">
             <Button
               variant="contained"
               color="secondary"
               size="medium"
               onClick={() => handleVisible("submit", orderItems)}
             >
-              <span className="mr-1">Submit</span>
+              <span className="mr-1">Create</span>
               <Send />
             </Button>
+          </div> */}
+
+          <div className="d-flex justify-content-end w-100 mb-5">
+            <button
+              className="btn btn-outline-success btn-sm"
+              onClick={() => handleVisible("submit", orderItems)}
+            >
+              <span className="nav-icon">
+                <i className="flaticon2-plus"></i>
+              </span>
+              <span className="nav-text">Create</span>
+            </button>
           </div>
+
+          <TableBuilder
+            hecto={5}
+            dataHead={["", "Keterangan", "Due Date", "Qty", "Uom", "Net Value"]}
+            // dataBody={items}
+            // renderRowBody={({ item, index }) => (
+            //   <RowNormal
+            //     key={index}
+            //     data={
+            //       item.item
+            //         ? [
+            //             <Checkbox
+            //               name={`checkbox-${item?.item?.id}`}
+            //               color="secondary"
+            //               onChange={(e) => handleChecklist(item?.item)}
+            //               size="small"
+            //               width={50}
+            //               variant="body"
+            //               checked={item?.checked}
+            //               disabled={item.qty_available === 0 ? true : false}
+            //             />,
+            //             item?.item?.desc,
+            //             "",
+            //             <Form.Control
+            //               type="number"
+            //               size="sm"
+            //               min={1}
+            //               max={item?.item?.qty}
+            //               disabled={!item.checked}
+            //               defaultValue={item.qty}
+            //               onChange={(e) => handleChange(e, item.item)}
+            //             />,
+            //             "",
+            //             rupiah(item?.item?.unit_price),
+            //           ]
+            //         : [
+            //             <Checkbox
+            //               name={`checkbox-${item?.id}`}
+            //               color="secondary"
+            //               onChange={(e) => handleChecklist(item)}
+            //               size="small"
+            //               width={50}
+            //               variant="body"
+            //               checked={item?.checked}
+            //               disabled={item.qty_available === 0 ? true : false}
+            //             />,
+            //             item?.desc,
+            //             "",
+            //             <Form.Control
+            //               type="number"
+            //               size="sm"
+            //               min={1}
+            //               max={item?.qty_available}
+            //               disabled={!item.checked}
+            //               defaultValue={item?.qty_available}
+            //               onChange={(e) => handleChange(e, item)}
+            //             />,
+            //             "",
+            //             rupiah(item?.unit_price),
+            //           ]
+            //     }
+            //   />
+            // )}
+          />
         </CardContent>
       </Card>
     </React.Fragment>

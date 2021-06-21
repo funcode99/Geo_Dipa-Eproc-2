@@ -404,7 +404,7 @@ export default function Summary({ taskId = "" }) {
   const addSubmitJasa = (qtyValue, qtyAvailable, serviceId, desc) => {
     const isValidQty = parseFloat(qtyValue) ? true : false;
     const floatQtyValue = parseFloat(qtyValue);
-    const floatQtyAvailable = parseFloat(qtyValue);
+    const floatQtyAvailable = parseFloat(qtyAvailable);
 
     //validate quantity number
     if (!isValidQty || floatQtyValue < 0 || floatQtyValue > floatQtyAvailable) {
@@ -743,7 +743,7 @@ export default function Summary({ taskId = "" }) {
                                             color="secondary"
                                             onChange={() =>
                                               handleChecklistJasa(
-                                                service.service.quantity,
+                                                service.qty,
                                                 service.qty,
                                                 item.id,
                                                 service.service.id,
@@ -769,13 +769,22 @@ export default function Summary({ taskId = "" }) {
                                             step="0.1"
                                             // min="1"
                                             // step="1"
-                                            max={service.service.quantity}
+                                            max={(
+                                              parseFloat(
+                                                service.service.qty_available
+                                              ) + parseFloat(service.qty)
+                                            ).toFixed(1)}
                                             disabled={!service.checked}
                                             defaultValue={service.qty}
                                             onChange={(e) =>
                                               addSubmitJasa(
                                                 e.target.value,
-                                                service.service.quantity,
+                                                (
+                                                  parseFloat(
+                                                    service.service
+                                                      .qty_available
+                                                  ) + parseFloat(service.qty)
+                                                ).toFixed(1),
                                                 service.service.id,
                                                 service.service.short_text
                                               )

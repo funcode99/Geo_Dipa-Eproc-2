@@ -17,7 +17,6 @@ import {
   DialogTitle,
   Slide,
 } from "@material-ui/core";
-// import "react-select2-wrapper/css/select2.css";
 import {
   getPicContract,
   getPicVendor,
@@ -115,6 +114,7 @@ function ItemContractSummary(props) {
     shallowEqual
   );
   const contract_id = props.match.params.contract;
+  const monitoring_type = "INVOICE";
 
   const getPicContractData = useCallback(() => {
     getPicContract({
@@ -261,8 +261,6 @@ function ItemContractSummary(props) {
     email: "",
     id: "",
   };
-
-  const monitoring_type = "INVOICE";
 
   const initialValues = {
     email: "",
