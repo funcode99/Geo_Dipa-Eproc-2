@@ -437,13 +437,23 @@ function ItemContractInvoice(props) {
 
           {navActive === "Kwitansi" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractReceiptPage {...props} />
+              <ContractReceiptPage {...props}
+                {...props}
+                classes={classes}
+                dialogTitleFile={DialogTitleFile}
+                transition={Transition}
+              />
             </div>
           )}
 
           {navActive === "Faktur" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractTaxPage {...props} />
+              <ContractTaxPage
+                {...props}
+                classes={classes}
+                dialogTitleFile={DialogTitleFile}
+                transition={Transition}
+              />
             </div>
           )}
         </CardBody>

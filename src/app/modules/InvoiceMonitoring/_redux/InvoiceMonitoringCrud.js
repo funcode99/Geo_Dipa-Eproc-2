@@ -90,9 +90,65 @@ export const getFileInvoice = `${DEV_NODE}/invoice/get_file_invoice/`;
 export async function approveInvoice(id, data) {
   return axios.post(`/invoice/invoice_approved/${id}`, data);
 }
+export async function saveReceipt(data) {
+  return axios.post(`/invoice/invoice_receipt_save/`, data);
+}
+export async function updateReceipt(id, data) {
+  return axios.post(`/invoice/invoice_receipt_update/${id}`, data);
+}
+export async function getReceipt(contract_id, termin) {
+  return axios.get(
+    `/invoice/get_invoice_receipt?contract_id=${contract_id}&term=${termin}`
+  );
+}
+export async function rejectReceipt(data) {
+  return axios.post(`/invoice/invoice_receipt_rejected`, data);
+}
+export async function rejectReceiptStatus(id) {
+  return axios.post(`/invoice/invoice_receipt_status_rejected/${id}`);
+}
+export async function getAllRejectedReceipt(id) {
+  return axios.get(`/invoice/get_all_invoice_receipt_rejected/${id}`);
+}
+export async function getAllApprovedReceipt(id) {
+  return axios.get(`/invoice/get_invoice_receipt_approved/${id}`);
+}
+export const getFileReceipt = `${DEV_NODE}/invoice/get_file_receipt/`;
+export async function approveReceipt(id, data) {
+  return axios.post(`/invoice/invoice_approved/${id}`, data);
+}
+export async function saveTax(data) {
+  return axios.post(`/invoice/invoice_tax_save/`, data);
+}
+export async function updateTax(id, data) {
+  return axios.post(`/invoice/invoice_tax_update/${id}`, data);
+}
+export async function getTax(contract_id, termin) {
+  return axios.get(
+    `/invoice/get_tax_invoice?contract_id=${contract_id}&term=${termin}`
+  );
+}
+export async function rejectTax(data) {
+  return axios.post(`/invoice/invoice_tax_rejected`, data);
+}
+export async function rejectTaxStatus(id) {
+  return axios.post(`/invoice/invoice_tax_status_rejected/${id}`);
+}
+export async function getAllRejectedTax(id) {
+  return axios.get(`/invoice/get_all_invoice_tax_rejected/${id}`);
+}
+export async function getAllApprovedTax(id) {
+  return axios.get(`/invoice/get_invoice_tax_approved/${id}`);
+}
+export const getFileTax = `${DEV_NODE}/invoice/get_file_tax/`;
+export async function approveTax(id, data) {
+  return axios.post(`/invoice/invoice_tax_approved/${id}`, data);
+}
 export async function getFile() {
   return axios.get(`/invoice/get_file`);
 }
+
+
 
 export async function getListSpt(params) {
   return axios.get(`/invoice/list_spt${params ? "?" + params : ""}`);
