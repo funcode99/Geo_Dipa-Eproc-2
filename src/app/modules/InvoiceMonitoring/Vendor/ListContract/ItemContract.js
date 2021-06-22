@@ -11,6 +11,7 @@ import Subheader from "../../../../components/subheader";
 import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from "./ItemContractSummary";
 import ItemContractInvoice from "./ItemContractInvoice";
+import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -79,6 +80,29 @@ const ItemContract = (props) => {
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
+      />
+
+      <SubBreadcrumbs
+        items={[
+          {
+            label: intl.formatMessage({
+              id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+            }),
+            to: `/vendor/invoice_monitoring/contract`,
+          },
+          {
+            label: intl.formatMessage({
+              id: "TITLE.CONTRACT_ITEM",
+            }),
+            to: `/vendor/invoice_monitoring/contract/${useParams().contract}`,
+          },
+          {
+            label: intl.formatMessage({
+              id: "TITLE.CONTRACT_TERM",
+            }),
+            to: "/",
+          },
+        ]}
       />
       <Paper className={classes.paper}>
         <Container>
