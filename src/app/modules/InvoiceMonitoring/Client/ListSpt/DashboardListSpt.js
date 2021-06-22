@@ -20,9 +20,9 @@ import {
   DialogContent,
   DialogTitle,
   Slide,
-  makeStyles,
   TablePagination,
 } from "@material-ui/core";
+import { Form, Row, Col } from "react-bootstrap";
 
 const data_ops = [
   {
@@ -216,11 +216,51 @@ function DashboardListSpt(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Edit <FormattedMessage id="TITLE.SERVICE_LEVEL_AGREEMENT" />
+          <FormattedMessage id="TITLE.RANGE_BY_DATE" />
         </DialogTitle>
-        <DialogContent>asdd</DialogContent>
+        <DialogContent>
+          <Form id="asyncData">
+            <Row>
+              <Col>
+                <Form.Group as={Row}>
+                  <Form.Label column md="4">
+                    <FormattedMessage id="TITLE.START_DATE" />
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      type="date"
+                      max={new Date().toISOString().split("T")[0]}
+                    />
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row}>
+                  <Form.Label column md="4">
+                    <FormattedMessage id="TITLE.END_DATE" />
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      type="date"
+                      max={new Date().toISOString().split("T")[0]}
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+          </Form>
+        </DialogContent>
         <DialogActions>
-          <button className="btn btn-sm btn-danger">
+          <button className="btn btn-sm btn-primary">
+            <FormattedMessage id="TITLE.START_SYNC" />
+          </button>
+          <button
+            className="btn btn-sm btn-danger"
+            onClick={() => {
+              setDialogSync(false);
+              document.getElementById("asyncData").reset();
+            }}
+          >
             <FormattedMessage id="TITLE.CANCEL" />
           </button>
         </DialogActions>
@@ -228,8 +268,14 @@ function DashboardListSpt(props) {
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
-            <button type="button" className="btn btn-sm btn-primary">
-              <i className="fas fa-sync-alt fa-spin p-0"></i>
+            <button
+              type="button"
+              onClick={() => {
+                setDialogSync(true);
+              }}
+              className="btn btn-sm btn-primary"
+            >
+              <i className="fas fa-sync-alt p-0"></i>
               <span className="ml-2">Syncronice</span>
             </button>
           </CardHeaderToolbar>

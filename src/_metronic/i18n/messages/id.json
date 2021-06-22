@@ -380,5 +380,14 @@
   "TITLE.SEND": "Kirim",
   "TITLE.FOUND_SOMETHING": "Menemukan Sesuatu?",
   "TITLE.MISMATCH": "Letak Ketidaksesuaian",
-  "TITLE.SUBBMITTEDTO": "Diajukan Kepada"
+  "TITLE.SUBBMITTEDTO": "Diajukan Kepada",
+  "TITLE.NEWS": "Berita Acara",
+  "TITLE.NOMINAL": "Nominal",
+  "TITLE.NO_DOC_SAP": "No Doc SAP",
+  "TITLE.PAYMENT_SPT": "daftar tagihan yang akan dibayar",
+  "TITLE.ATTACHMENT_LETTER_NO_SPT": "Lampiran surat no:",
+  "TITLE.RANGE_BY_DATE": "Rentang Data Berdasarkan Tanggal",
+  "TITLE.START_DATE": "Tanggal Mulai",
+  "TITLE.END_DATE": "Tanggal Berakhir",
+  "TITLE.START_SYNC": "Mulai Sync"
 }

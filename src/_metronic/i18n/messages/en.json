@@ -380,5 +380,14 @@
   "TITLE.SEND": "Send",
   "TITLE.FOUND_SOMETHING": "Find Something?",
   "TITLE.MISMATCH": "Location of Mismatch",
-  "TITLE.SUBBMITTEDTO": "Submitted To"
+  "TITLE.SUBBMITTEDTO": "Submitted To",
+  "TITLE.NEWS": "News",
+  "TITLE.NOMINAL": "Nominal",
+  "TITLE.NO_DOC_SAP": "No Doc SAP",
+  "TITLE.PAYMENT_SPT": "list of bills to be paid",
+  "TITLE.ATTACHMENT_LETTER_NO_SPT": "Attachment letter no:",
+  "TITLE.RANGE_BY_DATE": "Data Range By Date",
+  "TITLE.START_DATE": "Start Date",
+  "TITLE.END_DATE": "End Date",
+  "TITLE.START_SYNC": "Start Sync"
 }
