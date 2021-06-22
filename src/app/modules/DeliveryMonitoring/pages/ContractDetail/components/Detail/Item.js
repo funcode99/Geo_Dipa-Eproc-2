@@ -255,20 +255,31 @@ const Item = ({ handleClick }) => {
                     {(item) => {
                       return item?.map((item2) => {
                         return (
-                          <TableRow hover key={item2?.id}>
+                          <TableRow
+                            hover
+                            onClick={
+                              (e) =>
+                                handleChecklist(e, item2, {
+                                  id: item.id,
+                                  type: "jasa",
+                                })
+                              // console.log(e)
+                            }
+                            key={item2?.id}
+                          >
                             <TableCell>
                               <Checkbox
                                 name={`checkbox-${item2.id}`}
                                 id={`checkbox-${item2.id}`}
                                 color="secondary"
-                                onChange={
-                                  (e) =>
-                                    handleChecklist(e, item2, {
-                                      id: item.id,
-                                      type: "jasa",
-                                    })
-                                  // console.log(e)
-                                }
+                                // onChange={
+                                //   (e) =>
+                                //     handleChecklist(e, item2, {
+                                //       id: item.id,
+                                //       type: "jasa",
+                                //     })
+                                //   // console.log(e)
+                                // }
                                 size="small"
                                 checked={item2.checked}
                                 disabled={

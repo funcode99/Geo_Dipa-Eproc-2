@@ -1,4 +1,4 @@
-import { TableCell } from "@material-ui/core";
+import { TableCell, TableRow } from "@material-ui/core";
 import React, { Children } from "react";
 import {
   SelectStyled,
@@ -22,12 +22,12 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
   const isChildExist = typeof children === "function";
   return (
     <React.Fragment>
-      <StyledTableRow>
+      <TableRow hover onClick={handleVisible}>
         <TableCell className={`align-middle ${classBtn}`}>
           {isChildExist && (
             <button
               className={`btn btn-primary btn-sm p-0 align-middle`}
-              onClick={handleVisible}
+              // onClick={handleVisible}
             >
               {visible ? <ExpandLessOutlined /> : <ExpandMoreOutlined />}
             </button>
@@ -44,7 +44,7 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
               </TableCell>
             )
         )}
-      </StyledTableRow>
+      </TableRow>
       {isChildExist && visible && children(dataAll)}
     </React.Fragment>
   );

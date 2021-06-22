@@ -1,5 +1,6 @@
 import {
   TableCell,
+  TableRow,
   CircularProgress,
   Button,
   TableBody,
@@ -23,6 +24,7 @@ import { rupiah } from "../../../../libs/currency";
 import Navs from "../../../../components/navs";
 import { StyledModal } from "../../../../components/modals";
 import { FormattedMessage } from "react-intl";
+import TablePaginationCustom from "../../../../components/tables/TablePagination";
 
 const theadItems = [
   { id: "action", label: "" },
@@ -591,415 +593,340 @@ export default function Summary({ taskId = "" }) {
 
           {/* component table jasa */}
           {navActive === "link-jasa" && (
-            <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
-              <div className="segment-table">
-                <div className="hecto-10">
-                  <StyledTable className="table-bordered overflow-auto">
-                    <StyledTableHead>
-                      <StyledHead>
-                        {theadItems.map((item) => (
-                          <TableCell
-                            className="text-white align-middle"
-                            key={item.id}
-                          >
-                            {item.label}
-                          </TableCell>
-                        ))}
-                      </StyledHead>
-                    </StyledTableHead>
-                    <TableBody>
-                      {dataJasa?.length < 1 && !loading ? (
-                        <StyledTableRow>
-                          <TableCell
-                            colSpan={theadItems.length}
-                            className="text-center"
-                          >
-                            Empty Data
-                          </TableCell>
-                        </StyledTableRow>
-                      ) : null}
-                      {loading ? (
-                        <StyledTableRow>
-                          <TableCell
-                            colSpan={theadItems.length}
-                            className="text-center"
-                          >
-                            <CircularProgress />
-                          </TableCell>
-                        </StyledTableRow>
-                      ) : null}
-                      {dataJasa?.map((item) => {
-                        return (
-                          <React.Fragment key={item.id}>
-                            <StyledTableRow>
-                              <TableCell className="align-middle">
-                                <button
-                                  className="btn btn-primary btn-sm p-0 align-middle"
-                                  onClick={(e) => handleExpand(e, item.id)}
-                                >
-                                  {item.show ? (
-                                    <ExpandLessOutlined />
-                                  ) : (
-                                    <ExpandMoreOutlined />
-                                  )}
-                                </button>
-                              </TableCell>
-                              <TableCell className="align-middle">
-                                {item.desc}
-                              </TableCell>
-                              <TableCell className="align-middle"></TableCell>
-                              <TableCell className="align-middle"></TableCell>
-                              <TableCell className="align-middle"></TableCell>
-                              <TableCell className="align-middle"></TableCell>
-                              {/* <TableCell className="align-middle"></TableCell> */}
-                            </StyledTableRow>
+            <TablePaginationCustom
+              headerRows={theadItems}
+              rows={dataJasa}
+              loading={loading}
+              width={1207}
+              withSearch={false}
+              withPagination={false}
+              renderRows={({ item, index }) => {
+                return (
+                  <React.Fragment key={item.id}>
+                    <TableRow hover onClick={() => handleExpand("e", item.id)}>
+                      <TableCell className="align-middle">
+                        <button
+                          className="btn btn-primary btn-sm p-0 align-middle"
+                          // onClick={(e) => handleExpand(e, item.id)}
+                        >
+                          {item.show ? (
+                            <ExpandLessOutlined />
+                          ) : (
+                            <ExpandMoreOutlined />
+                          )}
+                        </button>
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        {item.desc}
+                      </TableCell>
+                      <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle"></TableCell>
+                      {/* <TableCell className="align-middle"></TableCell> */}
+                    </TableRow>
 
-                            {item.item_services.length !== 0 && item.show
-                              ? item.item_services.map((service) => {
-                                  // Check if already submit
-                                  if (service.service === undefined) {
-                                    return (
-                                      <StyledTableRow
-                                        key={service.id}
-                                        className={
-                                          service.qty_available === 0
-                                            ? `bg-secondary`
-                                            : null
-                                        }
-                                      >
-                                        <TableCell className="align-middle">
-                                          <Checkbox
-                                            name={`checkbox-${service.id}`}
-                                            color="secondary"
-                                            onChange={() =>
-                                              handleChecklistJasa(
-                                                service.qty_available,
-                                                service.qty_available,
-                                                item.id,
-                                                service.id,
-                                                service.short_text
-                                              )
-                                            }
-                                            size="small"
-                                            checked={service.checked}
-                                            disabled={
-                                              service.qty_available === 0
-                                                ? true
-                                                : false
-                                            }
-                                          />
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {service.short_text}
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {/* 31/01/2021 */}
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {/* {service.quantity} */}
-                                          <Form.Control
-                                            type="number"
-                                            size="sm"
-                                            min="0.1"
-                                            step="0.1"
-                                            // min="1"
-                                            // step="1"
-                                            max={service.qty_available}
-                                            disabled={!service.checked}
-                                            defaultValue={service.qty_available}
-                                            onChange={(e) =>
-                                              addSubmitJasa(
-                                                e.target.value,
-                                                service.qty_available,
-                                                service.id,
-                                                service.short_text
-                                              )
-                                            }
-                                            // onBlur={(e) =>
-                                            //   addSubmitJasa(
-                                            //     e.target.value,
-                                            //     service.qty_available,
-                                            //     service.id,
-                                            //     service.short_text
-                                            //   )
-                                            // }
-                                          />
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {service.base_uom}
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {rupiah(service.net_value)}
-                                        </TableCell>
-                                        {/* <TableCell className="align-middle"></TableCell> */}
-                                      </StyledTableRow>
-                                    );
-                                  } else {
-                                    return (
-                                      <StyledTableRow key={service.service.id}>
-                                        <TableCell className="align-middle">
-                                          <Checkbox
-                                            name={`checkbox-${service.service.id}`}
-                                            color="secondary"
-                                            onChange={() =>
-                                              handleChecklistJasa(
-                                                service.qty,
-                                                service.qty,
-                                                item.id,
-                                                service.service.id,
-                                                service.service.short_text
-                                              )
-                                            }
-                                            size="small"
-                                            checked={service.checked}
-                                          />
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {service.service.short_text}
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {/* 31/01/2021 */}
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {/* {service.quantity} */}
-                                          <Form.Control
-                                            type="number"
-                                            size="sm"
-                                            min="0.1"
-                                            step="0.1"
-                                            // min="1"
-                                            // step="1"
-                                            max={(
-                                              parseFloat(
-                                                service.service.qty_available
-                                              ) + parseFloat(service.qty)
-                                            ).toFixed(1)}
-                                            disabled={!service.checked}
-                                            defaultValue={service.qty}
-                                            onChange={(e) =>
-                                              addSubmitJasa(
-                                                e.target.value,
-                                                (
-                                                  parseFloat(
-                                                    service.service
-                                                      .qty_available
-                                                  ) + parseFloat(service.qty)
-                                                ).toFixed(1),
-                                                service.service.id,
-                                                service.service.short_text
-                                              )
-                                            }
-                                            // onBlur={(e) =>
-                                            //   addSubmitJasa(
-                                            //     e.target.value,
-                                            //     service.service.quantity,
-                                            //     service.service.id,
-                                            //     service.service.short_text
-                                            //   )
-                                            // }
-                                          />
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {service.service.base_uom}
-                                        </TableCell>
-                                        <TableCell className="align-middle">
-                                          {rupiah(service.service.net_value)}
-                                        </TableCell>
-                                        {/* <TableCell className="align-middle"></TableCell> */}
-                                      </StyledTableRow>
-                                    );
-                                  }
-                                })
-                              : null}
-                          </React.Fragment>
-                        );
-                      })}
-                    </TableBody>
-                  </StyledTable>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* component table barang */}
-          {navActive === "link-barang" && (
-            <div className="table-wrapper-scroll-y my-custom-scrollbar my-5">
-              <div className="segment-table">
-                <div className="hecto-10">
-                  <StyledTable className="table-bordered overflow-auto">
-                    <StyledTableHead>
-                      <StyledHead>
-                        {theadItems.map((item) => (
-                          <TableCell
-                            className="text-white align-middle"
-                            key={item.id}
-                          >
-                            {item.label}
-                          </TableCell>
-                        ))}
-                      </StyledHead>
-                    </StyledTableHead>
-                    <TableBody>
-                      {dataBarang.length < 1 && !loading ? (
-                        <StyledTableRow>
-                          <TableCell
-                            colSpan={theadItems.length}
-                            className="text-center"
-                          >
-                            Empty Data
-                          </TableCell>
-                        </StyledTableRow>
-                      ) : null}
-                      {loading ? (
-                        <StyledTableRow>
-                          <TableCell
-                            colSpan={theadItems.length}
-                            className="text-center"
-                          >
-                            <CircularProgress />
-                          </TableCell>
-                        </StyledTableRow>
-                      ) : null}
-                      {dataBarang.length !== 0 &&
-                        dataBarang.map((item) => {
+                    {item.item_services.length !== 0 && item.show
+                      ? item.item_services.map((service) => {
                           // Check if already submit
-                          if (item.item === undefined) {
+                          if (service.service === undefined) {
                             return (
-                              <StyledTableRow
-                                key={item.id}
+                              <TableRow
+                                key={service.id}
                                 className={
-                                  item.qty_available === 0
+                                  service.qty_available === 0
                                     ? `bg-secondary`
                                     : null
                                 }
                               >
                                 <TableCell className="align-middle">
                                   <Checkbox
-                                    name={`checkbox-${item.id}`}
+                                    name={`checkbox-${service.id}`}
                                     color="secondary"
                                     onChange={() =>
-                                      handleChecklistBarang(
-                                        item.qty_available,
-                                        item.qty_available,
+                                      handleChecklistJasa(
+                                        service.qty_available,
+                                        service.qty_available,
                                         item.id,
-                                        item.desc
+                                        service.id,
+                                        service.short_text
                                       )
                                     }
                                     size="small"
-                                    width={50}
-                                    variant="body"
-                                    checked={item.checked}
+                                    checked={service.checked}
                                     disabled={
-                                      item.qty_available === 0 ? true : false
+                                      service.qty_available === 0 ? true : false
                                     }
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
-                                  {item.desc}
+                                  {service.short_text}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {/* 31/01/2021 */}
                                 </TableCell>
                                 <TableCell className="align-middle">
+                                  {/* {service.quantity} */}
                                   <Form.Control
                                     type="number"
                                     size="sm"
-                                    min={1}
-                                    max={item.qty_available}
-                                    disabled={!item.checked}
-                                    defaultValue={item.qty_available}
+                                    min="0.1"
+                                    step="0.1"
+                                    // min="1"
+                                    // step="1"
+                                    max={service.qty_available}
+                                    disabled={!service.checked}
+                                    defaultValue={service.qty_available}
                                     onChange={(e) =>
-                                      addSubmitBarang(
+                                      addSubmitJasa(
                                         e.target.value,
-                                        item.qty_available,
-                                        item.id,
-                                        item.desc
+                                        service.qty_available,
+                                        service.id,
+                                        service.short_text
                                       )
                                     }
                                     // onBlur={(e) =>
-                                    //   addSubmitBarang(
+                                    //   addSubmitJasa(
                                     //     e.target.value,
-                                    //     item.qty_available,
-                                    //     item.id,
-                                    //     item.desc
+                                    //     service.qty_available,
+                                    //     service.id,
+                                    //     service.short_text
                                     //   )
                                     // }
                                   />
                                 </TableCell>
-                                <TableCell className="align-middle"></TableCell>
                                 <TableCell className="align-middle">
-                                  {rupiah(item.unit_price)}
+                                  {service.base_uom}
+                                </TableCell>
+                                <TableCell className="align-middle">
+                                  {rupiah(service.net_value)}
                                 </TableCell>
                                 {/* <TableCell className="align-middle"></TableCell> */}
-                              </StyledTableRow>
+                              </TableRow>
                             );
                           } else {
                             return (
-                              <StyledTableRow key={item.item.id}>
+                              <TableRow key={service.service.id}>
                                 <TableCell className="align-middle">
                                   <Checkbox
-                                    name={`checkbox-${item.item.id}`}
+                                    name={`checkbox-${service.service.id}`}
                                     color="secondary"
                                     onChange={() =>
-                                      handleChecklistBarang(
-                                        item.item.qty,
-                                        item.item.qty_available,
-                                        item.item.id,
-                                        item.item.desc
+                                      handleChecklistJasa(
+                                        service.qty,
+                                        service.qty,
+                                        item.id,
+                                        service.service.id,
+                                        service.service.short_text
                                       )
                                     }
                                     size="small"
-                                    width={50}
-                                    variant="body"
-                                    checked={item.checked}
+                                    checked={service.checked}
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
-                                  {item.item.desc}
+                                  {service.service.short_text}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {/* 31/01/2021 */}
                                 </TableCell>
                                 <TableCell className="align-middle">
+                                  {/* {service.quantity} */}
                                   <Form.Control
                                     type="number"
                                     size="sm"
-                                    min={1}
-                                    max={item.item.qty}
-                                    disabled={!item.checked}
-                                    defaultValue={item.qty}
+                                    min="0.1"
+                                    step="0.1"
+                                    // min="1"
+                                    // step="1"
+                                    max={(
+                                      parseFloat(
+                                        service.service.qty_available
+                                      ) + parseFloat(service.qty)
+                                    ).toFixed(1)}
+                                    disabled={!service.checked}
+                                    defaultValue={service.qty}
                                     onChange={(e) =>
-                                      addSubmitBarang(
+                                      addSubmitJasa(
                                         e.target.value,
-                                        item.item.qty,
-                                        item.item.id,
-                                        item.item.desc
+                                        (
+                                          parseFloat(
+                                            service.service.qty_available
+                                          ) + parseFloat(service.qty)
+                                        ).toFixed(1),
+                                        service.service.id,
+                                        service.service.short_text
                                       )
                                     }
                                     // onBlur={(e) =>
-                                    //   addSubmitBarang(
+                                    //   addSubmitJasa(
                                     //     e.target.value,
-                                    //     item.item.qty_available,
-                                    //     item.item.id,
-                                    //     item.item.desc
+                                    //     service.service.quantity,
+                                    //     service.service.id,
+                                    //     service.service.short_text
                                     //   )
                                     // }
                                   />
                                 </TableCell>
-                                <TableCell className="align-middle"></TableCell>
                                 <TableCell className="align-middle">
-                                  {rupiah(item.item.unit_price)}
+                                  {service.service.base_uom}
+                                </TableCell>
+                                <TableCell className="align-middle">
+                                  {rupiah(service.service.net_value)}
                                 </TableCell>
                                 {/* <TableCell className="align-middle"></TableCell> */}
-                              </StyledTableRow>
+                              </TableRow>
                             );
                           }
-                        })}
-                    </TableBody>
-                  </StyledTable>
-                </div>
-              </div>
-            </div>
+                        })
+                      : null}
+                  </React.Fragment>
+                );
+              }}
+            />
+          )}
+
+          {/* component table barang */}
+
+          {navActive === "link-barang" && (
+            <TablePaginationCustom
+              headerRows={theadItems}
+              rows={dataBarang}
+              loading={loading}
+              width={1207}
+              withSearch={false}
+              withPagination={false}
+              renderRows={({ item, index }) => {
+                // Check if already submit
+                if (item.item === undefined) {
+                  return (
+                    <TableRow
+                      key={item.id}
+                      className={
+                        item.qty_available === 0 ? `bg-secondary` : null
+                      }
+                    >
+                      <TableCell className="align-middle">
+                        <Checkbox
+                          name={`checkbox-${item.id}`}
+                          color="secondary"
+                          onChange={() =>
+                            handleChecklistBarang(
+                              item.qty_available,
+                              item.qty_available,
+                              item.id,
+                              item.desc
+                            )
+                          }
+                          size="small"
+                          width={50}
+                          variant="body"
+                          checked={item.checked}
+                          disabled={item.qty_available === 0 ? true : false}
+                        />
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        {item.desc}
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        {/* 31/01/2021 */}
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        <Form.Control
+                          type="number"
+                          size="sm"
+                          min={1}
+                          max={item.qty_available}
+                          disabled={!item.checked}
+                          defaultValue={item.qty_available}
+                          onChange={(e) =>
+                            addSubmitBarang(
+                              e.target.value,
+                              item.qty_available,
+                              item.id,
+                              item.desc
+                            )
+                          }
+                          // onBlur={(e) =>
+                          //   addSubmitBarang(
+                          //     e.target.value,
+                          //     item.qty_available,
+                          //     item.id,
+                          //     item.desc
+                          //   )
+                          // }
+                        />
+                      </TableCell>
+                      <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle">
+                        {rupiah(item.unit_price)}
+                      </TableCell>
+                      {/* <TableCell className="align-middle"></TableCell> */}
+                    </TableRow>
+                  );
+                } else {
+                  return (
+                    <TableRow key={item.item.id}>
+                      <TableCell className="align-middle">
+                        <Checkbox
+                          name={`checkbox-${item.item.id}`}
+                          color="secondary"
+                          onChange={() =>
+                            handleChecklistBarang(
+                              item.item.qty,
+                              item.item.qty_available,
+                              item.item.id,
+                              item.item.desc
+                            )
+                          }
+                          size="small"
+                          width={50}
+                          variant="body"
+                          checked={item.checked}
+                        />
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        {item.item.desc}
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        {/* 31/01/2021 */}
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        <Form.Control
+                          type="number"
+                          size="sm"
+                          min={1}
+                          max={item.item.qty}
+                          disabled={!item.checked}
+                          defaultValue={item.qty}
+                          onChange={(e) =>
+                            addSubmitBarang(
+                              e.target.value,
+                              item.item.qty,
+                              item.item.id,
+                              item.item.desc
+                            )
+                          }
+                          // onBlur={(e) =>
+                          //   addSubmitBarang(
+                          //     e.target.value,
+                          //     item.item.qty_available,
+                          //     item.item.id,
+                          //     item.item.desc
+                          //   )
+                          // }
+                        />
+                      </TableCell>
+                      <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle">
+                        {rupiah(item.item.unit_price)}
+                      </TableCell>
+                      {/* <TableCell className="align-middle"></TableCell> */}
+                    </TableRow>
+                  );
+                }
+              }}
+            />
           )}
 
           <div className="d-flex justify-content-end w-100">

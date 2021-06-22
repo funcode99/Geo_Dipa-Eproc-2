@@ -92,6 +92,7 @@ export default function TablePaginationCustom({
   loading,
   width,
   withSearch = true,
+  withPagination = true,
   renderRows,
 }) {
   const classes = useStyles();
@@ -245,13 +246,15 @@ export default function TablePaginationCustom({
               </TableBody>
             </Table>
           </TableContainer>
-          <PaginationTable
-            rows={rows}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            handleChangePage={handleChangePage}
-            handleChangeRowsPerPage={handleChangeRowsPerPage}
-          />
+          {withPagination && (
+            <PaginationTable
+              rows={rows}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          )}
         </div>
       </Paper>
     </div>

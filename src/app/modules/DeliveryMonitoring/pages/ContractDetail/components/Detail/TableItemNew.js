@@ -24,6 +24,7 @@ const TableItemNew = ({ dataRows, loading, renderRows }) => {
       width={1207}
       loading={loading}
       withSearch={false}
+      withPagination={false}
       renderRows={renderRows}
     />
   );
