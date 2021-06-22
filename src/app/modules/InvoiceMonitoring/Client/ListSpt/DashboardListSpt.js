@@ -9,7 +9,7 @@ import {
 } from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
-import { getListSpt } from "../../_redux/InvoiceMonitoringCrud";
+import { getListSpt, getAsyncSpt } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { rupiah } from "../../../../libs/currency";
@@ -20,9 +20,9 @@ import {
   DialogContent,
   DialogTitle,
   Slide,
-  makeStyles,
   TablePagination,
 } from "@material-ui/core";
+import { Form, Row, Col } from "react-bootstrap";
 
 const data_ops = [
   {
@@ -88,6 +88,10 @@ function DashboardListSpt(props) {
   const [dialogState, setDialogState] = useState(false);
   const history = useHistory();
   const [dialogSync, setDialogSync] = useState(false);
+  const [loadingSync, setLoadingSync] = useState(false);
+  const [errLoadingSync, setErrLoadingSync] = useState(false);
+  const [statusSync, setStatusSync] = useState(false);
+  const [errSync, setErrSync] = useState({ status: false, message: "" });
 
   const requestFilterSort = useCallback(
     (updateFilterTable, updateSortTable) => {
@@ -203,6 +207,39 @@ function DashboardListSpt(props) {
       history.push(`/client/invoice_monitoring/spt/${data.id}`);
   };
 
+  const handleAsyncSpt = (e) => {
+    e.preventDefault();
+    setLoadingSync(true);
+    setErrLoadingSync(false);
+    setStatusSync(true);
+    const data = new FormData(e.target);
+    let dataRequest = {
+      start_date: data.get("startDate"),
+      end_date: data.get("endDate"),
+    };
+    getAsyncSpt(dataRequest)
+      .then(async (result) => {
+        setStatusSync(false);
+        let errSyncs = Object.assign({}, errSync);
+        if (result.data.data.message !== "Done Process || ") {
+          errSyncs.status = true;
+          errSyncs.message = result.data.data.message;
+          setErrSync({
+            ...errSyncs,
+          });
+        }
+        setTimeout(() => {
+          setLoadingSync(false);
+          requestFilterSort();
+        }, 2000);
+      })
+      .catch(async (err) => {
+        setStatusSync(false);
+        setLoadingSync(false);
+        setErrLoadingSync(true);
+      });
+  };
+
   return (
     <React.Fragment>
       <Toast />
@@ -216,20 +253,124 @@ function DashboardListSpt(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Edit <FormattedMessage id="TITLE.SERVICE_LEVEL_AGREEMENT" />
+          <FormattedMessage id="TITLE.RANGE_BY_DATE" />
         </DialogTitle>
-        <DialogContent>asdd</DialogContent>
+        <Form id="asyncData" onSubmit={handleAsyncSpt}>
+        <DialogContent>
+            <Row>
+              <Col>
+                <Form.Group as={Row}>
+                  <Form.Label column md="4">
+                    <FormattedMessage id="TITLE.START_DATE" />
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      type="date"
+                      name="startDate"
+                      disabled={loadingSync}
+                      max={new Date().toISOString().split("T")[0]}
+                    />
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row}>
+                  <Form.Label column md="4">
+                    <FormattedMessage id="TITLE.END_DATE" />
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      type="date"
+                      name="endDate"
+                      disabled={loadingSync}
+                      max={new Date().toISOString().split("T")[0]}
+                    />
+                  </Col>
+                </Form.Group>
+                {errLoadingSync && !loadingSync && (
+                  <div>
+                    <p
+                      className="text-danger font-italic"
+                      style={{ fontSize: 11 }}
+                    >
+                      Error: <FormattedMessage id="TITLE.ERROR_REQUEST" />
+                    </p>
+                  </div>
+                )}
+                {errSync.status && (
+                  <Form.Group as={Row}>
+                    <Form.Label column md="12" className="text-danger">
+                      <FormattedMessage id="TITLE.INFORMATION_OR_NOTE" />
+                    </Form.Label>
+                    <Col sm="12">
+                      <Form.Control
+                        as="textarea"
+                        disabled={true}
+                        rows={8}
+                        value={errSync.message}
+                        onChange={(e) => {}}
+                      />
+                    </Col>
+                  </Form.Group>
+                )}
+              </Col>
+            </Row>
+        </DialogContent>
         <DialogActions>
-          <button className="btn btn-sm btn-danger">
+            <button
+              className="btn btn-sm btn-primary"
+              type="submit"
+              disabled={loadingSync}
+            >
+              {!statusSync && !loadingSync && (
+                <>
+                  <i className="fas fa-sync-alt p-0 mr-2"></i>
+            <FormattedMessage id="TITLE.START_SYNC" />
+                </>
+              )}
+              {statusSync && loadingSync && (
+                <>
+                  <i className="fas fa-sync-alt fa-spin p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.WAITING" />
+                </>
+              )}
+              {!statusSync && loadingSync && (
+                <>
+                  <i className="fas fa-check p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.DONE_DATA_SYNC" />
+                </>
+              )}
+          </button>
+          <button
+            className="btn btn-sm btn-danger"
+              type="button"
+              disabled={loadingSync}
+            onClick={() => {
+                let errSyncs = Object.assign({}, errSync);
+                errSyncs.status = false;
+                setErrSync({
+                  ...errSyncs,
+                });
+              setDialogSync(false);
+              document.getElementById("asyncData").reset();
+            }}
+          >
             <FormattedMessage id="TITLE.CANCEL" />
           </button>
         </DialogActions>
+        </Form>
       </Dialog>
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
-            <button type="button" className="btn btn-sm btn-primary">
-              <i className="fas fa-sync-alt fa-spin p-0"></i>
+            <button
+              type="button"
+              onClick={() => {
+                setDialogSync(true);
+              }}
+              className="btn btn-sm btn-primary"
+            >
+              <i className="fas fa-sync-alt p-0"></i>
               <span className="ml-2">Syncronice</span>
             </button>
           </CardHeaderToolbar>

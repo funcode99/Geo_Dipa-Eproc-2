@@ -88,22 +88,39 @@ const ItemSpt = (props) => {
               <div className="row">
                 <div className="col-sm-12">
                   <h3 className="text-uppercase">
-                    daftar tagihan yang akan dibayar
+                    <FormattedMessage id="TITLE.PAYMENT_SPT" />
                   </h3>
-                  <h6>Lampiran surat no: {data?.spt_no}</h6>
+                  <h6>
+                    <FormattedMessage id="TITLE.ATTACHMENT_LETTER_NO_SPT" />{" "}
+                    {data?.spt_no}
+                  </h6>
                 </div>
               </div>
               <div className="row mt-5">
                 <table className="table table-bordered table-responsive mt-5">
                   <thead>
                     <tr>
-                      <td>No</td>
-                      <td>Nama Vendor</td>
-                      <td>Berita Acara</td>
-                      <td>Nominal</td>
-                      <td>No. Rekening</td>
-                      <td>Nama Bank</td>
-                      <td>No Doc SAP</td>
+                      <td className="td-3">
+                        <FormattedMessage id="TITLE.TABLE_HEADER.NO" />
+                      </td>
+                      <td className="td-20">
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />
+                      </td>
+                      <td className="td-20">
+                        <FormattedMessage id="TITLE.NEWS" />
+                      </td>
+                      <td className="td-12">
+                        <FormattedMessage id="TITLE.NOMINAL" />
+                      </td>
+                      <td className="td-10">
+                        <FormattedMessage id="TITLE.ACCOUNT_NUMBER" />
+                      </td>
+                      <td className="td-25">
+                        <FormattedMessage id="TITLE.BANK_NAME" />
+                      </td>
+                      <td className="td-10">
+                        <FormattedMessage id="TITLE.NO_DOC_SAP" />
+                      </td>
                     </tr>
                   </thead>
                   {data &&

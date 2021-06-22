@@ -95,14 +95,12 @@ function ContractInvoicePage(props) {
                             getHistoryInvoiceData(invoiceData.id)
                         })
                         .catch((error) => {
-                            if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
-                                setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                            setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                             setLoading(false);
                         });
                 })
                 .catch((error) => {
-                    if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                    setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                     setLoading(false);
                 });
         }
@@ -115,11 +113,7 @@ function ContractInvoicePage(props) {
                 setContractData(response.data.data)
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, formik, intl, setToast, user_id])
 
@@ -127,14 +121,12 @@ function ContractInvoicePage(props) {
         getInvoice(contract_id, termin)
             .then(response => {
                 setInvoiceData(response.data.data)
-                getHistoryInvoiceData(response['data']['data']['id'])
+                if (response.data.data) {
+                    getHistoryInvoiceData(response['data']['data']['id'])
+                }
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, formik, intl, setToast])
 
@@ -156,11 +148,7 @@ function ContractInvoicePage(props) {
                 getHistoryInvoiceData(invoiceData.id)
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
                 setLoading(false);
             });
     };
@@ -173,20 +161,13 @@ function ContractInvoicePage(props) {
                         setHistoryInvoiceData([...responseReject['data']['data'], ...responseApprove['data']['data']])
                     })
                     .catch((error) => {
-                        if (
-                            error.response?.status !== 400 &&
-                            error.response?.data.message !== "TokenExpiredError"
-                        )
-                            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
                     });
                 // setHistoryInvoiceData(response['data']['data'])
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [intl, setToast])
 
