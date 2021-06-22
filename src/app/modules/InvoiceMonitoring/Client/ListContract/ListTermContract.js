@@ -204,8 +204,8 @@ const ListTermContract = (props) => {
                     placeholder={intl.formatMessage({
                       id: "CONTRACT_DETAIL.LABEL.PRICE",
                     })}
-                    defaultValue={rupiah(
-                      parseInt(data.contract_value ? data.contract_value : 0)
+                    value={rupiah(
+                      parseInt(data?.contract_value ? data?.contract_value : 0)
                     )}
                     disabled
                   />
