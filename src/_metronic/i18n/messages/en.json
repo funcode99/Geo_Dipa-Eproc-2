@@ -389,5 +389,6 @@
   "TITLE.RANGE_BY_DATE": "Data Range By Date",
   "TITLE.START_DATE": "Start Date",
   "TITLE.END_DATE": "End Date",
-  "TITLE.START_SYNC": "Start Sync"
+  "TITLE.START_SYNC": "Start Sync",
+  "TITLE.DONE_DATA_SYNC": "Data Sync Complete"
 }

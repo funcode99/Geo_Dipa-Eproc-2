@@ -389,5 +389,6 @@
   "TITLE.RANGE_BY_DATE": "Rentang Data Berdasarkan Tanggal",
   "TITLE.START_DATE": "Tanggal Mulai",
   "TITLE.END_DATE": "Tanggal Berakhir",
-  "TITLE.START_SYNC": "Mulai Sync"
+  "TITLE.START_SYNC": "Mulai Sync",
+  "TITLE.DONE_DATA_SYNC": "Data Selesai Sync"
 }
