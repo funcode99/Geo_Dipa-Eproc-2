@@ -357,18 +357,18 @@ function ContractInvoicePage(props) {
                             </div>
                         </div>
                         <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_BY" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />}</label>
+                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] === 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_BY" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />}</label>
                             <div className="col-sm-9">
-                                <span className="form-control-plaintext">: {modalHistoryData['state'] == 'REJECTED' ? modalHistoryData['rejected_by_name'] : modalHistoryData['approved_by_name']}</span>
+                                <span className="form-control-plaintext">: {modalHistoryData['state'] === 'REJECTED' ? modalHistoryData['rejected_by_name'] : modalHistoryData['approved_by_name']}</span>
                             </div>
                         </div>
                         <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] == 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DATE" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />}</label>
+                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] === 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DATE" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />}</label>
                             <div className="col-sm-9">
-                                <span className="form-control-plaintext">: {modalHistoryData['state'] == 'REJECTED' ? moment(new Date(modalHistoryData['rejected_at'])).format("YYYY-MM-DD HH:mm:ss") : moment(new Date(modalHistoryData['approved_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
+                                <span className="form-control-plaintext">: {modalHistoryData['state'] === 'REJECTED' ? moment(new Date(modalHistoryData['rejected_at'])).format("YYYY-MM-DD HH:mm:ss") : moment(new Date(modalHistoryData['approved_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
                             </div>
                         </div>
-                        {modalHistoryData['state'] == 'REJECTED' && <div className="form-group row mb-0">
+                        {modalHistoryData['state'] === 'REJECTED' && <div className="form-group row mb-0">
                             <label className="col-sm-12 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DESC" /></label>
                             <div className="col-sm-12">
                                 <textarea disabled className="form-control" defaultValue={modalHistoryData['rejected_remark']}></textarea>
