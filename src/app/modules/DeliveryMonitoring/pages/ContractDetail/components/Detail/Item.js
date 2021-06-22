@@ -7,8 +7,9 @@ import { rupiah } from "../../../../../../libs/currency";
 import Navs from "../../../../../../components/navs";
 import useToast from "../../../../../../components/toast";
 import TableItem from "./TableItem";
+import TableItemNew from "./TableItemNew";
 import { StyledTableRow } from "../../../../../../components/tables/style";
-import { TableCell, Checkbox, Button } from "@material-ui/core";
+import { TableCell, TableRow, Checkbox, Button } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import RowAccordion from "./RowAccordion";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
@@ -239,7 +240,117 @@ const Item = ({ handleClick }) => {
               handleSelect={(selectedKey) => setNavActive(selectedKey)}
             />
           </div>
+
           {navActive === "link-jasa" && (
+            <TableItemNew
+              dataRows={dataContractById.services}
+              loading={loading}
+              renderRows={({ item, index }) => {
+                return (
+                  <RowAccordion
+                    key={item.id}
+                    data={["accordIcon", item.desc, "", "", "", ""]}
+                    dataAll={item.item_services}
+                  >
+                    {(item) => {
+                      return item?.map((item2) => {
+                        return (
+                          <TableRow hover key={item2?.id}>
+                            <TableCell>
+                              <Checkbox
+                                name={`checkbox-${item2.id}`}
+                                id={`checkbox-${item2.id}`}
+                                color="secondary"
+                                onChange={
+                                  (e) =>
+                                    handleChecklist(e, item2, {
+                                      id: item.id,
+                                      type: "jasa",
+                                    })
+                                  // console.log(e)
+                                }
+                                size="small"
+                                checked={item2.checked}
+                                disabled={
+                                  item2.qty_available === 0 ? true : false
+                                }
+                              />
+                            </TableCell>
+                            <TableCell>{item2?.short_text}</TableCell>
+                            <TableCell></TableCell>
+                            <TableCell>
+                              <Form.Control
+                                type="number"
+                                size="sm"
+                                min="0.1"
+                                step="0.1"
+                                max={item2?.qty_available}
+                                disabled={!item2.checked ? true : false}
+                                defaultValue={item2.qty_available}
+                                onChange={(e) =>
+                                  handleInputQty(e.target.value, item2, "jasa")
+                                }
+                              />
+                            </TableCell>
+                            <TableCell></TableCell>
+                            <TableCell>{rupiah(item2?.net_value)}</TableCell>
+                          </TableRow>
+                        );
+                      });
+                    }}
+                  </RowAccordion>
+                );
+              }}
+            />
+          )}
+          {navActive === "link-barang" && (
+            <TableItemNew
+              dataRows={dataContractById.items}
+              loading={loading}
+              renderRows={({ item, index }) => {
+                return (
+                  <TableRow hover key={item?.id}>
+                    <TableCell>
+                      <Checkbox
+                        name={`checkbox-${item.id}`}
+                        id={`checkbox-${item.id}`}
+                        color="secondary"
+                        onChange={(e) =>
+                          handleChecklist(e, item, {
+                            id: item.id,
+                            type: "barang",
+                          })
+                        }
+                        size="small"
+                        checked={item.checked}
+                        disabled={item.qty_available === 0 ? true : false}
+                      />
+                    </TableCell>
+                    <TableCell>{item?.desc}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>
+                      <Form.Control
+                        type="number"
+                        size="sm"
+                        min="1"
+                        step="1"
+                        max={item?.qty_available}
+                        disabled={!item.checked ? true : false}
+                        defaultValue={item.qty_available}
+                        onChange={(e) =>
+                          handleInputQty(e.target.value, item, "barang")
+                        }
+                      />
+                    </TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>{rupiah(item?.unit_price)}</TableCell>
+                  </TableRow>
+                );
+              }}
+            />
+          )}
+
+          {/* {navActive === "link-jasa" && (
             <TableItem data={dataContractById.services} loading={loading}>
               {dataContractById.services?.map((el) => {
                 return (
@@ -298,9 +409,9 @@ const Item = ({ handleClick }) => {
                 );
               })}
             </TableItem>
-          )}
+          )} */}
 
-          {navActive === "link-barang" && (
+          {/* {navActive === "link-barang" && (
             <TableItem data={dataContractById.items} loading={loading}>
               {dataContractById.items?.map((item) => {
                 return (
@@ -343,7 +454,7 @@ const Item = ({ handleClick }) => {
                 );
               })}
             </TableItem>
-          )}
+          )} */}
 
           <div className="d-flex justify-content-end w-100 mt-3">
             <Button

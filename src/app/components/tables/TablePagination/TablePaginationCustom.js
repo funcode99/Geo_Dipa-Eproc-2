@@ -92,6 +92,7 @@ export default function TablePaginationCustom({
   loading,
   width,
   withSearch = true,
+  renderRows,
 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -194,6 +195,9 @@ export default function TablePaginationCustom({
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name);
                     const labelId = `enhanced-table-checkbox-${index}`;
+                    if (typeof renderRows === "function") {
+                      return renderRows({ item: row, index });
+                    }
                     return (
                       <TableRow
                         hover
