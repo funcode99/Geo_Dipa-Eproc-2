@@ -205,7 +205,7 @@ const ListTermContract = (props) => {
                       id: "CONTRACT_DETAIL.LABEL.PRICE",
                     })}
                     defaultValue={rupiah(
-                      parseInt(data.total_amount ? data.total_amount : 0)
+                      parseInt(data.contract_value ? data.contract_value : 0)
                     )}
                     disabled
                   />
