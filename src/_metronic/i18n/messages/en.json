@@ -378,5 +378,7 @@
   "TITLE.DOCUMENT_NAME": "Document Name",
   "TITLE.REMARKS": "Remarks",
   "TITLE.SEND": "Send",
-  "TITLE.FOUND_SOMETHING": "Find Something?"
+  "TITLE.FOUND_SOMETHING": "Find Something?",
+  "TITLE.MISMATCH": "Location of Mismatch",
+  "TITLE.SUBBMITTEDTO": "Submitted To"
 }

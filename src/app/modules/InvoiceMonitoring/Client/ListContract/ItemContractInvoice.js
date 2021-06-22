@@ -248,8 +248,12 @@ function ItemContractInvoice(props) {
       <div className={"d-flex flex-row align-items-center"}>
         {/* <Typography>{url}</Typography> */}
         {url && (
-          <button onClick={handleOpen} href="#text-buttons">
-            Lihat Dokumen
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={handleOpen}
+            href="#text-buttons"
+          >
+            <i className="fas fa-cloud-download-alt mx-2"></i>Lihat Dokumen
           </button>
         )}
       </div>
@@ -538,13 +542,15 @@ function ItemContractInvoice(props) {
                                               : "AVAILABLE",
                                             <BtnLihat url={els?.url} />,
                                             els?.remarks,
+                                            els?.url && (
                                             <ButtonAction
                                               data={els}
                                               handleAction={
                                                 handleActionDeliverable
                                               }
                                               ops={data_opsDeliverable}
-                                            />,
+                                              />
+                                            ),
                                           ]}
                                         />
                                       ))
@@ -566,11 +572,13 @@ function ItemContractInvoice(props) {
                                         : "AVAILABLE",
                                       <BtnLihat url={el?.url} />,
                                       el?.remarks,
+                                      el?.url && (
                                       <ButtonAction
                                         data={el}
                                         handleAction={handleActionDeliverable}
                                         ops={data_opsDeliverable}
-                                      />,
+                                        />
+                                      ),
                                     ]}
                                   />
                                 ));
@@ -617,7 +625,8 @@ function ItemContractInvoice(props) {
 
           {navActive === "Kwitansi" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractReceiptPage {...props}
+              <ContractReceiptPage
+                {...props}
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
