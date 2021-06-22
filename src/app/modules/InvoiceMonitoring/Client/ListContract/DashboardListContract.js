@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { connect, shallowEqual, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";

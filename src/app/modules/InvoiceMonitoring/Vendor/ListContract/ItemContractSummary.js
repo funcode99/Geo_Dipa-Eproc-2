@@ -225,7 +225,7 @@ function ItemContractSummary(props) {
         getData(response.data.data);
       })
       .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [
     getPicContractData,
@@ -234,6 +234,7 @@ function ItemContractSummary(props) {
     contract_id,
     intl,
     setToast,
+    getData,
   ]);
 
   const setTimePIcker = (from_time, thru_time) => {

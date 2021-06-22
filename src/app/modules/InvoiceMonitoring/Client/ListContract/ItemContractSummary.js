@@ -183,7 +183,14 @@ function ItemContractSummary(props) {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  }, [contract_id, intl, setToast, getPicContractData, getPicVendorData]);
+  }, [
+    contract_id,
+    intl,
+    setToast,
+    getPicContractData,
+    getPicVendorData,
+    getData,
+  ]);
 
   const setTimePIcker = (from_time, thru_time) => {
     window.$("#kt_daterangepicker_1").daterangepicker({
