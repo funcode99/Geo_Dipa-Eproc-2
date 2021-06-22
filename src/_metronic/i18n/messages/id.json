@@ -378,5 +378,7 @@
   "TITLE.DOCUMENT_NAME": "Nama Dokumen",
   "TITLE.REMARKS": "Catatan",
   "TITLE.SEND": "Kirim",
-  "TITLE.FOUND_SOMETHING": "Menemukan Sesuatu?"
+  "TITLE.FOUND_SOMETHING": "Menemukan Sesuatu?",
+  "TITLE.MISMATCH": "Letak Ketidaksesuaian",
+  "TITLE.SUBBMITTEDTO": "Diajukan Kepada"
 }

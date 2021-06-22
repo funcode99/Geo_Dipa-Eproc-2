@@ -173,7 +173,7 @@ const ItemContract = (props) => {
           <DialogContent>
             <div className="form-group row">
               <label htmlFor="notFit" className="col-sm-3 col-form-label">
-                Letak Ketidak Sesuaian
+                <FormattedMessage id="TITLE.MISMATCH" />
               </label>
               <div className="col-sm-9">
                 <StyledSelect
@@ -199,7 +199,7 @@ const ItemContract = (props) => {
             </div>
             <div className="form-group row">
               <label htmlFor="toSend" className="col-sm-3 col-form-label">
-                Diajukan Kepada
+                <FormattedMessage id="TITLE.SUBBMITTEDTO" />
               </label>
               <div className="col-sm-9">
                 <StyledSelect
