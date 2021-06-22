@@ -495,7 +495,7 @@ const DetailPage = ({
       <FormDetail contractId={contractId} />
       <Item handleClick={() => handleModal("create")} />
       <Container>
-        <ExpansionBox title={"Tabel Termin"}>
+        {/* <ExpansionBox title={"Tabel Termin"}>
           <TablePaginationCustom
             headerRows={tableHeaderTerminNew}
             rows={newContent}
@@ -503,8 +503,8 @@ const DetailPage = ({
             loading={false}
             withSearch={false}
           />
-        </ExpansionBox>
-        {/* <FormControlLabel
+        </ExpansionBox> */}
+        <FormControlLabel
           control={<Switch checked={show} onChange={handleShow} />}
           label="Show"
         />
@@ -520,7 +520,7 @@ const DetailPage = ({
               />
             </CardContent>
           </Card>
-        </Collapse> */}
+        </Collapse>
       </Container>
     </React.Fragment>
   );
