@@ -380,5 +380,7 @@
   "TITLE.SEND": "Send",
   "TITLE.FOUND_SOMETHING": "Find Something?",
   "TITLE.MISMATCH": "Location of Mismatch",
-  "TITLE.SUBBMITTEDTO": "Submitted To"
+  "TITLE.SUBBMITTEDTO": "Submitted To",
+  "TITLE.TERM_TABLE": "Term Table",
+  "TITLE.ITEM_TABLE": "Item Table"
 }

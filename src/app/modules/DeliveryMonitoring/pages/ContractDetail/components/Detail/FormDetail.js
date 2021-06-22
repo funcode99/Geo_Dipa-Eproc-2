@@ -11,7 +11,7 @@ import {
   checkEmail,
   updateEmail,
   requestUser,
-  deleteUser
+  deleteUser,
 } from "../../../../../InvoiceMonitoring/_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../../components/toast";
 import {
@@ -19,7 +19,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Slide
+  Slide,
 } from "@material-ui/core";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -30,11 +30,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const FormDetail = (props) => {
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
-  const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
 
   const contract_id = props.contractId;
   const monitoring_type = "DELIVERY";
-  const vendor_id = dataContractById?.vendor?.id
+  const vendor_id = dataContractById?.vendor?.id;
 
   const [Toast, setToast] = useToast();
   const [picVendorData, setPicVendorData] = useState([]);
@@ -57,11 +60,11 @@ const FormDetail = (props) => {
     email: "",
     user_id: user_id,
     vendor_id: vendor_id,
-    monitoring_type: monitoring_type
+    monitoring_type: monitoring_type,
   };
 
-  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function (errorMessage) {
-    return this.test(`test-card-length`, errorMessage, function (value) {
+  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function(errorMessage) {
+    return this.test(`test-card-length`, errorMessage, function(value) {
       const { path, createError } = this;
       return emailAvailability || createError({ path, message: errorMessage });
     });
@@ -69,19 +72,21 @@ const FormDetail = (props) => {
 
   const UpdateSchema = Yup.object().shape({
     email: Yup.string()
-      .required(
-        <FormattedMessage id="AUTH.VALIDATION.REQUIRED_FIELD" />
-      )
-      .email(
-        <FormattedMessage id="AUTH.VALIDATION.INVALID_EMAILS" />
-      )
+      .required(<FormattedMessage id="AUTH.VALIDATION.REQUIRED_FIELD" />)
+      .email(<FormattedMessage id="AUTH.VALIDATION.INVALID_EMAILS" />)
       .min(
         8,
-        <FormattedMessage id="AUTH.VALIDATION.MIN_LENGTH_FIELD" values={{ length: 8 }} />
+        <FormattedMessage
+          id="AUTH.VALIDATION.MIN_LENGTH_FIELD"
+          values={{ length: 8 }}
+        />
       )
       .max(
         50,
-        <FormattedMessage id="AUTH.VALIDATION.MIN_LENGTH_FIELD" values={{ length: 50 }} />
+        <FormattedMessage
+          id="AUTH.VALIDATION.MIN_LENGTH_FIELD"
+          values={{ length: 50 }}
+        />
       )
       .checkAvailabilityEmail(
         <FormattedMessage id="REQ.EMAIL_NOT_AVAILABLE" />
@@ -90,19 +95,21 @@ const FormDetail = (props) => {
 
   const NewSchema = Yup.object().shape({
     email: Yup.string()
-      .required(
-        <FormattedMessage id="AUTH.VALIDATION.REQUIRED_FIELD" />
-      )
-      .email(
-        <FormattedMessage id="AUTH.VALIDATION.INVALID_EMAILS" />
-      )
+      .required(<FormattedMessage id="AUTH.VALIDATION.REQUIRED_FIELD" />)
+      .email(<FormattedMessage id="AUTH.VALIDATION.INVALID_EMAILS" />)
       .min(
         8,
-        <FormattedMessage id="AUTH.VALIDATION.MIN_LENGTH_FIELD" values={{ length: 8 }} />
+        <FormattedMessage
+          id="AUTH.VALIDATION.MIN_LENGTH_FIELD"
+          values={{ length: 8 }}
+        />
       )
       .max(
         50,
-        <FormattedMessage id="AUTH.VALIDATION.MIN_LENGTH_FIELD" values={{ length: 50 }} />
+        <FormattedMessage
+          id="AUTH.VALIDATION.MIN_LENGTH_FIELD"
+          values={{ length: 50 }}
+        />
       )
       .checkAvailabilityEmail(
         <FormattedMessage id="REQ.EMAIL_NOT_AVAILABLE" />
@@ -140,7 +147,11 @@ const FormDetail = (props) => {
   };
 
   const getPicContractData = useCallback(() => {
-    getPicContract({ id: contract_id, vendor_id: vendor_id, monitoring_type: monitoring_type })
+    getPicContract({
+      id: contract_id,
+      vendor_id: vendor_id,
+      monitoring_type: monitoring_type,
+    })
       .then((response) => {
         setPicContractData(response.data.data);
       })
@@ -154,9 +165,7 @@ const FormDetail = (props) => {
       .then((response) => {
         setPicVendorData(response.data.data);
       })
-      .catch((error) => {
-
-      });
+      .catch((error) => {});
   }, [setToast]);
 
   const assignPic = () => {
@@ -169,9 +178,7 @@ const FormDetail = (props) => {
     };
     assignUser(data)
       .then((response) => {
-        setToast(
-          <FormattedMessage id="REQ.ASSIGN_ACCOUNT_SUCCESS" />
-        );
+        setToast(<FormattedMessage id="REQ.ASSIGN_ACCOUNT_SUCCESS" />);
         setLoading(false);
       })
       .catch((error) => {
@@ -203,10 +210,7 @@ const FormDetail = (props) => {
         if (response.data.message === "Data Not Found") {
           setToast(<FormattedMessage id="REQ.NOT_FOUND" />, 10000);
         } else {
-          setToast(
-            <FormattedMessage id="REQ.UPDATE_EMAIL_SUCCESS" />,
-            10000
-          );
+          setToast(<FormattedMessage id="REQ.UPDATE_EMAIL_SUCCESS" />, 10000);
           getPicVendorData();
           setEditEmail(false);
           setEmailAvailability(false);
@@ -228,10 +232,7 @@ const FormDetail = (props) => {
     requestUser(formikNew.values)
       .then((response) => {
         formikNew.setValues({ email: "" });
-        setToast(
-          <FormattedMessage id="REQ.REQUEST_ACCOUNT_SUCCESS" />,
-          10000
-        );
+        setToast(<FormattedMessage id="REQ.REQUEST_ACCOUNT_SUCCESS" />, 10000);
         getPicVendorData();
         setEmailAvailability(false);
         setLoading(false);
@@ -256,10 +257,7 @@ const FormDetail = (props) => {
     deleteUser({ users_pic_id: id })
       .then((response) => {
         setOpenModalDeletePIC(false);
-        setToast(
-          <FormattedMessage id="REQ.DELETE_ACCOUNT_SUCCESS" />,
-          10000
-        );
+        setToast(<FormattedMessage id="REQ.DELETE_ACCOUNT_SUCCESS" />, 10000);
         getPicVendorData();
         setLoading(false);
         setEditEmail(false);
@@ -427,7 +425,7 @@ const FormDetail = (props) => {
                     </button>
                   </div>
                   {(formikUpdate.touched.email && formikUpdate.errors.email) ||
-                    !emailAvailability ? (
+                  !emailAvailability ? (
                     <div className="invalid-feedback display-block">
                       {formikUpdate.errors.email}
                     </div>
@@ -447,10 +445,11 @@ const FormDetail = (props) => {
                           <span>
                             Status:{" "}
                             <span
-                              className={`font-weight-bold ${item.actives === "true"
-                                ? "text-primary"
-                                : "text-danger"
-                                }`}
+                              className={`font-weight-bold ${
+                                item.actives === "true"
+                                  ? "text-primary"
+                                  : "text-danger"
+                              }`}
                             >
                               {item.actives === "true"
                                 ? "Terverifikasi"
@@ -499,133 +498,137 @@ const FormDetail = (props) => {
           </button>
         </DialogActions>
       </Dialog>
-    <Form className="my-3">
-      <Container>
-        <Row>
-          <Col>
-            <Form.Group as={Row}>
-              <Form.Label column md="4">
-                <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />
-              </Form.Label>
-              <Col sm="8">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Nomor Kontrak"
-                  defaultValue={dataContractById?.contract_no}
-                  disabled
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column md="4">
-                <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />
-              </Form.Label>
-              <Col md="8">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Judul Pengadaan"
-                  defaultValue={dataContractById?.contract_name}
-                  disabled
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} controlId="validationCustom01">
-              <Form.Label column sm="4">
-                <FormattedMessage id="CONTRACT_DETAIL.LABEL.AUTHORITY_GROUP" />
-              </Form.Label>
-              <Col md="8">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Kewenangan"
-                  defaultValue={dataContractById?.authority_group?.alias_name}
-                  disabled
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} controlId="validationCustom02">
-              <Form.Label column md="4">
-                <FormattedMessage id="CONTRACT_DETAIL.LABEL.USER_GROUP" />
-              </Form.Label>
-              <Col md="8">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="User"
-                  defaultValue={dataContractById?.user_group?.alias_name}
-                  disabled
-                />
-              </Col>
-            </Form.Group>
-          </Col>
+      <Form className="my-3">
+        <Container>
+          <Row>
+            <Col>
+              <Form.Group as={Row}>
+                <Form.Label column md="4">
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />
+                </Form.Label>
+                <Col sm="8">
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Nomor Kontrak"
+                    defaultValue={dataContractById?.contract_no}
+                    disabled
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row}>
+                <Form.Label column md="4">
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />
+                </Form.Label>
+                <Col md="8">
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Judul Pengadaan"
+                    defaultValue={dataContractById?.contract_name}
+                    disabled
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} controlId="validationCustom01">
+                <Form.Label column sm="4">
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.AUTHORITY_GROUP" />
+                </Form.Label>
+                <Col md="8">
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Kewenangan"
+                    defaultValue={dataContractById?.authority_group?.alias_name}
+                    disabled
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} controlId="validationCustom02">
+                <Form.Label column md="4">
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.USER_GROUP" />
+                </Form.Label>
+                <Col md="8">
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="User"
+                    defaultValue={dataContractById?.user_group?.alias_name}
+                    disabled
+                  />
+                </Col>
+              </Form.Group>
+            </Col>
 
-          <Col>
-            <Form.Group as={Row}>
-              <Form.Label column md="4">
-                <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />
-              </Form.Label>
-              <Col sm="8">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Nomor PO"
-                  defaultValue={dataContractById?.purch_order_no}
-                  disabled
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column md="4">
-                <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NAME" />
-              </Form.Label>
-              <Col md="8">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Header Text PO"
-                  defaultValue={dataContractById?.purch_order?.name}
-                  disabled
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm="4">
-                <FormattedMessage id="CONTRACT_DETAIL.LABEL.PRICE" />
-              </Form.Label>
-              <Col md="8">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Harga Pekerjaan"
-                  defaultValue={rupiah(
-                    parseInt(dataContractById?.total_amount)
-                  )}
-                  disabled
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column md="4">
-                <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />
-              </Form.Label>
-              <Col md="8">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Penyedia"
-                  defaultValue={dataContractById?.vendor?.party?.full_name}
-                  disabled
-                />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column md="4">
-                PIC
-              </Form.Label>
+            <Col>
+              <Form.Group as={Row}>
+                <Form.Label column md="4">
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />
+                </Form.Label>
+                <Col sm="8">
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Nomor PO"
+                    defaultValue={dataContractById?.purch_order_no}
+                    disabled
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row}>
+                <Form.Label column md="4">
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NAME" />
+                </Form.Label>
+                <Col md="8">
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Header Text PO"
+                    defaultValue={dataContractById?.purch_order?.name}
+                    disabled
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row}>
+                <Form.Label column sm="4">
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PRICE" />
+                </Form.Label>
+                <Col md="8">
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Harga Pekerjaan"
+                    defaultValue={rupiah(
+                      parseInt(dataContractById?.total_amount)
+                    )}
+                    disabled
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row}>
+                <Form.Label column md="4">
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />
+                </Form.Label>
+                <Col md="8">
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Penyedia"
+                    defaultValue={dataContractById?.vendor?.party?.full_name}
+                    disabled
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row}>
+                <Form.Label column md="4">
+                  PIC
+                </Form.Label>
                 <Col md="8" className="input-group">
-                <StyledSelect options={picVendorData} value={picContractData} onChange={handlePic}></StyledSelect>
+                  <StyledSelect
+                    options={picVendorData}
+                    value={picContractData}
+                    onChange={handlePic}
+                  ></StyledSelect>
                   <div className="input-group-prepend">
                     <span
                       className="input-group-text pointer"
@@ -636,26 +639,31 @@ const FormDetail = (props) => {
                       <i className="fas fa-pencil-alt"></i>
                     </span>
                   </div>
-              </Col>
-            </Form.Group>
-          </Col>
-        </Row>
-        <button
-          type="button"
-          className="btn btn-primary mx-1 float-right"
-          onClick={assignPic}
-          disabled={loading}
-        >
-          Simpan
-          {loading && (
-            <span
-              className="spinner-border spinner-border-sm ml-1"
-              aria-hidden="true"
-            ></span>
-          )}
-        </button>
-      </Container>
-    </Form>
+                </Col>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col>
+              <button
+                type="button"
+                className="btn btn-primary mx-1 float-right"
+                onClick={assignPic}
+                disabled={loading}
+              >
+                Simpan
+                {loading && (
+                  <span
+                    className="spinner-border spinner-border-sm ml-1"
+                    aria-hidden="true"
+                  ></span>
+                )}
+              </button>
+            </Col>
+          </Row>
+        </Container>
+      </Form>
     </React.Fragment>
   );
 };

@@ -27,29 +27,6 @@ import { rupiah } from "../../../../../../libs/currency";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
 
-const tableHeaderTermin = [
-  { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.NO" /> },
-  {
-    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK" />,
-    props: { align: "left" },
-  },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" /> },
-  { label: "Bobot" },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" /> },
-  {
-    label: (
-      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS" />
-    ),
-  },
-  {
-    label: (
-      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS" />
-    ),
-  },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" /> },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" /> },
-];
-
 const tableHeaderTerminNew = [
   {
     id: "number",
@@ -442,7 +419,7 @@ const DetailPage = ({
       <FormDetail contractId={contractId} />
       <Item handleClick={() => handleModal("create")} />
       <Container>
-        <ExpansionBox title={"Tabel Termin"}>
+        <ExpansionBox title={"TITLE.TERM_TABLE"}>
           <TablePaginationCustom
             headerRows={tableHeaderTerminNew}
             rows={newContent}

@@ -380,5 +380,7 @@
   "TITLE.SEND": "Kirim",
   "TITLE.FOUND_SOMETHING": "Menemukan Sesuatu?",
   "TITLE.MISMATCH": "Letak Ketidaksesuaian",
-  "TITLE.SUBBMITTEDTO": "Diajukan Kepada"
+  "TITLE.SUBBMITTEDTO": "Diajukan Kepada",
+  "TITLE.TERM_TABLE": "Tabel Termin",
+  "TITLE.ITEM_TABLE": "Table Item"
 }
