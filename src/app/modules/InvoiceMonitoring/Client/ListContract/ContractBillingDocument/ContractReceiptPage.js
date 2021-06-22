@@ -93,14 +93,12 @@ function ContractReceiptPage(props) {
                             getHistoryReceiptData(receiptData.id)
                         })
                         .catch((error) => {
-                            if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
-                                setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                            setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                             setLoading(false);
                         });
                 })
                 .catch((error) => {
-                    if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                    setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                     setLoading(false);
                 });
         }
@@ -124,11 +122,7 @@ function ContractReceiptPage(props) {
                 getHistoryReceiptData(response['data']['data']['id'])
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, formik, intl, setToast])
 
@@ -155,11 +149,7 @@ function ContractReceiptPage(props) {
                 getHistoryReceiptData(receiptData.id)
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
                 setLoading(false);
             });
     };
@@ -172,20 +162,12 @@ function ContractReceiptPage(props) {
                         setHistoryReceiptData([...responseReject['data']['data'], ...responseApprove['data']['data']])
                     })
                     .catch((error) => {
-                        if (
-                            error.response?.status !== 400 &&
-                            error.response?.data.message !== "TokenExpiredError"
-                        )
-                            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
                     });
                 // setHistoryReceiptData(response['data']['data'])
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [intl, setToast])
 

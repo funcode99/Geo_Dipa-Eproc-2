@@ -173,8 +173,9 @@ function ContractSprPage(props) {
                         setLoading(false)
                     })
                     .catch((error) => {
-                        if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                         setLoading(false);
+                        setSppStatus(false);
                     });
             } else {
                 saveSpp(data)
@@ -183,8 +184,9 @@ function ContractSprPage(props) {
                         setLoading(false)
                     })
                     .catch((error) => {
-                        if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                         setLoading(false);
+                        setSppStatus(false);
                     });
             }
         }
@@ -213,11 +215,7 @@ function ContractSprPage(props) {
                 })
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, formik, intl, setToast, user_id])
 
@@ -252,11 +250,7 @@ function ContractSprPage(props) {
                 }
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, termin, formik, intl, setToast, user_id])
 
@@ -268,20 +262,12 @@ function ContractSprPage(props) {
                         setHistorySppData([...responseReject['data']['data'], ...responseApprove['data']['data']])
                     })
                     .catch((error) => {
-                        if (
-                            error.response?.status !== 400 &&
-                            error.response?.data.message !== "TokenExpiredError"
-                        )
-                            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
                     });
                 // setHistorySppData(response['data']['data'])
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [intl, setToast, getAllRejectedSpp, getAllApprovedSpp])
 
@@ -620,7 +606,7 @@ function ContractSprPage(props) {
                                     ) : null}
                                 </div>
                                 <div className="form-group row">
-                                <label htmlFor="accountNumberSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE" /></label>
+                                    <label htmlFor="accountNumberSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE" /></label>
                                     <div className="col-sm-8 col-form-label">
                                         <div className="form-check form-check-inline">
                                             <input className="form-check-input" type="radio" name="RadioOptions" value={true} disabled={loading || sppStatus} onChange={handleRadio} checked={bankReference} />
@@ -638,7 +624,7 @@ function ContractSprPage(props) {
                                         <select onChange={handleChangeBank} disabled={loading || sppStatus} className="custom-select custom-select-sm">
                                             {contractData["data_bank"]?.map((item, index) => {
                                                 return (
-                                                    <option key={index} defaultValue={index} selected={sppData.bank_account_no === item.account_number} value={index}>{item.account_number}</option>
+                                                    <option key={index} defaultValue={index} selected={sppData.bank_account_no === item.account_number} value={index}>{item.account_number} - {item.account_holder_name}</option>
                                                 )
                                             })}
                                         </select>
@@ -656,7 +642,7 @@ function ContractSprPage(props) {
                                     ) : null}
                                 </div>}
                                 <div className="form-group row">
-                                <label htmlFor="accountNameSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NAME" /></label>
+                                    <label htmlFor="accountNameSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NAME" /></label>
                                     <div className="col-sm-8">
                                         <input type="text" className="form-control" id="accountNameSpp" disabled={loading || bankReference || sppStatus} defaultValue={sppData.bank_account_name} {...formik.getFieldProps('bank_account_name')} />
                                     </div>
@@ -678,7 +664,7 @@ function ContractSprPage(props) {
                                     ) : null}
                                 </div>
                                 <div className="form-group row">
-                                <label htmlFor="bankAddressSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_ADDRESS" /></label>
+                                    <label htmlFor="bankAddressSpp" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_ADDRESS" /></label>
                                     <div className="col-sm-8">
                                         <textarea rows="4" className="form-control" id="bankAddressSpp" disabled={loading || bankReference || sppStatus} {...formik.getFieldProps('bank_address')}></textarea>
                                     </div>
@@ -728,7 +714,7 @@ function ContractSprPage(props) {
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                <label htmlFor="priceTaxSpp" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: termin }} /></label>
+                                    <label htmlFor="priceTaxSpp" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: termin }} /></label>
                                     <div className="col-sm-7">
                                         <input type="text" className="form-control" id="priceTaxSpp" disabled />
                                     </div>

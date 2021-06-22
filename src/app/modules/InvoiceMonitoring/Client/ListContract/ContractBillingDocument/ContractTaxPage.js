@@ -93,14 +93,12 @@ function ContractTaxPage(props) {
                             getHistoryTaxData(taxData.id)
                         })
                         .catch((error) => {
-                            if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
-                                setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                            setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                             setLoading(false);
                         });
                 })
                 .catch((error) => {
-                    if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                    setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                     setLoading(false);
                 });
         }

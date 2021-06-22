@@ -59,7 +59,7 @@ function ContractReceiptPage(props) {
         receipt_date: '',
         contract_id: '',
         vendor_id: '',
-        term: '',
+        term_id: '',
         payment_value: '',
         file_name: '',
         description: '',
@@ -161,7 +161,7 @@ function ContractReceiptPage(props) {
                         setLoading(false)
                     })
                     .catch((error) => {
-                        if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                         setLoading(false)
                         setReceiptStatus(false)
                     });
@@ -172,7 +172,7 @@ function ContractReceiptPage(props) {
                         setLoading(false)
                     })
                     .catch((error) => {
-                        if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                         setLoading(false);
                         setReceiptStatus(false)
                     });
@@ -188,7 +188,7 @@ function ContractReceiptPage(props) {
                 formik.setValues({
                     contract_id: response['data']['data']['id'],
                     vendor_id: response['data']['data']['vendor_id'],
-                    term: termin,
+                    term_id: termin,
                     payment_value: response['data']['data']['contract_value'],
                     created_by_id: user_id
                 })

@@ -21,7 +21,7 @@ import {
     CardBody,
     CardFooter
 } from "../../../../../../_metronic/_partials/controls";
-import { getContractSummary, saveInvoice, getInvoice, updateInvoice, getAllRejectedInvoice, getFileInvoice, getAllApprovedInvoice } from '../../../_redux/InvoiceMonitoringCrud';
+import { getContractSummary, saveInvoice, getInvoice, updateInvoice, getAllRejectedInvoice, getFileInvoice, getAllApprovedInvoice, getTax } from '../../../_redux/InvoiceMonitoringCrud';
 import useToast from '../../../../../components/toast';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -69,13 +69,15 @@ function ContractInvoicePage(props) {
         vendor_id: '',
         contract_value: '',
         currency_id: '',
-        invoice_term: '',
         invoice_value: '',
         description: '',
         file_name: '',
         created_at: '',
         created_by_id: '',
-        file: ''
+        file: '',
+        invoice_term_id: termin,
+        tax_bool: false,
+        tax_date: new Date(Date.now()),
     }
 
     const InvoiceSchema = Yup.object().shape({
@@ -94,12 +96,22 @@ function ContractInvoicePage(props) {
                 })
             ),
         from_time: Yup
-            .string()
+            .date()
             .required(
                 intl.formatMessage({
                     id: "AUTH.VALIDATION.REQUIRED_FIELD",
                 })
-            ),
+            )
+            .when("tax_bool", {
+                is: true,
+                then: Yup.date()
+                    .min(Yup.ref('tax_date'), intl.formatMessage({
+                        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
+                    }))
+                    .max(Yup.ref('tax_date'), intl.formatMessage({
+                        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
+                    }))
+            }),
         invoice_no: Yup
             .string()
             .required(
@@ -126,7 +138,7 @@ function ContractInvoicePage(props) {
                         setLoading(false)
                     })
                     .catch((error) => {
-                        if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                         setLoading(false)
                         setInvoiceStatus(false)
                     });
@@ -134,11 +146,10 @@ function ContractInvoicePage(props) {
                 saveInvoice(data)
                     .then(response => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-                        getInvoiceData()
                         setLoading(false)
                     })
                     .catch((error) => {
-                        if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError") setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                         setLoading(false);
                         setInvoiceStatus(false)
                     });
@@ -166,15 +177,14 @@ function ContractInvoicePage(props) {
                     vendor_id: response['data']['data']['vendor_id'],
                     contract_value: response['data']['data']['contract_value'],
                     currency_id: response['data']['data']['currency_id'],
-                    created_by_id: user_id
+                    created_by_id: user_id,
+                    invoice_term_id: termin,
+                    tax_bool: false,
+                    tax_date: new Date(Date.now()),
                 })
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, formik, intl, setToast, user_id])
 
@@ -186,20 +196,12 @@ function ContractInvoicePage(props) {
                         setHistoryInvoiceData([...responseReject['data']['data'], ...responseApprove['data']['data']])
                     })
                     .catch((error) => {
-                        if (
-                            error.response?.status !== 400 &&
-                            error.response?.data.message !== "TokenExpiredError"
-                        )
-                            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
                     });
                 // setHistoryInvoiceData(response['data']['data'])
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [intl, setToast])
 
@@ -226,13 +228,22 @@ function ContractInvoicePage(props) {
                 }
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, termin, gethistoryInvoiceData, formik, intl, setToast])
+
+    const getTaxData = useCallback(() => {
+        getTax(contract_id, termin)
+            .then(response => {
+                if (response.data.data) {
+                    formik.setFieldValue('tax_date', new Date(response.data.data.tax_date))
+                    formik.setFieldValue('tax_bool', true)
+                }
+            })
+            .catch((error) => {
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+            });
+    }, [contract_id, formik, intl, setToast])
 
     const onDocumentLoadSuccess = ({ numPages }) => {
         setNumPages(numPages);
@@ -240,16 +251,15 @@ function ContractInvoicePage(props) {
 
     const handleUpload = (e) => {
         setUploadFilename(e.currentTarget.files[0].name)
-        console.log('asd')
         formik.setFieldValue('file_name', e.currentTarget.files[0].name)
         formik.setFieldValue('file', e.currentTarget.files[0])
     }
 
     const handleDate = (e) => {
-        formik.setFieldValue('from_time', e.target.value)
-        var date = new Date(e.target.value)
-        date.setMonth(date.getMonth() + 1)
-        formik.setFieldValue('thru_time', date.toISOString().split('T')[0])
+        formik.setFieldValue('from_time', new Date(e.target.value))
+        // var date = new Date(e.target.value)
+        // date.setMonth(date.getMonth() + 1)
+        // formik.setFieldValue('thru_time', date.toISOString().split('T')[0])
     }
 
     const handleHistory = (index) => {
@@ -259,6 +269,7 @@ function ContractInvoicePage(props) {
 
     useEffect(getContractData, []);
     useEffect(getInvoiceData, []);
+    useEffect(getTaxData, []);
 
     return (
         <React.Fragment>
@@ -405,9 +416,9 @@ function ContractInvoicePage(props) {
                                 <div className="form-group row">
                                     <label htmlFor="dateInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" /></label>
                                     <div className="col-sm-8">
-                                        <input type="date" className="form-control" id="dateInvoice" disabled={loading || invoiceStatus} defaultValue={invoiceData ? invoiceData['from_time'] : null} onChange={e => handleDate(e)} />
+                                        <input type="date" className="form-control" id="dateInvoice" disabled={loading || invoiceStatus} onBlur={formik.handleBlur} defaultValue={invoiceData ? invoiceData['from_time'] : null} onChange={e => handleDate(e)} />
                                     </div>
-                                    {(formik.touched.from_time && formik.errors.from_time) ? (
+                                    {(formik.touched.dateInvoice && formik.errors.from_time) ? (
                                         <span className="col-sm-8 offset-sm-4 text-center text-danger" >
                                             {formik.errors.from_time}
                                         </span>
