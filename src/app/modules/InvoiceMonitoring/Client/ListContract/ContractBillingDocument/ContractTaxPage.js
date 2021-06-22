@@ -119,7 +119,9 @@ function ContractTaxPage(props) {
         getTax(contract_id, termin)
             .then(response => {
                 setTaxData(response.data.data)
-                getHistoryTaxData(response['data']['data']['id'])
+                if (response.data.data) {
+                    getHistoryTaxData(response['data']['data']['id'])
+                }
             })
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);

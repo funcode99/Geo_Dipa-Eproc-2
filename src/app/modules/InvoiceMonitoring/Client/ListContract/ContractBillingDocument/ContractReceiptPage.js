@@ -119,7 +119,9 @@ function ContractReceiptPage(props) {
         getReceipt(contract_id, termin)
             .then(response => {
                 setReceiptData(response.data.data)
-                getHistoryReceiptData(response['data']['data']['id'])
+                if (response.data.data) {
+                    getHistoryReceiptData(response['data']['data']['id'])
+                }
             })
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
