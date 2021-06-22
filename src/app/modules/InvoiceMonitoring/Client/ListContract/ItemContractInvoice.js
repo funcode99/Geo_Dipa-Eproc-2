@@ -195,7 +195,7 @@ function ItemContractInvoice(props) {
   const [dataReject, setDataReject] = useState({});
 
   const handleAction = (type, data) => {
-    if (type == "rejected") {
+    if (type === "rejected") {
       setDataReject(data);
       setModalReject(true);
     }
@@ -204,7 +204,7 @@ function ItemContractInvoice(props) {
   };
 
   const handleActionDeliverable = (type, data) => {
-    if (type == "rejected") {
+    if (type === "rejected") {
       setDataReject(data);
       setModalReject(true);
     }
@@ -282,7 +282,7 @@ function ItemContractInvoice(props) {
                 (dataReject?.due_date
                   ? " - " +
                     window
-                  .moment(new Date(dataReject?.due_date))
+                      .moment(new Date(dataReject?.due_date))
                       .format("DD MMM YYYY")
                   : "")}
             </span>
@@ -543,12 +543,12 @@ function ItemContractInvoice(props) {
                                             <BtnLihat url={els?.url} />,
                                             els?.remarks,
                                             els?.url && (
-                                            <ButtonAction
-                                              data={els}
-                                              handleAction={
-                                                handleActionDeliverable
-                                              }
-                                              ops={data_opsDeliverable}
+                                              <ButtonAction
+                                                data={els}
+                                                handleAction={
+                                                  handleActionDeliverable
+                                                }
+                                                ops={data_opsDeliverable}
                                               />
                                             ),
                                           ]}
@@ -573,10 +573,10 @@ function ItemContractInvoice(props) {
                                       <BtnLihat url={el?.url} />,
                                       el?.remarks,
                                       el?.url && (
-                                      <ButtonAction
-                                        data={el}
-                                        handleAction={handleActionDeliverable}
-                                        ops={data_opsDeliverable}
+                                        <ButtonAction
+                                          data={el}
+                                          handleAction={handleActionDeliverable}
+                                          ops={data_opsDeliverable}
                                         />
                                       ),
                                     ]}

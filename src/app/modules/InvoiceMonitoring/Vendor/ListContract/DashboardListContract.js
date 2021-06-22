@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { connect, shallowEqual, useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";
@@ -116,7 +116,7 @@ function DashboardListContract(props) {
           });
       }
     },
-    [filterTable, sortData, filterSort, intl, setToast, paginations]
+    [filterTable, sortData, filterSort, intl, setToast, paginations, dataUser]
   );
 
   useEffect(requestFilterSort, []);
@@ -199,8 +199,6 @@ function DashboardListContract(props) {
   const handleAction = (type, data) => {
     history.push(`/vendor/invoice_monitoring/contract/${data.contract_id}`);
   };
-
-  console.log("dataUser", dataUser);
 
   return (
     <React.Fragment>

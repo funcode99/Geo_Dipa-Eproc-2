@@ -92,7 +92,7 @@ const ListTermContract = (props) => {
         ]}
       />
       {loading && <LinearProgress color="secondary" className="rounded" />}
-      <Paper className={classes.paper} className="py-5 px-5">
+      <Paper className={classes.paper + "py-5 px-5"}>
         <Form>
           <Row>
             <Col>
