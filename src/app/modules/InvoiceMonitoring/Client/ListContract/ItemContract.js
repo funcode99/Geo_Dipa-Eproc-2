@@ -126,15 +126,8 @@ const DialogTitle = withStyles(styles)((props) => {
 });
 
 const ItemContract = (props) => {
-  const suhbeader = useSubheader();
   const { intl } = props;
-  suhbeader.setTitle(
-    intl.formatMessage({
-      id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT",
-    }) +
-      " Term " +
-      useParams().termin
-  );
+  const suhbeader = useSubheader();
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
   const [dialogLeader, setDialogLeader] = React.useState(false);
@@ -142,6 +135,13 @@ const ItemContract = (props) => {
   const [dataOneValue, setDataOneValue] = React.useState([]);
   const [dataTwo, setDataTwo] = React.useState([]);
   const [dataTwoValue, setDataTwoValue] = React.useState([]);
+  const [data, setData] = React.useState({});
+
+  suhbeader.setTitle(
+    intl.formatMessage({
+      id: "TITLE.CONTRACT_TERM",
+    })
+  );
 
   function handleChangeTab(event, newTabActive) {
     setTabActive(newTabActive);
@@ -149,9 +149,11 @@ const ItemContract = (props) => {
 
   function handleChangeTabTwo(event, newTabActive) {
     setDialogLeader(true);
-    // console.log("event", event);
-    // console.log("newTabActive", newTabActive);
   }
+
+  const getSetData = (data) => {
+    setData(data);
+  };
 
   return (
     <Container className="px-0">
@@ -228,7 +230,7 @@ const ItemContract = (props) => {
         </form>
       </Dialog>
       <Subheader
-        text="012.PJ/PST.30-GDE/IX/2020-1000014263"
+        text={(data?.contract_no || "") + " - " + (data.contract_name || "")}
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
@@ -243,11 +245,15 @@ const ItemContract = (props) => {
             to: `/client/invoice_monitoring/contract`,
           },
           {
-            label: "Contract Item",
+            label: intl.formatMessage({
+              id: "TITLE.CONTRACT_ITEM",
+            }),
             to: `/client/invoice_monitoring/contract/${useParams().contract}`,
           },
           {
-            label: `Contract Term 1`,
+            label: intl.formatMessage({
+              id: "TITLE.CONTRACT_TERM",
+            }),
             to: "/",
           },
         ]}
@@ -263,7 +269,9 @@ const ItemContract = (props) => {
         </Container>
         <hr className="p-0 m-0" />
         <Container className="p-0">
-          {tabActive === 0 && <ItemContractSummary {...props} />}
+          {tabActive === 0 && (
+            <ItemContractSummary {...props} getData={getSetData} />
+          )}
           {tabActive === 1 && <ItemContractInvoice {...props} />}
           {tabActive === 2 && <ContractHardCopyDoc />}
           {tabActive === 3 && <ItemContractBKB />}

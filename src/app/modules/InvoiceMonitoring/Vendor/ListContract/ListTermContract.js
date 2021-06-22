@@ -48,7 +48,7 @@ const ListTermContract = (props) => {
 
   const handleAction = (type, data) => {
     history.push(
-      `/client/invoice_monitoring/contract/${contract}/${data.task_id}`
+      `/vendor/invoice_monitoring/contract/${contract}/${data.task_id}`
     );
   };
 
@@ -81,7 +81,7 @@ const ListTermContract = (props) => {
             label: intl.formatMessage({
               id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
             }),
-            to: `/client/invoice_monitoring/contract`,
+            to: `/vendor/invoice_monitoring/contract`,
           },
           {
             label: intl.formatMessage({

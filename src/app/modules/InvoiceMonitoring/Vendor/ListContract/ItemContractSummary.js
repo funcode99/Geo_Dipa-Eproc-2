@@ -38,7 +38,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function ItemContractSummary(props) {
-  const { intl } = props;
+  const { intl, getData } = props;
   const [data] = useState([
     {
       name: "BAPP",
@@ -222,12 +222,9 @@ function ItemContractSummary(props) {
         getPicContractData();
         getPicVendorData();
         getRole();
+        getData(response.data.data);
       })
       .catch((error) => {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [
