@@ -266,60 +266,52 @@ const DetailPage = ({
   // generate isi table task
   const generateTableContent = React.useCallback(
     (data) => {
-      setTableContent([]);
-      data.forEach((item, index) => {
-        const rows = [
-          { content: (index += 1) },
-          { content: item.name, props: { align: "left" } },
-          {
-            content:
-              item.due_date !== null
-                ? formatDate(new Date(item.due_date))
-                : null,
-          },
-          { content: `${item.weight}%` },
-          { content: rupiah(item.nett_amount) },
-          { content: item.progress },
-          { content: "" },
-          { content: item?.task_status?.name },
-          {
-            content: (
-              <ButtonAction
-                data={item}
-                handleAction={handleAction}
-                ops={[
-                  {
-                    label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
-                    icon: "fas fa-search",
-                    to: {
-                      url: `/client/delivery-monitoring/contract/task/${item.id}`,
-                      style: {
-                        color: "black",
-                      },
-                    },
+      setNewContent([]);
+      let arrData = [];
+      arrData = data.map((item, index) => ({
+        number: (index += 1),
+        scope_of_work: item.name,
+        due_date:
+          item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
+        bobot: `${item.weight}%`,
+        price: rupiah(item.nett_amount),
+        project_progress: item.progress,
+        document_progress: "",
+        status: item?.task_status?.name,
+        action: (
+          <ButtonAction
+            data={item}
+            handleAction={handleAction}
+            ops={[
+              {
+                label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
+                icon: "fas fa-search",
+                to: {
+                  url: `/client/delivery-monitoring/contract/task/${item.id}`,
+                  style: {
+                    color: "black",
                   },
-                  {
-                    label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
-                    icon: "fas fa-edit text-primary",
-                    disabled:
-                      item.task_status_id ===
-                      "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
-                        ? true
-                        : false,
-                    type: "update",
-                  },
-                  {
-                    label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
-                    icon: "fas fa-trash text-danger",
-                    type: "delete",
-                  },
-                ]}
-              />
-            ),
-          },
-        ];
-        setTableContent((prev) => [...prev, rows]);
-      });
+                },
+              },
+              {
+                label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
+                icon: "fas fa-edit text-primary",
+                disabled:
+                  item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+                    ? true
+                    : false,
+                type: "update",
+              },
+              {
+                label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
+                icon: "fas fa-trash text-danger",
+                type: "delete",
+              },
+            ]}
+          />
+        ),
+      }));
+      setNewContent(arrData);
     },
     [handleAction]
   );
@@ -414,55 +406,10 @@ const DetailPage = ({
 
   React.useEffect(() => {
     getContractById(contractId);
-    let arrData = [];
     if (tasks && tasks.length > 0) {
       generateTableContent(tasks);
-      arrData = tasks.map((item, index) => ({
-        number: (index += 1),
-        scope_of_work: item.name,
-        due_date:
-          item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
-        bobot: `${item.weight}%`,
-        price: rupiah(item.nett_amount),
-        project_progress: item.progress,
-        document_progress: "",
-        status: item?.task_status?.name,
-        action: (
-          <ButtonAction
-            data={item}
-            handleAction={handleAction}
-            ops={[
-              {
-                label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
-                icon: "fas fa-search",
-                to: {
-                  url: `/client/delivery-monitoring/contract/task/${item.id}`,
-                  style: {
-                    color: "black",
-                  },
-                },
-              },
-              {
-                label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
-                icon: "fas fa-edit text-primary",
-                disabled:
-                  item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
-                    ? true
-                    : false,
-                type: "update",
-              },
-              {
-                label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
-                icon: "fas fa-trash text-danger",
-                type: "delete",
-              },
-            ]}
-          />
-        ),
-      }));
     }
 
-    setNewContent(arrData);
     getOptions();
     // eslint-disable-next-line
   }, [contractId]);
@@ -495,7 +442,7 @@ const DetailPage = ({
       <FormDetail contractId={contractId} />
       <Item handleClick={() => handleModal("create")} />
       <Container>
-        {/* <ExpansionBox title={"Tabel Termin"}>
+        <ExpansionBox title={"Tabel Termin"}>
           <TablePaginationCustom
             headerRows={tableHeaderTerminNew}
             rows={newContent}
@@ -503,24 +450,7 @@ const DetailPage = ({
             loading={false}
             withSearch={false}
           />
-        </ExpansionBox> */}
-        <FormControlLabel
-          control={<Switch checked={show} onChange={handleShow} />}
-          label="Show"
-        />
-
-        <Collapse in={show}>
-          <Card className="mb-5">
-            <CardContent>
-              <CustomTable
-                tableHeader={tableHeaderTermin}
-                tableContent={tableContent}
-                marginY="my-5"
-                hecto="hecto-16"
-              />
-            </CardContent>
-          </Card>
-        </Collapse>
+        </ExpansionBox>
       </Container>
     </React.Fragment>
   );

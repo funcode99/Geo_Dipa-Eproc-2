@@ -22,23 +22,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const tableHeaderContracts = [
-  {
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
-    props: { align: "left" },
-  },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" /> },
-  {
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
-    props: { align: "left" },
-  },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" /> },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" /> },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" /> },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" /> },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" /> },
-  { label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" /> },
-];
 const tableHeaderContractsNew = [
   {
     id: "contract_no",
@@ -83,11 +66,11 @@ export const ContractsPage = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = React.useState(false);
-  const [tableContent, setTableContent] = React.useState([]);
   const [newContent, setNewContent] = React.useState([]);
 
   const generateTableContent = (data) => {
     let dataArr = [];
+    // console.log(`data`, data);
     data.forEach((item) => {
       let objData = {
         contract_no: item?.contract_no,
@@ -124,48 +107,6 @@ export const ContractsPage = () => {
           />
         ),
       };
-      const rows = [
-        { content: item?.contract_no, props: { align: "left" } },
-        { content: item?.purch_order_no },
-        { content: item?.contract_name, props: { align: "left" } },
-        {
-          content:
-            item?.issued_date !== null
-              ? formatDate(new Date(item?.issued_date))
-              : null,
-        },
-        {
-          content:
-            item?.issued_date !== null
-              ? formatDate(new Date(item?.issued_date))
-              : null,
-        },
-        { content: item?.purch_order?.purch_group?.alias_name },
-        { content: item?.vendor.party?.full_name },
-        { content: item?.state },
-        {
-          content: (
-            <ButtonAction
-              hoverLabel="More"
-              data={"1"}
-              // handleAction={console.log(null)}
-              ops={[
-                {
-                  label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
-                  icon: "fas fa-search text-primary pointer",
-                  to: {
-                    url: `/client/delivery-monitoring/contract/${item.id}`,
-                    style: {
-                      color: "black",
-                    },
-                  },
-                },
-              ]}
-            />
-          ),
-        },
-      ];
-      setTableContent((prev) => [...prev, rows]);
       dataArr.push(objData);
     });
     console.log(`objData`, dataArr);
@@ -216,13 +157,6 @@ export const ContractsPage = () => {
           width={1500}
           loading={false}
         />
-        {/* <CustomTable
-          tableHeader={tableHeaderContracts}
-          tableContent={tableContent}
-          marginY="my-1"
-          hecto="hecto-15"
-          loading={loading}
-        /> */}
       </Paper>
     </>
   );
