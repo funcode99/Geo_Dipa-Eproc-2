@@ -37,6 +37,10 @@ const tableHeaderTerminNew = [
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK" />,
   },
   {
+    id: "start_date",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.START_DATE" />,
+  },
+  {
     id: "due_date",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />,
   },
@@ -248,6 +252,10 @@ const DetailPage = ({
       arrData = data.map((item, index) => ({
         number: (index += 1),
         scope_of_work: item.name,
+        start_date:
+          item.start_date !== null
+            ? formatDate(new Date(item.start_date))
+            : null,
         due_date:
           item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
         bobot: `${item.weight}%`,
