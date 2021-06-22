@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
   },
+  bodyDialog: {
+    minHeight: "65vh",
+  },
 }));
 
 const TabLists = [
@@ -170,7 +173,7 @@ const ItemContract = (props) => {
           >
             <FormattedMessage id="TITLE.FOUND_SOMETHING" />
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className={classes.bodyDialog}>
             <div className="form-group row">
               <label htmlFor="notFit" className="col-sm-3 col-form-label">
                 <FormattedMessage id="TITLE.MISMATCH" />

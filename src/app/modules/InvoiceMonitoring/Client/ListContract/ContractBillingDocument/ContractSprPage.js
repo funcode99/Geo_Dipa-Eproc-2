@@ -147,14 +147,12 @@ function ContractSprPage(props) {
                             getHistorySppData(sppData.id)
                         })
                         .catch((error) => {
-                            if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
-                                setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                            setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                             setLoading(false);
                         });
                 })
                 .catch((error) => {
-                    if (error.response?.status === 400 && error.response?.data.message !== "TokenExpiredError")
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+                    setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
                     setLoading(false);
                 });
         }
@@ -172,11 +170,7 @@ function ContractSprPage(props) {
                 setContractData(response.data.data)
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, formik, intl, setToast, user_id])
 
@@ -184,14 +178,12 @@ function ContractSprPage(props) {
         getSpp(contract_id, termin)
             .then(response => {
                 setSppData(response['data']['data'])
-                getHistorySppData(response['data']['data']['id'])
+                if (response['data']['data']) {
+                    getHistorySppData(response['data']['data']['id'])
+                }
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [contract_id, termin, formik, intl, setToast, user_id])
 
@@ -217,11 +209,7 @@ function ContractSprPage(props) {
                 getHistorySppData(sppData.id)
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
                 setLoading(false);
             });
     };
@@ -234,20 +222,12 @@ function ContractSprPage(props) {
                         setHistorySppData([...responseReject['data']['data'], ...responseApprove['data']['data']])
                     })
                     .catch((error) => {
-                        if (
-                            error.response?.status !== 400 &&
-                            error.response?.data.message !== "TokenExpiredError"
-                        )
-                            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
                     });
                 // setHistorySppData(response['data']['data'])
             })
             .catch((error) => {
-                if (
-                    error.response?.status !== 400 &&
-                    error.response?.data.message !== "TokenExpiredError"
-                )
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
     }, [intl, setToast])
 
