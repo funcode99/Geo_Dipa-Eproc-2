@@ -163,7 +163,7 @@ export const DataAsideMenuListVendor = [
     title: "MENU.INVOICE_MONITORING",
     subMenu: [
       {
-        rootPath: "/vendor/invoice_monitoring",
+        rootPath: "/vendor/invoice_monitoring/contract",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },

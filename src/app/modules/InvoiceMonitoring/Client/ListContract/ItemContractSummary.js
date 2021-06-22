@@ -16,7 +16,7 @@ import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
 
 function ItemContractSummary(props) {
-  const { intl } = props;
+  const { intl, getData } = props;
   const [data] = useState([
     {
       name: "BAPP",
@@ -174,6 +174,7 @@ function ItemContractSummary(props) {
         );
         getPicContractData(response.data.data.vendor_id);
         getPicVendorData(response.data.data.vendor_id);
+        getData(response.data.data);
       })
       .catch((error) => {
         if (

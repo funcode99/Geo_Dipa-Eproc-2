@@ -31,8 +31,15 @@ export async function checkRole(id) {
 export async function getContractClient(params) {
   return axios.get(`/invoice/contract_invoice${params ? "?" + params : ""}`);
 }
-export async function getContractVendor(id) {
-  return axios.get(`/invoice/contract_by_vendors/${id}`);
+export async function getContractVendor(id, params) {
+  return axios.get(
+    `/invoice/contract_by_vendors/${id}${params ? "?" + params : ""}`
+  );
+}
+export async function getContractPic(id, params) {
+  return axios.get(
+    `/invoice/contract_by_pic/${id}${params ? "?" + params : ""}`
+  );
 }
 export async function saveSpp(data) {
   // axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'

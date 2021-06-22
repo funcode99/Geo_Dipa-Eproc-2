@@ -392,5 +392,7 @@
   "TITLE.START_DATE": "Tanggal Mulai",
   "TITLE.END_DATE": "Tanggal Berakhir",
   "TITLE.START_SYNC": "Mulai Sync",
-  "TITLE.DONE_DATA_SYNC": "Data Selesai Sync"
+  "TITLE.DONE_DATA_SYNC": "Data Selesai Sync",
+  "TITLE.CONTRACT_ITEM": "Contract Item",
+  "TITLE.CONTRACT_TERM": "Contract Term"
 }
