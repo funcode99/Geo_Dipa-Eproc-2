@@ -135,6 +135,10 @@ const ItemContract = (props) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
   const [dialogLeader, setDialogLeader] = React.useState(false);
+  const [dataOne, setDataOne] = React.useState([]);
+  const [dataOneValue, setDataOneValue] = React.useState([]);
+  const [dataTwo, setDataTwo] = React.useState([]);
+  const [dataTwoValue, setDataTwoValue] = React.useState([]);
 
   function handleChangeTab(event, newTabActive) {
     setTabActive(newTabActive);
@@ -168,15 +172,15 @@ const ItemContract = (props) => {
           </DialogTitle>
           <DialogContent>
             <div className="form-group row">
-              <label htmlFor="staticEmail" className="col-sm-3 col-form-label">
+              <label htmlFor="notFit" className="col-sm-3 col-form-label">
                 Letak Ketidak Sesuaian
               </label>
               <div className="col-sm-9">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="staticEmail"
-                  defaultValue="Test"
+                <StyledSelect
+                  isDisabled={false}
+                  options={dataOne}
+                  value={dataOneValue}
+                  id="notFit"
                 />
               </div>
             </div>
@@ -198,11 +202,11 @@ const ItemContract = (props) => {
                 Diajukan Kepada
               </label>
               <div className="col-sm-9">
-                <input
-                  type="text"
-                  className="form-control"
+                <StyledSelect
+                  isDisabled={false}
+                  options={dataTwo}
+                  value={dataTwoValue}
                   id="toSend"
-                  defaultValue="Test"
                 />
               </div>
             </div>
