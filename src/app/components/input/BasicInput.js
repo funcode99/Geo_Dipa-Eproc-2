@@ -20,7 +20,7 @@ const BasicInput = ({ placeholder, onChange, type = "text", ...other }) => {
 };
 
 BasicInput.defaultProps = {
-  placeholder: "placeholder ...",
+  // placeholder: "placeholder ...",
 };
 
 export default BasicInput;
