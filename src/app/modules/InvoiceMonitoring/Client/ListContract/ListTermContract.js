@@ -284,8 +284,8 @@ const ListTermContract = (props) => {
                               .moment(new Date(value?.due_date))
                               .format("DD MMM YYYY")}
                           </td>
-                          <td>bobot</td>
-                          <td>price</td>
+                          <td>{value?.bobot + "%"}</td>
+                          <td>{rupiah(value?.prices || 0)}</td>
                           <td>{value?.progress}</td>
                           <td>Doc Progress</td>
                           <td>{value?.name}</td>

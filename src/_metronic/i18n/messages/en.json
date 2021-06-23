@@ -398,5 +398,6 @@
   "TITLE.START_SYNC": "Start Sync",
   "TITLE.DONE_DATA_SYNC": "Data Sync Complete",
   "TITLE.CONTRACT_ITEM": "Contract Item",
-  "TITLE.CONTRACT_TERM": "Contract Term"
+  "TITLE.CONTRACT_TERM": "Contract Term",
+  "TITLE.DOCUMENT_CONTRACT": "Contract Document"
 }
