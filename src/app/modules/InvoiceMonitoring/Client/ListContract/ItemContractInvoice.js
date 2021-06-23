@@ -28,7 +28,13 @@ import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/components/RowAccordion";
 import { formatDate } from "../../../../libs/date";
 import BtnAksi from "../../../DeliveryMonitoring/pages/Termin/Documents/components/BtnAksi";
-import { getDeliverableInInvoive, getContractSoftCopy, getContractDistributionSPK, getContractDistributionAgreement, getFileEproc } from "../../_redux/InvoiceMonitoringCrud";
+import {
+  getDeliverableInInvoive,
+  getContractSoftCopy,
+  getContractDistributionSPK,
+  getContractDistributionAgreement,
+  getFileEproc,
+} from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
 
@@ -78,12 +84,12 @@ const useStyles = makeStyles((theme) => ({
 const data_ops = [
   {
     label: "TITLE.ACCEPT_DOCUMENT",
-    icon: "fas fa-check text-primary",
+    icon: "fas fa-check-circle text-success",
     type: "approved",
   },
   {
     label: "TITLE.REJECT_DOCUMENT",
-    icon: "fas fa-times-circle text-danger",
+    icon: "fas fa-times-circle text-warning",
     type: "rejected",
   },
 ];
@@ -91,12 +97,12 @@ const data_ops = [
 const data_opsDeliverable = [
   {
     label: "TITLE.ACCEPT_DOCUMENT",
-    icon: "fas fa-check text-primary",
+    icon: "fas fa-check-circle text-success",
     type: "approved",
   },
   {
     label: "TITLE.REJECT_DOCUMENT",
-    icon: "fas fa-times-circle text-danger",
+    icon: "fas fa-times-circle text-warning",
     type: "rejected",
   },
 ];
@@ -229,8 +235,8 @@ function ItemContractInvoice(props) {
     getContractDistributionSPK(contract)
       .then((result) => {
         setLoading(false);
-        if (result.data !== 'DATA NOT FOUND!') {
-          setContractFilename(result.data.data.items.data.fileName)
+        if (result.data !== "DATA NOT FOUND!") {
+          setContractFilename(result.data.data.items.data.fileName);
         }
       })
       .catch((error) => {
@@ -244,8 +250,8 @@ function ItemContractInvoice(props) {
     getContractDistributionAgreement(contract)
       .then((result) => {
         setLoading(false);
-        if (result.data !== 'DATA NOT FOUND!') {
-          setContractFilename(result.data.data.items.data.fileName)
+        if (result.data !== "DATA NOT FOUND!") {
+          setContractFilename(result.data.data.items.data.fileName);
         }
       })
       .catch((error) => {
@@ -261,9 +267,9 @@ function ItemContractInvoice(props) {
         setLoading(false);
         setDataSoftCopy(result.data.data);
         if (result.data.data.contract_status === "SPK") {
-          getContractDistributionSPKData()
+          getContractDistributionSPKData();
         } else {
-          getContractDistributionAgreementData()
+          getContractDistributionAgreementData();
         }
       })
       .catch((error) => {
@@ -280,7 +286,7 @@ function ItemContractInvoice(props) {
         a.href = result.data.data.items.respons;
         a.download = contractFilename;
         a.click();
-        a.remove()
+        a.remove();
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -437,10 +443,17 @@ function ItemContractInvoice(props) {
                       <td>
                         <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT" />
                       </td>
-                      {contractFilename
-                        ? <td><a href="#" onClick={getFileContract}>{dataSoftCopy?.contract_number}</a></td>
-                        : <td>{dataSoftCopy?.contract_number} (file tidak tersedia)</td>
-                      }
+                      {contractFilename ? (
+                        <td>
+                          <a href="#" onClick={getFileContract}>
+                            {dataSoftCopy?.contract_number}
+                          </a>
+                        </td>
+                      ) : (
+                        <td>
+                          {dataSoftCopy?.contract_number} (file tidak tersedia)
+                        </td>
+                      )}
                       <td className="align-middle"></td>
                       <td className="align-middle">
                         <ButtonAction

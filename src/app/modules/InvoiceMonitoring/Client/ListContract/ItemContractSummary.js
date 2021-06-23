@@ -75,6 +75,7 @@ function ItemContractSummary(props) {
 
   const [Toast, setToast] = useToast();
   const contract_id = props.match.params.contract;
+  const termin = props.match.params.termin;
   const monitoring_type = "INVOICE";
 
   const getPicContractData = useCallback(
@@ -116,7 +117,7 @@ function ItemContractSummary(props) {
   );
 
   const getContractData = useCallback(() => {
-    getContractSummary(contract_id)
+    getContractSummary(contract_id, termin)
       .then((response) => {
         response["data"]["data"]["contract_value"] = rupiah(
           response["data"]["data"]["contract_value"]

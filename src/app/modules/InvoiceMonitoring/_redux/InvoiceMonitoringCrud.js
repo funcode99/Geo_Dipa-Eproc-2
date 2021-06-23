@@ -22,8 +22,8 @@ export function deleteUser(data) {
 export function assignUser(data) {
   return axios.post(`/invoice/assign_pic/`, data);
 }
-export async function getContractSummary(id) {
-  return axios.get(`/invoice/contract_invoice_sumary/${id}`);
+export async function getContractSummary(contract_id, term_id) {
+  return axios.get(`/invoice/contract_invoice_sumary?contract_id=${contract_id}&term_id=${term_id}`);
 }
 export async function checkRole(id) {
   return axios.get(`/invoice/check_role/${id}`);

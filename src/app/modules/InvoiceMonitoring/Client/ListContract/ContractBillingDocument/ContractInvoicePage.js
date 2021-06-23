@@ -107,9 +107,11 @@ function ContractInvoicePage(props) {
     });
 
     const getContractData = useCallback(() => {
-        getContractSummary(contract_id)
+        getContractSummary(contract_id, termin)
             .then(response => {
                 response['data']['data']['contract_value_new'] = rupiah(response['data']['data']['contract_value'])
+                response['data']['data']['termin_value_new'] = rupiah(response['data']['data']['termin_value'])
+                response['data']['data']['termin_value_ppn_new'] = rupiah(response['data']['data']['termin_value'] * 1.1)
                 setContractData(response.data.data)
             })
             .catch((error) => {
@@ -433,15 +435,15 @@ function ContractInvoicePage(props) {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
+                                <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: contractData['termin_name'] }} /></label>
                                 <div className="col-sm-7">
-                                    <input type="text" className="form-control" id="priceStep1" disabled />
+                                    <input type="text" className="form-control" id="priceStep1" defaultValue={contractData['termin_value_new']} disabled />
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="priceTaxInvoice" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: termin }} /></label>
+                                <label htmlFor="priceTaxInvoice" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: contractData['termin_name'] }} /></label>
                                 <div className="col-sm-7">
-                                    <input type="text" className="form-control" id="priceTaxInvoice" disabled />
+                                    <input type="text" className="form-control" id="priceTaxInvoice" defaultValue={contractData['termin_value_ppn_new']} disabled />
                                 </div>
                             </div>
                         </div>
@@ -450,10 +452,6 @@ function ContractInvoicePage(props) {
                 <CardFooter className="text-right">
                     <button type="button" onClick={() => setModalApprove(true)} disabled={isSubmit || invoiceData?.state === 'REJECTED' || invoiceData?.state === 'APPROVED' || invoiceData === null} className="btn btn-primary mx-1"><FormattedMessage id="TITLE.ACCEPT_DOCUMENT" /></button>
                     <button type="button" onClick={() => setModalReject(true)} disabled={isSubmit || invoiceData?.state === 'REJECTED' || invoiceData?.state === 'APPROVED' || invoiceData === null} className="btn btn-danger mx-1"><FormattedMessage id="TITLE.REJECT_DOCUMENT" /></button>
-                </CardFooter>
-            </Card>
-            <Card className="mt-5">
-                <CardBody>
                     <div className="my-5 text-center">
                         <h6><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.HISTORY" /></h6>
                     </div>
@@ -508,8 +506,7 @@ function ContractInvoicePage(props) {
                             </div>
                         </div>
                     </div>
-                    {/* end: Table */}
-                </CardBody>
+                </CardFooter>
             </Card>
         </React.Fragment>
     )
