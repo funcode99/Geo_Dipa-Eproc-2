@@ -1,5 +1,11 @@
 import React, { Suspense, lazy, useEffect } from "react";
-import { Redirect, Switch, Route, useHistory } from "react-router-dom";
+import {
+  Redirect,
+  Switch,
+  Route,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 // Page Guide Metronic
 // import { BuilderPage } from "./pages/BuilderPage";
@@ -48,12 +54,13 @@ export default function BasePage() {
     shallowEqual
   );
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     if (window.location.pathname.split("/")[1] !== status) {
       history.push("/");
     }
-  }, []); // [] - is required if you need only one call
+  }, [location]); // [] - is required if you need only one call
   // https://reactjs.org/docs/hooks-reference.html#useeffect
 
   return (
