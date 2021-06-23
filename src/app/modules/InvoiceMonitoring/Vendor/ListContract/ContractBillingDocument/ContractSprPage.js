@@ -35,7 +35,7 @@ import moment from 'moment';
 
 function ContractSprPage(props) {
 
-    const { intl, classes } = props;
+    const { intl, classes, supportedFormats } = props;
 
     const [loading, setLoading] = useState(false);
     const [contractData, setContractData] = useState({})
@@ -91,6 +91,13 @@ function ContractSprPage(props) {
                 intl.formatMessage({
                     id: "AUTH.VALIDATION.REQUIRED_FIELD",
                 })
+            )
+            .test(
+                'fileType',
+                intl.formatMessage({
+                    id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FILE_TYPE_PDF",
+                }),
+                value => supportedFormats.includes(value?.type)
             ),
         bank_refference: Yup.boolean(),
         file_bank: Yup
@@ -102,6 +109,13 @@ function ContractSprPage(props) {
                         intl.formatMessage({
                             id: "AUTH.VALIDATION.REQUIRED_FIELD",
                         })
+                    )
+                    .test(
+                        'fileType',
+                        intl.formatMessage({
+                            id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FILE_TYPE_PDF",
+                        }),
+                        value => supportedFormats.includes(value?.type)
                     ),
             }),
         description: Yup
@@ -208,6 +222,7 @@ function ContractSprPage(props) {
                     bank_address: response['data']['data']['data_bank'][0]['address']['postal_address'],
                     bank_account_no: response['data']['data']['data_bank'][0]['account_number'],
                     bank_account_name: response['data']['data']['data_bank'][0]['account_holder_name'],
+                    payment_value: response['data']['data']['termin_value'],
                     created_by_id: user_id,
                 })
             })
@@ -277,14 +292,24 @@ function ContractSprPage(props) {
     };
 
     const handleUpload = (e) => {
-        setUploadFilename(e.currentTarget.files[0].name)
-        formik.setFieldValue('file_name', e.currentTarget.files[0].name)
+        if(e.currentTarget.files.length){
+            setUploadFilename(e.currentTarget.files[0].name)
+        } else {
+            setUploadFilename(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))
+        }
+        formik.setTouched({ ...formik.touched, file: true });
+        formik.setFieldValue('file_name', e.currentTarget.files[0]?.name)
         formik.setFieldValue('file', e.currentTarget.files[0])
     }
 
     const handleUploadBank = (e) => {
-        setUploadFilenameBank(e.currentTarget.files[0].name)
-        formik.setFieldValue('new_bank_file', e.currentTarget.files[0].name)
+        if(e.currentTarget.files.length){
+            setUploadFilenameBank(e?.currentTarget?.files[0]?.name)
+        } else {
+            setUploadFilenameBank(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))
+        }
+        formik.setTouched({ ...formik.touched, file_bank: true });
+        formik.setFieldValue('new_bank_file', e.currentTarget.files[0]?.name)
         formik.setFieldValue('file_bank', e.currentTarget.files[0])
     }
 
@@ -595,7 +620,7 @@ function ContractSprPage(props) {
                                             <span className={`input-group-text ${classes.textHover}`} onClick={() => setDialogState(true)}><i className="fas fa-eye"></i></span>
                                         </div>}
                                     </label>
-                                    <input type="file" className="d-none" id="upload" disabled={loading || sppStatus} onChange={(e => handleUpload(e))} />
+                                    <input type="file" className="d-none" id="upload" disabled={loading || sppStatus} onBlur={formik.handleBlur} onChange={(e => handleUpload(e))} />
                                     {(formik.touched.file && formik.errors.file) ? (
                                         <span className="col-sm-8 offset-sm-4 text-center text-danger" >
                                             {formik.errors.file}

@@ -53,7 +53,7 @@ function ContractTaxPage(props) {
     const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
     const contract_id = props.match.params.contract;
     const termin = props.match.params.termin;
-    const { intl, classes } = props;
+    const { intl, classes, supportedFormats } = props;
 
     const initialValues = {
         tax_no: '',
@@ -79,6 +79,13 @@ function ContractTaxPage(props) {
                 intl.formatMessage({
                     id: "AUTH.VALIDATION.REQUIRED_FIELD",
                 })
+            )
+            .test(
+                'fileType',
+                intl.formatMessage({
+                    id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FILE_TYPE_PDF",
+                }),
+                value => supportedFormats.includes(value?.type)
             ),
         description: Yup
             .string()
@@ -166,8 +173,8 @@ function ContractTaxPage(props) {
                 formik.setValues({
                     contract_id: response['data']['data']['id'],
                     vendor_id: response['data']['data']['vendor_id'],
+                    payment_value: response['data']['data']['termin_value'],
                     term: termin,
-                    payment_value: response['data']['data']['contract_value'],
                     created_by_id: user_id,
                     invoice_bool: false,
                     invoice_date: new Date(Date.now())
@@ -237,8 +244,13 @@ function ContractTaxPage(props) {
     }, [contract_id, termin, formik])
 
     const handleUpload = (e) => {
-        setUploadFilename(e.currentTarget.files[0].name)
-        formik.setFieldValue('file_name', e.currentTarget.files[0].name)
+        if(e.currentTarget.files.length){
+            setUploadFilename(e.currentTarget.files[0].name)
+        } else {
+            setUploadFilename(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))
+        }
+        formik.setTouched({ ...formik.touched, file: true });
+        formik.setFieldValue('file_name', e.currentTarget.files[0]?.name)
         formik.setFieldValue('file', e.currentTarget.files[0])
     }
 

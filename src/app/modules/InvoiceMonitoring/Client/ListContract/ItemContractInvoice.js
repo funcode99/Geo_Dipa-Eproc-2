@@ -407,7 +407,7 @@ function ItemContractInvoice(props) {
         >
           <div className={classes.column}>
             <span className={classes.ExpansionPanelHeaderSpan}>
-              Dokumen Pendukung
+              <FormattedMessage id="TITLE.DOCUMENT_CONTRACT" />
             </span>
           </div>
         </ExpansionPanelSummary>
