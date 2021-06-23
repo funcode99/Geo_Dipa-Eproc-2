@@ -181,9 +181,11 @@ function ContractReceiptPage(props) {
     });
 
     const getContractData = useCallback(() => {
-        getContractSummary(contract_id)
+        getContractSummary(contract_id, termin)
             .then(response => {
                 response['data']['data']['contract_value_new'] = rupiah(response['data']['data']['contract_value'])
+                response['data']['data']['termin_value_new'] = rupiah(response['data']['data']['termin_value'])
+                response['data']['data']['termin_value_ppn_new'] = rupiah(response['data']['data']['termin_value'] * 1.1)
                 setContractData(response.data.data)
                 formik.setValues({
                     contract_id: response['data']['data']['id'],
@@ -418,15 +420,15 @@ function ContractReceiptPage(props) {
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
+                                    <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: contractData['termin_name'] }} /></label>
                                     <div className="col-sm-7">
-                                        <input type="text" className="form-control" id="priceStep1" disabled />
+                                        <input type="text" className="form-control" id="priceStep1" defaultValue={contractData['termin_value_new']} disabled />
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                    <label htmlFor="priceTaxInvoice" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: termin }} /></label>
+                                    <label htmlFor="priceTaxInvoice" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: contractData['termin_name'] }} /></label>
                                     <div className="col-sm-7">
-                                        <input type="text" className="form-control" id="priceTaxReceipt" disabled />
+                                        <input type="text" className="form-control" id="priceTaxReceipt" defaultValue={contractData['termin_value_ppn_new']} disabled />
                                     </div>
                                 </div>
                             </div>
