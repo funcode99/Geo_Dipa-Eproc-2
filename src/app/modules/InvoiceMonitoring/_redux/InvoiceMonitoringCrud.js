@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DEV_NODE } from "../../../../redux/BaseHost";
+import { DEV_NODE, API_EPROC } from "../../../../redux/BaseHost";
 
 export function getPicContract(data) {
   return axios.post(`/invoice/get_pic_contract/${data.id}`, data);
@@ -157,6 +157,15 @@ export async function getFile() {
 
 export async function getContractSoftCopy(id) {
   return axios.get(`/invoice/get_soft_copy/${id}`);
+}
+export async function getContractDistributionSPK(id) {
+  return axios.get(`${API_EPROC}/api/contract_approved_vendor/${id}`);
+}
+export async function getContractDistributionAgreement(id) {
+  return axios.get(`${API_EPROC}/api/contract_approved_user/${id}`);
+}
+export async function getFileEproc(data) {
+  return axios.post(`${API_EPROC}/api/get_file`, data);
 }
 
 export async function getListSpt(params) {
