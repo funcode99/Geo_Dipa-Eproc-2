@@ -122,7 +122,7 @@ export async function getAllApprovedReceipt(id) {
 }
 export const getFileReceipt = `${DEV_NODE}/invoice/get_file_receipt/`;
 export async function approveReceipt(id, data) {
-  return axios.post(`/invoice/invoice_approved/${id}`, data);
+  return axios.post(`/invoice/invoice_receipt_approved/${id}`, data);
 }
 export async function saveTax(data) {
   return axios.post(`/invoice/invoice_tax_save/`, data);
