@@ -246,11 +246,12 @@ const Item = ({ handleClick }) => {
               dataRows={dataContractById.services}
               loading={loading}
               renderRows={({ item, index }) => {
+                let el = item;
                 return (
                   <RowAccordion
-                    key={item.id}
-                    data={["accordIcon", item.desc, "", "", "", ""]}
-                    dataAll={item.item_services}
+                    key={el.id}
+                    data={["accordIcon", el.desc, "", "", "", ""]}
+                    dataAll={el.item_services}
                   >
                     {(item) => {
                       return item?.map((item2) => {
@@ -260,7 +261,7 @@ const Item = ({ handleClick }) => {
                             onClick={
                               (e) =>
                                 handleChecklist(e, item2, {
-                                  id: item.id,
+                                  id: el.id,
                                   type: "jasa",
                                 })
                               // console.log(e)
