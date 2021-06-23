@@ -44,7 +44,7 @@ function DashboardListSpt(props) {
   const [paginations, setPaginations] = useState({
     numberColum: 0,
     page: 0,
-    count: 15,
+    count: 0,
     rowsPerPage: 10,
   });
   const [filterData] = useState([
