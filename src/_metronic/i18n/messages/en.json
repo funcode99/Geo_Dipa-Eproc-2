@@ -395,5 +395,20 @@
   "TITLE.START_DATE": "Start Date",
   "TITLE.END_DATE": "End Date",
   "TITLE.START_SYNC": "Start Sync",
-  "TITLE.DONE_DATA_SYNC": "Data Sync Complete"
+  "TITLE.DONE_DATA_SYNC": "Data Sync Complete",
+  "TITLE.QUANTITY": "Quantity",
+  "TITLE.ACTION": "Action",
+  "TITLE.TOTAL_PRICE_IS": "Total price is",
+  "TITLE.ADD": "Add",
+  "TITLE.EDIT_DATA": "Edit data",
+  "TITLE.DELETE_DATA": "Delete data",
+  "TITLE.DELIVERY_ORDER": "Delivery Order",
+  "TITLE.ITEM_IS_REQUIRE": "Item is required.",
+  "TITLE.DATE_IS_REQUIRE": "Date is required.",
+  "TITLE.QTY_IS_REQUIRE": "Quantity is required.",
+  "TITLE.SELECT_ITEM": "select item",
+  "TITLE.ITEM": "Item",
+  "MESSAGE.MIN_QUANTITY": "Minimum quantity is 1",
+  "MESSAGE.MUST_NUMBER": "Must number.",
+  "MESSAGE.MUST_POSITIVE": "Must greater than 0."
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-const BasicInput = ({ placeholder, onChange, ...other }) => {
+const BasicInput = ({ placeholder, onChange, type = "text", ...other }) => {
   const _handleChange = React.useCallback(
     (e) => {
       // console.log(`e`, e.target.value);
@@ -10,7 +10,7 @@ const BasicInput = ({ placeholder, onChange, ...other }) => {
   );
   return (
     <input
-      type="text"
+      type={type}
       className="form-control"
       onChange={_handleChange}
       placeholder={placeholder}
