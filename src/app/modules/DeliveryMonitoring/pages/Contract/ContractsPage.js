@@ -2,6 +2,7 @@ import { makeStyles, Paper } from "@material-ui/core";
 import React from "react";
 import SVG from "react-inlinesvg";
 import { FormattedMessage } from "react-intl";
+import { shallowEqual, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
@@ -67,6 +68,10 @@ export const ContractsPage = () => {
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = React.useState(false);
   const [newContent, setNewContent] = React.useState([]);
+  let status = useSelector(
+    (state) => state.auth.user.data.status,
+    shallowEqual
+  );
 
   const generateTableContent = (data) => {
     let dataArr = [];
@@ -97,7 +102,7 @@ export const ContractsPage = () => {
                 label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
                 icon: "fas fa-search text-primary pointer",
                 to: {
-                  url: `/client/delivery-monitoring/contract/${item.id}`,
+                  url: `/${status}/delivery-monitoring/contract/${item.id}`,
                   style: {
                     color: "black",
                   },

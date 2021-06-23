@@ -19,7 +19,7 @@ import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
 import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { FormattedMessage } from "react-intl";
 import ParaPihak from "./components/ParaPihak";
@@ -100,7 +100,10 @@ export const ContractDetailPage = () => {
   const dispatch = useDispatch();
   const [tabActive, setTabActive] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-
+  let authStatus = useSelector(
+    (state) => state.auth.user.data.status,
+    shallowEqual
+  );
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
       data.map((services) => {
@@ -202,7 +205,7 @@ export const ContractDetailPage = () => {
         items={[
           {
             label: "List of Contract & PO",
-            to: "/client/delivery-monitoring/contract",
+            to: `/${authStatus}/delivery-monitoring/contract`,
           },
           {
             label: `${

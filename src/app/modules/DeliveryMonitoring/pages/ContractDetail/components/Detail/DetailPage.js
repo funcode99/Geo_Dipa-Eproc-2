@@ -18,7 +18,7 @@ import * as Yup from "yup";
 import useToast from "../../../../../../components/toast";
 import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
-import { connect } from "react-redux";
+import { connect, shallowEqual, useSelector } from "react-redux";
 import ModalTerm from "./ModalTerm";
 import { FormattedMessage } from "react-intl";
 import ModalConfirmation from "../../../../../../components/modals/ModalConfirmation";
@@ -78,6 +78,7 @@ const DetailPage = ({
   dataSubmitItems,
   saveSubmitItems,
   saveContractById,
+  authStatus,
 }) => {
   const [tableContent, setTableContent] = React.useState([]);
   const [newContent, setNewContent] = React.useState([]);
@@ -272,7 +273,7 @@ const DetailPage = ({
                 label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
                 icon: "fas fa-search",
                 to: {
-                  url: `/client/delivery-monitoring/contract/task/${item.id}`,
+                  url: `/${authStatus}/delivery-monitoring/contract/task/${item.id}`,
                   style: {
                     color: "black",
                   },
@@ -441,9 +442,10 @@ const DetailPage = ({
   );
 };
 
-const mapState = ({ deliveryMonitoring }) => ({
+const mapState = ({ deliveryMonitoring, auth }) => ({
   dataSubmitItems: deliveryMonitoring.dataSubmitItems,
   contract: deliveryMonitoring.dataContractById,
+  authStatus: auth.user.data.status
 });
 
 const mapDispatch = (dispatch) => ({
