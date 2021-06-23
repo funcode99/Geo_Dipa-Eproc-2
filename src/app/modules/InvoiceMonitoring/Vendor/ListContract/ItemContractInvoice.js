@@ -73,6 +73,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const supportedFormats = [
+    "application/pdf",
+    "application/x-pdf",
+    "application/x-bzpdf",
+    "application/x-gzpdf",
+];
+
 function ItemContractInvoice(props) {
 
     const navLists = [
@@ -108,25 +115,25 @@ function ItemContractInvoice(props) {
 
                     {navActive === 'SPR' && (
                         <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-                            <ContractSprPage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} />
+                            <ContractSprPage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} supportedFormats={supportedFormats} />
                         </div>
                     )}
 
                     {navActive === 'Invoice' && (
                         <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-                            <ContractInvoicePage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} />
+                            <ContractInvoicePage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} supportedFormats={supportedFormats} />
                         </div>
                     )}
 
                     {navActive === 'Kwitansi' && (
                         <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-                            <ContractReceiptPage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} />
+                            <ContractReceiptPage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} supportedFormats={supportedFormats} />
                         </div>
                     )}
 
                     {navActive === 'Faktur' && (
                         <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-                            <ContractTaxPage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} />
+                            <ContractTaxPage {...props} classes={classes} dialogTitleFile={DialogTitleFile} transition={Transition} supportedFormats={supportedFormats} />
                         </div>
                     )}
 
