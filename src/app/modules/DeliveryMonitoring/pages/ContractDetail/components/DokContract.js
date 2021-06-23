@@ -1,7 +1,11 @@
+import { Button } from "@material-ui/core";
 import { TableBody, TableCell } from "@material-ui/core";
 import React from "react";
-import { Table } from "react-bootstrap";
+import {  Table } from "react-bootstrap";
+import { FormattedMessage } from "react-intl";
+import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
+import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import {
   StyledHead,
   StyledTable,
@@ -9,6 +13,45 @@ import {
   StyledTableHead,
 } from "../../Termin/style";
 import withBox from "./withBox";
+
+const tableHeaderContractsNew = [
+  {
+    id: "no",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.NO" />,
+  },
+  // {
+  //   id: "po_number",
+  //   label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
+  // },
+  // {
+  //   id: "procurement_title",
+  //   label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
+  // },
+  // {
+  //   id: "po_date",
+  //   label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
+  // },
+  // {
+  //   id: "contract_date",
+  //   label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />,
+  // },
+  {
+    id: "name",
+    label: 'Nama Dokumen',
+  },
+  {
+    id: "nomor",
+    label: 'Nomor Dokumen',
+  },
+  {
+    id: "dokumen",
+    label: 'Dokumen',
+  },
+  {
+    id: "tanggal",
+    label: 'Tanggal Dokumen',
+  },
+];
 
 const RowNormal = () => {
   return (
@@ -22,11 +65,42 @@ const RowNormal = () => {
   );
 };
 
+const BtnLihat = ({ url }) => {
+  const handleOpen = React.useCallback(() => {
+    window.open(url, "_blank");
+  }, [url]);
+  return (
+    <div className={"d-flex flex-row align-items-center"}>
+      {/* <Typography>{url}</Typography> */}
+      {url && (
+        <Button onClick={handleOpen} href="#text-buttons">
+          Lihat Dokumen
+        </Button>
+      )}
+    </div>
+  );
+};
+
 const DokContract = () => {
+  const { data:{file} } = useSelector(
+    (state) => state.deliveryMonitoring.dataContractById
+  );
+  console.log(`data`, file);
   return (
     <Card>
       <CardBody>
-        <div className="table-wrapper-scroll-y my-custom-scrollbar">
+        <TablePaginationCustom
+          headerRows={tableHeaderContractsNew}
+          width={1210}
+          rows={file.map((el, id) => ({
+            no:id+1,
+            name:el.namaDokumen,
+            nomor: el.noDokumen,
+            dokumen: <BtnLihat url={el.linkDokumen} />,
+            tanggal: el.tglDokumen,
+          }))}
+         />
+        {/* <div className="table-wrapper-scroll-y my-custom-scrollbar">
           <div className="segment-table">
             <div className="hecto-10">
               <StyledTable>
@@ -52,7 +126,7 @@ const DokContract = () => {
               </StyledTable>
             </div>
           </div>
-        </div>
+        </div> */}
       </CardBody>
     </Card>
   );
