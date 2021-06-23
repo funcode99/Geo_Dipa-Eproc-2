@@ -15,6 +15,7 @@ import PaginationTable from "./components/PaginationTable";
 import Skeleton from "@material-ui/lab/Skeleton";
 import SearchBox from "./components/SearchBox";
 import "./styles.scss";
+import _ from "lodash";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -47,7 +48,7 @@ function searchFind(rows, query) {
   // (row) => row.procurement_title.toLowerCase().indexOf(query) > -1
   return rows.filter((row) =>
     columns.some((column) => {
-      if (row[column] !== null)
+      if (!_.isEmpty(row[column]))
         return (
           row[column]
             .toString()
@@ -92,6 +93,8 @@ export default function TablePaginationCustom({
   loading,
   width,
   withSearch = true,
+  withPagination = true,
+  renderRows,
 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -194,6 +197,9 @@ export default function TablePaginationCustom({
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name);
                     const labelId = `enhanced-table-checkbox-${index}`;
+                    if (typeof renderRows === "function") {
+                      return renderRows({ item: row, index });
+                    }
                     return (
                       <TableRow
                         hover
@@ -241,13 +247,15 @@ export default function TablePaginationCustom({
               </TableBody>
             </Table>
           </TableContainer>
-          <PaginationTable
-            rows={rows}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            handleChangePage={handleChangePage}
-            handleChangeRowsPerPage={handleChangeRowsPerPage}
-          />
+          {withPagination && (
+            <PaginationTable
+              rows={rows}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          )}
         </div>
       </Paper>
     </div>

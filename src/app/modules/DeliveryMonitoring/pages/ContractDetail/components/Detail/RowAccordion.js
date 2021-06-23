@@ -1,4 +1,4 @@
-import { TableCell } from "@material-ui/core";
+import { TableCell, TableRow } from "@material-ui/core";
 import { ExpandLessOutlined, ExpandMoreOutlined } from "@material-ui/icons";
 import React from "react";
 import { StyledTableRow } from "../../../../../../components/tables/style";
@@ -14,12 +14,12 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
 
   return (
     <React.Fragment>
-      <StyledTableRow>
+      <TableRow hover onClick={handleVisible}>
         <TableCell>
           {isChildExist && (
             <button
               className={`btn btn-primary btn-sm p-0 align-middle`}
-              onClick={handleVisible}
+              // onClick={handleVisible}
             >
               {visible ? <ExpandLessOutlined /> : <ExpandMoreOutlined />}
             </button>
@@ -28,7 +28,7 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
         {data?.map(
           (element, id) => id > 0 && <TableCell key={id}>{element}</TableCell>
         )}
-      </StyledTableRow>
+      </TableRow>
       {isChildExist && visible && children(dataAll)}
     </React.Fragment>
   );

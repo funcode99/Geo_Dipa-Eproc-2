@@ -16,7 +16,7 @@ import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
 
 function ItemContractSummary(props) {
-  const { intl } = props;
+  const { intl, getData } = props;
   const [data] = useState([
     {
       name: "BAPP",
@@ -75,6 +75,7 @@ function ItemContractSummary(props) {
 
   const [Toast, setToast] = useToast();
   const contract_id = props.match.params.contract;
+  const termin = props.match.params.termin;
   const monitoring_type = "INVOICE";
 
   const getPicContractData = useCallback(
@@ -116,7 +117,7 @@ function ItemContractSummary(props) {
   );
 
   const getContractData = useCallback(() => {
-    getContractSummary(contract_id)
+    getContractSummary(contract_id, termin)
       .then((response) => {
         response["data"]["data"]["contract_value"] = rupiah(
           response["data"]["data"]["contract_value"]
@@ -174,6 +175,7 @@ function ItemContractSummary(props) {
         );
         getPicContractData(response.data.data.vendor_id);
         getPicVendorData(response.data.data.vendor_id);
+        getData(response.data.data);
       })
       .catch((error) => {
         if (
@@ -182,7 +184,14 @@ function ItemContractSummary(props) {
         )
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  }, [contract_id, intl, setToast, getPicContractData, getPicVendorData]);
+  }, [
+    contract_id,
+    intl,
+    setToast,
+    getPicContractData,
+    getPicVendorData,
+    getData,
+  ]);
 
   const setTimePIcker = (from_time, thru_time) => {
     window.$("#kt_daterangepicker_1").daterangepicker({

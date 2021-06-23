@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DEV_NODE } from "../../../../redux/BaseHost";
+import { DEV_NODE, API_EPROC } from "../../../../redux/BaseHost";
 
 export function getPicContract(data) {
   return axios.post(`/invoice/get_pic_contract/${data.id}`, data);
@@ -22,8 +22,8 @@ export function deleteUser(data) {
 export function assignUser(data) {
   return axios.post(`/invoice/assign_pic/`, data);
 }
-export async function getContractSummary(id) {
-  return axios.get(`/invoice/contract_invoice_sumary/${id}`);
+export async function getContractSummary(contract_id, term_id) {
+  return axios.get(`/invoice/contract_invoice_sumary?contract_id=${contract_id}&term_id=${term_id}`);
 }
 export async function checkRole(id) {
   return axios.get(`/invoice/check_role/${id}`);
@@ -31,8 +31,15 @@ export async function checkRole(id) {
 export async function getContractClient(params) {
   return axios.get(`/invoice/contract_invoice${params ? "?" + params : ""}`);
 }
-export async function getContractVendor(id) {
-  return axios.get(`/invoice/contract_by_vendors/${id}`);
+export async function getContractVendor(id, params) {
+  return axios.get(
+    `/invoice/contract_by_vendors/${id}${params ? "?" + params : ""}`
+  );
+}
+export async function getContractPic(id, params) {
+  return axios.get(
+    `/invoice/contract_by_pic/${id}${params ? "?" + params : ""}`
+  );
 }
 export async function saveSpp(data) {
   // axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
@@ -115,7 +122,7 @@ export async function getAllApprovedReceipt(id) {
 }
 export const getFileReceipt = `${DEV_NODE}/invoice/get_file_receipt/`;
 export async function approveReceipt(id, data) {
-  return axios.post(`/invoice/invoice_approved/${id}`, data);
+  return axios.post(`/invoice/invoice_receipt_approved/${id}`, data);
 }
 export async function saveTax(data) {
   return axios.post(`/invoice/invoice_tax_save/`, data);
@@ -150,6 +157,15 @@ export async function getFile() {
 
 export async function getContractSoftCopy(id) {
   return axios.get(`/invoice/get_soft_copy/${id}`);
+}
+export async function getContractDistributionSPK(id) {
+  return axios.get(`${API_EPROC}/api/contract_approved_vendor/${id}`);
+}
+export async function getContractDistributionAgreement(id) {
+  return axios.get(`${API_EPROC}/api/contract_approved_user/${id}`);
+}
+export async function getFileEproc(data) {
+  return axios.post(`${API_EPROC}/api/get_file`, data);
 }
 
 export async function getListSpt(params) {

@@ -1,51 +1,41 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-} from "../../../../../_metronic/_partials/controls";
+import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
-import { Link } from "react-router-dom";
-import { getContractClient } from "../../_redux/InvoiceMonitoringCrud";
-import useToast from "../../../../components/toast";
 import {
-  TablePagination,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Typography,
-  IconButton,
-} from "@material-ui/core";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import { withStyles } from "@material-ui/core/styles";
-import { Document, Page, pdfjs } from "react-pdf";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import "react-perfect-scrollbar/dist/css/styles.css";
+  getContractVendor,
+  getContractPic,
+} from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
+import { TablePagination } from "@material-ui/core";
+import ButtonAction from "../../../../components/buttonAction/ButtonAction";
+import { useHistory } from "react-router-dom";
+
+const data_ops = [
+  {
+    label: "TITLE.OPEN_INVOICE",
+    icon: "fas fa-search text-primary",
+    type: "open",
+  },
+];
 
 function DashboardListContract(props) {
   const { intl } = props;
-  // const vendor_id = useSelector(
-  //   (state) => state.auth.user.data.vendor_id,
-  //   shallowEqual
-  // );
-  const [filterTable, setFilterTable] = useState({});
-  const [contractData, setContractData] = useState([]);
-  const [nameStateFilter, setNameStateFilter] = useState("");
   const [Toast, setToast] = useToast();
+  const [filterTable, setFilterTable] = useState({});
+  const [nameStateFilter, setNameStateFilter] = useState("");
   const [paginations, setPaginations] = useState({
     numberColum: 0,
     page: 0,
-    count: 15,
+    count: 0,
     rowsPerPage: 10,
   });
   const [filterData] = useState([
     {
       title: intl.formatMessage({
-        id: "TITLE.CONTRACT_NO",
+        id: "CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER",
       }),
       name: "contract_no",
       type: "text",
@@ -61,28 +51,14 @@ function DashboardListContract(props) {
       title: intl.formatMessage({
         id: "TITLE.PO_NUMBER",
       }),
-      name: "no_po",
+      name: "po_no",
       type: "text",
     },
     {
       title: intl.formatMessage({
-        id: "TITLE.TERMIN",
+        id: "CONTRACT_DETAIL.LABEL.VENDOR",
       }),
-      name: "termin",
-      type: "text",
-    },
-    {
-      title: intl.formatMessage({
-        id: "TITLE.SA_NUMBER",
-      }),
-      name: "no_sa",
-      type: "text",
-    },
-    {
-      title: intl.formatMessage({
-        id: "TITLE.INVOICE_NO",
-      }),
-      name: "no_invoice",
+      name: "vendor_name",
       type: "text",
     },
   ]);
@@ -90,15 +66,60 @@ function DashboardListContract(props) {
   const [data, setData] = useState([]);
   const [filterSort, setFilterSort] = useState({ filter: {}, sort: {} });
   const [sortData, setSortData] = useState({
-    name: "contract_no",
+    name: "",
     order: false,
   });
   const [err, setErr] = useState(false);
-  const [dialogState, setDialogState] = useState(false);
+  const history = useHistory();
+  const dataUser = useSelector((state) => state.auth.user.data);
 
-  useEffect(() => {
-    getListContractData();
-  }, []);
+  const requestFilterSort = useCallback(
+    (updateFilterTable, updateSortTable) => {
+      setErr(false);
+      setLoading(true);
+      setData([]);
+      let pagination = Object.assign({}, paginations);
+      let filterSorts = filterSort;
+      filterSorts.filter = JSON.stringify(
+        updateFilterTable ? updateFilterTable : filterTable
+      );
+      filterSorts.sort = JSON.stringify(
+        updateSortTable ? updateSortTable : sortData
+      );
+      pagination.page = pagination.page + 1;
+      filterSorts = Object.assign({}, filterSorts, pagination);
+      setFilterSort({ ...filterSorts });
+      let params = new URLSearchParams(filterSorts).toString();
+      if (dataUser.main_vendor) {
+        getContractVendor(dataUser.vendor_id, params)
+          .then((result) => {
+            setLoading(false);
+            setData(result.data.data);
+            setPaginations({ ...paginations, count: result.data.count || 0 });
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      } else {
+        getContractPic(dataUser.user_id, params)
+          .then((result) => {
+            setLoading(false);
+            setData(result.data.data);
+            setPaginations({ ...paginations, count: result.data.count || 0 });
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      }
+    },
+    [filterTable, sortData, filterSort, intl, setToast, paginations, dataUser]
+  );
+
+  useEffect(requestFilterSort, []);
 
   const openFilterTable = (name, index) => {
     let idFilter = "filter-" + index;
@@ -134,7 +155,7 @@ function DashboardListContract(props) {
     ).value;
     setFilterTable({ ...filterTables });
     openFilterTable(property, index);
-    // requestFilterSort();
+    requestFilterSort();
   };
 
   const resetValueFilter = (property) => {
@@ -142,66 +163,16 @@ function DashboardListContract(props) {
     filterTables[property] = "";
     document.getElementById(property).value = "";
     setFilterTable({ ...filterTables });
-    // requestFilterSort();
+    requestFilterSort();
   };
 
   const resetFilter = () => {
     setFilterTable({});
     document.getElementById("filter-form-all").reset();
-    // requestFilterSort({});
-  };
-
-  const requestFilterSort = useCallback(
-    (updateFilterTable, updateSortTable) => {
-      setLoading(true);
-      setData([]);
-      let pagination = Object.assign({}, paginations);
-      let filterSorts = filterSort;
-      filterSorts.filter = JSON.stringify(
-        updateFilterTable ? updateFilterTable : filterTable
-      );
-      filterSorts.sort = JSON.stringify(
-        updateSortTable ? updateSortTable : sortData
-      );
-      pagination.page = pagination.page + 1;
-      filterSorts = Object.assign({}, filterSorts, pagination);
-      setFilterSort({ ...filterSorts });
-      let params = new URLSearchParams(filterSorts).toString();
-      // getSla(params)
-      //   .then((result) => {
-      //     setLoading(false);
-      //     setData(result.data.data);
-      //     setPaginations({ ...paginations, count: result.data.count || 0 });
-      //   })
-      //   .catch((err) => {
-      //     setErr(true);
-      //     setLoading(false);
-      //     if (
-      //       err.response?.status !== 400 &&
-      //       err.response?.data.message !== "TokenExpiredError"
-      //     )
-      //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      //   });
-    },
-    [filterTable, sortData, filterSort, intl, setToast, paginations]
-  );
-
-  const getListContractData = () => {
-    getContractClient()
-      .then((response) => {
-        setContractData(response.data.data);
-      })
-      .catch((error) => {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        )
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      });
+    requestFilterSort({});
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log("newPage", newPage);
     let pagination = paginations;
     pagination.numberColum =
       newPage > pagination.page
@@ -211,7 +182,9 @@ function DashboardListContract(props) {
     setPaginations({
       ...pagination,
     });
+    requestFilterSort();
   };
+
   const handleChangeRowsPerPage = (event) => {
     let pagination = paginations;
     pagination.page = 0;
@@ -220,22 +193,17 @@ function DashboardListContract(props) {
     setPaginations({
       ...pagination,
     });
+    requestFilterSort();
   };
 
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
-
-  function onDocumentLoadSuccess({ numPages }) {
-    console.log("numPages", numPages);
-    setNumPages(numPages);
-  }
+  const handleAction = (type, data) => {
+    history.push(`/vendor/invoice_monitoring/contract/${data.contract_id}`);
+  };
 
   return (
     <React.Fragment>
       <Toast />
       <Card>
-        <CardHeader>
-        </CardHeader>
         <CardBody>
           {/* begin: Filter Table */}
           <form id="filter-form-all" className="panel-filter-table mb-1">
@@ -341,19 +309,19 @@ function DashboardListContract(props) {
           {/* begin: Table */}
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">
-              <div className="hecto-11">
+              <div className="hecto-14">
                 <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
                       <th
-                        className="bg-primary text-white align-middle td-23 pointer"
+                        className="bg-primary text-white align-middle pointer td-15"
                         id="contract_no"
                         onClick={(e) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         {sortData.name === "contract_no" && (
@@ -376,17 +344,50 @@ function DashboardListContract(props) {
                             )}
                           </span>
                         )}
-                        Nomor Kontrak
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />
                       </th>
                       <th
-                        className="bg-primary text-white pointer align-middle td-20"
+                        className="bg-primary text-white text-center align-middle pointer td-10"
+                        id="po_no"
+                        onClick={(e) => {
+                          let sortDatas = sortData;
+                          sortDatas.name = e.target.id;
+                          sortDatas.order = sortDatas.order ? false : true;
+                          setSortData({ ...sortDatas });
+                          requestFilterSort();
+                        }}
+                      >
+                        {sortData.name === "po_no" && (
+                          <span
+                            id="iconSort"
+                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
+                          >
+                            {sortData.order ? (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Up-2.svg"
+                                )}
+                              />
+                            ) : (
+                              <SVG
+                                src={toAbsoluteUrl(
+                                  "/media/svg/icons/Navigation/Down-2.svg"
+                                )}
+                              />
+                            )}
+                          </span>
+                        )}
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />
+                      </th>
+                      <th
+                        className="bg-primary text-white align-middle pointer td-20"
                         id="procurement_title"
                         onClick={(e) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
                         {sortData.name === "procurement_title" && (
@@ -409,20 +410,29 @@ function DashboardListContract(props) {
                             )}
                           </span>
                         )}
-                        Judul Pengadaan
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />
+                      </th>
+                      <th className="bg-primary text-white text-center align-middle td-8">
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />
+                      </th>
+                      <th className="bg-primary text-white text-center align-middle td-10">
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />
+                      </th>
+                      <th className="bg-primary text-white text-center align-middle td-12">
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />
                       </th>
                       <th
-                        className="bg-primary text-white pointer align-middle td-12"
-                        id="no_po"
+                        className="bg-primary text-white text-center align-middle pointer td-12"
+                        id="vendor_name"
                         onClick={(e) => {
                           let sortDatas = sortData;
                           sortDatas.name = e.target.id;
                           sortDatas.order = sortDatas.order ? false : true;
                           setSortData({ ...sortDatas });
-                          // requestFilterSort();
+                          requestFilterSort();
                         }}
                       >
-                        {sortData.name === "no_po" && (
+                        {sortData.name === "vendor_name" && (
                           <span
                             id="iconSort"
                             className="svg-icon svg-icon-sm svg-icon-white ml-1"
@@ -442,203 +452,44 @@ function DashboardListContract(props) {
                             )}
                           </span>
                         )}
-                        Nomor PO
+                        <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />
                       </th>
-                      <th
-                        className="bg-primary text-white pointer align-middle td-10"
-                        id="termin"
-                        onClick={(e) => {
-                          let sortDatas = sortData;
-                          sortDatas.name = e.target.id;
-                          sortDatas.order = sortDatas.order ? false : true;
-                          setSortData({ ...sortDatas });
-                          // requestFilterSort();
-                        }}
-                      >
-                        {sortData.name === "termin" && (
-                          <span
-                            id="iconSort"
-                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                          >
-                            {sortData.order ? (
-                              <SVG
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/Navigation/Up-2.svg"
-                                )}
-                              />
-                            ) : (
-                              <SVG
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/Navigation/Down-2.svg"
-                                )}
-                              />
-                            )}
-                          </span>
-                        )}
-                        Termin
+                      <th className="bg-primary text-white text-center align-middle td-8">
+                        <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />
                       </th>
-                      <th
-                        className="bg-primary text-white pointer align-middle td-15"
-                        id="no_sa"
-                        onClick={(e) => {
-                          let sortDatas = sortData;
-                          sortDatas.name = e.target.id;
-                          sortDatas.order = sortDatas.order ? false : true;
-                          setSortData({ ...sortDatas });
-                          // requestFilterSort();
-                        }}
-                      >
-                        {sortData.name === "no_sa" && (
-                          <span
-                            id="iconSort"
-                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                          >
-                            {sortData.order ? (
-                              <SVG
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/Navigation/Up-2.svg"
-                                )}
-                              />
-                            ) : (
-                              <SVG
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/Navigation/Down-2.svg"
-                                )}
-                              />
-                            )}
-                          </span>
-                        )}
-                        Nomor SA
-                      </th>
-                      <th
-                        className="bg-primary text-white pointer align-middle td-17"
-                        id="no_invoice"
-                        onClick={(e) => {
-                          let sortDatas = sortData;
-                          sortDatas.name = e.target.id;
-                          sortDatas.order = sortDatas.order ? false : true;
-                          setSortData({ ...sortDatas });
-                          // requestFilterSort();
-                        }}
-                      >
-                        {sortData.name === "no_invoice" && (
-                          <span
-                            id="iconSort"
-                            className="svg-icon svg-icon-sm svg-icon-white ml-1"
-                          >
-                            {sortData.order ? (
-                              <SVG
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/Navigation/Up-2.svg"
-                                )}
-                              />
-                            ) : (
-                              <SVG
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/Navigation/Down-2.svg"
-                                )}
-                              />
-                            )}
-                          </span>
-                        )}
-                        Nomor Invoice
-                      </th>
-                      <th className="bg-primary text-white align-middle td-3">
-                        Status
+                      <th className="bg-primary text-white text-center align-middle td-5">
+                        <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {contractData.map((item, index) => {
+                    {data.map((item, index) => {
                       return (
                         <tr key={index.toString()}>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              {item.contract_no}
-                            </Link>
+                          <td>{item.contract_no}</td>
+                          <td className="text-center">{item.purch_order_no}</td>
+                          <td>{item.contract_name}</td>
+                          <td className="text-center">
+                            {window
+                              .moment(new Date(item.po_date))
+                              .format("DD MMM YYYY")}
                           </td>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              {item.contract_name}
-                            </Link>
+                          <td className="text-center">
+                            {window
+                              .moment(new Date(new Date(item.contract_date)))
+                              .format("DD MMM YYYY")}
                           </td>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              {item.purch_order_no}
-                            </Link>
+                          <td className="text-center">
+                            {item.purch_group_name}
                           </td>
+                          <td className="text-center">{item.vendor_name}</td>
+                          <td className="text-center">------</td>
                           <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              {index === 0
-                                ? 1
-                                : index === 1
-                                ? 2
-                                : index === 2
-                                ? 3
-                                : index === 3
-                                ? 4
-                                : 5}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              80000035434
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/vendor/invoice_monitoring/1/` + item.id}
-                            >
-                              INV0352345
-                            </Link>
-                          </td>
-                          <td>
-                            {index === 1 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-info rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting SA
-                              </label>
-                            ) : index === 2 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-warning rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting Invoice
-                              </label>
-                            ) : index === 3 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-primary rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Waiting Document
-                              </label>
-                            ) : index === 4 ? (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-danger rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Document Rejected
-                              </label>
-                            ) : (
-                              <label
-                                className="font-weight-bold font-italic text-white bg-success rounded px-1 py-1 text-center text-uppercase"
-                                style={{ width: 150 }}
-                              >
-                                Paid
-                              </label>
-                            )}
+                            <ButtonAction
+                              data={item}
+                              handleAction={handleAction}
+                              ops={data_ops}
+                            />
                           </td>
                         </tr>
                       );
@@ -650,14 +501,18 @@ function DashboardListContract(props) {
             <div className="table-loading-data">
               <div className="text-center font-weight-bold">
                 <div className="table-loading-data-potition">
-                  {/* <span>
+                  {loading && (
+                    <span>
                       <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
                       <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
                     </span>
-                    <span>
-                      <i className="far fa-frown text-dark mr-1"></i>
-                      <FormattedMessage id="TITLE.TABLE.NO_DATA_AVAILABLE" />
-                    </span> */}
+                  )}
+                  {err && (
+                    <span className="text-danger">
+                      <i className="far fa-frown text-danger mr-1"></i>
+                      <FormattedMessage id="TITLE.ERROR_REQUEST" />
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

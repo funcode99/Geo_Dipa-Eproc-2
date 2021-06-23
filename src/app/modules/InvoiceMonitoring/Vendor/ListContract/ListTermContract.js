@@ -48,7 +48,7 @@ const ListTermContract = (props) => {
 
   const handleAction = (type, data) => {
     history.push(
-      `/client/invoice_monitoring/contract/${contract}/${data.task_id}`
+      `/vendor/invoice_monitoring/contract/${contract}/${data.task_id}`
     );
   };
 
@@ -81,7 +81,7 @@ const ListTermContract = (props) => {
             label: intl.formatMessage({
               id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
             }),
-            to: `/client/invoice_monitoring/contract`,
+            to: `/vendor/invoice_monitoring/contract`,
           },
           {
             label: intl.formatMessage({
@@ -271,24 +271,24 @@ const ListTermContract = (props) => {
                 </thead>
                 <tbody>
                   {data &&
-                    data?.data_termin &&
-                    data?.data_termin.map((value, index) => {
+                    data.data_termin &&
+                    data.data_termin.map((value, index) => {
                       return (
                         <tr key={index.toString()}>
                           <td className="align-middle text-center">
                             {index + 1}
                           </td>
-                          <td>{value?.task_name}</td>
+                          <td>{value.task_name}</td>
                           <td>
                             {window
-                              .moment(new Date(value?.due_date))
+                              .moment(new Date(value.due_date))
                               .format("DD MMM YYYY")}
                           </td>
                           <td>bobot</td>
                           <td>price</td>
-                          <td>{value?.progress}</td>
+                          <td>{value.progress}</td>
                           <td>Doc Progress</td>
-                          <td>{value?.name}</td>
+                          <td>{value.name}</td>
                           <td className="align-middle">
                             <ButtonAction
                               data={value}

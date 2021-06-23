@@ -28,10 +28,15 @@ import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/components/RowAccordion";
 import { formatDate } from "../../../../libs/date";
 import BtnAksi from "../../../DeliveryMonitoring/pages/Termin/Documents/components/BtnAksi";
-import { getDeliverableInInvoive } from "../../_redux/InvoiceMonitoringCrud";
+import {
+  getDeliverableInInvoive,
+  getContractSoftCopy,
+  getContractDistributionSPK,
+  getContractDistributionAgreement,
+  getFileEproc,
+} from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
-import { getContractSoftCopy } from "../../_redux/InvoiceMonitoringCrud";
 
 const styles = (theme) => ({
   root: {
@@ -79,12 +84,12 @@ const useStyles = makeStyles((theme) => ({
 const data_ops = [
   {
     label: "TITLE.ACCEPT_DOCUMENT",
-    icon: "fas fa-check text-primary",
+    icon: "fas fa-check-circle text-success",
     type: "approved",
   },
   {
     label: "TITLE.REJECT_DOCUMENT",
-    icon: "fas fa-times-circle text-danger",
+    icon: "fas fa-times-circle text-warning",
     type: "rejected",
   },
 ];
@@ -92,12 +97,12 @@ const data_ops = [
 const data_opsDeliverable = [
   {
     label: "TITLE.ACCEPT_DOCUMENT",
-    icon: "fas fa-check text-primary",
+    icon: "fas fa-check-circle text-success",
     type: "approved",
   },
   {
     label: "TITLE.REJECT_DOCUMENT",
-    icon: "fas fa-times-circle text-danger",
+    icon: "fas fa-times-circle text-warning",
     type: "rejected",
   },
 ];
@@ -152,6 +157,7 @@ function ItemContractInvoice(props) {
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
   const [loadingRequest, setLoadingRequest] = useState(false);
+  const [contractFilename, setContractFilename] = useState(false);
   const [theadDocuments] = useState([
     { id: "action", label: "" },
     {
@@ -195,7 +201,7 @@ function ItemContractInvoice(props) {
   const [dataReject, setDataReject] = useState({});
 
   const handleAction = (type, data) => {
-    if (type == "rejected") {
+    if (type === "rejected") {
       setDataReject(data);
       setModalReject(true);
     }
@@ -204,7 +210,7 @@ function ItemContractInvoice(props) {
   };
 
   const handleActionDeliverable = (type, data) => {
-    if (type == "rejected") {
+    if (type === "rejected") {
       setDataReject(data);
       setModalReject(true);
     }
@@ -224,15 +230,65 @@ function ItemContractInvoice(props) {
       });
   };
 
+  const getContractDistributionSPKData = () => {
+    setLoading(true);
+    getContractDistributionSPK(contract)
+      .then((result) => {
+        setLoading(false);
+        if (result.data !== "DATA NOT FOUND!") {
+          setContractFilename(result.data.data.items.data.fileName);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  const getContractDistributionAgreementData = () => {
+    setLoading(true);
+    getContractDistributionAgreement(contract)
+      .then((result) => {
+        setLoading(false);
+        if (result.data !== "DATA NOT FOUND!") {
+          setContractFilename(result.data.data.items.data.fileName);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
   const callApiContractSoftCopy = () => {
     setLoading(true);
     getContractSoftCopy(contract)
       .then((result) => {
         setLoading(false);
         setDataSoftCopy(result.data.data);
+        if (result.data.data.contract_status === "SPK") {
+          getContractDistributionSPKData();
+        } else {
+          getContractDistributionAgreementData();
+        }
       })
       .catch((error) => {
         setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  const getFileContract = (e) => {
+    e.preventDefault();
+    getFileEproc({ filename: contractFilename })
+      .then((result) => {
+        var a = document.createElement("a");
+        a.href = result.data.data.items.respons;
+        a.download = contractFilename;
+        a.click();
+        a.remove();
+      })
+      .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
@@ -282,7 +338,7 @@ function ItemContractInvoice(props) {
                 (dataReject?.due_date
                   ? " - " +
                     window
-                  .moment(new Date(dataReject?.due_date))
+                      .moment(new Date(dataReject?.due_date))
                       .format("DD MMM YYYY")
                   : "")}
             </span>
@@ -387,7 +443,17 @@ function ItemContractInvoice(props) {
                       <td>
                         <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT" />
                       </td>
-                      <td>{dataSoftCopy?.contract_number}</td>
+                      {contractFilename ? (
+                        <td>
+                          <a href="#" onClick={getFileContract}>
+                            {dataSoftCopy?.contract_number}
+                          </a>
+                        </td>
+                      ) : (
+                        <td>
+                          {dataSoftCopy?.contract_number} (file tidak tersedia)
+                        </td>
+                      )}
                       <td className="align-middle"></td>
                       <td className="align-middle">
                         <ButtonAction
@@ -543,12 +609,12 @@ function ItemContractInvoice(props) {
                                             <BtnLihat url={els?.url} />,
                                             els?.remarks,
                                             els?.url && (
-                                            <ButtonAction
-                                              data={els}
-                                              handleAction={
-                                                handleActionDeliverable
-                                              }
-                                              ops={data_opsDeliverable}
+                                              <ButtonAction
+                                                data={els}
+                                                handleAction={
+                                                  handleActionDeliverable
+                                                }
+                                                ops={data_opsDeliverable}
                                               />
                                             ),
                                           ]}
@@ -573,10 +639,10 @@ function ItemContractInvoice(props) {
                                       <BtnLihat url={el?.url} />,
                                       el?.remarks,
                                       el?.url && (
-                                      <ButtonAction
-                                        data={el}
-                                        handleAction={handleActionDeliverable}
-                                        ops={data_opsDeliverable}
+                                        <ButtonAction
+                                          data={el}
+                                          handleAction={handleActionDeliverable}
+                                          ops={data_opsDeliverable}
                                         />
                                       ),
                                     ]}

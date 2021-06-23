@@ -108,6 +108,75 @@ function ContractHardCopyDoc(props) {
                         />
                       </td>
                     </tr>
+
+                    <tr>
+                      <td>
+                        <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT" />
+                      </td>
+                      <td>-</td>
+                      <td className="align-middle">-</td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "Contract" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Purch Order</td>
+                      <td>-</td>
+                      <td className="align-middle">-</td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "Purch Order" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <FormattedMessage id="CONTRACT_DETAIL.TAB.OFFICIAL_REPORT" />
+                      </td>
+                      <td>-</td>
+                      <td className="align-middle">-</td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "BAPP" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />
+                      </td>
+                      <td>-</td>
+                      <td className="align-middle">-</td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "BAST" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
+                      </td>
+                      <td>-</td>
+                      <td className="align-middle">-</td>
+                      <td className="align-middle">
+                        <ButtonAction
+                          data={{ document: { name: "NPWP" } }}
+                          handleAction={handleAction}
+                          ops={data_ops}
+                        />
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>

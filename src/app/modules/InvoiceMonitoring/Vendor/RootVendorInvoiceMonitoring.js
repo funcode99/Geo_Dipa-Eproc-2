@@ -1,12 +1,9 @@
 import React from "react";
-import {
-  Route,
-  Switch,
-  // Redirect
-} from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 // import { useSubheader } from "../../../../_metronic/layout";
 import DashboardListContract from "./ListContract/DashboardListContract";
 import ItemContract from "./ListContract/ItemContract";
+import ListTermContract from "./ListContract/ListTermContract";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -18,14 +15,23 @@ function RootVendorInvoiceMonitoring(props) {
   // }));
   return (
     <Switch>
-      {/* <Redirect exact from="/client" to="/client/invoice_monitoring" /> */}
+      <Redirect
+        exact
+        from="/vendor/invoice_monitoring"
+        to="/vendor/invoice_monitoring/contract"
+      />
       <Route
-        path="/vendor/invoice_monitoring/:termin/:contract"
+        path="/vendor/invoice_monitoring/contract/:contract/:termin"
         component={(props) => <ItemContract {...props} />}
         exact={true}
       />
       <Route
-        path="/vendor/invoice_monitoring"
+        path="/vendor/invoice_monitoring/contract/:contract"
+        component={(props) => <ListTermContract {...props} />}
+        exact={true}
+      />
+      <Route
+        path="/vendor/invoice_monitoring/contract"
         component={DashboardListContract}
       />
     </Switch>

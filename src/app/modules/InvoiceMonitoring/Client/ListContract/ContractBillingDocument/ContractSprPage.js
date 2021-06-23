@@ -159,14 +159,11 @@ function ContractSprPage(props) {
     });
 
     const getContractData = useCallback(() => {
-        getContractSummary(contract_id)
+        getContractSummary(contract_id, termin)
             .then(response => {
                 response['data']['data']['contract_value_new'] = rupiah(response['data']['data']['contract_value'])
-                response['data']['data']['direksi'] = response['data']['data']['party_1_contract_signature_name'].concat(' - ', response['data']['data']['party_1_director_position'])
-                response['data']['data']['full_name'] = response['data']['data']["data"]["legal_org_type_sub"]["name"].concat(". ", response['data']['data']["data"]["full_name"])
-                response['data']['data']['full_address_party_2'] = `${response['data']['data']["data"]["address"]["postal_address"] ? response['data']['data']["data"]["address"]["postal_address"] : null} ${response['data']['data']["data"]["address"]["sub_district"] ? response['data']['data']["data"]["address"]["sub_district"]["name"] : null} ${response['data']['data']["data"]["address"]["district"] ? response['data']['data']["data"]["address"]["district"]["name"] : null} ${response['data']['data']["data"]["address"]["province"] ? response['data']['data']["data"]["address"]["province"]["name"] : null} ${response['data']['data']["data"]["address"]["postal_code"] ? response['data']['data']["data"]["address"]["postal_code"] : null}`
-                response['data']['data']['full_data_party_2'] = `${response['data']['data']['full_name']} \n\n${response['data']['data']['full_address_party_2']} \n${response['data']['data']["data"]["phone_number"]["number"]} ${response['data']['data']["data"]["phone_number"]["ext"] ? "\next: ".concat(response['data']['data']["data"]["phone_number"]["ext"]) : ''}`
-                response['data']['data']['full_data_party_1'] = `PT. GEO DIPA ENERGI \n\n${response['data']['data']['name']} \n${response['data']['data']['address']}`
+                response['data']['data']['termin_value_new'] = rupiah(response['data']['data']['termin_value'])
+                response['data']['data']['termin_value_ppn_new'] = rupiah(response['data']['data']['termin_value'] * 1.1)
                 setContractData(response.data.data)
             })
             .catch((error) => {
@@ -637,15 +634,15 @@ function ContractSprPage(props) {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: termin }} /></label>
+                                <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: contractData['termin_name'] }} /></label>
                                 <div className="col-sm-7">
-                                    <input type="text" className="form-control" id="priceStep1" disabled />
+                                    <input type="text" className="form-control" id="priceStep1" defaultValue={contractData['termin_value_new']} disabled />
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="priceTaxSpp" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: termin }} /></label>
+                                <label htmlFor="priceTaxSpp" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: contractData['termin_name'] }} /></label>
                                 <div className="col-sm-7">
-                                    <input type="text" className="form-control" id="priceTaxSpp" disabled />
+                                    <input type="text" className="form-control" id="priceTaxSpp" defaultValue={contractData['termin_value_ppn_new']} disabled />
                                 </div>
                             </div>
                         </div>
@@ -654,10 +651,6 @@ function ContractSprPage(props) {
                 <CardFooter className="text-right">
                     <button type="button" onClick={() => setModalApprove(true)} disabled={isSubmit || sppData?.state === 'REJECTED' || sppData?.state === 'APPROVED' || sppData === null} className="btn btn-primary mx-1"><FormattedMessage id="TITLE.ACCEPT_DOCUMENT" /></button>
                     <button type="button" onClick={() => setModalReject(true)} disabled={isSubmit || sppData?.state === 'REJECTED' || sppData?.state === 'APPROVED' || sppData === null} className="btn btn-danger mx-1"><FormattedMessage id="TITLE.REJECT_DOCUMENT" /></button>
-                </CardFooter>
-            </Card>
-            <Card className="mt-5">
-                <CardBody>
                     <div className="my-5 text-center">
                         <h6><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.HISTORY" /></h6>
                     </div>
@@ -712,8 +705,7 @@ function ContractSprPage(props) {
                             </div>
                         </div>
                     </div>
-                    {/* end: Table */}
-                </CardBody>
+                </CardFooter>
             </Card>
         </React.Fragment>
     )
