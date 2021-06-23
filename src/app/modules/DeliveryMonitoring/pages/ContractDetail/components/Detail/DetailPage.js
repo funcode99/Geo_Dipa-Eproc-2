@@ -27,6 +27,7 @@ import { rupiah } from "../../../../../../libs/currency";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
 
+
 const tableHeaderTerminNew = [
   {
     id: "number",
@@ -89,11 +90,17 @@ const DetailPage = ({
   const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
   const [options, setOptions] = React.useState();
+  const [showForm, setShowForm] = React.useState(false)
   const { tasks } = contract;
 
   const handleShow = React.useCallback(() => setShow((prev) => !prev), [
     setShow,
   ]);
+
+  // React.useEffect(() => {
+  //   setTimeout(() => {
+  //   }, 550);
+  // }, [])
 
   const FormSchema = Yup.object().shape({
     name: Yup.string()
@@ -319,6 +326,7 @@ const DetailPage = ({
           saveContractById(data);
 
           generateTableContent(data?.tasks);
+          setShowForm(true);
 
           if (toast.visible) {
             setToast(toast.message, 5000);
@@ -327,7 +335,7 @@ const DetailPage = ({
         .catch((err) => handleError(err))
         .finally(disableLoading());
     },
-    [generateTableContent, handleError, saveContractById, setToast]
+    [generateTableContent, handleError, saveContractById, setToast,contractId]
   );
 
   const handleSuccess = React.useCallback(
@@ -398,7 +406,7 @@ const DetailPage = ({
 
     getOptions();
     // eslint-disable-next-line
-  }, [contractId]);
+  }, []);
 
   return (
     <React.Fragment>
@@ -425,7 +433,7 @@ const DetailPage = ({
         onSubmit={() => handleDelete()}
         submitColor="danger"
       />
-      <FormDetail contractId={contractId} />
+      {showForm && <FormDetail contractId={contractId} />}
       <Item handleClick={() => handleModal("create")} />
       <Container>
         <ExpansionBox title={"TITLE.TERM_TABLE"}>

@@ -19,7 +19,7 @@ import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
 import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { FormattedMessage } from "react-intl";
 import ParaPihak from "./components/ParaPihak";
@@ -31,6 +31,7 @@ import Jaminan from "./components/Jaminan";
 import Denda from "./components/Denda";
 import BAST from "./components/BAST";
 import DetailPage from "./components/Detail/DetailPage";
+import { compose } from "redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,18 +93,18 @@ const TabLists = [
   },
 ];
 
-export const ContractDetailPage = () => {
+export const ContractDetailPage = ({dataContractById,authStatus}) => {
   const classes = useStyles();
   const { contract_id } = useParams();
   const [Toast, setToast] = useToast();
-  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
+  // const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
   const [tabActive, setTabActive] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-  let authStatus = useSelector(
-    (state) => state.auth.user.data.status,
-    shallowEqual
-  );
+  // let authStatus = useSelector(
+  //   (state) => state.auth.user.data.status,
+  //   shallowEqual
+  // );
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
       data.map((services) => {
@@ -133,10 +134,10 @@ export const ContractDetailPage = () => {
   // get data contract detail from api
   const getContractById = async (contract_id) => {
     try {
-      dispatch({
-        type: actionTypes.SetContractById,
-        payload: [],
-      });
+      // dispatch({
+      //   type: actionTypes.SetContractById,
+      //   payload: [],
+      // });
 
       setLoading(true);
       const {
@@ -168,7 +169,7 @@ export const ContractDetailPage = () => {
   };
 
   React.useEffect(() => {
-    getContractById(contract_id);
+    // getContractById(contract_id);
     setInitialSubmitItems();
     // eslint-disable-next-line
   }, []);
@@ -240,4 +241,9 @@ export const ContractDetailPage = () => {
   );
 };
 
-export default withRouter(ContractDetailPage);
+const mapState = ({auth,deliveryMonitoring}) => ({
+  authStatus: auth.user.data.status,
+  dataContractById: deliveryMonitoring.dataContractById
+})
+
+export default compose(withRouter, connect(mapState))(ContractDetailPage);
