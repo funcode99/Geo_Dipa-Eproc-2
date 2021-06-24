@@ -708,7 +708,7 @@ function ContractSprPage(props) {
                                         {!sppStatus && <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fas fa-file-upload"></i></span>
                                         </div>}
-                                        <span className={`form-control text-truncate ${sppStatus ? classes.textDisabled : ''}`}>{uploadFilenameBank}</span>
+                                        <span className={`form-control text-truncate h-100 ${sppStatus ? classes.textDisabled : ''}`}>{uploadFilenameBank}</span>
                                         {sppStatus && <div className="input-group-append pointer">
                                             <span className={`input-group-text ${classes.textHover}`}><a download={sppData?.new_bank_file} href={sppData?.file_bank}><i className="fas fa-download"></i></a></span>
                                             <span className={`input-group-text ${classes.textHover}`} onClick={() => setDialogStateBank(true)}><i className="fas fa-eye"></i></span>
