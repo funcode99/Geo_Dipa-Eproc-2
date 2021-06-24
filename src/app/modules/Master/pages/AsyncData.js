@@ -41,6 +41,11 @@ const AsyncData = (props) => {
 
   const handleAsync = (e) => {
     e.preventDefault();
+    let errSyncs_ = Object.assign({}, errSync);
+    errSyncs_.status = false;
+    setErrSync({
+      ...errSyncs_,
+    });
     setLoadingSync(true);
     setErrLoadingSync(false);
     setStatusSync(true);
@@ -55,9 +60,18 @@ const AsyncData = (props) => {
           }, 2000);
         })
         .catch(async (err) => {
+          let errSyncs = Object.assign({}, errSync);
+          if (err.response?.data.message === "Number Purch Order Invalid.") {
+            errSyncs.status = true;
+            errSyncs.message = err.response?.data.message;
+            setErrSync({
+              ...errSyncs,
+            });
+          } else {
+            setErrLoadingSync(true);
+          }
           setStatusSync(false);
           setLoadingSync(false);
-          setErrLoadingSync(true);
         });
     } else if (stateSync === "schedule") {
       asyncSchedule(numberPo)
@@ -68,9 +82,18 @@ const AsyncData = (props) => {
           }, 2000);
         })
         .catch(async (err) => {
+          let errSyncs = Object.assign({}, errSync);
+          if (err.response?.data.message === "Number Purch Order Invalid.") {
+            errSyncs.status = true;
+            errSyncs.message = err.response?.data.message;
+            setErrSync({
+              ...errSyncs,
+            });
+          } else {
+            setErrLoadingSync(true);
+          }
           setStatusSync(false);
           setLoadingSync(false);
-          setErrLoadingSync(true);
         });
     }
   };
