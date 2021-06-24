@@ -6,4 +6,5 @@ export const actionTypes = {
   SetSubmitItemsByContractId: "[Set Submit Items by Contract Id] Action",
   SetDataTask: "[Set Data Task] Action",
   SetDataOrderItems: "[Set Data Order Items] Action",
+  SetDataTempOrderItems: "[Set Data Temp Order Items] Action",
 };

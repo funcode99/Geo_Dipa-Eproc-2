@@ -13,6 +13,8 @@ import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 // Page Guide Metronic
 import { DashboardPage } from "./pages/DashboardPage";
 import { useSelector, shallowEqual } from "react-redux";
+import RootClientDelivery from "./modules/DeliveryMonitoring/Client/RootClientDelivery";
+import RootVendorDelivery from "./modules/DeliveryMonitoring/Vendor/RootVendorDelivery";
 
 // Page Guide Metronic
 // const GoogleMaterialPage = lazy(() =>
@@ -101,7 +103,11 @@ export default function BasePage() {
         <Route path="/client/master" component={MasterData} />
         <Route
           path="/client/delivery-monitoring"
-          component={RootDeliveryMonitoring}
+          component={RootClientDelivery}
+        />
+        <Route
+          path="/vendor/delivery-monitoring"
+          component={RootVendorDelivery}
         />
         <Redirect to="/error" />
       </Switch>

@@ -18,7 +18,7 @@ import * as Yup from "yup";
 import useToast from "../../../../../../components/toast";
 import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
-import { connect } from "react-redux";
+import { connect, shallowEqual, useSelector } from "react-redux";
 import ModalTerm from "./ModalTerm";
 import { FormattedMessage } from "react-intl";
 import ModalConfirmation from "../../../../../../components/modals/ModalConfirmation";
@@ -26,6 +26,7 @@ import * as Option from "../../../../../../service/Option";
 import { rupiah } from "../../../../../../libs/currency";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
+
 
 const tableHeaderTerminNew = [
   {
@@ -78,6 +79,7 @@ const DetailPage = ({
   dataSubmitItems,
   saveSubmitItems,
   saveContractById,
+  authStatus,
 }) => {
   const [tableContent, setTableContent] = React.useState([]);
   const [newContent, setNewContent] = React.useState([]);
@@ -88,11 +90,17 @@ const DetailPage = ({
   const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
   const [options, setOptions] = React.useState();
+  const [showForm, setShowForm] = React.useState(false)
   const { tasks } = contract;
 
   const handleShow = React.useCallback(() => setShow((prev) => !prev), [
     setShow,
   ]);
+
+  // React.useEffect(() => {
+  //   setTimeout(() => {
+  //   }, 550);
+  // }, [])
 
   const FormSchema = Yup.object().shape({
     name: Yup.string()
@@ -272,7 +280,7 @@ const DetailPage = ({
                 label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
                 icon: "fas fa-search",
                 to: {
-                  url: `/client/delivery-monitoring/contract/task/${item.id}`,
+                  url: `/${authStatus}/delivery-monitoring/contract/task/${item.id}`,
                   style: {
                     color: "black",
                   },
@@ -318,6 +326,7 @@ const DetailPage = ({
           saveContractById(data);
 
           generateTableContent(data?.tasks);
+          setShowForm(true);
 
           if (toast.visible) {
             setToast(toast.message, 5000);
@@ -326,7 +335,7 @@ const DetailPage = ({
         .catch((err) => handleError(err))
         .finally(disableLoading());
     },
-    [generateTableContent, handleError, saveContractById, setToast]
+    [generateTableContent, handleError, saveContractById, setToast,contractId]
   );
 
   const handleSuccess = React.useCallback(
@@ -397,7 +406,7 @@ const DetailPage = ({
 
     getOptions();
     // eslint-disable-next-line
-  }, [contractId]);
+  }, []);
 
   return (
     <React.Fragment>
@@ -424,7 +433,7 @@ const DetailPage = ({
         onSubmit={() => handleDelete()}
         submitColor="danger"
       />
-      <FormDetail contractId={contractId} />
+      {showForm && <FormDetail contractId={contractId} />}
       <Item handleClick={() => handleModal("create")} />
       <Container>
         <ExpansionBox title={"TITLE.TERM_TABLE"}>
@@ -441,9 +450,10 @@ const DetailPage = ({
   );
 };
 
-const mapState = ({ deliveryMonitoring }) => ({
+const mapState = ({ deliveryMonitoring, auth }) => ({
   dataSubmitItems: deliveryMonitoring.dataSubmitItems,
   contract: deliveryMonitoring.dataContractById,
+  authStatus: auth.user.data.status
 });
 
 const mapDispatch = (dispatch) => ({

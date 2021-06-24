@@ -1,12 +1,18 @@
 import TitleField from "../../../../../../components/input/TitleField";
 import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
+import { FormattedMessage } from "react-intl";
+import React from "react";
+
+const TextIni = ({ text }) => (
+  <FormattedMessage id={`CONTRACT_DETAIL.PARTIES.${text}`} />
+);
 
 export const formData1 = [
   [
     {
       name: "nama_pemberi",
-      label: "Nama Pemberi Kerja",
+      label: <TextIni text={"NAMA_PEMBERI"} />,
     },
   ],
   {
@@ -113,7 +119,42 @@ export const formData1 = [
       typeInput: "TextAreaInput",
     },
   ],
-
+  [
+    {
+      name: "nama_notaris_penugasan",
+      label: "Nama Notaris",
+    },
+  ],
+  [
+    {
+      name: "sk_penugasan",
+      label: "Nomor SK Penugasan",
+    },
+    {
+      name: "tgl_sk_penugasan",
+      label: "Tanggal SK",
+    },
+  ],
+  [
+    {
+      name: "akta_penugasan",
+      label: "Nomor Akta",
+    },
+    {
+      name: "tgl_akta_penugasan",
+      label: "Tanggal Akta",
+    },
+  ],
+  [
+    {
+      name: "sk_kemenkum_penugasan",
+      label: "Nomor SK Kemenkumham",
+    },
+    {
+      name: "tgl_sk_kemenkum_penugasan",
+      label: "Tanggal SK",
+    },
+  ],
   {
     Child: TitleField,
     ChildrenProps: {
@@ -278,6 +319,42 @@ export const formData2 = [
       name: "alamat_pejabat_2",
       label: "Alamat",
       typeInput: "TextAreaInput",
+    },
+  ],
+  [
+    {
+      name: "nama_notaris_penugasan_2",
+      label: "Nama Notaris",
+    },
+  ],
+  [
+    {
+      name: "sk_penugasan_2",
+      label: "Nomor SK Penugasan",
+    },
+    {
+      name: "tgl_sk_penugasan_2",
+      label: "Tanggal SK",
+    },
+  ],
+  [
+    {
+      name: "akta_penugasan_2",
+      label: "Nomor Akta",
+    },
+    {
+      name: "tgl_akta_penugasan_2",
+      label: "Tanggal Akta",
+    },
+  ],
+  [
+    {
+      name: "sk_kemenkum_penugasan_2",
+      label: "Nomor SK Kemenkumham",
+    },
+    {
+      name: "tgl_sk_kemenkum_penugasan_2",
+      label: "Tanggal SK",
     },
   ],
   [

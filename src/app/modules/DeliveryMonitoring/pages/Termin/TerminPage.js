@@ -34,7 +34,7 @@ const TerminPage = ({ items }) => {
   const { dataContractById, dataTask } = useSelector(
     (state) => state.deliveryMonitoring
   );
-  let status = useSelector(
+  let authStatus = useSelector(
     (state) => state.auth.user.data.status,
     shallowEqual
   );
@@ -118,11 +118,11 @@ const TerminPage = ({ items }) => {
         items={[
           {
             label: "List of Contract & PO",
-            to: "/client/delivery-monitoring/contract",
+            to: `/${authStatus}/delivery-monitoring/contract`,
           },
           {
             label: `${dataContractById?.contract_name || "no data"}`,
-            to: `/client/delivery-monitoring/contract/${dataContractById?.id ||
+            to: `/${authStatus}/delivery-monitoring/contract/${dataContractById?.id ||
               1}`,
           },
           {

@@ -15,6 +15,7 @@ import PaginationTable from "./components/PaginationTable";
 import Skeleton from "@material-ui/lab/Skeleton";
 import SearchBox from "./components/SearchBox";
 import "./styles.scss";
+import _ from "lodash";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -47,7 +48,7 @@ function searchFind(rows, query) {
   // (row) => row.procurement_title.toLowerCase().indexOf(query) > -1
   return rows.filter((row) =>
     columns.some((column) => {
-      if (row[column] !== null)
+      if (!_.isEmpty(row[column]))
         return (
           row[column]
             .toString()

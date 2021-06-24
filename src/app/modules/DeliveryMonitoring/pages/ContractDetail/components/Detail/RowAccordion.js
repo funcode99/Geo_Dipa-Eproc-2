@@ -19,7 +19,7 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
           {isChildExist && (
             <button
               className={`btn btn-primary btn-sm p-0 align-middle`}
-              onClick={handleVisible}
+              // onClick={handleVisible}
             >
               {visible ? <ExpandLessOutlined /> : <ExpandMoreOutlined />}
             </button>

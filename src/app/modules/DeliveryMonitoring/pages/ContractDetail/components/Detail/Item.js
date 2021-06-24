@@ -246,25 +246,26 @@ const Item = ({ handleClick }) => {
               dataRows={dataContractById.services}
               loading={loading}
               renderRows={({ item, index }) => {
+                let el = item;
                 return (
                   <RowAccordion
-                    key={item.id}
-                    data={["accordIcon", item.desc, "", "", "", ""]}
-                    dataAll={item.item_services}
+                    key={el.id}
+                    data={["accordIcon", el.desc, "", "", "", ""]}
+                    dataAll={el.item_services}
                   >
                     {(item) => {
                       return item?.map((item2) => {
                         return (
                           <TableRow
                             hover
-                            onClick={
-                              (e) =>
-                                handleChecklist(e, item2, {
-                                  id: item.id,
-                                  type: "jasa",
-                                })
-                              // console.log(e)
-                            }
+                            // onClick={
+                            //   (e) =>
+                            //     handleChecklist(e, item2, {
+                            //       id: el.id,
+                            //       type: "jasa",
+                            //     })
+                            //   // console.log(e)
+                            // }
                             key={item2?.id}
                           >
                             <TableCell>
@@ -272,14 +273,14 @@ const Item = ({ handleClick }) => {
                                 name={`checkbox-${item2.id}`}
                                 id={`checkbox-${item2.id}`}
                                 color="secondary"
-                                // onChange={
-                                //   (e) =>
-                                //     handleChecklist(e, item2, {
-                                //       id: item.id,
-                                //       type: "jasa",
-                                //     })
-                                //   // console.log(e)
-                                // }
+                                onChange={
+                                  (e) =>
+                                    handleChecklist(e, item2, {
+                                      id: el.id,
+                                      type: "jasa",
+                                    })
+                                  // console.log(e)
+                                }
                                 size="small"
                                 checked={item2.checked}
                                 disabled={

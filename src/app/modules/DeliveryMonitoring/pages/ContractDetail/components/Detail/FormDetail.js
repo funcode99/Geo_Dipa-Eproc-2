@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Form, Row, Col, Container } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../../../libs/currency";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual, connect } from "react-redux";
 import StyledSelect from "../../../../../../components/select-multiple";
 import {
   getPicContract,
@@ -29,11 +29,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const FormDetail = (props) => {
-  const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
-  const user_id = useSelector(
-    (state) => state.auth.user.data.user_id,
-    shallowEqual
-  );
+  // const dataLama = useSelector((state) => state.deliveryMonitoring.dataContractById);
+  // const user_id = useSelector(
+  //   (state) => state.auth.user.data.user_id,
+  //   shallowEqual
+  //   );
+  const {user_id, dataLama} = props
+    const dataContractById = React.useMemo(() => ({...dataLama}) , [dataLama])
+
+  // console.log(`dataContractById`, dataContractById)
 
   const contract_id = props.contractId;
   const monitoring_type = "DELIVERY";
@@ -48,6 +52,7 @@ const FormDetail = (props) => {
   const [openModalEmail, setopenModalEmail] = useState(false);
   const [openModalDeletePIC, setOpenModalDeletePIC] = useState(false);
   const [tempPic, setTempPic] = useState([]);
+
 
   const updateEmailRef = useRef(null);
 
@@ -668,4 +673,10 @@ const FormDetail = (props) => {
   );
 };
 
-export default FormDetail;
+const mapState = ({auth,deliveryMonitoring}) => ({
+  user_id: auth.user.data.user_id,
+  dataLama: deliveryMonitoring.dataContractById
+})
+
+export default React.memo(connect(mapState)(FormDetail), () => true);
+// export default FormDetail
