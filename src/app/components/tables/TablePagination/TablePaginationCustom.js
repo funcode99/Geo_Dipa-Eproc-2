@@ -95,6 +95,7 @@ export default function TablePaginationCustom({
   withSearch = true,
   withPagination = true,
   renderRows,
+  footerComponent,
 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -244,6 +245,7 @@ export default function TablePaginationCustom({
                         </TableCell>
                       </TableRow>
                     )}
+                {footerComponent}
               </TableBody>
             </Table>
           </TableContainer>
