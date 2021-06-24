@@ -55,17 +55,18 @@ function ContractReceiptPage(props) {
     const { intl, classes, supportedFormats } = props;
 
     const initialValues = {
+        draft_no: '',
         receipt_no: '',
         receipt_date: '',
         contract_id: '',
         vendor_id: '',
-        term_id: '',
+        term_id: termin,
         payment_value: '',
         file_name: '',
         description: '',
         state: '',
         created_at: '',
-        created_by_id: '',
+        created_by_id: user_id,
         file: ''
     }
 
@@ -132,6 +133,7 @@ function ContractReceiptPage(props) {
                 } else {
                     getHistoryReceiptData(response['data']['data']['id'])
                     setReceiptId(response['data']['data']['id'])
+                    formik.setFieldValue('draft_no', response['data']['data']['receipt_draft_no'])
                     if (response['data']['data']['state'] === 'REJECTED') {
                         setReceiptStatus(false)
                         setReceiptUpdate(true)
@@ -164,8 +166,13 @@ function ContractReceiptPage(props) {
             if (receiptUpdate) {
                 updateReceipt(receiptId, data)
                     .then(response => {
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-                        setLoading(false)
+                        getReceipt(contract_id, termin)
+                            .then((responses) => {
+                                setReceiptData(responses['data']['data'])
+                                setUploadFilename(responses['data']['data']['file_name'])
+                                setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+                                setLoading(false)
+                            })
                     })
                     .catch((error) => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -177,6 +184,8 @@ function ContractReceiptPage(props) {
                     .then(response => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
                         setLoading(false)
+                        setReceiptData(response['data']['data'])
+                        setUploadFilename(response['data']['data']['file_name'])
                     })
                     .catch((error) => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -194,13 +203,9 @@ function ContractReceiptPage(props) {
                 response['data']['data']['termin_value_new'] = rupiah(response['data']['data']['termin_value'])
                 response['data']['data']['termin_value_ppn_new'] = rupiah(response['data']['data']['termin_value'] * 1.1)
                 setContractData(response.data.data)
-                formik.setValues({
-                    contract_id: response['data']['data']['id'],
-                    vendor_id: response['data']['data']['vendor_id'],
-                    payment_value: response['data']['data']['termin_value'],
-                    term_id: termin,
-                    created_by_id: user_id
-                })
+                formik.setFieldValue('contract_id', response['data']['data']['id'])
+                formik.setFieldValue('vendor_id', response['data']['data']['vendor_id'])
+                formik.setFieldValue('payment_value', response['data']['data']['termin_value'])
             })
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -208,7 +213,7 @@ function ContractReceiptPage(props) {
     }, [contract_id, formik, intl, setToast, user_id])
 
     const handleUpload = (e) => {
-        if(e.currentTarget.files.length){
+        if (e.currentTarget.files.length) {
             setUploadFilename(e.currentTarget.files[0].name)
         } else {
             setUploadFilename(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))

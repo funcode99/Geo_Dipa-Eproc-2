@@ -65,12 +65,13 @@ function ContractSprPage(props) {
 
     const initialValues = {
         spr_no: '',
+        draft_no: '',
         spr_date: '',
-        contract_id: '',
+        contract_id: contract_id,
         vendor_id: '',
-        term: '',
+        term: termin,
         payment_value: '',
-        bank_refference: '',
+        bank_refference: true,
         bank_name: '',
         bank_address: '',
         bank_account_no: '',
@@ -79,7 +80,7 @@ function ContractSprPage(props) {
         new_bank_file: '',
         description: '',
         created_at: '',
-        created_by_id: '',
+        created_by_id: user_id,
         file: '',
         file_bank: '',
     }
@@ -183,8 +184,14 @@ function ContractSprPage(props) {
             if (sppUpdate) {
                 updateSpp(sppId, data)
                     .then(response => {
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-                        setLoading(false)
+                        getSpp(contract_id, termin)
+                            .then((responses) => {
+                                setSppData(responses['data']['data'])
+                                setUploadFilename(responses['data']['data']['file_name'])
+                                setUploadFilenameBank(responses['data']['data']['new_bank_file'])
+                                setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+                                setLoading(false)
+                            })
                     })
                     .catch((error) => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -196,6 +203,9 @@ function ContractSprPage(props) {
                     .then(response => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
                         setLoading(false)
+                        setSppData(response['data']['data'])
+                        setUploadFilename(response['data']['data']['file_name'])
+                        setUploadFilenameBank(response['data']['data']['new_bank_file'])
                     })
                     .catch((error) => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -203,6 +213,7 @@ function ContractSprPage(props) {
                         setSppStatus(false);
                     });
             }
+
         }
     });
 
@@ -213,18 +224,12 @@ function ContractSprPage(props) {
                 response['data']['data']['termin_value_new'] = rupiah(response['data']['data']['termin_value'])
                 response['data']['data']['termin_value_ppn_new'] = rupiah(response['data']['data']['termin_value'] * 1.1)
                 setContractData(response.data.data)
-                formik.setValues({
-                    contract_id: contract_id,
-                    term: termin,
-                    bank_refference: true,
-                    vendor_id: response['data']['data']['vendor_id'],
-                    bank_name: response['data']['data']['data_bank'][0]['bank']['full_name'],
-                    bank_address: response['data']['data']['data_bank'][0]['address']['postal_address'],
-                    bank_account_no: response['data']['data']['data_bank'][0]['account_number'],
-                    bank_account_name: response['data']['data']['data_bank'][0]['account_holder_name'],
-                    payment_value: response['data']['data']['termin_value'],
-                    created_by_id: user_id,
-                })
+                formik.setFieldValue('vendor_id', response['data']['data']['vendor_id'])
+                formik.setFieldValue('bank_name', response['data']['data']['data_bank'][0]['bank']['full_name'])
+                formik.setFieldValue('bank_address', response['data']['data']['data_bank'][0]['address']['postal_address'])
+                formik.setFieldValue('bank_account_no', response['data']['data']['data_bank'][0]['account_number'])
+                formik.setFieldValue('bank_account_name', response['data']['data']['data_bank'][0]['account_holder_name'])
+                formik.setFieldValue('payment_value', response['data']['data']['termin_value'])
             })
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -239,6 +244,7 @@ function ContractSprPage(props) {
                 } else {
                     getHistorySppData(response['data']['data']['id'])
                     setSppId(response['data']['data']['id'])
+                    formik.setFieldValue('draft_no', response['data']['data']['spr_draft_no'])
                     if (response['data']['data']['state'] === 'REJECTED') {
                         setSppStatus(false)
                         setSppUpdate(true)
@@ -292,7 +298,7 @@ function ContractSprPage(props) {
     };
 
     const handleUpload = (e) => {
-        if(e.currentTarget.files.length){
+        if (e.currentTarget.files.length) {
             setUploadFilename(e.currentTarget.files[0].name)
         } else {
             setUploadFilename(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))
@@ -303,7 +309,7 @@ function ContractSprPage(props) {
     }
 
     const handleUploadBank = (e) => {
-        if(e.currentTarget.files.length){
+        if (e.currentTarget.files.length) {
             setUploadFilenameBank(e?.currentTarget?.files[0]?.name)
         } else {
             setUploadFilenameBank(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))
@@ -702,7 +708,7 @@ function ContractSprPage(props) {
                                         {!sppStatus && <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fas fa-file-upload"></i></span>
                                         </div>}
-                                        <span className={`form-control text-truncate ${sppStatus ? classes.textDisabled : ''}`}>{uploadFilenameBank}</span>
+                                        <span className={`form-control text-truncate h-100 ${sppStatus ? classes.textDisabled : ''}`}>{uploadFilenameBank}</span>
                                         {sppStatus && <div className="input-group-append pointer">
                                             <span className={`input-group-text ${classes.textHover}`}><a download={sppData?.new_bank_file} href={sppData?.file_bank}><i className="fas fa-download"></i></a></span>
                                             <span className={`input-group-text ${classes.textHover}`} onClick={() => setDialogStateBank(true)}><i className="fas fa-eye"></i></span>

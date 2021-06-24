@@ -136,5 +136,14 @@ export function getInvoicePeriods() {
 }
 
 export function updateInvoicePeriods(data) {
-  return axios.post(`data/update_invoice_periods/${data.id}`, data );
+  return axios.post(`data/update_invoice_periods/${data.id}`, data);
+}
+
+// async data || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com
+
+export function asyncService(po) {
+  return axios.get(`sap/services/${po}`);
+}
+export function asyncSchedule(po) {
+  return axios.get(`sap/schedules/${po}`);
 }
