@@ -119,6 +119,11 @@ export const DataAsideMenuListClient = [
         title: "TITLE.SERVICE_LEVEL_AGREEMENT",
         subMenu: null,
       },
+      {
+        rootPath: "/client/master/async",
+        title: "TITLE.SYNCHRONIZE_DATA",
+        subMenu: null,
+      },
     ],
   },
 ];
