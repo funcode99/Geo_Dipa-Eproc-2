@@ -57,9 +57,9 @@ function ContractInvoicePage(props) {
     const { intl, classes, supportedFormats } = props;
 
     const initialValues = {
+        draft_no: '',
         invoice_no: '',
         from_time: '',
-        thru_time: '',
         purch_order_no: '',
         contract_id: '',
         plant_id: '',
@@ -73,7 +73,7 @@ function ContractInvoicePage(props) {
         description: '',
         file_name: '',
         created_at: '',
-        created_by_id: '',
+        created_by_id: user_id,
         file: '',
         invoice_term_id: termin,
         tax_bool: false,
@@ -141,8 +141,13 @@ function ContractInvoicePage(props) {
             if (invoiceUpdate) {
                 updateInvoice(invoiceId, data)
                     .then(response => {
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-                        setLoading(false)
+                        getInvoice(contract_id, termin)
+                            .then((responses) => {
+                                setInvoiceData(responses['data']['data'])
+                                setUploadFilename(responses['data']['data']['file_name'])
+                                setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+                                setLoading(false)
+                            })
                     })
                     .catch((error) => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -154,6 +159,8 @@ function ContractInvoicePage(props) {
                     .then(response => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
                         setLoading(false)
+                        setInvoiceData(response['data']['data'])
+                        setUploadFilename(response['data']['data']['file_name'])
                     })
                     .catch((error) => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -171,22 +178,16 @@ function ContractInvoicePage(props) {
                 response['data']['data']['termin_value_new'] = rupiah(response['data']['data']['termin_value'])
                 response['data']['data']['termin_value_ppn_new'] = rupiah(response['data']['data']['termin_value'] * 1.1)
                 setContractData(response.data.data)
-                formik.setValues({
-                    purch_order_no: response['data']['data']['purch_order_no'],
-                    contract_id: response['data']['data']['id'],
-                    plant_id: response['data']['data']['plant_id'],
-                    purch_group_id: response['data']['data']['purch_group_id'],
-                    plant_id2: response['data']['data']['plant_id2'],
-                    purch_group_id2: response['data']['data']['purch_group_id2'],
-                    vendor_id: response['data']['data']['vendor_id'],
-                    contract_value: response['data']['data']['contract_value'],
-                    currency_id: response['data']['data']['currency_id'],
-                    invoice_value: response['data']['data']['termin_value'],
-                    created_by_id: user_id,
-                    invoice_term_id: termin,
-                    tax_bool: false,
-                    tax_date: new Date(Date.now()),
-                })
+                formik.setFieldValue('purch_order_no', response['data']['data']['purch_order_no'])
+                formik.setFieldValue('contract_id', response['data']['data']['id'])
+                formik.setFieldValue('plant_id', response['data']['data']['plant_id'])
+                formik.setFieldValue('purch_group_id', response['data']['data']['purch_group_id'])
+                formik.setFieldValue('plant_id2', response['data']['data']['plant_id2'])
+                formik.setFieldValue('purch_group_id2', response['data']['data']['purch_group_id2'])
+                formik.setFieldValue('contract_value', response['data']['data']['contract_value'])
+                formik.setFieldValue('vendor_id', response['data']['data']['vendor_id'])
+                formik.setFieldValue('currency_id', response['data']['data']['currency_id'])
+                formik.setFieldValue('invoice_value', response['data']['data']['termin_value'])
             })
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -218,6 +219,7 @@ function ContractInvoicePage(props) {
                 } else {
                     gethistoryInvoiceData(response['data']['data']['id'])
                     setInvoiceId(response['data']['data']['id'])
+                    formik.setFieldValue('draft_no', response['data']['data']['invoice_draft_no'])
                     if (response['data']['data']['state'] === 'REJECTED') {
                         setInvoiceStatus(false)
                         setInvoiceUpdate(true)
@@ -240,7 +242,7 @@ function ContractInvoicePage(props) {
     const getTaxData = useCallback(() => {
         getTax(contract_id, termin)
             .then(response => {
-                if (response.data.data) {
+                if (response.data.data?.state == "PENDING") {
                     formik.setFieldValue('tax_date', new Date(response.data.data.tax_date))
                     formik.setFieldValue('tax_bool', true)
                 }
@@ -255,7 +257,7 @@ function ContractInvoicePage(props) {
     };
 
     const handleUpload = (e) => {
-        if(e.currentTarget.files.length){
+        if (e.currentTarget.files.length) {
             setUploadFilename(e.currentTarget.files[0].name)
         } else {
             setUploadFilename(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))
@@ -280,6 +282,7 @@ function ContractInvoicePage(props) {
     useEffect(getContractData, []);
     useEffect(getInvoiceData, []);
     useEffect(getTaxData, []);
+
 
     return (
         <React.Fragment>

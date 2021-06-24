@@ -56,17 +56,18 @@ function ContractTaxPage(props) {
     const { intl, classes, supportedFormats } = props;
 
     const initialValues = {
+        draft_no: '',
         tax_no: '',
         tax_date: '',
         contract_id: '',
         vendor_id: '',
-        term: '',
+        term: termin,
         npwp: '',
         payment_value: '',
         file_name: '',
         description: '',
         created_at: '',
-        created_by_id: '',
+        created_by_id: user_id,
         file: '',
         invoice_bool: false,
         invoice_date: new Date(Date.now())
@@ -140,8 +141,13 @@ function ContractTaxPage(props) {
             if (taxUpdate) {
                 updateTax(taxId, data)
                     .then(response => {
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-                        setLoading(false)
+                        getTax(contract_id, termin)
+                            .then((responses) => {
+                                setTaxData(responses['data']['data'])
+                                setUploadFilename(responses['data']['data']['file_name'])
+                                setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+                                setLoading(false)
+                            })
                     })
                     .catch((error) => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -153,6 +159,8 @@ function ContractTaxPage(props) {
                     .then(response => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
                         setLoading(false)
+                        setTaxData(response['data']['data'])
+                        setUploadFilename(response['data']['data']['file_name'])
                     })
                     .catch((error) => {
                         setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -170,15 +178,9 @@ function ContractTaxPage(props) {
                 response['data']['data']['termin_value_new'] = rupiah(response['data']['data']['termin_value'])
                 response['data']['data']['termin_value_ppn_new'] = rupiah(response['data']['data']['termin_value'] * 1.1)
                 setContractData(response.data.data)
-                formik.setValues({
-                    contract_id: response['data']['data']['id'],
-                    vendor_id: response['data']['data']['vendor_id'],
-                    payment_value: response['data']['data']['termin_value'],
-                    term: termin,
-                    created_by_id: user_id,
-                    invoice_bool: false,
-                    invoice_date: new Date(Date.now())
-                })
+                formik.setFieldValue('contract_id', response['data']['data']['id'])
+                formik.setFieldValue('vendor_id', response['data']['data']['vendor_id'])
+                formik.setFieldValue('payment_value', response['data']['data']['termin_value'])
             })
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -193,6 +195,7 @@ function ContractTaxPage(props) {
                 } else {
                     getHistoryTaxData(response['data']['data']['id'])
                     setTaxId(response['data']['data']['id'])
+                    formik.setFieldValue('draft_no', response['data']['data']['tax_draft_no'])
                     if (response['data']['data']['state'] === 'REJECTED') {
                         setTaxStatus(false)
                         setTaxUpdate(true)
@@ -244,7 +247,7 @@ function ContractTaxPage(props) {
     }, [contract_id, termin, formik])
 
     const handleUpload = (e) => {
-        if(e.currentTarget.files.length){
+        if (e.currentTarget.files.length) {
             setUploadFilename(e.currentTarget.files[0].name)
         } else {
             setUploadFilename(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))
@@ -270,8 +273,6 @@ function ContractTaxPage(props) {
     useEffect(getContractData, []);
     useEffect(getTaxData, []);
     useEffect(getInvoiceData, []);
-
-    console.log(formik.values.invoice_date)
 
     return (
         <React.Fragment>

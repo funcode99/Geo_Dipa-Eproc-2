@@ -6,7 +6,7 @@ import Periode from "./pages/Periode";
 import Roles from "./pages/Roles";
 import InvoicePeriode from "./pages/InvoicePeriode";
 import ServiceLevelAgreement from "./pages/ServiceLevelAgreement";
-// import ItemContract from "./ListContract/ItemContract";
+import AsyncData from "./pages/AsyncData";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -25,6 +25,7 @@ function RootMasterData() {
         path="/client/master/service_level_agreement"
         component={ServiceLevelAgreement}
       />
+      <Route path="/client/master/async" component={AsyncData} />
     </Switch>
   );
 }

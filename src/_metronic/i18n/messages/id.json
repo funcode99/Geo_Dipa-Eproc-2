@@ -415,5 +415,13 @@
   "MESSAGE.MUST_POSITIVE": "Harus lebih dari 0.",
   "TITLE.CONTRACT_ITEM": "Contract Item",
   "TITLE.CONTRACT_TERM": "Contract Term",
-  "TITLE.DOCUMENT_CONTRACT": "Dokumen Contrak"
+  "TITLE.DOCUMENT_CONTRACT": "Dokumen Contrak",
+  "TITLE.SYNCHRONIZE_DATA": "Sinkronisasi Data",
+  "TITLE.FEATURES_SYNCHRONIZE_DATA": "Fitur Sinkronisasi Data",
+  "TITLE.FEATURES": "Fitur",
+  "TITLE.UNDERSTAND": "Mengerti",
+  "TITLE.SYNCHRONIZE": "Sinkronisasi",
+  "TITLE.PO_SERVICES": "Purchase Order Services",
+  "TITLE.PO_SCHEDULES": "Purchase Order Services",
+  "TITLE.SPAN_PO_ASYNC": "Berdasarkan Nomor Pesanan Pembelian SAP:"
 }
