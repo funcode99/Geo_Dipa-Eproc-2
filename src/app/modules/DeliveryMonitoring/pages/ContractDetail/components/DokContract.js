@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import { TableBody, TableCell } from "@material-ui/core";
 import React from "react";
-import {  Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
@@ -37,19 +37,19 @@ const tableHeaderContractsNew = [
   // },
   {
     id: "name",
-    label: 'Nama Dokumen',
+    label: "Nama Dokumen",
   },
   {
     id: "nomor",
-    label: 'Nomor Dokumen',
+    label: "Nomor Dokumen",
   },
   {
     id: "dokumen",
-    label: 'Dokumen',
+    label: "Dokumen",
   },
   {
     id: "tanggal",
-    label: 'Tanggal Dokumen',
+    label: "Tanggal Dokumen",
   },
 ];
 
@@ -81,25 +81,32 @@ const BtnLihat = ({ url }) => {
   );
 };
 
+const initRows = tableHeaderContractsNew.map((item) => ({ [item.id]: "" }));
+
 const DokContract = () => {
-  const { data:{file} } = useSelector(
-    (state) => state.deliveryMonitoring.dataContractById
-  );
+  const {
+    data: { file },
+  } = useSelector((state) => state.deliveryMonitoring.dataContractById);
   console.log(`data`, file);
+  console.log(`initRows`, initRows);
   return (
     <Card>
       <CardBody>
         <TablePaginationCustom
           headerRows={tableHeaderContractsNew}
           width={1210}
-          rows={file.map((el, id) => ({
-            no:id+1,
-            name:el.namaDokumen,
-            nomor: el.noDokumen,
-            dokumen: <BtnLihat url={el.linkDokumen} />,
-            tanggal: el.tglDokumen,
-          }))}
-         />
+          rows={
+            file
+              ? file.map((el, id) => ({
+                  no: id + 1,
+                  name: el.namaDokumen,
+                  nomor: el.noDokumen,
+                  dokumen: <BtnLihat url={el.linkDokumen} />,
+                  tanggal: el.tglDokumen,
+                }))
+              : initRows
+          }
+        />
         {/* <div className="table-wrapper-scroll-y my-custom-scrollbar">
           <div className="segment-table">
             <div className="hecto-10">

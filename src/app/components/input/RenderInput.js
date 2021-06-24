@@ -41,7 +41,7 @@ const RenderInput = ({
             <div className="col-sm-8">
               <Component
                 // labelClass="mb-1"
-                value={values[name]}
+                value={values[name] || ""}
                 name={name}
                 // onChange={handleChange(name)}
                 onChange={(val) => setFieldValue(name, val, true)}

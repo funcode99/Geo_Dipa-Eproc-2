@@ -2,18 +2,17 @@ import TitleField from "../../../../../../components/input/TitleField";
 import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
 import { FormattedMessage } from "react-intl";
-import React from 'react'
+import React from "react";
 
-const TextIni = ({text}) => (
-  <FormattedMessage id={`PARTIES.NAMA_PEMBERI`} />
-)
-
+const TextIni = ({ text }) => (
+  <FormattedMessage id={`CONTRACT_DETAIL.PARTIES.${text}`} />
+);
 
 export const formData1 = [
   [
     {
       name: "nama_pemberi",
-      label: <TextIni text={'NAMA_PEMBER'} />,
+      label: <TextIni text={"NAMA_PEMBERI"} />,
     },
   ],
   {
