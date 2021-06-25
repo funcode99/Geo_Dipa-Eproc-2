@@ -34,13 +34,9 @@ const ModalUpdate = ({
   formik,
   loading,
   updateData,
+  errors,
+  handleError,
 }) => {
-  const [errors, setErrors] = React.useState({});
-
-  const handleError = (type, err) => {
-    setErrors((prev) => ({ ...prev, [type]: err }));
-  };
-
   const handleChecklist = (data, index) => {
     handleError("item", false);
 
@@ -132,6 +128,11 @@ const ModalUpdate = ({
             })}
           </TableBody>
         </Table>
+        {errors.item && (
+          <span className="text-danger">
+            <FormattedMessage id="TITLE.ITEM_IS_REQUIRE" />
+          </span>
+        )}
 
         <form
           noValidate

@@ -133,85 +133,81 @@ const DeliveryOrder = ({
     }
   };
 
+  const [errors, setErrors] = React.useState({});
+
+  const handleErrorSubmit = (type, err) => {
+    setErrors((prev) => ({ ...prev, [type]: err }));
+  };
+
   const formik = useFormik({
     initialValues,
     validationSchema: FormSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
-      try {
-        let requestData = {};
-        let submitItem = [];
-        let res = {};
+      let submitItem = [];
+      if (open.update) {
+        submitItem = updateOrderItems.filter((item) => item.checked === true);
+      } else if (open.create) {
+        submitItem = tempOrderItems.filter((item) => item.checked === true);
+      }
 
-        if (open.update) {
-          submitItem = updateOrderItems.filter((item) => item.checked === true);
-          if (submitItem.length < 1) {
-            handleError("item", true);
+      if (submitItem.length < 1) {
+        handleErrorSubmit("item", true);
+      } else {
+        try {
+          let requestData = {};
+
+          let res = {};
+          if (open.update) {
+            requestData = {
+              name: values.name,
+              date: values.date,
+              remarks: values.remarks,
+              items: submitItem.map((item) => ({
+                task_item_id: item.task_item_id,
+                qty: item.qty,
+              })),
+            };
+            // console.log(`requestData`, requestData);
+            handleLoading("update", true);
+            res = await deliveryMonitoring.postDeliveryItem(
+              "update",
+              open?.tempParams?.id,
+              requestData
+            );
+          } else if (open.create) {
+            requestData = {
+              name: values.name,
+              date: values.date,
+              remarks: values.remarks,
+              items: submitItem.map((item) => ({
+                task_item_id: item.id,
+                qty: item.qty,
+              })),
+            };
+            handleLoading("create", true);
+            res = await deliveryMonitoring.postDeliveryItem(
+              "create",
+              taskId,
+              requestData
+            );
           }
-
-          requestData = {
-            name: values.name,
-            date: values.date,
-            remarks: values.remarks,
-            items: submitItem.map((item) => ({
-              task_item_id: item.task_item_id,
-              qty: item.qty,
-            })),
-          };
-
-          // console.log(`requestData`, requestData);
-          handleLoading("update", true);
-          res = await deliveryMonitoring.postDeliveryItem(
-            "update",
-            open?.tempParams?.id,
-            requestData
-          );
-        } else if (open.create) {
-          submitItem = tempOrderItems.filter((item) => item.checked === true);
-          if (submitItem.length < 1) {
-            handleError("item", true);
+          if (res.data.status === true) {
+            handleSuccess(res);
           }
-
-          requestData = {
-            name: values.name,
-            date: values.date,
-            remarks: values.remarks,
-            items: submitItem.map((item) => ({
-              task_item_id: item.id,
-              qty: item.qty,
-            })),
-          };
-
-          handleLoading("create", true);
-          res = await deliveryMonitoring.postDeliveryItem(
-            "create",
-            taskId,
-            requestData
-          );
-        }
-
-        // console.log(`requestData`, requestData);
-        // res = await deliveryMonitoring.postDeliveryItem(
-        //   "create",
-        //   taskId,
-        //   requestData
-        // );
-
-        if (res.data.status === true) {
-          handleSuccess(res);
-        }
-      } catch (error) {
-        setSubmitting(false);
-        setStatus("Failed Submit Data");
-        handleError("api", error);
-      } finally {
-        if (open.update) {
-          // console.log(`open.update`, open.update);
-          handleLoading("update", false);
-          handleVisible("update");
-        } else if (open.create) {
-          console.log(`open.create`, open.create);
-          handleLoading("create", false);
-          handleVisible("create");
+        } catch (error) {
+          setSubmitting(false);
+          setStatus("Failed Submit Data");
+          handleError("api", error);
+        } finally {
+          if (open.update) {
+            // console.log(`open.update`, open.update);
+            handleLoading("update", false);
+            handleVisible("update");
+          } else if (open.create) {
+            console.log(`open.create`, open.create);
+            handleLoading("create", false);
+            handleVisible("create");
+          }
         }
       }
     },
@@ -346,6 +342,8 @@ const DeliveryOrder = ({
         onClose={() => handleVisible("create")}
         formik={formik}
         loading={loading.create}
+        errors={errors}
+        handleError={handleErrorSubmit}
       />
 
       <ModalUpdate
@@ -354,6 +352,8 @@ const DeliveryOrder = ({
         formik={formik}
         loading={loading.update}
         updateData={open.tempParams}
+        errors={errors}
+        handleError={handleErrorSubmit}
       />
 
       <Card>

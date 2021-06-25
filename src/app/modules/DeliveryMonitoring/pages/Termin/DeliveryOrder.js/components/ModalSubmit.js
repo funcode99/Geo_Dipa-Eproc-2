@@ -33,13 +33,9 @@ const ModalSubmit = ({
   setTempOrderItems,
   formik,
   loading,
+  errors,
+  handleError,
 }) => {
-  const [errors, setErrors] = React.useState({});
-
-  const handleError = (type, err) => {
-    setErrors((prev) => ({ ...prev, [type]: err }));
-  };
-
   const handleChecklist = (data, index) => {
     handleError("item", false);
 
