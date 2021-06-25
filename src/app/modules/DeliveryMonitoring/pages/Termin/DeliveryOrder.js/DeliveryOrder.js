@@ -1,8 +1,5 @@
 import { Card, CardContent } from "@material-ui/core";
 import React from "react";
-import TableBuilder from "../../../../../components/builder/TableBuilder";
-import RowNormal from "./RowNormal";
-import { rupiah } from "../../../../../libs/currency";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
@@ -10,11 +7,16 @@ import ModalSubmit from "./components/ModalSubmit";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
 import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
-import { formatDate, formatInitialDate } from "../../../../../libs/date";
+import {
+  formatDate,
+  formatInitialDate,
+  formatUpdateDate,
+} from "../../../../../libs/date";
 import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import useToast from "../../../../../components/toast";
+import ModalUpdate from "./components/ModalUpdate";
 
 const tblHeadDlvItem = [
   {
@@ -62,17 +64,21 @@ const DeliveryOrder = ({
   tempOrderItems,
   setTempOrderItems,
   saveDataTask,
+  updateOrderItems,
 }) => {
   const [open, setOpen] = React.useState({
-    submit: false,
+    create: false,
     delete: false,
+    update: false,
     tempParams: {},
   });
   const [tableContent, setTableContent] = React.useState([]);
   const [loading, setLoading] = React.useState({
     fetch: false,
     create: false,
+
     delete: false,
+    update: false,
   });
   const [Toast, setToast] = useToast();
 
@@ -92,7 +98,8 @@ const DeliveryOrder = ({
           err.response?.code !== 400 &&
           err.response?.data.message !== "TokenExpiredError"
         ) {
-          setToast(err.response?.data.message, 5000);
+          getTask({ visible: "true", message: err.response?.data.message });
+          // setToast(err.response?.data.message, 5000);
         }
         break;
 
@@ -108,7 +115,7 @@ const DeliveryOrder = ({
       .getTaskById(taskId)
       .then((res) => {
         if (res.data.status === true) {
-          console.log(`res.data.data`, res.data.data);
+          // console.log(`res.data.data`, res.data.data);
           saveDataTask(res.data.data);
           // generateTableContent(orderItems);
           if (toast.visible) {
@@ -131,30 +138,63 @@ const DeliveryOrder = ({
     validationSchema: FormSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       try {
-        const submitItem = tempOrderItems.filter(
-          (item) => item.checked === true
-        );
-        if (submitItem.length < 1) {
-          handleError("item", true);
+        let requestData = {};
+        let submitItem = [];
+        let res = {};
+
+        if (open.update) {
+          submitItem = updateOrderItems.filter((item) => item.checked === true);
+          if (submitItem.length < 1) {
+            handleError("item", true);
+          }
+
+          requestData = {
+            name: values.name,
+            date: values.date,
+            remarks: values.remarks,
+            items: submitItem.map((item) => ({
+              task_item_id: item.task_item_id,
+              qty: item.qty,
+            })),
+          };
+
+          // console.log(`requestData`, requestData);
+          handleLoading("update", true);
+          res = await deliveryMonitoring.postDeliveryItem(
+            "update",
+            open?.tempParams?.id,
+            requestData
+          );
+        } else if (open.create) {
+          submitItem = tempOrderItems.filter((item) => item.checked === true);
+          if (submitItem.length < 1) {
+            handleError("item", true);
+          }
+
+          requestData = {
+            name: values.name,
+            date: values.date,
+            remarks: values.remarks,
+            items: submitItem.map((item) => ({
+              task_item_id: item.id,
+              qty: item.qty,
+            })),
+          };
+
+          handleLoading("create", true);
+          res = await deliveryMonitoring.postDeliveryItem(
+            "create",
+            taskId,
+            requestData
+          );
         }
 
-        const requestData = {
-          name: values.name,
-          date: values.date,
-          remarks: values.remarks,
-          items: submitItem.map((item) => ({
-            task_item_id: item.id,
-            qty: item.qty,
-          })),
-        };
-
-        console.log(`requestData`, requestData);
-        handleLoading("create", true);
-
-        const res = await deliveryMonitoring.addDeliveryItem(
-          requestData,
-          taskId
-        );
+        // console.log(`requestData`, requestData);
+        // res = await deliveryMonitoring.postDeliveryItem(
+        //   "create",
+        //   taskId,
+        //   requestData
+        // );
 
         if (res.data.status === true) {
           handleSuccess(res);
@@ -164,8 +204,15 @@ const DeliveryOrder = ({
         setStatus("Failed Submit Data");
         handleError("api", error);
       } finally {
-        handleLoading("create", false);
-        handleVisible("submit");
+        if (open.update) {
+          // console.log(`open.update`, open.update);
+          handleLoading("update", false);
+          handleVisible("update");
+        } else if (open.create) {
+          console.log(`open.create`, open.create);
+          handleLoading("create", false);
+          handleVisible("create");
+        }
       }
     },
   });
@@ -173,9 +220,10 @@ const DeliveryOrder = ({
   const handleDelete = async () => {
     try {
       handleLoading("delete", true);
-      console.log(open.tempParams);
+      // console.log(open.tempParams);
       // const itemId = open?.tempParams?.id;
-      const res = await deliveryMonitoring.deleteDeliveryItem(
+      const res = await deliveryMonitoring.postDeliveryItem(
+        "delete",
         open?.tempParams?.id
       );
       if (res?.data?.status === true) {
@@ -190,12 +238,34 @@ const DeliveryOrder = ({
     }
   };
 
+  const handleModal = (type, data) => {
+    if (type === "update") {
+      // console.log(`type`, type);
+      // console.log(`data`, data);
+
+      formik.setValues({
+        name: data.name,
+        date: data.date
+          ? formatUpdateDate(new Date(data.date), "yyy-MM-dd")
+          : formatUpdateDate(new Date(), "yyy-MM-dd"),
+        remarks: data.remarks,
+      });
+    }
+  };
+
   const handleAction = (type, data) => {
-    console.log(`type`, type);
-    console.log(`data`, data);
+    // console.log(`type`, type);
+    // console.log(`data`, data);
     switch (type) {
+      case "create":
+        handleVisible("create", data);
+        break;
       case "delete":
         handleVisible("delete", data);
+        break;
+      case "update":
+        handleVisible("update", data);
+        handleModal("update", data);
         break;
 
       default:
@@ -206,36 +276,37 @@ const DeliveryOrder = ({
   const generateTableContent = (data) => {
     let dataArr = [];
     // console.log(`data`, data);
-    data.forEach((item, index) => {
-      // console.log(`item`, item);
-      let objData = {
-        no: (index += 1),
-        desc: item?.name || "",
-        date: item?.date !== null ? formatDate(new Date(item?.date)) : null,
-        remarks: item.remarks || "",
-        action: (
-          <ButtonAction
-            hoverLabel="More"
-            data={item}
-            handleAction={handleAction}
-            ops={[
-              {
-                label: "TITLE.EDIT_DATA",
-                icon: "fas fa-edit text-primary",
-                type: "update",
-                disabled: true,
-              },
-              {
-                label: "TITLE.DELETE_DATA",
-                icon: "fas fa-trash text-danger",
-                type: "delete",
-              },
-            ]}
-          />
-        ),
-      };
-      dataArr.push(objData);
-    });
+    data
+      ? data.forEach((item, index) => {
+          // console.log(`item`, item);
+          let objData = {
+            no: (index += 1),
+            desc: item?.name || "",
+            date: item?.date !== null ? formatDate(new Date(item?.date)) : null,
+            remarks: item.remarks || "",
+            action: (
+              <ButtonAction
+                hoverLabel="More"
+                data={item}
+                handleAction={handleAction}
+                ops={[
+                  {
+                    label: "TITLE.EDIT_DATA",
+                    icon: "fas fa-edit text-primary",
+                    type: "update",
+                  },
+                  {
+                    label: "TITLE.DELETE_DATA",
+                    icon: "fas fa-trash text-danger",
+                    type: "delete",
+                  },
+                ]}
+              />
+            ),
+          };
+          dataArr.push(objData);
+        })
+      : (dataArr = tblHeadDlvItem.map((item) => ({ [item.id]: "" })));
     setTableContent(dataArr);
   };
 
@@ -260,7 +331,7 @@ const DeliveryOrder = ({
 
       <ModalConfirmation
         visible={open.delete}
-        onClose={() => handleVisible("delete", false)}
+        onClose={() => handleVisible("delete")}
         title={<FormattedMessage id="TITLE.MODAL_DELETE.TITLE" />}
         subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
         textYes={<FormattedMessage id="BUTTON.DELETE" />}
@@ -271,11 +342,18 @@ const DeliveryOrder = ({
       />
 
       <ModalSubmit
-        visible={open.submit}
-        onClose={() => handleVisible("submit", false)}
-        taskId={taskId}
+        visible={open.create}
+        onClose={() => handleVisible("create")}
         formik={formik}
         loading={loading.create}
+      />
+
+      <ModalUpdate
+        visible={open.update}
+        onClose={() => handleVisible("update")}
+        formik={formik}
+        loading={loading.update}
+        updateData={open.tempParams}
       />
 
       <Card>
@@ -283,7 +361,7 @@ const DeliveryOrder = ({
           <div className="d-flex justify-content-end w-100 mb-5">
             <button
               className="btn btn-outline-success btn-sm"
-              onClick={() => handleVisible("submit", items)}
+              onClick={() => handleAction("create")}
             >
               <span className="nav-icon">
                 <i className="flaticon2-plus"></i>
@@ -311,6 +389,7 @@ const mapState = ({ deliveryMonitoring }) => ({
   items: deliveryMonitoring.dataBarang,
   orderItems: deliveryMonitoring.dataTask?.task_deliveries,
   tempOrderItems: deliveryMonitoring.dataTempOrderItems,
+  updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
 });
 
 const mapDispatch = (dispatch) => ({
