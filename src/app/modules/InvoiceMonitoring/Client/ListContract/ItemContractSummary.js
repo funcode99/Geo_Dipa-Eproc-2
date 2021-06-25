@@ -122,44 +122,38 @@ function ItemContractSummary(props) {
         response["data"]["data"]["contract_value"] = rupiah(
           response["data"]["data"]["contract_value"]
         );
-        response["data"]["data"]["direksi"] = response["data"]["data"][
-          "party_1_contract_signature_name"
-        ].concat(" - ", response["data"]["data"]["party_1_director_position"]);
+        response["data"]["data"]["termin_value"] = rupiah(
+          response["data"]["data"]["termin_value"]
+        );
+        response["data"]["data"]["authorize"] = response["data"]["data"]["party_1_contract_signature_name"]
+          .concat(" - ", response["data"]["data"]["party_1_position_of_autorize"]);
         response["data"]["data"]["full_name"] = response["data"]["data"][
           "data"
         ]["legal_org_type_sub"]["name"].concat(
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${
-          response["data"]["data"]["data"]["address"]["postal_address"]
+        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
             ? response["data"]["data"]["data"]["address"]["postal_address"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["sub_district"]
+          } ${response["data"]["data"]["data"]["address"]["sub_district"]
             ? response["data"]["data"]["data"]["address"]["sub_district"][
                 "name"
               ]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["district"]
+          } ${response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["province"]
+          } ${response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["postal_code"]
+          } ${response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
         }`;
-        response["data"]["data"]["full_data_party_2"] = `${
-          response["data"]["data"]["full_name"]
-        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
-          response["data"]["data"]["data"]["phone_number"]["number"]
-        } ${
-          response["data"]["data"]["data"]["phone_number"]["ext"]
+        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
+          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
+          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
                 response["data"]["data"]["data"]["phone_number"]["ext"]
               )
@@ -286,7 +280,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue="Rp. 1.000.000"
+                    defaultValue={contractData["termin_value"]}
                     disabled
                   />
                 </div>
@@ -305,7 +299,7 @@ function ItemContractSummary(props) {
                     id="authorizedOffice"
                     defaultValue={
                       contractData
-                        ? contractData["party_1_position_of_autorize"]
+                        ? contractData["authorize"]
                         : null
                     }
                     disabled
@@ -324,7 +318,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="jobDirectors"
-                    defaultValue={contractData ? contractData["direksi"] : null}
+                    defaultValue={contractData ? contractData["party_1_director_position"] : null}
                     disabled
                   />
                 </div>
@@ -338,7 +332,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="progress"
-                    defaultValue="100%"
+                    defaultValue={contractData ? contractData["termin_progress"] : null}
                     disabled
                   />
                 </div>

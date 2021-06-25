@@ -25,8 +25,10 @@ const StyledSubheader = ({
           {IconComponent ? IconComponent : null}
         </span>
       </SubWrap>
-      <div className="d-flex align-items-baseline mr-5">
-        <h2 className="text-dark font-weight-bold my-2 mr-5">{text}</h2>
+      <div className="d-flex align-items-baseline mr-5 w-75">
+        <h2 className="text-dark font-weight-bold my-2 mr-5 text-truncate">
+          {text}
+        </h2>
       </div>
     </div>
   );

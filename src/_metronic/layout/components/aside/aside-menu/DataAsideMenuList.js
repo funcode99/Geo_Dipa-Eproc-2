@@ -86,6 +86,12 @@ export const DataAsideMenuListClient = [
   {
     rootPath: "/client/user-profile",
     icon: "/All/users-solid.svg",
+    title: "User Profile",
+    subMenu: null,
+  },
+  {
+    rootPath: "/client/user-management",
+    icon: "/All/users-solid.svg",
     title: "MENU.USER_MANAGEMENT",
     subMenu: null,
   },
@@ -122,6 +128,11 @@ export const DataAsideMenuListClient = [
       {
         rootPath: "/client/master/async",
         title: "TITLE.SYNCHRONIZE_DATA",
+        subMenu: null,
+      },
+      {
+        rootPath: "/client/master/email",
+        title: "TITLE.EMAIL",
         subMenu: null,
       },
     ],
