@@ -28,6 +28,10 @@ import RootVendorDelivery from "./modules/DeliveryMonitoring/Vendor/RootVendorDe
 // );
 // Page Guide Metronic
 
+const UserManagementClient = lazy(() =>
+  import("./modules/UserManagement/UserManagement")
+);
+
 const UserProfilePageClient = lazy(() =>
   import("./modules/UserProfile/Client/UserProfilePage")
 );
@@ -88,6 +92,8 @@ export default function BasePage() {
         <Route path="/react-bootstrap" component={ReactBootstrapPage} />
         <Route path="/e-commerce" component={ECommercePage} /> */}
         {/* Page Guide Metronic */}
+
+        <Route path="/client/user-management" component={UserManagementClient} />
 
         <Route path="/client/user-profile" component={UserProfilePageClient} />
         <Route path="/vendor/user-profile" component={UserProfilePageVendor} />
