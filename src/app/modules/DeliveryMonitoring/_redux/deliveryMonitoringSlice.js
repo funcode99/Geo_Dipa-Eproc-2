@@ -15,6 +15,7 @@ const initialDelivMonitoringState = {
   dataTask: {},
   dataOrderItems: [],
   dataTempOrderItems: [],
+  dataUpdateOrderItems: [],
 };
 
 export const reducer = persistReducer(
@@ -79,6 +80,13 @@ export const reducer = persistReducer(
         return {
           ...state,
           dataTempOrderItems: action.payload,
+        };
+      }
+
+      case actionTypes.SetDataUpdateOrderItems: {
+        return {
+          ...state,
+          dataUpdateOrderItems: action.payload,
         };
       }
 

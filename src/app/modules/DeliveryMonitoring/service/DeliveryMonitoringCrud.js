@@ -34,12 +34,20 @@ export function submitItems(values, taskId) {
 }
 
 // Task Delivery Item
-export function addDeliveryItem(values, taskId) {
-  return axios.post(`/delivery/task-delivery/${taskId}`, values);
-}
+export function postDeliveryItem(type, id, values) {
+  switch (type) {
+    case "create":
+      return axios.post(`/delivery/task-delivery/${id}`, values);
 
-export function deleteDeliveryItem(itemId) {
-  return axios.delete(`/delivery/task-delivery/${itemId}`);
+    case "delete":
+      return axios.delete(`/delivery/task-delivery/${id}`);
+
+    case "update":
+      return axios.put(`/delivery/task-delivery/${id}`, values);
+
+    default:
+      break;
+  }
 }
 
 // Task Document

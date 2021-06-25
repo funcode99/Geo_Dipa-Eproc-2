@@ -26,13 +26,14 @@ const tableHeader = [
   <FormattedMessage id="TITLE.UNIT_PRICE" />,
 ];
 
-const ModalSubmit = ({
+const ModalUpdate = ({
   visible,
   onClose,
-  tempOrderItems,
-  setTempOrderItems,
+  updateOrderItems,
+  setUpdateOrderItems,
   formik,
   loading,
+  updateData,
 }) => {
   const [errors, setErrors] = React.useState({});
 
@@ -43,18 +44,34 @@ const ModalSubmit = ({
   const handleChecklist = (data, index) => {
     handleError("item", false);
 
-    const dataArr = [...tempOrderItems];
+    // console.log(`updateOrderItems`, updateOrderItems);
+    const dataArr = [...updateOrderItems];
     dataArr[index].checked = !dataArr[index].checked;
-    setTempOrderItems(dataArr);
+    setUpdateOrderItems(dataArr);
   };
 
   const handleChange = (e, data, index) => {
     const value = +e.target.value;
 
-    const dataArr = [...tempOrderItems];
+    const dataArr = [...updateOrderItems];
     dataArr[index].qty = value;
-    setTempOrderItems(dataArr);
+    setUpdateOrderItems(dataArr);
   };
+
+  const addCheckedField = React.useCallback(() => {
+    setUpdateOrderItems(
+      updateData?.task_delivery_items?.map((item) => ({
+        ...item,
+        checked: true,
+      }))
+    );
+  }, [updateData, setUpdateOrderItems]);
+
+  React.useEffect(() => {
+    addCheckedField();
+  }, [updateData, addCheckedField]);
+
+  // console.log(`updateOrderItems`, updateOrderItems);
 
   return (
     <React.Fragment>
@@ -67,7 +84,7 @@ const ModalSubmit = ({
         maxwidth="70vw"
       >
         <h3 className="mb-7">
-          <FormattedMessage id="TITLE.ADD" />{" "}
+          <FormattedMessage id="TITLE.UPDATE" />{" "}
           <FormattedMessage id="TITLE.DELIVERY_ORDER" />
         </h3>
 
@@ -82,7 +99,7 @@ const ModalSubmit = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {tempOrderItems?.map((item, index) => {
+            {updateOrderItems?.map((item, index) => {
               return (
                 <TableRow key={index}>
                   <TableCell>
@@ -93,7 +110,7 @@ const ModalSubmit = ({
                       size="small"
                       width={50}
                       variant="body"
-                      checked={item.checked}
+                      checked={item?.checked}
                     />
                   </TableCell>
                   <TableCell>{item?.item?.desc}</TableCell>
@@ -103,7 +120,7 @@ const ModalSubmit = ({
                       size="sm"
                       min="1"
                       step="1"
-                      max={item?.qty}
+                      max={item?.item?.qty}
                       disabled={!item.checked ? true : false}
                       defaultValue={item.qty}
                       onChange={(e) => handleChange(e, item, index)}
@@ -115,11 +132,6 @@ const ModalSubmit = ({
             })}
           </TableBody>
         </Table>
-        {errors.item && (
-          <span className="text-danger">
-            <FormattedMessage id="TITLE.ITEM_IS_REQUIRE" />
-          </span>
-        )}
 
         <form
           noValidate
@@ -194,7 +206,7 @@ const ModalSubmit = ({
               color="secondary"
             >
               <span className="mr-1">
-                <FormattedMessage id="TITLE.ADD" />
+                <FormattedMessage id="TITLE.UPDATE" />
               </span>
               {loading ? (
                 <CircularProgress size="0.875rem" color="inherit" />
@@ -211,6 +223,7 @@ const ModalSubmit = ({
 
 const mapState = ({ deliveryMonitoring }) => ({
   tempOrderItems: deliveryMonitoring.dataTempOrderItems,
+  updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
 });
 
 const mapDispatch = (dispatch) => ({
@@ -220,6 +233,12 @@ const mapDispatch = (dispatch) => ({
       payload: payload,
     });
   },
+  setUpdateOrderItems: (payload) => {
+    dispatch({
+      type: actionTypes.SetDataUpdateOrderItems,
+      payload: payload,
+    });
+  },
 });
 
-export default connect(mapState, mapDispatch)(ModalSubmit);
+export default connect(mapState, mapDispatch)(ModalUpdate);
