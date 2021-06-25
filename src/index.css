@@ -1445,3 +1445,8 @@ th {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+.rdw-editor-main {
+  border: 1px solid #f1f1f1;
+  height: 200px !important;
+}

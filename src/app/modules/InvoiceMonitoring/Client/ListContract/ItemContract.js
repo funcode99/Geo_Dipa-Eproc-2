@@ -26,6 +26,7 @@ import StyledSelect from "../../../../components/select-multiple";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import { withStyles } from "@material-ui/core/styles";
+import Steppers from "../../../../components/steppersCustom/Steppers";
 
 const styles = (theme) => ({
   root: {
@@ -136,6 +137,44 @@ const ItemContract = (props) => {
   const [dataTwo, setDataTwo] = React.useState([]);
   const [dataTwoValue, setDataTwoValue] = React.useState([]);
   const [data, setData] = React.useState({});
+  const [dataProgress, setDataProgress] = React.useState([
+    {
+      label: "Delivery Document",
+      status: "COMPLETE",
+    },
+    {
+      label: "Contract Document",
+      status: "COMPLETE",
+    },
+    {
+      label: "Document SPP",
+      status: "COMPLETE",
+    },
+    {
+      label: "Document Invoice",
+      status: "COMPLETE",
+    },
+    {
+      label: "Document Receipt",
+      status: "COMPLETE",
+    },
+    {
+      label: "Document Tax Invoice",
+      status: "ON PROGRESS",
+    },
+    {
+      label: "Verification Document Softcopy",
+      status: "NO STARTED",
+    },
+    {
+      label: "Verification Document Hardcopy",
+      status: "NO STARTED",
+    },
+    {
+      label: "Payment Invoice",
+      status: "NO STARTED",
+    },
+  ]);
 
   suhbeader.setTitle(
     intl.formatMessage({
@@ -258,6 +297,8 @@ const ItemContract = (props) => {
           },
         ]}
       />
+
+      <Steppers steps={dataProgress} />
       <Paper className={classes.paper}>
         <Container>
           <Tabs

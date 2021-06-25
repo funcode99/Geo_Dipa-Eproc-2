@@ -1,0 +1,23 @@
+.MuiStepper-root {
+  padding: 15px !important;
+  border-radius: 5px;
+}
+.MuiSvgIcon-root.MuiStepIcon-root {
+  font-size: 1.8rem !important;
+
+  text {
+    fill: white;
+  }
+
+  &.MuiStepIcon-completed {
+    color: #3699ff !important;
+  }
+
+  &.MuiStepIcon-active {
+    color: #4caf50 !important;
+
+    text {
+      fill: white;
+    }
+  }
+}

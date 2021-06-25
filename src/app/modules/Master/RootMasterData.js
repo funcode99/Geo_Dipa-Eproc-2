@@ -7,6 +7,8 @@ import Roles from "./pages/Roles";
 import InvoicePeriode from "./pages/InvoicePeriode";
 import ServiceLevelAgreement from "./pages/ServiceLevelAgreement";
 import AsyncData from "./pages/AsyncData";
+import Email from "./pages/Email";
+import ItemEmail from "./pages/Email/ItemEmail";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -26,6 +28,8 @@ function RootMasterData() {
         component={ServiceLevelAgreement}
       />
       <Route path="/client/master/async" component={AsyncData} />
+      <Route path="/client/master/email/item" component={ItemEmail} />
+      <Route path="/client/master/email" component={Email} />
     </Switch>
   );
 }
