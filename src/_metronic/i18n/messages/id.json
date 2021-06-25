@@ -423,5 +423,9 @@
   "TITLE.SYNCHRONIZE": "Sinkronisasi",
   "TITLE.PO_SERVICES": "Purchase Order Services",
   "TITLE.PO_SCHEDULES": "Purchase Order Services",
-  "TITLE.SPAN_PO_ASYNC": "Berdasarkan Nomor Pesanan Pembelian SAP:"
+  "TITLE.SPAN_PO_ASYNC": "Berdasarkan Nomor Pesanan Pembelian SAP:",
+  "TITLE.EMAIL": "Email",
+  "TITLE.UPDATED_DATE": "Tanggal Diperbaharui",
+  "TITLE.SCHEDULED": "Terjadwal",
+  "TITLE.OPEN_DATA": "Buka Data"
 }

@@ -423,5 +423,9 @@
   "TITLE.SYNCHRONIZE": "Synchronize",
   "TITLE.PO_SERVICES": "Purchase Order Services",
   "TITLE.PO_SCHEDULES": "Purchase Order Schedule",
-  "TITLE.SPAN_PO_ASYNC": "By Number Purchase Order SAP:"
+  "TITLE.SPAN_PO_ASYNC": "By Number Purchase Order SAP:",
+  "TITLE.EMAIL": "Email",
+  "TITLE.UPDATED_DATE": "Updated Date",
+  "TITLE.SCHEDULED": "Scheduled",
+  "TITLE.OPEN_DATA": "Open Data"
 }

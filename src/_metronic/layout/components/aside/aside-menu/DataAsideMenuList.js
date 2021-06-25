@@ -130,6 +130,11 @@ export const DataAsideMenuListClient = [
         title: "TITLE.SYNCHRONIZE_DATA",
         subMenu: null,
       },
+      {
+        rootPath: "/client/master/email",
+        title: "TITLE.EMAIL",
+        subMenu: null,
+      },
     ],
   },
 ];

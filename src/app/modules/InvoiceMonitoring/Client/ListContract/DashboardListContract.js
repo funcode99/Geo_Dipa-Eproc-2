@@ -254,7 +254,7 @@ function DashboardListContract(props) {
                                 updateValueFilter(item.name, index);
                               }}
                             >
-                              Perbaharui
+                              <FormattedMessage id="TITLE.UPDATE" />
                             </button>
                             <button
                               type="button"
