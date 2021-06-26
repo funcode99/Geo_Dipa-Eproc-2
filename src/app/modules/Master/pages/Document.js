@@ -38,6 +38,7 @@ import CustomTable from "../../../components/tables";
 import Subheader from "../../../components/subheader";
 import TablePaginationCustom from "../../../components/tables/TablePagination";
 import ButtonAction from "../../../components/buttonAction/ButtonAction";
+import DialogGlobal from "../../../components/modals/DialogGlobal";
 // import DocumentsTable from './Document';
 
 const useStyles = makeStyles((theme) => ({
@@ -62,6 +63,9 @@ const rowHeader = [
 export const Documents = ({ typeId }) => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
+
+  const updateCreateRef = React.useRef();
+  const confirmationRef = React.useRef();
   // const [dataList, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
   const [confirm, setConfirm] = React.useState({ show: false, id: "" });
@@ -216,6 +220,7 @@ export const Documents = ({ typeId }) => {
         if (status) {
           getListID();
           setModals(false);
+          updateCreateRef.current.close();
         }
       } catch (error) {
         setToast("Error API, Please contact developer!");
@@ -229,6 +234,7 @@ export const Documents = ({ typeId }) => {
 
   const handleClose = () => {
     setModals(false);
+    updateCreateRef.current.close();
   };
 
   const handleModal = async (type, id) => {
@@ -249,6 +255,7 @@ export const Documents = ({ typeId }) => {
       // formik.setValues(initialValues);
     }
     setModals(true);
+    updateCreateRef.current.open();
   };
 
   const handleDelete = async () => {
@@ -256,6 +263,7 @@ export const Documents = ({ typeId }) => {
       setLoading(true);
       await master.deleteDocument(confirm.id);
       setConfirm({ ...confirm, show: false });
+      confirmationRef.current.close();
       getListID();
     } catch (error) {
       setToast("Error with API, please contact Developer!");
@@ -276,6 +284,7 @@ export const Documents = ({ typeId }) => {
         break;
       case "delete":
         setConfirm({ show: true, id: params?.id });
+        confirmationRef.current.open();
         break;
       default:
         break;
@@ -285,17 +294,14 @@ export const Documents = ({ typeId }) => {
   return (
     <React.Fragment>
       <Toast />
-      <StyledModal
-        visible={modals}
-        onClose={handleClose}
-        hideCloseIcon={false}
-        disableBackdrop
+      <DialogGlobal
+        title={`${update.update ? "Update" : "Create"} Master Document`}
+        ref={updateCreateRef}
+        onYes={formik.handleSubmit}
+        textYes={update.update ? "Update" : "Create"}
       >
         <Flex style={{ justifyContent: "center" }}>
           <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
-            <div style={{ justifyContent: "center", display: "flex" }}>
-              <h3>Input Form</h3>
-            </div>
             <FormContent>
               <InputWrapper>
                 <Input
@@ -304,7 +310,7 @@ export const Documents = ({ typeId }) => {
                   name="document_name"
                   {...formik.getFieldProps("document_name")}
                 />
-                <p style={{ textAlign: "center", color: "red", margin: 5 }}>
+                <p style={{ color: "red", margin: 5 }}>
                   {formik.touched.document_name && formik.errors.document_name
                     ? formik.errors.document_name
                     : null}
@@ -377,7 +383,7 @@ export const Documents = ({ typeId }) => {
                 </InputWrapper>
               ) : null}
             </FormContent>
-            <div style={{ justifyContent: "center", display: "flex" }}>
+            {/* <div style={{ justifyContent: "center", display: "flex" }}>
               <Button
                 disabled={loading}
                 type="submit"
@@ -388,11 +394,32 @@ export const Documents = ({ typeId }) => {
                 {loading ? <CircularProgress /> : null}&nbsp;
                 {update.update ? "Update" : "Create"}
               </Button>
-            </div>
+            </div> */}
           </form>
         </Flex>
-      </StyledModal>
-      <StyledModal
+      </DialogGlobal>
+      {/* <StyledModal
+        visible={modals}
+        onClose={handleClose}
+        hideCloseIcon={false}
+        disableBackdrop
+      >
+        
+      </StyledModal> */}
+
+      <DialogGlobal
+        title={`Are you sure ?`}
+        ref={confirmationRef}
+        onYes={() => handleDelete()}
+        textYes={"Delete"}
+      >
+        <div>
+          <p>Item terpilih akan dihapus dari list</p>
+          <p>Selected item will be removed from the list.</p>
+        </div>
+      </DialogGlobal>
+
+      {/* <StyledModal
         visible={confirm.show}
         onClose={() => setConfirm({ ...confirm, show: false })}
         hideCloseIcon={false}
@@ -428,6 +455,7 @@ export const Documents = ({ typeId }) => {
           </div>
         </Flex>
       </StyledModal>
+       */}
       <div>
         <Subheader
           text="Master Dokumen"

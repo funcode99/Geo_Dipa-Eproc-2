@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   Checkbox,
   CircularProgress,
+  Switch,
 } from "@material-ui/core";
 // import SVG from 'react-inlinesvg';
 import { useFormik } from "formik";
@@ -24,6 +25,9 @@ import CustomTable from "../../../components/tables";
 import Subheader from "../../../components/subheader";
 import TablePaginationCustom from "../../../components/tables/TablePagination";
 import ButtonAction from "../../../components/buttonAction/ButtonAction";
+import DialogGlobal from "../../../components/modals/DialogGlobal";
+import BasicInput from "../../../components/input/BasicInput";
+import ItemSwitch from "../../../components/input/ItemSwitch";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +51,8 @@ const rowHeader = [
 export const DocumentTypes = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
+  const updateCreateRef = React.useRef();
+  const confirmationRef = React.useRef();
   // const [docType, setDocType] = React.useState();
   const [modals, setModals] = React.useState(false);
   const [docId, setType] = React.useState();
@@ -178,6 +184,7 @@ export const DocumentTypes = () => {
         if (status) {
           getList();
           setModals(false);
+          updateCreateRef.current.close();
         }
       } catch (error) {
         setToast("Error API, Please contact developer!");
@@ -191,6 +198,7 @@ export const DocumentTypes = () => {
 
   const handleClose = () => {
     setModals(false);
+    updateCreateRef.current.close();
   };
   const handleModal = async (type, id) => {
     if (type === "update") {
@@ -198,6 +206,7 @@ export const DocumentTypes = () => {
         data: { data },
       } = await master.getByID(id);
       setModals(true);
+      updateCreateRef.current.open();
 
       // console.log(data[0].is_periodic);
       setUpdate({ id, update: true });
@@ -209,6 +218,7 @@ export const DocumentTypes = () => {
     } else {
       setUpdate({ id: "", update: false });
       setModals(true);
+      updateCreateRef.current.open();
       formik.setValues(initialValues);
     }
   };
@@ -218,6 +228,7 @@ export const DocumentTypes = () => {
       setLoading(true);
       await master.deleteDoctypes(confirm.id);
       setConfirm({ ...confirm, show: false });
+      confirmationRef.current.close();
       getList();
     } catch (error) {
       setToast("Error with API, please contact Developer!");
@@ -237,6 +248,7 @@ export const DocumentTypes = () => {
         handleModal("update", params?.id);
         break;
       case "delete":
+        confirmationRef.current.open();
         setConfirm({ show: true, id: params?.id });
         break;
       default:
@@ -247,7 +259,66 @@ export const DocumentTypes = () => {
   return (
     <Container>
       <Toast />
-      <StyledModal
+      <DialogGlobal
+        title={`${update.update ? "Update" : "Create"} Master Document Type`}
+        ref={updateCreateRef}
+        onYes={formik.handleSubmit}
+        textYes={update.update ? "Update" : "Create"}
+      >
+        <Flex style={{ justifyContent: "center" }}>
+          <form
+            noValidate
+            autoComplete="off"
+            // onSubmit={handleSubmit(formSubmit)}
+            onSubmit={formik.handleSubmit}
+          >
+            <div>
+              <div style={{ width: "70%" }}>
+                <Input
+                  style={{ margin: 0 }}
+                  label="Nama Dokumen"
+                  variant="outlined"
+                  name="document_name"
+                  {...formik.getFieldProps("document_name")}
+                />
+                <p style={{ color: "red", margin: 5 }}>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </p>
+              </div>
+              <div>
+                <FormControlLabel
+                  style={{ alignSelf: "center" }}
+                  control={
+                    <Switch
+                      name="check_periodic"
+                      color="primary"
+                      size="medium"
+                      checked={formik.values.check_periodic}
+                      {...formik.getFieldProps("check_periodic")}
+                    />
+                  }
+                  label="Periodik"
+                />
+              </div>
+            </div>
+            {/* <div style={{ justifyContent: "center", display: "flex" }}>
+              <Button
+                disabled={loading}
+                type="submit"
+                color="secondary"
+                variant="contained"
+                style={{ width: "50%" }}
+              >
+                {loading ? <CircularProgress /> : null}&nbsp;
+                {update.update ? "Update" : "Create"}
+              </Button>
+            </div> */}
+          </form>
+        </Flex>
+      </DialogGlobal>
+      {/* <StyledModal
         visible={modals}
         onClose={handleClose}
         hideCloseIcon={false}
@@ -308,7 +379,19 @@ export const DocumentTypes = () => {
           </form>
         </Flex>
       </StyledModal>
-      <StyledModal
+       */}
+      <DialogGlobal
+        title={`Are you sure ?`}
+        ref={confirmationRef}
+        onYes={() => handleDelete()}
+        textYes={"Delete"}
+      >
+        <div>
+          <p>Item terpilih akan dihapus dari list</p>
+          <p>Selected item will be removed from the list.</p>
+        </div>
+      </DialogGlobal>
+      {/* <StyledModal
         visible={confirm.show}
         onClose={() => setConfirm({ ...confirm, show: false })}
         hideCloseIcon={false}
@@ -343,7 +426,8 @@ export const DocumentTypes = () => {
             </Button>
           </div>
         </Flex>
-      </StyledModal>
+      </StyledModal> */}
+
       <div>
         <Subheader
           text="Master Document Type"
