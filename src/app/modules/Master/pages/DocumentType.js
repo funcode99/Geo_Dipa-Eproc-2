@@ -23,12 +23,14 @@ import DocumentsTable from "./Document";
 import CustomTable from "../../../components/tables";
 import Subheader from "../../../components/subheader";
 import TablePaginationCustom from "../../../components/tables/TablePagination";
+import ButtonAction from "../../../components/buttonAction/ButtonAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     marginTop: theme.spacing(3),
     overflowX: "auto",
+    padding: theme.spacing(2),
   },
   table: {
     minWidth: 650,
@@ -38,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
 const rowHeader = [
   { id: "no", label: "No" },
   { id: "doc", label: "Dokumen" },
-  { id: "periode", label: "Periode" },
-  { id: "action", label: "Action" },
+  { id: "periode", label: "Periode", align: "center", sortable: false },
+  { id: "action", label: "Action", align: "right", sortable: false },
 ];
 
 export const DocumentTypes = () => {
@@ -225,6 +227,23 @@ export const DocumentTypes = () => {
     }
   };
 
+  const handleAction = (type, params) => {
+    console.log(`type`, type, params);
+    switch (type) {
+      case "find":
+        setType(params?.id);
+        break;
+      case "update":
+        handleModal("update", params?.id);
+        break;
+      case "delete":
+        setConfirm({ show: true, id: params?.id });
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <Container>
       <Toast />
@@ -385,25 +404,48 @@ export const DocumentTypes = () => {
                 <Icon className="fas fa-times-circle" color="error" />
               ),
               action: (
-                <IconWrapper>
-                  <Icon
-                    style={{ marginInline: 5 }}
-                    className="fas fa-search"
-                    onClick={() => setType(el.id)}
-                  />
-                  <Icon
-                    style={{ marginInline: 5 }}
-                    className="fas fa-edit"
-                    onClick={() => handleModal("update", el.id)}
-                  />
-                  <Icon
-                    style={{ marginInline: 5 }}
-                    className="fas fa-trash"
-                    color="error"
-                    onClick={() => setConfirm({ show: true, id: el.id })}
-                  />
-                </IconWrapper>
+                <ButtonAction
+                  data={el}
+                  handleAction={handleAction}
+                  ops={[
+                    {
+                      label: "ECOMMERCE.COMMON.SEARCH",
+                      icon: "fas fa-search text-warning",
+                      type: "find",
+                    },
+                    {
+                      label: "TITLE.EDIT_DATA",
+                      icon: "fas fa-edit text-primary",
+                      type: "update",
+                    },
+                    {
+                      label: "TITLE.DELETE_DATA",
+                      icon: "fas fa-trash text-danger",
+                      type: "delete",
+                    },
+                  ]}
+                />
               ),
+              // action: (
+              //   <IconWrapper>
+              //     <Icon
+              //       style={{ marginInline: 5 }}
+              //       className="fas fa-search"
+              //       onClick={() => setType(el.id)}
+              //     />
+              //     <Icon
+              //       style={{ marginInline: 5 }}
+              //       className="fas fa-edit"
+              //       onClick={() => handleModal("update", el.id)}
+              //     />
+              //     <Icon
+              //       style={{ marginInline: 5 }}
+              //       className="fas fa-trash"
+              //       color="error"
+              //       onClick={() => setConfirm({ show: true, id: el.id })}
+              //     />
+              //   </IconWrapper>
+              // ),
             }))}
           />
         </Paper>
