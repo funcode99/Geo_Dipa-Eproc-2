@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
-import ModalSubmit from "./components/ModalSubmit";
+import { ModalSubmit, ModalUpdate, ModalDetail } from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
 import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
@@ -16,7 +16,6 @@ import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import useToast from "../../../../../components/toast";
-import ModalUpdate from "./components/ModalUpdate";
 
 const tblHeadDlvItem = [
   {
@@ -70,13 +69,13 @@ const DeliveryOrder = ({
     create: false,
     delete: false,
     update: false,
+    detail: false,
     tempParams: {},
   });
   const [tableContent, setTableContent] = React.useState([]);
   const [loading, setLoading] = React.useState({
     fetch: false,
     create: false,
-
     delete: false,
     update: false,
   });
@@ -235,7 +234,8 @@ const DeliveryOrder = ({
   };
 
   const handleModal = (type, data) => {
-    if (type === "update") {
+    const option = ["update", "detail"];
+    if (option.includes(type)) {
       // console.log(`type`, type);
       // console.log(`data`, data);
 
@@ -246,6 +246,8 @@ const DeliveryOrder = ({
           : formatUpdateDate(new Date(), "yyy-MM-dd"),
         remarks: data.remarks,
       });
+    } else if (type === "create") {
+      formik.setValues(initialValues);
     }
   };
 
@@ -254,6 +256,7 @@ const DeliveryOrder = ({
     // console.log(`data`, data);
     switch (type) {
       case "create":
+        handleModal("create");
         handleVisible("create", data);
         break;
       case "delete":
@@ -262,6 +265,10 @@ const DeliveryOrder = ({
       case "update":
         handleVisible("update", data);
         handleModal("update", data);
+        break;
+      case "detail":
+        handleVisible("detail", data);
+        handleModal("detail", data);
         break;
 
       default:
@@ -286,6 +293,11 @@ const DeliveryOrder = ({
                 data={item}
                 handleAction={handleAction}
                 ops={[
+                  {
+                    label: "TITLE.VIEW_DETAILS_DATA",
+                    icon: "fas fa-search text-info",
+                    type: "detail",
+                  },
                   {
                     label: "TITLE.EDIT_DATA",
                     icon: "fas fa-edit text-primary",
@@ -348,12 +360,21 @@ const DeliveryOrder = ({
 
       <ModalUpdate
         visible={open.update}
-        onClose={() => handleVisible("update")}
+        onClose={() => {
+          handleVisible("update");
+        }}
         formik={formik}
         loading={loading.update}
         updateData={open.tempParams}
         errors={errors}
         handleError={handleErrorSubmit}
+      />
+
+      <ModalDetail
+        visible={open.detail}
+        onClose={() => handleVisible("detail")}
+        formik={formik}
+        updateData={open.tempParams}
       />
 
       <Card>

@@ -404,6 +404,7 @@
   "TITLE.ADD": "Add",
   "TITLE.EDIT_DATA": "Edit data",
   "TITLE.DELETE_DATA": "Delete data",
+  "TITLE.VIEW_DETAILS_DATA": "View details data",
   "TITLE.DELIVERY_ORDER": "Delivery Order",
   "TITLE.ITEM_IS_REQUIRE": "Item is required.",
   "TITLE.DATE_IS_REQUIRE": "Date is required.",
@@ -432,5 +433,6 @@
   "TITLE.EMAIL": "Email",
   "TITLE.UPDATED_DATE": "Updated Date",
   "TITLE.SCHEDULED": "Scheduled",
-  "TITLE.OPEN_DATA": "Open Data"
+  "TITLE.OPEN_DATA": "Open Data",
+  "TITLE.DETAIL": "Detail"
 }
