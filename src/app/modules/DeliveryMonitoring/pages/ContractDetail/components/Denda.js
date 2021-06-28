@@ -9,6 +9,29 @@ import {
   StyledTableHead,
   StyledTableRow,
 } from "../../Termin/style";
+import { FormattedMessage } from "react-intl";
+import TablePaginationCustom from "../../../../../components/tables/TablePagination";
+import { useSelector } from "react-redux";
+
+const tableHeaderContractsNew = [
+  {
+    id: "no",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.NO" />,
+  },
+  {
+    id: "type",
+    label: "Jenis Denda",
+  },
+  {
+    id: "value",
+    label: "Nilai",
+    sortable: false,
+  },
+  {
+    id: "max",
+    label: "Maksimal Hari",
+  },
+];
 
 const RowNormal = () => {
   return (
@@ -32,10 +55,29 @@ const RowNormal = () => {
 };
 
 const Denda = () => {
+  const { penalty_fine_data } = useSelector(
+    (state) => state.deliveryMonitoring.dataContractById
+  );
   return (
     <Card>
       <CardBody>
-        <div
+        <TablePaginationCustom
+          headerRows={tableHeaderContractsNew}
+          rows={penalty_fine_data.map((el, id) => ({
+            no: id + 1,
+            type: el?.pinalty_name,
+            value: (
+              <InputGroup className="mb-3">
+                <FormControl defaultValue={el?.value} aria-label="Days" />
+                <InputGroup.Append>
+                  <InputGroup.Text>%</InputGroup.Text>
+                </InputGroup.Append>
+              </InputGroup>
+            ),
+            max: el?.max_day,
+          }))}
+        />
+        {/* <div
           className="table-wrapper-scroll-y my-custom-scrollbar"
           style={{ height: "30vh", marginBottom: 21 }}
         >
@@ -61,7 +103,7 @@ const Denda = () => {
               </StyledTable>
             </div>
           </div>
-        </div>
+        </div> */}
       </CardBody>
     </Card>
   );
