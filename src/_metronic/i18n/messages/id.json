@@ -427,5 +427,7 @@
   "TITLE.EMAIL": "Email",
   "TITLE.UPDATED_DATE": "Tanggal Diperbaharui",
   "TITLE.SCHEDULED": "Terjadwal",
-  "TITLE.OPEN_DATA": "Buka Data"
+  "TITLE.OPEN_DATA": "Buka Data",
+  "TITLE.CONFIRMATION": "Konfirmasi",
+  "TITLE.NOTIV_ACTION_CHANGES": "Apakah Anda yakin ingin melakukan perubahan?"
 }

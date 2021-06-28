@@ -427,5 +427,7 @@
   "TITLE.EMAIL": "Email",
   "TITLE.UPDATED_DATE": "Updated Date",
   "TITLE.SCHEDULED": "Scheduled",
-  "TITLE.OPEN_DATA": "Open Data"
+  "TITLE.OPEN_DATA": "Open Data",
+  "TITLE.CONFIRMATION": "Confirmation",
+  "TITLE.NOTIV_ACTION_CHANGES": "Are you sure you want to make changes?"
 }
