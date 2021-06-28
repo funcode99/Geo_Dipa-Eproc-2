@@ -33,6 +33,23 @@ export function submitItems(values, taskId) {
   return axios.post(`/delivery/task/${taskId}`, values);
 }
 
+// Task Delivery Item
+export function postDeliveryItem(type, id, values) {
+  switch (type) {
+    case "create":
+      return axios.post(`/delivery/task-delivery/${id}`, values);
+
+    case "delete":
+      return axios.delete(`/delivery/task-delivery/${id}`);
+
+    case "update":
+      return axios.put(`/delivery/task-delivery/${id}`, values);
+
+    default:
+      break;
+  }
+}
+
 // Task Document
 export async function deleteDocId(document_id) {
   // console.log(`api`, `delivery/task-document/${document_id}`);

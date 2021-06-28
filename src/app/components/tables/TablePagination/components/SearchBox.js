@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import Container from "@material-ui/core/Container";
 import InputBase from "@material-ui/core/InputBase";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,7 +18,10 @@ const useStyles = makeStyles({
     width: "40vw",
     marginTop: 13,
     marginBottom: 13,
-    // marginLeft: 8,
+    marginLeft: 8,
+    border: "1px solid",
+    borderColor: "#ebebeb",
+    borderRadius: 8,
   },
   input: {
     marginLeft: 8,
@@ -37,7 +41,7 @@ export default function SearchBox({ onChange }) {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Container className={classes.root}>
       <InputBase
         className={classes.input}
         placeholder="Search ..."
@@ -47,6 +51,6 @@ export default function SearchBox({ onChange }) {
       <IconButton className={classes.iconButton} aria-label="Search">
         <SearchIcon />
       </IconButton>
-    </Card>
+    </Container>
   );
 }

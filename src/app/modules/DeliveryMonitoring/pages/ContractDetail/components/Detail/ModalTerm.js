@@ -69,12 +69,22 @@ const ModalTerm = ({
               <h5>
                 <FormattedMessage id="SUMMARY.NAV.SERVICE" />
               </h5>
-              <Table size="small">
+              <Table style={{ width: 600 }} size="small">
+                <colgroup>
+                  <col width="50px" />
+                  <col width="200px" />
+                  <col width="50px" />
+                  <col width="150px" />
+                </colgroup>
                 <TableHead>
                   <TableRow>
                     {["No", "Name", "Quantity", "Unit Price"].map(
                       (item, index) => (
-                        <TableCell className="bg-white" key={index}>
+                        <TableCell
+                          className="bg-white"
+                          key={index}
+                          align={index > 1 ? "right" : "left"}
+                        >
                           {item}
                         </TableCell>
                       )
@@ -86,8 +96,8 @@ const ModalTerm = ({
                     <TableRow key={item?.service_id}>
                       <TableCell>{(index += 1)}</TableCell>
                       <TableCell>{item?.name}</TableCell>
-                      <TableCell>{item?.qty}</TableCell>
-                      <TableCell>{rupiah(item?.price)}</TableCell>
+                      <TableCell align="right">{item?.qty}</TableCell>
+                      <TableCell align="right">{rupiah(item?.price)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -99,12 +109,22 @@ const ModalTerm = ({
               <h5 className="mt-4">
                 <FormattedMessage id="SUMMARY.NAV.ITEM" />
               </h5>
-              <Table size="small">
+              <Table style={{ width: 600 }} size="small">
+                <colgroup>
+                  <col width="50px" />
+                  <col width="200px" />
+                  <col width="50px" />
+                  <col width="150px" />
+                </colgroup>
                 <TableHead>
                   <TableRow>
                     {["No", "Name", "Quantity", "Unit Price"].map(
                       (item, index) => (
-                        <TableCell className="bg-white" key={index}>
+                        <TableCell
+                          className="bg-white"
+                          key={index}
+                          align={index > 1 ? "right" : "left"}
+                        >
                           {item}
                         </TableCell>
                       )
@@ -116,8 +136,8 @@ const ModalTerm = ({
                     <TableRow key={item?.item_id}>
                       <TableCell>{(index += 1)}</TableCell>
                       <TableCell>{item?.name}</TableCell>
-                      <TableCell>{item?.qty}</TableCell>
-                      <TableCell>{rupiah(item?.price)}</TableCell>
+                      <TableCell align="right">{item?.qty}</TableCell>
+                      <TableCell align="right">{rupiah(item?.price)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

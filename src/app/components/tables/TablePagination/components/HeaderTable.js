@@ -60,8 +60,9 @@ function HeaderTable(props) {
             align={"left"}
             className={"bg-primary text-white"}
             // align={row.numeric ? "right" : "left"}
-            padding={"default"}
+            // padding={"default"}
             sortDirection={orderBy === row.id ? order : false}
+            align={row.align}
           >
             {row?.sortable === false ? (
               row.label

@@ -8,6 +8,7 @@ import {
   TableCell,
   TableRow,
   TableContainer,
+  Container,
 } from "@material-ui/core";
 import React from "react";
 import HeaderTable from "./components/HeaderTable";
@@ -95,6 +96,7 @@ export default function TablePaginationCustom({
   withSearch = true,
   withPagination = true,
   renderRows,
+  footerComponent,
 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -214,7 +216,10 @@ export default function TablePaginationCustom({
                         {headerRows.length &&
                           Object.keys(row).map((el, id) => {
                             return (
-                              <TableCell key={id}>
+                              <TableCell
+                                key={id}
+                                align={headerRows?.[id]?.align ?? "left"}
+                              >
                                 {row[headerRows?.[id]?.id]}
                               </TableCell>
                             );
@@ -244,6 +249,7 @@ export default function TablePaginationCustom({
                         </TableCell>
                       </TableRow>
                     )}
+                {footerComponent}
               </TableBody>
             </Table>
           </TableContainer>
