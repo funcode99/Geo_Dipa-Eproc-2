@@ -56,7 +56,7 @@ const BastPage = ({ status, contract, saveContract }) => {
   const { news, contract_name, vendor, contract_no, purch_order_no } = contract;
   const initialValues = React.useMemo(
     () => ({
-      nomor_bast: "",
+      nomor_bast: news?.no || "",
       tanggal_bast: news?.date,
       jenis: contract_name,
       pelaksana: vendor?.party?.full_name,
@@ -135,7 +135,21 @@ const BastPage = ({ status, contract, saveContract }) => {
   let allowedClient = ["hasil_pekerjaan"];
   let allowedVendor = ["nomor_bast", "tanggal_bast"];
 
-  // console.log(`contract`, contract);
+  const handleAction = (type, params) => {
+    switch (type) {
+      case "preview":
+        window.open(params?.file, "_blank");
+        break;
+      case "upload":
+        console.log(`type`, type);
+        break;
+      case "approve":
+        console.log(`type`, type);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <React.Fragment>
@@ -186,8 +200,8 @@ const BastPage = ({ status, contract, saveContract }) => {
                     variant="contained"
                   >
                     <Button
-                    // onClick={() => handleAction("preview", taskNews?.file)}
-                    // disabled={taskNews ? false : true}
+                      onClick={() => handleAction("preview", news?.file)}
+                      disabled={news ? false : true}
                     >
                       <FormattedMessage id="TITLE.PREVIEW" />
                     </Button>
@@ -245,6 +259,7 @@ const BastPage = ({ status, contract, saveContract }) => {
 const mapState = ({ auth, deliveryMonitoring }) => ({
   status: auth.user.data.status,
   contract: deliveryMonitoring.dataContractById,
+  news: deliveryMonitoring.dataContractById?.news,
 });
 
 export default connect(mapState, {
