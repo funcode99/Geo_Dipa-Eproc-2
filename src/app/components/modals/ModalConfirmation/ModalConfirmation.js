@@ -1,3 +1,4 @@
+import { CircularProgress } from "@material-ui/core";
 import React from "react";
 import { FormControl } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
@@ -14,6 +15,7 @@ const ModalConfirmation = ({
   additionalParams,
   children,
   submitColor = "primary",
+  loading = false,
   ...other
 }) => {
   const _handleSubmit = React.useCallback(() => visible && onSubmit(), [
@@ -43,8 +45,16 @@ const ModalConfirmation = ({
       </div>
       {children}
       <div className="d-flex justify-content-center mt-9">
-        <button className={`btn btn-${submitColor} mr-8`} onClick={onSubmit}>
-          {textYes}
+        <button
+          disabled={loading}
+          className={`btn btn-${submitColor} mr-8`}
+          onClick={onSubmit}
+        >
+          {loading ? (
+            <CircularProgress size="0.875rem" color="inherit" />
+          ) : (
+            textYes
+          )}
         </button>
         <button className="btn btn-light" onClick={onClose}>
           {textNo}

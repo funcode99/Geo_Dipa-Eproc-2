@@ -7,4 +7,5 @@ export const actionTypes = {
   SetDataTask: "[Set Data Task] Action",
   SetDataOrderItems: "[Set Data Order Items] Action",
   SetDataTempOrderItems: "[Set Data Temp Order Items] Action",
+  SetDataUpdateOrderItems: "[Set Data Update Order Items] Action",
 };

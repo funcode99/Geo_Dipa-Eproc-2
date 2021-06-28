@@ -40,7 +40,7 @@ const TerminPage = ({ items }) => {
   );
   const history = useHistory();
   const { task_id } = useParams();
-  const isItemExists = typeof items && items.length > 0;
+  const isItemExists = Array.isArray(items) && items.length > 0;
 
   const TabLists = React.useMemo(
     () => [
@@ -149,7 +149,9 @@ const TerminPage = ({ items }) => {
         <Container style={{ marginTop: 20, paddingBottom: 20 }}>
           {tabActive === 0 && <Summary taskId={task_id} />}
 
-          {isItemExists && tabActive === 1 && <DeliveryOrder />}
+          {isItemExists && tabActive === 1 && (
+            <DeliveryOrder taskId={task_id} />
+          )}
           {!isItemExists && tabActive === 1 && <BAPP />}
 
           {isItemExists && tabActive === 2 && <BAPP />}

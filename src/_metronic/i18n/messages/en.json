@@ -404,6 +404,7 @@
   "TITLE.ADD": "Add",
   "TITLE.EDIT_DATA": "Edit data",
   "TITLE.DELETE_DATA": "Delete data",
+  "TITLE.VIEW_DETAILS_DATA": "View details data",
   "TITLE.DELIVERY_ORDER": "Delivery Order",
   "TITLE.ITEM_IS_REQUIRE": "Item is required.",
   "TITLE.DATE_IS_REQUIRE": "Date is required.",
@@ -416,6 +417,11 @@
   "TITLE.CONTRACT_ITEM": "Contract Item",
   "TITLE.CONTRACT_TERM": "Contract Term",
   "TITLE.DOCUMENT_CONTRACT": "Contract Document",
+  "TITLE.DESCRIPTION": "Description",
+  "TITLE.UNIT_PRICE": "Unit Price",
+  "TITLE.DESC_IS_REQUIRE": "Description is required.",
+  "TITLE.MODAL_DELETE.TITLE": "Are you sure you want to delete this data?",
+  "TITLE.MODAL_DELETE.SUBTITLE": "Once deleted, the data will no longer be displayed",
   "TITLE.SYNCHRONIZE_DATA": "Synchronize Data",
   "TITLE.FEATURES_SYNCHRONIZE_DATA": "Data Sync Features",
   "TITLE.FEATURES": "Features",
@@ -428,6 +434,5 @@
   "TITLE.UPDATED_DATE": "Updated Date",
   "TITLE.SCHEDULED": "Scheduled",
   "TITLE.OPEN_DATA": "Open Data",
-  "TITLE.CONFIRMATION": "Confirmation",
-  "TITLE.NOTIV_ACTION_CHANGES": "Are you sure you want to make changes?"
+  "TITLE.DETAIL": "Detail"
 }

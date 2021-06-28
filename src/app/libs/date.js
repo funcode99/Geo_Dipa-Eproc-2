@@ -8,4 +8,8 @@ const formatInitialDate = () => {
   return format(new Date(), "yyy-MM-dd");
 };
 
-export { formatDate, formatInitialDate };
+const formatUpdateDate = (date) => {
+  return format(new Date(date), "yyy-MM-dd");
+};
+
+export { formatDate, formatInitialDate, formatUpdateDate };

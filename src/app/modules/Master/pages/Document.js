@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   // Table,
   // TableBody,
@@ -12,13 +12,13 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-} from '@material-ui/core';
+} from "@material-ui/core";
 // import SVG from 'react-inlinesvg';
-import { useFormik } from 'formik';
+import { useFormik } from "formik";
 // import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
-import * as Yup from 'yup';
-import * as master from '../service/MasterCrud';
+import * as Yup from "yup";
+import * as master from "../service/MasterCrud";
 // import http from '../../libs/http';
 import {
   Flex,
@@ -31,40 +31,55 @@ import {
   InputWrapper,
   SelectStyled,
   FormContent,
-} from './style';
-import { StyledModal } from '../../../components/modals';
-import useToast from '../../../components/toast';
-import CustomTable from '../../../components/tables';
-import Subheader from '../../../components/subheader';
+} from "./style";
+import { StyledModal } from "../../../components/modals";
+import useToast from "../../../components/toast";
+import CustomTable from "../../../components/tables";
+import Subheader from "../../../components/subheader";
+import TablePaginationCustom from "../../../components/tables/TablePagination";
+import ButtonAction from "../../../components/buttonAction/ButtonAction";
+import DialogGlobal from "../../../components/modals/DialogGlobal";
 // import DocumentsTable from './Document';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(3),
-    overflowX: 'auto',
+    overflowX: "auto",
+    padding: theme.spacing(2),
   },
   table: {
     minWidth: 650,
   },
 }));
 
+const rowHeader = [
+  { id: "no", label: "No" },
+  { id: "doc", label: "Dokumen" },
+  { id: "periode", label: "Periode", align: "center", sortable: false },
+  { id: "action", label: "Action", align: "right", sortable: false },
+];
+
 export const Documents = ({ typeId }) => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
+
+  const updateCreateRef = React.useRef();
+  const confirmationRef = React.useRef();
   // const [dataList, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
-  const [confirm, setConfirm] = React.useState({ show: false, id: '' });
-  const [update, setUpdate] = React.useState({ id: '', update: false });
+  const [confirm, setConfirm] = React.useState({ show: false, id: "" });
+  const [update, setUpdate] = React.useState({ id: "", update: false });
   const [loading, setLoading] = React.useState(false);
   const [periodic, setPeriodic] = React.useState(false);
   const [options, setOptions] = React.useState();
   const [tableContent, setTableContent] = React.useState([]);
+  const [newContent, setnewContent] = React.useState([]);
 
   const FormSchema = Yup.object().shape({
     document_name: Yup.string()
-      .min(3, 'Input minimal 3 karakter')
-      .required('Field ini wajib diisi'),
+      .min(3, "Input minimal 3 karakter")
+      .required("Field ini wajib diisi"),
   });
 
   const enableLoading = () => {
@@ -75,7 +90,7 @@ export const Documents = ({ typeId }) => {
     setLoading(false);
   };
   const initialValues = {
-    document_name: '',
+    document_name: "",
     document_type: 709,
     document_periode: 0,
   };
@@ -98,7 +113,7 @@ export const Documents = ({ typeId }) => {
     setTableContent([]);
     data.forEach((item, i) => {
       const rows = [
-        { content: i + 1, props: { width: '5%' } },
+        { content: i + 1, props: { width: "5%" } },
         { content: item.name },
         {
           content: item.is_periodic ? (
@@ -113,7 +128,7 @@ export const Documents = ({ typeId }) => {
               <Icon
                 style={{ marginInline: 5 }}
                 className="fas fa-edit"
-                onClick={() => handleModal('update', item.id)}
+                onClick={() => handleModal("update", item.id)}
               />
               <Icon
                 style={{ marginInline: 5 }}
@@ -126,6 +141,7 @@ export const Documents = ({ typeId }) => {
         },
       ];
       setTableContent((prev) => [...prev, rows]);
+      setnewContent(data);
     });
   };
 
@@ -144,7 +160,7 @@ export const Documents = ({ typeId }) => {
       }
       setOptions(data);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -156,14 +172,14 @@ export const Documents = ({ typeId }) => {
       const {
         data: { data },
       } = await master.getDocumentByType(typeId);
-      if (typeId !== ' ') {
+      if (typeId !== " ") {
         formik.setValues({ document_type: typeId });
       }
       // setData(data.data);
       // setData(data);
       generateTableContent(data);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -204,11 +220,12 @@ export const Documents = ({ typeId }) => {
         if (status) {
           getListID();
           setModals(false);
+          updateCreateRef.current.close();
         }
       } catch (error) {
-        setToast('Error API, Please contact developer!');
+        setToast("Error API, Please contact developer!");
         setSubmitting(false);
-        setStatus('Failed Submit Data');
+        setStatus("Failed Submit Data");
       } finally {
         disableLoading();
       }
@@ -217,10 +234,11 @@ export const Documents = ({ typeId }) => {
 
   const handleClose = () => {
     setModals(false);
+    updateCreateRef.current.close();
   };
 
   const handleModal = async (type, id) => {
-    if (type === 'update') {
+    if (type === "update") {
       const {
         data: { data },
       } = await master.getDocumentID(id);
@@ -233,10 +251,11 @@ export const Documents = ({ typeId }) => {
         document_periode: data[0].periode_id,
       });
     } else {
-      setUpdate({ id: '', update: false });
+      setUpdate({ id: "", update: false });
       // formik.setValues(initialValues);
     }
     setModals(true);
+    updateCreateRef.current.open();
   };
 
   const handleDelete = async () => {
@@ -244,38 +263,54 @@ export const Documents = ({ typeId }) => {
       setLoading(true);
       await master.deleteDocument(confirm.id);
       setConfirm({ ...confirm, show: false });
+      confirmationRef.current.close();
       getListID();
     } catch (error) {
-      setToast('Error with API, please contact Developer!');
+      setToast("Error with API, please contact Developer!");
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleAction = (type, params) => {
+    console.log(`type`, type, params);
+    switch (type) {
+      // case "find":
+      //   setType(params?.id);
+      //   break;
+      case "update":
+        handleModal("update", params?.id);
+        break;
+      case "delete":
+        setConfirm({ show: true, id: params?.id });
+        confirmationRef.current.open();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
-    <Container>
+    <React.Fragment>
       <Toast />
-      <StyledModal
-        visible={modals}
-        onClose={handleClose}
-        hideCloseIcon={false}
-        disableBackdrop
+      <DialogGlobal
+        title={`${update.update ? "Update" : "Create"} Master Document`}
+        ref={updateCreateRef}
+        onYes={formik.handleSubmit}
+        textYes={update.update ? "Update" : "Create"}
       >
-        <Flex style={{ justifyContent: 'center' }}>
+        <Flex style={{ justifyContent: "center" }}>
           <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
-              <h3>Input Form</h3>
-            </div>
             <FormContent>
               <InputWrapper>
                 <Input
                   label="Nama Document"
                   variant="outlined"
                   name="document_name"
-                  {...formik.getFieldProps('document_name')}
+                  {...formik.getFieldProps("document_name")}
                 />
-                <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
+                <p style={{ color: "red", margin: 5 }}>
                   {formik.touched.document_name && formik.errors.document_name
                     ? formik.errors.document_name
                     : null}
@@ -285,14 +320,14 @@ export const Documents = ({ typeId }) => {
                 <FormControl
                   variant="outlined"
                   style={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
                   <InputLabel
                     id="demo-simple-select-label"
-                    style={{ marginTop: '1%', marginLeft: '5%' }}
+                    style={{ marginTop: "1%", marginLeft: "5%" }}
                   >
                     Document Type
                   </InputLabel>
@@ -301,7 +336,7 @@ export const Documents = ({ typeId }) => {
                     id="demo-simple-select"
                     labelWidth={150}
                     name="document_type"
-                    {...formik.getFieldProps('document_type')}
+                    {...formik.getFieldProps("document_type")}
                   >
                     <MenuItem value={709}>Select Item</MenuItem>
                     {options &&
@@ -319,14 +354,14 @@ export const Documents = ({ typeId }) => {
                   <FormControl
                     variant="outlined"
                     style={{
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
                     <InputLabel
                       id="demo-simple-select-label"
-                      style={{ marginTop: '1%', marginLeft: '5%' }}
+                      style={{ marginTop: "1%", marginLeft: "5%" }}
                     >
                       Periode
                     </InputLabel>
@@ -334,7 +369,7 @@ export const Documents = ({ typeId }) => {
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       labelWidth={150}
-                      {...formik.getFieldProps('document_periode')}
+                      {...formik.getFieldProps("document_periode")}
                     >
                       {/* <MenuItem value="">Select Item</MenuItem> */}
                       {options &&
@@ -348,22 +383,43 @@ export const Documents = ({ typeId }) => {
                 </InputWrapper>
               ) : null}
             </FormContent>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
+            {/* <div style={{ justifyContent: "center", display: "flex" }}>
               <Button
                 disabled={loading}
                 type="submit"
                 color="secondary"
                 variant="contained"
-                style={{ width: '50%' }}
+                style={{ width: "50%" }}
               >
                 {loading ? <CircularProgress /> : null}&nbsp;
-                {update.update ? 'Update' : 'Create'}
+                {update.update ? "Update" : "Create"}
               </Button>
-            </div>
+            </div> */}
           </form>
         </Flex>
-      </StyledModal>
-      <StyledModal
+      </DialogGlobal>
+      {/* <StyledModal
+        visible={modals}
+        onClose={handleClose}
+        hideCloseIcon={false}
+        disableBackdrop
+      >
+        
+      </StyledModal> */}
+
+      <DialogGlobal
+        title={`Are you sure ?`}
+        ref={confirmationRef}
+        onYes={() => handleDelete()}
+        textYes={"Delete"}
+      >
+        <div>
+          <p>Item terpilih akan dihapus dari list</p>
+          <p>Selected item will be removed from the list.</p>
+        </div>
+      </DialogGlobal>
+
+      {/* <StyledModal
         visible={confirm.show}
         onClose={() => setConfirm({ ...confirm, show: false })}
         hideCloseIcon={false}
@@ -379,9 +435,9 @@ export const Documents = ({ typeId }) => {
               variant="contained"
               disabled={loading}
               style={{
-                width: '40%',
-                background: 'red',
-                color: 'white',
+                width: "40%",
+                background: "red",
+                color: "white",
                 marginInline: 10,
               }}
               onClick={() => handleDelete()}
@@ -391,7 +447,7 @@ export const Documents = ({ typeId }) => {
             <Button
               variant="contained"
               disabled={loading}
-              style={{ width: '40%', marginInline: 10 }}
+              style={{ width: "40%", marginInline: 10 }}
               onClick={() => setConfirm({ ...confirm, show: false })}
             >
               Cancel
@@ -399,6 +455,7 @@ export const Documents = ({ typeId }) => {
           </div>
         </Flex>
       </StyledModal>
+       */}
       <div>
         <Subheader
           text="Master Dokumen"
@@ -409,25 +466,55 @@ export const Documents = ({ typeId }) => {
           <Button
             color="secondary"
             variant="contained"
-            style={{ marginLeft: 'auto' }}
-            onClick={() => handleModal('create')}
+            style={{ marginLeft: "auto" }}
+            onClick={() => handleModal("create")}
           >
             Create
           </Button>
         </Flex>
 
         <Paper className={classes.root} style={{ marginBottom: 30 }}>
-          <CustomTable
+          {/* <CustomTable
             tableHeader={[
-              { label: 'No' },
-              { label: 'Dokumen' },
-              { label: 'Periode Hari' },
-              { label: 'Action' },
+              { label: "No" },
+              { label: "Dokumen" },
+              { label: "Periode Hari" },
+              { label: "Action" },
             ]}
             tableContent={tableContent}
             marginY="my-1"
             hecto="hecto-10"
             loading={loading}
+          /> */}
+          <TablePaginationCustom
+            headerRows={rowHeader}
+            rows={newContent.map((el, id) => ({
+              no: id + 1,
+              doc: el.name,
+              periode: el.is_periodic ? (
+                <Icon className="fas fa-check-circle" color="primary" />
+              ) : (
+                <Icon className="fas fa-times-circle" color="error" />
+              ),
+              action: (
+                <ButtonAction
+                  data={el}
+                  handleAction={handleAction}
+                  ops={[
+                    {
+                      label: "TITLE.EDIT_DATA",
+                      icon: "fas fa-edit text-primary",
+                      type: "update",
+                    },
+                    {
+                      label: "TITLE.DELETE_DATA",
+                      icon: "fas fa-trash text-danger",
+                      type: "delete",
+                    },
+                  ]}
+                />
+              ),
+            }))}
           />
           {/* <Table className={classes.table}>
             <StyledTableHead>
@@ -491,7 +578,7 @@ export const Documents = ({ typeId }) => {
         </Paper>
         {/* {docId ? <DocumentsTable dataList={docId} /> : null} */}
       </div>
-    </Container>
+    </React.Fragment>
   );
 };
 

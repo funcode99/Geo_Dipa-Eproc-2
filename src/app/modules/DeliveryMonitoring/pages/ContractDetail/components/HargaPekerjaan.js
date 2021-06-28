@@ -1,4 +1,4 @@
-import { TableCell } from "@material-ui/core";
+import { TableCell, TableRow } from "@material-ui/core";
 import React from "react";
 import {
   Col,
@@ -15,6 +15,7 @@ import BasicInput from "../../../../../components/input/BasicInput";
 import RenderInput from "../../../../../components/input/RenderInput";
 import TitleField from "../../../../../components/input/TitleField";
 import Navs from "../../../../../components/navs";
+import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { StyledTableRow } from "../../Termin/style";
 import withBox from "./withBox";
 
@@ -27,6 +28,23 @@ const navLists = [
     id: "kedua",
     label: "Bertahap Pembayaran",
   },
+];
+
+const tableHeader = [
+  { id: "no", label: "No" },
+  { id: "desc", label: "Deskripsi" },
+  { id: "qty", label: "QTY" },
+  { id: "satuan", label: "Satuan" },
+  { id: "harga_satuan", label: "Harga Satuan" },
+  { id: "sum", label: "Harga Total" },
+  { id: "ket", label: "Keterangan" },
+];
+const tableHeader2 = [
+  { id: "no", label: "No" },
+  { id: "behalf", label: "Atas Nama" },
+  { id: "bank_name", label: "Nama Bank" },
+  { id: "address", label: "Alamat Bank" },
+  { id: "account_no", label: "Nomor Rekening" },
 ];
 
 const RowNormal = () => {
@@ -60,15 +78,14 @@ const RowBank = ({ data }) => {
 
 const RowAdditional = ({ label, value }) => {
   return (
-    <StyledTableRow>
-      <TableCell colSpan={5} className="text-dark text-right">
-        {label}
-      </TableCell>
+    <TableRow>
+      <TableCell colSpan={4}></TableCell>
+      <TableCell className="text-dark">{label}</TableCell>
       <TableCell colSpan={2} className="text-dark text-left">
         {value}
       </TableCell>
       {/* <TableCell className="text-dark text-right"></TableCell> */}
-    </StyledTableRow>
+    </TableRow>
   );
 };
 
@@ -112,7 +129,29 @@ const HargaPekerjaan = () => {
             <TitleField title={"Rincian Harga Pekerjaan"} />
           </Col>
         </Row>
-        <TableBuilder
+        <TablePaginationCustom
+          headerRows={tableHeader}
+          width={1210}
+          withPagination={false}
+          withSearch={false}
+          rows={[1, 2, 3].map((el, id) => ({
+            no: id + 1,
+            desc: "desc",
+            qty: "qty",
+            satuan: "satuan",
+            harga_satuan: "harga_satuan",
+            sum: "sum",
+            ket: "ket",
+          }))}
+          footerComponent={
+            <React.Fragment>
+              <RowAdditional label={"Subtotal"} />
+              <RowAdditional label={"PPN 10%"} />
+              <RowAdditional label={"Grand Total"} value={contract_value} />
+            </React.Fragment>
+          }
+        />
+        {/* <TableBuilder
           hecto={10}
           dataHead={[
             "No",
@@ -138,7 +177,7 @@ const HargaPekerjaan = () => {
               <RowAdditional label={"Grand Total"} value={contract_value} />
             </React.Fragment>
           }
-        />
+        /> */}
         <Row>
           <Col md={6}>
             <TitleField title={"Metode Pembayaran"} />
@@ -180,7 +219,21 @@ const HargaPekerjaan = () => {
             <TitleField title={"Referensi Bank Penyedia"} />
           </Col>
           <Col md={12}>
-            <TableBuilder
+            <TablePaginationCustom
+              headerRows={tableHeader2}
+              width={1210}
+              withPagination={false}
+              withSearch={false}
+              rows={[1, 2, 3].map((el, id) => ({
+                no: id + 1,
+                behalf: "behalf",
+                bank_name: "bank_name",
+                address: "address",
+                account_no: "account_no",
+              }))}
+            />
+
+            {/* <TableBuilder
               hecto={12}
               dataHead={[
                 "No",
@@ -202,7 +255,7 @@ const HargaPekerjaan = () => {
                   ]}
                 />
               )}
-            />
+            /> */}
           </Col>
         </Row>
       </CardBody>

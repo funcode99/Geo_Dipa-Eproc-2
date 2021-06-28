@@ -6,51 +6,39 @@ import {
   TableBody,
   TableCell,
   TextField,
-  Checkbox,
   InputLabel,
-  CircularProgress,
-  Button,
+  makeStyles,
 } from "@material-ui/core";
-import { Send } from "@material-ui/icons";
 import { rupiah } from "../../../../../../libs/currency";
 import { FormattedMessage } from "react-intl";
 import { StyledModal } from "../../../../../../components/modals";
 import { Form } from "react-bootstrap";
 import { connect } from "react-redux";
-import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+
+const useStyles = makeStyles((theme) => ({
+  textField: {
+    "& .Mui-disabled": {
+      color: "black",
+      background: "lightgray",
+    },
+  },
+}));
 
 const tableHeader = [
-  "",
+  "No",
   <FormattedMessage id="TITLE.NAME" />,
   <FormattedMessage id="TITLE.QUANTITY" />,
   <FormattedMessage id="TITLE.UNIT_PRICE" />,
 ];
 
-const ModalSubmit = ({
+const ModalDetail = ({
   visible,
   onClose,
-  tempOrderItems,
-  setTempOrderItems,
+  updateOrderItems,
   formik,
-  loading,
-  errors,
-  handleError,
+  updateData,
 }) => {
-  const handleChecklist = (data, index) => {
-    handleError("item", false);
-
-    const dataArr = [...tempOrderItems];
-    dataArr[index].checked = !dataArr[index].checked;
-    setTempOrderItems(dataArr);
-  };
-
-  const handleChange = (e, data, index) => {
-    const value = +e.target.value;
-
-    const dataArr = [...tempOrderItems];
-    dataArr[index].qty = value;
-    setTempOrderItems(dataArr);
-  };
+  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -63,7 +51,7 @@ const ModalSubmit = ({
         maxwidth="70vw"
       >
         <h3 className="mb-7">
-          <FormattedMessage id="TITLE.ADD" />{" "}
+          <FormattedMessage id="TITLE.DETAIL" />{" "}
           <FormattedMessage id="TITLE.DELIVERY_ORDER" />
         </h3>
 
@@ -78,44 +66,18 @@ const ModalSubmit = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {tempOrderItems?.map((item, index) => {
+            {updateOrderItems?.map((item, index) => {
               return (
                 <TableRow key={index}>
-                  <TableCell>
-                    <Checkbox
-                      name={`checkbox-${item?.id}`}
-                      color="secondary"
-                      onChange={() => handleChecklist(item, index)}
-                      size="small"
-                      width={50}
-                      variant="body"
-                      checked={item.checked}
-                    />
-                  </TableCell>
+                  <TableCell>{(index += 1)}</TableCell>
                   <TableCell>{item?.item?.desc}</TableCell>
-                  <TableCell>
-                    <Form.Control
-                      type="number"
-                      size="sm"
-                      min="1"
-                      step="1"
-                      max={item?.qty}
-                      disabled={!item.checked ? true : false}
-                      defaultValue={item.qty}
-                      onChange={(e) => handleChange(e, item, index)}
-                    />
-                  </TableCell>
+                  <TableCell>{item?.qty}</TableCell>
                   <TableCell>{rupiah(item?.item?.unit_price)}</TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
-        {errors.item && (
-          <span className="text-danger">
-            <FormattedMessage id="TITLE.ITEM_IS_REQUIRE" />
-          </span>
-        )}
 
         <form
           noValidate
@@ -123,7 +85,7 @@ const ModalSubmit = ({
           className="d-flex flex-column mt-7"
           onSubmit={formik.handleSubmit}
         >
-          <InputLabel id="name" className="mt-6">
+          <InputLabel id="name" className="mt-6 text-dark">
             <FormattedMessage id="TITLE.DESCRIPTION" />
           </InputLabel>
           <TextField
@@ -135,6 +97,8 @@ const ModalSubmit = ({
             InputLabelProps={{
               shrink: true,
             }}
+            disabled
+            classes={{ root: classes.textField }}
             {...formik.getFieldProps("name")}
           />
           <span className="text-danger">
@@ -143,7 +107,7 @@ const ModalSubmit = ({
               : null}
           </span>
 
-          <InputLabel id="date" className="mt-6">
+          <InputLabel id="date" className="mt-6 text-dark">
             <FormattedMessage id="TITLE.DATE" />
           </InputLabel>
           <TextField
@@ -154,6 +118,8 @@ const ModalSubmit = ({
             InputLabelProps={{
               shrink: true,
             }}
+            disabled
+            classes={{ root: classes.textField }}
             {...formik.getFieldProps("date")}
           />
           <span className="text-danger">
@@ -162,7 +128,7 @@ const ModalSubmit = ({
               : null}
           </span>
 
-          <InputLabel id="remarks" className="mt-6">
+          <InputLabel id="remarks" className="mt-6 text-dark">
             <FormattedMessage id="TITLE.REMARKS" />
           </InputLabel>
           <TextField
@@ -174,6 +140,8 @@ const ModalSubmit = ({
             InputLabelProps={{
               shrink: true,
             }}
+            disabled
+            classes={{ root: classes.textField }}
             {...formik.getFieldProps("remarks")}
           />
           <span className="text-danger">
@@ -181,24 +149,6 @@ const ModalSubmit = ({
               ? formik.errors.remarks
               : null}
           </span>
-
-          <div className="d-flex justify-content-end w-100 mt-7">
-            <Button
-              disabled={loading}
-              type="submit"
-              variant="contained"
-              color="secondary"
-            >
-              <span className="mr-1">
-                <FormattedMessage id="TITLE.ADD" />
-              </span>
-              {loading ? (
-                <CircularProgress size="0.875rem" color="inherit" />
-              ) : (
-                <Send />
-              )}
-            </Button>
-          </div>
         </form>
       </StyledModal>
     </React.Fragment>
@@ -206,16 +156,9 @@ const ModalSubmit = ({
 };
 
 const mapState = ({ deliveryMonitoring }) => ({
-  tempOrderItems: deliveryMonitoring.dataTempOrderItems,
+  updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
 });
 
-const mapDispatch = (dispatch) => ({
-  setTempOrderItems: (payload) => {
-    dispatch({
-      type: actionTypes.SetDataTempOrderItems,
-      payload: payload,
-    });
-  },
-});
+const mapDispatch = (dispatch) => ({});
 
-export default connect(mapState, mapDispatch)(ModalSubmit);
+export default connect(mapState, mapDispatch)(ModalDetail);

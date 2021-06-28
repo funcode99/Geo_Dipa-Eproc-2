@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Paper,
   makeStyles,
@@ -8,47 +8,64 @@ import {
   FormControlLabel,
   Checkbox,
   CircularProgress,
-} from '@material-ui/core';
+  Switch,
+} from "@material-ui/core";
 // import SVG from 'react-inlinesvg';
-import { useFormik } from 'formik';
+import { useFormik } from "formik";
 // import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
-import * as Yup from 'yup';
-import * as master from '../service/MasterCrud';
+import * as Yup from "yup";
+import * as master from "../service/MasterCrud";
 // import http from '../../libs/http';
-import { Flex, Input, IconWrapper } from './style';
-import { StyledModal } from '../../../components/modals';
-import useToast from '../../../components/toast';
-import DocumentsTable from './Document';
-import CustomTable from '../../../components/tables';
-import Subheader from '../../../components/subheader';
+import { Flex, Input, IconWrapper } from "./style";
+import { StyledModal } from "../../../components/modals";
+import useToast from "../../../components/toast";
+import DocumentsTable from "./Document";
+import CustomTable from "../../../components/tables";
+import Subheader from "../../../components/subheader";
+import TablePaginationCustom from "../../../components/tables/TablePagination";
+import ButtonAction from "../../../components/buttonAction/ButtonAction";
+import DialogGlobal from "../../../components/modals/DialogGlobal";
+import BasicInput from "../../../components/input/BasicInput";
+import ItemSwitch from "../../../components/input/ItemSwitch";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(3),
-    overflowX: 'auto',
+    overflowX: "auto",
+    padding: theme.spacing(2),
   },
   table: {
     minWidth: 650,
   },
 }));
 
+const rowHeader = [
+  { id: "no", label: "No" },
+  { id: "doc", label: "Dokumen" },
+  { id: "periode", label: "Periode", align: "center", sortable: false },
+  { id: "action", label: "Action", align: "right", sortable: false },
+];
+
 export const DocumentTypes = () => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
+  const updateCreateRef = React.useRef();
+  const confirmationRef = React.useRef();
   // const [docType, setDocType] = React.useState();
   const [modals, setModals] = React.useState(false);
   const [docId, setType] = React.useState();
-  const [confirm, setConfirm] = React.useState({ show: false, id: '' });
-  const [update, setUpdate] = React.useState({ id: '', update: false });
+  const [confirm, setConfirm] = React.useState({ show: false, id: "" });
+  const [update, setUpdate] = React.useState({ id: "", update: false });
   const [loading, setLoading] = React.useState(false);
   const [tableContent, setTableContent] = React.useState([]);
+  const [newContent, setNewContent] = React.useState([]);
 
   const FormSchema = Yup.object().shape({
     document_name: Yup.string()
-      .min(3, 'Input minimal 3 karakter')
-      .required('Field ini wajib diisi'),
+      .min(3, "Input minimal 3 karakter")
+      .required("Field ini wajib diisi"),
   });
 
   const enableLoading = () => {
@@ -59,7 +76,7 @@ export const DocumentTypes = () => {
     setLoading(false);
   };
   const initialValues = {
-    document_name: '',
+    document_name: "",
     check_periodic: false,
   };
 
@@ -68,7 +85,7 @@ export const DocumentTypes = () => {
     const rows1 = [
       {
         content: (
-          <Button variant="contained" onClick={() => setType(' ')}>
+          <Button variant="contained" onClick={() => setType(" ")}>
             See all document type
           </Button>
         ),
@@ -78,7 +95,7 @@ export const DocumentTypes = () => {
     setTableContent((prev) => [...prev, rows1]);
     data.forEach((item, i) => {
       const rows = [
-        { content: i + 1, props: { width: '5%' } },
+        { content: i + 1, props: { width: "5%" } },
         { content: item.name },
         {
           content: item.is_periodic ? (
@@ -98,7 +115,7 @@ export const DocumentTypes = () => {
               <Icon
                 style={{ marginInline: 5 }}
                 className="fas fa-edit"
-                onClick={() => handleModal('update', item.id)}
+                onClick={() => handleModal("update", item.id)}
               />
               <Icon
                 style={{ marginInline: 5 }}
@@ -122,8 +139,9 @@ export const DocumentTypes = () => {
       } = await master.getList();
       // setDocType(data);
       generateTableContent(data);
+      setNewContent(data);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -166,11 +184,12 @@ export const DocumentTypes = () => {
         if (status) {
           getList();
           setModals(false);
+          updateCreateRef.current.close();
         }
       } catch (error) {
-        setToast('Error API, Please contact developer!');
+        setToast("Error API, Please contact developer!");
         setSubmitting(false);
-        setStatus('Failed Submit Data');
+        setStatus("Failed Submit Data");
       } finally {
         disableLoading();
       }
@@ -179,13 +198,15 @@ export const DocumentTypes = () => {
 
   const handleClose = () => {
     setModals(false);
+    updateCreateRef.current.close();
   };
   const handleModal = async (type, id) => {
-    if (type === 'update') {
+    if (type === "update") {
       const {
         data: { data },
       } = await master.getByID(id);
       setModals(true);
+      updateCreateRef.current.open();
 
       // console.log(data[0].is_periodic);
       setUpdate({ id, update: true });
@@ -195,8 +216,9 @@ export const DocumentTypes = () => {
         check_periodic: data[0].is_periodic,
       });
     } else {
-      setUpdate({ id: '', update: false });
+      setUpdate({ id: "", update: false });
       setModals(true);
+      updateCreateRef.current.open();
       formik.setValues(initialValues);
     }
   };
@@ -206,80 +228,170 @@ export const DocumentTypes = () => {
       setLoading(true);
       await master.deleteDoctypes(confirm.id);
       setConfirm({ ...confirm, show: false });
+      confirmationRef.current.close();
       getList();
     } catch (error) {
-      setToast('Error with API, please contact Developer!');
+      setToast("Error with API, please contact Developer!");
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleAction = (type, params) => {
+    console.log(`type`, type, params);
+    switch (type) {
+      case "find":
+        setType(params?.id);
+        break;
+      case "update":
+        handleModal("update", params?.id);
+        break;
+      case "delete":
+        confirmationRef.current.open();
+        setConfirm({ show: true, id: params?.id });
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <Container>
       <Toast />
-      <StyledModal
-        visible={modals}
-        onClose={handleClose}
-        hideCloseIcon={false}
-        disableBackdrop
+      <DialogGlobal
+        title={`${update.update ? "Update" : "Create"} Master Document Type`}
+        ref={updateCreateRef}
+        onYes={formik.handleSubmit}
+        textYes={update.update ? "Update" : "Create"}
       >
-        <Flex style={{ justifyContent: 'center' }}>
+        <Flex style={{ justifyContent: "center" }}>
           <form
             noValidate
             autoComplete="off"
             // onSubmit={handleSubmit(formSubmit)}
             onSubmit={formik.handleSubmit}
           >
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
-              <h3>Input Form</h3>
-            </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
-              <div style={{ width: '70%', alignSelf: 'center' }}>
+            <div>
+              <div style={{ width: "70%" }}>
                 <Input
+                  style={{ margin: 0 }}
                   label="Nama Dokumen"
                   variant="outlined"
                   name="document_name"
-                  {...formik.getFieldProps('document_name')}
+                  {...formik.getFieldProps("document_name")}
                 />
-                <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
+                <p style={{ color: "red", margin: 5 }}>
                   {formik.touched.document_name && formik.errors.document_name
                     ? formik.errors.document_name
                     : null}
                 </p>
               </div>
-              <div style={{ alignSelf: 'center' }}>
+              <div>
                 <FormControlLabel
-                  style={{ alignSelf: 'center' }}
+                  style={{ alignSelf: "center" }}
                   control={
-                    <Checkbox
+                    <Switch
                       name="check_periodic"
                       color="primary"
                       size="medium"
                       checked={formik.values.check_periodic}
-                      {...formik.getFieldProps('check_periodic')}
+                      {...formik.getFieldProps("check_periodic")}
                     />
                   }
                   label="Periodik"
                 />
               </div>
             </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
+            {/* <div style={{ justifyContent: "center", display: "flex" }}>
               <Button
                 disabled={loading}
                 type="submit"
                 color="secondary"
                 variant="contained"
-                style={{ width: '50%' }}
+                style={{ width: "50%" }}
               >
                 {loading ? <CircularProgress /> : null}&nbsp;
-                {update.update ? 'Update' : 'Create'}
+                {update.update ? "Update" : "Create"}
+              </Button>
+            </div> */}
+          </form>
+        </Flex>
+      </DialogGlobal>
+      {/* <StyledModal
+        visible={modals}
+        onClose={handleClose}
+        hideCloseIcon={false}
+        disableBackdrop
+      >
+        <Flex style={{ justifyContent: "center" }}>
+          <form
+            noValidate
+            autoComplete="off"
+            // onSubmit={handleSubmit(formSubmit)}
+            onSubmit={formik.handleSubmit}
+          >
+            <div style={{ justifyContent: "center", display: "flex" }}>
+              <h3>Input Form</h3>
+            </div>
+            <div style={{ justifyContent: "center", display: "flex" }}>
+              <div style={{ width: "70%", alignSelf: "center" }}>
+                <Input
+                  label="Nama Dokumen"
+                  variant="outlined"
+                  name="document_name"
+                  {...formik.getFieldProps("document_name")}
+                />
+                <p style={{ textAlign: "center", color: "red", margin: 5 }}>
+                  {formik.touched.document_name && formik.errors.document_name
+                    ? formik.errors.document_name
+                    : null}
+                </p>
+              </div>
+              <div style={{ alignSelf: "center" }}>
+                <FormControlLabel
+                  style={{ alignSelf: "center" }}
+                  control={
+                    <Checkbox
+                      name="check_periodic"
+                      color="primary"
+                      size="medium"
+                      checked={formik.values.check_periodic}
+                      {...formik.getFieldProps("check_periodic")}
+                    />
+                  }
+                  label="Periodik"
+                />
+              </div>
+            </div>
+            <div style={{ justifyContent: "center", display: "flex" }}>
+              <Button
+                disabled={loading}
+                type="submit"
+                color="secondary"
+                variant="contained"
+                style={{ width: "50%" }}
+              >
+                {loading ? <CircularProgress /> : null}&nbsp;
+                {update.update ? "Update" : "Create"}
               </Button>
             </div>
           </form>
         </Flex>
       </StyledModal>
-      <StyledModal
+       */}
+      <DialogGlobal
+        title={`Are you sure ?`}
+        ref={confirmationRef}
+        onYes={() => handleDelete()}
+        textYes={"Delete"}
+      >
+        <div>
+          <p>Item terpilih akan dihapus dari list</p>
+          <p>Selected item will be removed from the list.</p>
+        </div>
+      </DialogGlobal>
+      {/* <StyledModal
         visible={confirm.show}
         onClose={() => setConfirm({ ...confirm, show: false })}
         hideCloseIcon={false}
@@ -295,9 +407,9 @@ export const DocumentTypes = () => {
               variant="contained"
               disabled={loading}
               style={{
-                width: '40%',
-                background: 'red',
-                color: 'white',
+                width: "40%",
+                background: "red",
+                color: "white",
                 marginInline: 10,
               }}
               onClick={() => handleDelete()}
@@ -307,110 +419,119 @@ export const DocumentTypes = () => {
             <Button
               variant="contained"
               disabled={loading}
-              style={{ width: '40%', marginInline: 10 }}
+              style={{ width: "40%", marginInline: 10 }}
               onClick={() => setConfirm({ ...confirm, show: false })}
             >
               Cancel
             </Button>
           </div>
         </Flex>
-      </StyledModal>
+      </StyledModal> */}
+
       <div>
         <Subheader
           text="Master Document Type"
           // IconComponent={<DescriptionOutlined style={{ color: 'white' }} />}
         />
-        <Flex>
-          <div></div>
+        <Flex
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            // direction: "rtl",
+          }}
+        >
+          {/* <div></div> */}
+          <Button
+            variant="contained"
+            style={{
+              marginLeft: "auto",
+              marginRight: 13,
+            }}
+            onClick={() => setType(" ")}
+          >
+            See all document type
+          </Button>
           <Button
             color="secondary"
             variant="contained"
-            style={{ marginLeft: 'auto' }}
-            onClick={() => handleModal('create')}
+            // style={{ marginLeft: "auto" }}
+            onClick={() => handleModal("create")}
           >
             Create
           </Button>
         </Flex>
 
         <Paper className={classes.root} style={{ marginBottom: 30 }}>
-          <CustomTable
+          {/* <CustomTable
             tableHeader={[
-              { label: 'No' },
-              { label: 'Dokumen' },
-              { label: 'Periode' },
-              { label: 'Action' },
+              { label: "No" },
+              { label: "Dokumen" },
+              { label: "Periode" },
+              { label: "Action" },
             ]}
             tableContent={tableContent}
             marginY="my-1"
             hecto="hecto-10"
             loading={loading}
+          /> */}
+          {/* <Button variant="contained" onClick={() => setType(" ")}>
+            See all document type
+          </Button> */}
+          <TablePaginationCustom
+            headerRows={rowHeader}
+            rows={newContent.map((el, id) => ({
+              no: id + 1,
+              doc: el.name,
+              periode: el.is_periodic ? (
+                <Icon className="fas fa-check-circle" color="primary" />
+              ) : (
+                <Icon className="fas fa-times-circle" color="error" />
+              ),
+              action: (
+                <ButtonAction
+                  data={el}
+                  handleAction={handleAction}
+                  ops={[
+                    {
+                      label: "ECOMMERCE.COMMON.SEARCH",
+                      icon: "fas fa-search text-warning",
+                      type: "find",
+                    },
+                    {
+                      label: "TITLE.EDIT_DATA",
+                      icon: "fas fa-edit text-primary",
+                      type: "update",
+                    },
+                    {
+                      label: "TITLE.DELETE_DATA",
+                      icon: "fas fa-trash text-danger",
+                      type: "delete",
+                    },
+                  ]}
+                />
+              ),
+              // action: (
+              //   <IconWrapper>
+              //     <Icon
+              //       style={{ marginInline: 5 }}
+              //       className="fas fa-search"
+              //       onClick={() => setType(el.id)}
+              //     />
+              //     <Icon
+              //       style={{ marginInline: 5 }}
+              //       className="fas fa-edit"
+              //       onClick={() => handleModal("update", el.id)}
+              //     />
+              //     <Icon
+              //       style={{ marginInline: 5 }}
+              //       className="fas fa-trash"
+              //       color="error"
+              //       onClick={() => setConfirm({ show: true, id: el.id })}
+              //     />
+              //   </IconWrapper>
+              // ),
+            }))}
           />
-          {/* <Table className={classes.table}>
-            <StyledTableHead>
-              <StyledHead>
-                <TableCell>No</TableCell>
-                <TableCell>Document Name</TableCell>
-                <TableCell align="center">Periodic</TableCell>
-
-                <TableCell align="center" className="MuiTableCell-sizeSmall">
-                  Action
-                </TableCell>
-              </StyledHead>
-            </StyledTableHead>
-            <TableBody>
-              <StyledTableRow hover onClick={() => setType(' ')}>
-                <TableCell colSpan={4} align="center">
-                  <Button variant="contained">See all document type</Button>
-                </TableCell>
-              </StyledTableRow>
-
-              {loading ? (
-                <StyledTableRow hover>
-                  <TableCell colSpan={4} align="center">
-                    <CircularProgress />
-                  </TableCell>
-                </StyledTableRow>
-              ) : null}
-
-              {docType?.map((row, i) => (
-                <StyledTableRow
-                  key={row.id}
-                  hover
-                  className={`${row.id === docId ? 'Mui-selected' : ''}`}
-                >
-                  <TableCell scope="row">{i + 1}</TableCell>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell align="center">
-                    {row.is_periodic ? (
-                      <Icon className="fas fa-check-circle" color="primary" />
-                    ) : (
-                      <Icon className="fas fa-times-circle" color="error" />
-                    )}
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconWrapper>
-                      <Icon
-                        style={{ marginInline: 5 }}
-                        className="fas fa-search"
-                        onClick={() => setType(row.id)}
-                      />
-                      <Icon
-                        style={{ marginInline: 5 }}
-                        className="fas fa-edit"
-                        onClick={() => handleModal('update', row.id)}
-                      />
-                      <Icon
-                        style={{ marginInline: 5 }}
-                        className="fas fa-trash"
-                        color="error"
-                        onClick={() => setConfirm({ show: true, id: row.id })}
-                      />
-                    </IconWrapper>
-                  </TableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table> */}
         </Paper>
         {docId ? <DocumentsTable typeId={docId} /> : null}
       </div>
