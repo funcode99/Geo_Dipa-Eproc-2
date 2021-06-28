@@ -21,7 +21,7 @@ const theadDocuments = [
   { id: "action", label: "" },
   { id: "doc-name", label: "Document Name" },
   { id: "due-date", label: "Due Date" },
-  { id: "dokumen-progress", label: "Document Progress" },
+  { id: "dokumen-progress", label: "Status" },
   { id: "deliv-dokumen", label: "Deliverable Document" },
   { id: "remarks", label: "Remarks" },
   { id: "aksi", label: "Action" },
