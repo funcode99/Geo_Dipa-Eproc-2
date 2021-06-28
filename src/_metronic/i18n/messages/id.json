@@ -436,5 +436,12 @@
   "TITLE.OPEN_DATA": "Buka Data",
   "TITLE.DETAIL": "Detail",
   "TITLE.CONFIRMATION": "Konfirmasi",
-  "TITLE.NOTIV_ACTION_CHANGES": "Apakah Anda yakin ingin melakukan perubahan?"
+  "TITLE.NOTIV_ACTION_CHANGES": "Apakah Anda yakin ingin melakukan perubahan?",
+  "TITLE.AUTHOR_OFFICIAL": "Pejabat Berwenang",
+  "TITLE.DIRECTOR_OF_WD": "Direksi Pekerjaan",
+  "TITLE.AUTHOR_INVOICE": "Faktur Otorisasi",
+  "TITLE.SELECT": "Pilih",
+  "TITLE.SELECT_PIC": "Pilih PIC",
+  "TITLE.BILLING_DOCUMENT": "Dokumen Tagihan",
+  "TITLE.UPLOAD_DATE": "Tanggal Unggah"
 }
