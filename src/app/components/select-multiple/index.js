@@ -1,7 +1,7 @@
 import React from "react";
 import Select from 'react-select';
 
-const StyledSelect = ({ options, value, onChange, isDisabled = false }) => {
+const StyledSelect = ({ options, value, onChange, isDisabled = false, placeholder = "Select..." }) => {
     const customStyles = {
         control: styles => ({
             ...styles,
@@ -20,6 +20,8 @@ const StyledSelect = ({ options, value, onChange, isDisabled = false }) => {
             className="form-control border-0 p-0 h-100"
             classNamePrefix="react-select"
             styles={customStyles}
+            menuPosition={'fixed'} 
+            placeholder={placeholder}
         />
     );
 };
