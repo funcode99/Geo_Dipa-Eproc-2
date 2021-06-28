@@ -171,6 +171,7 @@ export default function TablePaginationCustom({
               // className={"table-bordered"}
               aria-labelledby="tableTitle"
               style={{ width: width ? width : undefined }}
+              size={"small"}
             >
               {/* <colgroup>
               <col width="150px" />

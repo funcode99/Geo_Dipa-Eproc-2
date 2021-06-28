@@ -6,16 +6,29 @@ import ModalDeleteDoc from "./components/ModalDeleteDoc";
 import useToast from "../../../../../components/toast";
 import ModalAddDeliverables from "./components/ModalAddDeliverables";
 import ModalUploadDoc from "./components/ModalUploadDoc";
-import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import HeaderTableDoc from "./components/HeaderTableDoc";
 import ModalSubmitDoc from "./components/ModalSubmitDoc";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 import BASE_MODAL_CONF from "./BASE_MODAL_CONF";
 import ModalEditDraft from "./components/ModalEditDraft";
+import {
+  getLoading,
+  set_loading_done_rd,
+  set_loading_rd,
+} from "../../../../../../redux/globalReducer";
+import { connect } from "react-redux";
 
 export const DocumentsContext = createContext({});
 
-const Documents = ({ taskId }) => {
+const keyList = "fetch_deliverables";
+
+const Documents = ({
+  taskId,
+  loadings,
+  set_loading_rd,
+  set_loading_done_rd,
+}) => {
   const [loading, setLoading] = React.useState({
     get: false,
     create: false,
@@ -235,6 +248,13 @@ const Documents = ({ taskId }) => {
     if (taskId !== "") fetchData();
   }, [taskId]);
 
+  React.useEffect(() => {
+    set_loading_rd(keyList);
+    setTimeout(() => {
+      set_loading_done_rd(keyList);
+    }, 5000);
+  }, []);
+
   return (
     <DocumentsContext.Provider
       value={{
@@ -247,6 +267,7 @@ const Documents = ({ taskId }) => {
         handleApi,
       }}
     >
+      {loadings.list && <CircularProgress />}
       <Toast />
       <ModalDeleteDoc
         visible={open.delete}
@@ -300,4 +321,16 @@ Documents.defaultProps = {
   taskId: "",
 };
 
-export default Documents;
+const mapState = (state) => ({
+  // loadings: state.globalReducer.loadings,
+  loadings: {
+    list: getLoading(state, keyList),
+  },
+});
+
+const mapDispatch = {
+  set_loading_rd,
+  set_loading_done_rd,
+};
+
+export default connect(mapState, mapDispatch)(Documents);
