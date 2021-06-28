@@ -29,7 +29,7 @@ import * as Yup from 'yup';
 import { rupiah } from '../../../../../libs/currency';
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from '../ItemContractInvoice';
 import moment from 'moment';
@@ -117,7 +117,7 @@ function ContractInvoicePage(props) {
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
-    }, [contract_id, formik, intl, setToast, user_id])
+    }, [contract_id, termin, formik, intl, setToast, user_id])
 
     const getInvoiceData = useCallback(() => {
         getInvoice(contract_id, termin)
@@ -130,7 +130,7 @@ function ContractInvoicePage(props) {
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
-    }, [contract_id, formik, intl, setToast])
+    }, [contract_id, setInvoiceData, getHistoryInvoiceData, formik, intl, setToast])
 
     const onDocumentLoadSuccess = ({ numPages }) => {
         setNumPages(numPages);
@@ -178,10 +178,8 @@ function ContractInvoicePage(props) {
         setModalHistory(true)
     }
 
-    useEffect(() => {
-        getContractData();
-        getInvoiceData();
-    }, []);
+    useEffect(getContractData, []);
+    useEffect(getInvoiceData, []);
 
     return (
         <React.Fragment>

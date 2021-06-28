@@ -442,5 +442,14 @@
   "MESSAGE.SUBMIT_ITEM": "Are you sure you want to submit the following items?",
   "TITLE.YES": "Yes",
   "MESSAGE.NO_ITEMS": "No items have been selected for this term",
-  "BUTTON.SUBMIT": "Submit"
+  "BUTTON.SUBMIT": "Submit",
+  "TITLE.CONFIRMATION": "Confirmation",
+  "TITLE.NOTIV_ACTION_CHANGES": "Are you sure you want to make changes?",
+  "TITLE.AUTHOR_OFFICIAL": "Authorized Official",
+  "TITLE.DIRECTOR_OF_WD": "Director of Work Direksi",
+  "TITLE.AUTHOR_INVOICE": "Authorization Invoice",
+  "TITLE.SELECT": "Select",
+  "TITLE.SELECT_PIC": "Select PIC",
+  "TITLE.BILLING_DOCUMENT": "Billing Document",
+  "TITLE.UPLOAD_DATE": "Upload Date"
 }

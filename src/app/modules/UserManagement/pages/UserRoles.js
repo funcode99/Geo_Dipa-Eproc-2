@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Card, CardBody } from "../../../_metronic/_partials/controls";
-import useToast from "../../components/toast";
+import { Card, CardBody } from "../../../../_metronic/_partials/controls";
+import useToast from "../../../components/toast";
 import { TablePagination } from "@material-ui/core";
 import {
     Dialog,
@@ -10,20 +10,15 @@ import {
     DialogContent,
     Slide,
     Checkbox,
-    FormControlLabel,
-    Paper,
-    Container
+    FormControlLabel
 } from "@material-ui/core";
-import { getBuyers, getRoles, assignBuyers } from "./_redux/UserManagementCrud";
+import { getBuyers, getRoles, assignBuyers } from "../_redux/UserManagementCrud";
 import { withStyles } from "@material-ui/core/styles";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import StyledSelect from "../../components/select-multiple";
-import Tabs from "../../components/tabs";
-import { MAIN_ROLES_AUTHORITY, UNIT_ROLES_AUTHORITY } from "../../../redux/BaseHost";
-import UserRoles from "./pages/UserRoles";
-import PicRoles from "./pages/PicRoles";
+import StyledSelect from "../../../components/select-multiple";
+import { MAIN_ROLES_AUTHORITY, UNIT_ROLES_AUTHORITY } from "../../../../redux/BaseHost";
 
 const styles = (theme) => ({
     root: {
@@ -62,20 +57,8 @@ const DialogTitle = withStyles(styles)((props) => {
     );
 });
 
-const TabLists = [
-    {
-        id: 'users',
-        label: 'Users Eproc',
-        icon: <i className="fas fa-user-friends mb-0 mr-2" style={{ color: 'inherit' }}></i>,
-    },
-    {
-        id: 'pic',
-        label: 'PIC Vendors',
-        icon: <i className="fas fa-user mb-0 mr-2" style={{ color: 'inherit' }}></i>,
-    },
-];
 
-function UserManagement(props) {
+function UserRoles(props) {
     const { intl } = props;
     const [Toast, setToast] = useToast();
     const [filterTable, setFilterTable] = useState({});
@@ -85,7 +68,6 @@ function UserManagement(props) {
     const [mainRoles, setMainRoles] = useState([]);
     const [unitRoles, setUnitRoles] = useState([]);
     const [rolesData, setRolesData] = useState([]);
-    const [tabActiveMain, setTabActiveMain] = React.useState(0);
     const [paginations, setPaginations] = useState({
         numberColum: 0,
         page: 0,
@@ -96,9 +78,6 @@ function UserManagement(props) {
         (state) => state.auth.user.data.user_id,
         shallowEqual
     );
-    function handleChangeTabMain(event, newTabActive) {
-        setTabActiveMain(newTabActive);
-    }
     const [filterData] = useState([
         {
             title: intl.formatMessage({
@@ -330,11 +309,11 @@ function UserManagement(props) {
                         Peran Pengguna
                     </DialogTitle>
                     <DialogContent>
-                        <div className="form-group row">
-                            <label htmlFor="static_1" className="col-sm-5 col-form-label">
+                        <div className="form-group row mb-3">
+                            <label htmlFor="static_1" className="col-sm-3 col-form-label">
                                 Kode
                             </label>
-                            <div className="col-sm-7">
+                            <div className="col-sm-9">
                                 <input
                                     type="text"
                                     disabled
@@ -343,11 +322,11 @@ function UserManagement(props) {
                                 />
                             </div>
                         </div>
-                        <div className="form-group row">
-                            <label htmlFor="static_1" className="col-sm-5 col-form-label">
+                        <div className="form-group row mb-3">
+                            <label htmlFor="static_1" className="col-sm-3 col-form-label">
                                 Nama Lengkap
                             </label>
-                            <div className="col-sm-7">
+                            <div className="col-sm-9">
                                 <input
                                     type="text"
                                     disabled
@@ -356,11 +335,11 @@ function UserManagement(props) {
                                 />
                             </div>
                         </div>
-                        <div className="form-group row">
-                            <label htmlFor="static_1" className="col-sm-5 col-form-label">
+                        <div className="form-group row mb-3">
+                            <label htmlFor="static_1" className="col-sm-3 col-form-label">
                                 Plant
                             </label>
-                            <div className="col-sm-7">
+                            <div className="col-sm-9">
                                 <StyledSelect
                                     isDisabled={true}
                                     value={dataUser.plant_data}
@@ -369,20 +348,22 @@ function UserManagement(props) {
                             </div>
                         </div>
                         <div className="form-group row">
-                            <label htmlFor="static_1" className="col-sm-5 col-form-label">
+                            <label htmlFor="static_1" className="col-sm-3 col-form-label">
                                 Peran
                             </label>
-                            <div className="col-sm-7">
+                            <div className="col-sm-9">
                                 {isMainPlant && mainRoles.map((item, index) => {
                                     return (
                                         <FormControlLabel
                                             key={index}
+                                            className="col-sm-12 mb-0"
                                             control={
                                                 <Checkbox
                                                     checked={rolesData?.includes(item.id)}
                                                     value={item.id}
                                                     color="secondary"
                                                     onChange={handleCheckbox}
+                                                    className="py-1"
                                                 />
                                             }
                                             label={item.name}
@@ -393,12 +374,14 @@ function UserManagement(props) {
                                     return (
                                         <FormControlLabel
                                             key={index}
+                                            className="col-sm-12 mb-0"
                                             control={
                                                 <Checkbox
                                                     checked={rolesData?.includes(item.id)}
                                                     value={item.id}
                                                     color="secondary"
                                                     onChange={handleCheckbox}
+                                                    className="py-1"
                                                 />
                                             }
                                             label={item.name}
@@ -438,20 +421,190 @@ function UserManagement(props) {
                     </DialogActions>
                 </form>
             </Dialog>
-            <Paper>
-                <Container>
-                    <Tabs
-                        tabActive={tabActiveMain}
-                        handleChange={handleChangeTabMain}
-                        tabLists={TabLists}
+            <Card>
+                <CardBody>
+                    {/* begin: Filter Table */}
+                    <form id="filter-form-all" className="panel-filter-table mb-1">
+                        <span className="mr-2 mt-2 float-left">
+                            <FormattedMessage id="TITLE.FILTER.TABLE" />
+                        </span>
+                        <div className="d-block">
+                            <div className="">
+                                {filterData.map((item, index) => {
+                                    return (
+                                        <div
+                                            key={index.toString()}
+                                            className="btn-group hover-filter-table"
+                                            status="closed"
+                                            id={"filter-" + index}
+                                        >
+                                            <div
+                                                className="btn btn-sm dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-expanded="false"
+                                                onClick={() => {
+                                                    openFilterTable(item.name, index);
+                                                }}
+                                            >
+                                                <span>{item.title}:</span>
+                                                <strong style={{ paddingRight: 1, paddingLeft: 1 }}>
+                                                    <span
+                                                        className="filter-label"
+                                                        id={"filter-span-" + index}
+                                                    >
+                                                        {filterTable["filter-" + item.name]}
+                                                    </span>
+                                                </strong>
+                                                {filterTable["filter-" + item.name] ? null : (
+                                                    <span style={{ color: "#777777" }}>
+                                                        <FormattedMessage id="TITLE.ALL" />
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <ul
+                                                role="menu"
+                                                className="dropdown-menu"
+                                                style={{ zIndex: 90 }}
+                                            >
+                                                <li style={{ width: 360, padding: 5 }}>
+                                                    <div className="clearfix">
+                                                        <div className="float-left">
+                                                            <input
+                                                                type={item.type}
+                                                                className="form-control form-control-sm"
+                                                                min="0"
+                                                                name={"filter-" + item.name}
+                                                                id={"filter-" + item.name}
+                                                                defaultValue={
+                                                                    filterTable["filter-" + item.name] || ""
+                                                                }
+                                                                placeholder={intl.formatMessage({
+                                                                    id: "TITLE.ALL",
+                                                                })}
+                                                            />
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            className="ml-2 float-left btn btn-sm btn-primary"
+                                                            onClick={() => {
+                                                                updateValueFilter(item.name, index);
+                                                            }}
+                                                        >
+                                                            Perbaharui
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="float-right btn btn-sm btn-light"
+                                                            onClick={() => {
+                                                                resetValueFilter("filter-" + item.name);
+                                                            }}
+                                                        >
+                                                            <i className="fas fa-redo fa-right"></i>
+                                                            <span>
+                                                                <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    );
+                                })}
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit"
+                                    onClick={() => {
+                                        resetFilter();
+                                    }}
+                                >
+                                    <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    {/* end: Filter Table */}
+
+                    {/* begin: Table */}
+                    <div className="table-wrapper-scroll-y my-custom-scrollbar">
+                        <div className="segment-table">
+                            <div className="hecto-10">
+                                <table className="table-bordered overflow-auto">
+                                    <thead>
+                                        <tr>
+                                            <th className="bg-primary text-white text-center align-middle td-5">
+                                                No
+                                            </th>
+                                            <th className="bg-primary text-white text-center align-middle td-20">
+                                                Kode
+                                            </th>
+                                            <th className="bg-primary text-white text-center align-middle td-20">
+                                                Nama Lengkap
+                                            </th>
+                                            <th className="bg-primary text-white text-center align-middle td-20">
+                                                Plant
+                                            </th>
+                                            <th className="bg-primary text-white text-center align-middle td-30">
+                                                Peran
+                                            </th>
+                                            <th className="bg-primary text-white text-center align-middle td-5">
+                                                <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.map((item, index) => {
+                                            return (
+                                                <tr key={index.toString()}>
+                                                    <td>{index + 1}</td>
+                                                    <td>{item.code}</td>
+                                                    <td>{item.full_name}</td>
+                                                    <td>{item.plant}</td>
+                                                    <td>{item.role_name}</td>
+                                                    <td className="text-center">
+                                                        <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="table-loading-data">
+                            <div className="text-center font-weight-bold">
+                                <div className="table-loading-data-potition">
+                                    {loading && (
+                                        <span>
+                                            <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+                                            <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+                                        </span>
+                                    )}
+                                    {err && (
+                                        <span className="text-danger">
+                                            <i className="far fa-frown text-danger mr-1"></i>
+                                            <FormattedMessage id="TITLE.ERROR_REQUEST" />
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* end: Table */}
+
+                    {/* begin: Pagination Table */}
+                    <TablePagination
+                        component="div"
+                        count={paginations.count}
+                        page={paginations.page}
+                        onChangePage={handleChangePage}
+                        rowsPerPage={paginations.rowsPerPage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
                     />
-                </Container>
-                <hr className="p-0 m-0" />
-                {tabActiveMain === 0 && <UserRoles />}
-                {tabActiveMain === 1 && <PicRoles />}
-            </Paper>
+                    {/* end: Pagination Table */}
+                </CardBody>
+            </Card>
         </React.Fragment>
     );
 }
 
-export default injectIntl(connect(null, null)(UserManagement));
+export default injectIntl(connect(null, null)(UserRoles));
