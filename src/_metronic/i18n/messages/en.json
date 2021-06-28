@@ -434,5 +434,7 @@
   "TITLE.UPDATED_DATE": "Updated Date",
   "TITLE.SCHEDULED": "Scheduled",
   "TITLE.OPEN_DATA": "Open Data",
-  "TITLE.DETAIL": "Detail"
+  "TITLE.DETAIL": "Detail",
+  "TITLE.CONFIRMATION": "Confirmation",
+  "TITLE.NOTIV_ACTION_CHANGES": "Are you sure you want to make changes?"
 }
