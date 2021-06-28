@@ -451,5 +451,6 @@
   "TITLE.SELECT": "Select",
   "TITLE.SELECT_PIC": "Select PIC",
   "TITLE.BILLING_DOCUMENT": "Billing Document",
-  "TITLE.UPLOAD_DATE": "Upload Date"
+  "TITLE.UPLOAD_DATE": "Upload Date",
+  "TITLE.UPLOAD_SIGNED_DOCUMENT": "Upload Signed Document"
 }

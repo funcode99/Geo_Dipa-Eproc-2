@@ -13,11 +13,12 @@ import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
 import { connect, useSelector } from "react-redux";
 import { StyledTableRow } from "../../../../../../components/builder/TableBuilder/styledComponent";
-import { TableCell } from "@material-ui/core";
+import { Button, ButtonGroup, TableCell } from "@material-ui/core";
 import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../../../components/toast";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 import { formatDate } from "../../../../../../libs/date";
+import { FormattedMessage } from "react-intl";
 
 const validationClient = object().shape({
   hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
@@ -134,75 +135,110 @@ const BastPage = ({ status, contract, saveContract }) => {
   let allowedClient = ["hasil_pekerjaan"];
   let allowedVendor = ["nomor_bast", "tanggal_bast"];
 
+  // console.log(`contract`, contract);
+
   return (
-    <Card>
-      <CardBody>
-        {/* <FieldBuilder readOnly formData={formData3} /> */}
-        <FormBuilder
-          // ref={formikRef}
-          onSubmit={_handleSubmit}
-          // formData={formData3}
-          loading={loadings.post}
-          initial={initialValues}
-          validation={isClient ? validationClient : validationVendor}
-          fieldProps={{
-            readOnly: false,
-            // disabledFields: disabledInput,
-            disabledFields: disabledInput.filter((el) =>
-              isClient
-                ? !allowedClient.includes(el)
-                : !allowedVendor.includes(el)
-            ),
-          }}
-        >
-          {({ fieldProps }) => (
-            <Row>
-              <Col>
-                <FieldBuilder formData={formData1} {...fieldProps} />
-              </Col>
-              <Col>
-                <FieldBuilder formData={formData2} {...fieldProps} />
-              </Col>
-            </Row>
-          )}
-        </FormBuilder>
-        <Row>
-          <Col md={12}>
-            <TitleField title={"History"} />
-          </Col>
-        </Row>
-        <Row>
-          <Col md={12}>
-            <TableBuilder
-              hecto={10}
-              dataHead={[
-                "No BAST",
-                "Tanggal",
-                "Status",
-                "Approved by",
-                "Dokumen",
-                "Aksi",
-              ]}
-              dataBody={news?.task_news_histories}
-              renderRowBody={({ item, index }) => (
-                <RowNormal
-                  key={index}
-                  data={[
-                    item?.history?.no,
-                    formatDate(new Date(item?.updatedAt)),
-                    "",
-                    "",
-                    "",
-                    "",
-                  ]}
-                />
-              )}
-            />
-          </Col>
-        </Row>
-      </CardBody>
+    <React.Fragment>
       <Toast />
-    </Card>
+      <Card>
+        <CardBody>
+          <Card>
+            <CardBody>
+              {/* <FieldBuilder readOnly formData={formData3} /> */}
+              <FormBuilder
+                // ref={formikRef}
+                onSubmit={_handleSubmit}
+                // formData={formData3}
+                loading={loadings.post}
+                initial={initialValues}
+                validation={isClient ? validationClient : validationVendor}
+                fieldProps={{
+                  readOnly: false,
+                  // disabledFields: disabledInput,
+                  disabledFields: disabledInput.filter((el) =>
+                    isClient
+                      ? !allowedClient.includes(el)
+                      : !allowedVendor.includes(el)
+                  ),
+                }}
+              >
+                {({ fieldProps }) => (
+                  <Row>
+                    <Col>
+                      <FieldBuilder formData={formData1} {...fieldProps} />
+                    </Col>
+                    <Col>
+                      <FieldBuilder formData={formData2} {...fieldProps} />
+                    </Col>
+                  </Row>
+                )}
+              </FormBuilder>
+            </CardBody>
+          </Card>
+
+          <Card className="mt-5">
+            <CardBody>
+              <Row className="mb-5">
+                <Col md={12}>
+                  <ButtonGroup
+                    size="medium"
+                    color="secondary"
+                    variant="contained"
+                  >
+                    <Button
+                    // onClick={() => handleAction("preview", taskNews?.file)}
+                    // disabled={taskNews ? false : true}
+                    >
+                      <FormattedMessage id="TITLE.PREVIEW" />
+                    </Button>
+                    <Button>
+                      <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
+                    </Button>
+                    <Button>
+                      <FormattedMessage id="TITLE.APPROVE" />
+                    </Button>
+                  </ButtonGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <TitleField title={"History"} />
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <TableBuilder
+                    hecto={10}
+                    dataHead={[
+                      "No BAST",
+                      "Tanggal",
+                      "Status",
+                      "Approved by",
+                      "Dokumen",
+                      "Aksi",
+                    ]}
+                    dataBody={news?.task_news_histories}
+                    renderRowBody={({ item, index }) => (
+                      <RowNormal
+                        key={index}
+                        data={[
+                          item?.history?.no,
+                          formatDate(new Date(item?.updatedAt)),
+                          "",
+                          "",
+                          "",
+                          "",
+                        ]}
+                      />
+                    )}
+                  />
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        </CardBody>
+      </Card>
+    </React.Fragment>
   );
 };
 

@@ -451,5 +451,6 @@
   "TITLE.SELECT": "Pilih",
   "TITLE.SELECT_PIC": "Pilih PIC",
   "TITLE.BILLING_DOCUMENT": "Dokumen Tagihan",
-  "TITLE.UPLOAD_DATE": "Tanggal Unggah"
+  "TITLE.UPLOAD_DATE": "Tanggal Unggah",
+  "TITLE.UPLOAD_SIGNED_DOCUMENT": "Unggah Dokumen Bertandatangan"
 }
