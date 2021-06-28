@@ -116,7 +116,7 @@ const ModalUpdate = ({
                       size="sm"
                       min={0.1}
                       step={0.1}
-                      max={item?.item?.qty}
+                      // max={item?.item?.qty}
                       disabled={!item.checked ? true : false}
                       defaultValue={item.qty}
                       onChange={(e) => handleChange(e, item, index)}

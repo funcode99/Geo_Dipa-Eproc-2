@@ -8,15 +8,6 @@ export const formData1 = [
     label: "Nomor BAST",
   },
   {
-    name: "tanggal_bast",
-    label: "Tanggal BAST",
-    typeInput: "SelectDateInput",
-  },
-  {
-    name: "jenis",
-    label: "Jenis Pekerjaan",
-  },
-  {
     name: "pelaksana",
     label: "Pelaksana Pekerjaan",
   },
@@ -31,9 +22,13 @@ export const formData1 = [
 
 export const formData2 = [
   {
-    name: "hasil_pekerjaan",
-    label: "Hasil pekerjaan yang telah diselesaikan",
-    typeInput: "TextAreaInput",
+    name: "tanggal_bast",
+    label: "Tanggal BAST",
+    typeInput: "SelectDateInput",
+  },
+  {
+    name: "pelaksana",
+    label: "Pelaksana Pekerjaan",
   },
   // {
   //   name: "select_example",
