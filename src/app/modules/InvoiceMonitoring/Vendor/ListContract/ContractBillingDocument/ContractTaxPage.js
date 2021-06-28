@@ -19,8 +19,7 @@ import {
     Dialog,
     DialogContent,
     DialogTitle,
-    DialogActions,
-    Slide
+    DialogActions
 } from "@material-ui/core";
 import { getContractSummary, saveTax, updateTax, getTax, getAllApprovedTax, getAllRejectedTax, getFileTax, getInvoice } from '../../../_redux/InvoiceMonitoringCrud';
 import useToast from '../../../../../components/toast';
@@ -171,6 +170,23 @@ function ContractTaxPage(props) {
         }
     });
 
+    const getHistoryTaxData = useCallback((invoice_id) => {
+        getAllRejectedTax(invoice_id)
+            .then(responseReject => {
+                getAllApprovedTax(invoice_id)
+                    .then(responseApprove => {
+                        setHistoryTaxData([...responseReject['data']['data'], ...responseApprove['data']['data']])
+                    })
+                    .catch((error) => {
+                        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                    });
+                // setHistoryTaxData(response['data']['data'])
+            })
+            .catch((error) => {
+                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+            });
+    }, [intl, setToast])
+
     const getContractData = useCallback(() => {
         getContractSummary(contract_id, termin)
             .then(response => {
@@ -185,7 +201,7 @@ function ContractTaxPage(props) {
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
-    }, [contract_id, formik, intl, setToast, user_id])
+    }, [contract_id, termin, formik, intl, setToast, user_id])
 
     const getTaxData = useCallback(() => {
         getTax(contract_id, termin)
@@ -216,23 +232,6 @@ function ContractTaxPage(props) {
             });
     }, [contract_id, termin, getHistoryTaxData, formik, intl, setToast])
 
-    const getHistoryTaxData = useCallback((invoice_id) => {
-        getAllRejectedTax(invoice_id)
-            .then(responseReject => {
-                getAllApprovedTax(invoice_id)
-                    .then(responseApprove => {
-                        setHistoryTaxData([...responseReject['data']['data'], ...responseApprove['data']['data']])
-                    })
-                    .catch((error) => {
-                        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-                    });
-                // setHistoryTaxData(response['data']['data'])
-            })
-            .catch((error) => {
-                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-            });
-    }, [intl, setToast])
-
     const getInvoiceData = useCallback(() => {
         getInvoice(contract_id, termin)
             .then(response => {
@@ -244,7 +243,7 @@ function ContractTaxPage(props) {
             .catch((error) => {
                 setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
-    }, [contract_id, termin, formik])
+    }, [contract_id, termin, formik, intl, setToast])
 
     const handleUpload = (e) => {
         if (e.currentTarget.files.length) {
