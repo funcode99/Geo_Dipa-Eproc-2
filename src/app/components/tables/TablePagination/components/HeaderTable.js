@@ -36,6 +36,7 @@ function HeaderTable(props) {
     rowCount,
     onRequestSort,
     rows,
+    headerProps,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -64,7 +65,7 @@ function HeaderTable(props) {
             sortDirection={orderBy === row.id ? order : false}
             align={row.align}
           >
-            {row?.sortable === false ? (
+            {row?.sortable === false || headerProps?.sortable === false ? (
               row.label
             ) : (
               <TableSortLabel

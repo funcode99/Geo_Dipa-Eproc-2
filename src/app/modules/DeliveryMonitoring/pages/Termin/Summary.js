@@ -645,6 +645,8 @@ export default function Summary({ taskId = "" }) {
               rows={dataJasa}
               loading={loading}
               width={1207}
+              maxHeight={300}
+              headerProps={{ sortable: false }}
               withSearch={false}
               withPagination={false}
               renderRows={({ item, index }) => {

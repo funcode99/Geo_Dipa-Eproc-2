@@ -46,6 +46,7 @@ const tableHeaderContractsNew = [
   {
     id: "dokumen",
     label: "Dokumen",
+    sortable: false,
   },
   {
     id: "tanggal",
@@ -94,7 +95,7 @@ const DokContract = () => {
       <CardBody>
         <TablePaginationCustom
           headerRows={tableHeaderContractsNew}
-          width={1210}
+          // width={1210}
           rows={
             file
               ? file.map((el, id) => ({

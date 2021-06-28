@@ -78,7 +78,9 @@ const TableDoc = ({}) => {
     <TablePaginationCustom
       headerRows={theadDocuments}
       rows={content?.task_documents}
+      headerProps={{ sortable: false }}
       width={1207}
+      maxHeight={300}
       loading={false}
       withSearch={false}
       withPagination={false}
@@ -112,9 +114,10 @@ const TableDoc = ({}) => {
                               "accordIcon",
                               els?.document_custom_name ?? els?.document?.name,
                               formatDate(new Date(els?.due_date)),
-                              els?.url === null
-                                ? "WAITING TO UPLOAD"
-                                : "AVAILABLE",
+                              // els?.url === null
+                              //   ? "WAITING TO UPLOAD"
+                              //   : "AVAILABLE",
+                              els?.document_status?.name,
                               <BtnLihat url={els?.url} />,
                               els?.remarks,
                               <BtnAksi
@@ -137,7 +140,8 @@ const TableDoc = ({}) => {
                         "accordIcon",
                         el?.document_custom_name ?? el?.document?.name,
                         formatDate(new Date(el?.due_date)),
-                        el?.url === null ? "WAITING TO UPLOAD" : "AVAILABLE",
+                        // el?.url === null ? "WAITING TO UPLOAD" : "AVAILABLE",
+                        el?.document_status?.name,
                         <BtnLihat url={el?.url} />,
                         el?.remarks,
                         <BtnAksi item={el} handleAction={handleAction} />,

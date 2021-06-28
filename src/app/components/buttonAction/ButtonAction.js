@@ -67,6 +67,9 @@ export default function ButtonAction({
           aria-controls="long-menu"
           aria-haspopup="true"
           onClick={handleClick}
+          style={{
+            margin: "-8px 0px",
+          }}
         >
           <MoreVert />
         </IconButton>
