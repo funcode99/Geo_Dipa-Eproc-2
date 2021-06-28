@@ -410,10 +410,12 @@
   "TITLE.DATE_IS_REQUIRE": "Date is required.",
   "TITLE.QTY_IS_REQUIRE": "Quantity is required.",
   "TITLE.SELECT_ITEM": "select item",
+  "TITLE.SERVICE": "Service",
   "TITLE.ITEM": "Item",
   "MESSAGE.MIN_QUANTITY": "Minimum quantity is 1",
   "MESSAGE.MUST_NUMBER": "Must number.",
   "MESSAGE.MUST_POSITIVE": "Must greater than 0.",
+  "MESSAGE.VALIDATE_QTY": "Quantity should be greater than {minValue} and lower than {floatQtyAvailable}",
   "TITLE.CONTRACT_ITEM": "Contract Item",
   "TITLE.CONTRACT_TERM": "Contract Term",
   "TITLE.DOCUMENT_CONTRACT": "Contract Document",
@@ -434,5 +436,11 @@
   "TITLE.UPDATED_DATE": "Updated Date",
   "TITLE.SCHEDULED": "Scheduled",
   "TITLE.OPEN_DATA": "Open Data",
-  "TITLE.DETAIL": "Detail"
+  "TITLE.DETAIL": "Detail",
+  "MESSAGE.ERROR_API": "Error API. Please contact IT department!",
+  "MESSAGE.SUCCESS_SUBMIT_ITEM": "Successfully submit item",
+  "MESSAGE.SUBMIT_ITEM": "Are you sure you want to submit the following items?",
+  "TITLE.YES": "Yes",
+  "MESSAGE.NO_ITEMS": "No items have been selected for this term",
+  "BUTTON.SUBMIT": "Submit"
 }
