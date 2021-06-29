@@ -92,7 +92,7 @@ export const Documents = ({ typeId }) => {
   const initialValues = {
     document_name: "",
     document_type: 709,
-    document_periode: 0,
+    document_periode: 123,
   };
 
   // const getList = async () => {
@@ -173,7 +173,11 @@ export const Documents = ({ typeId }) => {
         data: { data },
       } = await master.getDocumentByType(typeId);
       if (typeId !== " ") {
-        formik.setValues({ document_type: typeId });
+        formik.setValues({
+          document_type: typeId,
+          document_name: "",
+          document_periode: 123,
+        });
       }
       // setData(data.data);
       // setData(data);
@@ -204,7 +208,7 @@ export const Documents = ({ typeId }) => {
           ? {
               name: values.document_name,
               document_type_id: values.document_type,
-              periode_id: values.document_type,
+              periode_id: values.document_periode,
             }
           : {
               name: values.document_name,
@@ -366,12 +370,12 @@ export const Documents = ({ typeId }) => {
                       Periode
                     </InputLabel>
                     <SelectStyled
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
+                      labelId="demo-simple-select-label-2"
+                      id="demo-simple-select-2"
                       labelWidth={150}
                       {...formik.getFieldProps("document_periode")}
                     >
-                      {/* <MenuItem value="">Select Item</MenuItem> */}
+                      <MenuItem value={123}>Select Item</MenuItem>
                       {options &&
                         options.periodes.map((val) => (
                           <MenuItem key={val.id} value={val.id}>
@@ -491,7 +495,7 @@ export const Documents = ({ typeId }) => {
             rows={newContent.map((el, id) => ({
               no: id + 1,
               doc: el.name,
-              periode: el.is_periodic ? (
+              periode: el.periode_id ? (
                 <Icon className="fas fa-check-circle" color="primary" />
               ) : (
                 <Icon className="fas fa-times-circle" color="error" />
