@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { rupiah } from "../../../../libs/currency";
 import {
-  // FormattedMessage,
+  FormattedMessage,
   injectIntl,
 } from "react-intl";
 import {
@@ -177,40 +177,32 @@ function ItemContractSummary(props) {
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${
-          response["data"]["data"]["data"]["address"]["postal_address"]
-            ? response["data"]["data"]["data"]["address"]["postal_address"]
-            : null
-        } ${
-          response["data"]["data"]["data"]["address"]["sub_district"]
+        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
+          ? response["data"]["data"]["data"]["address"]["postal_address"]
+          : null
+          } ${response["data"]["data"]["data"]["address"]["sub_district"]
             ? response["data"]["data"]["data"]["address"]["sub_district"][
-                "name"
-              ]
+            "name"
+            ]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["district"]
+          } ${response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["province"]
+          } ${response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["postal_code"]
+          } ${response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
-        }`;
-        response["data"]["data"]["full_data_party_2"] = `${
-          response["data"]["data"]["full_name"]
-        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
-          response["data"]["data"]["data"]["phone_number"]["number"]
-        } ${
-          response["data"]["data"]["data"]["phone_number"]["ext"]
+          }`;
+        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
+          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
+          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
-                response["data"]["data"]["data"]["phone_number"]["ext"]
-              )
+              response["data"]["data"]["data"]["phone_number"]["ext"]
+            )
             : ""
-        }`;
+          }`;
         response["data"]["data"][
           "full_data_party_1"
         ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
@@ -267,8 +259,8 @@ function ItemContractSummary(props) {
     monitoring_type: monitoring_type,
   };
 
-  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function(errorMessage) {
-    return this.test(`test-card-length`, errorMessage, function(value) {
+  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function (errorMessage) {
+    return this.test(`test-card-length`, errorMessage, function (value) {
       const { path, createError } = this;
       return emailAvailability || createError({ path, message: errorMessage });
     });
@@ -510,10 +502,10 @@ function ItemContractSummary(props) {
         fullWidth={true}
         style={{ zIndex: "1301" }}
       >
-        <DialogTitle id="alert-dialog-slide-title">Batalkan PIC</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title"><FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_DELETE.TITLE" /></DialogTitle>
         <DialogContent>
-          Apakah anda akan membatalkan PIC dengan Email{" "}
-          <span className="text-danger">{tempPic.text}</span> ?
+          <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_DELETE.BODY" />
+          <span className="text-danger"> {tempPic.label}</span> ?
         </DialogContent>
         <DialogActions>
           <button
@@ -523,14 +515,14 @@ function ItemContractSummary(props) {
             }}
             disabled={loading}
           >
-            Kembali
+            <FormattedMessage id="TITLE.GENERAL.BACK_BUTTON" />
           </button>
           <button
             className="btn btn-danger"
             disabled={loading}
             onClick={() => deletePic(tempPic.value)}
           >
-            Batalkan
+            <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_DELETE.SUBMIT" />
             {loading && (
               <span
                 className="spinner-border spinner-border-sm ml-1"
@@ -550,13 +542,13 @@ function ItemContractSummary(props) {
         fullWidth={true}
       >
         <DialogTitle id="alert-dialog-slide-title">
-          Daftar Email PIC / {editEmail ? "Ubah" : "Tambah"}
+          <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.TITLE" />{editEmail ? <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.UPDATE" /> : <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.NEW" />}
         </DialogTitle>
         <DialogContent>
           <div ref={updateEmailRef}>
             {!editEmail && (
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Email</label>
+                <label className="col-sm-2 col-form-label"><FormattedMessage id="TITLE.EMAIL" /></label>
                 <div className="input-group col-sm-10">
                   <input
                     type="email"
@@ -576,7 +568,7 @@ function ItemContractSummary(props) {
                       }
                       onClick={submitNewEmail}
                     >
-                      Simpan
+                      <FormattedMessage id="TITLE.SAVE" />
                       {loading && (
                         <span
                           className="spinner-border spinner-border-sm ml-1"
@@ -616,7 +608,7 @@ function ItemContractSummary(props) {
                       }}
                       disabled={loading}
                     >
-                      Batal
+                      <FormattedMessage id="TITLE.CANCEL" />
                     </button>
                     {/* </span> */}
                   </div>
@@ -632,7 +624,7 @@ function ItemContractSummary(props) {
                           formikUpdate.errors.email)
                       }
                     >
-                      Ubah
+                      <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.UPDATE" />
                       {loading && (
                         <span
                           className="spinner-border spinner-border-sm ml-1"
@@ -642,7 +634,7 @@ function ItemContractSummary(props) {
                     </button>
                   </div>
                   {(formikUpdate.touched.email && formikUpdate.errors.email) ||
-                  !emailAvailability ? (
+                    !emailAvailability ? (
                     <div className="invalid-feedback display-block">
                       {formikUpdate.errors.email}
                     </div>
@@ -651,7 +643,7 @@ function ItemContractSummary(props) {
               </div>
             )}
             <div className="form-group">
-              <label>Register:</label>
+              <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BODY" />
               <ul className="list-group">
                 {picVendorData.map((item, index) => {
                   return (
@@ -660,17 +652,17 @@ function ItemContractSummary(props) {
                         <span className="col-md">{item.label}</span>
                         <div className="col-md text-right-md">
                           <span>
-                            Status:{" "}
+                            <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.STATUS" />
                             <span
-                              className={`font-weight-bold ${
-                                item.actives === "true"
-                                  ? "text-primary"
-                                  : "text-danger"
-                              }`}
+                              className={`font-weight-bold ${item.actives === "true"
+                                ? "text-primary"
+                                : "text-danger"
+                                }`}
                             >
                               {item.actives === "true"
-                                ? "Terverifikasi"
-                                : "Belum Verifikasi"}
+                                ? <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE" />
+                                : <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE" />
+                              }
                             </span>
                           </span>
                           {item.actives === "false" && (
@@ -706,12 +698,12 @@ function ItemContractSummary(props) {
         <DialogActions>
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-secondary"
             onClick={() => {
               setopenModalEmail(false);
             }}
           >
-            OK
+            <FormattedMessage id="TITLE.GENERAL.BACK_BUTTON" />
           </button>
         </DialogActions>
       </Dialog>
@@ -724,7 +716,7 @@ function ItemContractSummary(props) {
                   htmlFor="numberContract"
                   className="col-sm-4 col-form-label"
                 >
-                  Number Contract
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -738,7 +730,7 @@ function ItemContractSummary(props) {
               </div>
 
               <div className="form-group row">
-                <label className="col-form-label col-sm-4">Jangka Waktu</label>
+                <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />
                 <div className="col-sm-8">
                   <input
                     type="text"
@@ -754,7 +746,7 @@ function ItemContractSummary(props) {
                   htmlFor="priceContract"
                   className="col-sm-4 col-form-label"
                 >
-                  Harga Pekerjaan
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE" />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -768,7 +760,7 @@ function ItemContractSummary(props) {
               </div>
               <div className="form-group row">
                 <label htmlFor="poNumber" className="col-sm-4 col-form-label">
-                  Nomor PO
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -782,7 +774,7 @@ function ItemContractSummary(props) {
               </div>
               <div className="form-group row">
                 <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
-                  Harga Pekerjaan Tahap 1
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: contractData['termin_name'] }} />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -799,7 +791,7 @@ function ItemContractSummary(props) {
                   htmlFor="authorizedOffice"
                   className="col-sm-4 col-form-label"
                 >
-                  Pejabat Berwenang
+                  <FormattedMessage id="TITLE.AUTHOR_OFFICIAL" />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -820,7 +812,7 @@ function ItemContractSummary(props) {
                   htmlFor="jobDirectors"
                   className="col-sm-4 col-form-label"
                 >
-                  Direksi Pekerjaan
+                  <FormattedMessage id="TITLE.DIRECTOR_OF_WD" />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -834,7 +826,7 @@ function ItemContractSummary(props) {
               </div>
               <div className="form-group row">
                 <label htmlFor="progress" className="col-sm-4 col-form-label">
-                  Progress Pekerjaan
+                  <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS" />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -850,7 +842,7 @@ function ItemContractSummary(props) {
             <div className="col-md-6">
               <div className="form-group row">
                 <label htmlFor="first" className="col-sm-4 col-form-label">
-                  Pihak Pertama
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FIRST_PARTY" />
                 </label>
                 <div className="col-sm-8">
                   <textarea
@@ -867,7 +859,7 @@ function ItemContractSummary(props) {
               </div>
               <div className="form-group row">
                 <label htmlFor="second" className="col-sm-4 col-form-label">
-                  Pihak Kedua
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SECOND_PARTY" />
                 </label>
                 <div className="col-sm-8">
                   <textarea
@@ -884,7 +876,7 @@ function ItemContractSummary(props) {
               </div>
               <div className="form-group row">
                 <label htmlFor="pic" className="col-sm-4 col-form-label">
-                  Email PIC
+                  <FormattedMessage id="TITLE.SELECT_PIC" />
                 </label>
                 <div className="input-group col-sm-8">
                   <StyledSelect
@@ -931,7 +923,7 @@ function ItemContractSummary(props) {
       <Card className="mt-5">
         <CardBody>
           <div className="my-5 text-center">
-            <h6>Dokumen Tagihan</h6>
+            <h6><FormattedMessage id="TITLE.BILLING_DOCUMENT" /></h6>
           </div>
           {/* begin: Table */}
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
@@ -940,21 +932,23 @@ function ItemContractSummary(props) {
                 <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
-                      <th className="bg-primary text-white align-middle">No</th>
                       <th className="bg-primary text-white align-middle">
-                        Dokumen
+                        <FormattedMessage id="TITLE.NO" />
                       </th>
                       <th className="bg-primary text-white align-middle">
-                        Status
+                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
                       </th>
                       <th className="bg-primary text-white align-middle">
-                        Approve by
+                        <FormattedMessage id="TITLE.STATUS" />
                       </th>
                       <th className="bg-primary text-white align-middle">
-                        Tanggal Upload
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />
                       </th>
                       <th className="bg-primary text-white align-middle">
-                        Dokumen
+                        <FormattedMessage id="TITLE.UPLOAD_DATE" />
+                      </th>
+                      <th className="bg-primary text-white align-middle">
+                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
                       </th>
                     </tr>
                   </thead>
