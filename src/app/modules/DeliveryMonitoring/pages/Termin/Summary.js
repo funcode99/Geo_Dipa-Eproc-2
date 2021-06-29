@@ -5,6 +5,8 @@ import {
   Button,
   TableBody,
   Checkbox,
+  Table,
+  TableHead,
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -25,6 +27,12 @@ import Navs from "../../../../components/navs";
 import { StyledModal } from "../../../../components/modals";
 import { FormattedMessage } from "react-intl";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
+
+const tHeadSubmitItems = [
+  "No",
+  <FormattedMessage id="TITLE.NAME" />,
+  <FormattedMessage id="TITLE.QUANTITY" />,
+];
 
 const theadItems = [
   { id: "action", label: "" },
@@ -193,7 +201,7 @@ export default function Summary({ taskId = "" }) {
         error.response?.status !== 400 &&
         error.response?.data.message !== "TokenExpiredError"
       ) {
-        setToast("Error, please contact developer!", 5000);
+        setToast(<FormattedMessage id="MESSAGE.ERROR_API" />, 5000);
       }
       console.log(`error`, error);
     } finally {
@@ -251,6 +259,9 @@ export default function Summary({ taskId = "" }) {
 
   const handleChecklistBarang = (qtyValue, qtyAvailable, itemId, desc) => {
     // addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
+
+    console.log(`qtyValue`, qtyValue);
+    console.log(`qtyAvailable`, qtyAvailable);
 
     let tempBarang = dataBarang;
 
@@ -360,13 +371,17 @@ export default function Summary({ taskId = "" }) {
   const addSubmitBarang = (qtyValue, qtyAvailable, itemId, desc) => {
     const isValidQty = parseFloat(qtyValue) ? true : false;
     const floatQty = parseFloat(qtyValue);
-    const floatQtyAvailable = parseFloat(qtyAvailable);
+    const floatQtyAvailable = parseFloat(qtyAvailable).toFixed(1);
+    const minValue = 0.1;
 
     //validate quantity number
-    if (!isValidQty || floatQty < 1 || floatQty > floatQtyAvailable) {
+    if (!isValidQty || floatQty < minValue || floatQty > floatQtyAvailable) {
       removeFromSubmitItem(itemId, "barang");
       setToast(
-        `Quantity should be greater than 0 and lower than ${qtyAvailable}`
+        <FormattedMessage
+          id="MESSAGE.VALIDATE_QTY"
+          values={{ minValue, floatQtyAvailable }}
+        />
       );
     } else {
       const tempSubmitItems = itemBarang;
@@ -406,13 +421,21 @@ export default function Summary({ taskId = "" }) {
   const addSubmitJasa = (qtyValue, qtyAvailable, serviceId, desc) => {
     const isValidQty = parseFloat(qtyValue) ? true : false;
     const floatQtyValue = parseFloat(qtyValue);
-    const floatQtyAvailable = parseFloat(qtyAvailable);
+    const floatQtyAvailable = parseFloat(qtyAvailable).toFixed(1);
+    const minValue = 0.1;
 
     //validate quantity number
-    if (!isValidQty || floatQtyValue < 0 || floatQtyValue > floatQtyAvailable) {
+    if (
+      !isValidQty ||
+      floatQtyValue < minValue ||
+      floatQtyValue > floatQtyAvailable
+    ) {
       removeFromSubmitItem(serviceId, "jasa");
       setToast(
-        `Quantity should be greater than 0 and lower than ${qtyAvailable}`
+        <FormattedMessage
+          id="MESSAGE.VALIDATE_QTY"
+          values={{ minValue, floatQtyAvailable }}
+        />
       );
     } else {
       const tempSubmitJasa = itemJasa;
@@ -468,7 +491,7 @@ export default function Summary({ taskId = "" }) {
       } = await deliveryMonitoring.submitItems(requestData, taskId);
 
       if (status) {
-        setToast("Successfully submit item", 5000);
+        setToast(<FormattedMessage id="MESSAGE.SUCCESS_SUBMIT_ITEM" />, 5000);
         getAllItems(taskId);
         handleVisibleModal("submit");
       }
@@ -496,88 +519,112 @@ export default function Summary({ taskId = "" }) {
         maxWidth="70vw"
       >
         {itemJasa.length > 0 && (
-          <div>
-            <h4>Jasa</h4>
-            <table className="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Keterangan</th>
-                  <th>Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
+          <div className="mb-5">
+            <h4>
+              <FormattedMessage id="TITLE.SERVICE" />
+            </h4>
+            <Table style={{ width: 450 }} size="small">
+              <colgroup>
+                <col width="50px" />
+                <col width="200px" />
+                <col width="50px" />
+              </colgroup>
+              <TableHead>
+                <TableRow>
+                  {tHeadSubmitItems.map((item, index) => (
+                    <TableCell key={index} align={index > 1 ? "right" : "left"}>
+                      {item}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {itemJasa.map((item, index) => (
-                  <tr key={item.service_id}>
-                    <td>{(index += 1)}</td>
-                    <td>{item.desc}</td>
-                    <td>{item.qty}</td>
-                  </tr>
+                  <TableRow key={item.service_id}>
+                    <TableCell>{(index += 1)}</TableCell>
+                    <TableCell>{item.desc}</TableCell>
+                    <TableCell align="right">{item.qty}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
 
         {itemBarang.length > 0 && (
-          <div>
-            <h4>Barang</h4>
-            <table className="table table-sm table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Keterangan</th>
-                  <th>Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
+          <div className="mb-5">
+            <h4>
+              <FormattedMessage id="TITLE.ITEM" />
+            </h4>
+            <Table style={{ width: 450 }} size="small">
+              <colgroup>
+                <col width="50px" />
+                <col width="200px" />
+                <col width="50px" />
+              </colgroup>
+              <TableHead>
+                <TableRow>
+                  {tHeadSubmitItems.map((item, index) => (
+                    <TableCell key={index} align={index > 1 ? "right" : "left"}>
+                      {item}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {itemBarang.map((item, index) => (
-                  <tr key={item.item_id}>
-                    <td>{(index += 1)}</td>
-                    <td>{item.desc}</td>
-                    <td>{item.qty}</td>
-                  </tr>
+                  <TableRow key={item.item_id}>
+                    <TableCell>{(index += 1)}</TableCell>
+                    <TableCell>{item.desc}</TableCell>
+                    <TableCell align="right">{item.qty}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
 
         {itemBarang.length > 0 || itemJasa.length > 0 ? (
           <div>
-            <h6>Anda yakin ingin submit?</h6>
+            <h6 className="mb-5">
+              <FormattedMessage id="MESSAGE.SUBMIT_ITEM" />
+            </h6>
             <div className="d-flex justify-content-end w-100">
               <Button
                 className="btn btn-secondary border-success mr-3"
                 onClick={() => handleVisibleModal("submit")}
               >
-                Batal
+                <FormattedMessage id="TITLE.CANCEL" />
               </Button>
               <Button
                 className="btn btn-success"
                 onClick={() => handleSubmit()}
               >
-                Ya
+                <FormattedMessage id="TITLE.YES" />
                 {loading ? <CircularProgress /> : null}
               </Button>
             </div>
           </div>
         ) : (
           <div className="d-flex justify-content-center align-items-center flex-column">
-            <h6>Anda yakin ingin submit?</h6>
-            <p>Tidak ada item yang dipilih untuk termin ini</p>
+            <h6>
+              <FormattedMessage id="MESSAGE.SUBMIT_ITEM" />
+            </h6>
+            <p className="mb-5">
+              <FormattedMessage id="MESSAGE.NO_ITEMS" />
+            </p>
             <div className="d-flex justify-content-end">
               <Button
                 className="btn btn-secondary border-success mr-3"
                 onClick={() => handleVisibleModal("submit")}
               >
-                Batal
+                <FormattedMessage id="TITLE.CANCEL" />
               </Button>
               <Button
                 className="btn btn-success"
                 onClick={() => handleSubmit()}
               >
-                Ya
+                <FormattedMessage id="TITLE.YES" />
                 {loading ? <CircularProgress /> : null}
               </Button>
             </div>
@@ -598,6 +645,8 @@ export default function Summary({ taskId = "" }) {
               rows={dataJasa}
               loading={loading}
               width={1207}
+              maxHeight={300}
+              headerProps={{ sortable: false }}
               withSearch={false}
               withPagination={false}
               renderRows={({ item, index }) => {
@@ -696,7 +745,7 @@ export default function Summary({ taskId = "" }) {
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
-                                  {service.base_uom}
+                                  {item?.measurement_unit?.ident_name}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {rupiah(service.net_value)}
@@ -714,7 +763,11 @@ export default function Summary({ taskId = "" }) {
                                     onChange={() =>
                                       handleChecklistJasa(
                                         service.qty,
-                                        service.qty,
+                                        (
+                                          parseFloat(
+                                            service.service.qty_available
+                                          ) + parseFloat(service.qty)
+                                        ).toFixed(1),
                                         item.id,
                                         service.service.id,
                                         service.service.short_text
@@ -769,7 +822,7 @@ export default function Summary({ taskId = "" }) {
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
-                                  {service.service.base_uom}
+                                  {item?.measurement_unit?.ident_name}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {rupiah(service.service.net_value)}
@@ -835,7 +888,8 @@ export default function Summary({ taskId = "" }) {
                         <Form.Control
                           type="number"
                           size="sm"
-                          min={1}
+                          min={0.1}
+                          step={0.1}
                           max={item.qty_available}
                           disabled={!item.checked}
                           defaultValue={item.qty_available}
@@ -857,7 +911,9 @@ export default function Summary({ taskId = "" }) {
                           // }
                         />
                       </TableCell>
-                      <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle">
+                        {item?.measurement_unit?.ident_name}
+                      </TableCell>
                       <TableCell className="align-middle">
                         {rupiah(item.unit_price)}
                       </TableCell>
@@ -874,7 +930,10 @@ export default function Summary({ taskId = "" }) {
                           onChange={() =>
                             handleChecklistBarang(
                               item.item.qty,
-                              item.item.qty_available,
+                              (
+                                parseFloat(item.qty) +
+                                parseFloat(item.item.qty_available)
+                              ).toFixed(1),
                               item.item.id,
                               item.item.desc
                             )
@@ -895,14 +954,21 @@ export default function Summary({ taskId = "" }) {
                         <Form.Control
                           type="number"
                           size="sm"
-                          min={1}
-                          max={item.item.qty}
+                          min={0.1}
+                          step={0.1}
+                          max={(
+                            parseFloat(item.qty) +
+                            parseFloat(item.item.qty_available)
+                          ).toFixed(1)}
                           disabled={!item.checked}
                           defaultValue={item.qty}
                           onChange={(e) =>
                             addSubmitBarang(
                               e.target.value,
-                              item.item.qty,
+                              (
+                                parseFloat(item.qty) +
+                                parseFloat(item.item.qty_available)
+                              ).toFixed(1),
                               item.item.id,
                               item.item.desc
                             )
@@ -917,7 +983,9 @@ export default function Summary({ taskId = "" }) {
                           // }
                         />
                       </TableCell>
-                      <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle">
+                        {item?.item?.measurement_unit?.ident_name}
+                      </TableCell>
                       <TableCell className="align-middle">
                         {rupiah(item.item.unit_price)}
                       </TableCell>
@@ -936,7 +1004,9 @@ export default function Summary({ taskId = "" }) {
               size="medium"
               onClick={() => handleVisibleModal("submit")}
             >
-              <span className="mr-1">Submit</span>
+              <span className="mr-1">
+                <FormattedMessage id="BUTTON.SUBMIT" />
+              </span>
               <Send />
             </Button>
           </div>

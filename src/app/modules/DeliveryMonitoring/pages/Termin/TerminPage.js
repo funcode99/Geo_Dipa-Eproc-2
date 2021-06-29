@@ -19,6 +19,7 @@ import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { useHistory, useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+import Steppers from "../../../../components/steppersCustom/Steppers";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -67,6 +68,33 @@ const TerminPage = ({ items }) => {
     ],
     []
   );
+
+  const dataProgress = [
+    {
+      label: "Create Term",
+      status: "COMPLETE",
+    },
+    {
+      label: "Create Deliverables",
+      status: "COMPLETE",
+    },
+    {
+      label: "Upload Deliverables",
+      status: "COMPLETE",
+    },
+    {
+      label: "Create Delivery Order",
+      status: "ON PROGRESS",
+    },
+    {
+      label: "Create BAPP",
+      status: "NO STARTED",
+    },
+    {
+      label: "Approve SA/GR",
+      status: "NO STARTED",
+    },
+  ];
 
   const getTask = React.useCallback(() => {
     const task = dataContractById?.tasks?.find((item) => item.id === task_id);
@@ -131,7 +159,7 @@ const TerminPage = ({ items }) => {
           },
         ]}
       />
-
+      <Steppers steps={dataProgress} />
       <Paper className={classes.paper}>
         <Container>
           <Tabs

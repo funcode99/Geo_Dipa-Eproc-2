@@ -119,6 +119,9 @@ export default function BtnAksi({ item, isPeriodic, handleAction }) {
         aria-controls="long-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        style={{
+          margin: "-8px 0px",
+        }}
       >
         <MoreVertIcon />
       </IconButton>
