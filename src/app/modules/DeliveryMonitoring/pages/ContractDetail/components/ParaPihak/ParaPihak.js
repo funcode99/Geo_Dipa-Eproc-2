@@ -28,7 +28,7 @@ const ParaPihak = () => {
     (state) => state.deliveryMonitoring.dataContractById
   );
 
-  console.log(`dataContractById`, contract_party);
+  // console.log(`dataContractById`, contract_party);
 
   const values = React.useMemo(
     () => ({

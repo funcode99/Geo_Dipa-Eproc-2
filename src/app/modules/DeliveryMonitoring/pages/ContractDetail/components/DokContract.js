@@ -37,20 +37,20 @@ const tableHeaderContractsNew = [
   // },
   {
     id: "name",
-    label: "Nama Dokumen",
+    label: <FormattedMessage id="TITLE.DOCUMENT_NAME" />,
   },
   {
     id: "nomor",
-    label: "Nomor Dokumen",
+    label: <FormattedMessage id="TITLE.NO_DOCUMENT" />,
   },
   {
     id: "dokumen",
-    label: "Dokumen",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
     sortable: false,
   },
   {
     id: "tanggal",
-    label: "Tanggal Dokumen",
+    label: <FormattedMessage id="TITLE.DATE" />,
   },
 ];
 
