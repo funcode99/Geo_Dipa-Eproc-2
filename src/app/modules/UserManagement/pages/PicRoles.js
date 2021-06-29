@@ -16,7 +16,6 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import StyledSelect from "../../../components/select-multiple";
-import { MAIN_ROLES_AUTHORITY, UNIT_ROLES_AUTHORITY } from "../../../../redux/BaseHost";
 import { getContractVendor } from "../../InvoiceMonitoring/_redux/InvoiceMonitoringCrud";
 
 const styles = (theme) => ({
@@ -250,7 +249,7 @@ function PicRoles(props) {
                 setContractVendor(data)
             })
         setPicData(data[index].pic_data);
-        picTableRef.current.scrollIntoView({ behavior: "smooth" });
+        picTableRef.current.scrollIntoView({ behavior: "smooth", block: 'center' });
     }
 
     const handleDelivery = (e) => {
@@ -306,12 +305,12 @@ function PicRoles(props) {
                         }}
                         disabled={loading}
                     >
-                        Kontrak PIC
+                        <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.MODAL.MODAL_TITLE" />
                     </DialogTitle>
                     <DialogContent>
                         <div className="form-group row mb-3">
                             <label htmlFor="static_1" className="col-sm-3 col-form-label">
-                                Nama Lengkap
+                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.NAME" />
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -324,7 +323,7 @@ function PicRoles(props) {
                         </div>
                         <div className="form-group row mb-3">
                             <label htmlFor="static_1" className="col-sm-3 col-form-label">
-                                Email
+                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.EMAIL" />
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -337,28 +336,32 @@ function PicRoles(props) {
                         </div>
                         <div className="form-group row mb-3">
                             <label htmlFor="static_1" className="col-sm-3 col-form-label">
-                                Delivery Contract
+                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.DELIVERY_CONTRACT" />
                             </label>
                             <div className="col-sm-9">
                                 <StyledSelect
                                     options={contractVendor}
                                     value={picDeliveryData}
                                     isMulti
-                                    placeholder="Pilih Kontrak"
+                                    placeholder={intl.formatMessage({
+                                        id: "TITLE.USER_MANAGEMENT.PIC_ROLES.MULTI_SELECT.PLACEHOLDER",
+                                    })}
                                     onChange={handleDelivery}
                                 />
                             </div>
                         </div>
                         <div className="form-group row mb-3">
                             <label htmlFor="static_1" className="col-sm-3 col-form-label">
-                                Invoice Contract
+                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.INVOICE_CONTRACT" />
                             </label>
                             <div className="col-sm-9">
                                 <StyledSelect
                                     options={contractVendor}
                                     value={picInvoiceData}
                                     isMulti
-                                    placeholder="Pilih Kontrak"
+                                    placeholder={intl.formatMessage({
+                                        id: "TITLE.USER_MANAGEMENT.PIC_ROLES.MULTI_SELECT.PLACEHOLDER",
+                                    })}
                                     onChange={handleInvoice}
                                 />
                             </div>
@@ -464,7 +467,7 @@ function PicRoles(props) {
                                                                 updateValueFilter(item.name, index);
                                                             }}
                                                         >
-                                                            Perbaharui
+                                                            <FormattedMessage id="TITLE.UPDATE" />
                                                         </button>
                                                         <button
                                                             type="button"
@@ -506,19 +509,19 @@ function PicRoles(props) {
                                     <thead>
                                         <tr>
                                             <th className="bg-primary text-white text-center align-middle td-5">
-                                                No
+                                                <FormattedMessage id="TITLE.NO" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-15">
-                                                Kode Vendor
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.VENDOR_CODE" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-30">
-                                                Nama Vendor
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.VENDOR_NAME" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-15">
-                                                Status
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.STATUS" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-30">
-                                                PIC
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.PIC" />
                                             </th>
                                         </tr>
                                     </thead>
@@ -637,7 +640,7 @@ function PicRoles(props) {
                                                                 updateValueFilter(item.name, index);
                                                             }}
                                                         >
-                                                            Perbaharui
+                                                            <FormattedMessage id="TITLE.UPDATE" />
                                                         </button>
                                                         <button
                                                             type="button"
@@ -679,19 +682,19 @@ function PicRoles(props) {
                                     <thead>
                                         <tr>
                                             <th className="bg-primary text-white text-center align-middle td-5">
-                                                No
+                                                <FormattedMessage id="TITLE.NO" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-20">
-                                                Email
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.EMAIL" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-25">
-                                                Nama Lengkap
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.NAME" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-20">
-                                                Vendor
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.VENDOR" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-10">
-                                                Aktif
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.ACTIVE" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-5">
                                                 <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
@@ -707,8 +710,8 @@ function PicRoles(props) {
                                                     <td>{item.full_name}</td>
                                                     <td>{item.vendor_name}</td>
                                                     <td>
-                                                        {!item.active && <span className="text-danger">Nonaktif</span>}
-                                                        {item.active && <span className="text-success">Aktif</span>}
+                                                        {!item.active && <span className="text-danger"><FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.NONACTIVE" /></span>}
+                                                        {item.active && <span className="text-success"><FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.ACTIVE" /></span>}
                                                     </td>
                                                     <td className="text-center">
                                                         <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>

@@ -306,12 +306,12 @@ function UserRoles(props) {
                         }}
                         disabled={loading}
                     >
-                        Peran Pengguna
+                        <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.MODAL.MODAL_TITLE" />
                     </DialogTitle>
                     <DialogContent>
                         <div className="form-group row mb-3">
                             <label htmlFor="static_1" className="col-sm-3 col-form-label">
-                                Kode
+                                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" />
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -324,7 +324,7 @@ function UserRoles(props) {
                         </div>
                         <div className="form-group row mb-3">
                             <label htmlFor="static_1" className="col-sm-3 col-form-label">
-                                Nama Lengkap
+                                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.NAME" />
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -337,7 +337,7 @@ function UserRoles(props) {
                         </div>
                         <div className="form-group row mb-3">
                             <label htmlFor="static_1" className="col-sm-3 col-form-label">
-                                Plant
+                                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.PLANT" />
                             </label>
                             <div className="col-sm-9">
                                 <StyledSelect
@@ -349,7 +349,7 @@ function UserRoles(props) {
                         </div>
                         <div className="form-group row">
                             <label htmlFor="static_1" className="col-sm-3 col-form-label">
-                                Peran
+                                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.ROLE" />
                             </label>
                             <div className="col-sm-9">
                                 {isMainPlant && mainRoles.map((item, index) => {
@@ -490,7 +490,7 @@ function UserRoles(props) {
                                                                 updateValueFilter(item.name, index);
                                                             }}
                                                         >
-                                                            Perbaharui
+                                                            <FormattedMessage id="TITLE.UPDATE" />
                                                         </button>
                                                         <button
                                                             type="button"
@@ -532,19 +532,19 @@ function UserRoles(props) {
                                     <thead>
                                         <tr>
                                             <th className="bg-primary text-white text-center align-middle td-5">
-                                                No
+                                                <FormattedMessage id="TITLE.NO" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-20">
-                                                Kode
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-20">
-                                                Nama Lengkap
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.NAME" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-20">
-                                                Plant
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.PLANT" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-30">
-                                                Peran
+                                                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.ROLE" />
                                             </th>
                                             <th className="bg-primary text-white text-center align-middle td-5">
                                                 <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
