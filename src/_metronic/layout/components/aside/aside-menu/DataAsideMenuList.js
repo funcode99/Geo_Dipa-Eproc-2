@@ -86,7 +86,7 @@ export const DataAsideMenuListClient = [
   {
     rootPath: "/client/user-profile",
     icon: "/Communication/user-solid.svg",
-    title: "MENU.USER_PROFILE",
+    title: "TITLE.USER_PROFILE",
     subMenu: null,
   },
   {

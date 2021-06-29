@@ -14,6 +14,8 @@ import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import { RowNormal } from "./components";
+import { Button, ButtonGroup } from "@material-ui/core";
+import { FormattedMessage } from "react-intl";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const validationClient = object().shape({
@@ -243,15 +245,15 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
         <CardBody>
           <div className="d-flex justify-content-between align-items-center w-100">
             <h2 className="mb-0">Berita Acara Pelaksanaan Pekerjaan</h2>
-            {taskNews && (
-              <ButtonAction
-                label="TITLE.MORE"
-                data={taskNews}
-                ops={listUsed}
-                handleAction={handleAction}
-                exclude={exclude}
-              />
-            )}
+            {/* {taskNews && ( */}
+            <ButtonAction
+              label="TITLE.MORE"
+              data={taskNews}
+              ops={listUsed}
+              handleAction={handleAction}
+              exclude={exclude}
+            />
+            {/* )} */}
           </div>
 
           <FormBuilder
@@ -270,6 +272,29 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
             loading={loading.submit}
             disabledButton={isDisabled}
           />
+        </CardBody>
+      </Card>
+
+      <Card className="mt-5">
+        <CardBody>
+          <Row className="mb-5">
+            <Col md={12}>
+              <ButtonGroup size="medium" color="secondary" variant="contained">
+                <Button
+                  onClick={() => handleAction("preview", taskNews?.file)}
+                  disabled={taskNews ? false : true}
+                >
+                  <FormattedMessage id="TITLE.PREVIEW" />
+                </Button>
+                <Button>
+                  <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
+                </Button>
+                <Button>
+                  <FormattedMessage id="TITLE.APPROVE" />
+                </Button>
+              </ButtonGroup>
+            </Col>
+          </Row>
           <Row>
             <Col md={12}>
               <TitleField title={"History"} />

@@ -6,9 +6,9 @@ import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../../../libs/currency";
 import Navs from "../../../../../../components/navs";
 import useToast from "../../../../../../components/toast";
-import TableItem from "./TableItem";
+// import TableItem from "./TableItem";
 import TableItemNew from "./TableItemNew";
-import { StyledTableRow } from "../../../../../../components/tables/style";
+// import { StyledTableRow } from "../../../../../../components/tables/style";
 import { TableCell, TableRow, Checkbox, Button } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import RowAccordion from "./RowAccordion";
@@ -174,15 +174,15 @@ const Item = ({ handleClick }) => {
   const validateQty = (qtyValue, items, type) => {
     const isValidQty = parseFloat(qtyValue) ? true : false;
     const floatQtyValue = qtyValue;
-    const floatQtyAvailable = items.qty_available;
-    let minValue = 0;
+    const floatQtyAvailable = parseFloat(items.qty_available).toFixed(1);
+    let minValue = 0.1;
     // console.log(items);
 
-    if (type === "jasa") {
-      minValue = 0.1;
-    } else if (type === "barang") {
-      minValue = 1;
-    }
+    // if (type === "jasa") {
+    //   minValue = 0.1;
+    // } else if (type === "barang") {
+    //   minValue = 1;
+    // }
 
     if (
       !isValidQty ||
@@ -192,8 +192,10 @@ const Item = ({ handleClick }) => {
       // console.log('salah');
       removeFromSubmitItem(items, type);
       setToast(
-        `Quantity should be greater than ${minValue} and lower than ${floatQtyAvailable}`,
-        3000
+        <FormattedMessage
+          id="MESSAGE.VALIDATE_QTY"
+          values={{ minValue, floatQtyAvailable }}
+        />
       );
     }
   };
@@ -304,7 +306,9 @@ const Item = ({ handleClick }) => {
                                 }
                               />
                             </TableCell>
-                            <TableCell></TableCell>
+                            <TableCell>
+                              {el?.measurement_unit?.ident_name}
+                            </TableCell>
                             <TableCell>{rupiah(item2?.net_value)}</TableCell>
                           </TableRow>
                         );
@@ -344,8 +348,8 @@ const Item = ({ handleClick }) => {
                       <Form.Control
                         type="number"
                         size="sm"
-                        min="1"
-                        step="1"
+                        min="0.1"
+                        step="0.1"
                         max={item?.qty_available}
                         disabled={!item.checked ? true : false}
                         defaultValue={item.qty_available}
@@ -354,7 +358,7 @@ const Item = ({ handleClick }) => {
                         }
                       />
                     </TableCell>
-                    <TableCell></TableCell>
+                    <TableCell>{item?.measurement_unit?.ident_name}</TableCell>
                     <TableCell>{rupiah(item?.unit_price)}</TableCell>
                   </TableRow>
                 );

@@ -114,9 +114,9 @@ const ModalUpdate = ({
                     <Form.Control
                       type="number"
                       size="sm"
-                      min="1"
-                      step="1"
-                      max={item?.item?.qty}
+                      min={0.1}
+                      step={0.1}
+                      // max={item?.item?.qty}
                       disabled={!item.checked ? true : false}
                       defaultValue={item.qty}
                       onChange={(e) => handleChange(e, item, index)}
