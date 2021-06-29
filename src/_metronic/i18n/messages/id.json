@@ -480,6 +480,34 @@
   "TITLE.SUMMARY.PIC.MODAL_EDIT.BODY": "Register:",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.STATUS": "Status: ",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE": "Terverifikasi",
-  "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE": "Belum Verifikasi"
-  "TITLE.UPLOAD_SIGNED_DOCUMENT": "Unggah Dokumen Bertandatangan"
+  "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE": "Belum Verifikasi",
+  "TITLE.UPLOAD_SIGNED_DOCUMENT": "Unggah Dokumen Bertandatangan",
+
+  "LABEL.DM.PARTIES.1_PARTY": "Pihak Pertama",
+  "LABEL.DM.PARTIES.2_PARTY": "Pihak Kedua",
+  "LABEL.DM.PARTIES.NAMA_PEMBERI": "Nama Pemberi",
+  "LABEL.DM.PARTIES.NAMA_PENYEDIA": "Nama Penyedia",
+  "LABEL.DM.PARTIES.DEED": "Akta Pendirian",
+  "LABEL.DM.PARTIES.NAMA_NOTARIS": "Nama Notaris",
+  "LABEL.DM.PARTIES.DEED_NO": "Nomor Akta",
+  "LABEL.DM.PARTIES.DEED_DATE": "Tanggal Akta",
+  "LABEL.DM.PARTIES.SK_KUM_NO": "Nomor SK Kemenkumham",
+  "LABEL.DM.PARTIES.SK_KUM_DATE": "Tanggal SK",
+  "LABEL.DM.PARTIES.SK_KUM_ASS_NO": "Nomor SK Penugasan",
+  "LABEL.DM.PARTIES.SK_ASS_NO": "Nomor SK Penugasan",
+
+  "LABEL.DM.PARTIES.DEED_LAST": "Akta Pendirian Terakhir",
+  "LABEL.DM.PARTIES.LEGAL_DOM": "Domisili Hukum",
+  "LABEL.DM.PARTIES.AUTH_OFC": "Pejabat Berwenang",
+  "LABEL.DM.PARTIES.PLACEMAN_NAME": "Nama Pejabat",
+  "LABEL.DM.PARTIES.PLACEMAN_POSITION": "Jabatan",
+  "LABEL.DM.PARTIES.PHONE": "Telp",
+  "LABEL.DM.PARTIES.FAX": "Fax",
+  "LABEL.DM.PARTIES.ADDRESS": "Alamat",
+  "LABEL.DM.PARTIES.DATE_SK": "Tanggal SK",
+  "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Direksi Pekerjaan",
+  "LABEL.DM.PARTIES.POS_DIRECTOR": "Jabatan Direksi",
+  "LABEL.DM.PARTIES.JOB_SUPERV": "Pengawas Pekerjaan"
+
+
 }

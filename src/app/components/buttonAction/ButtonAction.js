@@ -68,7 +68,8 @@ export default function ButtonAction({
           aria-haspopup="true"
           onClick={handleClick}
           style={{
-            margin: "-8px 0px",
+            margin: "-6px 0px",
+            padding: 8,
           }}
         >
           <MoreVert />

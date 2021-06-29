@@ -480,6 +480,36 @@
   "TITLE.SUMMARY.PIC.MODAL_EDIT.BODY": "Register:",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.STATUS": "Status: ",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE": "Verified",
-  "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE": "Not Verified"
-  "TITLE.UPLOAD_SIGNED_DOCUMENT": "Upload Signed Document"
+  "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE": "Not Verified",
+  "TITLE.UPLOAD_SIGNED_DOCUMENT": "Upload Signed Document",
+
+
+  "LABEL.DM.PARTIES.1_PARTY": "First Party",
+  "LABEL.DM.PARTIES.2_PARTY": "Second Party",
+  "LABEL.DM.PARTIES.NAMA_PEMBERI": "Giver's Name",
+  "LABEL.DM.PARTIES.NAMA_PENYEDIA": "Provider Name",
+  "LABEL.DM.PARTIES.DEED": "Deed of Establishment",
+  "LABEL.DM.PARTIES.NAMA_NOTARIS": "Name of the Notary",
+  "LABEL.DM.PARTIES.DEED_NO": "Deed of Establishment No",
+  "LABEL.DM.PARTIES.DEED_DATE": "Deed of Establishment Date",
+  "LABEL.DM.PARTIES.SK_KUM_NO": "SK Kemenkumham No",
+  "LABEL.DM.PARTIES.SK_KUM_DATE": "SK Kemenkumham Date",
+  "LABEL.DM.PARTIES.SK_KUM_ASS_NO": "SK Kemenkumham Assignment No",
+  "LABEL.DM.PARTIES.SK_ASS_NO": "SK Assignment No",
+
+  "LABEL.DM.PARTIES.DEED_LAST": "Last Deed of Establishment",
+  "LABEL.DM.PARTIES.LEGAL_DOM": "Legal Domicile",
+  "LABEL.DM.PARTIES.AUTH_OFC": "Authorized Official",
+  "LABEL.DM.PARTIES.PLACEMAN_NAME": "Placeman Name",
+  "LABEL.DM.PARTIES.PLACEMAN_POSITION": "Placeman Position",
+  "LABEL.DM.PARTIES.PHONE": "Phone",
+  "LABEL.DM.PARTIES.FAX": "Fax",
+  "LABEL.DM.PARTIES.ADDRESS": "Address",
+  "LABEL.DM.PARTIES.DATE_SK": "SK Date",
+  "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Board of Director",
+  "LABEL.DM.PARTIES.POS_DIRECTOR": "Position of Director",
+  "LABEL.DM.PARTIES.JOB_SUPERV": "Job Supervisor"
+  
+
+
 }

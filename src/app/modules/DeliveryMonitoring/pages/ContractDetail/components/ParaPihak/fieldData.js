@@ -4,209 +4,208 @@ import validation from "../../../../../../service/helper/validationHelper";
 import { FormattedMessage } from "react-intl";
 import React from "react";
 
-const TextIni = ({ text }) => (
-  <FormattedMessage id={`CONTRACT_DETAIL.PARTIES.${text}`} />
-);
+const Ini = ({ text }) => <FormattedMessage id={`LABEL.DM.PARTIES.${text}`} />;
+// <FormattedMessage id={`CONTRACT_DETAIL.PARTIES.${text}`} />
 
 export const formData1 = [
   [
     {
       name: "nama_pemberi",
-      label: <TextIni text={"NAMA_PEMBERI"} />,
+      label: <Ini text={"NAMA_PEMBERI"} />,
     },
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Akta Pendirian",
+      title: <Ini text={"DEED"} />,
     },
   },
   [
     {
       name: "nama_notaris",
-      label: "Nama Notaris",
+      label: <Ini text={"NAMA_NOTARIS"} />,
     },
   ],
   [
     {
       name: "akta",
-      label: "Nomor Akta",
+      label: <Ini text={"DEED_NO"} />,
     },
     {
       name: "tgl_akta",
-      label: "Tanggal Akta",
+      label: <Ini text={"DEED_DATE"} />,
     },
   ],
   [
     {
       name: "sk_kemenkum",
-      label: "Nomor SK Kemenkumham",
+      label: <Ini text={"SK_KUM_NO"} />,
     },
     {
       name: "tgl_sk_kemenkum",
-      label: "Tanggal SK",
+      label: <Ini text={"SK_KUM_DATE"} />,
     },
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Akta Perubahan Terakhir",
+      title: <Ini text={"DEED_LAST"} />,
     },
   },
   [
     {
       name: "nama_notaris_akhir",
-      label: "Nama Notaris",
+      label: <Ini text={"NAMA_NOTARIS"} />,
     },
   ],
   [
     {
       name: "akta_akhir",
-      label: "Nomor Akta",
+      label: <Ini text={"DEED_NO"} />,
     },
     {
       name: "tgl_akta_akhir",
-      label: "Tanggal Akta",
+      label: <Ini text={"DEED_DATE"} />,
     },
   ],
   [
     {
       name: "sk_kemenkum_akhir",
-      label: "Nomor SK Kemenkumham",
+      label: <Ini text={"SK_KUM_NO"} />,
     },
     {
       name: "tgl_sk_kemenkum_akhir",
-      label: "Tanggal SK",
+      label: <Ini text={"SK_KUM_DATE"} />,
     },
   ],
   [
     {
       name: "domisili_hukum",
-      label: "Domisili Hukum",
+      label: <Ini text={"LEGAL_DOM"} />,
       typeInput: "TextAreaInput",
     },
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Pejabat Berwenang",
+      title: <Ini text={"AUTH_OFC"} />,
     },
   },
   [
     {
       name: "nama_pejabat",
-      label: "Nama Pejabat",
+      label: <Ini text={"PLACEMAN_NAME"} />,
     },
     {
       name: "telp_pejabat",
-      label: "Telp",
+      label: <Ini text={"PHONE"} />,
     },
   ],
   [
     {
       name: "jabatan_pejabat",
-      label: "Jabatan Pejabat",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
     },
     {
       name: "fax_pejabat",
-      label: "Fax",
+      label: <Ini text={"FAX"} />,
     },
   ],
   [
     {
       name: "alamat_pejabat",
-      label: "Alamat",
+      label: <Ini text={"ADDRESS"} />,
       typeInput: "TextAreaInput",
     },
   ],
   [
     {
       name: "nama_notaris_penugasan",
-      label: "Nama Notaris",
+      label: <Ini text={"NAMA_NOTARIS"} />,
     },
   ],
   [
     {
       name: "sk_penugasan",
-      label: "Nomor SK Penugasan",
+      label: <Ini text={"SK_ASS_NO"} />,
     },
     {
       name: "tgl_sk_penugasan",
-      label: "Tanggal SK",
+      label: <Ini text={"DATE_SK"} />,
     },
   ],
   [
     {
       name: "akta_penugasan",
-      label: "Nomor Akta",
+      label: <Ini text={"DEED_NO"} />,
     },
     {
       name: "tgl_akta_penugasan",
-      label: "Tanggal Akta",
+      label: <Ini text={"DEED_DATE"} />,
     },
   ],
   [
     {
       name: "sk_kemenkum_penugasan",
-      label: "Nomor SK Kemenkumham",
+      label: <Ini text={"SK_KUM_ASS_NO"} />,
     },
     {
       name: "tgl_sk_kemenkum_penugasan",
-      label: "Tanggal SK",
+      label: <Ini text={"DATE_SK"} />,
     },
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Direksi Pekerjaan",
+      title: <Ini text={"BOARD_DIRECTOR"} />,
     },
   },
   [
     {
       name: "jabatan_direksi",
-      label: "Jabatan",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
     },
     {
       name: "telp_direksi",
-      label: "Telp",
+      label: <Ini text={"PHONE"} />,
     },
   ],
   [
     {
       name: "alamat_direksi",
-      label: "Alamat",
+      label: <Ini text={"ADDRESS"} />,
       typeInput: "TextAreaInput",
     },
     {
       name: "fax_direksi",
-      label: "Fax",
+      label: <Ini text={"FAX"} />,
     },
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Pengawas Pekerjaan",
+      title: <Ini text={"JOB_SUPERV"} />,
     },
   },
   [
     {
       name: "jabatan_pengawas",
-      label: "Jabatan",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
     },
     {
       name: "telp_pengawas",
-      label: "Telp",
+      label: <Ini text={"PHONE"} />,
     },
   ],
   [
     {
       name: "alamat_pengawas",
-      label: "Alamat",
+      label: <Ini text={"ADDRESS"} />,
       typeInput: "TextAreaInput",
     },
     {
       name: "fax_pengawas",
-      label: "Fax",
+      label: <Ini text={"FAX"} />,
     },
   ],
 ];
@@ -214,147 +213,147 @@ export const formData2 = [
   [
     {
       name: "nama_penyedia",
-      label: "Nama Penyedia",
+      label: <Ini text={"NAMA_PENYEDIA"} />,
     },
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Akta Pendirian",
+      title: <Ini text={"DEED"} />,
     },
   },
   [
     {
       name: "nama_notaris_2",
-      label: "Nama Notaris",
+      label: <Ini text={"NAMA_NOTARIS"} />,
     },
   ],
   [
     {
       name: "akta_2",
-      label: "Nomor Akta",
+      label: <Ini text={"DEED_NO"} />,
     },
     {
       name: "tgl_akta_2",
-      label: "Tanggal Akta",
+      label: <Ini text={"DEED_DATE"} />,
     },
   ],
   [
     {
       name: "sk_kemenkum_2",
-      label: "Nomor SK Kemenkumham",
+      label: <Ini text={"SK_KUM_NO"} />,
     },
     {
       name: "tgl_sk_kemenkum_2",
-      label: "Tanggal SK",
+      label: <Ini text={"SK_KUM_DATE"} />,
     },
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Akta Perubahan Terakhir",
+      title: <Ini text={"DEED_LAST"} />,
     },
   },
   [
     {
       name: "nama_notaris_akhir_2",
-      label: "Nama Notaris",
+      label: <Ini text={"NAMA_NOTARIS"} />,
     },
   ],
   [
     {
       name: "akta_akhir_2",
-      label: "Nomor Akta",
+      label: <Ini text={"DEED_NO"} />,
     },
     {
       name: "tgl_akta_akhir_2",
-      label: "Tanggal Akta",
+      label: <Ini text={"DEED_DATE"} />,
     },
   ],
   [
     {
       name: "sk_kemenkum_akhir_2",
-      label: "Nomor SK Kemenkumham",
+      label: <Ini text={"SK_KUM_NO"} />,
     },
     {
       name: "tgl_sk_kemenkum_akhir_2",
-      label: "Tanggal SK",
+      label: <Ini text={"SK_KUM_DATE"} />,
     },
   ],
   [
     {
       name: "domisili_hukum_2",
-      label: "Domisili Hukum",
+      label: <Ini text={"LEGAL_DOM"} />,
       typeInput: "TextAreaInput",
     },
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Pejabat Berwenang",
+      title: <Ini text={"AUTH_OFC"} />,
     },
   },
   [
     {
       name: "nama_pejabat_2",
-      label: "Nama Pejabat",
+      label: <Ini text={"PLACEMAN_NAME"} />,
     },
     {
       name: "telp_pejabat_2",
-      label: "Telp",
+      label: <Ini text={"PHONE"} />,
     },
   ],
   [
     {
       name: "jabatan_pejabat_2",
-      label: "Jabatan Pejabat",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
     },
     {
       name: "fax_pejabat_2",
-      label: "Fax",
+      label: <Ini text={"FAX"} />,
     },
   ],
   [
     {
       name: "alamat_pejabat_2",
-      label: "Alamat",
+      label: <Ini text={"ADDRESS"} />,
       typeInput: "TextAreaInput",
     },
   ],
   [
     {
       name: "nama_notaris_penugasan_2",
-      label: "Nama Notaris",
+      label: <Ini text={"NAMA_NOTARIS"} />,
     },
   ],
   [
     {
       name: "sk_penugasan_2",
-      label: "Nomor SK Penugasan",
+      label: <Ini text={"SK_ASS_NO"} />,
     },
     {
       name: "tgl_sk_penugasan_2",
-      label: "Tanggal SK",
+      label: <Ini text={"DATE_SK"} />,
     },
   ],
   [
     {
       name: "akta_penugasan_2",
-      label: "Nomor Akta",
+      label: <Ini text={"DEED_NO"} />,
     },
     {
       name: "tgl_akta_penugasan_2",
-      label: "Tanggal Akta",
+      label: <Ini text={"DEED_DATE"} />,
     },
   ],
   [
     {
       name: "sk_kemenkum_penugasan_2",
-      label: "Nomor SK Kemenkumham",
+      label: <Ini text={"SK_KUM_ASS_NO"} />,
     },
     {
       name: "tgl_sk_kemenkum_penugasan_2",
-      label: "Tanggal SK",
+      label: <Ini text={"DATE_SK"} />,
     },
   ],
   [
@@ -367,28 +366,28 @@ export const formData2 = [
   {
     Child: TitleField,
     ChildrenProps: {
-      title: "Direksi Pekerjaan",
+      title: <Ini text={"BOARD_DIRECTOR"} />,
     },
   },
   [
     {
       name: "jabatan_direksi_2",
-      label: "Jabatan",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
     },
     {
       name: "telp_direksi_2",
-      label: "Telp",
+      label: <Ini text={"PHONE"} />,
     },
   ],
   [
     {
       name: "alamat_direksi_2",
-      label: "Alamat",
+      label: <Ini text={"ADDRESS"} />,
       typeInput: "TextAreaInput",
     },
     {
       name: "fax_direksi_2",
-      label: "Fax",
+      label: <Ini text={"FAX"} />,
     },
   ],
   {
@@ -400,22 +399,22 @@ export const formData2 = [
   [
     {
       name: "jabatan_pengawas_2",
-      label: "Jabatan",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
     },
     {
       name: "telp_pengawas_2",
-      label: "Telp",
+      label: <Ini text={"PHONE"} />,
     },
   ],
   [
     {
       name: "alamat_pengawas_2",
-      label: "Alamat",
+      label: <Ini text={"ADDRESS"} />,
       typeInput: "TextAreaInput",
     },
     {
       name: "fax_pengawas_2",
-      label: "Fax",
+      label: <Ini text={"FAX"} />,
     },
   ],
 ];
@@ -432,11 +431,11 @@ export const formData3 = [
   },
   {
     name: "jabatan_pejabat",
-    label: "Jabatan",
+    label: <Ini text={"PLACEMAN_POSITION"} />,
   },
   {
     name: "nama_direksi",
-    label: "Direksi Pekerjaan",
+    label: <Ini text={"BOARD_DIRECTOR"} />,
   },
 ];
 export const formData4 = [
@@ -456,7 +455,7 @@ export const formData4 = [
   },
   {
     name: "jabatan_penyedia",
-    label: "Jabatan",
+    label: <Ini text={"PLACEMAN_POSITION"} />,
   },
   {
     name: "email_pic",
