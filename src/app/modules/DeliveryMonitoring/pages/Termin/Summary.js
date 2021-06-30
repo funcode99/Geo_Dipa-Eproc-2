@@ -673,6 +673,7 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle"></TableCell>
                       <TableCell className="align-middle"></TableCell>
                       <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle"></TableCell>
                       {/* <TableCell className="align-middle"></TableCell> */}
                     </TableRow>
 
@@ -930,7 +931,7 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle">
                         {rupiah(item.unit_price)}
                       </TableCell>
-                      {/* <TableCell className="align-middle"></TableCell> */}
+                      <TableCell className="align-middle"></TableCell>
                     </TableRow>
                   );
                 } else {
@@ -1006,7 +1007,7 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle">
                         {rupiah(item.item.unit_price)}
                       </TableCell>
-                      {/* <TableCell className="align-middle"></TableCell> */}
+                      <TableCell className="align-middle"></TableCell>
                     </TableRow>
                   );
                 }
