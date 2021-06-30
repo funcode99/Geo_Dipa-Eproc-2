@@ -2,18 +2,20 @@ import { FormControlLabel, Switch } from "@material-ui/core";
 import React from "react";
 import { Col } from "react-bootstrap";
 import { Row } from "react-bootstrap";
+import { FormattedHTMLMessage } from "react-intl";
 import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import UploadInput from "../../../../../components/input/UploadInput";
 
 const ItemSwitch = ({ label, value, onChange }) => {
   const [active, setActive] = React.useState(false);
-  const handleChange = () => {
+  const [dataForm, setDataForm] = React.useState({});
+  const handleChange = React.useCallback(() => {
     if (typeof onChange === "function") onChange(!active);
-    else setActive((prev) => !prev); // ini ilangin elsenya kalo mau dipake
-  };
+    setActive((prev) => !prev); // ini ilangin elsenya kalo mau dipake
+  }, [onChange, active, setActive]);
 
-  const valueUsed = value !== null ? value : active;
+  const valueUsed = active;
 
   return (
     <Row>
@@ -28,7 +30,24 @@ const ItemSwitch = ({ label, value, onChange }) => {
           }
           label={label}
         />
-        {Boolean(valueUsed) && <UploadInput />}
+        {Boolean(valueUsed) && <UploadInput onChange={handleChange} />}
+        {/* {Boolean(valueUsed) && (
+          <div className="form-group row">
+            <label className="input-group mb-3 col-sm-8">
+              <div className="input-group-append pointer">
+                <UploadInput onChange={handleChange} />
+                <span className={`input-group-text`}>
+                  <a download={"sppData?.file_name"} href={"sppData?.file"}>
+                    <i className="fas fa-download"></i>
+                  </a>
+                </span>
+                <span className={`input-group-text`}>
+                  <i className="fas fa-eye"></i>
+                </span>
+              </div>
+            </label>
+          </div>
+        )} */}
       </Col>
     </Row>
   );

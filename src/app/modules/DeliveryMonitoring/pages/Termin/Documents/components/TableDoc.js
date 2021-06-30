@@ -22,6 +22,7 @@ const theadDocuments = [
   { id: "doc-name", label: "Document Name" },
   { id: "due-date", label: "Due Date" },
   { id: "dokumen-progress", label: "Status" },
+  { id: "percentage", label: "Percentage" },
   { id: "deliv-dokumen", label: "Deliverable Document" },
   { id: "remarks", label: "Remarks" },
   { id: "aksi", label: "Action" },
@@ -91,7 +92,7 @@ const TableDoc = ({}) => {
           <RowAccordion
             key={id}
             dataAll={el}
-            data={["accordIcon", el.name, "-", "-", "-", "-", ""]}
+            data={["accordIcon", el.name, "-", "-", "-", "-", "-", ""]}
           >
             {(item) => {
               const isPeriodic = item.is_periodic;
@@ -102,7 +103,16 @@ const TableDoc = ({}) => {
                       key={id}
                       classBtn={"pl-8"}
                       dataAll={el}
-                      data={["accordIcon", el?.name, "-", "-", "-", "-", ""]}
+                      data={[
+                        "accordIcon",
+                        el?.name,
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "",
+                      ]}
                     >
                       {/* Dokumen */}
                       {(item2) =>
@@ -118,6 +128,7 @@ const TableDoc = ({}) => {
                               //   ? "WAITING TO UPLOAD"
                               //   : "AVAILABLE",
                               els?.document_status?.name,
+                              els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
                               els?.remarks,
                               <BtnAksi

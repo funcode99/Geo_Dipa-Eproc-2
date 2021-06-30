@@ -26,7 +26,7 @@ import * as Option from "../../../../../../service/Option";
 import { rupiah } from "../../../../../../libs/currency";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
-
+import { NavLink } from "react-router-dom";
 
 const tableHeaderTerminNew = [
   {
@@ -90,7 +90,7 @@ const DetailPage = ({
   const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
   const [options, setOptions] = React.useState();
-  const [showForm, setShowForm] = React.useState(false)
+  const [showForm, setShowForm] = React.useState(false);
   const { tasks } = contract;
 
   const handleShow = React.useCallback(() => setShow((prev) => !prev), [
@@ -259,7 +259,13 @@ const DetailPage = ({
       let arrData = [];
       arrData = data.map((item, index) => ({
         number: (index += 1),
-        scope_of_work: item.name,
+        scope_of_work: (
+          <NavLink
+            to={`/${authStatus}/delivery-monitoring/contract/task/${item.id}`}
+          >
+            {item.name}
+          </NavLink>
+        ),
         start_date:
           item.start_date !== null
             ? formatDate(new Date(item.start_date))
@@ -335,7 +341,7 @@ const DetailPage = ({
         .catch((err) => handleError(err))
         .finally(disableLoading());
     },
-    [generateTableContent, handleError, saveContractById, setToast,contractId]
+    [generateTableContent, handleError, saveContractById, setToast, contractId]
   );
 
   const handleSuccess = React.useCallback(
@@ -453,7 +459,7 @@ const DetailPage = ({
 const mapState = ({ deliveryMonitoring, auth }) => ({
   dataSubmitItems: deliveryMonitoring.dataSubmitItems,
   contract: deliveryMonitoring.dataContractById,
-  authStatus: auth.user.data.status
+  authStatus: auth.user.data.status,
 });
 
 const mapDispatch = (dispatch) => ({

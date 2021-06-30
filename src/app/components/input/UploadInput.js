@@ -18,6 +18,14 @@ const UploadInput = ({ onChange, value, ...other }) => {
           </span>
         </div>
         <span className="form-control">{value?.path ?? "Pilih File ..."}</span>
+        <span className={`input-group-text`}>
+          <a download={"sppData?.file_name"} href={"sppData?.file"}>
+            <i className="fas fa-download"></i>
+          </a>
+        </span>
+        <span className={`input-group-text`}>
+          <i className="fas fa-eye"></i>
+        </span>
       </label>
       <input
         type="file"
