@@ -14,17 +14,11 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
 import { SubWrap } from "./style";
-import { getSla, updateSla } from "../service/MasterCrud";
+import { getListEmail } from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import ButtonAction from "../../../components/buttonAction/ButtonAction";
 import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import StyledSelect from "../../../components/select-multiple";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,30 +37,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
-const html = `<p>Kepada Yth. <span style="color: rgb(0,0,0);background-color: rgb(255,255,255);">{PT_CV_ Nama_Perusahaan}</span></p>
-<p>Dokumen Softcopy telah kami terima dengan rincian sebagai berikut:</p>
-<p></p>
-<p>Nomor Invoice      : <span style="color: rgb(0,0,0);background-color: rgb(255,255,255);font-size: 13px;font-family: Poppins, Helvetica, sans-serif;">{Invoice_Number}</span>&nbsp;</p>
-<p>Total tagihan        : <span style="color: rgb(0,0,0);background-color: rgb(255,255,255);font-size: 13px;font-family: Poppins, Helvetica, sans-serif;">{Total_Bill}</span></p>
-<p>Nomor Kontrak     : <span style="color: rgb(0,0,0);background-color: rgb(255,255,255);font-size: 13px;font-family: Poppins, Helvetica, sans-serif;">{Number_Contract}</span>&nbsp;</p>
-<p>Judul Kontrak       : <span style="color: rgb(0,0,0);background-color: rgb(255,255,255);font-size: 13px;font-family: Poppins, Helvetica, sans-serif;">{Name_Contract}</span>&nbsp;</p>
-<p>Nomor PO             : <span style="color: rgb(0,0,0);background-color: rgb(255,255,255);font-size: 13px;font-family: Poppins, Helvetica, sans-serif;">{Number_PO}</span></p>
-<p>Denda                    :  <span style="color: rgb(226,80,65);">(Optional jika ada hasil Verifikasi)</span></p>
-<p>Nomor Rekening : <span style="color: rgb(0,0,0);background-color: rgb(255,255,255);font-size: 13px;font-family: Poppins, Helvetica, sans-serif;">{Account_Number}</span>&nbsp;</p>
-<p>Rencana Pembayaran : Tgl perkiraan pembayaran (by system)</p>
-<p></p>
-<p>Harap untuk mengirimkan dokument tagihan hardcopy kepada kami dalam waktu 5 Hari Kerja</p>
-<p>Ada masukan apa lagi yang Perlu dikirimkan?</p>
-<p>Untuk informasi lebih lanjut, silakan <a href="https://www.geodipa.co.id/" target="_blank">login</a>  ke dalam sistem&nbsp;</p>
-<p>Invoice Monitoring PT. Geo Dipa Energi (Persero).&nbsp;</p>
-<p> </p>
-<p>Terima kasih,</p>
-<p>E-Procurement - Invoice Monitoring PT. Geo Dipa Energi (Persero)&nbsp;</p>
-<p></p>`;
-const contentBlock = htmlToDraft(html);
-const contentState = ContentState.createFromBlockArray(
-  contentBlock.contentBlocks
-);
 const contohSchedule = [
   { label: "Hari H", value: "0" },
   { label: "3 Hari Sebelum Jatuh Tempo", value: "3" },
@@ -91,25 +61,17 @@ const Email = (props) => {
     name: "name",
     order: true,
   });
-  const [dialogState, setDialogState] = useState(false);
   const [filterSort, setFilterSort] = useState({ filter: {}, sort: {} });
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [Toast, setToast] = useToast();
   const [err, setErr] = useState(false);
-  const [dataEdit, setDataEdit] = useState({});
-  const [onSubmit, setOnSubmit] = useState(false);
-  const [statusSubmit, setStatusSubmit] = useState(false);
-  const [errOnSubmit, setErrOnSubmit] = useState(false);
   const [paginations, setPaginations] = useState({
     numberColum: 0,
     page: 0,
     count: 0,
     rowsPerPage: 10,
   });
-  const [editorState, setEditorState] = useState(
-    EditorState.createWithContent(contentState)
-  );
   const history = useHistory();
 
   const user_id = useSelector(
@@ -117,38 +79,38 @@ const Email = (props) => {
     shallowEqual
   );
 
-  //   const requestFilterSort = useCallback(
-  //     (updateFilterTable, updateSortTable) => {
-  //       setLoading(true);
-  //       setData([]);
-  //       let pagination = Object.assign({}, paginations);
-  //       let filterSorts = filterSort;
-  //       filterSorts.filter = JSON.stringify(
-  //         updateFilterTable ? updateFilterTable : filterTable
-  //       );
-  //       filterSorts.sort = JSON.stringify(
-  //         updateSortTable ? updateSortTable : sortData
-  //       );
-  //       pagination.page = pagination.page + 1;
-  //       filterSorts = Object.assign({}, filterSorts, pagination);
-  //       setFilterSort({ ...filterSorts });
-  //       let params = new URLSearchParams(filterSorts).toString();
-  //         getSla(params)
-  //           .then((result) => {
-  //             setLoading(false);
-  //             setData(result.data.data);
-  //             setPaginations({ ...paginations, count: result.data.count || 0 });
-  //           })
-  //           .catch((err) => {
-  //             setErr(true);
-  //             setLoading(false);
-  //             setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-  //           });
-  //     },
-  //     [filterTable, sortData, filterSort, intl, setToast, paginations]
-  //   );
+  const requestFilterSort = useCallback(
+    (updateFilterTable, updateSortTable) => {
+      setLoading(true);
+      setData([]);
+      let pagination = Object.assign({}, paginations);
+      let filterSorts = filterSort;
+      filterSorts.filter = JSON.stringify(
+        updateFilterTable ? updateFilterTable : filterTable
+      );
+      filterSorts.sort = JSON.stringify(
+        updateSortTable ? updateSortTable : sortData
+      );
+      pagination.page = pagination.page + 1;
+      filterSorts = Object.assign({}, filterSorts, pagination);
+      setFilterSort({ ...filterSorts });
+      let params = new URLSearchParams(filterSorts).toString();
+      getListEmail(params)
+        .then((result) => {
+          setLoading(false);
+          setData(result.data.data);
+          setPaginations({ ...paginations, count: result.data.count || 0 });
+        })
+        .catch((err) => {
+          setErr(true);
+          setLoading(false);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    },
+    [filterTable, sortData, filterSort, intl, setToast, paginations]
+  );
 
-  //   useEffect(requestFilterSort, []);
+  useEffect(requestFilterSort, []);
 
   const openFilterTable = (name, index) => {
     let idFilter = "filter-" + index;
@@ -201,33 +163,6 @@ const Email = (props) => {
     // requestFilterSort({});
   };
 
-  const sendUpdate = (e) => {
-    e.preventDefault();
-    //   setOnSubmit(true);
-    //   setErrOnSubmit(false);
-    //   var data = {
-    //     id: dataEdit.id,
-    //     request: {
-    //       days: Number(dataEdit.days),
-    //       user_id: user_id,
-    //     },
-    //   };
-    //   updateSla(data.id, data.request)
-    //     .then((result) => {
-    //       setStatusSubmit(true);
-    //       setTimeout(() => {
-    //         setDialogState(false);
-    //         setOnSubmit(false);
-    //         setStatusSubmit(false);
-    //         //   requestFilterSort();
-    //       }, 2000);
-    //     })
-    //     .catch((err) => {
-    //       setOnSubmit(false);
-    //       setErrOnSubmit(true);
-    //     });
-  };
-
   const handleChangePage = (event, newPage) => {
     console.log("newPage", newPage);
     let pagination = paginations;
@@ -254,163 +189,12 @@ const Email = (props) => {
   };
 
   const handleAction = (type, data) => {
-    history.push(`/client/master/email/item`);
-    // setDataEdit(data);
-    // setDialogState(true);
-  };
-
-  const onEditorStateChange = (editorState) => {
-    setEditorState(editorState);
-    let html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    console.log("html:", html);
+    history.push(`/client/master/email/${data.id}`);
   };
 
   return (
     <React.Fragment>
       <Toast />
-      <Dialog
-        open={dialogState}
-        keepMounted
-        maxWidth={"md"}
-        fullWidth={true}
-        TransitionComponent={Transition}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          <FormattedMessage id="TITLE.EMAIL" />
-        </DialogTitle>
-        <Form id="emailData" onSubmit={sendUpdate}>
-          <DialogContent>
-            <Row>
-              <Col>
-                <Form.Group as={Row}>
-                  <Form.Label column md="2">
-                    <FormattedMessage id="TITLE.NAME" />
-                  </Form.Label>
-                  <Col sm="10">
-                    <Form.Control
-                      type="text"
-                      disabled={true}
-                      value="approved softcopy by verification staff and tax administration staff"
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row}>
-                  <Form.Label column md="2">
-                    Parameter
-                  </Form.Label>
-                  <Col sm="10">
-                    <InputGroup className="mb-3">
-                      <select className="custom-select" defaultValue={0}>
-                        <option value="0" hidden>
-                          Pilih
-                        </option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                      <InputGroup.Append>
-                        <InputGroup.Text className="pointer">
-                          <i className="far fa-copy mr-2"></i>Copy
-                        </InputGroup.Text>
-                      </InputGroup.Append>
-                    </InputGroup>
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row}>
-                  <Form.Label column md="2">
-                    Subject Email
-                  </Form.Label>
-                  <Col sm="10">
-                    <Form.Control
-                      type="text"
-                      disabled={false}
-                      defaultValue="Subject"
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row}>
-                  <Form.Label column md="12">
-                    Body Email
-                  </Form.Label>
-                  <Col sm="12">
-                    <Editor
-                      editorState={editorState}
-                      toolbarClassName="toolbar-class"
-                      wrapperClassName="demo-wrapper"
-                      editorClassName="demo-editor"
-                      onEditorStateChange={onEditorStateChange}
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row}>
-                  <Form.Label column md="2">
-                    Schedule
-                  </Form.Label>
-                  <Col sm="10">
-                    <StyledSelect
-                      isDisabled={false}
-                      options={contohSchedule}
-                      value={[]}
-                      id="notFit"
-                    />
-                  </Col>
-                </Form.Group>
-              </Col>
-            </Row>
-            {errOnSubmit && !onSubmit && (
-              <div>
-                <p className="text-danger font-italic" style={{ fontSize: 11 }}>
-                  Error: <FormattedMessage id="REQ.UPDATE_FAILED" />
-                </p>
-              </div>
-            )}
-          </DialogContent>
-          <DialogActions>
-            <button
-              id="kt_login_signin_submit"
-              type="submit"
-              disabled={onSubmit}
-              className={`btn btn-primary font-weight-bold btn-sm`}
-              onClick={() => {
-                //   sendUpdate();
-              }}
-            >
-              {!onSubmit && (
-                <span>
-                  <FormattedMessage id="TITLE.SAVE" />
-                </span>
-              )}
-              {onSubmit &&
-                (statusSubmit && onSubmit ? (
-                  <div>
-                    <span>
-                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
-                    </span>
-                    <span className="ml-2 fas fa-check"></span>
-                  </div>
-                ) : (
-                  <div>
-                    <span>
-                      <FormattedMessage id="TITLE.WAITING" />
-                    </span>
-                    <span className="ml-2 mr-4 spinner spinner-white"></span>
-                  </div>
-                ))}
-            </button>
-            <button
-              onClick={() => {
-                setDialogState(false);
-              }}
-              disabled={onSubmit}
-              className="btn btn-sm btn-danger"
-            >
-              <FormattedMessage id="TITLE.CANCEL" />
-            </button>
-          </DialogActions>
-        </Form>
-      </Dialog>
       <div className="d-flex align-items-center flex-wrap mr-1">
         <SubWrap className="mr-2 iconWrap">
           <span className="svg-icon menu-icon">
@@ -580,80 +364,17 @@ const Email = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>
-                        approved softcopy by verification staff and tax
-                        administration staff
-                      </td>
-                      <td>NO</td>
-                      <td>{window.moment(new Date()).format("DD MMM YYYY")}</td>
-                      <td>
-                        <ButtonAction
-                          data={[]}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>SA/GR has been published</td>
-                      <td>YES</td>
-                      <td>{window.moment(new Date()).format("DD MMM YYYY")}</td>
-                      <td>
-                        <ButtonAction
-                          data={[]}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>direject softcopy by verification staff</td>
-                      <td>NO</td>
-                      <td>{window.moment(new Date()).format("DD MMM YYYY")}</td>
-                      <td>
-                        <ButtonAction
-                          data={[]}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>4</td>
-                      <td>approved hardcopy by verification staff</td>
-                      <td>NO</td>
-                      <td>{window.moment(new Date()).format("DD MMM YYYY")}</td>
-                      <td>
-                        <ButtonAction
-                          data={[]}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>5</td>
-                      <td>SPT has been published</td>
-                      <td>NO</td>
-                      <td>{window.moment(new Date()).format("DD MMM YYYY")}</td>
-                      <td>
-                        <ButtonAction
-                          data={[]}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
-                    {/* {data.map((item, index) => {
+                    {data.map((item, index) => {
                       return (
                         <tr key={index.toString()}>
                           <td>{index + 1 + paginations.numberColum}</td>
                           <td>{item.name}</td>
-                          <td>{item.days}</td>
+                          <td>{item.schedule ? "YES" : "NO"}</td>
+                          <td>
+                            {window
+                              .moment(new Date(item.updated_at))
+                              .format("DD MMM YYYY")}
+                          </td>
                           <td>
                             <ButtonAction
                               data={item}
@@ -663,7 +384,7 @@ const Email = (props) => {
                           </td>
                         </tr>
                       );
-                    })} */}
+                    })}
                   </tbody>
                 </table>
               </div>
