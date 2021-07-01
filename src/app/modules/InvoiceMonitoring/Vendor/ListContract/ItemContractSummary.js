@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { rupiah } from "../../../../libs/currency";
-import {
-  FormattedMessage,
-  injectIntl,
-} from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Card,
   CardBody,
@@ -169,40 +166,52 @@ function ItemContractSummary(props) {
         response["data"]["data"]["contract_value"] = rupiah(
           response["data"]["data"]["contract_value"]
         );
-        response["data"]["data"]["authorize"] = response["data"]["data"]["party_1_contract_signature_name"]
-          .concat(" - ", response["data"]["data"]["party_1_position_of_autorize"]);
+        response["data"]["data"]["authorize"] = response["data"]["data"][
+          "party_1_contract_signature_name"
+        ].concat(
+          " - ",
+          response["data"]["data"]["party_1_position_of_autorize"]
+        );
         response["data"]["data"]["full_name"] = response["data"]["data"][
           "data"
         ]["legal_org_type_sub"]["name"].concat(
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
-          ? response["data"]["data"]["data"]["address"]["postal_address"]
-          : null
-          } ${response["data"]["data"]["data"]["address"]["sub_district"]
-            ? response["data"]["data"]["data"]["address"]["sub_district"][
-            "name"
-            ]
+        response["data"]["data"]["full_address_party_2"] = `${
+          response["data"]["data"]["data"]["address"]["postal_address"]
+            ? response["data"]["data"]["data"]["address"]["postal_address"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["district"]
+        } ${
+          response["data"]["data"]["data"]["address"]["sub_district"]
+            ? response["data"]["data"]["data"]["address"]["sub_district"][
+                "name"
+              ]
+            : null
+        } ${
+          response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["province"]
+        } ${
+          response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["postal_code"]
+        } ${
+          response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
-          }`;
-        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
-          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
-          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
+        }`;
+        response["data"]["data"]["full_data_party_2"] = `${
+          response["data"]["data"]["full_name"]
+        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
+          response["data"]["data"]["data"]["phone_number"]["number"]
+        } ${
+          response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
-              response["data"]["data"]["data"]["phone_number"]["ext"]
-            )
+                response["data"]["data"]["data"]["phone_number"]["ext"]
+              )
             : ""
-          }`;
+        }`;
         response["data"]["data"][
           "full_data_party_1"
         ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
@@ -502,7 +511,9 @@ function ItemContractSummary(props) {
         fullWidth={true}
         style={{ zIndex: "1301" }}
       >
-        <DialogTitle id="alert-dialog-slide-title"><FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_DELETE.TITLE" /></DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">
+          <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_DELETE.TITLE" />
+        </DialogTitle>
         <DialogContent>
           <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_DELETE.BODY" />
           <span className="text-danger"> {tempPic.label}</span> ?
@@ -542,13 +553,20 @@ function ItemContractSummary(props) {
         fullWidth={true}
       >
         <DialogTitle id="alert-dialog-slide-title">
-          <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.TITLE" />{editEmail ? <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.UPDATE" /> : <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.NEW" />}
+          <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.TITLE" />
+          {editEmail ? (
+            <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.UPDATE" />
+          ) : (
+            <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.NEW" />
+          )}
         </DialogTitle>
         <DialogContent>
           <div ref={updateEmailRef}>
             {!editEmail && (
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label"><FormattedMessage id="TITLE.EMAIL" /></label>
+                <label className="col-sm-2 col-form-label">
+                  <FormattedMessage id="TITLE.EMAIL" />
+                </label>
                 <div className="input-group col-sm-10">
                   <input
                     type="email"
@@ -634,7 +652,7 @@ function ItemContractSummary(props) {
                     </button>
                   </div>
                   {(formikUpdate.touched.email && formikUpdate.errors.email) ||
-                    !emailAvailability ? (
+                  !emailAvailability ? (
                     <div className="invalid-feedback display-block">
                       {formikUpdate.errors.email}
                     </div>
@@ -654,15 +672,17 @@ function ItemContractSummary(props) {
                           <span>
                             <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.STATUS" />
                             <span
-                              className={`font-weight-bold ${item.actives === "true"
-                                ? "text-primary"
-                                : "text-danger"
-                                }`}
+                              className={`font-weight-bold ${
+                                item.actives === "true"
+                                  ? "text-primary"
+                                  : "text-danger"
+                              }`}
                             >
-                              {item.actives === "true"
-                                ? <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE" />
-                                : <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE" />
-                              }
+                              {item.actives === "true" ? (
+                                <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE" />
+                              ) : (
+                                <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE" />
+                              )}
                             </span>
                           </span>
                           {item.actives === "false" && (
@@ -746,7 +766,7 @@ function ItemContractSummary(props) {
                   htmlFor="priceContract"
                   className="col-sm-4 col-form-label"
                 >
-                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE" />
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -774,14 +794,19 @@ function ItemContractSummary(props) {
               </div>
               <div className="form-group row">
                 <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
-                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: contractData['termin_name'] }} />
+                  <FormattedMessage
+                    id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE"
+                    values={{ termin: contractData["termin_name"] }}
+                  />
                 </label>
                 <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={contractData ? contractData["termin_value"] : null}
+                    defaultValue={
+                      contractData ? contractData["termin_value"] : null
+                    }
                     disabled
                   />
                 </div>
@@ -799,9 +824,7 @@ function ItemContractSummary(props) {
                     className="form-control"
                     id="authorizedOffice"
                     defaultValue={
-                      contractData
-                        ? contractData["authorize"]
-                        : null
+                      contractData ? contractData["authorize"] : null
                     }
                     disabled
                   />
@@ -819,7 +842,11 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="jobDirectors"
-                    defaultValue={contractData ? contractData["party_1_director_position"] : null}
+                    defaultValue={
+                      contractData
+                        ? contractData["party_1_director_position"]
+                        : null
+                    }
                     disabled
                   />
                 </div>
@@ -833,7 +860,9 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="progress"
-                    defaultValue={contractData ? contractData["termin_progress"] : null}
+                    defaultValue={
+                      contractData ? contractData["termin_progress"] : null
+                    }
                     disabled
                   />
                 </div>
@@ -923,7 +952,9 @@ function ItemContractSummary(props) {
       <Card className="mt-5">
         <CardBody>
           <div className="my-5 text-center">
-            <h6><FormattedMessage id="TITLE.BILLING_DOCUMENT" /></h6>
+            <h6>
+              <FormattedMessage id="TITLE.BILLING_DOCUMENT" />
+            </h6>
           </div>
           {/* begin: Table */}
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
