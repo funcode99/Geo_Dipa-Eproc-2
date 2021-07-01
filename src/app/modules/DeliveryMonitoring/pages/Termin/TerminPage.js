@@ -20,6 +20,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import Steppers from "../../../../components/steppersCustom/Steppers";
+import SAGRPage from "./ServiceAccGR/SAGRPage";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -183,9 +184,11 @@ const TerminPage = ({ items }) => {
           {!isItemExists && tabActive === 1 && <BAPP />}
 
           {isItemExists && tabActive === 2 && <BAPP />}
-          {!isItemExists && tabActive === 2 && <ServAccGR />}
+          {/* {!isItemExists && tabActive === 2 && <ServAccGR />} */}
+          {!isItemExists && tabActive === 2 && <SAGRPage />}
 
-          {isItemExists && tabActive === 3 && <ServAccGR />}
+          {/* {isItemExists && tabActive === 3 && <ServAccGR />} */}
+          {isItemExists && tabActive === 3 && <SAGRPage />}
 
           {tabActive === 0 && <Documents taskId={task_id} />}
         </Container>

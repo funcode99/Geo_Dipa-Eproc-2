@@ -509,5 +509,15 @@
   "LABEL.DM.PARTIES.DATE_SK": "Tanggal SK",
   "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Direksi Pekerjaan",
   "LABEL.DM.PARTIES.POS_DIRECTOR": "Jabatan Direksi",
-  "LABEL.DM.PARTIES.JOB_SUPERV": "Pengawas Pekerjaan"
+  "LABEL.DM.PARTIES.JOB_SUPERV": "Pengawas Pekerjaan",
+  "TITLE.SERVICE_ACCEPTANCE": "Penerimaan",
+  "TITLE.GOOD_RECEIPT": "Tanda Terima",
+  "LABEL.SA_NUMBER": "Nomor SA",
+  "LABEL.POSTING_DATE": "Tanggal Posting",
+  "LABEL.DOCUMENT_DATE": "Tanggal Dokumen",
+  "LABEL.PURCHASING_GROUP": "Kelompok Purchasing",
+  "LABEL.TELEPHONE": "Telepon",
+  "TITLE.NET_VALUE": "Nilai Bersih",
+  "TITLE.POSITION": "Posisi",
+  "TITLE.COMMENT": "Komentar"
 }

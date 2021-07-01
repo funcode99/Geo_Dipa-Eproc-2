@@ -509,5 +509,15 @@
   "LABEL.DM.PARTIES.DATE_SK": "SK Date",
   "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Board of Director",
   "LABEL.DM.PARTIES.POS_DIRECTOR": "Position of Director",
-  "LABEL.DM.PARTIES.JOB_SUPERV": "Job Supervisor"
+  "LABEL.DM.PARTIES.JOB_SUPERV": "Job Supervisor",
+  "TITLE.SERVICE_ACCEPTANCE": "Service Acceptance",
+  "TITLE.GOOD_RECEIPT": "Good Receipt",
+  "LABEL.SA_NUMBER": "SA Number",
+  "LABEL.POSTING_DATE": "Posting Date",
+  "LABEL.DOCUMENT_DATE": "Document Date",
+  "LABEL.PURCHASING_GROUP": "Purchasing Group",
+  "LABEL.TELEPHONE": "Telephone",
+  "TITLE.NET_VALUE": "Net Value",
+  "TITLE.POSITION": "Position",
+  "TITLE.COMMENT": "Comment"
 }
