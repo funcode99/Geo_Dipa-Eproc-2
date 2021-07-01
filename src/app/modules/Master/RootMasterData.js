@@ -28,7 +28,7 @@ function RootMasterData() {
         component={ServiceLevelAgreement}
       />
       <Route path="/client/master/async" component={AsyncData} />
-      <Route path="/client/master/email/item" component={ItemEmail} />
+      <Route path="/client/master/email/:id" component={ItemEmail} />
       <Route path="/client/master/email" component={Email} />
     </Switch>
   );
