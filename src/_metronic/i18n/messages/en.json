@@ -204,7 +204,7 @@
   "TITLE.FILE": "File",
   "TITLE.STATUS": "Status",
   "TITLE.UPDATE_DATA_SUCCESS": "Changes saved successfully",
-  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE": "Contract Value",
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT": "Contract Amount",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER": "PO Number",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE": "{termin} Value",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN": "{termin} Value with Tax",
@@ -364,7 +364,7 @@
   "TITLE.LESS": "Less",
   "TITLE.FINE_OR_OTHER": "Fine/Other",
   "TITLE.NET_TO_PAID": "Net amount to be paid",
-  "TITLE.ARCHIVED_BY": "Archived By",
+  "TITLE.ARCHIVED_BY": "Archiv By",
   "TITLE.FINANCE": "Finance",
   "TITLE.ACCOUNTING": "Accounting",
   "TITLE.NO_VENDOR": "No Vendor",
@@ -445,7 +445,7 @@
   "MESSAGE.NO_ITEMS": "No items have been selected for this term",
   "BUTTON.SUBMIT": "Submit",
   "TITLE.CONFIRMATION": "Confirmation",
-  "TITLE.NOTIV_ACTION_CHANGES": "Are you sure you want to make changes?",
+  "TITLE.NOTIF_ACTION_CHANGES": "Are you sure you want to make changes?",
   "TITLE.AUTHOR_OFFICIAL": "Authorized Official",
   "TITLE.DIRECTOR_OF_WD": "Director of Work Direksi",
   "TITLE.AUTHOR_INVOICE": "Authorization Invoice",
@@ -519,5 +519,6 @@
   "LABEL.TELEPHONE": "Telephone",
   "TITLE.NET_VALUE": "Net Value",
   "TITLE.POSITION": "Position",
-  "TITLE.COMMENT": "Comment"
+  "TITLE.COMMENT": "Comment",
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Termin Amount"
 }

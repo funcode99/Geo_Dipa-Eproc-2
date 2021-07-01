@@ -204,7 +204,7 @@
   "TITLE.FILE": "File",
   "TITLE.STATUS": "Status",
   "TITLE.UPDATE_DATA_SUCCESS": "Perubahan berhasil disimpan",
-  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE": "Harga Pekerjaan",
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT": "Harga Pekerjaan",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER": "Nomor PO",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE": "Harga Pekerjaan {termin}",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN": "Harga Pekerjaan {termin} dengan PPN",
@@ -419,7 +419,7 @@
   "MESSAGE.VALIDATE_QTY": "Quantity harus lebih dari {minValue} and kurang dari {floatQtyAvailable}",
   "TITLE.CONTRACT_ITEM": "Contract Item",
   "TITLE.CONTRACT_TERM": "Contract Term",
-  "TITLE.DOCUMENT_CONTRACT": "Dokumen Contrak",
+  "TITLE.DOCUMENT_CONTRACT": "Dokumen Kontrak",
   "TITLE.DESCRIPTION": "Deskripsi",
   "TITLE.UNIT_PRICE": "Harga per Unit",
   "TITLE.DESC_IS_REQUIRE": "Deskripsi wajib diisi.",
@@ -445,7 +445,7 @@
   "MESSAGE.NO_ITEMS": "Tidak ada item yang dipilih untuk termin ini",
   "BUTTON.SUBMIT": "Kirim",
   "TITLE.CONFIRMATION": "Konfirmasi",
-  "TITLE.NOTIV_ACTION_CHANGES": "Apakah Anda yakin ingin melakukan perubahan?",
+  "TITLE.NOTIF_ACTION_CHANGES": "Apakah Anda yakin ingin melakukan perubahan?",
   "TITLE.AUTHOR_OFFICIAL": "Pejabat Berwenang",
   "TITLE.DIRECTOR_OF_WD": "Direksi Pekerjaan",
   "TITLE.AUTHOR_INVOICE": "Faktur Otorisasi",
@@ -519,5 +519,6 @@
   "LABEL.TELEPHONE": "Telepon",
   "TITLE.NET_VALUE": "Nilai Bersih",
   "TITLE.POSITION": "Posisi",
-  "TITLE.COMMENT": "Komentar"
+  "TITLE.COMMENT": "Komentar",
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Harga Termin"
 }

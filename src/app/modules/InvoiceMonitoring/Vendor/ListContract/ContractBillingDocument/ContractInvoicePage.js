@@ -1,564 +1,857 @@
-import React, {
-    useState,
-    useEffect,
-    useCallback
-} from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    DialogActions
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
 } from "@material-ui/core";
+import { connect, shallowEqual, useSelector } from "react-redux";
+import { FormattedMessage, injectIntl } from "react-intl";
 import {
-    connect, shallowEqual, useSelector
-} from "react-redux";
-import {
-    FormattedMessage,
-    injectIntl
-} from "react-intl";
-import {
-    Card,
-    CardBody,
-    CardFooter
+  Card,
+  CardBody,
+  CardFooter,
 } from "../../../../../../_metronic/_partials/controls";
-import { getContractSummary, saveInvoice, getInvoice, updateInvoice, getAllRejectedInvoice, getFileInvoice, getAllApprovedInvoice, getTax } from '../../../_redux/InvoiceMonitoringCrud';
-import useToast from '../../../../../components/toast';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { rupiah } from '../../../../../libs/currency';
+import {
+  getContractSummary,
+  saveInvoice,
+  getInvoice,
+  updateInvoice,
+  getAllRejectedInvoice,
+  getFileInvoice,
+  getAllApprovedInvoice,
+  getTax,
+} from "../../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../../components/toast";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { rupiah } from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import { Document, Page } from 'react-pdf';
+import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { DialogTitleFile } from '../ItemContractInvoice';
-import moment from 'moment';
+import { DialogTitleFile } from "../ItemContractInvoice";
+import moment from "moment";
 
 function ContractInvoicePage(props) {
+  const [loading, setLoading] = useState(false);
+  const [contractData, setContractData] = useState({});
+  const [uploadFilename, setUploadFilename] = useState("Pilih File");
+  const [invoiceStatus, setInvoiceStatus] = useState(false);
+  const [invoiceData, setInvoiceData] = useState({});
+  const [invoiceUpdate, setInvoiceUpdate] = useState(false);
+  const [invoiceId, setInvoiceId] = useState("");
+  const [dialogState, setDialogState] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [numPages, setNumPages] = useState(null);
+  const [historyInvoiceData, setHistoryInvoiceData] = useState([]);
+  const [modalHistory, setModalHistory] = useState(false);
+  const [modalHistoryData, setModalHistoryData] = useState({});
 
-    const [loading, setLoading] = useState(false);
-    const [contractData, setContractData] = useState({})
-    const [uploadFilename, setUploadFilename] = useState('Pilih File')
-    const [invoiceStatus, setInvoiceStatus] = useState(false)
-    const [invoiceData, setInvoiceData] = useState({})
-    const [invoiceUpdate, setInvoiceUpdate] = useState(false)
-    const [invoiceId, setInvoiceId] = useState('')
-    const [dialogState, setDialogState] = useState(false)
-    const [pageNumber, setPageNumber] = useState(1)
-    const [numPages, setNumPages] = useState(null)
-    const [historyInvoiceData, setHistoryInvoiceData] = useState([])
-    const [modalHistory, setModalHistory] = useState(false)
-    const [modalHistoryData, setModalHistoryData] = useState({})
+  const [Toast, setToast] = useToast();
 
-    const [Toast, setToast] = useToast();
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+  const contract_id = props.match.params.contract;
+  const termin = props.match.params.termin;
+  const { intl, classes, supportedFormats } = props;
 
-    const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
-    const contract_id = props.match.params.contract;
-    const termin = props.match.params.termin;
-    const { intl, classes, supportedFormats } = props;
+  const initialValues = {
+    draft_no: "",
+    invoice_no: "",
+    from_time: "",
+    purch_order_no: "",
+    contract_id: "",
+    plant_id: "",
+    purch_group_id: "",
+    plant_id2: "",
+    purch_group_id2: "",
+    vendor_id: "",
+    contract_value: "",
+    currency_id: "",
+    invoice_value: "",
+    description: "",
+    file_name: "",
+    created_at: "",
+    created_by_id: user_id,
+    file: "",
+    invoice_term_id: termin,
+    tax_bool: false,
+    tax_date: new Date(Date.now()),
+  };
 
-    const initialValues = {
-        draft_no: '',
-        invoice_no: '',
-        from_time: '',
-        purch_order_no: '',
-        contract_id: '',
-        plant_id: '',
-        purch_group_id: '',
-        plant_id2: '',
-        purch_group_id2: '',
-        vendor_id: '',
-        contract_value: '',
-        currency_id: '',
-        invoice_value: '',
-        description: '',
-        file_name: '',
-        created_at: '',
-        created_by_id: user_id,
-        file: '',
-        invoice_term_id: termin,
-        tax_bool: false,
-        tax_date: new Date(Date.now()),
-    }
+  const InvoiceSchema = Yup.object().shape({
+    file: Yup.mixed()
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      )
+      .test(
+        "fileType",
+        intl.formatMessage({
+          id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FILE_TYPE_PDF",
+        }),
+        (value) => supportedFormats.includes(value?.type)
+      ),
+    description: Yup.string().required(
+      intl.formatMessage({
+        id: "AUTH.VALIDATION.REQUIRED_FIELD",
+      })
+    ),
+    from_time: Yup.date()
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      )
+      .when("tax_bool", {
+        is: true,
+        then: Yup.date()
+          .min(
+            Yup.ref("tax_date"),
+            intl.formatMessage({
+              id:
+                "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
+            })
+          )
+          .max(
+            Yup.ref("tax_date"),
+            intl.formatMessage({
+              id:
+                "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
+            })
+          ),
+      }),
+    invoice_no: Yup.string().required(
+      intl.formatMessage({
+        id: "AUTH.VALIDATION.REQUIRED_FIELD",
+      })
+    ),
+  });
 
-    const InvoiceSchema = Yup.object().shape({
-        file: Yup
-            .mixed()
-            .required(
-                intl.formatMessage({
-                    id: "AUTH.VALIDATION.REQUIRED_FIELD",
-                })
-            )
-            .test(
-                'fileType',
-                intl.formatMessage({
-                    id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FILE_TYPE_PDF",
-                }),
-                value => supportedFormats.includes(value?.type)
-            ),
-        description: Yup
-            .string()
-            .required(
-                intl.formatMessage({
-                    id: "AUTH.VALIDATION.REQUIRED_FIELD",
-                })
-            ),
-        from_time: Yup
-            .date()
-            .required(
-                intl.formatMessage({
-                    id: "AUTH.VALIDATION.REQUIRED_FIELD",
-                })
-            )
-            .when("tax_bool", {
-                is: true,
-                then: Yup.date()
-                    .min(Yup.ref('tax_date'), intl.formatMessage({
-                        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
-                    }))
-                    .max(Yup.ref('tax_date'), intl.formatMessage({
-                        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
-                    }))
-            }),
-        invoice_no: Yup
-            .string()
-            .required(
-                intl.formatMessage({
-                    id: "AUTH.VALIDATION.REQUIRED_FIELD",
-                })
-            )
-    });
+  const formik = useFormik({
+    initialValues,
+    validationSchema: InvoiceSchema,
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
+      setLoading(true);
+      setInvoiceStatus(true);
+      var data = new FormData();
+      for (var key in values) {
+        data.append(key, values[key]);
+      }
+      if (invoiceUpdate) {
+        updateInvoice(invoiceId, data)
+          .then((response) => {
+            getInvoice(contract_id, termin).then((responses) => {
+              setInvoiceData(responses["data"]["data"]);
+              setUploadFilename(responses["data"]["data"]["file_name"]);
+              setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+              setLoading(false);
+            });
+          })
+          .catch((error) => {
+            setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+            setLoading(false);
+            setInvoiceStatus(false);
+          });
+      } else {
+        saveInvoice(data)
+          .then((response) => {
+            setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+            setLoading(false);
+            setInvoiceData(response["data"]["data"]);
+            setUploadFilename(response["data"]["data"]["file_name"]);
+          })
+          .catch((error) => {
+            setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+            setLoading(false);
+            setInvoiceStatus(false);
+          });
+      }
+    },
+  });
 
-    const formik = useFormik({
-        initialValues,
-        validationSchema: InvoiceSchema,
-        onSubmit: async (values, { setStatus, setSubmitting }) => {
-            setLoading(true)
-            setInvoiceStatus(true)
-            var data = new FormData()
-            for (var key in values) {
-                data.append(key, values[key])
-            }
-            if (invoiceUpdate) {
-                updateInvoice(invoiceId, data)
-                    .then(response => {
-                        getInvoice(contract_id, termin)
-                            .then((responses) => {
-                                setInvoiceData(responses['data']['data'])
-                                setUploadFilename(responses['data']['data']['file_name'])
-                                setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-                                setLoading(false)
-                            })
-                    })
-                    .catch((error) => {
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
-                        setLoading(false)
-                        setInvoiceStatus(false)
-                    });
-            } else {
-                saveInvoice(data)
-                    .then(response => {
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-                        setLoading(false)
-                        setInvoiceData(response['data']['data'])
-                        setUploadFilename(response['data']['data']['file_name'])
-                    })
-                    .catch((error) => {
-                        setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
-                        setLoading(false);
-                        setInvoiceStatus(false)
-                    });
-            }
-        },
-    });
+  const getContractData = useCallback(() => {
+    getContractSummary(contract_id, termin)
+      .then((response) => {
+        response["data"]["data"]["contract_value_new"] = rupiah(
+          response["data"]["data"]["contract_value"]
+        );
+        response["data"]["data"]["termin_value_new"] = rupiah(
+          response["data"]["data"]["termin_value"]
+        );
+        response["data"]["data"]["termin_value_ppn_new"] = rupiah(
+          response["data"]["data"]["termin_value"] * 1.1
+        );
+        setContractData(response.data.data);
+        formik.setFieldValue(
+          "purch_order_no",
+          response["data"]["data"]["purch_order_no"]
+        );
+        formik.setFieldValue("contract_id", response["data"]["data"]["id"]);
+        formik.setFieldValue("plant_id", response["data"]["data"]["plant_id"]);
+        formik.setFieldValue(
+          "purch_group_id",
+          response["data"]["data"]["purch_group_id"]
+        );
+        formik.setFieldValue(
+          "plant_id2",
+          response["data"]["data"]["plant_id2"]
+        );
+        formik.setFieldValue(
+          "purch_group_id2",
+          response["data"]["data"]["purch_group_id2"]
+        );
+        formik.setFieldValue(
+          "contract_value",
+          response["data"]["data"]["contract_value"]
+        );
+        formik.setFieldValue(
+          "vendor_id",
+          response["data"]["data"]["vendor_id"]
+        );
+        formik.setFieldValue(
+          "currency_id",
+          response["data"]["data"]["currency_id"]
+        );
+        formik.setFieldValue(
+          "invoice_value",
+          response["data"]["data"]["termin_value"]
+        );
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, formik, intl, setToast, user_id]);
 
-    const getContractData = useCallback(() => {
-        getContractSummary(contract_id, termin)
-            .then(response => {
-                response['data']['data']['contract_value_new'] = rupiah(response['data']['data']['contract_value'])
-                response['data']['data']['termin_value_new'] = rupiah(response['data']['data']['termin_value'])
-                response['data']['data']['termin_value_ppn_new'] = rupiah(response['data']['data']['termin_value'] * 1.1)
-                setContractData(response.data.data)
-                formik.setFieldValue('purch_order_no', response['data']['data']['purch_order_no'])
-                formik.setFieldValue('contract_id', response['data']['data']['id'])
-                formik.setFieldValue('plant_id', response['data']['data']['plant_id'])
-                formik.setFieldValue('purch_group_id', response['data']['data']['purch_group_id'])
-                formik.setFieldValue('plant_id2', response['data']['data']['plant_id2'])
-                formik.setFieldValue('purch_group_id2', response['data']['data']['purch_group_id2'])
-                formik.setFieldValue('contract_value', response['data']['data']['contract_value'])
-                formik.setFieldValue('vendor_id', response['data']['data']['vendor_id'])
-                formik.setFieldValue('currency_id', response['data']['data']['currency_id'])
-                formik.setFieldValue('invoice_value', response['data']['data']['termin_value'])
+  const gethistoryInvoiceData = useCallback(
+    (invoice_id) => {
+      getAllRejectedInvoice(invoice_id)
+        .then((responseReject) => {
+          getAllApprovedInvoice(invoice_id)
+            .then((responseApprove) => {
+              setHistoryInvoiceData([
+                ...responseReject["data"]["data"],
+                ...responseApprove["data"]["data"],
+              ]);
             })
             .catch((error) => {
-                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
-    }, [contract_id, formik, intl, setToast, user_id])
+          // setHistoryInvoiceData(response['data']['data'])
+        })
+        .catch((error) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        });
+    },
+    [intl, setToast]
+  );
 
-    const gethistoryInvoiceData = useCallback((invoice_id) => {
-        getAllRejectedInvoice(invoice_id)
-            .then(responseReject => {
-                getAllApprovedInvoice(invoice_id)
-                    .then(responseApprove => {
-                        setHistoryInvoiceData([...responseReject['data']['data'], ...responseApprove['data']['data']])
-                    })
-                    .catch((error) => {
-                        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-                    });
-                // setHistoryInvoiceData(response['data']['data'])
-            })
-            .catch((error) => {
-                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-            });
-    }, [intl, setToast])
-
-    const getInvoiceData = useCallback(() => {
-        getInvoice(contract_id, termin)
-            .then(response => {
-                if (!response['data']['data']) {
-                    setInvoiceStatus(false)
-                } else {
-                    gethistoryInvoiceData(response['data']['data']['id'])
-                    setInvoiceId(response['data']['data']['id'])
-                    formik.setFieldValue('draft_no', response['data']['data']['invoice_draft_no'])
-                    if (response['data']['data']['state'] === 'REJECTED') {
-                        setInvoiceStatus(false)
-                        setInvoiceUpdate(true)
-                    } else {
-                        setInvoiceStatus(true)
-                        formik.setFieldValue('invoice_no', response['data']['data']['invoice_no'])
-                        formik.setFieldValue('invoice_date', response['data']['data']['invoice_date'])
-                        formik.setFieldValue('description', response['data']['data']['description'])
-                        formik.setFieldValue('file_name', response['data']['data']['file_name'])
-                        setUploadFilename(response['data']['data']['file_name'])
-                        setInvoiceData(response['data']['data'])
-                    }
-                }
-            })
-            .catch((error) => {
-                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-            });
-    }, [contract_id, termin, gethistoryInvoiceData, formik, intl, setToast])
-
-    const getTaxData = useCallback(() => {
-        getTax(contract_id, termin)
-            .then(response => {
-                if (response.data.data?.state == "PENDING") {
-                    formik.setFieldValue('tax_date', new Date(response.data.data.tax_date))
-                    formik.setFieldValue('tax_bool', true)
-                }
-            })
-            .catch((error) => {
-                setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-            });
-    }, [contract_id, formik, intl, setToast])
-
-    const onDocumentLoadSuccess = ({ numPages }) => {
-        setNumPages(numPages);
-    };
-
-    const handleUpload = (e) => {
-        if (e.currentTarget.files.length) {
-            setUploadFilename(e.currentTarget.files[0].name)
+  const getInvoiceData = useCallback(() => {
+    getInvoice(contract_id, termin)
+      .then((response) => {
+        if (!response["data"]["data"]) {
+          setInvoiceStatus(false);
         } else {
-            setUploadFilename(intl.formatMessage({ id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME" }))
+          gethistoryInvoiceData(response["data"]["data"]["id"]);
+          setInvoiceId(response["data"]["data"]["id"]);
+          formik.setFieldValue(
+            "draft_no",
+            response["data"]["data"]["invoice_draft_no"]
+          );
+          if (response["data"]["data"]["state"] === "REJECTED") {
+            setInvoiceStatus(false);
+            setInvoiceUpdate(true);
+          } else {
+            setInvoiceStatus(true);
+            formik.setFieldValue(
+              "invoice_no",
+              response["data"]["data"]["invoice_no"]
+            );
+            formik.setFieldValue(
+              "invoice_date",
+              response["data"]["data"]["invoice_date"]
+            );
+            formik.setFieldValue(
+              "description",
+              response["data"]["data"]["description"]
+            );
+            formik.setFieldValue(
+              "file_name",
+              response["data"]["data"]["file_name"]
+            );
+            setUploadFilename(response["data"]["data"]["file_name"]);
+            setInvoiceData(response["data"]["data"]);
+          }
         }
-        formik.setTouched({ ...formik.touched, file: true });
-        formik.setFieldValue('file_name', e.currentTarget.files[0]?.name)
-        formik.setFieldValue('file', e.currentTarget.files[0])
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, termin, gethistoryInvoiceData, formik, intl, setToast]);
+
+  const getTaxData = useCallback(() => {
+    getTax(contract_id, termin)
+      .then((response) => {
+        if (response.data.data?.state == "PENDING") {
+          formik.setFieldValue(
+            "tax_date",
+            new Date(response.data.data.tax_date)
+          );
+          formik.setFieldValue("tax_bool", true);
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, formik, intl, setToast]);
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
+
+  const handleUpload = (e) => {
+    if (e.currentTarget.files.length) {
+      setUploadFilename(e.currentTarget.files[0].name);
+    } else {
+      setUploadFilename(
+        intl.formatMessage({
+          id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+        })
+      );
     }
+    formik.setTouched({ ...formik.touched, file: true });
+    formik.setFieldValue("file_name", e.currentTarget.files[0]?.name);
+    formik.setFieldValue("file", e.currentTarget.files[0]);
+  };
 
-    const handleDate = (e) => {
-        formik.setFieldValue('from_time', new Date(e.target.value))
-        // var date = new Date(e.target.value)
-        // date.setMonth(date.getMonth() + 1)
-        // formik.setFieldValue('thru_time', date.toISOString().split('T')[0])
-    }
+  const handleDate = (e) => {
+    formik.setFieldValue("from_time", new Date(e.target.value));
+    // var date = new Date(e.target.value)
+    // date.setMonth(date.getMonth() + 1)
+    // formik.setFieldValue('thru_time', date.toISOString().split('T')[0])
+  };
 
-    const handleHistory = (index) => {
-        setModalHistoryData(historyInvoiceData[index])
-        setModalHistory(true)
-    }
+  const handleHistory = (index) => {
+    setModalHistoryData(historyInvoiceData[index]);
+    setModalHistory(true);
+  };
 
-    useEffect(getContractData, []);
-    useEffect(getInvoiceData, []);
-    useEffect(getTaxData, []);
+  useEffect(getContractData, []);
+  useEffect(getInvoiceData, []);
+  useEffect(getTaxData, []);
 
-
-    return (
-        <React.Fragment>
-            <Toast />
-            <Dialog
-                open={dialogState}
-                // keepMounted
-                maxWidth={false}
-                fullWidth={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                PaperProps={{
-                    style: {
-                        backgroundColor: 'transparent',
-                        boxShadow: "none",
-                    },
-                }}
-            >
-                <DialogTitleFile
-                    id="alert-dialog-description"
-                    onClose={() => {
-                        setDialogState(false);
+  return (
+    <React.Fragment>
+      <Toast />
+      <Dialog
+        open={dialogState}
+        // keepMounted
+        maxWidth={false}
+        fullWidth={true}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+        }}
+      >
+        <DialogTitleFile
+          id="alert-dialog-description"
+          onClose={() => {
+            setDialogState(false);
+          }}
+        ></DialogTitleFile>
+        <PerfectScrollbar>
+          <DialogContent>
+            <div className="react-component">
+              <Document
+                file={invoiceData?.file}
+                onLoadSuccess={onDocumentLoadSuccess}
+              >
+                <Page pageNumber={pageNumber} renderMode="svg" />
+                <div className="page-controls">
+                  <button
+                    type="button"
+                    disabled={pageNumber === 1}
+                    onClick={() => {
+                      setPageNumber(pageNumber - 1);
                     }}
-                >
-                </DialogTitleFile>
-                <PerfectScrollbar>
-                    <DialogContent>
-                        <div className="react-component">
-                            <Document file={invoiceData?.file} onLoadSuccess={onDocumentLoadSuccess}>
-                                <Page pageNumber={pageNumber} renderMode="svg" />
-                                <div className="page-controls">
-                                    <button
-                                        type="button"
-                                        disabled={pageNumber === 1}
-                                        onClick={() => {
-                                            setPageNumber(pageNumber - 1);
-                                        }}
-                                    >
-                                        <span><i className={`fas fa-chevron-left ${pageNumber === 1 ? '' : 'text-secondary'}`}></i></span>
-                                    </button>
-                                    <span>{pageNumber} <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PDF.OF" /> {numPages}</span>
-                                    <button
-                                        type="button"
-                                        disabled={pageNumber === numPages}
-                                        onClick={() => {
-                                            setPageNumber(pageNumber + 1);
-                                        }}
-                                    >
-                                        <span><i className={`fas fa-chevron-right ${pageNumber === numPages ? '' : 'text-secondary'}`}></i></span>
-                                    </button>
-                                </div>
-                            </Document>
-                        </div>
-                    </DialogContent>
-                </PerfectScrollbar>
-            </Dialog>
-            <Dialog
-                open={modalHistory}
-                // keepMounted
-                maxWidth='sm'
-                fullWidth={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle>
-                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DETAIL_HISTORY" />
-                </DialogTitle>
-                <PerfectScrollbar>
-                    <DialogContent>
-                        <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" /></label>
-                            <div className="col-sm-9">
-                                <span className="form-control-plaintext">: {modalHistoryData['invoice_no']}</span>
-                            </div>
-                        </div>
-                        <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" /></label>
-                            <div className="col-sm-9">
-                                <span className="form-control-plaintext">: {moment(new Date(modalHistoryData['from_time'])).format("YYYY-MM-DD")}</span>
-                            </div>
-                        </div>
-                        <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" /></label>
-                            <div className="col-sm-9">
-                                <span className="form-control-plaintext">: {modalHistoryData['created_by_name']}</span>
-                            </div>
-                        </div>
-                        <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" /></label>
-                            <div className="col-sm-9">
-                                <span className="form-control-plaintext">: {moment(new Date(modalHistoryData['created_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
-                            </div>
-                        </div>
-                        <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] === 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_BY" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />}</label>
-                            <div className="col-sm-9">
-                                <span className="form-control-plaintext">: {modalHistoryData['state'] === 'REJECTED' ? modalHistoryData['rejected_by_name'] : modalHistoryData['approved_by_name']}</span>
-                            </div>
-                        </div>
-                        <div className="form-group row mb-0">
-                            <label className="col-sm-3 col-form-label">{modalHistoryData['state'] === 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DATE" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />}</label>
-                            <div className="col-sm-9">
-                                <span className="form-control-plaintext">: {modalHistoryData['state'] === 'REJECTED' ? moment(new Date(modalHistoryData['rejected_at'])).format("YYYY-MM-DD HH:mm:ss") : moment(new Date(modalHistoryData['approved_at'])).format("YYYY-MM-DD HH:mm:ss")}</span>
-                            </div>
-                        </div>
-                        {modalHistoryData['state'] === 'REJECTED' && <div className="form-group row mb-0">
-                            <label className="col-sm-12 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DESC" /></label>
-                            <div className="col-sm-12">
-                                <textarea disabled className="form-control" defaultValue={modalHistoryData['rejected_remark']}></textarea>
-                            </div>
-                        </div>}
-                    </DialogContent>
-                </PerfectScrollbar>
-                <DialogActions>
-                    <button
-                        className="btn btn-secondary"
-                        onClick={() => setModalHistory(false)}
-                        disabled={loading}
+                  >
+                    <span>
+                      <i
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
+                        }`}
+                      ></i>
+                    </span>
+                  </button>
+                  <span>
+                    {pageNumber}{" "}
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PDF.OF" />{" "}
+                    {numPages}
+                  </span>
+                  <button
+                    type="button"
+                    disabled={pageNumber === numPages}
+                    onClick={() => {
+                      setPageNumber(pageNumber + 1);
+                    }}
+                  >
+                    <span>
+                      <i
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
+                        }`}
+                      ></i>
+                    </span>
+                  </button>
+                </div>
+              </Document>
+            </div>
+          </DialogContent>
+        </PerfectScrollbar>
+      </Dialog>
+      <Dialog
+        open={modalHistory}
+        // keepMounted
+        maxWidth="sm"
+        fullWidth={true}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle>
+          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DETAIL_HISTORY" />
+        </DialogTitle>
+        <PerfectScrollbar>
+          <DialogContent>
+            <div className="form-group row mb-0">
+              <label className="col-sm-3 col-form-label">
+                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" />
+              </label>
+              <div className="col-sm-9">
+                <span className="form-control-plaintext">
+                  : {modalHistoryData["invoice_no"]}
+                </span>
+              </div>
+            </div>
+            <div className="form-group row mb-0">
+              <label className="col-sm-3 col-form-label">
+                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" />
+              </label>
+              <div className="col-sm-9">
+                <span className="form-control-plaintext">
+                  :{" "}
+                  {moment(new Date(modalHistoryData["from_time"])).format(
+                    "YYYY-MM-DD"
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="form-group row mb-0">
+              <label className="col-sm-3 col-form-label">
+                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" />
+              </label>
+              <div className="col-sm-9">
+                <span className="form-control-plaintext">
+                  : {modalHistoryData["created_by_name"]}
+                </span>
+              </div>
+            </div>
+            <div className="form-group row mb-0">
+              <label className="col-sm-3 col-form-label">
+                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
+              </label>
+              <div className="col-sm-9">
+                <span className="form-control-plaintext">
+                  :{" "}
+                  {moment(new Date(modalHistoryData["created_at"])).format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="form-group row mb-0">
+              <label className="col-sm-3 col-form-label">
+                {modalHistoryData["state"] === "REJECTED" ? (
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_BY" />
+                ) : (
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />
+                )}
+              </label>
+              <div className="col-sm-9">
+                <span className="form-control-plaintext">
+                  :{" "}
+                  {modalHistoryData["state"] === "REJECTED"
+                    ? modalHistoryData["rejected_by_name"]
+                    : modalHistoryData["approved_by_name"]}
+                </span>
+              </div>
+            </div>
+            <div className="form-group row mb-0">
+              <label className="col-sm-3 col-form-label">
+                {modalHistoryData["state"] === "REJECTED" ? (
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DATE" />
+                ) : (
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />
+                )}
+              </label>
+              <div className="col-sm-9">
+                <span className="form-control-plaintext">
+                  :{" "}
+                  {modalHistoryData["state"] === "REJECTED"
+                    ? moment(new Date(modalHistoryData["rejected_at"])).format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )
+                    : moment(new Date(modalHistoryData["approved_at"])).format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
+                </span>
+              </div>
+            </div>
+            {modalHistoryData["state"] === "REJECTED" && (
+              <div className="form-group row mb-0">
+                <label className="col-sm-12 col-form-label">
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED_DESC" />
+                </label>
+                <div className="col-sm-12">
+                  <textarea
+                    disabled
+                    className="form-control"
+                    defaultValue={modalHistoryData["rejected_remark"]}
+                  ></textarea>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </PerfectScrollbar>
+        <DialogActions>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setModalHistory(false)}
+            disabled={loading}
+          >
+            <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+          </button>
+        </DialogActions>
+      </Dialog>
+      <Card>
+        <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
+          <CardBody>
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group row">
+                  <label
+                    htmlFor="numberInvoice"
+                    className="col-sm-4 col-form-label"
+                  >
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="numberInvoice"
+                      disabled={loading || invoiceStatus}
+                      defaultValue={
+                        invoiceData ? invoiceData["invoice_no"] : null
+                      }
+                      {...formik.getFieldProps("invoice_no")}
+                    />
+                  </div>
+                  {formik.touched.invoice_no && formik.errors.invoice_no ? (
+                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                      {formik.errors.invoice_no}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="form-group row">
+                  <label
+                    htmlFor="dateInvoice"
+                    className="col-sm-4 col-form-label"
+                  >
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="dateInvoice"
+                      disabled={loading || invoiceStatus}
+                      onBlur={formik.handleBlur}
+                      defaultValue={
+                        invoiceData ? invoiceData["from_time"] : null
+                      }
+                      onChange={(e) => handleDate(e)}
+                    />
+                  </div>
+                  {formik.touched.dateInvoice && formik.errors.from_time ? (
+                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                      {formik.errors.from_time}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="note" className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DESCRIPTION" />
+                  </label>
+                  <div className="col-sm-8">
+                    <textarea
+                      rows="4"
+                      cols=""
+                      className="form-control"
+                      id="note"
+                      disabled={loading || invoiceStatus}
+                      {...formik.getFieldProps("description")}
+                    ></textarea>
+                  </div>
+                  {formik.touched.description && formik.errors.description ? (
+                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                      {formik.errors.description}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="upload" className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_UPLOAD" />
+                  </label>
+                  <label
+                    htmlFor="upload"
+                    className={`input-group mb-3 col-sm-8 ${
+                      !invoiceStatus ? "pointer" : ""
+                    }`}
+                  >
+                    {!invoiceStatus && (
+                      <div className="input-group-prepend">
+                        <span className="input-group-text">
+                          <i className="fas fa-file-upload"></i>
+                        </span>
+                      </div>
+                    )}
+                    <span
+                      className={`form-control text-truncate ${
+                        invoiceStatus ? classes.textDisabled : ""
+                      }`}
                     >
-                        <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
-                    </button>
-                </DialogActions>
-            </Dialog>
-            <Card>
-                <form
-                    noValidate
-                    autoComplete="off"
-                    onSubmit={formik.handleSubmit}
-                >
-                    <CardBody>
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div className="form-group row">
-                                    <label htmlFor="numberInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" /></label>
-                                    <div className="col-sm-8">
-                                        <input type="text" className="form-control" id="numberInvoice" disabled={loading || invoiceStatus} defaultValue={invoiceData ? invoiceData['invoice_no'] : null} {...formik.getFieldProps('invoice_no')} />
-                                    </div>
-                                    {(formik.touched.invoice_no && formik.errors.invoice_no) ? (
-                                        <span className="col-sm-8 offset-sm-4 text-center text-danger" >
-                                            {formik.errors.invoice_no}
-                                        </span>
-                                    ) : null}
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="dateInvoice" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" /></label>
-                                    <div className="col-sm-8">
-                                        <input type="date" className="form-control" id="dateInvoice" disabled={loading || invoiceStatus} onBlur={formik.handleBlur} defaultValue={invoiceData ? invoiceData['from_time'] : null} onChange={e => handleDate(e)} />
-                                    </div>
-                                    {(formik.touched.dateInvoice && formik.errors.from_time) ? (
-                                        <span className="col-sm-8 offset-sm-4 text-center text-danger" >
-                                            {formik.errors.from_time}
-                                        </span>
-                                    ) : null}
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="note" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DESCRIPTION" /></label>
-                                    <div className="col-sm-8">
-                                        <textarea rows="4" cols="" className="form-control" id="note" disabled={loading || invoiceStatus} {...formik.getFieldProps('description')}></textarea>
-                                    </div>
-                                    {(formik.touched.description && formik.errors.description) ? (
-                                        <span className="col-sm-8 offset-sm-4 text-center text-danger" >
-                                            {formik.errors.description}
-                                        </span>
-                                    ) : null}
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="upload" className="col-sm-4 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_UPLOAD" /></label>
-                                    <label htmlFor="upload" className={`input-group mb-3 col-sm-8 ${!invoiceStatus ? 'pointer' : ''}`}>
-                                        {!invoiceStatus && <div className="input-group-prepend">
-                                            <span className="input-group-text"><i className="fas fa-file-upload"></i></span>
-                                        </div>}
-                                        <span className={`form-control text-truncate ${invoiceStatus ? classes.textDisabled : ''}`}>{uploadFilename}</span>
-                                        {invoiceStatus && <div className="input-group-append pointer">
-                                            <span className={`input-group-text ${classes.textHover}`}><a download={invoiceData?.file_name} href={invoiceData?.file}><i className="fas fa-download"></i></a></span>
-                                            <span className={`input-group-text ${classes.textHover}`} onClick={() => setDialogState(true)}><i className="fas fa-eye"></i></span>
-                                        </div>}
-                                    </label>
-                                    {(formik.touched.file && formik.errors.file) ? (
-                                        <span className="col-sm-8 offset-sm-4 text-center text-danger" >
-                                            {formik.errors.file}
-                                        </span>
-                                    ) : null}
-                                    <input type="file" className="d-none" id="upload" disabled={loading || invoiceStatus} onChange={(e => handleUpload(e))} />
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="form-group row">
-                                    <label htmlFor="priceContract" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE" /></label>
-                                    <div className="col-sm-7">
-                                        <input type="text" className="form-control" id="priceContract" defaultValue={contractData['contract_value_new']} disabled />
-                                    </div>
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="poNumber" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" /></label>
-                                    <div className="col-sm-7">
-                                        <input type="text" className="form-control" id="poNumber" defaultValue={contractData['purch_order_no']} disabled />
-                                    </div>
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="priceStep1" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE" values={{ termin: contractData['termin_name'] }} /></label>
-                                    <div className="col-sm-7">
-                                        <input type="text" className="form-control" id="priceStep1" defaultValue={contractData['termin_value_new']} disabled />
-                                    </div>
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="priceTaxInvoice" className="col-sm-5 col-form-label"><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN" values={{ termin: contractData['termin_name'] }} /></label>
-                                    <div className="col-sm-7">
-                                        <input type="text" className="form-control" id="priceTaxInvoice" defaultValue={contractData['termin_value_ppn_new']} disabled />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </CardBody>
-                    <CardFooter className="text-right">
-                        <button type="submit" className="btn btn-primary mx-1" disabled={(formik.touched && !formik.isValid) || loading || invoiceStatus}>
-                            <FormattedMessage id="TITLE.UPLOAD" />
-                            {loading && <span className="spinner-border spinner-border-sm ml-1" aria-hidden="true"></span>}
-                        </button>
-                        <div className="my-5 text-center">
-                            <h6><FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.HISTORY" /></h6>
-                        </div>
-                        {/* begin: Table */}
-                        <div className="table-wrapper-scroll-y my-custom-scrollbar">
-                            <div className="segment-table">
-                                <div className="hecto-10">
-                                    <table className="table-bordered overflow-auto">
-                                        <thead>
-                                            <tr>
-                                                <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.NO" /></th>
-                                                <th className="bg-primary text-white align-middle">
-                                                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" />
-                                                </th>
-                                                <th className="bg-primary text-white align-middle">
-                                                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" />
-                                                </th>
-                                                <th className="bg-primary text-white align-middle">
-                                                    <FormattedMessage id="TITLE.FILE" />
-                                                </th>
-                                                <th className="bg-primary text-white align-middle">
-                                                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" />
-                                                </th>
-                                                <th className="bg-primary text-white align-middle">
-                                                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
-                                                </th>
-                                                <th className="bg-primary text-white align-middle">
-                                                    <FormattedMessage id="TITLE.STATUS" />
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {historyInvoiceData?.map((item, index) => {
-                                                return (
-                                                    <tr key={index.toString()}>
-                                                        <td className="align-middle text-center">
-                                                            {index + 1}
-                                                        </td>
-                                                        <td>{item.invoice_no}</td>
-                                                        <td>{item.from_time}</td>
-                                                        <td className="align-middle text-center">
-                                                            <a href={getFileInvoice + item.file_name}>{item.file_name}</a>
-                                                        </td>
-                                                        <td className="align-middle">{item.created_by_name}</td>
-                                                        <td className="align-middle">{moment(new Date(item.created_at)).format("YYYY-MM-DD HH:mm:ss")}</td>
-                                                        <td className="align-middle"><span className={`${item.state === 'REJECTED' ? 'text-danger' : 'text-success'} pointer font-weight-bold`} onClick={() => handleHistory(index)}>{item.state === 'REJECTED' ? <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" /> : <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />} <i className="fas fa-caret-down"></i></span></td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </CardFooter>
-                </form>
-            </Card>
-        </React.Fragment>
-    )
+                      {uploadFilename}
+                    </span>
+                    {invoiceStatus && (
+                      <div className="input-group-append pointer">
+                        <span
+                          className={`input-group-text ${classes.textHover}`}
+                        >
+                          <a
+                            download={invoiceData?.file_name}
+                            href={invoiceData?.file}
+                          >
+                            <i className="fas fa-download"></i>
+                          </a>
+                        </span>
+                        <span
+                          className={`input-group-text ${classes.textHover}`}
+                          onClick={() => setDialogState(true)}
+                        >
+                          <i className="fas fa-eye"></i>
+                        </span>
+                      </div>
+                    )}
+                  </label>
+                  {formik.touched.file && formik.errors.file ? (
+                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                      {formik.errors.file}
+                    </span>
+                  ) : null}
+                  <input
+                    type="file"
+                    className="d-none"
+                    id="upload"
+                    disabled={loading || invoiceStatus}
+                    onChange={(e) => handleUpload(e)}
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group row">
+                  <label
+                    htmlFor="priceContract"
+                    className="col-sm-5 col-form-label"
+                  >
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" />
+                  </label>
+                  <div className="col-sm-7">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceContract"
+                      defaultValue={contractData["contract_value_new"]}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="poNumber" className="col-sm-5 col-form-label">
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" />
+                  </label>
+                  <div className="col-sm-7">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="poNumber"
+                      defaultValue={contractData["purch_order_no"]}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label
+                    htmlFor="priceStep1"
+                    className="col-sm-5 col-form-label"
+                  >
+                    <FormattedMessage
+                      id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE"
+                      values={{ termin: contractData["termin_name"] }}
+                    />
+                  </label>
+                  <div className="col-sm-7">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceStep1"
+                      defaultValue={contractData["termin_value_new"]}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label
+                    htmlFor="priceTaxInvoice"
+                    className="col-sm-5 col-form-label"
+                  >
+                    <FormattedMessage
+                      id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN"
+                      values={{ termin: contractData["termin_name"] }}
+                    />
+                  </label>
+                  <div className="col-sm-7">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceTaxInvoice"
+                      defaultValue={contractData["termin_value_ppn_new"]}
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardBody>
+          <CardFooter className="text-right">
+            <button
+              type="submit"
+              className="btn btn-primary mx-1"
+              disabled={
+                (formik.touched && !formik.isValid) || loading || invoiceStatus
+              }
+            >
+              <FormattedMessage id="TITLE.UPLOAD" />
+              {loading && (
+                <span
+                  className="spinner-border spinner-border-sm ml-1"
+                  aria-hidden="true"
+                ></span>
+              )}
+            </button>
+            <div className="my-5 text-center">
+              <h6>
+                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.HISTORY" />
+              </h6>
+            </div>
+            {/* begin: Table */}
+            <div className="table-wrapper-scroll-y my-custom-scrollbar">
+              <div className="segment-table">
+                <div className="hecto-10">
+                  <table className="table-bordered overflow-auto">
+                    <thead>
+                      <tr>
+                        <th className="bg-primary text-white align-middle">
+                          <FormattedMessage id="TITLE.NO" />
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" />
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" />
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          <FormattedMessage id="TITLE.FILE" />
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" />
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
+                        </th>
+                        <th className="bg-primary text-white align-middle">
+                          <FormattedMessage id="TITLE.STATUS" />
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {historyInvoiceData?.map((item, index) => {
+                        return (
+                          <tr key={index.toString()}>
+                            <td className="align-middle text-center">
+                              {index + 1}
+                            </td>
+                            <td>{item.invoice_no}</td>
+                            <td>{item.from_time}</td>
+                            <td className="align-middle text-center">
+                              <a href={getFileInvoice + item.file_name}>
+                                {item.file_name}
+                              </a>
+                            </td>
+                            <td className="align-middle">
+                              {item.created_by_name}
+                            </td>
+                            <td className="align-middle">
+                              {moment(new Date(item.created_at)).format(
+                                "YYYY-MM-DD HH:mm:ss"
+                              )}
+                            </td>
+                            <td className="align-middle">
+                              <span
+                                className={`${
+                                  item.state === "REJECTED"
+                                    ? "text-danger"
+                                    : "text-success"
+                                } pointer font-weight-bold`}
+                                onClick={() => handleHistory(index)}
+                              >
+                                {item.state === "REJECTED" ? (
+                                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
+                                ) : (
+                                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
+                                )}{" "}
+                                <i className="fas fa-caret-down"></i>
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </CardFooter>
+        </form>
+      </Card>
+    </React.Fragment>
+  );
 }
 export default injectIntl(connect(null, null)(ContractInvoicePage));
