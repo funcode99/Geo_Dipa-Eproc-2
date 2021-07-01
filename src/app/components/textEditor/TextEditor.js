@@ -1,5 +1,4 @@
 import React from "react";
-import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import JoditEditor from "jodit-react";
