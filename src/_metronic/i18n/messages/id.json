@@ -419,7 +419,7 @@
   "MESSAGE.VALIDATE_QTY": "Quantity harus lebih dari {minValue} and kurang dari {floatQtyAvailable}",
   "TITLE.CONTRACT_ITEM": "Contract Item",
   "TITLE.CONTRACT_TERM": "Contract Term",
-  "TITLE.DOCUMENT_CONTRACT": "Dokumen Contrak",
+  "TITLE.DOCUMENT_CONTRACT": "Dokumen Kontrak",
   "TITLE.DESCRIPTION": "Deskripsi",
   "TITLE.UNIT_PRICE": "Harga per Unit",
   "TITLE.DESC_IS_REQUIRE": "Deskripsi wajib diisi.",
@@ -507,5 +507,5 @@
   "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Direksi Pekerjaan",
   "LABEL.DM.PARTIES.POS_DIRECTOR": "Jabatan Direksi",
   "LABEL.DM.PARTIES.JOB_SUPERV": "Pengawas Pekerjaan",
-  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Termin Ammount"
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Harga Termin"
 }
