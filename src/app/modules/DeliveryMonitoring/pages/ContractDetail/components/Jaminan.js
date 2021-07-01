@@ -7,13 +7,21 @@ import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import UploadInput from "../../../../../components/input/UploadInput";
 
-const ItemSwitch = ({ label, value, onChange }) => {
+const ItemSwitch = React.memo(({ label, value, onChange }) => {
   const [active, setActive] = React.useState(false);
   const [dataForm, setDataForm] = React.useState({});
-  const handleChange = React.useCallback(() => {
-    if (typeof onChange === "function") onChange(!active);
-    setActive((prev) => !prev); // ini ilangin elsenya kalo mau dipake
-  }, [onChange, active, setActive]);
+  const handleActive = React.useCallback(() => {
+    setActive((prev) => !prev);
+    if (typeof onChange === "function" && active === true) onChange("");
+  }, [setActive, active, onChange]);
+  const handleChange = React.useCallback(
+    (e) => {
+      if (typeof onChange === "function") onChange(e);
+    },
+    [onChange]
+  );
+
+  console.log(`type`, value);
 
   const valueUsed = active;
 
@@ -23,70 +31,71 @@ const ItemSwitch = ({ label, value, onChange }) => {
         <FormControlLabel
           control={
             <Switch
-              checked={Boolean(valueUsed)}
-              onChange={handleChange}
+              checked={Boolean(active)}
+              onChange={handleActive}
               color="primary"
             />
           }
           label={label}
         />
-        {Boolean(valueUsed) && <UploadInput onChange={handleChange} />}
-        {/* {Boolean(valueUsed) && (
-          <div className="form-group row">
-            <label className="input-group mb-3 col-sm-8">
-              <div className="input-group-append pointer">
-                <UploadInput onChange={handleChange} />
-                <span className={`input-group-text`}>
-                  <a download={"sppData?.file_name"} href={"sppData?.file"}>
-                    <i className="fas fa-download"></i>
-                  </a>
-                </span>
-                <span className={`input-group-text`}>
-                  <i className="fas fa-eye"></i>
-                </span>
-              </div>
-            </label>
-          </div>
-        )} */}
+        <UploadInput
+          value={value}
+          onChange={onChange}
+          classLabel={Boolean(!active) && "d-none"}
+        />
       </Col>
     </Row>
   );
-};
+});
 
 const Jaminan = () => {
   const dataContractById = useSelector(
     (state) => state.deliveryMonitoring.dataContractById
   );
+  const [dataForm, setDataForm] = React.useState({
+    down_payment: "",
+    implementation: "",
+    maintenance: "",
+  });
   const dataField = React.useMemo(
     () => [
       {
         type: "down_payment",
         label: "Jaminan Uang Muka",
-        value: dataContractById?.down_payment_guarantee,
+        // value: dataContractById?.down_payment_guarantee,
       },
       {
         type: "implementation",
         label: "Jaminan Pelaksanaan",
-        value: dataContractById?.implementation_guarantee,
+        // value: dataContractById?.implementation_guarantee,
       },
       {
         type: "maintenance",
         label: "Jaminan Pemeliharaan",
-        value: dataContractById?.maintenance_guarantee,
+        // value: dataContractById?.maintenance_guarantee,
       },
     ],
     [dataContractById]
   );
-  const handleChange = (state, type) => {};
+  const handleChange = React.useCallback((state, type) => {
+    console.log(`state`, state, type);
+    setDataForm((prev) => ({ ...prev, [type]: state }));
+  }, []);
+
+  const handleSubmit = () => {
+    console.log(`dataForm`, dataForm);
+  };
+
   return (
     <Card>
       <CardBody>
-        {dataField.map(({ type, label, value }, id) => (
+        {dataField.map((el, id) => (
           <ItemSwitch
             key={id}
-            label={label}
-            value={value}
-            onChange={(state) => handleChange(state, type)}
+            label={el.label}
+            value={dataForm[el.type]}
+            type={el.type}
+            onChange={(eve) => handleChange(eve, el.type)}
           />
         ))}
         <div className="d-flex justify-content-end">
