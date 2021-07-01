@@ -284,10 +284,10 @@ function ItemContractInvoice(props) {
   };
 
   const callApiContractSoftCopy = () => {
-    if (!loading) setLoading(true);
+    setLoading(true);
     getListDocSoftCopy(contract, termin)
       .then((result) => {
-        if (loading) setLoading(false);
+        setLoading(false);
             setDataDocSoftCopy(result.data.data);
       })
       .catch((err) => {
