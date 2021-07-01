@@ -10,6 +10,7 @@ import TablePaginationCustom from "../../../../components/tables/TablePagination
 import useToast from "../../../../components/toast";
 import { formatDate } from "../../../../libs/date";
 import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,47 +75,52 @@ export const ContractsPage = () => {
   );
 
   const generateTableContent = (data) => {
-    let dataArr = [];
-    // console.log(`data`, data);
-    data.forEach((item) => {
-      let objData = {
-        contract_no: item?.contract_no,
-        po_number: item?.purch_order_no,
-        procurement_title: item?.contract_name,
-        po_date:
-          item?.issued_date !== null
-            ? formatDate(new Date(item?.issued_date))
-            : null,
-        contract_date:
-          item?.issued_date !== null
-            ? formatDate(new Date(item?.issued_date))
-            : null,
-        group: item?.purch_order?.purch_group?.alias_name,
-        vendor: item?.vendor.party?.full_name,
-        status: item?.state,
-        action: (
-          <ButtonAction
-            hoverLabel="More"
-            data={"1"}
-            // handleAction={console.log(null)}
-            ops={[
-              {
-                label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
-                icon: "fas fa-search text-primary pointer",
-                to: {
-                  url: `/${status}/delivery-monitoring/contract/${item.id}`,
-                  style: {
-                    color: "black",
-                  },
+    let dataArr = data.map((item, id) => ({
+      contract_no: item?.contract_no,
+      po_number: item?.purch_order_no,
+      procurement_title: (
+        <NavLink to={`/${status}/delivery-monitoring/contract/${item.id}`}>
+          {item?.contract_name}
+        </NavLink>
+      ),
+      po_date:
+        item?.issued_date !== null
+          ? formatDate(new Date(item?.issued_date))
+          : null,
+      contract_date:
+        item?.issued_date !== null
+          ? formatDate(new Date(item?.issued_date))
+          : null,
+      group: item?.user_group?.party?.full_name,
+      vendor: item?.vendor.party?.full_name,
+      status: item?.state,
+      action: (
+        <ButtonAction
+          hoverLabel="More"
+          data={"1"}
+          // handleAction={console.log(null)}
+          ops={[
+            {
+              label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
+              icon: "fas fa-search text-primary pointer",
+              to: {
+                url: `/${status}/delivery-monitoring/contract/${item.id}`,
+                style: {
+                  color: "black",
                 },
               },
-            ]}
-          />
-        ),
-      };
-      dataArr.push(objData);
-    });
-    console.log(`objData`, dataArr);
+            },
+          ]}
+        />
+      ),
+    }));
+    console.log(`data`, data);
+    // data.forEach((item) => {
+    //   let objData = {
+    //   };
+    //   dataArr.push(objData);
+    // });
+    // console.log(`objData`, dataArr);
     setNewContent(dataArr);
   };
 

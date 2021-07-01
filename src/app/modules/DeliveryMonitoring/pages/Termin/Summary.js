@@ -39,6 +39,7 @@ const theadItems = [
   { id: "keterangan", label: "Keterangan" },
   { id: "due-date", label: "Due Date" },
   { id: "qty", label: "Qty" },
+  { id: "qty_avail", label: "Qty Available" },
   { id: "uom", label: "Uom" },
   { id: "net-value", label: "Net Value" },
   // { id: 'wbs', label: 'WBS' },
@@ -672,6 +673,7 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle"></TableCell>
                       <TableCell className="align-middle"></TableCell>
                       <TableCell className="align-middle"></TableCell>
+                      <TableCell className="align-middle"></TableCell>
                       {/* <TableCell className="align-middle"></TableCell> */}
                     </TableRow>
 
@@ -714,6 +716,7 @@ export default function Summary({ taskId = "" }) {
                                 <TableCell className="align-middle">
                                   {/* 31/01/2021 */}
                                 </TableCell>
+                                <TableCell>{service?.quantity}</TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
                                   <Form.Control
@@ -723,6 +726,10 @@ export default function Summary({ taskId = "" }) {
                                     step="0.1"
                                     // min="1"
                                     // step="1"
+                                    style={{
+                                      width: 80,
+                                      flex: "none",
+                                    }}
                                     max={service.qty_available}
                                     disabled={!service.checked}
                                     defaultValue={service.qty_available}
@@ -783,6 +790,7 @@ export default function Summary({ taskId = "" }) {
                                 <TableCell className="align-middle">
                                   {/* 31/01/2021 */}
                                 </TableCell>
+                                <TableCell>{service?.qty}</TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
                                   <Form.Control
@@ -790,8 +798,10 @@ export default function Summary({ taskId = "" }) {
                                     size="sm"
                                     min="0.1"
                                     step="0.1"
-                                    // min="1"
-                                    // step="1"
+                                    style={{
+                                      width: 80,
+                                      flex: "none",
+                                    }}
                                     max={(
                                       parseFloat(
                                         service.service.qty_available
@@ -888,6 +898,10 @@ export default function Summary({ taskId = "" }) {
                         <Form.Control
                           type="number"
                           size="sm"
+                          style={{
+                            width: 80,
+                            flex: "none",
+                          }}
                           min={0.1}
                           step={0.1}
                           max={item.qty_available}
@@ -917,7 +931,7 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle">
                         {rupiah(item.unit_price)}
                       </TableCell>
-                      {/* <TableCell className="align-middle"></TableCell> */}
+                      <TableCell className="align-middle"></TableCell>
                     </TableRow>
                   );
                 } else {
@@ -956,6 +970,10 @@ export default function Summary({ taskId = "" }) {
                           size="sm"
                           min={0.1}
                           step={0.1}
+                          style={{
+                            width: 80,
+                            flex: "none",
+                          }}
                           max={(
                             parseFloat(item.qty) +
                             parseFloat(item.item.qty_available)
@@ -989,7 +1007,7 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle">
                         {rupiah(item.item.unit_price)}
                       </TableCell>
-                      {/* <TableCell className="align-middle"></TableCell> */}
+                      <TableCell className="align-middle"></TableCell>
                     </TableRow>
                   );
                 }

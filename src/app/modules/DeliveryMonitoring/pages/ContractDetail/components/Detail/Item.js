@@ -252,7 +252,7 @@ const Item = ({ handleClick }) => {
                 return (
                   <RowAccordion
                     key={el.id}
-                    data={["accordIcon", el.desc, "", "", "", ""]}
+                    data={["accordIcon", el.desc, "", "", "", "", ""]}
                     dataAll={el.item_services}
                   >
                     {(item) => {
@@ -292,12 +292,17 @@ const Item = ({ handleClick }) => {
                             </TableCell>
                             <TableCell>{item2?.short_text}</TableCell>
                             <TableCell></TableCell>
+                            <TableCell>{item2?.quantity}</TableCell>
                             <TableCell>
                               <Form.Control
                                 type="number"
                                 size="sm"
                                 min="0.1"
                                 step="0.1"
+                                style={{
+                                  width: 80,
+                                  flex: "none",
+                                }}
                                 max={item2?.qty_available}
                                 disabled={!item2.checked ? true : false}
                                 defaultValue={item2.qty_available}
@@ -344,12 +349,17 @@ const Item = ({ handleClick }) => {
                     </TableCell>
                     <TableCell>{item?.desc}</TableCell>
                     <TableCell></TableCell>
+                    <TableCell>{item?.qty}</TableCell>
                     <TableCell>
                       <Form.Control
                         type="number"
                         size="sm"
                         min="0.1"
                         step="0.1"
+                        style={{
+                          width: 80,
+                          flex: "none",
+                        }}
                         max={item?.qty_available}
                         disabled={!item.checked ? true : false}
                         defaultValue={item.qty_available}

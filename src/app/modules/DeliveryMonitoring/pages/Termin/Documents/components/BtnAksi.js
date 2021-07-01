@@ -69,7 +69,7 @@ export default function BtnAksi({ item, isPeriodic, handleAction }) {
         label: "Resend Draft",
         icon: "fas fa-redo text-warning",
         type: "resend",
-        params: { resend_id: item?.id },
+        params: { resend_id: item?.id, isPeriodic },
       },
       {
         label: "Submit Document",

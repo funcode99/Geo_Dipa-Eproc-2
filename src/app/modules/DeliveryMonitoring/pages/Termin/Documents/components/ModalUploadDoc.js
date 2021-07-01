@@ -9,11 +9,13 @@ import { FormControl } from "react-bootstrap";
 const ModalUploadDoc = ({ visible, onClose, additionalParams, onSubmit }) => {
   const [file, setFile] = React.useState(false);
   const [remarks, setRemarks] = React.useState(false);
+  const [percent, setPercent] = React.useState(0);
   const [Toast, setToast] = useToast();
   const handleSubmit = React.useCallback(() => {
-    if (file !== false && remarks !== false) onSubmit({ file, remarks });
-    else setToast("Mohon masukkan dokumen !");
-  }, [onSubmit, file, remarks]);
+    if (file !== false && remarks !== false && percent !== false)
+      onSubmit({ file, remarks, percentage: percent });
+    else setToast("Mohon lengkapi isian !");
+  }, [onSubmit, file, remarks, percent]);
   const handleSelectChange = (e) => {
     // console.log(`e`, e.target.value);
     setFile(e.target.files[0]);
@@ -21,6 +23,12 @@ const ModalUploadDoc = ({ visible, onClose, additionalParams, onSubmit }) => {
   const handleRemarksChange = (e) => {
     // console.log(`e`, e.target.value);
     setRemarks(e.target.value);
+  };
+  const handlePercent = (e) => {
+    let value = e.target.value;
+
+    if (value <= 100) setPercent(e.target.value);
+    else setPercent(100);
   };
   return (
     <React.Fragment>
@@ -44,7 +52,15 @@ const ModalUploadDoc = ({ visible, onClose, additionalParams, onSubmit }) => {
           {additionalParams?.isPeriodic && (
             <InputGroup className="mb-3">
               <FormControl
-                // onChange={}
+                style={{
+                  width: 80,
+                  flex: "none",
+                }}
+                onChange={handlePercent}
+                value={percent}
+                type="number"
+                min="0.1"
+                step="0.1"
                 placeholder={"Masukkan Persentase"}
                 aria-label="Amount (to the nearest dollar)"
               />

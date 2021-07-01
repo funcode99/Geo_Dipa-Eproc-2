@@ -1,16 +1,22 @@
 import React from "react";
-import { Form } from "react-bootstrap";
 import { StyledModal } from "../../../../../../components/modals";
 import useToast from "../../../../../../components/toast";
+import * as documentOption from "../../../../../../service/Document";
+import { Form, Row, Col } from "react-bootstrap";
+import { InputGroup } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
 
-const ModalEditDraft = ({ visible, onClose, onSubmit }) => {
+const ModalEditDraft = ({ visible, onClose, additionalParams, onSubmit }) => {
   const [file, setFile] = React.useState(false);
   const [remarks, setRemarks] = React.useState(false);
+  const [percent, setPercent] = React.useState(0);
+
   const [Toast, setToast] = useToast();
   const handleSubmit = React.useCallback(() => {
-    if (file !== false && remarks !== false) onSubmit({ file, remarks });
-    else setToast("Mohon masukkan dokumen !");
-  }, [onSubmit, file, remarks]);
+    if (file !== false && remarks !== false && percent !== false)
+      onSubmit({ file, remarks, percentage: percent });
+    else setToast("Mohon lengkapi isian !");
+  }, [onSubmit, file, remarks, percent]);
   const handleSelectChange = (e) => {
     // console.log(`e`, e.target.value);
     setFile(e.target.files[0]);
@@ -18,6 +24,12 @@ const ModalEditDraft = ({ visible, onClose, onSubmit }) => {
   const handleRemarksChange = (e) => {
     // console.log(`e`, e.target.value);
     setRemarks(e.target.value);
+  };
+  const handlePercent = (e) => {
+    let value = e.target.value;
+
+    if (value <= 100) setPercent(e.target.value);
+    else setPercent(100);
   };
   return (
     <React.Fragment>
@@ -38,6 +50,26 @@ const ModalEditDraft = ({ visible, onClose, onSubmit }) => {
               placeholder="Masukkan Keterangan"
             />
           </Form.Group>
+          {additionalParams?.isPeriodic && (
+            <InputGroup className="mb-3">
+              <FormControl
+                style={{
+                  width: 80,
+                  flex: "none",
+                }}
+                onChange={handlePercent}
+                value={percent}
+                type="number"
+                min="0.1"
+                step="0.1"
+                placeholder={"Masukkan Persentase"}
+                aria-label="Amount (to the nearest dollar)"
+              />
+              <InputGroup.Append>
+                <InputGroup.Text>%</InputGroup.Text>
+              </InputGroup.Append>
+            </InputGroup>
+          )}
           <Form.Group controlId="file-attachment">
             <Form.Label>File Dokumen</Form.Label>
             <Form.File onChange={handleSelectChange} size="sm" />
