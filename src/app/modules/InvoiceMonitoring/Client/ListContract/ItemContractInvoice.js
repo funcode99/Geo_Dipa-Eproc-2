@@ -437,7 +437,7 @@ function ItemContractInvoice(props) {
           <FormattedMessage id="TITLE.CONFIRMATION" />
         </DialogTitle>
         <DialogContent>
-          <FormattedMessage id="TITLE.NOTIV_ACTION_CHANGES" />
+          <FormattedMessage id="TITLE.NOTIF_ACTION_CHANGES" />
         </DialogContent>
         <DialogActions>
           <button
@@ -784,7 +784,7 @@ function ItemContractInvoice(props) {
         <CardHeader title="">
           <CardHeaderToolbar>
             <button type="button" className="btn btn-sm btn-primary">
-              Send Notiv
+              Send Notif
             </button>
           </CardHeaderToolbar>
         </CardHeader>

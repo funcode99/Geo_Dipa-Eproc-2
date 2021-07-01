@@ -539,7 +539,7 @@ function ContractHardCopyDoc(props) {
         </CardBody>
         <CardFooter>
           <button type="button" className="btn btn-sm btn-primary">
-            Send Notiv
+            Send Notif
           </button>
         </CardFooter>
       </Card>

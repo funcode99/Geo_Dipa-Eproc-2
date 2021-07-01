@@ -259,8 +259,8 @@ function ItemContractSummary(props) {
     monitoring_type: monitoring_type,
   };
 
-  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function (errorMessage) {
-    return this.test(`test-card-length`, errorMessage, function (value) {
+  Yup.addMethod(Yup.string, "checkAvailabilityEmail", function(errorMessage) {
+    return this.test(`test-card-length`, errorMessage, function(value) {
       const { path, createError } = this;
       return emailAvailability || createError({ path, message: errorMessage });
     });
