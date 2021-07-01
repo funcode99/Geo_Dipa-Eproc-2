@@ -218,7 +218,7 @@ function ItemContractBKB(props) {
                 <div className="form-check">
                   <input
                     className="form-check-input pointer"
-                    type="radio"
+                    type="checkbox"
                     id="transfer"
                     name="pay"
                   />
@@ -248,34 +248,21 @@ function ItemContractBKB(props) {
                 <div className="form-check">
                   <input
                     className="form-check-input pointer"
-                    type="radio"
+                    type="checkbox"
                     id="giro"
                     name="pay"
                   />
                 </div>
               </div>
-              <div className="col-sm-4 form-group">
+              <div className="col-sm-10 form-group">
                 <div className="row">
                   <label
-                    className="font-weight-bold pointer col-sm-3 px-0"
+                    className="font-weight-bold pointer col-sm-1 px-0"
                     htmlFor="giro"
                   >
-                    <FormattedMessage id="TITLE.CEK_NUMBER" />
+                    <FormattedMessage id="TITLE.NO" />
                   </label>
-                  <div className="col-sm-9">
-                    <input
-                      type="text"
-                      className="form-control form-control-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6 form-group">
-                <div className="row">
-                  <label className="font-weight-bold col-sm-2">
-                    <FormattedMessage id="TITLE.GIRO_NUMBER" />
-                  </label>
-                  <div className="col-sm-10">
+                  <div className="col-sm-11">
                     <input
                       type="text"
                       className="form-control form-control-sm"
@@ -389,12 +376,12 @@ function ItemContractBKB(props) {
               </div>
               <div className="col-sm border text-center">
                 <span>
-                  <FormattedMessage id="TITLE.FINANCE" />:
+                  <FormattedMessage id="TITLE.ACCOUNTING" />:
                 </span>
               </div>
               <div className="col-sm border text-center">
                 <span>
-                  <FormattedMessage id="TITLE.ACCOUNTING" />:
+                  <FormattedMessage id="TITLE.FINANCE" />:
                 </span>
               </div>
             </div>

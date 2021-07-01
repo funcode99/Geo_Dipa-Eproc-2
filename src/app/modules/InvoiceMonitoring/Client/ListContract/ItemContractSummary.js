@@ -256,7 +256,7 @@ function ItemContractSummary(props) {
                   htmlFor="priceContract"
                   className="col-sm-4 col-form-label"
                 >
-                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE" />
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" />
                 </label>
                 <div className="col-sm-8">
                   <input
@@ -284,7 +284,7 @@ function ItemContractSummary(props) {
               </div>
               <div className="form-group row">
                 <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
-                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_VALUE" />
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT" />
                 </label>
                 <div className="col-sm-8">
                   <input
