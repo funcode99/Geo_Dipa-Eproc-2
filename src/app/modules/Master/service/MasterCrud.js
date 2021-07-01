@@ -151,6 +151,10 @@ export function getListSchedule() {
   return axios.get(`data/get_schedule`);
 }
 
+export function getListParameter() {
+  return axios.get(`data/list_parameter_email`);
+}
+
 // master data invoice periods
 
 export function getInvoicePeriods() {
