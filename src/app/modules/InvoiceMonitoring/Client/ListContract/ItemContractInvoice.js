@@ -362,8 +362,6 @@ function ItemContractInvoice(props) {
     if (modalApproved.data.hardcopy_state === null) {
       softcopy_save(data_1)
       .then((result) => {
-          sendApprovedDocSoftCopyLast(result.data.data.id, data_2)
-            .then((results) => {
         setModalApproved({
           ...modalApproved,
           statusReq: true,
@@ -385,14 +383,6 @@ function ItemContractInvoice(props) {
         });
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
-        })
-        .catch((err) => {
-          setModalApproved({
-            ...modalApproved,
-            loading: true,
-          });
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-        });
     } else {
       sendApprovedDocSoftCopyLast(
         modalApproved.data.document_monitoring_id,
