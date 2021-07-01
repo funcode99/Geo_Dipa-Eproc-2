@@ -894,6 +894,7 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle">
                         {/* 31/01/2021 */}
                       </TableCell>
+                      <TableCell className="align-middle">{item.qty}</TableCell>
                       <TableCell className="align-middle">
                         <Form.Control
                           type="number"
@@ -931,7 +932,6 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle">
                         {rupiah(item.unit_price)}
                       </TableCell>
-                      <TableCell className="align-middle"></TableCell>
                     </TableRow>
                   );
                 } else {
@@ -963,6 +963,9 @@ export default function Summary({ taskId = "" }) {
                       </TableCell>
                       <TableCell className="align-middle">
                         {/* 31/01/2021 */}
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        {item.item.qty}
                       </TableCell>
                       <TableCell className="align-middle">
                         <Form.Control
@@ -1007,7 +1010,6 @@ export default function Summary({ taskId = "" }) {
                       <TableCell className="align-middle">
                         {rupiah(item.item.unit_price)}
                       </TableCell>
-                      <TableCell className="align-middle"></TableCell>
                     </TableRow>
                   );
                 }

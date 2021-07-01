@@ -482,6 +482,9 @@
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE": "Verified",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE": "Not Verified",
   "TITLE.UPLOAD_SIGNED_DOCUMENT": "Upload Signed Document",
+  "TITLE.USER": "User",
+  "TITLE.ACTIVITY": "Activity",
+
   "LABEL.DM.PARTIES.1_PARTY": "First Party",
   "LABEL.DM.PARTIES.2_PARTY": "Second Party",
   "LABEL.DM.PARTIES.NAMA_PEMBERI": "Giver's Name",
@@ -507,5 +510,15 @@
   "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Board of Director",
   "LABEL.DM.PARTIES.POS_DIRECTOR": "Position of Director",
   "LABEL.DM.PARTIES.JOB_SUPERV": "Job Supervisor",
+  "TITLE.SERVICE_ACCEPTANCE": "Service Acceptance",
+  "TITLE.GOOD_RECEIPT": "Good Receipt",
+  "LABEL.SA_NUMBER": "SA Number",
+  "LABEL.POSTING_DATE": "Posting Date",
+  "LABEL.DOCUMENT_DATE": "Document Date",
+  "LABEL.PURCHASING_GROUP": "Purchasing Group",
+  "LABEL.TELEPHONE": "Telephone",
+  "TITLE.NET_VALUE": "Net Value",
+  "TITLE.POSITION": "Position",
+  "TITLE.COMMENT": "Comment",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Termin Amount"
 }

@@ -19,6 +19,26 @@ import useToast from "../../../../../../components/toast";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 import { formatDate } from "../../../../../../libs/date";
 import { FormattedMessage } from "react-intl";
+import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
+
+const tableHeader = [
+  {
+    id: "no",
+    label: <FormattedMessage id="TITLE.NO" />,
+  },
+  {
+    id: "user",
+    label: <FormattedMessage id="TITLE.USER" />,
+  },
+  {
+    id: "date",
+    label: <FormattedMessage id="TITLE.DATE" />,
+  },
+  {
+    id: "activity",
+    label: <FormattedMessage id="TITLE.ACTIVITY" />,
+  },
+];
 
 const validationClient = object().shape({
   hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
@@ -53,6 +73,7 @@ const BastPage = ({ status, contract, saveContract }) => {
     (key, state) => setLoadings((prev) => ({ ...prev, [key]: state })),
     [setLoadings]
   );
+  const [content, setContent] = React.useState([]);
   const { news, contract_name, vendor, contract_no, purch_order_no } = contract;
   const initialValues = React.useMemo(
     () => ({
@@ -83,6 +104,19 @@ const BastPage = ({ status, contract, saveContract }) => {
     },
     [setToast]
   );
+
+  const generateTableContent = (data) => {
+    console.log(`data`, data);
+
+    let dataArr = data.map((item, id) => ({
+      no: (id += 1),
+      user: item?.vendor?.username || item?.user?.username,
+      date: formatDate(new Date(item?.createdAt)),
+      activity: item?.description,
+    }));
+
+    setContent(dataArr);
+  };
 
   const handleSuccess = React.useCallback(
     async (res) => {
@@ -125,11 +159,17 @@ const BastPage = ({ status, contract, saveContract }) => {
       .then(handleSuccess)
       .catch(handleError)
       .finally(() => {
-        setTimeout(() => {
-          handleLoading("post", false);
-        }, 3000);
+        // setTimeout(() => {
+        handleLoading("post", false);
+        // }, 3000);
       });
   };
+
+  React.useEffect(() => {
+    if (news && Array.isArray(news?.news_histories)) {
+      generateTableContent(news.news_histories);
+    }
+  }, [news]);
 
   let disabledInput = Object.keys(initialValues);
   let allowedClient = ["hasil_pekerjaan"];
@@ -221,7 +261,7 @@ const BastPage = ({ status, contract, saveContract }) => {
               </Row>
               <Row>
                 <Col md={12}>
-                  <TableBuilder
+                  {/* <TableBuilder
                     hecto={10}
                     dataHead={[
                       "No BAST",
@@ -245,6 +285,11 @@ const BastPage = ({ status, contract, saveContract }) => {
                         ]}
                       />
                     )}
+                  /> */}
+                  <TablePaginationCustom
+                    headerRows={tableHeader}
+                    rows={content}
+                    loading={loadings.fetch}
                   />
                 </Col>
               </Row>
