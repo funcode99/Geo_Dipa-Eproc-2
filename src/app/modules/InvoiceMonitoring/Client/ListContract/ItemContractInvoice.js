@@ -42,7 +42,9 @@ import {
   getListDocSoftCopy,
   getDetailDocSoftCopy,
   sendApprovedDocSoftCopy,
-  sendRejectedDocSoftCopy,
+  softcopy_save,
+  sendRejectedDocSoftCopyLast,
+  sendApprovedDocSoftCopyLast,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
@@ -283,27 +285,9 @@ function ItemContractInvoice(props) {
 
   const callApiContractSoftCopy = () => {
     setLoading(true);
-    getListDocSoftCopy()
+    getListDocSoftCopy(contract, termin)
       .then((result) => {
-        getDetailDocSoftCopy(contract, termin)
-          .then((results) => {
-            result.data.data.map((item, index) => {
-              if (item.seq === 1)
-                item.no_document = results.data.data?.contract_no;
-              if (item.seq === 2)
-                item.no_document = results.data.data?.po_number;
-              if (item.seq === 3) item.no_document = results.data.data?.bapp;
-              if (item.seq === 4) item.no_document = results.data.data?.bast;
-              if (item.seq === 5)
-                item.no_document = results.data.data?.npwp_number;
-            });
             setDataDocSoftCopy(result.data.data);
-            // getDetailDocSoftCopy();
-          })
-          .catch((err) => {
-        setLoading(false);
-            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-          });
       })
       .catch((err) => {
         setLoading(false);
@@ -325,13 +309,12 @@ function ItemContractInvoice(props) {
     //   });
   };
 
-  const getFileContract = (e) => {
-    e.preventDefault();
-    getFileEproc({ filename: contractFilename })
+  const getFileContract = (name) => {
+    getFileEproc({ filename: name })
       .then((result) => {
         var a = document.createElement("a");
         a.href = result.data.data.items.respons;
-        a.download = contractFilename;
+        a.download = name;
         a.click();
         a.remove();
       })
@@ -365,10 +348,19 @@ function ItemContractInvoice(props) {
 
   const handleApproved = () => {
     setModalApproved({ ...modalApproved, loading: true });
-    var data = {
+    var data_1 = {
+      contract_id: contract,
+      term_id: termin,
+      softcopy_state: "APPROVED",
+      document_id: modalApproved.data.document_id,
+      document_no: modalApproved.data.doc_no,
+      created_by_id: user_id,
+    };
+    var data_2 = {
       softcopy_approved_by_id: user_id,
     };
-    sendApprovedDocSoftCopy(modalApproved.data.document_id, data)
+    if (modalApproved.data.hardcopy_state === null) {
+      softcopy_save(data_1)
       .then((result) => {
         setModalApproved({
           ...modalApproved,
@@ -376,6 +368,7 @@ function ItemContractInvoice(props) {
           loading: true,
         });
         setTimeout(() => {
+                callApiContractSoftCopy();
           setModalApproved({
             ...modalApproved,
             statusDialog: false,
@@ -390,20 +383,72 @@ function ItemContractInvoice(props) {
         });
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
+    } else {
+      sendApprovedDocSoftCopyLast(
+        modalApproved.data.document_monitoring_id,
+        data_2
+      )
+        .then((results) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            callApiContractSoftCopy();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setModalApproved({
+            ...modalApproved,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
   };
 
   const handleRejected = (e) => {
     e.preventDefault();
     setModalReject({ ...modalReject, loading: true });
     var note = document.getElementById("commentRejected").value;
-    sendRejectedDocSoftCopy(modalReject.data.document_id)
+    var data_1 = {
+      contract_id: contract,
+      term_id: termin,
+      softcopy_state: "REJECTED",
+      document_id: modalReject.data.document_id,
+      document_no: modalReject.data.doc_no,
+      created_by_id: user_id,
+    };
+    var data_2 = {
+      document_monitoring_id: "",
+      contract_id: contract,
+      term_id: termin,
+      document_id: modalReject.data.document_id,
+      document_no: modalReject.data.doc_no,
+      created_at: window.moment(new Date()).format("YYYY-MM-DD"),
+      created_by_id: user_id,
+      rejected_by_id: user_id,
+      rejected_remark: note,
+    };
+    if (modalReject.data.hardcopy_state === null) {
+      softcopy_save(data_1)
       .then((result) => {
+          data_2.document_monitoring_id = result.data.data.id;
+          sendRejectedDocSoftCopyLast(data_2)
+            .then((results) => {
         setModalReject({
           ...modalReject,
           statusReq: true,
           loading: true,
         });
         setTimeout(() => {
+                callApiContractSoftCopy();
           setModalReject({
             ...modalReject,
             statusDialog: false,
@@ -418,6 +463,40 @@ function ItemContractInvoice(props) {
         });
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
+        })
+        .catch((err) => {
+          setModalReject({
+            ...modalReject,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else {
+      data_2.document_monitoring_id = modalReject.data.document_monitoring_id;
+      sendRejectedDocSoftCopyLast(data_2)
+        .then((results) => {
+          setModalReject({
+            ...modalReject,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            callApiContractSoftCopy();
+            setModalReject({
+              ...modalReject,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setModalReject({
+            ...modalReject,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
   };
 
   return (
@@ -495,14 +574,7 @@ function ItemContractInvoice(props) {
           <DialogTitle id="alert-dialog-slide-title">
             <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
             <span className="text-danger">
-              {" " +
-                (modalReject.data.document?.name || "") +
-                (modalReject.data?.due_date
-                  ? " - " +
-                    window
-                      .moment(new Date(modalReject.data?.due_date))
-                      .format("DD MMM YYYY")
-                  : "")}
+              {" " + (modalReject.data.document_name || "")}
             </span>
           </DialogTitle>
           <DialogContent>
@@ -616,26 +688,42 @@ function ItemContractInvoice(props) {
                         <tr key={index.toString()}>
                           <td className="align-middle">{item.seq}</td>
                           <td>{item.document_name}</td>
-                          <td>{item.no_document}</td>
-                          {/* {contractFilename ? (
+                          {item.doc_no ? (
+                            item.doc_file ? (
                         <td>
-                          <a href="#" onClick={getFileContract}>
-                            {dataSoftCopy?.contract_number}
+                                <a
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    getFileContract(item.doc_file);
+                                  }}
+                                >
+                                  {item.doc_no}
                           </a>
                         </td>
                       ) : (
-                        <td>
-                              {dataSoftCopy?.contract_number} (file tidak
-                              tersedia)
+                              <td>{item.doc_no} (file tidak tersedia)</td>
+                            )
+                          ) : (
+                            <td></td>
+                          )}
+                          <td className="align-middle">
+                            {item.softcopy_approved_at
+                              ? window
+                                  .moment(new Date(item.softcopy_approved_at))
+                                  .format("DD MMM YYYY")
+                              : ""}
                         </td>
-                          )} */}
-                          <td className="align-middle">Belum Tersedia</td>
                       <td className="align-middle">
+                            {(item.softcopy_state === null ||
+                              item.softcopy_state === "PENDING") &&
+                              item.doc_no && (
                         <ButtonAction
                               data={item}
                           handleAction={handleAction}
                           ops={data_ops}
                         />
+                              )}
                       </td>
                     </tr>
                       );

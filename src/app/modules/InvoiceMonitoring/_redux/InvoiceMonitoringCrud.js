@@ -185,8 +185,10 @@ export async function getDeliverableInInvoive(id) {
 export async function getAsyncSpt(data) {
   return axios.post(`/invoice/async_list_spt`, data);
 }
-export async function getListDocSoftCopy() {
-  return axios.get(`/invoice/get_doc_softcopy`);
+export async function getListDocSoftCopy(contractId, termId) {
+  return axios.get(
+    `/invoice/get_soft_copy_support?contract_id=${contractId}&term_id=${termId}`
+  );
 }
 export async function getDetailDocSoftCopy(contractId, termId) {
   return axios.get(`/invoice/get_soft_copy/${contractId}/${termId}`);
@@ -194,6 +196,12 @@ export async function getDetailDocSoftCopy(contractId, termId) {
 export async function sendApprovedDocSoftCopy(id, data) {
   return axios.post(`/invoice/softcopy_approved/${id}`, data);
 }
-export async function sendRejectedDocSoftCopy(id) {
-  return axios.post(`/invoice/softcopy_rejected/${id}`);
+export async function softcopy_save(data) {
+  return axios.post(`/invoice/softcopy_save`, data);
+}
+export async function sendRejectedDocSoftCopyLast(data) {
+  return axios.post(`/invoice/softcopy_rejected_save`, data);
+}
+export async function sendApprovedDocSoftCopyLast(id, data) {
+  return axios.post(`/invoice/softcopy_approved/${id}`, data);
 }
