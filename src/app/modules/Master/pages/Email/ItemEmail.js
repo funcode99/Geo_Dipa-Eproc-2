@@ -14,7 +14,11 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
 import { SubWrap } from "../style";
-import { getEmail, getListSchedule, updateSla } from "../../service/MasterCrud";
+import {
+  getEmail,
+  getListSchedule,
+  getListParameter,
+} from "../../service/MasterCrud";
 import useToast from "../../../../components/toast";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
@@ -28,6 +32,7 @@ import ReactHtmlParser, {
   htmlparser2,
 } from "react-html-parser";
 import TextEditor from "../../../../components/textEditor/TextEditor";
+import copy from "clipboard-copy";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -60,6 +65,8 @@ const ItemEmail = (props) => {
   const [data, setData] = useState({});
   const [valueText, setValueText] = useState("");
   const [optionSchedule, setOptionSchedule] = useState([]);
+  const [optionParameter, setOptionParameter] = useState([]);
+  const [selectedParameter, setSelectedParameter] = useState({});
 
   const sendUpdate = useCallback(
     (e) => {
@@ -118,6 +125,13 @@ const ItemEmail = (props) => {
       .catch((err) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
+    getListParameter()
+      .then((result) => {
+        setOptionParameter(result.data.data);
+      })
+      .catch((err) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   }, []);
 
   useEffect(callAPI, []);
@@ -126,6 +140,12 @@ const ItemEmail = (props) => {
     setValueText(value);
   };
   // useEffect(handleTextArea, [data]);
+
+  const copyString = () => {
+    if (selectedParameter.id) {
+      copy(selectedParameter.value);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -180,19 +200,15 @@ const ItemEmail = (props) => {
                   <Col sm="10">
                     <InputGroup className="mb-3">
                       <Select
-                        value={[]}
-                        options={[
-                          { label: "Nomor Invoice", value: "{Invoice_Number}" },
-                          { label: "Total tagihan", value: " {Total_Bill}" },
-                          {
-                            label: "Nomor Kontrak",
-                            value: "{Number_Contract}",
-                          },
-                        ]}
+                        value={selectedParameter}
+                        options={optionParameter}
                         isDisabled={false}
                         className="form-control border-0 p-0 h-100"
                         classNamePrefix="react-select"
                         styles={customStyles}
+                        onChange={(value) => {
+                          setSelectedParameter(value);
+                        }}
                       />
                       {/* <select className="custom-select" defaultValue={0}>
                         <option value="0" hidden>
@@ -203,7 +219,10 @@ const ItemEmail = (props) => {
                         <option value="3">Three</option>
                       </select> */}
                       <InputGroup.Append>
-                        <InputGroup.Text className="pointer">
+                        <InputGroup.Text
+                          className="pointer"
+                          onClick={copyString}
+                        >
                           <i className="far fa-copy mr-2"></i>Copy
                         </InputGroup.Text>
                       </InputGroup.Append>
