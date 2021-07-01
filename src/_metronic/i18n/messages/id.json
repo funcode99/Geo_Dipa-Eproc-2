@@ -482,6 +482,8 @@
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE": "Terverifikasi",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE": "Belum Verifikasi",
   "TITLE.UPLOAD_SIGNED_DOCUMENT": "Unggah Dokumen Bertandatangan",
+  "TITLE.USER": "Pengguna",
+  "TITLE.ACTIVITY": "Aktivitas",
 
   "LABEL.DM.PARTIES.1_PARTY": "Pihak Pertama",
   "LABEL.DM.PARTIES.2_PARTY": "Pihak Kedua",
@@ -508,6 +510,4 @@
   "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Direksi Pekerjaan",
   "LABEL.DM.PARTIES.POS_DIRECTOR": "Jabatan Direksi",
   "LABEL.DM.PARTIES.JOB_SUPERV": "Pengawas Pekerjaan"
-
-
 }

@@ -482,7 +482,8 @@
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE": "Verified",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE": "Not Verified",
   "TITLE.UPLOAD_SIGNED_DOCUMENT": "Upload Signed Document",
-
+  "TITLE.USER": "User",
+  "TITLE.ACTIVITY": "Activity",
 
   "LABEL.DM.PARTIES.1_PARTY": "First Party",
   "LABEL.DM.PARTIES.2_PARTY": "Second Party",
@@ -509,7 +510,4 @@
   "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Board of Director",
   "LABEL.DM.PARTIES.POS_DIRECTOR": "Position of Director",
   "LABEL.DM.PARTIES.JOB_SUPERV": "Job Supervisor"
-  
-
-
 }
