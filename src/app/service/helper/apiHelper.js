@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 const apiHelper = {
   handleError: (err, setToast) => {
     if (
@@ -7,4 +9,9 @@ const apiHelper = {
       setToast(err.response?.data.message, 5000);
     }
   },
+  checkIsEmpty: (key, value) => {
+    return { [_.isEmpty(value) ? undefined : key]: value };
+  },
 };
+
+export default apiHelper;

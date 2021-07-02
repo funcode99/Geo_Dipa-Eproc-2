@@ -90,6 +90,16 @@ export async function postCreateBAPP({ url, ...params }) {
   return axios.post(url, params);
 }
 
+// Jaminan
+export async function uploadGuarantee(cont_id, oldParams) {
+  let params = new FormData();
+  Object.keys(oldParams).forEach((element) => {
+    params.append(element, oldParams[element].data);
+  });
+  console.log(`params`, params);
+  return axios.post(`delivery/contract/${cont_id}/upload-guarantee`, params);
+}
+
 // BAST
 export async function postCreateBAST({ url, ...params }) {
   // console.log(`params`, params, url);
