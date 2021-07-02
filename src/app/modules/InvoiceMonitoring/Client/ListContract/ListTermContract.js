@@ -46,12 +46,6 @@ const ListTermContract = (props) => {
   const [loading, setLoading] = useState(false);
   const [Toast, setToast] = useToast();
 
-  const handleAction = (type, data) => {
-    history.push(
-      `/client/invoice_monitoring/contract/${contract}/${data.task_id}`
-    );
-  };
-
   const getData = () => {
     setLoading(true);
     getTermContract(contract)

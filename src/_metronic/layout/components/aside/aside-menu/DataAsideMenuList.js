@@ -135,6 +135,11 @@ export const DataAsideMenuListClient = [
         title: "TITLE.EMAIL",
         subMenu: null,
       },
+      {
+        rootPath: "/client/master/purch_group",
+        title: "TITLE.PURCHASE_GROUPS",
+        subMenu: null,
+      },
     ],
   },
 ];
