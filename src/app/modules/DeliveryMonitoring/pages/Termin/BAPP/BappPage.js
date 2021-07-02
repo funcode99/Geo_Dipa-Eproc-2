@@ -16,7 +16,27 @@ import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import { RowNormal } from "./components";
 import { Button, ButtonGroup } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
+import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
+
+const tableHeader = [
+  {
+    id: "no",
+    label: <FormattedMessage id="TITLE.NO" />,
+  },
+  {
+    id: "user",
+    label: <FormattedMessage id="TITLE.USER" />,
+  },
+  {
+    id: "date",
+    label: <FormattedMessage id="TITLE.DATE" />,
+  },
+  {
+    id: "activity",
+    label: <FormattedMessage id="TITLE.ACTIVITY" />,
+  },
+];
 
 const validationClient = object().shape({
   hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
@@ -38,6 +58,7 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
   //   submit: false,
   //   tempParams: {},
   // });
+  const [content, setContent] = React.useState([]);
   const isClient = status === "client";
 
   const initialValues = React.useMemo(
@@ -129,6 +150,17 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
     }
   };
 
+  const generateTableContent = (data) => {
+    // console.log(`data`, data);
+    let dataArr = data.map((item, id) => ({
+      no: (id += 1),
+      user: item?.vendor?.username || item?.user?.username,
+      date: formatDate(new Date(item?.createdAt)),
+      activity: item?.description,
+    }));
+    setContent(dataArr);
+  };
+
   const fetchData = React.useCallback(
     (toast = { visible: false, message: "" }) => {
       handleLoading("get", true);
@@ -140,6 +172,7 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
           handleLoading("get", false);
           if (res.data.status === true) {
             saveTask(res?.data?.data);
+            generateTableContent(res?.data?.data?.news?.news_histories);
 
             updateExclude();
 
@@ -281,7 +314,7 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
             <Col md={12}>
               <ButtonGroup size="medium" color="secondary" variant="contained">
                 <Button
-                  onClick={() => handleAction("preview", taskNews?.file)}
+                  onClick={() => handleAction("preview", taskNews)}
                   disabled={taskNews ? false : true}
                 >
                   <FormattedMessage id="TITLE.PREVIEW" />
@@ -302,7 +335,7 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
           </Row>
           <Row>
             <Col md={12}>
-              <TableBuilder
+              {/* <TableBuilder
                 hecto={5}
                 dataHead={["No", "User", "Tanggal", "Aktivitas", "Aksi"]}
                 dataBody={taskNews?.news_histories}
@@ -318,6 +351,11 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
                     ]}
                   />
                 )}
+              /> */}
+              <TablePaginationCustom
+                headerRows={tableHeader}
+                rows={content}
+                loading={loading.get}
               />
             </Col>
           </Row>

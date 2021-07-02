@@ -482,6 +482,9 @@
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_TRUE": "Terverifikasi",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.VERIFICATION_FALSE": "Belum Verifikasi",
   "TITLE.UPLOAD_SIGNED_DOCUMENT": "Unggah Dokumen Bertandatangan",
+  "TITLE.USER": "Pengguna",
+  "TITLE.ACTIVITY": "Aktivitas",
+
   "LABEL.DM.PARTIES.1_PARTY": "Pihak Pertama",
   "LABEL.DM.PARTIES.2_PARTY": "Pihak Kedua",
   "LABEL.DM.PARTIES.NAMA_PEMBERI": "Nama Pemberi",
@@ -507,8 +510,15 @@
   "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Direksi Pekerjaan",
   "LABEL.DM.PARTIES.POS_DIRECTOR": "Jabatan Direksi",
   "LABEL.DM.PARTIES.JOB_SUPERV": "Pengawas Pekerjaan",
-  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Harga Termin",
-  "TITLE.PURCHASE_GROUPS": "Purchase Groups",
-  "TITLE.FROM_DATE": "Dari Tanggal",
-  "TITLE.THRU_DATE": "Sampai Tanggal"
+  "TITLE.SERVICE_ACCEPTANCE": "Penerimaan",
+  "TITLE.GOOD_RECEIPT": "Tanda Terima",
+  "LABEL.SA_NUMBER": "Nomor SA",
+  "LABEL.POSTING_DATE": "Tanggal Posting",
+  "LABEL.DOCUMENT_DATE": "Tanggal Dokumen",
+  "LABEL.PURCHASING_GROUP": "Kelompok Purchasing",
+  "LABEL.TELEPHONE": "Telepon",
+  "TITLE.NET_VALUE": "Nilai Bersih",
+  "TITLE.POSITION": "Posisi",
+  "TITLE.COMMENT": "Komentar",
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Harga Termin"
 }
