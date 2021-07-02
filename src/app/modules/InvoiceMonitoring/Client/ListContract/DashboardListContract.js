@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { connect } from "react-redux";
+import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
-import { getContractClient } from "../../_redux/InvoiceMonitoringCrud";
+import { getContractMainFinance, getContractUnitFinance, getContractUser } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { TablePagination } from "@material-ui/core";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
@@ -19,6 +19,11 @@ const data_ops = [
 ];
 
 function DashboardListContract(props) {
+
+  const user_id = useSelector((state) => state.auth.user.data.user_id, shallowEqual);
+  const is_finance = useSelector((state) => state.auth.user.data.is_finance, shallowEqual);
+  const is_main = useSelector((state) => state.auth.user.data.is_main, shallowEqual);
+
   const { intl } = props;
   const [Toast, setToast] = useToast();
   const [filterTable, setFilterTable] = useState({});
@@ -86,7 +91,8 @@ function DashboardListContract(props) {
       filterSorts = Object.assign({}, filterSorts, pagination);
       setFilterSort({ ...filterSorts });
       let params = new URLSearchParams(filterSorts).toString();
-      getContractClient(params)
+      if (is_finance && is_main) {
+        getContractMainFinance(params)
         .then((result) => {
           setLoading(false);
           setData(result.data.data);
@@ -97,6 +103,31 @@ function DashboardListContract(props) {
           setLoading(false);
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
+      } else if (is_finance) {
+        getContractUnitFinance(user_id, params)
+          .then((result) => {
+            setLoading(false);
+            setData(result.data.data);
+            setPaginations({ ...paginations, count: result.data.count || 0 });
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      } else {
+        getContractUser(user_id, params)
+          .then((result) => {
+            setLoading(false);
+            setData(result.data.data);
+            setPaginations({ ...paginations, count: result.data.count || 0 });
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      }
     },
     [filterTable, sortData, filterSort, intl, setToast, paginations]
   );
