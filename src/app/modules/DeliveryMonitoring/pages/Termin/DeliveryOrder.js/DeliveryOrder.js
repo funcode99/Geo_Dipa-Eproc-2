@@ -3,7 +3,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
-import { ModalSubmit, ModalUpdate, ModalDetail } from "./components";
+import {
+  ModalSubmit,
+  ModalUpdate,
+  ModalDetail,
+  RowCollapse,
+} from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
 import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
@@ -64,6 +69,7 @@ const DeliveryOrder = ({
   setTempOrderItems,
   saveDataTask,
   updateOrderItems,
+  status,
 }) => {
   const [open, setOpen] = React.useState({
     create: false,
@@ -79,6 +85,8 @@ const DeliveryOrder = ({
     delete: false,
     update: false,
   });
+  const isVendor = status === "vendor";
+  const excludeAction = isVendor ? [] : ["update", "delete"];
   const [Toast, setToast] = useToast();
 
   const handleVisible = (key, tempParams = {}) => {
@@ -292,6 +300,7 @@ const DeliveryOrder = ({
                 hoverLabel="More"
                 data={item}
                 handleAction={handleAction}
+                exclude={excludeAction}
                 ops={[
                   {
                     label: "TITLE.VIEW_DETAILS_DATA",
@@ -379,26 +388,31 @@ const DeliveryOrder = ({
 
       <Card>
         <CardContent>
-          <div className="d-flex justify-content-end w-100 mb-5">
-            <button
-              className="btn btn-outline-success btn-sm"
-              onClick={() => handleAction("create")}
-            >
-              <span className="nav-icon">
-                <i className="flaticon2-plus"></i>
-              </span>
-              <span className="nav-text">
-                <FormattedMessage id="TITLE.ADD" />
-              </span>
-            </button>
-          </div>
+          {isVendor && (
+            <div className="d-flex justify-content-end w-100 mb-5">
+              <button
+                className="btn btn-outline-success btn-sm"
+                onClick={() => handleAction("create")}
+              >
+                <span className="nav-icon">
+                  <i className="flaticon2-plus"></i>
+                </span>
+                <span className="nav-text">
+                  <FormattedMessage id="TITLE.ADD" />
+                </span>
+              </button>
+            </div>
+          )}
 
           <TablePaginationCustom
             headerRows={tblHeadDlvItem}
             rows={tableContent}
-            width={1000}
+            // width={1000}
             loading={loading.fetch}
             withSearch={false}
+            renderRows={({ item, index }) => {
+              return <RowCollapse key={index} row={item} />;
+            }}
           />
         </CardContent>
       </Card>
@@ -406,11 +420,12 @@ const DeliveryOrder = ({
   );
 };
 
-const mapState = ({ deliveryMonitoring }) => ({
+const mapState = ({ auth, deliveryMonitoring }) => ({
   items: deliveryMonitoring.dataBarang,
   orderItems: deliveryMonitoring.dataTask?.task_deliveries,
   tempOrderItems: deliveryMonitoring.dataTempOrderItems,
   updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
+  status: auth.user.data.status,
 });
 
 const mapDispatch = (dispatch) => ({

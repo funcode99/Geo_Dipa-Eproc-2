@@ -29,6 +29,7 @@ const tableHeader = [
   <FormattedMessage id="TITLE.NAME" />,
   <FormattedMessage id="TITLE.QUANTITY" />,
   <FormattedMessage id="TITLE.UNIT_PRICE" />,
+  "Status",
 ];
 
 const ModalDetail = ({
@@ -73,6 +74,7 @@ const ModalDetail = ({
                   <TableCell>{item?.item?.desc}</TableCell>
                   <TableCell>{item?.qty}</TableCell>
                   <TableCell>{rupiah(item?.item?.unit_price)}</TableCell>
+                  <TableCell>{item?.approve_status?.code}</TableCell>
                 </TableRow>
               );
             })}

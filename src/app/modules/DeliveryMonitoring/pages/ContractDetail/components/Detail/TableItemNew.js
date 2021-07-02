@@ -17,10 +17,15 @@ const theadItems = [
   // { id: 'wbs', label: 'WBS' },
 ];
 
-const TableItemNew = ({ dataRows, loading, renderRows }) => {
+const TableItemNew = ({
+  dataRows,
+  loading,
+  renderRows,
+  tableHeader = theadItems,
+}) => {
   return (
     <TablePaginationCustom
-      headerRows={theadItems}
+      headerRows={tableHeader}
       rows={dataRows}
       // width={1207}
       loading={loading}
