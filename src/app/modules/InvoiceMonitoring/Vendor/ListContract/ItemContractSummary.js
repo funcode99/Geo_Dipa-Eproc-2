@@ -750,7 +750,12 @@ function ItemContractSummary(props) {
               </div>
 
               <div className="form-group row">
+                <label
+                  htmlFor="numberContract"
+                  className="col-sm-4 col-form-label"
+                >
                 <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />
+                </label>
                 <div className="col-sm-8">
                   <input
                     type="text"

@@ -18,7 +18,7 @@ import { getListEmail } from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import ButtonAction from "../../../components/buttonAction/ButtonAction";
 import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, Link } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -319,7 +319,7 @@ const Email = (props) => {
                         <FormattedMessage id="TITLE.NO" />
                       </th>
                       <th
-                        className="bg-primary text-white align-middle td-46 pointer"
+                        className="bg-primary text-white align-middle td-61 pointer"
                         id="name"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -358,9 +358,6 @@ const Email = (props) => {
                       <th className="bg-primary text-white align-middle td-27">
                         <FormattedMessage id="TITLE.UPDATED_DATE" />
                       </th>
-                      <th className="bg-primary text-white align-middle td-15">
-                        <FormattedMessage id="MENU.ACTIONS" />
-                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -368,19 +365,16 @@ const Email = (props) => {
                       return (
                         <tr key={index.toString()}>
                           <td>{index + 1 + paginations.numberColum}</td>
-                          <td>{item.name}</td>
+                          <td>
+                            <Link to={`/client/master/email/${item.id}`}>
+                              {item.name}
+                            </Link>
+                          </td>
                           <td>{item.schedule ? "YES" : "NO"}</td>
                           <td>
                             {window
                               .moment(new Date(item.updated_at))
                               .format("DD MMM YYYY")}
-                          </td>
-                          <td>
-                            <ButtonAction
-                              data={item}
-                              handleAction={handleAction}
-                              ops={data_ops}
-                            />
                           </td>
                         </tr>
                       );

@@ -13,7 +13,7 @@ import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import { useSubheader } from "../../../../../_metronic/layout";
 import { Form, Row, Col } from "react-bootstrap";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, Link } from "react-router-dom";
 import { getTermContract } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 
@@ -264,9 +264,6 @@ const ListTermContract = (props) => {
                     <th className="bg-primary text-white align-middle">
                       <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />
                     </th>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -278,7 +275,13 @@ const ListTermContract = (props) => {
                           <td className="align-middle text-center">
                             {index + 1}
                           </td>
-                          <td>{value.task_name}</td>
+                          <td>
+                            <Link
+                              to={`/vendor/invoice_monitoring/contract/${contract}/${value.task_id}`}
+                            >
+                              {value.task_name}
+                            </Link>
+                          </td>
                           <td>
                             {window
                               .moment(new Date(value.due_date))
@@ -289,13 +292,6 @@ const ListTermContract = (props) => {
                           <td>{value.progress}</td>
                           <td>Doc Progress</td>
                           <td>{value.name}</td>
-                          <td className="align-middle">
-                            <ButtonAction
-                              data={value}
-                              handleAction={handleAction}
-                              ops={data_ops}
-                            />
-                          </td>
                         </tr>
                       );
                     })}

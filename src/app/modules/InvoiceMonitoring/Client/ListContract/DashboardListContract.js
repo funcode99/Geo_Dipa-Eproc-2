@@ -8,7 +8,7 @@ import { getContractClient } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { TablePagination } from "@material-ui/core";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 const data_ops = [
   {
@@ -176,10 +176,6 @@ function DashboardListContract(props) {
       ...pagination,
     });
     requestFilterSort();
-  };
-
-  const handleAction = (type, data) => {
-    history.push(`/client/invoice_monitoring/contract/${data.contract_id}`);
   };
 
   return (
@@ -404,7 +400,7 @@ function DashboardListContract(props) {
                         <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />
                       </th>
                       <th
-                        className="bg-primary text-white text-center align-middle pointer td-12"
+                        className="bg-primary text-white text-center align-middle pointer td-17"
                         id="vendor_name"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -439,16 +435,22 @@ function DashboardListContract(props) {
                       <th className="bg-primary text-white text-center align-middle td-8">
                         <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />
                       </th>
-                      <th className="bg-primary text-white text-center align-middle td-5">
-                        <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
-                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.map((item, index) => {
                       return (
                         <tr key={index.toString()}>
-                          <td>{item.contract_no}</td>
+                          <td>
+                            <Link
+                              to={
+                                "/client/invoice_monitoring/contract/" +
+                                item.contract_id
+                              }
+                            >
+                              {item.contract_no}
+                            </Link>
+                          </td>
                           <td className="text-center">{item.purch_order_no}</td>
                           <td>{item.contract_name}</td>
                           <td className="text-center">
@@ -466,13 +468,6 @@ function DashboardListContract(props) {
                           </td>
                           <td className="text-center">{item.vendor_name}</td>
                           <td className="text-center">------</td>
-                          <td>
-                            <ButtonAction
-                              data={item}
-                              handleAction={handleAction}
-                              ops={data_ops}
-                            />
-                          </td>
                         </tr>
                       );
                     })}
