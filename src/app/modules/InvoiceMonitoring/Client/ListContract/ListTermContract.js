@@ -272,11 +272,14 @@ const ListTermContract = (props) => {
                             {index + 1}
                           </td>
                           <td>
-                            {( is_main && is_finance ) || (value?.prices < 500000000) && <Link
+                            {(is_main && is_finance) || (value?.prices <= 500000000) && <Link
                               to={`/client/invoice_monitoring/contract/${contract}/${value.task_id}`}
                             >
                               {value?.task_name}
                             </Link>}
+                            {value?.prices > 500000000 &&
+                              <span>{value?.task_name}</span>
+                            }
                           </td>
                           <td>
                             {window
