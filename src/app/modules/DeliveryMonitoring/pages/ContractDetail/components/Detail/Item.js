@@ -13,6 +13,7 @@ import { TableCell, TableRow, Checkbox, Button } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import RowAccordion from "./RowAccordion";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
+import { theadService, theadItem } from "./fieldData";
 
 const navLists = [
   { id: "link-jasa", label: <FormattedMessage id="SUMMARY.NAV.SERVICE" /> },
@@ -245,6 +246,7 @@ const Item = ({ handleClick }) => {
 
           {navActive === "link-jasa" && (
             <TableItemNew
+              tableHeader={theadService}
               dataRows={dataContractById.services}
               loading={loading}
               renderRows={({ item, index }) => {
@@ -326,6 +328,7 @@ const Item = ({ handleClick }) => {
           )}
           {navActive === "link-barang" && (
             <TableItemNew
+              tableHeader={theadItem}
               dataRows={dataContractById.items}
               loading={loading}
               renderRows={({ item, index }) => {

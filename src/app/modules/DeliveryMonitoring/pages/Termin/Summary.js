@@ -645,7 +645,6 @@ export default function Summary({ taskId = "" }) {
               headerRows={theadItems}
               rows={dataJasa}
               loading={loading}
-              width={1207}
               maxHeight={300}
               headerProps={{ sortable: false }}
               withSearch={false}
@@ -856,7 +855,6 @@ export default function Summary({ taskId = "" }) {
               headerRows={theadItems}
               rows={dataBarang}
               loading={loading}
-              width={1207}
               withSearch={false}
               withPagination={false}
               renderRows={({ item, index }) => {
