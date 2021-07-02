@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import UploadInput from "../../../../../components/input/UploadInput";
 import useToast from "../../../../../components/toast";
+import apiHelper from "../../../../../service/helper/apiHelper";
+import { uploadGuarantee } from "../../../service/DeliveryMonitoringCrud";
 
 const ItemSwitch = React.memo(({ label, value, onChange }) => {
   const [active, setActive] = React.useState(false);
@@ -86,8 +88,26 @@ const Jaminan = () => {
   }, []);
 
   const handleSubmit = () => {
-    console.log(`dataForm`, dataForm);
-    setToast("fungsi belum tersedia" + JSON.stringify(dataForm));
+    let newParams = {
+      ...apiHelper.checkIsEmpty(
+        "down_payment_guarantee",
+        dataForm.down_payment
+      ),
+      ...apiHelper.checkIsEmpty(
+        "implementation_guarantee",
+        dataForm.implementation
+      ),
+      ...apiHelper.checkIsEmpty("maintenance_guarantee", dataForm.maintenance),
+    };
+    console.log(`dataForm`, dataForm, newParams);
+    uploadGuarantee(dataContractById.id, newParams)
+      .then((res) => {
+        if (res?.data?.status === true) {
+          setToast(res?.data?.message);
+        }
+      })
+      .catch((err) => apiHelper.handleError(err, setToast));
+    // setToast("fungsi belum tersedia" + JSON.stringify(dataForm));
   };
 
   return (
