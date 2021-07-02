@@ -30,8 +30,14 @@ export async function getContractSummary(contract_id, term_id) {
 export async function checkRole(id) {
   return axios.get(`/invoice/check_role/${id}`);
 }
-export async function getContractClient(params) {
-  return axios.get(`/invoice/contract_invoice${params ? "?" + params : ""}`);
+export async function getContractMainFinance(params) {
+  return axios.get(`/invoice/contract_main_finance${params ? "?" + params : ""}`);
+}
+export async function getContractUnitFinance(id, params) {
+  return axios.get(`/invoice/contract_unit_finance/${id}${params ? "?" + params : ""}`);
+}
+export async function getContractUser(id, params) {
+  return axios.get(`/invoice/contract_user/${id}${params ? "?" + params : ""}`);
 }
 export async function getContractVendor(id, params) {
   return axios.get(

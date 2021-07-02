@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"; // useState
-import { connect } from "react-redux";
+import { connect, useSelector, shallowEqual } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Container,
@@ -32,6 +32,8 @@ const data_ops = [
 ];
 
 const ListTermContract = (props) => {
+  const is_finance = useSelector((state) => state.auth.user.data.is_finance, shallowEqual);
+  const is_main = useSelector((state) => state.auth.user.data.is_main, shallowEqual);
   const suhbeader = useSubheader();
   const { intl } = props;
   suhbeader.setTitle(
@@ -45,12 +47,6 @@ const ListTermContract = (props) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [Toast, setToast] = useToast();
-
-  const handleAction = (type, data) => {
-    history.push(
-      `/client/invoice_monitoring/contract/${contract}/${data.task_id}`
-    );
-  };
 
   const getData = () => {
     setLoading(true);
@@ -276,11 +272,14 @@ const ListTermContract = (props) => {
                             {index + 1}
                           </td>
                           <td>
-                            <Link
+                            {(is_main && is_finance) || (value?.prices <= 500000000) && <Link
                               to={`/client/invoice_monitoring/contract/${contract}/${value.task_id}`}
                             >
                               {value?.task_name}
-                            </Link>
+                            </Link>}
+                            {value?.prices > 500000000 &&
+                              <span>{value?.task_name}</span>
+                            }
                           </td>
                           <td>
                             {window
