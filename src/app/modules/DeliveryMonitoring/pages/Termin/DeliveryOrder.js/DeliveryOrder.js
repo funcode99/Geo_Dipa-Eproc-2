@@ -64,6 +64,7 @@ const DeliveryOrder = ({
   setTempOrderItems,
   saveDataTask,
   updateOrderItems,
+  status,
 }) => {
   const [open, setOpen] = React.useState({
     create: false,
@@ -79,6 +80,8 @@ const DeliveryOrder = ({
     delete: false,
     update: false,
   });
+  const isVendor = status === "vendor";
+  const excludeAction = isVendor ? [] : ["update", "delete"];
   const [Toast, setToast] = useToast();
 
   const handleVisible = (key, tempParams = {}) => {
@@ -292,6 +295,7 @@ const DeliveryOrder = ({
                 hoverLabel="More"
                 data={item}
                 handleAction={handleAction}
+                exclude={excludeAction}
                 ops={[
                   {
                     label: "TITLE.VIEW_DETAILS_DATA",
@@ -379,24 +383,26 @@ const DeliveryOrder = ({
 
       <Card>
         <CardContent>
-          <div className="d-flex justify-content-end w-100 mb-5">
-            <button
-              className="btn btn-outline-success btn-sm"
-              onClick={() => handleAction("create")}
-            >
-              <span className="nav-icon">
-                <i className="flaticon2-plus"></i>
-              </span>
-              <span className="nav-text">
-                <FormattedMessage id="TITLE.ADD" />
-              </span>
-            </button>
-          </div>
+          {isVendor && (
+            <div className="d-flex justify-content-end w-100 mb-5">
+              <button
+                className="btn btn-outline-success btn-sm"
+                onClick={() => handleAction("create")}
+              >
+                <span className="nav-icon">
+                  <i className="flaticon2-plus"></i>
+                </span>
+                <span className="nav-text">
+                  <FormattedMessage id="TITLE.ADD" />
+                </span>
+              </button>
+            </div>
+          )}
 
           <TablePaginationCustom
             headerRows={tblHeadDlvItem}
             rows={tableContent}
-            width={1000}
+            // width={1000}
             loading={loading.fetch}
             withSearch={false}
           />
@@ -406,11 +412,12 @@ const DeliveryOrder = ({
   );
 };
 
-const mapState = ({ deliveryMonitoring }) => ({
+const mapState = ({ auth, deliveryMonitoring }) => ({
   items: deliveryMonitoring.dataBarang,
   orderItems: deliveryMonitoring.dataTask?.task_deliveries,
   tempOrderItems: deliveryMonitoring.dataTempOrderItems,
   updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
+  status: auth.user.data.status,
 });
 
 const mapDispatch = (dispatch) => ({
