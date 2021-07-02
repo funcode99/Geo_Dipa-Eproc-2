@@ -3,7 +3,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
-import { ModalSubmit, ModalUpdate, ModalDetail } from "./components";
+import {
+  ModalSubmit,
+  ModalUpdate,
+  ModalDetail,
+  RowCollapse,
+} from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
 import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
@@ -405,6 +410,9 @@ const DeliveryOrder = ({
             // width={1000}
             loading={loading.fetch}
             withSearch={false}
+            renderRows={({ item, index }) => {
+              return <RowCollapse key={index} row={item} />;
+            }}
           />
         </CardContent>
       </Card>

@@ -521,5 +521,6 @@
   "TITLE.POSITION": "Position",
   "TITLE.COMMENT": "Comment",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Termin Amount",
-  "TITLE.QTY_AVAILABLE": "Qty Available"
+  "TITLE.QTY_AVAILABLE": "Qty Available",
+  "TITLE.HISTORY": "History"
 }

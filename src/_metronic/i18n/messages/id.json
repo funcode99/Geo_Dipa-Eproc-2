@@ -521,5 +521,6 @@
   "TITLE.POSITION": "Posisi",
   "TITLE.COMMENT": "Komentar",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Harga Termin",
-  "TITLE.QTY_AVAILABLE": "Qty Tersedia"
+  "TITLE.QTY_AVAILABLE": "Qty Tersedia",
+  "TITLE.HISTORY": "Riwayat"
 }

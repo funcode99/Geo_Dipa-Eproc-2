@@ -7,6 +7,7 @@ import {
   Checkbox,
   Table,
   TableHead,
+  IconButton,
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -654,7 +655,8 @@ export default function Summary({ taskId = "" }) {
                   <React.Fragment key={item.id}>
                     <TableRow hover onClick={() => handleExpand("e", item.id)}>
                       <TableCell className="align-middle">
-                        <button
+                        <IconButton
+                          size="small"
                           className="btn btn-primary btn-sm p-0 align-middle"
                           // onClick={(e) => handleExpand(e, item.id)}
                         >
@@ -663,7 +665,7 @@ export default function Summary({ taskId = "" }) {
                           ) : (
                             <ExpandMoreOutlined />
                           )}
-                        </button>
+                        </IconButton>
                       </TableCell>
                       <TableCell className="align-middle">
                         {item.desc}
