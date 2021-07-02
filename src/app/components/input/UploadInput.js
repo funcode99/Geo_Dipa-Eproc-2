@@ -9,9 +9,10 @@ const UploadInput = ({ onChange, classLabel, value, ...other }) => {
     },
     [onChange]
   );
+  const idNow = "upload" + Date.now();
   return (
     <React.Fragment>
-      <label htmlFor="upload" className={`input-group pointer ${classLabel}`}>
+      <label htmlFor={idNow} className={`input-group pointer ${classLabel}`}>
         <div className="input-group-prepend">
           <span className="input-group-text">
             <i className="fas fa-file-upload"></i>
@@ -30,7 +31,7 @@ const UploadInput = ({ onChange, classLabel, value, ...other }) => {
       <input
         type="file"
         className="d-none"
-        id="upload"
+        id={idNow}
         onChange={_handleChange}
         {...other}
       />

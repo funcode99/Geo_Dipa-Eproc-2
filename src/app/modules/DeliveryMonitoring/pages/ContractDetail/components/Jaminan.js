@@ -6,6 +6,7 @@ import { FormattedHTMLMessage } from "react-intl";
 import { useSelector } from "react-redux";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import UploadInput from "../../../../../components/input/UploadInput";
+import useToast from "../../../../../components/toast";
 
 const ItemSwitch = React.memo(({ label, value, onChange }) => {
   const [active, setActive] = React.useState(false);
@@ -21,7 +22,7 @@ const ItemSwitch = React.memo(({ label, value, onChange }) => {
     [onChange]
   );
 
-  console.log(`type`, value);
+  // console.log(`type`, value);
 
   const valueUsed = active;
 
@@ -49,6 +50,8 @@ const ItemSwitch = React.memo(({ label, value, onChange }) => {
 });
 
 const Jaminan = () => {
+  const [Toast, setToast] = useToast();
+
   const dataContractById = useSelector(
     (state) => state.deliveryMonitoring.dataContractById
   );
@@ -84,27 +87,35 @@ const Jaminan = () => {
 
   const handleSubmit = () => {
     console.log(`dataForm`, dataForm);
+    setToast("fungsi belum tersedia" + JSON.stringify(dataForm));
   };
 
   return (
-    <Card>
-      <CardBody>
-        {dataField.map((el, id) => (
-          <ItemSwitch
-            key={id}
-            label={el.label}
-            value={dataForm[el.type]}
-            type={el.type}
-            onChange={(eve) => handleChange(eve, el.type)}
-          />
-        ))}
-        <div className="d-flex justify-content-end">
-          <button type="button" className="btn btn-primary mx-1">
-            Kirim
-          </button>
-        </div>
-      </CardBody>
-    </Card>
+    <React.Fragment>
+      <Toast />
+      <Card>
+        <CardBody>
+          {dataField.map((el, id) => (
+            <ItemSwitch
+              key={id}
+              label={el.label}
+              value={dataForm[el.type]}
+              type={el.type}
+              onChange={(eve) => handleChange(eve, el.type)}
+            />
+          ))}
+          <div className="d-flex justify-content-end">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="btn btn-primary mx-1"
+            >
+              Kirim
+            </button>
+          </div>
+        </CardBody>
+      </Card>
+    </React.Fragment>
   );
 };
 
