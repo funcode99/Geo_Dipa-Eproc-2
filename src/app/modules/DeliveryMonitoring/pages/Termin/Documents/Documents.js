@@ -13,6 +13,7 @@ import ModalConfirmation from "../../../../../components/modals/ModalConfirmatio
 import BASE_MODAL_CONF from "./BASE_MODAL_CONF";
 import ModalEditDraft from "./components/ModalEditDraft";
 import {
+  fetch_api_sg,
   getLoading,
   set_loading_done_rd,
   set_loading_rd,
@@ -29,6 +30,7 @@ const Documents = ({
   loadings,
   set_loading_rd,
   set_loading_done_rd,
+  fetch_api_sg,
 }) => {
   const [loading, setLoading] = React.useState({
     get: false,
@@ -250,11 +252,21 @@ const Documents = ({
   }, [taskId]);
 
   React.useEffect(() => {
-    set_loading_rd(keyList);
-    MODAL.showSnackbar("coba", "success", 5000);
-    setTimeout(() => {
-      set_loading_done_rd(keyList);
-    }, 2000);
+    // set_loading_rd(keyList);
+    // MODAL.showSnackbar("coba", "success", 5000);
+    // setTimeout(() => {
+    //   set_loading_done_rd(keyList);
+    // }, 2000);
+    // fetch_api_sg({
+    //   key: keyList,
+    //   url: `/delivery/task/${taskId}`,
+    //   type: "get",
+    //   alertAppear: "both",
+    //   onSuccess: (data) => {
+    //     console.log(`resnew`, data);
+    //     // if (res.data.status === true) setContent(res?.data?.data);
+    //   },
+    // });
   }, []);
 
   return (
@@ -269,7 +281,7 @@ const Documents = ({
         handleApi,
       }}
     >
-      {loadings.list && <CircularProgress />}
+      {/* {loadings.list && <CircularProgress />} */}
       <Toast />
       <ModalDeleteDoc
         visible={open.delete}
@@ -333,6 +345,7 @@ const mapState = (state) => ({
 const mapDispatch = {
   set_loading_rd,
   set_loading_done_rd,
+  fetch_api_sg,
 };
 
 export default connect(mapState, mapDispatch)(Documents);

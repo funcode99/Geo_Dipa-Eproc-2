@@ -1,16 +1,20 @@
 import { persistReducer } from "redux-persist";
+import { call, delay, put, takeEvery } from "redux-saga/effects";
+import apiHelper from "../app/service/helper/apiHelper";
+import { MODAL } from "../service/modalSession/ModalService";
 import { PERSIST_REDUCER } from "./BaseHost";
 
 const globalRedTypes = {
   SET_LOADING: "SET_LOADING",
   SET_LOADING_DONE: "SET_LOADING_DONE",
+  FETCH_API_SAGA: "FETCH_API_SAGA",
 };
 
 const initialState = {
   loadings: [],
 };
 
-export const globalReducer = persistReducer(
+export const reducer = persistReducer(
   PERSIST_REDUCER,
   (state = initialState, action) => {
     switch (action.type) {
@@ -39,6 +43,10 @@ export const set_loading_done_rd = (payload) => ({
   type: globalRedTypes.SET_LOADING_DONE,
   payload,
 });
+export const fetch_api_sg = (payload) => ({
+  type: globalRedTypes.FETCH_API_SAGA,
+  payload,
+});
 
 // selectors below
 export const getLoading = (state, key) => {
@@ -46,3 +54,31 @@ export const getLoading = (state, key) => {
   const loadState = loadings.includes(key);
   return loadState;
 };
+
+// sagas below
+export function* saga() {
+  yield takeEvery(globalRedTypes.FETCH_API_SAGA, function* fetchApi(action) {
+    const { key, onSuccess, onFail, alertAppear = false } = action.payload;
+    if (key) yield put(set_loading_rd(key));
+    try {
+      let { data } = yield call(apiHelper.fetchGlobalApi, action.payload);
+      console.log(`resnew`, data);
+      if (data.status === true) {
+        if (typeof onSuccess === "function") onSuccess(data);
+        if (alertAppear === "both")
+          MODAL.showSnackbar(data?.message ?? "Success", "success");
+      } else {
+        if (typeof onFail === "function") onFail(data);
+        MODAL.showSnackbar(data?.message ?? "Failed");
+      }
+    } catch (err) {
+      console.log(`err`, err);
+      if (typeof onFail === "function") onFail(err);
+      MODAL.showSnackbar(
+        err?.message ?? "Error API, please contact developer!"
+      );
+    }
+    yield delay(1000);
+    if (key) yield put(set_loading_done_rd(key));
+  });
+}

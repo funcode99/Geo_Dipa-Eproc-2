@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 
 import * as auth from "../app/modules/Auth/_redux/authRedux";
 import * as deliveryMonitoring from "../app/modules/DeliveryMonitoring/_redux/deliveryMonitoringSlice";
-import { globalReducer } from "./globalReducer";
+import * as globalReducer from "./globalReducer";
 // import {customersSlice} from "../app/modules/ECommerce/_redux/customers/customersSlice";
 // import {productsSlice} from "../app/modules/ECommerce/_redux/products/productsSlice";
 // import {remarksSlice} from "../app/modules/ECommerce/_redux/remarks/remarksSlice";
@@ -12,7 +12,7 @@ import { globalReducer } from "./globalReducer";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   deliveryMonitoring: deliveryMonitoring.reducer,
-  globalReducer,
+  globalReducer: globalReducer.reducer,
   // customers: customersSlice.reducer,
   // products: productsSlice.reducer,
   // remarks: remarksSlice.reducer,
@@ -20,5 +20,5 @@ export const rootReducer = combineReducers({
 });
 
 export function* rootSaga() {
-  yield all([auth.saga()]);
+  yield all([auth.saga(), globalReducer.saga()]);
 }

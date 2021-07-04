@@ -54,7 +54,7 @@ const ToastSession = (props) => {
 
 ToastSession.defaultProps = {
   message: "",
-  time: "",
+  time: 0,
 };
 
 ToastSession.propTypes = {
