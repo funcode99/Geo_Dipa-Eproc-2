@@ -18,6 +18,7 @@ import {
   set_loading_rd,
 } from "../../../../../../redux/globalReducer";
 import { connect } from "react-redux";
+import { MODAL } from "../../../../../../service/modalSession/ModalService";
 
 export const DocumentsContext = createContext({});
 
@@ -250,9 +251,10 @@ const Documents = ({
 
   React.useEffect(() => {
     set_loading_rd(keyList);
+    MODAL.showSnackbar("coba", "success", 5000);
     setTimeout(() => {
       set_loading_done_rd(keyList);
-    }, 5000);
+    }, 2000);
   }, []);
 
   return (
