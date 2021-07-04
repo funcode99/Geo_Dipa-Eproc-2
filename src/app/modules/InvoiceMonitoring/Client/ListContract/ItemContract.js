@@ -290,9 +290,7 @@ const ItemContract = (props) => {
             to: `/client/invoice_monitoring/contract/${useParams().contract}`,
           },
           {
-            label: intl.formatMessage({
-              id: "TITLE.CONTRACT_TERM",
-            }),
+            label: data.termin_name,
             to: "/",
           },
         ]}

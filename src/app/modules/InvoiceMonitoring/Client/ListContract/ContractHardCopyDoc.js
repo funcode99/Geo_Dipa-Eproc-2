@@ -537,6 +537,14 @@ function ContractHardCopyDoc(props) {
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </CardBody>
+        <CardFooter>
+          <button type="button" className="btn btn-sm btn-primary">
+            Send Notif
+          </button>
+          <button type="button" className="btn btn-sm btn-primary">
+            Print Kelengkapan Dokumen
+          </button>
+        </CardFooter>
       </Card>
     </React.Fragment>
   );

@@ -17,6 +17,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import SearchBox from "./components/SearchBox";
 import "./styles.scss";
 import _ from "lodash";
+import clsx from "clsx";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -73,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "auto",
   },
   table: {
-    minWidth: 750,
+    // minWidth: 750,
     border: 1,
   },
   tableBox: {
@@ -97,6 +98,8 @@ export default function TablePaginationCustom({
   withPagination = true,
   renderRows,
   footerComponent,
+  maxHeight,
+  headerProps,
 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -166,9 +169,17 @@ export default function TablePaginationCustom({
       {withSearch && <SearchBox onChange={handleChangeQuery} />}
       <Paper className={classes.paper}>
         <div className={classes.tableBox}>
-          <TableContainer className={classes.table}>
+          <TableContainer
+            style={{
+              maxHeight: maxHeight ? maxHeight : undefined,
+            }}
+            className={clsx(classes.table)}
+          >
             <Table
               // className={"table-bordered"}
+              style={{
+                width: width ? width : undefined,
+              }}
               aria-labelledby="tableTitle"
               style={{ width: width ? width : undefined }}
               size={"small"}
@@ -192,6 +203,7 @@ export default function TablePaginationCustom({
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
+                headerProps={headerProps}
               />
               <TableBody style={{ maxHeight: 500 }}>
                 {/* stableSort(rows, getSorting(order, orderBy)) */}

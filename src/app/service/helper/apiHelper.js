@@ -1,4 +1,5 @@
 import Axios from "axios";
+import _ from "lodash";
 
 const apiHelper = {
   handleError: (err, setToast) => {
@@ -28,6 +29,9 @@ const apiHelper = {
       default:
         throw "please set type !";
     }
+  },
+  checkIsEmpty: (key, value) => {
+    return { [_.isEmpty(value) ? undefined : key]: value };
   },
 };
 

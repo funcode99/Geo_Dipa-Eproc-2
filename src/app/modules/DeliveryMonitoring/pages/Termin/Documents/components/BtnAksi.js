@@ -69,7 +69,7 @@ export default function BtnAksi({ item, isPeriodic, handleAction }) {
         label: "Resend Draft",
         icon: "fas fa-redo text-warning",
         type: "resend",
-        params: { resend_id: item?.id },
+        params: { resend_id: item?.id, isPeriodic },
       },
       {
         label: "Submit Document",
@@ -119,6 +119,9 @@ export default function BtnAksi({ item, isPeriodic, handleAction }) {
         aria-controls="long-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        style={{
+          margin: "-8px 0px",
+        }}
       >
         <MoreVertIcon />
       </IconButton>

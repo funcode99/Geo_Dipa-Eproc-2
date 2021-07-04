@@ -37,19 +37,20 @@ const tableHeaderContractsNew = [
   // },
   {
     id: "name",
-    label: "Nama Dokumen",
+    label: <FormattedMessage id="TITLE.DOCUMENT_NAME" />,
   },
   {
     id: "nomor",
-    label: "Nomor Dokumen",
+    label: <FormattedMessage id="TITLE.NO_DOCUMENT" />,
   },
   {
     id: "dokumen",
-    label: "Dokumen",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
+    sortable: false,
   },
   {
     id: "tanggal",
-    label: "Tanggal Dokumen",
+    label: <FormattedMessage id="TITLE.DATE" />,
   },
 ];
 
@@ -87,14 +88,14 @@ const DokContract = () => {
   const {
     data: { file },
   } = useSelector((state) => state.deliveryMonitoring.dataContractById);
-  console.log(`data`, file);
-  console.log(`initRows`, initRows);
+  // console.log(`data`, file);
+  // console.log(`initRows`, initRows);
   return (
     <Card>
       <CardBody>
         <TablePaginationCustom
           headerRows={tableHeaderContractsNew}
-          width={1210}
+          // width={1210}
           rows={
             file
               ? file.map((el, id) => ({

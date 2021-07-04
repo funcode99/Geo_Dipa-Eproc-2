@@ -10,7 +10,8 @@ const theadItems = [
   { id: "action", label: "" },
   { id: "keterangan", label: "Keterangan" },
   { id: "due-date", label: "Due Date" },
-  { id: "qty", label: "Qty" },
+  { id: "qty", label: "Qty Total" },
+  { id: "qty_avail", label: "Qty Available" },
   { id: "uom", label: "Uom" },
   { id: "unit-price", label: "Unit Price" },
   // { id: 'wbs', label: 'WBS' },
@@ -21,7 +22,7 @@ const TableItemNew = ({ dataRows, loading, renderRows }) => {
     <TablePaginationCustom
       headerRows={theadItems}
       rows={dataRows}
-      width={1207}
+      // width={1207}
       loading={loading}
       withSearch={false}
       withPagination={false}

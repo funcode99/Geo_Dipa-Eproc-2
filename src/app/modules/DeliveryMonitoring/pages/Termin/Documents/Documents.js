@@ -299,16 +299,23 @@ const Documents = ({
         onSubmit={(params) => handleApi("upload", params)}
         additionalParams={open.tempParams}
       />
+      <ModalUploadDoc
+        visible={open.resend}
+        onClose={() => handleVisible("resend")}
+        onSubmit={(params) => handleApi("resend", params)}
+        additionalParams={open.tempParams}
+      />
       {/* <ModalEditDraft
         visible={open.edit}
         onClose={() => handleVisible("edit")}
         onSubmit={(params) => handleApi("edit", params)}
       /> */}
-      <ModalEditDraft
+      {/* <ModalEditDraft
         visible={open.resend}
         onClose={() => handleVisible("resend")}
+        additionalParams={open.tempParams}
         onSubmit={(params) => handleApi("resend", params)}
-      />
+      /> */}
       {BASE_MODAL_CONF.map(({ type, ...other }, id) => (
         <ModalConfirmation
           key={id}

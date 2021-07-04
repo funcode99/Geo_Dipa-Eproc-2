@@ -121,14 +121,40 @@ export function updateRoles(data) {
   return axios.post(`data/update_role/${data.id}`, data);
 }
 
-// master data SLA || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com
+// Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com
 
 export function getSla(params) {
   return axios.get(`data/get_sla${params ? "?" + params : ""}`);
 }
+
 export function updateSla(id, data) {
   return axios.post(`data/update_sla/${id}`, data);
 }
+
+export function asyncService(po) {
+  return axios.get(`sap/services/${po}`);
+}
+
+export function asyncSchedule(po) {
+  return axios.get(`sap/schedules/${po}`);
+}
+
+export function getListEmail(params) {
+  return axios.get(`data/list_email`);
+}
+
+export function getEmail(id) {
+  return axios.get(`data/get_email/${id}`);
+}
+
+export function getListSchedule() {
+  return axios.get(`data/get_schedule`);
+}
+
+export function getListParameter() {
+  return axios.get(`data/list_parameter_email`);
+}
+
 // master data invoice periods
 
 export function getInvoicePeriods() {
@@ -137,13 +163,4 @@ export function getInvoicePeriods() {
 
 export function updateInvoicePeriods(data) {
   return axios.post(`data/update_invoice_periods/${data.id}`, data);
-}
-
-// async data || Create By Jeffry Azhari Rosman || jeffryazhari@gmail.com
-
-export function asyncService(po) {
-  return axios.get(`sap/services/${po}`);
-}
-export function asyncSchedule(po) {
-  return axios.get(`sap/schedules/${po}`);
 }

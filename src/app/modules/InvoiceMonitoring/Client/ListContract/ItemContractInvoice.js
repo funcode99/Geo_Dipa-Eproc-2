@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardHeaderToolbar,
+} from "../../../../../_metronic/_partials/controls";
 import Navs from "../../../../components/navs";
 import ContractInvoicePage from "./ContractBillingDocument/ContractInvoicePage";
 import ContractSprPage from "./ContractBillingDocument/ContractSprPage";
@@ -34,6 +39,12 @@ import {
   getContractDistributionSPK,
   getContractDistributionAgreement,
   getFileEproc,
+  getListDocSoftCopy,
+  getDetailDocSoftCopy,
+  sendApprovedDocSoftCopy,
+  softcopy_save,
+  sendRejectedDocSoftCopyLast,
+  sendApprovedDocSoftCopyLast,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
@@ -197,13 +208,26 @@ function ItemContractInvoice(props) {
       }),
     },
   ]);
-  const [modalReject, setModalReject] = useState(false);
-  const [dataReject, setDataReject] = useState({});
+  const [modalReject, setModalReject] = useState({
+    statusDialog: false,
+    data: {},
+    loading: false,
+    statusReq: false,
+  });
+  const [dataDocSoftCopy, setDataDocSoftCopy] = useState([]);
+  const [modalApproved, setModalApproved] = useState({
+    statusDialog: false,
+    data: {},
+    loading: false,
+    statusReq: false,
+  });
+  const user_id = useSelector((state) => state.auth.user.data.user_id);
 
   const handleAction = (type, data) => {
     if (type === "rejected") {
-      setDataReject(data);
-      setModalReject(true);
+      setModalReject({ ...modalReject, statusDialog: true, data: data });
+    } else if (type === "approved") {
+      setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
     console.log("type: ", type, " - ", "data: ", data);
     // history.push(`/client/invoice_monitoring/contract/${contract}/1`);
@@ -211,8 +235,7 @@ function ItemContractInvoice(props) {
 
   const handleActionDeliverable = (type, data) => {
     if (type === "rejected") {
-      setDataReject(data);
-      setModalReject(true);
+      setModalReject({ ...modalReject, statusDialog: true, data: data });
     }
     console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
@@ -262,29 +285,37 @@ function ItemContractInvoice(props) {
 
   const callApiContractSoftCopy = () => {
     setLoading(true);
-    getContractSoftCopy(contract)
+    getListDocSoftCopy(contract, termin)
       .then((result) => {
         setLoading(false);
-        setDataSoftCopy(result.data.data);
-        if (result.data.data.contract_status === "SPK") {
-          getContractDistributionSPKData();
-        } else {
-          getContractDistributionAgreementData();
-        }
+            setDataDocSoftCopy(result.data.data);
       })
-      .catch((error) => {
+      .catch((err) => {
         setLoading(false);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
+    // getContractSoftCopy(contract)
+    //   .then((result) => {
+    //     setLoading(false);
+    //     setDataSoftCopy(result.data.data);
+    //     if (result.data.data.contract_status === "SPK") {
+    //       getContractDistributionSPKData();
+    //     } else {
+    //       getContractDistributionAgreementData();
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     setLoading(false);
+    //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+    //   });
   };
 
-  const getFileContract = (e) => {
-    e.preventDefault();
-    getFileEproc({ filename: contractFilename })
+  const getFileContract = (name) => {
+    getFileEproc({ filename: name })
       .then((result) => {
         var a = document.createElement("a");
         a.href = result.data.data.items.respons;
-        a.download = contractFilename;
+        a.download = name;
         a.click();
         a.remove();
       })
@@ -316,12 +347,165 @@ function ItemContractInvoice(props) {
     );
   };
 
+  const handleApproved = () => {
+    setModalApproved({ ...modalApproved, loading: true });
+    var data_1 = {
+      contract_id: contract,
+      term_id: termin,
+      softcopy_state: "APPROVED",
+      document_id: modalApproved.data.document_id,
+      document_no: modalApproved.data.doc_no,
+      created_by_id: user_id,
+    };
+    var data_2 = {
+      softcopy_approved_by_id: user_id,
+    };
+    if (modalApproved.data.hardcopy_state === null) {
+      softcopy_save(data_1)
+      .then((result) => {
+        setModalApproved({
+          ...modalApproved,
+          statusReq: true,
+          loading: true,
+        });
+        setTimeout(() => {
+                callApiContractSoftCopy();
+          setModalApproved({
+            ...modalApproved,
+            statusDialog: false,
+            loading: false,
+          });
+        }, 2500);
+      })
+      .catch((err) => {
+        setModalApproved({
+          ...modalApproved,
+          loading: true,
+        });
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+    } else {
+      sendApprovedDocSoftCopyLast(
+        modalApproved.data.document_monitoring_id,
+        data_2
+      )
+        .then((results) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            callApiContractSoftCopy();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setModalApproved({
+            ...modalApproved,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
+  };
+
+  const handleRejected = (e) => {
+    e.preventDefault();
+    setModalReject({ ...modalReject, loading: true });
+    var note = document.getElementById("commentRejected").value;
+    var data_1 = {
+      contract_id: contract,
+      term_id: termin,
+      softcopy_state: "REJECTED",
+      document_id: modalReject.data.document_id,
+      document_no: modalReject.data.doc_no,
+      created_by_id: user_id,
+    };
+    var data_2 = {
+      document_monitoring_id: "",
+      contract_id: contract,
+      term_id: termin,
+      document_id: modalReject.data.document_id,
+      document_no: modalReject.data.doc_no,
+      created_at: window.moment(new Date()).format("YYYY-MM-DD"),
+      created_by_id: user_id,
+      rejected_by_id: user_id,
+      rejected_remark: note,
+    };
+    if (modalReject.data.hardcopy_state === null) {
+      softcopy_save(data_1)
+      .then((result) => {
+          data_2.document_monitoring_id = result.data.data.id;
+          sendRejectedDocSoftCopyLast(data_2)
+            .then((results) => {
+        setModalReject({
+          ...modalReject,
+          statusReq: true,
+          loading: true,
+        });
+        setTimeout(() => {
+                callApiContractSoftCopy();
+          setModalReject({
+            ...modalReject,
+            statusDialog: false,
+            loading: false,
+          });
+        }, 2500);
+      })
+      .catch((err) => {
+        setModalReject({
+          ...modalReject,
+          loading: true,
+        });
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+        })
+        .catch((err) => {
+          setModalReject({
+            ...modalReject,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else {
+      data_2.document_monitoring_id = modalReject.data.document_monitoring_id;
+      sendRejectedDocSoftCopyLast(data_2)
+        .then((results) => {
+          setModalReject({
+            ...modalReject,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            callApiContractSoftCopy();
+            setModalReject({
+              ...modalReject,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setModalReject({
+            ...modalReject,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
+  };
+
   return (
     <React.Fragment>
       <Toast />
       {loading && <LinearProgress color="secondary" className="rounded" />}
       <Dialog
-        open={modalReject}
+        open={modalApproved.statusDialog}
         TransitionComponent={Transition}
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
@@ -329,18 +513,69 @@ function ItemContractInvoice(props) {
         maxWidth="xs"
         fullWidth={true}
       >
-        <form noValidate autoComplete="off">
+        <DialogTitle>
+          <FormattedMessage id="TITLE.CONFIRMATION" />
+        </DialogTitle>
+        <DialogContent>
+          <FormattedMessage id="TITLE.NOTIF_ACTION_CHANGES" />
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-primary"
+            type="button"
+            disabled={modalApproved.loading}
+            onClick={() => {
+              handleApproved();
+            }}
+          >
+            {!modalApproved.loading && (
+              <span>
+                <FormattedMessage id="TITLE.SAVE" />
+              </span>
+            )}
+            {modalApproved.loading &&
+              (modalApproved.statusReq && modalApproved.loading ? (
+                <div>
+                  <span>
+                    <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                  </span>
+                  <span className="ml-2 fas fa-check"></span>
+                </div>
+              ) : (
+                <div>
+                  <span>
+                    <FormattedMessage id="TITLE.WAITING" />
+                  </span>
+                  <span className="ml-2 mr-4 spinner spinner-white"></span>
+                </div>
+              ))}
+          </button>
+          <button
+            className="btn btn-danger"
+            type="button"
+            onClick={() => {
+              setModalApproved({ ...modalApproved, statusDialog: false });
+            }}
+            disabled={modalApproved.loading}
+          >
+            <FormattedMessage id="TITLE.CANCEL" />
+          </button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={modalReject.statusDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <form onSubmit={handleRejected}>
           <DialogTitle id="alert-dialog-slide-title">
             <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
             <span className="text-danger">
-              {" " +
-                (dataReject.document?.name || "") +
-                (dataReject?.due_date
-                  ? " - " +
-                    window
-                      .moment(new Date(dataReject?.due_date))
-                      .format("DD MMM YYYY")
-                  : "")}
+              {" " + (modalReject.data.document_name || "")}
             </span>
           </DialogTitle>
           <DialogContent>
@@ -351,25 +586,26 @@ function ItemContractInvoice(props) {
               rows="2"
               cols=""
               className="form-control"
+              id="commentRejected"
               placeholder={intl.formatMessage({
                 id:
                   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY",
               })}
-              disabled={loadingRequest}
-              // {...formik.getFieldProps("rejected_remark")}
+              required
+              disabled={modalReject.loading}
             ></textarea>
-            {/* {formik.touched.rejected_remark && formik.errors.rejected_remark ? (
-              <span className="text-center text-danger">
-                {formik.errors.rejected_remark}
-              </span>
-            ) : null} */}
           </DialogContent>
           <DialogActions>
             <button
               className="btn btn-secondary"
               type="button"
-              onClick={() => setModalReject(false)}
-              disabled={loadingRequest}
+              onClick={() =>
+                setModalReject({
+                  ...modalReject,
+                  statusDialog: false,
+                })
+              }
+              disabled={modalReject.loading}
             >
               <span>
                 <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
@@ -378,21 +614,29 @@ function ItemContractInvoice(props) {
             <button
               className="btn btn-danger"
               type="submit"
-              // disabled={
-              //   loadingRequest ||
-              //   (formik.touched && !formik.isValid) ||
-              //   !formik.dirty
-              // }
+              disabled={modalReject.loading}
             >
+              {!modalReject.loading && (
               <span>
                 <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" />
               </span>
-              {loadingRequest && (
-                <span
-                  className="spinner-border spinner-border-sm ml-1"
-                  aria-hidden="true"
-                ></span>
               )}
+              {modalReject.loading &&
+                (modalReject.statusReq && modalReject.loading ? (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                    </span>
+                    <span className="ml-2 fas fa-check"></span>
+                  </div>
+                ) : (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.WAITING" />
+                    </span>
+                    <span className="ml-2 mr-4 spinner spinner-white"></span>
+                  </div>
+                ))}
             </button>
           </DialogActions>
         </form>
@@ -422,105 +666,69 @@ function ItemContractInvoice(props) {
                 <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
-                      <th className="bg-primary text-white align-middle">No</th>
                       <th className="bg-primary text-white align-middle">
-                        Dokumen
+                        <FormattedMessage id="TITLE.TABLE_HEADER.NO" />
                       </th>
                       <th className="bg-primary text-white align-middle">
-                        Nomor
+                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
                       </th>
                       <th className="bg-primary text-white align-middle">
-                        Tanggal Approved
+                        <FormattedMessage id="TITLE.NO_DOCUMENT" />
                       </th>
                       <th className="bg-primary text-white align-middle">
-                        Action
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />
+                      </th>
+                      <th className="bg-primary text-white align-middle">
+                        <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td className="align-middle">1</td>
-                      <td>
-                        <FormattedMessage id="TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT" />
-                      </td>
-                      {contractFilename ? (
+                    {dataDocSoftCopy.map((item, index) => {
+                      return (
+                        <tr key={index.toString()}>
+                          <td className="align-middle">{item.seq}</td>
+                          <td>{item.document_name}</td>
+                          {item.doc_no ? (
+                            item.doc_file ? (
                         <td>
-                          <a href="#" onClick={getFileContract}>
-                            {dataSoftCopy?.contract_number}
+                                <a
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    getFileContract(item.doc_file);
+                                  }}
+                                >
+                                  {item.doc_no}
                           </a>
                         </td>
                       ) : (
-                        <td>
-                          {dataSoftCopy?.contract_number} (file tidak tersedia)
+                              <td>{item.doc_no} (file tidak tersedia)</td>
+                            )
+                          ) : (
+                            <td></td>
+                          )}
+                          <td className="align-middle">
+                            {item.softcopy_approved_at
+                              ? window
+                                  .moment(new Date(item.softcopy_approved_at))
+                                  .format("DD MMM YYYY")
+                              : ""}
                         </td>
-                      )}
-                      <td className="align-middle"></td>
                       <td className="align-middle">
+                            {(item.softcopy_state === null ||
+                              item.softcopy_state === "PENDING") &&
+                              item.doc_no && (
                         <ButtonAction
-                          data={{ document: { name: "Contract" } }}
+                              data={item}
                           handleAction={handleAction}
                           ops={data_ops}
                         />
+                              )}
                       </td>
                     </tr>
-                    <tr>
-                      <td className="align-middle">2</td>
-                      <td>Purch Order</td>
-                      <td>{dataSoftCopy?.po_number}</td>
-                      <td className="align-middle"></td>
-                      <td className="align-middle">
-                        <ButtonAction
-                          data={{ document: { name: "Purch Order" } }}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="align-middle">3</td>
-                      <td>
-                        <FormattedMessage id="CONTRACT_DETAIL.TAB.OFFICIAL_REPORT" />
-                      </td>
-                      <td></td>
-                      <td className="align-middle"></td>
-                      <td className="align-middle">
-                        <ButtonAction
-                          data={{ document: { name: "BAPP" } }}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="align-middle">4</td>
-                      <td>
-                        <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />
-                      </td>
-                      <td></td>
-                      <td className="align-middle"></td>
-                      <td className="align-middle">
-                        <ButtonAction
-                          data={{ document: { name: "BAST" } }}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="align-middle">5</td>
-                      <td>
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
-                      </td>
-                      <td>{dataSoftCopy?.npwp_number}</td>
-                      <td className="align-middle"></td>
-                      <td className="align-middle">
-                        <ButtonAction
-                          data={{ document: { name: "NPWP" } }}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                      </td>
-                    </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -660,7 +868,15 @@ function ItemContractInvoice(props) {
           {/* end: Table */}
         </ExpansionPanelDetails>
       </ExpansionPanel>
+
       <Card>
+        <CardHeader title="">
+          <CardHeaderToolbar>
+            <button type="button" className="btn btn-sm btn-primary">
+              Send Notif
+            </button>
+          </CardHeaderToolbar>
+        </CardHeader>
         <CardBody>
           <Navs
             navLists={navLists}

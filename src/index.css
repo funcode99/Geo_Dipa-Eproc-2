@@ -14,7 +14,7 @@
 
 .my-custom-scrollbar {
   position: relative;
-  height: 50vh;
+  height: 105vh;
   /* touch-action: none; */
   border: 1px solid #ebedf3;
   border-radius: 5px;
@@ -1444,9 +1444,4 @@ th {
 .page-controls button:last-child {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-}
-
-.rdw-editor-main {
-  border: 1px solid #f1f1f1;
-  height: 200px !important;
 }
