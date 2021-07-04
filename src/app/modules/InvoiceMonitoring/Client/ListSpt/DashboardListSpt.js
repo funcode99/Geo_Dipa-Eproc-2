@@ -13,7 +13,7 @@ import { getListSpt, getAsyncSpt } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { rupiah } from "../../../../libs/currency";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import {
   Dialog,
   DialogActions,
@@ -480,7 +480,7 @@ function DashboardListSpt(props) {
           {/* begin: Table */}
           <div className="table-wrapper-scroll-y my-custom-scrollbar">
             <div className="segment-table">
-              <div className="hecto-11">
+              <div className="hecto-9">
                 <table className="table-bordered overflow-auto">
                   <thead>
                     <tr>
@@ -521,7 +521,7 @@ function DashboardListSpt(props) {
                         <FormattedMessage id="TITLE.SPT_NO" />
                       </th>
                       <th
-                        className="bg-primary text-white pointer align-middle td-20"
+                        className="bg-primary text-white pointer align-middle td-15"
                         id="no_cek"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -554,7 +554,7 @@ function DashboardListSpt(props) {
                         <FormattedMessage id="TITLE.CEK_NO" />
                       </th>
                       <th
-                        className="bg-primary text-white pointer align-middle td-15"
+                        className="bg-primary text-white pointer align-middle td-20"
                         id="total_payment"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -619,11 +619,8 @@ function DashboardListSpt(props) {
                         )}
                         <FormattedMessage id="TITLE.ACCOUNT_NUMBER" />
                       </th>
-                      <th className="bg-primary text-white align-middle td-15">
+                      <th className="bg-primary text-white align-middle td-20">
                         <FormattedMessage id="TITLE.DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle td-5">
-                        <FormattedMessage id="TITLE.TABLE_HEADER.ACTION" />
                       </th>
                     </tr>
                   </thead>
@@ -632,7 +629,13 @@ function DashboardListSpt(props) {
                       return (
                         <tr key={index.toString()}>
                           <td>{index + 1 + paginations.numberColum}</td>
-                          <td>{item.spt_no}</td>
+                          <td>
+                            <Link
+                              to={`/client/invoice_monitoring/spt/${item.id}`}
+                            >
+                              {item.spt_no}
+                            </Link>
+                          </td>
                           <td>{item.cek_giro}</td>
                           <td>{rupiah(item.sub_total)}</td>
                           <td>{item.account_number}</td>
@@ -640,13 +643,6 @@ function DashboardListSpt(props) {
                             {window
                               .moment(new Date(item.date))
                               .format("DD MMM YYYY")}
-                          </td>
-                          <td>
-                            <ButtonAction
-                              data={item}
-                              handleAction={handleAction}
-                              ops={data_ops}
-                            />
                           </td>
                         </tr>
                       );

@@ -9,6 +9,7 @@ import ServiceLevelAgreement from "./pages/ServiceLevelAgreement";
 import AsyncData from "./pages/AsyncData";
 import Email from "./pages/Email";
 import ItemEmail from "./pages/Email/ItemEmail";
+import PurchGroup from "./pages/PurchGroup";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -30,6 +31,7 @@ function RootMasterData() {
       <Route path="/client/master/async" component={AsyncData} />
       <Route path="/client/master/email/:id" component={ItemEmail} />
       <Route path="/client/master/email" component={Email} />
+      <Route path="/client/master/purch_group" component={PurchGroup} />
     </Switch>
   );
 }

@@ -14,7 +14,7 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
 import { SubWrap } from "./style";
-import { getListEmail } from "../service/MasterCrud";
+import { getListPurchGroup, updatePurchGroup } from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import ButtonAction from "../../../components/buttonAction/ButtonAction";
 import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
@@ -26,9 +26,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const data_ops = [
   {
-    label: "TITLE.OPEN_DATA",
-    icon: "fas fa-envelope-open text-success",
-    type: "open",
+    label: "TITLE.EDIT",
+    icon: "fas fa-edit text-success",
+    type: "edit",
   },
 ];
 
@@ -37,13 +37,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
-const contohSchedule = [
-  { label: "Hari H", value: "0" },
-  { label: "3 Hari Sebelum Jatuh Tempo", value: "3" },
-  { label: "1 Minggu Sebelum Jatuh Tempo", value: "7" },
-  { label: "30 Hari Sebelum Jatuh Tempo", value: "30" },
-];
-const Email = (props) => {
+const PurchGroup = (props) => {
   const { intl } = props;
   const classes = useStyles();
   const [filterTable, setFilterTable] = useState({});
@@ -73,11 +67,17 @@ const Email = (props) => {
     rowsPerPage: 10,
   });
   const history = useHistory();
-
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
     shallowEqual
   );
+  const [dialogState, setDialogState] = useState({
+    status: false,
+    data: null,
+  });
+  const [onSubmit, setOnSubmit] = useState(false);
+  const [statusSubmit, setStatusSubmit] = useState(false);
+  const [errOnSubmit, setErrOnSubmit] = useState(false);
 
   const requestFilterSort = useCallback(
     (updateFilterTable, updateSortTable) => {
@@ -95,7 +95,7 @@ const Email = (props) => {
       filterSorts = Object.assign({}, filterSorts, pagination);
       setFilterSort({ ...filterSorts });
       let params = new URLSearchParams(filterSorts).toString();
-      getListEmail(params)
+      getListPurchGroup(params)
         .then((result) => {
           setLoading(false);
           setData(result.data.data);
@@ -189,12 +189,178 @@ const Email = (props) => {
   };
 
   const handleAction = (type, data) => {
-    history.push(`/client/master/email/${data.id}`);
+    setDialogState({
+      ...dialogState,
+      status: true,
+      data: Object.assign({}, data),
+    });
+  };
+
+  const sendUpdate = () => {
+    setOnSubmit(true);
+    setErrOnSubmit(false);
+    var data = {
+      email: dialogState.data.email,
+      updated_by_id: user_id,
+    };
+    updatePurchGroup(dialogState.data.id, data)
+      .then((result) => {
+        setStatusSubmit(true);
+        setTimeout(() => {
+          setDialogState(false);
+          setOnSubmit(false);
+          setStatusSubmit(false);
+          requestFilterSort();
+        }, 2000);
+      })
+      .catch((err) => {
+        setOnSubmit(false);
+        setErrOnSubmit(true);
+      });
   };
 
   return (
     <React.Fragment>
       <Toast />
+      <Dialog
+        open={dialogState.status}
+        keepMounted
+        maxWidth={"sm"}
+        fullWidth={true}
+        TransitionComponent={Transition}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Edit <FormattedMessage id="TITLE.PURCHASE_GROUPS" />
+        </DialogTitle>
+        <DialogContent>
+          <div className="form-group row">
+            <label htmlFor="static_1" className="col-sm-5 col-form-label">
+              <FormattedMessage id="TITLE.NAME" />
+            </label>
+            <div className="col-sm-7">
+              <input
+                type="text"
+                disabled
+                className="form-control"
+                id="static_1"
+                value={dialogState.data?.full_name || ""}
+              />
+            </div>
+          </div>
+          <div className="form-group row">
+            <label htmlFor="static_2" className="col-sm-5 col-form-label">
+              <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" />
+            </label>
+            <div className="col-sm-7">
+              <input
+                type="text"
+                disabled
+                className="form-control"
+                id="static_2"
+                value={dialogState.data?.code || ""}
+              />
+            </div>
+          </div>
+          <div className="form-group row">
+            <label htmlFor="static_3" className="col-sm-5 col-form-label">
+              <FormattedMessage id="TITLE.FROM_DATE" />
+            </label>
+            <div className="col-sm-7">
+              <input
+                type="text"
+                disabled
+                className="form-control"
+                id="static_3"
+                value={dialogState.data?.from_date || ""}
+              />
+            </div>
+          </div>
+          <div className="form-group row">
+            <label htmlFor="static_4" className="col-sm-5 col-form-label">
+              <FormattedMessage id="TITLE.THRU_DATE" />
+            </label>
+            <div className="col-sm-7">
+              <input
+                type="text"
+                disabled
+                className="form-control"
+                id="static_4"
+                value={dialogState.data?.thru_date || ""}
+              />
+            </div>
+          </div>
+          <div className="form-group row">
+            <label htmlFor="static_5" className="col-sm-5 col-form-label">
+              <FormattedMessage id="TITLE.EMAIL" />
+            </label>
+            <div className="col-sm-7">
+              <input
+                type="email"
+                className="form-control"
+                id="static_5"
+                disabled={onSubmit}
+                value={dialogState.data?.email || ""}
+                onChange={(e) => {
+                  let dataEdit_ = Object.assign({}, dialogState);
+                  dataEdit_.data.email = e.target.value;
+                  setDialogState({ ...dataEdit_ });
+                }}
+              />
+            </div>
+          </div>
+          {errOnSubmit && !onSubmit && (
+            <div>
+              <p className="text-danger font-italic" style={{ fontSize: 11 }}>
+                Error: <FormattedMessage id="REQ.UPDATE_FAILED" />
+              </p>
+            </div>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <button
+            id="kt_login_signin_submit"
+            type="submit"
+            disabled={onSubmit}
+            className={`btn btn-primary font-weight-bold btn-sm`}
+            onClick={() => {
+              sendUpdate();
+            }}
+          >
+            {!onSubmit && (
+              <span>
+                <FormattedMessage id="TITLE.SAVE" />
+              </span>
+            )}
+            {onSubmit &&
+              (statusSubmit && onSubmit ? (
+                <div>
+                  <span>
+                    <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                  </span>
+                  <span className="ml-2 fas fa-check"></span>
+                </div>
+              ) : (
+                <div>
+                  <span>
+                    <FormattedMessage id="TITLE.WAITING" />
+                  </span>
+                  <span className="ml-2 mr-4 spinner spinner-white"></span>
+                </div>
+              ))}
+          </button>
+          <button
+            onClick={() => {
+              setDialogState(false);
+            }}
+            disabled={onSubmit}
+            className="btn btn-sm btn-danger"
+          >
+            <FormattedMessage id="TITLE.CANCEL" />
+          </button>
+        </DialogActions>
+      </Dialog>
       <div className="d-flex align-items-center flex-wrap mr-1">
         <SubWrap className="mr-2 iconWrap">
           <span className="svg-icon menu-icon">
@@ -203,7 +369,7 @@ const Email = (props) => {
         </SubWrap>
         <div className="d-flex align-items-baseline mr-5">
           <h2 className="text-dark font-weight-bold my-2 mr-5">
-            Master <FormattedMessage id="TITLE.EMAIL" />
+            Master <FormattedMessage id="TITLE.PURCHASE_GROUPS" />
           </h2>
         </div>
       </div>
@@ -319,7 +485,7 @@ const Email = (props) => {
                         <FormattedMessage id="TITLE.NO" />
                       </th>
                       <th
-                        className="bg-primary text-white align-middle td-61 pointer"
+                        className="bg-primary text-white align-middle td-35 pointer"
                         id="name"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -353,10 +519,19 @@ const Email = (props) => {
                         <FormattedMessage id="TITLE.NAME" />
                       </th>
                       <th className="bg-primary text-white align-middle td-10">
-                        <FormattedMessage id="TITLE.SCHEDULED" />
+                        <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" />
                       </th>
-                      <th className="bg-primary text-white align-middle td-27">
-                        <FormattedMessage id="TITLE.UPDATED_DATE" />
+                      <th className="bg-primary text-white align-middle td-15">
+                        <FormattedMessage id="TITLE.FROM_DATE" />
+                      </th>
+                      <th className="bg-primary text-white align-middle td-15">
+                        <FormattedMessage id="TITLE.THRU_DATE" />
+                      </th>
+                      <th className="bg-primary text-white align-middle td-20">
+                        <FormattedMessage id="TITLE.EMAIL" />
+                      </th>
+                      <th className="bg-primary text-white align-middle td-3">
+                        <FormattedMessage id="TITLE.TABLE_HEADER.ACTION" />
                       </th>
                     </tr>
                   </thead>
@@ -365,16 +540,29 @@ const Email = (props) => {
                       return (
                         <tr key={index.toString()}>
                           <td>{index + 1 + paginations.numberColum}</td>
+                          <td>{item.full_name}</td>
+                          <td>{item.code}</td>
                           <td>
-                            <Link to={`/client/master/email/${item.id}`}>
-                              {item.name}
-                            </Link>
+                            {item.from_date
+                              ? window
+                                  .moment(new Date(item.from_date))
+                                  .format("DD MMM YYYY")
+                              : null}
                           </td>
-                          <td>{item.schedule ? "YES" : "NO"}</td>
                           <td>
-                            {window
-                              .moment(new Date(item.updated_at))
-                              .format("DD MMM YYYY")}
+                            {item.thru_date
+                              ? window
+                                  .moment(new Date(item.thru_date))
+                                  .format("DD MMM YYYY")
+                              : null}
+                          </td>
+                          <td>{item.email}</td>
+                          <td>
+                            <ButtonAction
+                              data={item}
+                              handleAction={handleAction}
+                              ops={data_ops}
+                            />
                           </td>
                         </tr>
                       );
@@ -418,4 +606,4 @@ const Email = (props) => {
   );
 };
 
-export default injectIntl(connect(null, null)(Email));
+export default injectIntl(connect(null, null)(PurchGroup));

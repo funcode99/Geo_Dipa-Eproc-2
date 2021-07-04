@@ -155,6 +155,14 @@ export function getListParameter() {
   return axios.get(`data/list_parameter_email`);
 }
 
+export function getListPurchGroup() {
+  return axios.get(`data/purch_group`);
+}
+
+export function updatePurchGroup(id, data) {
+  return axios.post(`data/update_purch_group/${id}`, data);
+}
+
 // master data invoice periods
 
 export function getInvoicePeriods() {
