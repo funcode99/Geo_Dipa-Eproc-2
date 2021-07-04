@@ -200,6 +200,7 @@
   "TITLE.UPLOAD": "Upload",
   "TITLE.PREVIEW": "Preview",
   "TITLE.APPROVE": "Approve",
+  "TITLE.REJECT": "Reject",
   "TITLE.MORE": "More",
   "TITLE.FILE": "File",
   "TITLE.STATUS": "Status",
@@ -520,5 +521,8 @@
   "TITLE.NET_VALUE": "Net Value",
   "TITLE.POSITION": "Position",
   "TITLE.COMMENT": "Comment",
-  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Termin Amount"
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Termin Amount",
+  "TITLE.GUARANTEE_TYPE": "Guarantee Type",
+  "TITLE.REQUIRED": "Required"
+
 }

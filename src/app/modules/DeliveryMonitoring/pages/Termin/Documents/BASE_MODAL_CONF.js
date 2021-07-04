@@ -12,12 +12,12 @@ const BASE_MODAL_CONF = [
   {
     type: "accept",
     title: "Yakin ingin mengkonfirmasi dokumen ini ?",
-    subTitle: "Pastikan yang dikirimkan dokumen telah sesuai !",
+    subTitle: "Pastikan dokumen yang dikirimkan telah sesuai !",
   },
   {
     type: "reject",
     title: "Yakin ingin menolak dokumen ini ?",
-    subTitle: "Pastikan yang dikirimkan dokumen tidak sesuai !",
+    subTitle: "Pastikan dokumen yang dikirimkan tidak sesuai !",
   },
 ];
 

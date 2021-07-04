@@ -30,8 +30,10 @@ const apiHelper = {
         throw "please set type !";
     }
   },
-  checkIsEmpty: (key, value) => {
-    return { [_.isEmpty(value) ? undefined : key]: value };
+  checkIsEmpty: (key, value, valueSet) => {
+    return {
+      [_.isEmpty(value) ? undefined : key]: valueSet ? valueSet : value,
+    };
   },
 };
 

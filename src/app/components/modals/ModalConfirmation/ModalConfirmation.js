@@ -5,7 +5,7 @@ import { InputGroup } from "react-bootstrap";
 import { StyledModal } from "../../modals";
 
 const ModalConfirmation = ({
-  visible,
+  visible = false,
   onClose,
   onSubmit,
   title,

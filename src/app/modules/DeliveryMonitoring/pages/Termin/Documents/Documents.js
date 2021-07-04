@@ -266,6 +266,7 @@ const Documents = ({
     //     console.log(`resnew`, data);
     //     // if (res.data.status === true) setContent(res?.data?.data);
     //   },
+    //   onFail: (err) => {},
     // });
   }, []);
 

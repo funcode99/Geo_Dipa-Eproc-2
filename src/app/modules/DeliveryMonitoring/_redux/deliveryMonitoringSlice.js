@@ -96,7 +96,13 @@ export const reducer = persistReducer(
   }
 );
 
+// actions below
 export const setDataDeverableDoc = (dataDeverableDoc) => ({
   type: actionTypes.SetDataDeverableDoc,
   payload: { dataDeverableDoc },
+});
+
+export const set_contract_id = (payload) => ({
+  type: actionTypes.SetContractById,
+  payload,
 });

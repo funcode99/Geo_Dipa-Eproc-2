@@ -200,6 +200,7 @@
   "TITLE.UPLOAD": "Unggah",
   "TITLE.PREVIEW": "Lihat",
   "TITLE.APPROVE": "Setujui",
+  "TITLE.REJECT": "Tolak",
   "TITLE.MORE": "Selengkapnya",
   "TITLE.FILE": "File",
   "TITLE.STATUS": "Status",
@@ -520,5 +521,7 @@
   "TITLE.NET_VALUE": "Nilai Bersih",
   "TITLE.POSITION": "Posisi",
   "TITLE.COMMENT": "Komentar",
-  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Harga Termin"
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT": "Harga Termin",
+  "TITLE.GUARANTEE_TYPE": "Jenis Jaminan",
+  "TITLE.REQUIRED": "Wajib"
 }

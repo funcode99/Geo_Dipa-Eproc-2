@@ -18,7 +18,12 @@ const UploadInput = ({ onChange, classLabel, value, ...other }) => {
             <i className="fas fa-file-upload"></i>
           </span>
         </div>
-        <span className="form-control">{value?.path ?? "Pilih File ..."}</span>
+        <span
+          className="form-control"
+          style={{ backgroundColor: other.disabled ? "#ebebeb" : undefined }}
+        >
+          {value?.path ?? "Pilih File ..."}
+        </span>
         {/* <span className={`input-group-text`}>
           <a download={"sppData?.file_name"} href={"sppData?.file"}>
             <i className="fas fa-download"></i>
