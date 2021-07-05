@@ -208,6 +208,26 @@ export async function softcopy_save(data) {
 export async function sendRejectedDocSoftCopyLast(data) {
   return axios.post(`/invoice/softcopy_rejected_save`, data);
 }
+export async function sendRejectSoftCopyStatus(id, data) {
+  return axios.post(`/invoice/softcopy_rejected/${id}`, data);
+}
 export async function sendApprovedDocSoftCopyLast(id, data) {
   return axios.post(`/invoice/softcopy_approved/${id}`, data);
+}
+
+export async function getContractAuthority(id) {
+  return axios.get(`/invoice/get_contract_authority/${id}`);
+}
+export async function createContractAuthority(data) {
+  return axios.post(`/invoice/create_contract_authority/`, data);
+}
+export async function updateContractAuthority(data) {
+  return axios.post(`/invoice/update_contract_authority/`, data);
+}
+
+export async function createBkb(data) {
+  return axios.post(`/invoice/bkb_save/`, data);
+}
+export async function getBkb(id) {
+  return axios.get(`/invoice/get_bkb/${id}`);
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
@@ -10,13 +10,55 @@ import {
 } from "../../../../../_metronic/_partials/controls";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { QRCodeG } from "../../../../components/qrCodeGenerate/QRCodeGenerate";
+import {
+  getBkb
+} from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
+import { rupiah } from "../../../../libs/currency";
 
 function ItemContractBKB(props) {
   const [styleCustom] = React.useState({
     heightAppvDiv: 145,
     minHeightAppv: 80,
   });
-  useEffect(() => {});
+
+  const { intl } = props;
+  const termin = props.match.params.termin;
+  const [Toast, setToast] = useToast();
+
+  const [bkbData, setBkbData] = useState(null);
+
+  const getBkbData = useCallback(() => {
+    getBkb(termin)
+      .then((response) => {
+        if (response["data"]["data"]) {
+          response["data"]["data"]["vendor_address"] = `${response["data"]["data"]["vendor_data"]["address"]["postal_address"]
+            ? response["data"]["data"]["vendor_data"]["address"]["postal_address"]
+            : null
+            } ${response["data"]["data"]["vendor_data"]["address"]["sub_district"]
+              ? response["data"]["data"]["vendor_data"]["address"]["sub_district"][
+              "name"
+              ]
+              : null
+            } ${response["data"]["data"]["vendor_data"]["address"]["district"]
+              ? response["data"]["data"]["vendor_data"]["address"]["district"]["name"]
+              : null
+            } ${response["data"]["data"]["vendor_data"]["address"]["province"]
+              ? response["data"]["data"]["vendor_data"]["address"]["province"]["name"]
+              : null
+            } ${response["data"]["data"]["vendor_data"]["address"]["postal_code"]
+              ? response["data"]["data"]["vendor_data"]["address"]["postal_code"]
+              : null
+            }`;
+          setBkbData(response["data"]["data"]);
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [termin, intl, setToast]);
+
+  useEffect(getBkbData, []);
 
   const print = () => {
     var printContents = window.$("#printBkb").html();
@@ -31,6 +73,7 @@ function ItemContractBKB(props) {
 
   return (
     <React.Fragment>
+      <Toast />
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
@@ -72,7 +115,7 @@ function ItemContractBKB(props) {
                     <span>:</span>
                   </div>
                   <div className="col-sm-6 border text-center font-weight-bold">
-                    <span>20 Mei 2020</span>
+                    <span>{bkbData ? window.moment(new Date(bkbData?.created_at)).format("DD MMMM YYYY") : '-'}</span>
                   </div>
                 </div>
               </div>
@@ -95,7 +138,7 @@ function ItemContractBKB(props) {
               </div>
               <div className="col-sm-2 border text-center">
                 <h2 className="mb-0" style={{ marginTop: 5 }}>
-                  PST
+                  {bkbData ? bkbData?.purch_group_name?.substring(0, 3) : '-'}
                 </h2>
               </div>
             </div>
@@ -130,23 +173,21 @@ function ItemContractBKB(props) {
                 <div className="row">
                   <div className="col">
                     <span className="font-weight-bold">
-                      PT. Ecolab International Indonesia
+                      {bkbData ? bkbData?.vendor_name : '-'}
                     </span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col">
                     <span>
-                      Jl. Pahlawan, Desa Karang Asem Timur, Citeureup, Bogor
-                      16810
+                      {bkbData ? bkbData?.vendor_address : '-'}
                     </span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col">
                     <span>
-                      Jasa Pengolahan Sistem Air Pendingin Cooling Tower PLTP
-                      Patuha Unit 1 Periode April 2020
+                      {bkbData ? bkbData?.contract_name : '-'}
                     </span>
                   </div>
                 </div>
@@ -166,7 +207,7 @@ function ItemContractBKB(props) {
               <div className="col-sm-2">
                 <div className="row border">
                   <div className="col">
-                    <span className="font-weight-bold">1234567</span>
+                    <span className="font-weight-bold">{bkbData ? bkbData?.vendor_code : '-'}</span>
                   </div>
                 </div>
               </div>
@@ -199,13 +240,13 @@ function ItemContractBKB(props) {
               <div className="col-sm-8">
                 <div className="row">
                   <div className="col border">
-                    <span className="">Bank Citibank</span>
+                    <span className="">{bkbData ? bkbData?.bank_name : '-'}</span>
                   </div>
                   <div className="col border">
-                    <span className="">0-105234-015 (Rp)</span>
+                    <span className="">{bkbData ? bkbData?.bank_account_no : '-'}</span>
                   </div>
                   <div className="col border">
-                    <span className="">PT. Ecolab International Indonesia</span>
+                    <span className="">{bkbData ? bkbData?.bank_account_name : '-'}</span>
                   </div>
                 </div>
               </div>
@@ -290,28 +331,32 @@ function ItemContractBKB(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>249714 / 8000005793</td>
-                    <td className="text-center">12 Mei 2020</td>
-                    <td className="text-justify">
-                      Jasa Pengolahan Sistem Air Pendingin Cooling Tower PLTP
-                      Patuha Unit 1 Periode April 2020
-                    </td>
-                    <td>
-                      <div className="d-flex justify-content-between">
-                        <span>Rp</span>
-                        <span>171.666.000</span>
-                      </div>
-                    </td>
-                  </tr>
+                  {bkbData?.items?.map((row, key) => {
+                    // Jenis Dokumen
+                    return (
+                      <tr key={key}>
+                        <td className="text-center">{bkbData?.invoice_no} / {bkbData?.purch_order_no}</td>
+                        <td className="text-center">{window.moment(new Date(bkbData?.invoice_date)).format("DD MMMM YYYY")}</td>
+                        <td className="text-justify">
+                          {row.desc}
+                        </td>
+                        <td>
+                          <div className="d-flex justify-content-between">
+                            <span>{bkbData?.symbol}</span>
+                            <span>{rupiah(row.price).slice(3)}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
                   <tr>
                     <td colSpan="3" className="text-right">
                       PPN(10%)
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
-                        <span>(15.606.000)</span>
+                        <span>{bkbData?.symbol}</span>
+                        <span>{bkbData ? rupiah(bkbData?.tax_ppn_10).slice(3) : '-'}</span>
                       </div>
                     </td>
                   </tr>
@@ -327,8 +372,8 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
-                        <span>(3.121.200)</span>
+                        <span>{bkbData?.symbol}</span>
+                        <span>-</span>
                       </div>
                     </td>
                   </tr>
@@ -338,7 +383,7 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
+                        <span>{bkbData?.symbol}</span>
                         <span>-</span>
                       </div>
                     </td>
@@ -349,7 +394,7 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
+                        <span>{bkbData?.symbol}</span>
                         <span>-</span>
                       </div>
                     </td>
@@ -360,8 +405,8 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
-                        <span>152.938.800</span>
+                        <span>{bkbData?.symbol}</span>
+                        <span>{bkbData ? rupiah(bkbData?.total_amount).slice(3) : '-'}</span>
                       </div>
                     </td>
                   </tr>

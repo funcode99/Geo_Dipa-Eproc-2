@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector, shallowEqual } from "react-redux";
 import { rupiah } from "../../../../libs/currency";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import { Card, CardBody, CardFooter } from "../../../../../_metronic/_partials/controls";
 // import "react-select2-wrapper/css/select2.css";
 import {
   getPicContract,
   getPicVendor,
   getContractSummary,
+  getContractAuthority,
+  createContractAuthority,
+  updateContractAuthority
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
@@ -69,8 +72,15 @@ function ItemContractSummary(props) {
   const [picContractData, setPicContractData] = useState([]);
   const [picVendorData, setPicVendorData] = useState([]);
   const [contractData, setContractData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [contractAuthority, setContractAuthority] = useState(0);
+  const [contractAuthorityExist, setContractAuthorityExist] = useState(false);
 
   const [Toast, setToast] = useToast();
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const monitoring_type = "INVOICE";
@@ -86,11 +96,7 @@ function ItemContractSummary(props) {
           setPicContractData(response.data.data);
         })
         .catch((error) => {
-          if (
-            error.response?.status !== 400 &&
-            error.response?.data.message !== "TokenExpiredError"
-          )
-            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
         });
     },
     [contract_id, intl, setToast]
@@ -103,11 +109,7 @@ function ItemContractSummary(props) {
           setPicVendorData(response.data.data);
         })
         .catch((error) => {
-          if (
-            error.response?.status !== 400 &&
-            error.response?.data.message !== "TokenExpiredError"
-          )
-            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
         });
     },
     [intl, setToast]
@@ -134,40 +136,32 @@ function ItemContractSummary(props) {
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${
-          response["data"]["data"]["data"]["address"]["postal_address"]
-            ? response["data"]["data"]["data"]["address"]["postal_address"]
-            : null
-        } ${
-          response["data"]["data"]["data"]["address"]["sub_district"]
+        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
+          ? response["data"]["data"]["data"]["address"]["postal_address"]
+          : null
+          } ${response["data"]["data"]["data"]["address"]["sub_district"]
             ? response["data"]["data"]["data"]["address"]["sub_district"][
-                "name"
-              ]
+            "name"
+            ]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["district"]
+          } ${response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["province"]
+          } ${response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["postal_code"]
+          } ${response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
-        }`;
-        response["data"]["data"]["full_data_party_2"] = `${
-          response["data"]["data"]["full_name"]
-        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
-          response["data"]["data"]["data"]["phone_number"]["number"]
-        } ${
-          response["data"]["data"]["data"]["phone_number"]["ext"]
+          }`;
+        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
+          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
+          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
-                response["data"]["data"]["data"]["phone_number"]["ext"]
-              )
+              response["data"]["data"]["data"]["phone_number"]["ext"]
+            )
             : ""
-        }`;
+          }`;
         response["data"]["data"][
           "full_data_party_1"
         ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
@@ -181,11 +175,7 @@ function ItemContractSummary(props) {
         getData(response.data.data);
       })
       .catch((error) => {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        )
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [
     contract_id,
@@ -194,6 +184,23 @@ function ItemContractSummary(props) {
     getPicContractData,
     getPicVendorData,
     getData,
+  ]);
+
+  const getContractAuthorityData = useCallback(() => {
+    getContractAuthority(contract_id)
+      .then((response) => {
+        if (response['data']['data']) {
+          setContractAuthority(response['data']['data']['authority'])
+          setContractAuthorityExist(true)
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [
+    contract_id,
+    intl,
+    setToast
   ]);
 
   const setTimePIcker = (from_time, thru_time) => {
@@ -210,7 +217,45 @@ function ItemContractSummary(props) {
     });
   };
 
+  const handleSelect = (e) => {
+    setContractAuthority(e.target.value)
+  };
+
+  const handleSubmit = () => {
+    setLoading(true);
+    const data = {
+      contract_id: contract_id,
+      authority: contractAuthority,
+      created_by_id: user_id,
+      updated_by_id: user_id,
+      term_id: termin
+    };
+    if (contractAuthorityExist) {
+      updateContractAuthority(data)
+        .then((response) => {
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setLoading(false);
+        });
+    } else {
+      createContractAuthority(data)
+        .then((response) => {
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+          setLoading(false);
+          setContractAuthorityExist(true);
+        })
+        .catch((error) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setLoading(false);
+        });
+    }
+  };
+
   useEffect(getContractData, []);
+  useEffect(getContractAuthorityData, []);
 
   return (
     <React.Fragment>
@@ -378,13 +423,14 @@ function ItemContractSummary(props) {
                 <div className="col-sm-8">
                   <select
                     className="custom-select custom-select-sm"
-                    defaultValue={0}
+                    value={contractAuthority}
+                    onChange={handleSelect}
                   >
                     <option value="0" hidden>
                       SELECT
                     </option>
-                    <option value="1">Pusat</option>
-                    <option value="2">Unit</option>
+                    <option value="Pusat">Pusat</option>
+                    <option value="Unit">Unit</option>
                   </select>
                 </div>
               </div>
@@ -421,6 +467,22 @@ function ItemContractSummary(props) {
             </div>
           </div>
         </CardBody>
+        <CardFooter className="text-right">
+          <button
+            type="button"
+            className="btn btn-primary mx-1"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            Simpan
+            {loading && (
+              <span
+                className="spinner-border spinner-border-sm ml-1"
+                aria-hidden="true"
+              ></span>
+            )}
+          </button>
+        </CardFooter>
       </Card>
       <Card className="mt-5">
         <CardBody>
