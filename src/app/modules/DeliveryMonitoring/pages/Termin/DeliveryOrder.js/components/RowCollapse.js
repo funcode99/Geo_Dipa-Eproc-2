@@ -31,6 +31,7 @@ const RowCollapse = ({ row, childData }) => {
         <TableCell>{row.desc}</TableCell>
         <TableCell>{row.date}</TableCell>
         <TableCell>{row.remarks}</TableCell>
+        <TableCell>{row.approve_status}</TableCell>
         <TableCell>{row.action}</TableCell>
       </TableRow>
       <TableRow>
@@ -43,7 +44,7 @@ const RowCollapse = ({ row, childData }) => {
               <Typography variant="h6" gutterBottom component="div">
                 <FormattedMessage id="TITLE.HISTORY" />
               </Typography>
-              <TableHistory />
+              <TableHistory data={childData} />
             </Box>
           </Collapse>
         </TableCell>
