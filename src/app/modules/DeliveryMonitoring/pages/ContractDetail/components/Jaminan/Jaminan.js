@@ -26,6 +26,8 @@ const BASE_MODAL_CONF = [
     type: "reject",
     title: "Yakin ingin menolak dokumen ini ?",
     subTitle: "Pastikan dokumen yang dikirimkan tidak sesuai !",
+    isReject: true,
+    submitColor: "danger",
   },
 ];
 
@@ -134,8 +136,8 @@ export class Jaminan extends PureComponent {
   handleApi = (type, params) => {
     const { contractById } = this.props;
     const { open } = this.state;
-    console.log(`type`, type, params);
-
+    // console.log(`type`, type, params);
+    // return;
     switch (type) {
       case "approve":
         this.props.fetch_api_sg({
@@ -161,7 +163,7 @@ export class Jaminan extends PureComponent {
           url: `/delivery/contract/${open?.tempParams?.reject_id}/status`,
           params: {
             approve_status_id: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
-            remarks: "",
+            reject_text: params?.remarks,
           },
           onSuccess: (res) => {
             console.log(`res`, res);
@@ -229,7 +231,7 @@ export class Jaminan extends PureComponent {
             visible={open[type]}
             type={type}
             onClose={() => this.handleVisible(type)}
-            onSubmit={() => this.handleApi(type)}
+            onSubmit={(params) => this.handleApi(type, params)}
             additionalParams={open.tempParams}
             {...other}
           />

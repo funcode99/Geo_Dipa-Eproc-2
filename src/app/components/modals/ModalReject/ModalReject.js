@@ -3,7 +3,6 @@ import React from "react";
 import { FormControl } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
 import { StyledModal } from "../../modals";
-import { Form, Row, Col } from "react-bootstrap";
 
 const ModalConfirmation = ({
   visible = false,
@@ -17,26 +16,11 @@ const ModalConfirmation = ({
   children,
   submitColor = "primary",
   loading = false,
-  isReject = false,
   ...other
 }) => {
-  const [remarks, setRemarks] = React.useState(false);
-  const _handleSubmit = React.useCallback(() => {
-    if (typeof onSubmit === "function") {
-      if (isReject === true && remarks !== false) onSubmit({ remarks });
-      else onSubmit();
-    }
-  }, [onSubmit, remarks]);
-  const handleRemarksChange = (e) => {
-    // console.log(`e`, e.target.value);
-    setRemarks(e.target.value);
-  };
-  const disRemarks = isReject === true && remarks === false;
-  React.useEffect(() => {
-    if (visible === false) {
-      setRemarks(false);
-    }
-  }, [visible]);
+  const _handleSubmit = React.useCallbackm(() => visible && onSubmit(), [
+    onSubmit,
+  ]);
   // console.log(`other`, other);
   return (
     <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
@@ -58,27 +42,13 @@ const ModalConfirmation = ({
             </InputGroup>
           </React.Fragment>
         )}
-        {isReject && (
-          <Form.Group
-            style={{ width: "100%" }}
-            className="mb-3 "
-            controlId="formBasicEmail"
-          >
-            <Form.Label>Keterangan pendukung</Form.Label>
-            <Form.Control
-              type="input"
-              onChange={handleRemarksChange}
-              placeholder="Masukkan Keterangan"
-            />
-          </Form.Group>
-        )}
       </div>
       {children}
       <div className="d-flex justify-content-center mt-9">
         <button
-          disabled={loading || disRemarks}
+          disabled={loading}
           className={`btn btn-${submitColor} mr-8`}
-          onClick={_handleSubmit}
+          onClick={onSubmit}
         >
           {loading ? (
             <CircularProgress size="0.875rem" color="inherit" />

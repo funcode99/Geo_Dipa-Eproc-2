@@ -20,7 +20,9 @@ const RowGuarantee = ({ item, index }) => {
   const statusItem = contractById?.contract_guarantees?.filter(
     (el) => el.name === item.type
   );
-  //   console.log(`item`, item, statusItem, contractById?.contract_guarantees);
+  // console.log(`item`, item, statusItem, contractById?.contract_guarantees);
+  const isRejected =
+    statusItem?.length && statusItem[0]?.approve_status?.name === "REJECTED";
   return (
     <TableRow hover style={{ backgroundColor: !valueUsed && "#f1f1f1" }}>
       <TableCell>
@@ -34,7 +36,14 @@ const RowGuarantee = ({ item, index }) => {
       </TableCell>
       <TableCell>{item.label}</TableCell>
       <TableCell>
-        {statusItem?.length ? statusItem[0]?.approve_status?.name : "-"}
+        <div className="d-flex flex-column flex-grow-1">
+          <p className="text-dark-75 font-size-lg mb-1">
+            {statusItem?.length ? statusItem[0]?.approve_status?.name : "-"}
+          </p>
+          <span className="text-muted font-weight-bold">
+            {isRejected ? statusItem[0]?.reject_text : null}
+          </span>
+        </div>
       </TableCell>
       <TableCell>
         {statusItem?.length ? (
@@ -50,15 +59,22 @@ const RowGuarantee = ({ item, index }) => {
                 },
                 {
                   label: "TITLE.APPROVE",
-                  icon: "fas fa-check-circle text-warning",
+                  icon: "fas fa-check-circle text-success",
                   type: "approve",
                 },
                 {
                   label: "TITLE.REJECT",
-                  icon: "fas fa-times-circle text-primary",
+                  icon: "fas fa-times-circle text-danger",
                   type: "reject",
                 },
               ]}
+            />
+          ) : isRejected ? (
+            <UploadInput
+              disabled={!valueUsed}
+              value={dataForm[item.type]}
+              onChange={(eve) => onChange(eve, item.type)}
+              //   classLabel={Boolean(!active) && "d-none"}
             />
           ) : (
             <ButtonAction
