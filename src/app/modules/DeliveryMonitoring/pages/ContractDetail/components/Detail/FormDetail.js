@@ -34,8 +34,8 @@ const FormDetail = (props) => {
   //   (state) => state.auth.user.data.user_id,
   //   shallowEqual
   //   );
-  const {user_id, dataLama} = props
-    const dataContractById = React.useMemo(() => ({...dataLama}) , [dataLama])
+  const { user_id, dataLama } = props;
+  const dataContractById = React.useMemo(() => ({ ...dataLama }), [dataLama]);
 
   // console.log(`dataContractById`, dataContractById)
 
@@ -52,7 +52,6 @@ const FormDetail = (props) => {
   const [openModalEmail, setopenModalEmail] = useState(false);
   const [openModalDeletePIC, setOpenModalDeletePIC] = useState(false);
   const [tempPic, setTempPic] = useState([]);
-
 
   const updateEmailRef = useRef(null);
 
@@ -563,6 +562,18 @@ const FormDetail = (props) => {
                   />
                 </Col>
               </Form.Group>
+              <Form.Group as={Row}>
+                <Form.Label column md="4">
+                  <FormattedMessage id="TITLE.CONTRACT_TYPE" />
+                </Form.Label>
+                <Col md="8">
+                  <Form.Control as="select">
+                    <option>Full Payment</option>
+                    <option>Term</option>
+                    <option>Confirmation Order</option>
+                  </Form.Control>
+                </Col>
+              </Form.Group>
             </Col>
 
             <Col>
@@ -673,10 +684,10 @@ const FormDetail = (props) => {
   );
 };
 
-const mapState = ({auth,deliveryMonitoring}) => ({
+const mapState = ({ auth, deliveryMonitoring }) => ({
   user_id: auth.user.data.user_id,
-  dataLama: deliveryMonitoring.dataContractById
-})
+  dataLama: deliveryMonitoring.dataContractById,
+});
 
 export default React.memo(connect(mapState)(FormDetail), () => true);
 // export default FormDetail
