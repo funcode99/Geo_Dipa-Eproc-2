@@ -31,10 +31,14 @@ export async function checkRole(id) {
   return axios.get(`/invoice/check_role/${id}`);
 }
 export async function getContractMainFinance(params) {
-  return axios.get(`/invoice/contract_main_finance${params ? "?" + params : ""}`);
+  return axios.get(
+    `/invoice/contract_main_finance${params ? "?" + params : ""}`
+  );
 }
 export async function getContractUnitFinance(id, params) {
-  return axios.get(`/invoice/contract_unit_finance/${id}${params ? "?" + params : ""}`);
+  return axios.get(
+    `/invoice/contract_unit_finance/${id}${params ? "?" + params : ""}`
+  );
 }
 export async function getContractUser(id, params) {
   return axios.get(`/invoice/contract_user/${id}${params ? "?" + params : ""}`);
@@ -230,4 +234,25 @@ export async function createBkb(data) {
 }
 export async function getBkb(id) {
   return axios.get(`/invoice/get_bkb/${id}`);
+}
+export async function tax_manager_approve_bkb(id, tax_man_approved_id) {
+  return axios.post(`/invoice/tax_manager_approve_bkb`, {
+    id,
+    tax_man_approved_id,
+  });
+}
+export async function finance_manager_approve_bkb(id, finance_man_approved_id) {
+  return axios.post(`/invoice/finance_manager_approve_bkb`, {
+    id,
+    finance_man_approved_id,
+  });
+}
+export async function finance_director_approve_bkb(
+  id,
+  finance_director_approved_id
+) {
+  return axios.post(`/invoice/finance_director_approve_bkb`, {
+    id,
+    finance_director_approved_id,
+  });
 }
