@@ -312,10 +312,10 @@ const ItemContract = (props) => {
             <ItemContractSummary {...props} getData={getSetData} />
           )}
           {tabActive === 1 && <ItemContractInvoice {...props} />}
-          {tabActive === 2 && <ContractHardCopyDoc />}
-          {tabActive === 3 && <ItemContractBKB />}
-          {tabActive === 4 && <ItemContractFormVerification />}
-          {tabActive === 5 && <ItemContractRoutingSlip />}
+          {tabActive === 2 && <ContractHardCopyDoc {...props} />}
+          {tabActive === 3 && <ItemContractBKB {...props} />}
+          {tabActive === 4 && <ItemContractFormVerification {...props} />}
+          {tabActive === 5 && <ItemContractRoutingSlip {...props} />}
         </Container>
       </Paper>
     </Container>

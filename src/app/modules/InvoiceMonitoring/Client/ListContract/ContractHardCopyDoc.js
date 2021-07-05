@@ -6,11 +6,10 @@ import {
   CardBody,
   CardFooter,
 } from "../../../../../_metronic/_partials/controls";
-// import {
-//   getContractSummary,
-//   saveInvoice,
-//   getInvoice,
-// } from "../../../_redux/InvoiceMonitoringCrud";
+import {
+  getInvoice,
+  createBkb
+} from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
 // import * as Yup from "yup";
@@ -32,6 +31,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/components/RowAccordion";
 import { formatDate } from "../../../../libs/date";
+import useToast from "../../../../components/toast";
 
 const data_ops = [
   {
@@ -89,8 +89,20 @@ const useStyles = makeStyles((theme) => ({
 function ContractHardCopyDoc(props) {
   const { intl } = props;
   const classes = useStyles();
+  const [Toast, setToast] = useToast();
   const [modalReject, setModalReject] = useState(false);
   const [dataReject, setDataReject] = useState({});
+  const [invoiceData, setInvoiceData] = useState({});
+  const [invoiceBkbExist, setInvoiceBkbExist] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const contract_id = props.match.params.contract;
+  const termin = props.match.params.termin;
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+
   const [theadDocuments] = useState([
     { id: "action", label: "" },
     {
@@ -169,8 +181,55 @@ function ContractHardCopyDoc(props) {
     console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
 
+  const getInvoiceData = useCallback(() => {
+    getInvoice(contract_id, termin)
+      .then((response) => {
+        setInvoiceData(response["data"]["data"]);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, termin, intl, setToast]);
+
+  const handleSubmit = () => {
+    setLoading(true);
+    const data = {
+      contract_id: contract_id,
+      term_id: termin,
+      vendor_id: invoiceData.vendor_id,
+      sub_total: invoiceData.invoice_value,
+      created_by_id: user_id,
+      updated_by_id: user_id,
+    };
+    if (invoiceBkbExist) {
+      // updateContractAuthority(data)
+      //   .then((response) => {
+      //     setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+      //     setLoading(false);
+      //   })
+      //   .catch((error) => {
+      //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      //     setLoading(false);
+      //   });
+    } else {
+      createBkb(data)
+        .then((response) => {
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+          setLoading(false);
+          setInvoiceBkbExist(true);
+        })
+        .catch((error) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setLoading(false);
+        });
+    }
+  };
+
+  useEffect(getInvoiceData, []);
+
   return (
     <React.Fragment>
+      <Toast />
       <Card>
         <CardBody>
           <ExpansionPanel
@@ -538,7 +597,7 @@ function ContractHardCopyDoc(props) {
           </ExpansionPanel>
         </CardBody>
         <CardFooter>
-          <button type="button" className="btn btn-sm btn-primary">
+          <button type="button" className="btn btn-sm btn-primary" onClick={handleSubmit}>
             Send Notif
           </button>
           <button type="button" className="btn btn-sm btn-primary">
