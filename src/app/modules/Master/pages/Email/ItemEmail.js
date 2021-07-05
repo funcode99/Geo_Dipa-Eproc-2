@@ -126,7 +126,6 @@ const ItemEmail = (props) => {
   useEffect(callAPI, []);
 
   const handleTextArea = (value) => {
-    console.log("valueText", value);
     setValueText(value);
   };
 
