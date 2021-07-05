@@ -8,6 +8,11 @@ export const formData1 = [
     label: "Nomor BAST",
   },
   {
+    name: "jenis",
+    label: "Jenis Pekerjaan",
+    // placeholder: "ada placeholder",
+  },
+  {
     name: "pelaksana",
     label: "Pelaksana Pekerjaan",
   },

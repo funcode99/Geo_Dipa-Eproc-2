@@ -194,74 +194,70 @@ const BastPage = ({ status, contract, saveContract }) => {
   return (
     <React.Fragment>
       <Toast />
+      {/* <Card>
+        <CardBody> */}
       <Card>
         <CardBody>
-          <Card>
-            <CardBody>
-              {/* <FieldBuilder readOnly formData={formData3} /> */}
-              <FormBuilder
-                // ref={formikRef}
-                onSubmit={_handleSubmit}
-                // formData={formData3}
-                loading={loadings.post}
-                initial={initialValues}
-                validation={isClient ? validationClient : validationVendor}
-                fieldProps={{
-                  readOnly: false,
-                  // disabledFields: disabledInput,
-                  disabledFields: disabledInput.filter((el) =>
-                    isClient
-                      ? !allowedClient.includes(el)
-                      : !allowedVendor.includes(el)
-                  ),
-                }}
-              >
-                {({ fieldProps }) => (
-                  <Row>
-                    <Col>
-                      <FieldBuilder formData={formData1} {...fieldProps} />
-                    </Col>
-                    <Col>
-                      <FieldBuilder formData={formData2} {...fieldProps} />
-                    </Col>
-                  </Row>
-                )}
-              </FormBuilder>
-            </CardBody>
-          </Card>
+          {/* <FieldBuilder readOnly formData={formData3} /> */}
+          <FormBuilder
+            // ref={formikRef}
+            onSubmit={_handleSubmit}
+            // formData={formData3}
+            loading={loadings.post}
+            initial={initialValues}
+            validation={isClient ? validationClient : validationVendor}
+            fieldProps={{
+              readOnly: false,
+              // disabledFields: disabledInput,
+              disabledFields: disabledInput.filter((el) =>
+                isClient
+                  ? !allowedClient.includes(el)
+                  : !allowedVendor.includes(el)
+              ),
+            }}
+          >
+            {({ fieldProps }) => (
+              <Row>
+                <Col>
+                  <FieldBuilder formData={formData1} {...fieldProps} />
+                </Col>
+                <Col>
+                  <FieldBuilder formData={formData2} {...fieldProps} />
+                </Col>
+              </Row>
+            )}
+          </FormBuilder>
+        </CardBody>
+      </Card>
 
-          <Card className="mt-5">
-            <CardBody>
-              <Row className="mb-5">
-                <Col md={12}>
-                  <ButtonGroup
-                    size="medium"
-                    color="secondary"
-                    variant="contained"
-                  >
-                    <Button
-                      onClick={() => handleAction("preview", news?.file)}
-                      disabled={news ? false : true}
-                    >
-                      <FormattedMessage id="TITLE.PREVIEW" />
-                    </Button>
-                    <Button>
-                      <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
-                    </Button>
-                    <Button>
-                      <FormattedMessage id="TITLE.APPROVE" />
-                    </Button>
-                  </ButtonGroup>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={12}>
-                  <TitleField title={"History"} />
-                </Col>
-              </Row>
-              <Row>
-                <Col md={12}>
-                  {/* <TableBuilder
+      <Card className="mt-5">
+        <CardBody>
+          <Row className="mb-5">
+            <Col md={12}>
+              <ButtonGroup size="medium" color="secondary" variant="contained">
+                <Button
+                  onClick={() => handleAction("preview", news?.file)}
+                  disabled={news ? false : true}
+                >
+                  <FormattedMessage id="TITLE.PREVIEW" />
+                </Button>
+                <Button>
+                  <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
+                </Button>
+                <Button>
+                  <FormattedMessage id="TITLE.APPROVE" />
+                </Button>
+              </ButtonGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+              <TitleField title={"History"} />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+              {/* <TableBuilder
                     hecto={10}
                     dataHead={[
                       "No BAST",
@@ -286,17 +282,17 @@ const BastPage = ({ status, contract, saveContract }) => {
                       />
                     )}
                   /> */}
-                  <TablePaginationCustom
-                    headerRows={tableHeader}
-                    rows={content}
-                    loading={loadings.fetch}
-                  />
-                </Col>
-              </Row>
-            </CardBody>
-          </Card>
+              <TablePaginationCustom
+                headerRows={tableHeader}
+                rows={content}
+                loading={loadings.fetch}
+              />
+            </Col>
+          </Row>
         </CardBody>
       </Card>
+      {/* </CardBody>
+      </Card> */}
     </React.Fragment>
   );
 };

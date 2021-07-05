@@ -6,6 +6,8 @@ import CustomTable from "../../../../components/tables";
 import { Send } from "@material-ui/icons";
 import Navs from "../../../../components/navs";
 import { useSelector, useDispatch } from "react-redux";
+import BAPP from "./BAPP";
+import BAST from "../ContractDetail/components/BAST";
 
 const useStyles = makeStyles((theme) => ({
   navLink: {
@@ -56,50 +58,56 @@ export default function BeritaAcara() {
   const [tableContent, setTableContent] = React.useState([]);
   const [dataBAPP, setDataBAPP] = React.useState(tempDataBAPP);
 
-  const generateTableContent = (data) => {
-    data.forEach((item) => {
-      const rows = [
-        { content: item.no_bapp },
-        { content: item.tanggal },
-        { content: item.approve_by },
-        { content: item.lampiran },
-        {
-          content: (
-            <div className="d-flex flex-row justify-content-center">
-              <button
-                className="btn btn-sm p-1"
-                onClick={(e) => console.log(e)}
-              >
-                <i className="fas fa-edit text-primary"></i>
-              </button>
-              <button
-                className="btn btn-sm p-1 mr-2"
-                onClick={(e) => console.log(e)}
-              >
-                <i className="fas fa-trash text-danger"></i>
-              </button>
-            </div>
-          ),
-        },
-      ];
-      setTableContent((prev) => [...prev, rows]);
-    });
-  };
+  console.log(`berita acara`);
 
-  React.useEffect(() => {
-    generateTableContent(tempDataBAPP);
-  }, []);
+  // const generateTableContent = (data) => {
+  //   data.forEach((item) => {
+  //     const rows = [
+  //       { content: item.no_bapp },
+  //       { content: item.tanggal },
+  //       { content: item.approve_by },
+  //       { content: item.lampiran },
+  //       {
+  //         content: (
+  //           <div className="d-flex flex-row justify-content-center">
+  //             <button
+  //               className="btn btn-sm p-1"
+  //               onClick={(e) => console.log(e)}
+  //             >
+  //               <i className="fas fa-edit text-primary"></i>
+  //             </button>
+  //             <button
+  //               className="btn btn-sm p-1 mr-2"
+  //               onClick={(e) => console.log(e)}
+  //             >
+  //               <i className="fas fa-trash text-danger"></i>
+  //             </button>
+  //           </div>
+  //         ),
+  //       },
+  //     ];
+  //     setTableContent((prev) => [...prev, rows]);
+  //   });
+  // };
+
+  // React.useEffect(() => {
+  //   generateTableContent(tempDataBAPP);
+  // }, []);
 
   return (
     <React.Fragment>
       <Card>
         <CardBody>
-          {/* <Navs
+          <Navs
             navLists={navLists}
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
-          /> */}
+          />
 
-          <React.Fragment>
+          <div className="mt-5">
+            {navActive === "link-bapp" && <BAPP />}
+            {navActive === "link-bast" && <BAST />}
+          </div>
+          {/* <React.Fragment>
             <Form className="mt-3">
               <Row>
                 <Col>
@@ -215,11 +223,11 @@ export default function BeritaAcara() {
                 </Button>
               </div>
             </Form>
-          </React.Fragment>
+          </React.Fragment> */}
         </CardBody>
       </Card>
 
-      <Card className="mt-5">
+      {/* <Card className="mt-5">
         <CardBody>
           {navActive === "link-bapp" && (
             <React.Fragment>
@@ -265,7 +273,7 @@ export default function BeritaAcara() {
             </React.Fragment>
           )}
         </CardBody>
-      </Card>
+      </Card> */}
     </React.Fragment>
   );
 }
