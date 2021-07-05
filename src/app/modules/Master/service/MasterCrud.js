@@ -163,6 +163,14 @@ export function updatePurchGroup(id, data) {
   return axios.post(`data/update_purch_group/${id}`, data);
 }
 
+export function getListEmailCc() {
+  return axios.get(`data/list_email_cc`);
+}
+
+export function updateEmail(data) {
+  return axios.post(`data/update_email`, data);
+}
+
 // master data invoice periods
 
 export function getInvoicePeriods() {

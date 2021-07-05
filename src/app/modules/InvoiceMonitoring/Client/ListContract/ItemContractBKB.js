@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, useCallback } from "react";
+import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Card,
@@ -10,13 +10,111 @@ import {
 } from "../../../../../_metronic/_partials/controls";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { QRCodeG } from "../../../../components/qrCodeGenerate/QRCodeGenerate";
+import {
+  getBkb,
+  tax_manager_approve_bkb,
+  finance_manager_approve_bkb,
+  finance_director_approve_bkb,
+} from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
+import { rupiah } from "../../../../libs/currency";
+import {
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  LinearProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slide,
+  IconButton,
+} from "@material-ui/core";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function ItemContractBKB(props) {
   const [styleCustom] = React.useState({
     heightAppvDiv: 145,
     minHeightAppv: 80,
   });
-  useEffect(() => {});
+
+  const { intl } = props;
+  const termin = props.match.params.termin;
+  const [Toast, setToast] = useToast();
+
+  const [bkbData, setBkbData] = useState(null);
+
+  const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
+
+  const [monitoringTax, setMonitoringTax] = useState(
+    data_login.monitoring_role.findIndex(
+      (element) => element === "Finance Assistant Manager"
+    ) >= 0
+  );
+  const [monitoringFinance, setMonitoringFinance] = useState(
+    data_login.monitoring_role.findIndex(
+      (element) => element === "Finance Manager"
+    ) >= 0
+  );
+  const [monitoringFinanceDirec, setMonitoringFinanceDirec] = useState(
+    data_login.monitoring_role.findIndex(
+      (element) => element === "Direktur Keuangan"
+    ) >= 0
+  );
+  const [modalApproved, setModalApproved] = useState({
+    statusDialog: false,
+    data: {},
+    loading: false,
+    statusReq: false,
+  });
+
+  const getBkbData = useCallback(() => {
+    getBkb(termin)
+      .then((response) => {
+        if (response["data"]["data"]) {
+          response["data"]["data"]["vendor_address"] = `${
+            response["data"]["data"]["vendor_data"]["address"]["postal_address"]
+              ? response["data"]["data"]["vendor_data"]["address"][
+                  "postal_address"
+                ]
+              : null
+          } ${
+            response["data"]["data"]["vendor_data"]["address"]["sub_district"]
+              ? response["data"]["data"]["vendor_data"]["address"][
+                  "sub_district"
+                ]["name"]
+              : null
+          } ${
+            response["data"]["data"]["vendor_data"]["address"]["district"]
+              ? response["data"]["data"]["vendor_data"]["address"]["district"][
+                  "name"
+                ]
+              : null
+          } ${
+            response["data"]["data"]["vendor_data"]["address"]["province"]
+              ? response["data"]["data"]["vendor_data"]["address"]["province"][
+                  "name"
+                ]
+              : null
+          } ${
+            response["data"]["data"]["vendor_data"]["address"]["postal_code"]
+              ? response["data"]["data"]["vendor_data"]["address"][
+                  "postal_code"
+                ]
+              : null
+          }`;
+          setBkbData(response["data"]["data"]);
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [termin, intl, setToast]);
+
+  useEffect(getBkbData, []);
 
   const print = () => {
     var printContents = window.$("#printBkb").html();
@@ -29,8 +127,132 @@ function ItemContractBKB(props) {
     window.$("#print-content").html("");
   };
 
+  const handleApproved = () => {
+    setModalApproved({ ...modalApproved, loading: true });
+    if (modalApproved.data === "monitoringTax") {
+      tax_manager_approve_bkb(bkbData.id, data_login.user_id)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else if (modalApproved.data === "monitoringFinance") {
+      finance_manager_approve_bkb(bkbData.id, data_login.user_id)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else if (modalApproved.data === "monitoringFinanceDirec") {
+      finance_director_approve_bkb(bkbData.id, data_login.user_id)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
+  };
+
   return (
     <React.Fragment>
+      <Toast />
+      <Dialog
+        open={modalApproved.statusDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <DialogTitle>
+          <FormattedMessage id="TITLE.CONFIRMATION" />
+        </DialogTitle>
+        <DialogContent>
+          <FormattedMessage id="TITLE.NOTIF_ACTION_CHANGES" />
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-primary"
+            type="button"
+            disabled={modalApproved.loading}
+            onClick={() => {
+              handleApproved();
+            }}
+          >
+            {!modalApproved.loading && (
+              <span>
+                <FormattedMessage id="TITLE.SAVE" />
+              </span>
+            )}
+            {modalApproved.loading &&
+              (modalApproved.statusReq && modalApproved.loading ? (
+                <div>
+                  <span>
+                    <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                  </span>
+                  <span className="ml-2 fas fa-check"></span>
+                </div>
+              ) : (
+                <div>
+                  <span>
+                    <FormattedMessage id="TITLE.WAITING" />
+                  </span>
+                  <span className="ml-2 mr-4 spinner spinner-white"></span>
+                </div>
+              ))}
+          </button>
+          <button
+            className="btn btn-danger"
+            type="button"
+            onClick={() => {
+              setModalApproved({ ...modalApproved, statusDialog: false });
+            }}
+            disabled={modalApproved.loading}
+          >
+            <FormattedMessage id="TITLE.CANCEL" />
+          </button>
+        </DialogActions>
+      </Dialog>
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
@@ -72,7 +294,13 @@ function ItemContractBKB(props) {
                     <span>:</span>
                   </div>
                   <div className="col-sm-6 border text-center font-weight-bold">
-                    <span>20 Mei 2020</span>
+                    <span>
+                      {bkbData
+                        ? window
+                            .moment(new Date(bkbData?.created_at))
+                            .format("DD MMMM YYYY")
+                        : "-"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -95,7 +323,7 @@ function ItemContractBKB(props) {
               </div>
               <div className="col-sm-2 border text-center">
                 <h2 className="mb-0" style={{ marginTop: 5 }}>
-                  PST
+                  {bkbData ? bkbData?.purch_group_name?.substring(0, 3) : "-"}
                 </h2>
               </div>
             </div>
@@ -130,24 +358,18 @@ function ItemContractBKB(props) {
                 <div className="row">
                   <div className="col">
                     <span className="font-weight-bold">
-                      PT. Ecolab International Indonesia
+                      {bkbData ? bkbData?.vendor_name : "-"}
                     </span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col">
-                    <span>
-                      Jl. Pahlawan, Desa Karang Asem Timur, Citeureup, Bogor
-                      16810
-                    </span>
+                    <span>{bkbData ? bkbData?.vendor_address : "-"}</span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col">
-                    <span>
-                      Jasa Pengolahan Sistem Air Pendingin Cooling Tower PLTP
-                      Patuha Unit 1 Periode April 2020
-                    </span>
+                    <span>{bkbData ? bkbData?.contract_name : "-"}</span>
                   </div>
                 </div>
               </div>
@@ -166,7 +388,9 @@ function ItemContractBKB(props) {
               <div className="col-sm-2">
                 <div className="row border">
                   <div className="col">
-                    <span className="font-weight-bold">1234567</span>
+                    <span className="font-weight-bold">
+                      {bkbData ? bkbData?.vendor_code : "-"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -199,13 +423,19 @@ function ItemContractBKB(props) {
               <div className="col-sm-8">
                 <div className="row">
                   <div className="col border">
-                    <span className="">Bank Citibank</span>
+                    <span className="">
+                      {bkbData ? bkbData?.bank_name : "-"}
+                    </span>
                   </div>
                   <div className="col border">
-                    <span className="">0-105234-015 (Rp)</span>
+                    <span className="">
+                      {bkbData ? bkbData?.bank_account_no : "-"}
+                    </span>
                   </div>
                   <div className="col border">
-                    <span className="">PT. Ecolab International Indonesia</span>
+                    <span className="">
+                      {bkbData ? bkbData?.bank_account_name : "-"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -290,28 +520,38 @@ function ItemContractBKB(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>249714 / 8000005793</td>
-                    <td className="text-center">12 Mei 2020</td>
-                    <td className="text-justify">
-                      Jasa Pengolahan Sistem Air Pendingin Cooling Tower PLTP
-                      Patuha Unit 1 Periode April 2020
-                    </td>
-                    <td>
-                      <div className="d-flex justify-content-between">
-                        <span>Rp</span>
-                        <span>171.666.000</span>
-                      </div>
-                    </td>
-                  </tr>
+                  {bkbData?.items?.map((row, key) => {
+                    // Jenis Dokumen
+                    return (
+                      <tr key={key}>
+                        <td className="text-center">
+                          {bkbData?.invoice_no} / {bkbData?.purch_order_no}
+                        </td>
+                        <td className="text-center">
+                          {window
+                            .moment(new Date(bkbData?.invoice_date))
+                            .format("DD MMMM YYYY")}
+                        </td>
+                        <td className="text-justify">{row.desc}</td>
+                        <td>
+                          <div className="d-flex justify-content-between">
+                            <span>{bkbData?.symbol}</span>
+                            <span>{rupiah(row.price).slice(3)}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                   <tr>
                     <td colSpan="3" className="text-right">
                       PPN(10%)
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
-                        <span>(15.606.000)</span>
+                        <span>{bkbData?.symbol}</span>
+                        <span>
+                          {bkbData ? rupiah(bkbData?.tax_ppn_10).slice(3) : "-"}
+                        </span>
                       </div>
                     </td>
                   </tr>
@@ -327,8 +567,8 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
-                        <span>(3.121.200)</span>
+                        <span>{bkbData?.symbol}</span>
+                        <span>-</span>
                       </div>
                     </td>
                   </tr>
@@ -338,7 +578,7 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
+                        <span>{bkbData?.symbol}</span>
                         <span>-</span>
                       </div>
                     </td>
@@ -349,7 +589,7 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
+                        <span>{bkbData?.symbol}</span>
                         <span>-</span>
                       </div>
                     </td>
@@ -360,8 +600,12 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>Rp</span>
-                        <span>152.938.800</span>
+                        <span>{bkbData?.symbol}</span>
+                        <span>
+                          {bkbData
+                            ? rupiah(bkbData?.total_amount).slice(3)
+                            : "-"}
+                        </span>
                       </div>
                     </td>
                   </tr>
@@ -496,52 +740,51 @@ function ItemContractBKB(props) {
                             paddingBottom: 5,
                           }}
                         >
-                          <QRCodeG value="http://192.168.0.168:3000/qrcode" />
+                          {monitoringTax &&
+                            bkbData?.tax_man_approved_id === null &&
+                            bkbData?.finance_director_approved_id === null &&
+                            bkbData?.finance_man_approved_id === null && (
+                              <button
+                                type="button"
+                                className="btn btn-primary btn-sm"
+                                style={{ fontSize: 10, marginTop: 20 }}
+                                onClick={() => {
+                                  setModalApproved({
+                                    ...modalApproved,
+                                    statusDialog: true,
+                                    data: "monitoringTax",
+                                  });
+                                }}
+                              >
+                                <i
+                                  className="fas fa-check-circle"
+                                  style={{ fontSize: 8 }}
+                                ></i>
+                                <FormattedMessage id="TITLE.APPROVE" />
+                              </button>
+                            )}
+                          {monitoringTax &&
+                            (bkbData?.tax_man_approved_id ||
+                              bkbData?.finance_director_approved_id ||
+                              bkbData?.finance_man_approved_id) && (
+                              <QRCodeG value="http://192.168.0.168:3000/qrcode" />
+                            )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
                             <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />: Test00000
-                            </span>
-                            <br />
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.DATE" />: 24/04/2021
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="col-sm border-right"
-                        style={{ height: styleCustom.heightAppvDiv }}
-                      >
-                        <div
-                          className="text-center"
-                          style={{
-                            height: styleCustom.minHeightAppv,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                          }}
-                        >
-                          {/* <button
-                            type="button"
-                            className="btn btn-primary btn-sm"
-                            style={{ fontSize: 10, marginTop: 20 }}
-                          >
-                            <i
-                              className="fas fa-check-circle"
-                              style={{ fontSize: 10 }}
-                            ></i>
-                            Setuju
-                          </button> */}
-                        </div>
-                        <div className="d-flex align-items-end">
-                          <div>
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />: -
+                              <FormattedMessage id="TITLE.NAME" />:
                             </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
                               <FormattedMessage id="TITLE.DATE" />:
+                              {bkbData?.tax_man_approved_at
+                                ? window
+                                    .moment(
+                                      new Date(bkbData?.tax_man_approved_at)
+                                    )
+                                    .format("DD/MM/YYYY")
+                                : ""}
                             </span>
                           </div>
                         </div>
@@ -558,16 +801,114 @@ function ItemContractBKB(props) {
                             paddingBottom: 5,
                           }}
                         >
-                          <QRCodeG value="http://192.168.0.168:3000/qrcode" />
+                          {monitoringFinance &&
+                            bkbData?.tax_man_approved_id === null &&
+                            bkbData?.finance_director_approved_id === null &&
+                            bkbData?.finance_man_approved_id === null && (
+                              <button
+                                type="button"
+                                className="btn btn-primary btn-sm"
+                                style={{ fontSize: 10, marginTop: 20 }}
+                                onClick={() => {
+                                  setModalApproved({
+                                    ...modalApproved,
+                                    statusDialog: true,
+                                    data: "monitoringFinance",
+                                  });
+                                }}
+                              >
+                                <i
+                                  className="fas fa-check-circle"
+                                  style={{ fontSize: 8 }}
+                                ></i>
+                                <FormattedMessage id="TITLE.APPROVE" />
+                              </button>
+                            )}
+                          {monitoringFinance &&
+                            (bkbData?.tax_man_approved_id ||
+                              bkbData?.finance_director_approved_id ||
+                              bkbData?.finance_man_approved_id) && (
+                              <QRCodeG value="http://192.168.0.168:3000/qrcode" />
+                            )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
                             <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />: Test1234
+                              <FormattedMessage id="TITLE.NAME" />:
                             </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.DATE" />: 24/04/2021
+                              <FormattedMessage id="TITLE.DATE" />:
+                              {bkbData?.finance_man_approved_at
+                                ? window
+                                    .moment(
+                                      new Date(bkbData?.finance_man_approved_at)
+                                    )
+                                    .format("DD/MM/YYYY")
+                                : ""}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="col-sm border-right"
+                        style={{ height: styleCustom.heightAppvDiv }}
+                      >
+                        <div
+                          className="text-center"
+                          style={{
+                            height: styleCustom.minHeightAppv,
+                            paddingTop: 5,
+                            paddingBottom: 5,
+                          }}
+                        >
+                          {monitoringFinanceDirec &&
+                            bkbData?.tax_man_approved_id === null &&
+                            bkbData?.finance_director_approved_id === null &&
+                            bkbData?.finance_man_approved_id === null && (
+                              <button
+                                type="button"
+                                className="btn btn-primary btn-sm"
+                                style={{ fontSize: 10, marginTop: 20 }}
+                                onClick={() => {
+                                  setModalApproved({
+                                    ...modalApproved,
+                                    statusDialog: true,
+                                    data: "monitoringFinanceDirec",
+                                  });
+                                }}
+                              >
+                                <i
+                                  className="fas fa-check-circle"
+                                  style={{ fontSize: 8 }}
+                                ></i>
+                                <FormattedMessage id="TITLE.APPROVE" />
+                              </button>
+                            )}
+                          {monitoringFinanceDirec &&
+                            (bkbData?.tax_man_approved_id ||
+                              bkbData?.finance_director_approved_id ||
+                              bkbData?.finance_man_approved_id) && (
+                              <QRCodeG value="http://192.168.0.168:3000/qrcode" />
+                            )}
+                        </div>
+                        <div className="d-flex align-items-end">
+                          <div>
+                            <span style={{ fontSize: 8 }}>
+                              <FormattedMessage id="TITLE.NAME" />:
+                            </span>
+                            <br />
+                            <span style={{ fontSize: 8 }}>
+                              <FormattedMessage id="TITLE.DATE" />:
+                              {bkbData?.finance_director_approved_at
+                                ? window
+                                    .moment(
+                                      new Date(
+                                        bkbData?.finance_director_approved_at
+                                      )
+                                    )
+                                    .format("DD/MM/YYYY")
+                                : ""}
                             </span>
                           </div>
                         </div>
@@ -609,10 +950,10 @@ function ItemContractBKB(props) {
                         paddingBottom: 5,
                       }}
                     >
-                      <QRCodeG
+                      {/* <QRCodeG
                         value="http://192.168.0.168:3000/qrcode"
                         size="60"
-                      />
+                      /> */}
                     </div>
                     <div className="d-flex align-items-end">
                       <div>
@@ -675,16 +1016,16 @@ function ItemContractBKB(props) {
                       }}
                     >
                       {/* <button
-                            type="button"
-                            className="btn btn-primary btn-sm"
-                            style={{ fontSize: 10, marginTop: 20 }}
-                          >
-                            <i
-                              className="fas fa-check-circle"
-                              style={{ fontSize: 10 }}
-                            ></i>
-                            Setuju
-                          </button> */}
+                        type="button"
+                        className="btn btn-primary btn-sm"
+                        style={{ fontSize: 10, marginTop: 20 }}
+                      >
+                        <i
+                          className="fas fa-check-circle"
+                          style={{ fontSize: 8 }}
+                        ></i>
+                        <FormattedMessage id="TITLE.APPROVE" />
+                      </button> */}
                     </div>
                     <div className="d-flex align-items-end">
                       <div>

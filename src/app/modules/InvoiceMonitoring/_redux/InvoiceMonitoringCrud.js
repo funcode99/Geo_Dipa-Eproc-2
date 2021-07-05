@@ -31,10 +31,14 @@ export async function checkRole(id) {
   return axios.get(`/invoice/check_role/${id}`);
 }
 export async function getContractMainFinance(params) {
-  return axios.get(`/invoice/contract_main_finance${params ? "?" + params : ""}`);
+  return axios.get(
+    `/invoice/contract_main_finance${params ? "?" + params : ""}`
+  );
 }
 export async function getContractUnitFinance(id, params) {
-  return axios.get(`/invoice/contract_unit_finance/${id}${params ? "?" + params : ""}`);
+  return axios.get(
+    `/invoice/contract_unit_finance/${id}${params ? "?" + params : ""}`
+  );
 }
 export async function getContractUser(id, params) {
   return axios.get(`/invoice/contract_user/${id}${params ? "?" + params : ""}`);
@@ -208,6 +212,47 @@ export async function softcopy_save(data) {
 export async function sendRejectedDocSoftCopyLast(data) {
   return axios.post(`/invoice/softcopy_rejected_save`, data);
 }
+export async function sendRejectSoftCopyStatus(id, data) {
+  return axios.post(`/invoice/softcopy_rejected/${id}`, data);
+}
 export async function sendApprovedDocSoftCopyLast(id, data) {
   return axios.post(`/invoice/softcopy_approved/${id}`, data);
+}
+
+export async function getContractAuthority(id) {
+  return axios.get(`/invoice/get_contract_authority/${id}`);
+}
+export async function createContractAuthority(data) {
+  return axios.post(`/invoice/create_contract_authority/`, data);
+}
+export async function updateContractAuthority(data) {
+  return axios.post(`/invoice/update_contract_authority/`, data);
+}
+
+export async function createBkb(data) {
+  return axios.post(`/invoice/bkb_save/`, data);
+}
+export async function getBkb(id) {
+  return axios.get(`/invoice/get_bkb/${id}`);
+}
+export async function tax_manager_approve_bkb(id, tax_man_approved_id) {
+  return axios.post(`/invoice/tax_manager_approve_bkb`, {
+    id,
+    tax_man_approved_id,
+  });
+}
+export async function finance_manager_approve_bkb(id, finance_man_approved_id) {
+  return axios.post(`/invoice/finance_manager_approve_bkb`, {
+    id,
+    finance_man_approved_id,
+  });
+}
+export async function finance_director_approve_bkb(
+  id,
+  finance_director_approved_id
+) {
+  return axios.post(`/invoice/finance_director_approve_bkb`, {
+    id,
+    finance_director_approved_id,
+  });
 }

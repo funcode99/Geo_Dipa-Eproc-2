@@ -296,7 +296,7 @@ function ContractInvoicePage(props) {
   const getTaxData = useCallback(() => {
     getTax(contract_id, termin)
       .then((response) => {
-        if (response.data.data?.state == "PENDING") {
+        if (response.data.data?.state == "PENDING" || response.data.data?.state == "APPROVED") {
           formik.setFieldValue(
             "tax_date",
             new Date(response.data.data.tax_date)

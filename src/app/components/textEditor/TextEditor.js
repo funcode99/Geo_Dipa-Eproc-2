@@ -13,6 +13,7 @@ const TextEditor = (props) => {
 
   const initial = () => {
     setContent(initialData);
+    getData(initialData);
   };
 
   React.useEffect(initial, [initialData]);

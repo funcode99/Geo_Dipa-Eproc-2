@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { connect, shallowEqual, useSelector } from "react-redux";
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Slide,
-  makeStyles,
-  TablePagination,
-} from "@material-ui/core";
+  connect,
+  // shallowEqual,
+  // useSelector
+} from "react-redux";
+import { makeStyles } from "@material-ui/core";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
@@ -18,45 +14,31 @@ import {
   getEmail,
   getListSchedule,
   getListParameter,
+  getListEmailCc,
+  updateEmail,
 } from "../../service/MasterCrud";
 import useToast from "../../../../components/toast";
-import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
 import StyledSelect from "../../../../components/select-multiple";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import Select from "react-select";
-import { useHistory, useParams } from "react-router-dom";
-import ReactHtmlParser, {
-  processNodes,
-  convertNodeToElement,
-  htmlparser2,
-} from "react-html-parser";
+import {
+  // useHistory,
+  useParams,
+} from "react-router-dom";
+// import ReactHtmlParser, {
+//   processNodes,
+//   convertNodeToElement,
+//   htmlparser2,
+// } from "react-html-parser";
 import TextEditor from "../../../../components/textEditor/TextEditor";
 import copy from "clipboard-copy";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const data_ops = [
-  {
-    label: "TITLE.OPEN_DATA",
-    icon: "fas fa-envelope-open text-success",
-    type: "open",
-  },
-];
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
   },
 }));
-const contohSchedule = [
-  { label: "Hari H", value: "0" },
-  { label: "3 Hari Sebelum Jatuh Tempo", value: "3" },
-  { label: "1 Minggu Sebelum Jatuh Tempo", value: "7" },
-  { label: "30 Hari Sebelum Jatuh Tempo", value: "30" },
-];
 const ItemEmail = (props) => {
   const { intl } = props;
   const classes = useStyles();
@@ -66,35 +48,35 @@ const ItemEmail = (props) => {
   const [valueText, setValueText] = useState("");
   const [optionSchedule, setOptionSchedule] = useState([]);
   const [optionParameter, setOptionParameter] = useState([]);
+  const [optionEmailCc, setOptionEmailCc] = useState([]);
   const [selectedParameter, setSelectedParameter] = useState({});
+  const [onSubmit, setOnSubmit] = useState(false);
+  const [statusSubmit, setStatusSubmit] = useState(false);
+  const [errOnSubmit, setErrOnSubmit] = useState(false);
 
   const sendUpdate = useCallback(
     (e) => {
       e.preventDefault();
-      console.log("valueText", valueText);
-      //   setOnSubmit(true);
-      //   setErrOnSubmit(false);
-      //   var data = {
-      //     id: dataEdit.id,
-      //     request: {
-      //       days: Number(dataEdit.days),
-      //       user_id: user_id,
-      //     },
-      //   };
-      //   updateSla(data.id, data.request)
-      //     .then((result) => {
-      //       setStatusSubmit(true);
-      //       setTimeout(() => {
-      //         setDialogState(false);
-      //         setOnSubmit(false);
-      //         setStatusSubmit(false);
-      //         //   requestFilterSort();
-      //       }, 2000);
-      //     })
-      //     .catch((err) => {
-      //       setOnSubmit(false);
-      //       setErrOnSubmit(true);
-      //     });
+      let dataRequest = Object.assign({}, data);
+      dataRequest.body = valueText;
+      dataRequest.updated_at = window
+        .moment(new Date())
+        .format("YYYY-MM-DD h:mm:ss");
+      setOnSubmit(true);
+      setErrOnSubmit(false);
+      updateEmail(dataRequest)
+        .then((result) => {
+          setStatusSubmit(true);
+          setTimeout(() => {
+            setOnSubmit(false);
+            setStatusSubmit(false);
+            //   requestFilterSort();
+          }, 2000);
+        })
+        .catch((err) => {
+          setOnSubmit(false);
+          setErrOnSubmit(true);
+        });
     },
     [data, valueText]
   );
@@ -111,7 +93,7 @@ const ItemEmail = (props) => {
   const callAPI = useCallback(() => {
     getEmail(id)
       .then((result) => {
-        if (result.data.data.schedule) {
+        if (result.data.data.schedules) {
           getListSchedule()
             .then((results) => {
               setOptionSchedule(results.data.data);
@@ -132,6 +114,13 @@ const ItemEmail = (props) => {
       .catch((err) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
+    getListEmailCc()
+      .then((result) => {
+        setOptionEmailCc(result.data.data);
+      })
+      .catch((err) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   }, []);
 
   useEffect(callAPI, []);
@@ -139,7 +128,6 @@ const ItemEmail = (props) => {
   const handleTextArea = (value) => {
     setValueText(value);
   };
-  // useEffect(handleTextArea, [data]);
 
   const copyString = () => {
     if (selectedParameter.id) {
@@ -155,9 +143,9 @@ const ItemEmail = (props) => {
             <SVG src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")} />
           </span>
         </SubWrap>
-        <div className="d-flex align-items-baseline mr-5">
-          <h2 className="text-dark font-weight-bold my-2 mr-5">
-            approved softcopy by verification staff and tax administration staff
+        <div className="d-flex align-items-baseline mr-5 w-75">
+          <h2 className="text-dark font-weight-bold my-2 mr-5 text-truncate">
+            {data.name || "-"}
           </h2>
         </div>
       </div>
@@ -210,14 +198,6 @@ const ItemEmail = (props) => {
                           setSelectedParameter(value);
                         }}
                       />
-                      {/* <select className="custom-select" defaultValue={0}>
-                        <option value="0" hidden>
-                          Pilih
-                        </option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select> */}
                       <InputGroup.Append>
                         <InputGroup.Text
                           className="pointer"
@@ -236,12 +216,11 @@ const ItemEmail = (props) => {
                   <Col sm="10">
                     <StyledSelect
                       isDisabled={false}
-                      options={[
-                        { label: "Vendor Tekait", value: "0" },
-                        { label: "User Terkait(Email Divisi)", value: "1" },
-                        { label: "Pusat(Email Pusat)", value: "1" },
-                      ]}
-                      value={[]}
+                      options={optionEmailCc}
+                      value={data.cc}
+                      onChange={(value) => {
+                        setData({ ...data, cc: value });
+                      }}
                       id="notFit"
                     />
                   </Col>
@@ -255,7 +234,10 @@ const ItemEmail = (props) => {
                       type="text"
                       disabled={false}
                       defaultValue={data.subject}
-                      onChange={(e) => {}}
+                      onChange={(e) => {
+                        setData({ ...data, subject: e.target.value });
+                      }}
+                      autoComplete="false"
                     />
                   </Col>
                 </Form.Group>
@@ -279,29 +261,54 @@ const ItemEmail = (props) => {
                       <StyledSelect
                         isDisabled={false}
                         options={optionSchedule}
-                        value={data.schedule}
+                        value={data.schedules}
                         onChange={(value) => {
-                          setData({ ...data, schedule: value });
+                          setData({ ...data, schedules: value });
                         }}
                         id="notFit"
                       />
                     </Col>
                   </Form.Group>
                 )}
+                {errOnSubmit && !onSubmit && (
+                  <div>
+                    <p
+                      className="text-danger font-italic"
+                      style={{ fontSize: 11 }}
+                    >
+                      Error: <FormattedMessage id="REQ.UPDATE_FAILED" />
+                    </p>
+                  </div>
+                )}
               </Col>
             </Row>
             <button
               id="kt_login_signin_submit"
               type="submit"
+              disabled={onSubmit}
               className={`btn btn-primary font-weight-bold btn-sm`}
-              onClick={() => {
-                //   sendUpdate();
-              }}
             >
-              kirim
-            </button>
-            <button className="btn btn-sm btn-danger">
-              <FormattedMessage id="TITLE.CANCEL" />
+              {!onSubmit && (
+                <span>
+                  <FormattedMessage id="TITLE.SAVE" />
+                </span>
+              )}
+              {onSubmit &&
+                (statusSubmit && onSubmit ? (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                    </span>
+                    <span className="ml-2 fas fa-check"></span>
+                  </div>
+                ) : (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.WAITING" />
+                    </span>
+                    <span className="ml-2 mr-4 spinner spinner-white"></span>
+                  </div>
+                ))}
             </button>
           </Form>
         </CardBody>
