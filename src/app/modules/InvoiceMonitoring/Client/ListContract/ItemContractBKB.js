@@ -764,16 +764,16 @@ function ItemContractBKB(props) {
                               </button>
                             )}
                           {monitoringTax &&
-                            (bkbData?.tax_man_approved_id !== null ||
-                              bkbData?.finance_director_approved_id !== null ||
-                              bkbData?.finance_man_approved_id !== null) && (
+                            (bkbData?.tax_man_approved_id ||
+                              bkbData?.finance_director_approved_id ||
+                              bkbData?.finance_man_approved_id) && (
                               <QRCodeG value="http://192.168.0.168:3000/qrcode" />
                             )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
                             <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />: Test00000
+                              <FormattedMessage id="TITLE.NAME" />:
                             </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
@@ -825,16 +825,16 @@ function ItemContractBKB(props) {
                               </button>
                             )}
                           {monitoringFinance &&
-                            (bkbData?.tax_man_approved_id !== null ||
-                              bkbData?.finance_director_approved_id !== null ||
-                              bkbData?.finance_man_approved_id !== null) && (
+                            (bkbData?.tax_man_approved_id ||
+                              bkbData?.finance_director_approved_id ||
+                              bkbData?.finance_man_approved_id) && (
                               <QRCodeG value="http://192.168.0.168:3000/qrcode" />
                             )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
                             <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />: -
+                              <FormattedMessage id="TITLE.NAME" />:
                             </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
@@ -886,16 +886,16 @@ function ItemContractBKB(props) {
                               </button>
                             )}
                           {monitoringFinanceDirec &&
-                            (bkbData?.tax_man_approved_id !== null ||
-                              bkbData?.finance_director_approved_id !== null ||
-                              bkbData?.finance_man_approved_id !== null) && (
+                            (bkbData?.tax_man_approved_id ||
+                              bkbData?.finance_director_approved_id ||
+                              bkbData?.finance_man_approved_id) && (
                               <QRCodeG value="http://192.168.0.168:3000/qrcode" />
                             )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
                             <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />: Test1234
+                              <FormattedMessage id="TITLE.NAME" />:
                             </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
