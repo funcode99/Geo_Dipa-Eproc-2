@@ -61,7 +61,7 @@ const ItemEmail = (props) => {
       dataRequest.body = valueText;
       dataRequest.updated_at = window
         .moment(new Date())
-        .format("YYYY-MM-DD h:mm:ss");
+        .format("YYYY-MM-DD HH:mm:ss");
       setOnSubmit(true);
       setErrOnSubmit(false);
       updateEmail(dataRequest)
