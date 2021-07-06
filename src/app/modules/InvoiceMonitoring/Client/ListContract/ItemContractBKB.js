@@ -30,6 +30,7 @@ import {
   Slide,
   IconButton,
 } from "@material-ui/core";
+import { DEV_NODE } from "../../../../../redux/BaseHost";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -49,17 +50,17 @@ function ItemContractBKB(props) {
 
   const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
 
-  const [monitoringTax, setMonitoringTax] = useState(
+  const [monitoringTax] = useState(
     data_login.monitoring_role.findIndex(
-      (element) => element === "Finance Assistant Manager"
+      (element) => element === "Treasury Assistant Manager"
     ) >= 0
   );
-  const [monitoringFinance, setMonitoringFinance] = useState(
+  const [monitoringFinance] = useState(
     data_login.monitoring_role.findIndex(
       (element) => element === "Finance Manager"
     ) >= 0
   );
-  const [monitoringFinanceDirec, setMonitoringFinanceDirec] = useState(
+  const [monitoringFinanceDirec] = useState(
     data_login.monitoring_role.findIndex(
       (element) => element === "Direktur Keuangan"
     ) >= 0
@@ -762,13 +763,16 @@ function ItemContractBKB(props) {
                               </button>
                             )}
                           {monitoringTax && bkbData?.tax_man_approved_id && (
-                              <QRCodeG value="http://192.168.0.168:3000/qrcode" />
+                            <QRCodeG
+                              value={`${DEV_NODE}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
+                            />
                             )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
                             <span style={{ fontSize: 8 }}>
                               <FormattedMessage id="TITLE.NAME" />:
+                              {bkbData?.tax_man_name}
                             </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
@@ -819,13 +823,16 @@ function ItemContractBKB(props) {
                             )}
                           {monitoringFinance &&
                             bkbData?.finance_man_approved_id && (
-                              <QRCodeG value="http://192.168.0.168:3000/qrcode" />
+                              <QRCodeG
+                                value={`${DEV_NODE}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}`}
+                              />
                             )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
                             <span style={{ fontSize: 8 }}>
                               <FormattedMessage id="TITLE.NAME" />:
+                              {bkbData?.finance_man_name}
                             </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
@@ -876,13 +883,16 @@ function ItemContractBKB(props) {
                             )}
                           {monitoringFinanceDirec &&
                             bkbData?.finance_director_approved_id && (
-                              <QRCodeG value="http://192.168.0.168:3000/qrcode" />
+                              <QRCodeG
+                                value={`${DEV_NODE}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}`}
+                              />
                             )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
                             <span style={{ fontSize: 8 }}>
                               <FormattedMessage id="TITLE.NAME" />:
+                              {bkbData?.finance_director_name}
                             </span>
                             <br />
                             <span style={{ fontSize: 8 }}>
