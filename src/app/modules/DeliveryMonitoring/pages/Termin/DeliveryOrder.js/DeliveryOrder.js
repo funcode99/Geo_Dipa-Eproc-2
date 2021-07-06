@@ -23,6 +23,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import useToast from "../../../../../components/toast";
 import * as Option from "../../../../../service/Option";
+import DevOrderItem from "./components/DevOrderItem";
 
 const tblHeadDlvItem = [
   {
@@ -98,22 +99,24 @@ const DeliveryOrder = ({
   const isVendor = status === "vendor";
   const excludeAction = isVendor ? ["change_status"] : ["update", "delete"];
   const [Toast, setToast] = useToast();
+  const [dataOrderItem, setDataOrderItem] = React.useState({});
 
-  const handleVisible = (key, tempParams = {}) => {
+  const handleVisible = (key, tempParams = {}, state) => {
     // console.log(`tempParams`, tempParams);
-    if (key === "change_status") {
-      setOpen((prev) => ({
-        ...prev,
-        [key]: true,
-        tempParams: { ...tempParams },
-      }));
-    } else {
-      setOpen((prev) => ({
-        ...prev,
-        [key]: !prev[key],
-        tempParams: { ...tempParams },
-      }));
-    }
+    // if (key === "change_status") {
+    //   setOpen((prev) => ({
+    //     ...prev,
+    //     [key]: true,
+    //     tempParams: { ...tempParams },
+    //   }));
+    // } else {
+    if (dataOrderItem !== {}) setDataOrderItem({});
+    setOpen((prev) => ({
+      ...prev,
+      [key]: state !== undefined ? state : !prev[key],
+      tempParams: { ...tempParams },
+    }));
+    // }
   };
 
   const handleError = (type, err) => {
@@ -329,9 +332,13 @@ const DeliveryOrder = ({
         break;
 
       case "change_status":
-        // console.log(`type`, type);
+        // console.log(`type`, type, data);
         // console.log(`data`, data);
-        handleVisible("change_status", data);
+        // handleVisible("change_status", data, true);
+        setDataOrderItem({});
+        setTimeout(() => {
+          setDataOrderItem(data);
+        }, 350);
         break;
 
       default:
@@ -484,6 +491,7 @@ const DeliveryOrder = ({
             maxHeight={300}
             loading={loading.fetch}
             withSearch={false}
+            withPagination={false}
             renderRows={({ item, index }) => {
               return (
                 <RowCollapse key={index} row={item} childData={item?.history} />
@@ -491,15 +499,14 @@ const DeliveryOrder = ({
             }}
           />
 
-          {open.change_status && (
-            <DeliveryOrderItem
+          {/* <DeliveryOrderItem
               headerRows={tblHeadDlvItem}
               rows={tableContent}
               data={open.tempParams}
-            />
-          )}
+            /> */}
         </CardContent>
       </Card>
+      {<DevOrderItem data={dataOrderItem} />}
     </React.Fragment>
   );
 };

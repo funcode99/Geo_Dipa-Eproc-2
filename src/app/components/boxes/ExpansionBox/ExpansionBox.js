@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
   },
   column: {
-    flexBasis: "33.33%",
+    // flexBasis: "33.33%",
   },
   helper: {
     borderLeft: `2px solid ${theme.palette.divider}`,
@@ -46,23 +46,35 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ExpansionBox({
   title,
+  custTitle,
+  subTitle,
   children,
+  rightComponent,
+  classCont,
   defaultExpanded = true,
 }) {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <ExpansionPanel defaultExpanded>
+    <div className={`${classes.root} ${classCont}`}>
+      <ExpansionPanel defaultExpanded={defaultExpanded}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1c-content"
           id="panel1c-header"
         >
-          <div className={classes.column}>
-            <Typography className={classes.heading}>
-              <FormattedMessage id={title} />
-            </Typography>
+          <div
+            className={"d-flex justify-content-between "}
+            style={{ flex: 1 }}
+          >
+            <div className={classes.column}>
+              <Typography className={classes.heading}>
+                {custTitle}
+                {title && <FormattedMessage id={title} />}
+              </Typography>
+              {subTitle}
+            </div>
+            {rightComponent}
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>

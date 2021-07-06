@@ -14,6 +14,7 @@ const FormBuilder = (
     fieldProps,
     loading = false,
     disabledButton = false,
+    withSubmit = true,
   },
   ref
 ) => {
@@ -41,22 +42,24 @@ const FormBuilder = (
             ) : (
               <FieldBuilder formData={formData} {...fieldProps} />
             )}
-            <div className="d-flex justify-content-end w-100">
-              <Button
-                variant="contained"
-                color="secondary"
-                size="medium"
-                onClick={handleSubmit}
-                disabled={loading || disabledButton}
-              >
-                <span className="mr-1">Submit</span>
-                {loading ? (
-                  <CircularProgress size="0.875rem" color="inherit" />
-                ) : (
-                  <Send />
-                )}
-              </Button>
-            </div>
+            {withSubmit && (
+              <div className="d-flex justify-content-end w-100">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="medium"
+                  onClick={handleSubmit}
+                  disabled={loading || disabledButton}
+                >
+                  <span className="mr-1">Submit</span>
+                  {loading ? (
+                    <CircularProgress size="0.875rem" color="inherit" />
+                  ) : (
+                    <Send />
+                  )}
+                </Button>
+              </div>
+            )}
           </React.Fragment>
         );
       }}
