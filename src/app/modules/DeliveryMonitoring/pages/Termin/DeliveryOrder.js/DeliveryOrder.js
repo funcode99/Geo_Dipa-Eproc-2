@@ -59,6 +59,7 @@ const initialValues = {
   date: formatInitialDate(),
   remarks: "",
   status: 4,
+  status_remarks: "",
 };
 
 const DeliveryOrder = ({
@@ -167,7 +168,7 @@ const DeliveryOrder = ({
         try {
           const requestData = {
             approve_status_id: values.status,
-            // reject_text: ""
+            reject_text: values.status_remarks,
           };
 
           handleLoading("detail", true);
@@ -279,7 +280,8 @@ const DeliveryOrder = ({
           ? formatUpdateDate(new Date(data.date), "yyy-MM-dd")
           : formatUpdateDate(new Date(), "yyy-MM-dd"),
         remarks: data.remarks,
-        status: data.approve_status_id,
+        status: data.approve_status_id || initialValues.status,
+        status_remarks: data.reject_text || initialValues.status_remarks,
       });
     } else if (type === "create") {
       formik.setValues(initialValues);

@@ -529,5 +529,6 @@
   "TITLE.PURCHASE_GROUPS": "Purchase Groups",
   "TITLE.FROM_DATE": "Dari Tanggal",
   "TITLE.THRU_DATE": "Sampai Tanggal",
-  "TITLE.CONTRACT_TYPE": "Tipe Kontrak"
+  "TITLE.CONTRACT_TYPE": "Tipe Kontrak",
+  "TITLE.STATUS_REMARKS": "Komentar Status"
 }

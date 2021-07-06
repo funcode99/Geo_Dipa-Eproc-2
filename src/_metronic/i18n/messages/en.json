@@ -530,5 +530,6 @@
   "TITLE.PURCHASE_GROUPS": "Purchase Groups",
   "TITLE.FROM_DATE": "From Date",
   "TITLE.THRU_DATE": "Thru Date",
-  "TITLE.CONTRACT_TYPE": "Contract Type"
+  "TITLE.CONTRACT_TYPE": "Contract Type",
+  "TITLE.STATUS_REMARKS": "Status Remarks"
 }

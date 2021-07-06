@@ -49,6 +49,7 @@ const ModalDetail = ({
 }) => {
   const classes = useStyles();
   const isClient = userStatus === "client";
+  const isVendor = userStatus === "vendor";
 
   return (
     <React.Fragment>
@@ -146,44 +147,62 @@ const ModalDetail = ({
             {...formik.getFieldProps("remarks")}
           />
 
-          {isClient && (
-            <React.Fragment>
-              <InputLabel id="delivery-order-status" className="mt-6 text-dark">
-                Status
-              </InputLabel>
-              <TextField
-                labelid="delivery-order-status"
-                id="elivery-order-status-id"
-                name="approve_status"
-                size="small"
-                classes={{ root: classes.textField }}
-                select
-                variant="outlined"
-                // onChange={(e) => console.log(e.target.value)}
-                defaultValue={4}
-                {...formik.getFieldProps("status")}
-              >
-                <MenuItem value={4}>
-                  <FormattedMessage id="CONTRACT_DETAIL.MODAL_CREATE.SELECT_ITEM" />
-                </MenuItem>
-                {/* {["satu", "dua", "tiga"].map((item, id) => (
+          <React.Fragment>
+            <InputLabel id="delivery-order-status" className="mt-6 text-dark">
+              <FormattedMessage id="TITLE.DELIVERY_ORDER" /> Status
+            </InputLabel>
+            <TextField
+              labelid="delivery-order-status"
+              id="elivery-order-status-id"
+              name="approve_status"
+              size="small"
+              classes={{ root: classes.textField }}
+              select
+              variant="outlined"
+              disabled={isVendor}
+              // onChange={(e) => console.log(e.target.value)}
+              defaultValue={4}
+              {...formik.getFieldProps("status")}
+            >
+              <MenuItem value={4}>
+                <FormattedMessage id="CONTRACT_DETAIL.MODAL_CREATE.SELECT_ITEM" />
+              </MenuItem>
+              {/* {["satu", "dua", "tiga"].map((item, id) => (
                   <MenuItem key={id} value={item}>
                     {item}
                   </MenuItem>
                 ))} */}
-                {options &&
-                  options.map((option, id) => (
-                    <MenuItem key={id} value={option.id}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-              </TextField>
-              {/* <p style={{ color: "red" }}>
+              {options &&
+                options.map((option, id) => (
+                  <MenuItem key={id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+            </TextField>
+            {/* <p style={{ color: "red" }}>
                     {formik.touched.status && formik.errors.status
                       ? formik.errors.status
                       : null}
                   </p> */}
 
+            <InputLabel id="status_remarks" className="mt-6 text-dark">
+              <FormattedMessage id="TITLE.STATUS_REMARKS" />
+            </InputLabel>
+            <TextField
+              variant="outlined"
+              name="status_remarks"
+              size="small"
+              type="text"
+              placeholder="status remarks..."
+              disabled={isVendor}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              classes={{ root: classes.textField }}
+              {...formik.getFieldProps("status_remarks")}
+            />
+
+            {isClient && (
               <div className="d-flex justify-content-end w-100 mt-7">
                 <Button
                   disabled={loading}
@@ -201,8 +220,8 @@ const ModalDetail = ({
                   )}
                 </Button>
               </div>
-            </React.Fragment>
-          )}
+            )}
+          </React.Fragment>
         </form>
       </StyledModal>
     </React.Fragment>
