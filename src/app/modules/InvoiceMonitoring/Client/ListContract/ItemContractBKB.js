@@ -741,9 +741,7 @@ function ItemContractBKB(props) {
                           }}
                         >
                           {monitoringTax &&
-                            bkbData?.tax_man_approved_id === null &&
-                            bkbData?.finance_director_approved_id === null &&
-                            bkbData?.finance_man_approved_id === null && (
+                            bkbData?.tax_man_approved_id === null && (
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm"
@@ -763,10 +761,7 @@ function ItemContractBKB(props) {
                                 <FormattedMessage id="TITLE.APPROVE" />
                               </button>
                             )}
-                          {monitoringTax &&
-                            (bkbData?.tax_man_approved_id ||
-                              bkbData?.finance_director_approved_id ||
-                              bkbData?.finance_man_approved_id) && (
+                          {monitoringTax && bkbData?.tax_man_approved_id && (
                               <QRCodeG value="http://192.168.0.168:3000/qrcode" />
                             )}
                         </div>
@@ -802,8 +797,6 @@ function ItemContractBKB(props) {
                           }}
                         >
                           {monitoringFinance &&
-                            bkbData?.tax_man_approved_id === null &&
-                            bkbData?.finance_director_approved_id === null &&
                             bkbData?.finance_man_approved_id === null && (
                               <button
                                 type="button"
@@ -825,9 +818,7 @@ function ItemContractBKB(props) {
                               </button>
                             )}
                           {monitoringFinance &&
-                            (bkbData?.tax_man_approved_id ||
-                              bkbData?.finance_director_approved_id ||
-                              bkbData?.finance_man_approved_id) && (
+                            bkbData?.finance_man_approved_id && (
                               <QRCodeG value="http://192.168.0.168:3000/qrcode" />
                             )}
                         </div>
@@ -863,9 +854,7 @@ function ItemContractBKB(props) {
                           }}
                         >
                           {monitoringFinanceDirec &&
-                            bkbData?.tax_man_approved_id === null &&
-                            bkbData?.finance_director_approved_id === null &&
-                            bkbData?.finance_man_approved_id === null && (
+                            bkbData?.finance_director_approved_id === null && (
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm"
@@ -886,9 +875,7 @@ function ItemContractBKB(props) {
                               </button>
                             )}
                           {monitoringFinanceDirec &&
-                            (bkbData?.tax_man_approved_id ||
-                              bkbData?.finance_director_approved_id ||
-                              bkbData?.finance_man_approved_id) && (
+                            bkbData?.finance_director_approved_id && (
                               <QRCodeG value="http://192.168.0.168:3000/qrcode" />
                             )}
                         </div>
