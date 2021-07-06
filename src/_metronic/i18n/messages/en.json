@@ -531,5 +531,6 @@
   "TITLE.FROM_DATE": "From Date",
   "TITLE.THRU_DATE": "Thru Date",
   "TITLE.CONTRACT_TYPE": "Contract Type",
-  "TITLE.STATUS_REMARKS": "Status Remarks"
+  "TITLE.STATUS_REMARKS": "Status Remarks",
+  "TITLE.CHANGE_ITEM_STATUS": "Change item status"
 }

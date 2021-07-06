@@ -530,5 +530,6 @@
   "TITLE.FROM_DATE": "Dari Tanggal",
   "TITLE.THRU_DATE": "Sampai Tanggal",
   "TITLE.CONTRACT_TYPE": "Tipe Kontrak",
-  "TITLE.STATUS_REMARKS": "Komentar Status"
+  "TITLE.STATUS_REMARKS": "Komentar Status",
+  "TITLE.CHANGE_ITEM_STATUS": "Ubah status item"
 }

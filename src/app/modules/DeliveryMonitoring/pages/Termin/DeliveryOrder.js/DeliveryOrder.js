@@ -3,7 +3,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
-import { ModalSubmit, ModalDetail, RowCollapse } from "./components";
+import {
+  ModalSubmit,
+  ModalDetail,
+  RowCollapse,
+  BtnAction,
+  DeliveryOrderItem,
+} from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
 import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
@@ -76,6 +82,7 @@ const DeliveryOrder = ({
     submit: false,
     delete: false,
     detail: false,
+    change_status: false,
     tempParams: {},
   });
   const [tableContent, setTableContent] = React.useState([]);
@@ -84,20 +91,29 @@ const DeliveryOrder = ({
     submit: false,
     detail: false,
     delete: false,
+    change_status: false,
   });
   const [isUpdate, setIsUpdate] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const isVendor = status === "vendor";
-  const excludeAction = isVendor ? [] : ["update", "delete"];
+  const excludeAction = isVendor ? ["change_status"] : ["update", "delete"];
   const [Toast, setToast] = useToast();
 
   const handleVisible = (key, tempParams = {}) => {
     // console.log(`tempParams`, tempParams);
-    setOpen((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-      tempParams: { ...tempParams },
-    }));
+    if (key === "change_status") {
+      setOpen((prev) => ({
+        ...prev,
+        [key]: true,
+        tempParams: { ...tempParams },
+      }));
+    } else {
+      setOpen((prev) => ({
+        ...prev,
+        [key]: !prev[key],
+        tempParams: { ...tempParams },
+      }));
+    }
   };
 
   const handleError = (type, err) => {
@@ -312,6 +328,12 @@ const DeliveryOrder = ({
         handleModal("detail", data);
         break;
 
+      case "change_status":
+        // console.log(`type`, type);
+        // console.log(`data`, data);
+        handleVisible("change_status", data);
+        break;
+
       default:
         break;
     }
@@ -331,8 +353,9 @@ const DeliveryOrder = ({
             approve_status: item?.approve_status?.name,
             history: item?.task_delivery_histories,
             action: (
-              <ButtonAction
-                hoverLabel="More"
+              <BtnAction
+                status={item?.approve_status?.code}
+                label="TITLE.MORE"
                 data={item}
                 handleAction={handleAction}
                 exclude={excludeAction}
@@ -341,6 +364,11 @@ const DeliveryOrder = ({
                     label: "TITLE.VIEW_DETAILS_DATA",
                     icon: "fas fa-search text-info",
                     type: "detail",
+                  },
+                  {
+                    label: "TITLE.CHANGE_ITEM_STATUS",
+                    icon: "fas fa-edit text-primary",
+                    type: "change_status",
                   },
                   {
                     label: "TITLE.EDIT_DATA",
@@ -453,6 +481,7 @@ const DeliveryOrder = ({
             headerRows={tblHeadDlvItem}
             rows={tableContent}
             // width={1000}
+            maxHeight={300}
             loading={loading.fetch}
             withSearch={false}
             renderRows={({ item, index }) => {
@@ -461,6 +490,14 @@ const DeliveryOrder = ({
               );
             }}
           />
+
+          {open.change_status && (
+            <DeliveryOrderItem
+              headerRows={tblHeadDlvItem}
+              rows={tableContent}
+              data={open.tempParams}
+            />
+          )}
         </CardContent>
       </Card>
     </React.Fragment>
