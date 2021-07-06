@@ -48,21 +48,19 @@ function ItemContractBKB(props) {
   const [bkbData, setBkbData] = useState(null);
 
   const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
-
+  const monitoring_role = data_login.monitoring_role
+    ? data_login.monitoring_role
+    : [];
   const [monitoringTax] = useState(
-    data_login.monitoring_role.findIndex(
+    monitoring_role.findIndex(
       (element) => element === "Treasury Assistant Manager"
     ) >= 0
   );
   const [monitoringFinance] = useState(
-    data_login.monitoring_role.findIndex(
-      (element) => element === "Finance Manager"
-    ) >= 0
+    monitoring_role.findIndex((element) => element === "Finance Manager") >= 0
   );
   const [monitoringFinanceDirec] = useState(
-    data_login.monitoring_role.findIndex(
-      (element) => element === "Direktur Keuangan"
-    ) >= 0
+    monitoring_role.findIndex((element) => element === "Direktur Keuangan") >= 0
   );
   const [modalApproved, setModalApproved] = useState({
     statusDialog: false,
@@ -761,11 +759,11 @@ function ItemContractBKB(props) {
                                 <FormattedMessage id="TITLE.APPROVE" />
                               </button>
                             )}
-                          {monitoringTax && bkbData?.tax_man_approved_id && (
+                          {bkbData?.tax_man_approved_id && (
                             <QRCodeG
                               value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
                             />
-                            )}
+                          )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
@@ -820,12 +818,11 @@ function ItemContractBKB(props) {
                                 <FormattedMessage id="TITLE.APPROVE" />
                               </button>
                             )}
-                          {monitoringFinance &&
-                            bkbData?.finance_man_approved_id && (
-                              <QRCodeG
-                                value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}`}
-                              />
-                            )}
+                          {bkbData?.finance_man_approved_id && (
+                            <QRCodeG
+                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}`}
+                            />
+                          )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
@@ -880,12 +877,11 @@ function ItemContractBKB(props) {
                                 <FormattedMessage id="TITLE.APPROVE" />
                               </button>
                             )}
-                          {monitoringFinanceDirec &&
-                            bkbData?.finance_director_approved_id && (
-                              <QRCodeG
-                                value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}`}
-                              />
-                            )}
+                          {bkbData?.finance_director_approved_id && (
+                            <QRCodeG
+                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}`}
+                            />
+                          )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
