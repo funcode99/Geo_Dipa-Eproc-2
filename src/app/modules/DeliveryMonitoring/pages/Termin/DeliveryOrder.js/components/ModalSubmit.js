@@ -35,7 +35,10 @@ const ModalSubmit = ({
   loading,
   errors,
   handleError,
+  updateData,
 }) => {
+  const isUpdate = Object.keys(updateData).length > 0;
+
   const handleChecklist = (data, index) => {
     handleError("item", false);
 
@@ -63,7 +66,8 @@ const ModalSubmit = ({
         maxwidth="70vw"
       >
         <h3 className="mb-7">
-          <FormattedMessage id="TITLE.ADD" />{" "}
+          {isUpdate && <FormattedMessage id="TITLE.UPDATE" />}
+          {!isUpdate && <FormattedMessage id="TITLE.ADD" />}{" "}
           <FormattedMessage id="TITLE.DELIVERY_ORDER" />
         </h3>
 
@@ -190,7 +194,8 @@ const ModalSubmit = ({
               color="secondary"
             >
               <span className="mr-1">
-                <FormattedMessage id="TITLE.ADD" />
+                {isUpdate && <FormattedMessage id="TITLE.UPDATE" />}
+                {!isUpdate && <FormattedMessage id="TITLE.ADD" />}
               </span>
               {loading ? (
                 <CircularProgress size="0.875rem" color="inherit" />

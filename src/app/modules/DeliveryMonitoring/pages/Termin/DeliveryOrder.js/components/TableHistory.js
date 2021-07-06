@@ -3,6 +3,7 @@ import { TableCell } from "@material-ui/core";
 import { Table } from "@material-ui/core";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { formatDate } from "../../../../../../libs/date";
 
 const initTHead = [
   {
@@ -10,61 +11,30 @@ const initTHead = [
     label: <FormattedMessage id="TITLE.NO" />,
   },
   {
-    id: "name",
+    id: "description",
     label: <FormattedMessage id="TITLE.NAME" />,
-  },
-  {
-    id: "qty",
-    label: <FormattedMessage id="TITLE.QUANTITY" />,
-    align: "right",
-  },
-  {
-    id: "unit_price",
-    label: <FormattedMessage id="TITLE.UNIT_PRICE" />,
-    align: "right",
   },
   {
     id: "date",
     label: <FormattedMessage id="TITLE.DATE" />,
-  },
-  {
-    id: "status",
-    label: <FormattedMessage id="TITLE.STATUS" />,
   },
 ];
 
 const initData = [
   {
     id: 1,
-    name: "Barang 1",
-    qty: 2,
-    unit_price: "Rp 10,00",
+    description: "Vendor membuat permintaan barang",
     date: "1 Juli 2021",
-    status: "waiting",
   },
   {
     id: 2,
-    name: "Barang 1",
-    qty: 2,
-    unit_price: "Rp 10,00",
+    description: "User melakukan perubahan status (approved)",
     date: "2 Juli 2021",
-    status: "reject",
   },
   {
-    id: 3,
-    name: "Barang 1",
-    qty: 2,
-    unit_price: "Rp 10,00",
-    date: "2 Juli 2021",
-    status: "waiting",
-  },
-  {
-    id: 4,
-    name: "Barang 1",
-    qty: 2,
-    unit_price: "Rp 10,00",
+    id: 2,
+    description: "Vendor melakukan perubahan status (approved) item barang 1",
     date: "3 Juli 2021",
-    status: "accept",
   },
 ];
 
@@ -87,11 +57,12 @@ const TableHistory = ({ data = initData, tableHeader = initTHead }) => {
           return (
             <TableRow key={index}>
               <TableCell>{(index += 1)}</TableCell>
-              <TableCell>{item.name}</TableCell>
-              <TableCell align="right">{item.qty}</TableCell>
-              <TableCell align="right">{item.unit_price}</TableCell>
-              <TableCell>{item.date}</TableCell>
-              <TableCell>{item.status}</TableCell>
+              <TableCell>{item.description}</TableCell>
+              <TableCell>
+                {item?.createdAt !== null
+                  ? formatDate(new Date(item?.createdAt))
+                  : null}
+              </TableCell>
             </TableRow>
           );
         })}

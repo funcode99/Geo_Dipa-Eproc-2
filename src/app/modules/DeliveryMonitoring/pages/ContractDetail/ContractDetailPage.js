@@ -86,14 +86,14 @@ const TabLists = [
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
     icon: <PeopleAlt className="mb-0 mr-2" />,
   },
-  {
-    id: "bast",
-    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />,
-    icon: <Description className="mb-0 mr-2" />,
-  },
+  // {
+  //   id: "bast",
+  //   label: <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />,
+  //   icon: <Description className="mb-0 mr-2" />,
+  // },
 ];
 
-export const ContractDetailPage = ({dataContractById,authStatus}) => {
+export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   const classes = useStyles();
   const { contract_id } = useParams();
   const [Toast, setToast] = useToast();
@@ -235,15 +235,15 @@ export const ContractDetailPage = ({dataContractById,authStatus}) => {
         {tabActive === 5 && <Jaminan />}
         {tabActive === 6 && <Denda />}
         {tabActive === 7 && <ParaPihak2 />}
-        {tabActive === 8 && <BAST />}
+        {/* {tabActive === 8 && <BAST />} */}
       </Paper>
     </React.Fragment>
   );
 };
 
-const mapState = ({auth,deliveryMonitoring}) => ({
+const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
-  dataContractById: deliveryMonitoring.dataContractById
-})
+  dataContractById: deliveryMonitoring.dataContractById,
+});
 
 export default compose(withRouter, connect(mapState))(ContractDetailPage);

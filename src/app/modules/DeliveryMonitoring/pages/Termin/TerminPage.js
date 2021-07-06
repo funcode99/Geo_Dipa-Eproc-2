@@ -21,6 +21,7 @@ import { FormattedMessage } from "react-intl";
 import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import Steppers from "../../../../components/steppersCustom/Steppers";
 import SAGRPage from "./ServiceAccGR/SAGRPage";
+import BeritaAcara from "./BeritaAcara";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -181,9 +182,12 @@ const TerminPage = ({ items }) => {
           {isItemExists && tabActive === 1 && (
             <DeliveryOrder taskId={task_id} />
           )}
-          {!isItemExists && tabActive === 1 && <BAPP />}
+          {/* {!isItemExists && tabActive === 1 && <BAPP />} */}
+          {!isItemExists && tabActive === 1 && <BeritaAcara />}
 
-          {isItemExists && tabActive === 2 && <BAPP />}
+          {/* {isItemExists && tabActive === 2 && <BAPP />} */}
+          {isItemExists && tabActive === 2 && <BeritaAcara />}
+
           {/* {!isItemExists && tabActive === 2 && <ServAccGR />} */}
           {!isItemExists && tabActive === 2 && <SAGRPage />}
 

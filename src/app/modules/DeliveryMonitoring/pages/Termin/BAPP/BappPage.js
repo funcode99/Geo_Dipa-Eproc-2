@@ -276,18 +276,18 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
 
       <Card>
         <CardBody>
-          <div className="d-flex justify-content-between align-items-center w-100">
+          {/* <div className="d-flex justify-content-between align-items-center w-100">
             <h2 className="mb-0">Berita Acara Pelaksanaan Pekerjaan</h2>
-            {/* {taskNews && ( */}
-            <ButtonAction
-              label="TITLE.MORE"
-              data={taskNews}
-              ops={listUsed}
-              handleAction={handleAction}
-              exclude={exclude}
-            />
-            {/* )} */}
-          </div>
+            {taskNews && (
+              <ButtonAction
+                label="TITLE.MORE"
+                data={taskNews}
+                ops={listUsed}
+                handleAction={handleAction}
+                exclude={exclude}
+              />
+            )}
+          </div> */}
 
           <FormBuilder
             onSubmit={_handleSubmit}

@@ -45,6 +45,9 @@ export function postDeliveryItem(type, id, values) {
     case "update":
       return axios.put(`/delivery/task-delivery/${id}`, values);
 
+    case "delivery_order_status":
+      return axios.post(`delivery/task-delivery/${id}/status`, values);
+
     default:
       break;
   }
