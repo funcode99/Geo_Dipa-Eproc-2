@@ -30,7 +30,6 @@ import {
   Slide,
   IconButton,
 } from "@material-ui/core";
-import { DEV_NODE } from "../../../../../redux/BaseHost";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -764,7 +763,7 @@ function ItemContractBKB(props) {
                             )}
                           {monitoringTax && bkbData?.tax_man_approved_id && (
                             <QRCodeG
-                              value={`${DEV_NODE}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
+                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
                             />
                             )}
                         </div>
@@ -824,7 +823,7 @@ function ItemContractBKB(props) {
                           {monitoringFinance &&
                             bkbData?.finance_man_approved_id && (
                               <QRCodeG
-                                value={`${DEV_NODE}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}`}
+                                value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}`}
                               />
                             )}
                         </div>
@@ -884,7 +883,7 @@ function ItemContractBKB(props) {
                           {monitoringFinanceDirec &&
                             bkbData?.finance_director_approved_id && (
                               <QRCodeG
-                                value={`${DEV_NODE}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}`}
+                                value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}`}
                               />
                             )}
                         </div>
