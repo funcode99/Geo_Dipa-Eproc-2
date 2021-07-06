@@ -281,7 +281,7 @@ function ItemContractBKB(props) {
                     <span>:</span>
                   </div>
                   <div className="col-sm-6 border text-center font-weight-bold">
-                    <span>863</span>
+                    <span>{bkbData?.bkb_number}</span>
                   </div>
                 </div>
                 <div className="row">
