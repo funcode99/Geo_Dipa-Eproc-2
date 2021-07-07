@@ -5,8 +5,15 @@ import * as documentOption from "../../../../../../service/Document";
 import { Form, Row, Col } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
 import { FormControl } from "react-bootstrap";
+import ButtonSubmit from "../../../../../../components/buttonAction/ButtonSubmit";
 
-const ModalUploadDoc = ({ visible, onClose, additionalParams, onSubmit }) => {
+const ModalUploadDoc = ({
+  visible,
+  onClose,
+  additionalParams,
+  loading,
+  onSubmit,
+}) => {
   const [file, setFile] = React.useState(false);
   const [remarks, setRemarks] = React.useState(false);
   const [percent, setPercent] = React.useState(0);
@@ -75,13 +82,19 @@ const ModalUploadDoc = ({ visible, onClose, additionalParams, onSubmit }) => {
           </Form.Group>
         </Form>
         <div className="d-flex mt-5">
-          <button
+          <ButtonSubmit
+            handleSubmit={handleSubmit}
+            disabled={file === false && remarks === false}
+            loading={loading}
+            classBtn={"ml-auto"}
+          />
+          {/* <button
             disabled={file === false && remarks === false}
             onClick={handleSubmit}
             className="btn btn-primary ml-auto"
           >
             Kirim
-          </button>
+          </button> */}
         </div>
         {/* </form> */}
       </StyledModal>

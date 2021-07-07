@@ -21,15 +21,20 @@ const ModalConfirmation = ({
   ...other
 }) => {
   const [remarks, setRemarks] = React.useState(false);
+  const [percent, setPercent] = React.useState(false);
   const _handleSubmit = React.useCallback(() => {
     if (typeof onSubmit === "function") {
       if (isReject === true && remarks !== false) onSubmit({ remarks });
+      else if (additionalParams?.isPeriodic && !isReject && percent !== false)
+        onSubmit({ percentage: percent });
       else onSubmit();
     }
-  }, [onSubmit, remarks]);
+  }, [onSubmit, remarks, percent]);
   const handleRemarksChange = (e) => {
-    // console.log(`e`, e.target.value);
     setRemarks(e.target.value);
+  };
+  const handlePercentChange = (e) => {
+    setPercent(e.target.value);
   };
   const disRemarks = isReject === true && remarks === false;
   React.useEffect(() => {
@@ -43,14 +48,29 @@ const ModalConfirmation = ({
       <div className="d-flex align-items-center flex-column">
         <h3>{title}</h3>
         <h6>{subTitle}</h6>
-        {additionalParams?.isPeriodic && (
+        {additionalParams?.isPeriodic && !isReject && (
           <React.Fragment>
             <label htmlFor="basic-url">Persentase</label>
-            <InputGroup className="mb-3" style={{ width: 100 }}>
-              <FormControl
-                defaultValue={"20"}
-                placeholder={"Masukkan Persentase"}
+            <InputGroup className="mb-3" style={{ width: 121 }}>
+              {/* <FormControl
+                // defaultValue={"20"}
+                // value={percent}
+                onChange={handlePercentChange}
+                // placeholder={"Masukkan Persentase"}
                 aria-label="Amount (to the nearest dollar)"
+              /> */}
+              <FormControl
+                style={{
+                  width: 80,
+                  flex: "none",
+                }}
+                onChange={handlePercentChange}
+                // value={percent}
+                type="number"
+                min="0.1"
+                step="0.1"
+                // placeholder={"Masukkan Persentase"}
+                // aria-label="Amount (to the nearest dollar)"
               />
               <InputGroup.Append>
                 <InputGroup.Text>%</InputGroup.Text>
@@ -80,11 +100,8 @@ const ModalConfirmation = ({
           className={`btn btn-${submitColor} mr-8`}
           onClick={_handleSubmit}
         >
-          {loading ? (
-            <CircularProgress size="0.875rem" color="inherit" />
-          ) : (
-            textYes
-          )}
+          {loading && <CircularProgress size="0.875rem" color="inherit" />}
+          {textYes}
         </button>
         <button className="btn btn-light" onClick={onClose}>
           {textNo}

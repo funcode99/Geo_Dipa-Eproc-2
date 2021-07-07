@@ -31,6 +31,18 @@ const theadDocuments = [
   { id: "aksi", label: "Action" },
 ];
 
+const StatusRemarks = ({ status, remarks }) => {
+  const isRejected = status === "REJECTED";
+  return (
+    <div className="d-flex flex-column flex-grow-1">
+      <p className="text-dark-75 font-size-lg mb-1">{status || "-"}</p>
+      <span className="text-muted font-weight-bold">
+        {isRejected ? remarks : null}
+      </span>
+    </div>
+  );
+};
+
 // const BtnAksi = ({ item }) => {
 //   const { handleAction } = React.useContext(DocumentsContext);
 //   //   console.log(`item`, item);
@@ -76,7 +88,7 @@ const BtnLihat = ({ url }) => {
   );
 };
 
-const TableDoc = ({}) => {
+const TableDoc = ({ loading }) => {
   const { content, handleAction } = React.useContext(DocumentsContext);
 
   return (
@@ -86,7 +98,7 @@ const TableDoc = ({}) => {
       headerProps={{ sortable: false }}
       width={1207}
       maxHeight={300}
-      loading={false}
+      loading={loading}
       withSearch={false}
       withPagination={false}
       renderRows={({ item, index }) => {
@@ -131,7 +143,10 @@ const TableDoc = ({}) => {
                               // els?.url === null
                               //   ? "WAITING TO UPLOAD"
                               //   : "AVAILABLE",
-                              els?.document_status?.name,
+                              <StatusRemarks
+                                status={els?.document_status?.name}
+                                remarks={els?.remarks_status}
+                              />,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
                               els?.remarks,
@@ -156,7 +171,11 @@ const TableDoc = ({}) => {
                         el?.document_custom_name ?? el?.document?.name,
                         formatDate(new Date(el?.due_date)),
                         // el?.url === null ? "WAITING TO UPLOAD" : "AVAILABLE",
-                        el?.document_status?.name,
+                        <StatusRemarks
+                          status={el?.document_status?.name}
+                          remarks={el?.remarks_status}
+                        />,
+                        el?.percentage && el?.percentage + "%",
                         <BtnLihat url={el?.url} />,
                         el?.remarks,
                         <BtnAksi item={el} handleAction={handleAction} />,

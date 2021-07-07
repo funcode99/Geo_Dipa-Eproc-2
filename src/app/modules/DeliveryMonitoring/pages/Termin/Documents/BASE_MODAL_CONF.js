@@ -18,6 +18,7 @@ const BASE_MODAL_CONF = [
     type: "reject",
     title: "Yakin ingin menolak dokumen ini ?",
     subTitle: "Pastikan dokumen yang dikirimkan tidak sesuai !",
+    isReject: true,
   },
 ];
 
