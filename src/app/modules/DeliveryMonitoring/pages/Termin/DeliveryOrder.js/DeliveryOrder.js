@@ -25,6 +25,10 @@ import { useFormik } from "formik";
 import useToast from "../../../../../components/toast";
 import * as Option from "../../../../../service/Option";
 import DevOrderItem from "./components/DevOrderItem";
+import {
+  fetch_api_sg,
+  getLoading,
+} from "../../../../../../redux/globalReducer";
 
 const tblHeadDlvItem = [
   {
@@ -82,6 +86,8 @@ const DeliveryOrder = ({
   updateOrderItems,
   setUpdateOrderItems,
   status,
+  fetchApi,
+  loadings,
 }) => {
   const [open, setOpen] = React.useState({
     submit: false,
@@ -104,6 +110,7 @@ const DeliveryOrder = ({
   const excludeAction = isVendor ? ["change_status"] : ["update", "delete"];
   const [Toast, setToast] = useToast();
   const [dataOrderItem, setDataOrderItem] = React.useState({});
+  const [itemForm, setItemForm] = React.useState({});
 
   const handleVisible = (key, tempParams = {}, state) => {
     // console.log(`tempParams`, tempParams);
@@ -114,7 +121,7 @@ const DeliveryOrder = ({
     //     tempParams: { ...tempParams },
     //   }));
     // } else {
-    if (dataOrderItem !== {}) setDataOrderItem({});
+    // if (dataOrderItem !== {}) setDataOrderItem({});
     setOpen((prev) => ({
       ...prev,
       [key]: state !== undefined ? state : !prev[key],
@@ -291,6 +298,24 @@ const DeliveryOrder = ({
     }
   };
 
+  const handleConfirmItem = React.useCallback(() => {
+    // console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
+    fetchApi({
+      key: keys.submit_item,
+      type: "post",
+      url: `delivery/task-delivery-item/${dataOrderItem.id}/status`,
+      alertAppear: "both",
+      params: {
+        items: Object.values(itemForm).map((el) => ({
+          ...el,
+          // qty_approved: el.qty_approved,
+          qty_approved: parseInt(el.qty_approved),
+        })),
+      },
+      // onSuccess: res => {}
+    });
+  }, [dataOrderItem, itemForm, fetchApi]);
+
   const handleModal = (type, data) => {
     const option = ["update", "detail"];
     if (option.includes(type)) {
@@ -466,8 +491,8 @@ const DeliveryOrder = ({
         subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
         textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
         textNo={<FormattedMessage id="BUTTON.CANCEL" />}
-        onSubmit={() => handleDelete()}
-        loading={loading.confirm}
+        onSubmit={() => handleConfirmItem()}
+        loading={loadings.submit_item}
       />
 
       <ModalConfirmation
@@ -547,6 +572,8 @@ const DeliveryOrder = ({
       {
         <DevOrderItem
           data={dataOrderItem}
+          options={options}
+          setItem={setItemForm}
           // handleSubmit={() => handleAction("confirm", null)}
         />
       }
@@ -554,13 +581,23 @@ const DeliveryOrder = ({
   );
 };
 
-const mapState = ({ auth, deliveryMonitoring }) => ({
-  items: deliveryMonitoring.dataBarang,
-  orderItems: deliveryMonitoring.dataTask?.task_deliveries,
-  tempOrderItems: deliveryMonitoring.dataTempOrderItems,
-  updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
-  status: auth.user.data.status,
-});
+const keys = {
+  submit_item: "submit-item",
+};
+
+const mapState = (state) => {
+  const { auth, deliveryMonitoring } = state;
+  return {
+    items: deliveryMonitoring.dataBarang,
+    orderItems: deliveryMonitoring.dataTask?.task_deliveries,
+    tempOrderItems: deliveryMonitoring.dataTempOrderItems,
+    updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
+    status: auth.user.data.status,
+    loadings: {
+      submit_item: getLoading(state, keys.submit_item),
+    },
+  };
+};
 
 const mapDispatch = (dispatch) => ({
   setTempOrderItems: (payload) => {
@@ -581,6 +618,7 @@ const mapDispatch = (dispatch) => ({
       payload: payload,
     });
   },
+  fetchApi: (payload) => dispatch(fetch_api_sg(payload)),
 });
 
 export default connect(mapState, mapDispatch)(DeliveryOrder);

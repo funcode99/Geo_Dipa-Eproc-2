@@ -56,6 +56,15 @@ export const getLoading = (state, key) => {
 };
 
 // sagas below
+/**
+ * key:required
+  type: required
+  url: required
+  alertAppear: optional , default error only
+  params: optional
+  onSuccess: optional,
+  onFail: optional
+ */
 export function* saga() {
   yield takeEvery(globalRedTypes.FETCH_API_SAGA, function* fetchApi(action) {
     const { key, onSuccess, onFail, alertAppear = false } = action.payload;
@@ -78,7 +87,7 @@ export function* saga() {
         err?.message ?? "Error API, please contact developer!"
       );
     }
-    yield delay(1000);
+    // yield delay(1000);
     if (key) yield put(set_loading_done_rd(key));
   });
 }

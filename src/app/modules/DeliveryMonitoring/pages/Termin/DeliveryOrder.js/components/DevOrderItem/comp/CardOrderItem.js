@@ -20,12 +20,18 @@ import { DeliveryOrderContext } from "../../../DeliveryOrder";
 //   { label: "WAITING APPROVE", class: "dark" },
 // ];
 
-const CardOrderItem = ({ data, updateOrderItems, setUpdateOrderItems }) => {
-  const { options } = React.useContext(DeliveryOrderContext);
+const CardOrderItem = ({
+  data,
+  options,
+  setItem,
+  updateOrderItems,
+  setUpdateOrderItems,
+}) => {
+  // const { options } = React.useContext(DeliveryOrderContext);
   const formRef = React.useRef();
 
-  console.log(`data`, data);
-  console.log(`options`, options);
+  // console.log(`data`, data);
+  // console.log(`options`, options);
 
   const [componentIndex, setComponentIndex] = React.useState(0);
   // const [inputValues, setInputValues] = React.useState({
@@ -38,15 +44,36 @@ const CardOrderItem = ({ data, updateOrderItems, setUpdateOrderItems }) => {
 
   const handleChange = (state) => {
     setComponentIndex(state ? 1 : 2);
+    formRef.current.setFieldValue(
+      "approve_status_id",
+      options[state ? 1 : 2].id
+    );
+    setTimeout(() => {
+      getValue();
+    }, 200);
   };
 
-  const values = React.useMemo(
+  const initValues = React.useMemo(
     () => ({
       qty_approved: data?.qty_approved || "0",
       reject_text: data?.reject_text || "",
+      id: data?.id,
+      approve_status_id: data?.approve_status_id,
     }),
     [data]
   );
+
+  const getValue = () => {
+    // console.log(`formRef`, formRef?.current?.values);
+    setItem((prev) => ({
+      ...prev,
+      [formRef?.current?.values?.id]: formRef?.current?.values,
+    }));
+  };
+
+  // React.useEffect(() => {
+  //   console.log(`formRef`, formRef?.current?.values);
+  // }, [formRef?.current?.values]);
 
   return (
     <ExpansionBox
@@ -72,7 +99,13 @@ const CardOrderItem = ({ data, updateOrderItems, setUpdateOrderItems }) => {
         ref={formRef}
         withSubmit={false}
         formData={formData2}
-        initial={values}
+        initial={initValues}
+        fieldProps={{
+          onBlur: () => {
+            console.log("blur");
+            getValue();
+          },
+        }}
       />
       <Divider />
       <div>

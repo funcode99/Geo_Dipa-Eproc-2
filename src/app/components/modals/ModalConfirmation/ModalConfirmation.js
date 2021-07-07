@@ -80,11 +80,8 @@ const ModalConfirmation = ({
           className={`btn btn-${submitColor} mr-8`}
           onClick={_handleSubmit}
         >
-          {loading ? (
-            <CircularProgress size="0.875rem" color="inherit" />
-          ) : (
-            textYes
-          )}
+          {loading && <CircularProgress size="0.875rem" color="inherit" />}
+          {textYes}
         </button>
         <button className="btn btn-light" onClick={onClose}>
           {textNo}

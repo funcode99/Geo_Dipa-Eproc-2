@@ -8,9 +8,10 @@ import { Row } from "react-bootstrap";
 import ButtonSubmit from "../../../../../../../components/buttonAction/ButtonSubmit";
 import { DeliveryOrderContext } from "../../DeliveryOrder";
 
-const DevOrderItem = ({ data }) => {
+const DevOrderItem = ({ data, ...other }) => {
   const [visible, setVisible] = React.useState(false);
   const { handleAction } = React.useContext(DeliveryOrderContext);
+  // const [itemForm, setItemForm] = React.useState({});
 
   React.useEffect(() => {
     if (Object.keys(data).length) setVisible(true);
@@ -24,6 +25,12 @@ const DevOrderItem = ({ data }) => {
     }),
     [data]
   );
+
+  // React.useEffect(() => {
+  //   console.log(`itemForm`, itemForm, Object.values(itemForm));
+  // }, [itemForm]);
+
+  const handleSubmit = () => {};
   //   console.log(`data`, data, values);
 
   return (
@@ -48,7 +55,7 @@ const DevOrderItem = ({ data }) => {
           />
           {/* <Row> */}
           {data?.task_delivery_items.map((el, id) => (
-            <CardOrderItem key={id} data={el} />
+            <CardOrderItem key={id} data={el} {...other} />
           ))}
           {/* {data?.task_delivery_items.map((el, id) => (
             <CardOrderItem key={id} data={el} />

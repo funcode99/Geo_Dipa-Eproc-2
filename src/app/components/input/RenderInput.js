@@ -32,6 +32,11 @@ const RenderInput = ({
   const Component = inputs[typeInput || "BasicInput"];
   const { values, errors, setFieldValue, setFieldTouched } = formik;
   const selectProps = isSelect ? { listOptions } : {};
+
+  // const _onChange = (val) => {
+  //   setFieldValue(name, val, true)
+  //   onChangeCustom()
+  // }
   return (
     <div>
       {name && (
