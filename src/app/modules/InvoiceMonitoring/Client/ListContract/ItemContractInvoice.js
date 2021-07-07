@@ -45,6 +45,10 @@ import {
   softcopy_save,
   sendRejectedDocSoftCopyLast,
   sendApprovedDocSoftCopyLast,
+  updateSoftCopyByUser,
+  getFileRuby,
+  getFileMonitoring,
+  sendAddRejectedDocSoftCopy,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
@@ -102,6 +106,14 @@ const data_ops = [
     label: "TITLE.REJECT_DOCUMENT",
     icon: "fas fa-times-circle text-warning",
     type: "rejected",
+  },
+];
+
+const data_ops_user = [
+  {
+    label: "TITLE.UPLOAD",
+    icon: "fas fa-cloud-upload-alt text-success",
+    type: "upload",
   },
 ];
 
@@ -221,16 +233,33 @@ function ItemContractInvoice(props) {
     loading: false,
     statusReq: false,
   });
+  const [modalUpload, setModalUpload] = useState({
+    statusDialog: false,
+    data: {},
+    loading: false,
+    statusReq: false,
+  });
   const user_id = useSelector((state) => state.auth.user.data.user_id);
+  const dataUser = useSelector((state) => state.auth.user.data);
+  const [uploadFilename, setUploadFilename] = useState(
+    intl.formatMessage({
+      id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+    })
+  );
 
   const handleAction = (type, data) => {
     if (type === "rejected") {
       setModalReject({ ...modalReject, statusDialog: true, data: data });
     } else if (type === "approved") {
       setModalApproved({ ...modalApproved, statusDialog: true, data: data });
+    } else if (type === "upload") {
+      setModalUpload({
+        ...modalUpload,
+        statusDialog: true,
+        data: data,
+      });
     }
-    console.log("type: ", type, " - ", "data: ", data);
-    // history.push(`/client/invoice_monitoring/contract/${contract}/1`);
+    console.log("handleAction type: ", type, " - ", "data: ", data);
   };
 
   const handleActionDeliverable = (type, data) => {
@@ -310,7 +339,9 @@ function ItemContractInvoice(props) {
     //   });
   };
 
-  const getFileContract = (name) => {
+  const getFileContract = (name, status, ident_name) => {
+    console.log(name, status);
+    if (status === "eproc") {
     getFileEproc({ filename: name })
       .then((result) => {
         var a = document.createElement("a");
@@ -322,6 +353,11 @@ function ItemContractInvoice(props) {
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
+    } else if (status === "ruby") {
+      getFileRuby(name);
+    } else if (status === "monitoring") {
+      getFileMonitoring(name, ident_name);
+    }
   };
 
   useEffect(callApi, []);
@@ -360,7 +396,7 @@ function ItemContractInvoice(props) {
     var data_2 = {
       softcopy_approved_by_id: user_id,
     };
-    if (modalApproved.data.hardcopy_state === null) {
+    if (modalApproved.data.softcopy_state === null) {
       softcopy_save(data_1)
       .then((result) => {
         setModalApproved({
@@ -436,8 +472,9 @@ function ItemContractInvoice(props) {
       created_by_id: user_id,
       rejected_by_id: user_id,
       rejected_remark: note,
+      filename: modalReject.data.doc_file,
     };
-    if (modalReject.data.hardcopy_state === null) {
+    if (modalReject.data.softcopy_state === null) {
       softcopy_save(data_1)
       .then((result) => {
           data_2.document_monitoring_id = result.data.data.id;
@@ -460,7 +497,7 @@ function ItemContractInvoice(props) {
       .catch((err) => {
         setModalReject({
           ...modalReject,
-          loading: true,
+                loading: false,
         });
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
@@ -468,12 +505,17 @@ function ItemContractInvoice(props) {
         .catch((err) => {
           setModalReject({
             ...modalReject,
-            loading: true,
+            loading: false,
           });
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     } else {
       data_2.document_monitoring_id = modalReject.data.document_monitoring_id;
+      sendAddRejectedDocSoftCopy(
+        modalReject.data.document_monitoring_id,
+        user_id
+      )
+        .then((results) => {
       sendRejectedDocSoftCopyLast(data_2)
         .then((results) => {
           setModalReject({
@@ -493,11 +535,57 @@ function ItemContractInvoice(props) {
         .catch((err) => {
           setModalReject({
             ...modalReject,
-            loading: true,
+                loading: false,
+              });
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+            });
+        })
+        .catch((err) => {
+          setModalReject({
+            ...modalReject,
+            loading: false,
           });
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     }
+  };
+
+  const handleUpload = (e) => {
+    e.preventDefault();
+    setModalUpload({ ...modalUpload, loading: true });
+    var data = new FormData();
+    data.append("file", modalUpload.data.newFile);
+    data.append("created_by_id", user_id);
+    data.append("ident_name", modalUpload.data.ident_name);
+    updateSoftCopyByUser(modalUpload.data.document_monitoring_id, data)
+      .then((results) => {
+        setModalUpload({
+          ...modalUpload,
+          statusReq: true,
+          loading: true,
+        });
+        setTimeout(() => {
+          callApiContractSoftCopy();
+          setModalUpload({
+            ...modalUpload,
+            statusDialog: false,
+            data: {},
+            loading: false,
+          });
+          setUploadFilename(
+            intl.formatMessage({
+              id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+            })
+          );
+        }, 2500);
+      })
+      .catch((err) => {
+        setModalUpload({
+          ...modalUpload,
+          loading: false,
+        });
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   };
 
   return (
@@ -641,6 +729,123 @@ function ItemContractInvoice(props) {
           </DialogActions>
         </form>
       </Dialog>
+      <Dialog
+        open={modalUpload.statusDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <form onSubmit={handleUpload}>
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.UPLOAD" />
+            <span className="text-danger">
+              {" " + (modalUpload.data.document_name || "")}
+            </span>
+          </DialogTitle>
+          <DialogContent>
+            <div className="form-group row">
+              <label htmlFor="upload" className="col-sm-4 col-form-label">
+                <FormattedMessage id="TITLE.UPLOAD" />
+              </label>
+              <label
+                htmlFor="upload"
+                className="input-group mb-3 col-sm-8 pointer"
+              >
+                <div className="input-group-prepend">
+                  <span className="input-group-text">
+                    <i className="fas fa-file-upload"></i>
+                  </span>
+                </div>
+                <span className={`form-control text-truncate`}>
+                  {uploadFilename}
+                </span>
+              </label>
+              <input
+                type="file"
+                className="d-none"
+                id={modalUpload.loading ? "uploads" : "upload"}
+                accept="application/pdf, .pdf"
+                // onBlur={formik.handleBlur}
+                onChange={(e) => {
+                  if (
+                    e.currentTarget.files.length &&
+                    e.currentTarget.files[0].type === "application/pdf"
+                  ) {
+                    let data_ = Object.assign({}, modalUpload);
+                    setUploadFilename(e.currentTarget.files[0].name);
+                    data_.data.newFile = e.currentTarget.files[0];
+                    setModalUpload({
+                      ...modalUpload,
+                      data: data_.data,
+                    });
+                  }
+                }}
+              />
+              <span className="col-sm-8 offset-sm-3 text-center text-danger font-size-xs">
+                File wajib diisi dengan extension .PDF
+              </span>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => {
+                setModalUpload({
+                  ...modalUpload,
+                  data: {},
+                  statusDialog: false,
+                });
+                setUploadFilename(
+                  intl.formatMessage({
+                    id:
+                      "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+                  })
+                );
+              }}
+              disabled={modalUpload.loading}
+            >
+              <span>
+                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+              </span>
+            </button>
+            <button
+              className="btn btn-danger"
+              type="submit"
+              disabled={
+                modalUpload.loading ||
+                modalUpload.data.newFile === null ||
+                modalUpload.data.newFile === undefined
+              }
+            >
+              {!modalUpload.loading && (
+                <span>
+                  <FormattedMessage id="TITLE.SEND" />
+                </span>
+              )}
+              {modalUpload.loading &&
+                (modalUpload.statusReq && modalUpload.loading ? (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                    </span>
+                    <span className="ml-2 fas fa-check"></span>
+                  </div>
+                ) : (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.WAITING" />
+                    </span>
+                    <span className="ml-2 mr-4 spinner spinner-white"></span>
+                  </div>
+                ))}
+            </button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <ExpansionPanel
         defaultExpanded={false}
         className={classes.ExpansionPanelCard}
@@ -696,7 +901,11 @@ function ItemContractInvoice(props) {
                                   href="#"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    getFileContract(item.doc_file);
+                                    getFileContract(
+                                      item.doc_file,
+                                      item.doc_status,
+                                      item.ident_name
+                                    );
                                   }}
                                 >
                                   {item.doc_no}
@@ -716,14 +925,26 @@ function ItemContractInvoice(props) {
                               : ""}
                         </td>
                       <td className="align-middle">
-                            {(item.softcopy_state === null ||
+                            {dataUser?.is_finance &&
+                              (item.softcopy_state === null ||
                               item.softcopy_state === "PENDING") &&
-                              item.doc_no && (
+                              item.doc_no &&
+                              item.doc_file && (
                         <ButtonAction
                               data={item}
                           handleAction={handleAction}
                           ops={data_ops}
                         />
+                              )}
+                            {!dataUser?.is_finance &&
+                              item.softcopy_state === "REJECTED" &&
+                              item.doc_no &&
+                              item.seq === 1 && (
+                                <ButtonAction
+                                  data={Object.assign({}, item)}
+                                  handleAction={handleAction}
+                                  ops={data_ops_user}
+                                />
                               )}
                       </td>
                     </tr>

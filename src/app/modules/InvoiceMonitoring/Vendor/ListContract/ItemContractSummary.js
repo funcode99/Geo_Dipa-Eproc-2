@@ -526,7 +526,7 @@ function ItemContractSummary(props) {
             }}
             disabled={loading}
           >
-            <FormattedMessage id="TITLE.GENERAL.BACK_BUTTON" />
+            <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
           </button>
           <button
             className="btn btn-danger"
@@ -723,7 +723,7 @@ function ItemContractSummary(props) {
               setopenModalEmail(false);
             }}
           >
-            <FormattedMessage id="TITLE.GENERAL.BACK_BUTTON" />
+            <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
           </button>
         </DialogActions>
       </Dialog>
@@ -754,7 +754,7 @@ function ItemContractSummary(props) {
                   htmlFor="numberContract"
                   className="col-sm-4 col-form-label"
                 >
-                <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />
+                  <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />
                 </label>
                 <div className="col-sm-8">
                   <input
