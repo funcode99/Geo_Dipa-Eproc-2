@@ -177,7 +177,27 @@ const ModalTerm = ({
         </p>
 
         <TextField
-          label="Due Date"
+          label={
+            <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.START_DATE" />
+          }
+          variant="outlined"
+          name="start_date"
+          className={classes.textField}
+          size="small"
+          type="date"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          {...formik.getFieldProps("start_date")}
+        />
+        <p style={{ color: "red" }}>
+          {formik.touched.start_date && formik.errors.start_date
+            ? formik.errors.start_date
+            : null}
+        </p>
+
+        <TextField
+          label={<FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />}
           variant="outlined"
           name="due_date"
           className={classes.textField}
