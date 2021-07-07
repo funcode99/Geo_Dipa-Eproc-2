@@ -20,6 +20,9 @@ import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 import { formatDate } from "../../../../../../libs/date";
 import { FormattedMessage } from "react-intl";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
+import urlHelper, {
+  openLinkTab,
+} from "../../../../../../service/helper/urlHelper";
 
 const tableHeader = [
   {
@@ -178,7 +181,8 @@ const BastPage = ({ status, contract, saveContract }) => {
   const handleAction = (type, params) => {
     switch (type) {
       case "preview":
-        window.open(params?.file, "_blank");
+        openLinkTab(params?.file);
+        // window.open(urlHelper.addBaseURL(params?.file), "_blank");
         break;
       case "upload":
         console.log(`type`, type);

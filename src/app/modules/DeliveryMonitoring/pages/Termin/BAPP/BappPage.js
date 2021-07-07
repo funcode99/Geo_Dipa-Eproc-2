@@ -17,6 +17,9 @@ import { RowNormal } from "./components";
 import { Button, ButtonGroup } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
+import urlHelper, {
+  openLinkTab,
+} from "../../../../../service/helper/urlHelper";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -250,7 +253,8 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
 
     switch (type) {
       case "preview":
-        window.open(params?.file, "_blank");
+        openLinkTab(params?.file);
+        // window.open(urlHelper.addBaseURL(params?.file), "_blank");
         break;
       case "upload":
         console.log(`type`, type);

@@ -16,6 +16,9 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import BtnAksi from "./BtnAksi";
 import { formatDate } from "../../../../../../libs/date";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
+import urlHelper, {
+  openLinkTab,
+} from "../../../../../../service/helper/urlHelper";
 
 const theadDocuments = [
   { id: "action", label: "" },
@@ -58,7 +61,8 @@ const theadDocuments = [
 
 const BtnLihat = ({ url }) => {
   const handleOpen = React.useCallback(() => {
-    window.open(url, "_blank");
+    openLinkTab(url);
+    // window.open(urlHelper.addBaseURL(url), "_blank");
   }, [url]);
   return (
     <div className={"d-flex flex-row align-items-center"}>
