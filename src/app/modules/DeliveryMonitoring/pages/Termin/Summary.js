@@ -1017,7 +1017,7 @@ export default function Summary({ taskId = "" }) {
             />
           )}
 
-          <div className="d-flex justify-content-end w-100">
+          <div className="mt-4 d-flex justify-content-end w-100">
             <Button
               variant="contained"
               color="secondary"

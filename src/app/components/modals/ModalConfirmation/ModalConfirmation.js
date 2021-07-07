@@ -41,8 +41,9 @@ const ModalConfirmation = ({
   return (
     <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
       <div className="d-flex align-items-center flex-column">
+        {children}
         <h3>{title}</h3>
-        <h6>{subTitle}</h6>
+        {subTitle && <h6>{subTitle}</h6>}
         {additionalParams?.isPeriodic && (
           <React.Fragment>
             <label htmlFor="basic-url">Persentase</label>
@@ -73,7 +74,6 @@ const ModalConfirmation = ({
           </Form.Group>
         )}
       </div>
-      {children}
       <div className="d-flex justify-content-center mt-9">
         <button
           disabled={loading || disRemarks}

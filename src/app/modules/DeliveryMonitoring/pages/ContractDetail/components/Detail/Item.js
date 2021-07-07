@@ -485,7 +485,7 @@ const Item = ({ handleClick }) => {
             </TableItem>
           )} */}
 
-          <div className="d-flex justify-content-end w-100 mt-3">
+          <div className="d-flex justify-content-end w-100 mt-4">
             <Button
               variant="contained"
               color="secondary"

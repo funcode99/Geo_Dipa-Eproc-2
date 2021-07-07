@@ -1,12 +1,17 @@
+import React from "react";
+import { FormattedMessage } from "react-intl";
+
 export const formData = [
   [
     {
       name: "deliv_status",
-      label: "Delivery Order Status",
+      label: <FormattedMessage id="TITLE.DELIVERY_ORDER_STATUS" />,
+      readOnly: true,
     },
     {
       name: "deliv_status_remarks",
-      label: "Status Remarks",
+      label: <FormattedMessage id="TITLE.STATUS_REMARKS" />,
+      readOnly: true,
     },
   ],
 ];
@@ -15,11 +20,13 @@ export const formData2 = [
   [
     {
       name: "qty_approved",
-      label: "Quantity Approved",
+      label: <FormattedMessage id="TITLE.QUANTITY_APPROVED" />,
+      type: "number",
+      min: 0,
     },
     {
-      name: "remarks_item",
-      label: "Remarks",
+      name: "reject_text",
+      label: <FormattedMessage id="TITLE.REMARKS" />,
     },
   ],
 ];

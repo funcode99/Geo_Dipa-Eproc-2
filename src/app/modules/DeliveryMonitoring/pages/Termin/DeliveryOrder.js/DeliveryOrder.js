@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@material-ui/core";
-import React from "react";
+import React, { createContext } from "react";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
@@ -8,7 +8,8 @@ import {
   ModalDetail,
   RowCollapse,
   BtnAction,
-  DeliveryOrderItem,
+  // DeliveryOrderItem,
+  ModalSubmitItem,
 } from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
@@ -18,7 +19,7 @@ import {
   formatInitialDate,
   formatUpdateDate,
 } from "../../../../../libs/date";
-import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
+// import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import useToast from "../../../../../components/toast";
@@ -69,6 +70,8 @@ const initialValues = {
   status_remarks: "",
 };
 
+export const DeliveryOrderContext = createContext({});
+
 const DeliveryOrder = ({
   taskId,
   items,
@@ -77,13 +80,14 @@ const DeliveryOrder = ({
   setTempOrderItems,
   saveDataTask,
   updateOrderItems,
+  setUpdateOrderItems,
   status,
 }) => {
   const [open, setOpen] = React.useState({
     submit: false,
     delete: false,
     detail: false,
-    change_status: false,
+    confirm: false,
     tempParams: {},
   });
   const [tableContent, setTableContent] = React.useState([]);
@@ -92,7 +96,7 @@ const DeliveryOrder = ({
     submit: false,
     detail: false,
     delete: false,
-    change_status: false,
+    confirm: false,
   });
   const [isUpdate, setIsUpdate] = React.useState(false);
   const [options, setOptions] = React.useState([]);
@@ -317,7 +321,6 @@ const DeliveryOrder = ({
         handleVisible("submit", data);
         break;
       case "delete":
-        setIsUpdate(false);
         handleVisible("delete", data);
         break;
       case "update":
@@ -326,19 +329,20 @@ const DeliveryOrder = ({
         handleModal("update", data);
         break;
       case "detail":
-        setIsUpdate(false);
         handleVisible("detail", data);
         handleModal("detail", data);
         break;
 
       case "change_status":
-        // console.log(`type`, type, data);
-        // console.log(`data`, data);
-        // handleVisible("change_status", data, true);
         setDataOrderItem({});
         setTimeout(() => {
           setDataOrderItem(data);
+          setUpdateOrderItems(data?.task_delivery_items);
         }, 350);
+        break;
+
+      case "confirm":
+        handleVisible("confirm", data);
         break;
 
       default:
@@ -407,12 +411,35 @@ const DeliveryOrder = ({
     setTempOrderItems(temp.map((item) => ({ ...item, checked: false })));
   };
 
+  const addClassToOptions = (data) => {
+    data.map((item, index) => {
+      switch (item.name) {
+        case "WAITING APPROVAL":
+          item.class = "dark";
+          break;
+
+        case "APPROVED":
+          item.class = "success";
+          break;
+
+        case "REJECTED":
+          item.class = "danger";
+          break;
+
+        default:
+          break;
+      }
+    });
+  };
+
   const getOptions = async () => {
     try {
       setLoading(true);
       const {
         data: { data },
       } = await Option.getAllOptions();
+
+      addClassToOptions(data?.approve_status);
 
       setOptions(data?.approve_status);
     } catch (error) {
@@ -429,8 +456,19 @@ const DeliveryOrder = ({
   }, [orderItems]);
 
   return (
-    <React.Fragment>
+    <DeliveryOrderContext.Provider value={{ handleAction, options }}>
       <Toast />
+
+      <ModalSubmitItem
+        visible={open.confirm}
+        onClose={() => handleVisible("confirm")}
+        title={<FormattedMessage id="MESSAGE.DATA_IS_CORRECT" />}
+        subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
+        textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
+        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        onSubmit={() => handleDelete()}
+        loading={loading.confirm}
+      />
 
       <ModalConfirmation
         visible={open.delete}
@@ -506,8 +544,13 @@ const DeliveryOrder = ({
             /> */}
         </CardContent>
       </Card>
-      {<DevOrderItem data={dataOrderItem} />}
-    </React.Fragment>
+      {
+        <DevOrderItem
+          data={dataOrderItem}
+          // handleSubmit={() => handleAction("confirm", null)}
+        />
+      }
+    </DeliveryOrderContext.Provider>
   );
 };
 
@@ -523,6 +566,12 @@ const mapDispatch = (dispatch) => ({
   setTempOrderItems: (payload) => {
     dispatch({
       type: actionTypes.SetDataTempOrderItems,
+      payload: payload,
+    });
+  },
+  setUpdateOrderItems: (payload) => {
+    dispatch({
+      type: actionTypes.SetDataUpdateOrderItems,
       payload: payload,
     });
   },

@@ -6,9 +6,11 @@ import { formData } from "./formDataOItem";
 import CardOrderItem from "./comp/CardOrderItem";
 import { Row } from "react-bootstrap";
 import ButtonSubmit from "../../../../../../../components/buttonAction/ButtonSubmit";
+import { DeliveryOrderContext } from "../../DeliveryOrder";
 
 const DevOrderItem = ({ data }) => {
   const [visible, setVisible] = React.useState(false);
+  const { handleAction } = React.useContext(DeliveryOrderContext);
 
   React.useEffect(() => {
     if (Object.keys(data).length) setVisible(true);
@@ -34,7 +36,9 @@ const DevOrderItem = ({ data }) => {
           subheader={
             data?.date !== null ? formatDate(new Date(data?.date)) : null
           }
-          action={<ButtonSubmit />}
+          action={
+            <ButtonSubmit handleSubmit={() => handleAction("confirm", null)} />
+          }
         />
         <CardContent>
           <FormBuilder

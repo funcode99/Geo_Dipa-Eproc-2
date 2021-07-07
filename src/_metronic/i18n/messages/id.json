@@ -531,5 +531,9 @@
   "TITLE.THRU_DATE": "Sampai Tanggal",
   "TITLE.CONTRACT_TYPE": "Tipe Kontrak",
   "TITLE.STATUS_REMARKS": "Komentar Status",
-  "TITLE.CHANGE_ITEM_STATUS": "Ubah status item"
+  "TITLE.CHANGE_ITEM_STATUS": "Ubah status item",
+  "TITLE.QUANTITY_TOTAL": "Total Kuantitas",
+  "TITLE.QUANTITY_APPROVED": "Kuantitas Diterima",
+  "TITLE.DELIVERY_ORDER_STATUS": "Status Pengiriman",
+  "MESSAGE.DATA_IS_CORRECT": "Apakah anda yakin datanya sudah sesuai?"
 }
