@@ -23,6 +23,7 @@ export const formData2 = [
       label: <FormattedMessage id="TITLE.QUANTITY_APPROVED" />,
       type: "number",
       min: 0,
+      step: 0.1,
     },
     {
       name: "reject_text",

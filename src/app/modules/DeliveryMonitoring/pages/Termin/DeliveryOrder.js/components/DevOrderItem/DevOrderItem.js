@@ -9,8 +9,8 @@ import ButtonSubmit from "../../../../../../../components/buttonAction/ButtonSub
 import { DeliveryOrderContext } from "../../DeliveryOrder";
 
 const DevOrderItem = ({ data, ...other }) => {
+  const { handleAction } = other;
   const [visible, setVisible] = React.useState(false);
-  const { handleAction } = React.useContext(DeliveryOrderContext);
   // const [itemForm, setItemForm] = React.useState({});
 
   React.useEffect(() => {
@@ -30,9 +30,6 @@ const DevOrderItem = ({ data, ...other }) => {
   //   console.log(`itemForm`, itemForm, Object.values(itemForm));
   // }, [itemForm]);
 
-  const handleSubmit = () => {};
-  //   console.log(`data`, data, values);
-
   return (
     visible &&
     Object.keys(data).length && (
@@ -44,7 +41,7 @@ const DevOrderItem = ({ data, ...other }) => {
             data?.date !== null ? formatDate(new Date(data?.date)) : null
           }
           action={
-            <ButtonSubmit handleSubmit={() => handleAction("confirm", null)} />
+            <ButtonSubmit handleSubmit={() => handleAction("confirm", data)} />
           }
         />
         <CardContent>

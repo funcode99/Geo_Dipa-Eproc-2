@@ -23,48 +23,51 @@ const initData = [
     id: 1,
     name: "barang 1",
     qty: 2,
-    qty_approve: 2,
-    status: "approve",
-    remarks: "good",
+    qty_approved: 2,
+    approve_status: "approve",
+    reject_text: "good",
   },
   {
     id: 2,
     name: "barang 2",
     qty: 3,
-    qty_approve: 0,
-    status: "reject",
-    remarks: "salah",
+    qty_approved: 0,
+    approve_status: "reject",
+    reject_text: "salah",
   },
   {
     id: 3,
     name: "barang 3",
     qty: 4,
-    qty_approve: 2,
-    status: "approve",
-    remarks: "yang 2 gak sesuai standar",
+    qty_approved: 2,
+    approve_status: "approve",
+    reject_text: "yang 2 gak sesuai standar",
   },
 ];
 
 const ModalSubmitItem = ({
-  visible,
-  onClose,
-  title,
-  textYes,
-  textNo,
-  onSubmit,
-  loading,
+  // visible,
+  // onClose,
+  // title,
+  // textYes,
+  // textNo,
+  // onSubmit,
+  // loading,
   data = initData,
+  // itemForm = [],
+  ...other
 }) => {
   return (
     <ModalConfirmation
-      visible={visible}
-      onClose={onClose}
-      title={title}
-      textYes={textYes}
-      textNo={textNo}
       submitColor="primary"
-      onSubmit={onSubmit}
-      loading={loading}
+      // visible={visible}
+      // onClose={onClose}
+      // title={title}
+      // textYes={textYes}
+      // textNo={textNo}
+      // onSubmit={onSubmit}
+      // loading={loading}
+      {...other}
     >
       <Table
         // style={{ width: 450 }}
@@ -94,9 +97,9 @@ const ModalSubmitItem = ({
               <TableCell>{(index += 1)}</TableCell>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.qty}</TableCell>
-              <TableCell>{item.qty_approve}</TableCell>
-              <TableCell>{item.status}</TableCell>
-              <TableCell>{item.remarks}</TableCell>
+              <TableCell>{item.qty_approved}</TableCell>
+              <TableCell>{item.approve_status}</TableCell>
+              <TableCell>{item.reject_text}</TableCell>
             </TableRow>
           ))}
         </TableBody>

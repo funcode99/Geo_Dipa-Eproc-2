@@ -95,6 +95,7 @@ const DeliveryOrder = ({
     detail: false,
     confirm: false,
     tempParams: {},
+    tempItems: [],
   });
   const [tableContent, setTableContent] = React.useState([]);
   const [loading, setLoading] = React.useState({
@@ -112,7 +113,7 @@ const DeliveryOrder = ({
   const [dataOrderItem, setDataOrderItem] = React.useState({});
   const [itemForm, setItemForm] = React.useState({});
 
-  const handleVisible = (key, tempParams = {}, state) => {
+  const handleVisible = (key, tempParams = {}, tempItems = [], state) => {
     // console.log(`tempParams`, tempParams);
     // if (key === "change_status") {
     //   setOpen((prev) => ({
@@ -122,11 +123,19 @@ const DeliveryOrder = ({
     //   }));
     // } else {
     // if (dataOrderItem !== {}) setDataOrderItem({});
-    setOpen((prev) => ({
-      ...prev,
-      [key]: state !== undefined ? state : !prev[key],
-      tempParams: { ...tempParams },
-    }));
+    if (key === "confirm") {
+      setOpen((prev) => ({
+        ...prev,
+        [key]: state !== undefined ? state : !prev[key],
+        tempItems: [...tempItems],
+      }));
+    } else {
+      setOpen((prev) => ({
+        ...prev,
+        [key]: state !== undefined ? state : !prev[key],
+        tempParams: { ...tempParams },
+      }));
+    }
     // }
   };
 
@@ -308,11 +317,13 @@ const DeliveryOrder = ({
       params: {
         items: Object.values(itemForm).map((el) => ({
           ...el,
-          // qty_approved: el.qty_approved,
-          qty_approved: parseInt(el.qty_approved),
+          qty_approved: parseFloat(el.qty_approved),
         })),
       },
-      // onSuccess: res => {}
+      onSuccess: (res) => {
+        getTask();
+        handleVisible("confirm", {});
+      },
     });
   }, [dataOrderItem, itemForm, fetchApi]);
 
@@ -334,6 +345,28 @@ const DeliveryOrder = ({
     } else if (type === "create") {
       formik.setValues(initialValues);
     }
+  };
+
+  const processingData = (oldItems, itemForm) => {
+    let olds = [...oldItems];
+    let news = [...itemForm];
+    let result = [];
+    olds.forEach((item1, index1) => {
+      news.forEach((item2, index2) => {
+        if (item1.id === item2.id) {
+          let objData = {};
+          objData = {
+            name: item1?.item?.desc,
+            qty: item1?.qty,
+            qty_approved: item2?.qty_approved,
+            approve_status: item2.approve_status,
+            reject_text: item2.reject_text,
+          };
+          result.push(objData);
+        }
+      });
+    });
+    return result;
   };
 
   const handleAction = (type, data) => {
@@ -362,12 +395,16 @@ const DeliveryOrder = ({
         setDataOrderItem({});
         setTimeout(() => {
           setDataOrderItem(data);
-          setUpdateOrderItems(data?.task_delivery_items);
+          // setUpdateOrderItems(data?.task_delivery_items);
         }, 350);
         break;
 
       case "confirm":
-        handleVisible("confirm", data);
+        const dataArr = processingData(
+          data?.task_delivery_items,
+          Object.values(itemForm)
+        );
+        handleVisible("confirm", data, dataArr);
         break;
 
       default:
@@ -488,11 +525,11 @@ const DeliveryOrder = ({
         visible={open.confirm}
         onClose={() => handleVisible("confirm")}
         title={<FormattedMessage id="MESSAGE.DATA_IS_CORRECT" />}
-        subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
         textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
         textNo={<FormattedMessage id="BUTTON.CANCEL" />}
         onSubmit={() => handleConfirmItem()}
         loading={loadings.submit_item}
+        data={open.tempItems}
       />
 
       <ModalConfirmation
@@ -574,6 +611,7 @@ const DeliveryOrder = ({
           data={dataOrderItem}
           options={options}
           setItem={setItemForm}
+          handleAction={handleAction}
           // handleSubmit={() => handleAction("confirm", null)}
         />
       }
