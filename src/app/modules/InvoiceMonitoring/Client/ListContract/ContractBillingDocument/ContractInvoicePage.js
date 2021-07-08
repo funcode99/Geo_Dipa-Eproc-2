@@ -22,6 +22,8 @@ import {
   getAllRejectedInvoice,
   getFileInvoice,
   getAllApprovedInvoice,
+  getBillingDocumentId,
+  softcopy_save
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -51,6 +53,7 @@ function ContractInvoicePage(props) {
   const [historyInvoiceData, setHistoryInvoiceData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
+  const [invoiceBillingId, setInvoiceBillingId] = useState('');
 
   const [Toast, setToast] = useToast();
 
@@ -60,6 +63,7 @@ function ContractInvoicePage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
+  const invoiceName = "INVOICE"
   const { intl, classes } = props;
 
   const initialValues = {};
@@ -123,6 +127,22 @@ function ContractInvoicePage(props) {
       });
   }, [contract_id, termin, formik, intl, setToast, user_id]);
 
+  const getBillingDocumentIdData = useCallback(() => {
+    getBillingDocumentId(invoiceName)
+      .then((response) => {
+        setInvoiceBillingId(response.data.data.id)
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [
+    invoiceName,
+    setInvoiceBillingId,
+    formik,
+    intl,
+    setToast,
+  ]);
+
   const getInvoiceData = useCallback(() => {
     getInvoice(contract_id, termin)
       .then((response) => {
@@ -149,6 +169,14 @@ function ContractInvoicePage(props) {
 
   const approveInvoiceData = () => {
     setLoading(true);
+    var data_1 = {
+      contract_id: contract,
+      term_id: termin,
+      softcopy_state: "APPROVED",
+      document_id: invoiceBillingId,
+      document_no: invoiceData?.invoice_no,
+      created_by_id: user_id,
+    };
     approveInvoice(invoiceData.id, { approved_by_id: user_id })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -156,6 +184,7 @@ function ContractInvoicePage(props) {
         setModalApprove(false);
         setIsSubmit(true);
         getHistoryInvoiceData(invoiceData.id);
+        softcopy_save(data_1);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -193,6 +222,7 @@ function ContractInvoicePage(props) {
 
   useEffect(getContractData, []);
   useEffect(getInvoiceData, []);
+  useEffect(getBillingDocumentIdData, []);
 
   return (
     <React.Fragment>
