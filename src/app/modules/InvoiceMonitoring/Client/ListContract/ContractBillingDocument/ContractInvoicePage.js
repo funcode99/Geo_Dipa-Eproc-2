@@ -170,7 +170,7 @@ function ContractInvoicePage(props) {
   const approveInvoiceData = () => {
     setLoading(true);
     var data_1 = {
-      contract_id: contract,
+      contract_id: contract_id,
       term_id: termin,
       softcopy_state: "APPROVED",
       document_id: invoiceBillingId,
