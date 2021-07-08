@@ -173,7 +173,7 @@ function ContractInvoicePage(props) {
       contract_id: contract_id,
       term_id: termin,
       softcopy_state: "APPROVED",
-      document_id: invoiceBillingId,
+      billing_id: invoiceBillingId,
       document_no: invoiceData?.invoice_no,
       created_by_id: user_id,
     };
