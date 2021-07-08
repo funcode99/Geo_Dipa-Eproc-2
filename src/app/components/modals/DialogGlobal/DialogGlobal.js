@@ -81,7 +81,7 @@ class DialogGlobal extends React.Component {
   };
 
   render() {
-    const { children, title, textYes, textNo } = this.props;
+    const { children, title, textYes, textNo, btnAction } = this.props;
     return (
       <div>
         <Dialog
@@ -94,6 +94,7 @@ class DialogGlobal extends React.Component {
           <DialogTitle id="customized-dialog-title">{title}</DialogTitle>
           <DialogContent dividers>{children}</DialogContent>
           <DialogActions>
+            {btnAction}
             <Button
               variant="contained"
               className={"bg-primary text-light"}

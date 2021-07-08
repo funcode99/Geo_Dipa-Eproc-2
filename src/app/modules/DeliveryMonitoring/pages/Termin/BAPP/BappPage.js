@@ -20,6 +20,8 @@ import TablePaginationCustom from "../../../../../components/tables/TablePaginat
 import urlHelper, {
   openLinkTab,
 } from "../../../../../service/helper/urlHelper";
+import ModalUploadSigned from "./components/ModalUploadSigned";
+import ModalPreview from "./components/ModalPreview";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -52,9 +54,14 @@ const validationVendor = object().shape({
 
 const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
   const [Toast, setToast] = useToast();
+  const uploadRef = React.useRef();
+  const previewRef = React.useRef();
   const [loading, setLoading] = React.useState({
     get: false,
     submit: false,
+  });
+  const [open, setOpen] = React.useState({
+    uploadSign: false,
   });
   const [exclude, setExclude] = React.useState([]);
   // const [open, setOpen] = React.useState({
@@ -256,20 +263,37 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
         openLinkTab(params?.file);
         // window.open(urlHelper.addBaseURL(params?.file), "_blank");
         break;
+      case "uploadSign":
+        console.log(`type`, type);
+        // handleVisible(type);
+        uploadRef.current.open();
+        break;
       case "upload":
         console.log(`type`, type);
         break;
       case "approve":
         console.log(`type`, type);
+        previewRef.current.open();
         break;
       default:
         break;
     }
   };
 
+  // untuk buka / tutup modal
+  const handleVisible = (key, tempParams = {}) => {
+    setOpen((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+      tempParams: { ...prev.tempParams, ...tempParams },
+    }));
+  };
+
   return (
     <React.Fragment>
       <Toast />
+      <ModalUploadSigned innerRef={uploadRef} />
+      <ModalPreview innerRef={previewRef} />
 
       {/* <ModalConfirmation
         visible={open.submit}
@@ -323,10 +347,10 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
                 >
                   <FormattedMessage id="TITLE.PREVIEW" />
                 </Button>
-                <Button>
+                <Button onClick={() => handleAction("uploadSign")}>
                   <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
                 </Button>
-                <Button>
+                <Button onClick={() => handleAction("approve")}>
                   <FormattedMessage id="TITLE.APPROVE" />
                 </Button>
               </ButtonGroup>
@@ -339,23 +363,6 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
           </Row>
           <Row>
             <Col md={12}>
-              {/* <TableBuilder
-                hecto={5}
-                dataHead={["No", "User", "Tanggal", "Aktivitas", "Aksi"]}
-                dataBody={taskNews?.news_histories}
-                renderRowBody={({ item, index }) => (
-                  <RowNormal
-                    key={index}
-                    data={[
-                      (index += 1),
-                      item?.vendor?.username || item?.user?.username,
-                      formatDate(new Date(item?.createdAt)),
-                      item?.description,
-                      "",
-                    ]}
-                  />
-                )}
-              /> */}
               <TablePaginationCustom
                 headerRows={tableHeader}
                 rows={content}
