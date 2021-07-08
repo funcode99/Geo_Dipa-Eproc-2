@@ -1,6 +1,7 @@
 import { Button, CircularProgress } from "@material-ui/core";
 import React from "react";
 import { Send } from "@material-ui/icons";
+import { FormattedMessage } from "react-intl";
 
 const ButtonSubmit = ({ handleSubmit, loading, disabled, classBtn }) => {
   return (
@@ -12,7 +13,9 @@ const ButtonSubmit = ({ handleSubmit, loading, disabled, classBtn }) => {
       onClick={handleSubmit}
       disabled={loading || disabled}
     >
-      <span className="mr-1">Submit</span>
+      <span className="mr-1">
+        <FormattedMessage id="BUTTON.SUBMIT" />
+      </span>
       {loading ? (
         <CircularProgress size="0.875rem" color="inherit" />
       ) : (

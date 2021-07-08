@@ -532,5 +532,9 @@
   "TITLE.THRU_DATE": "Thru Date",
   "TITLE.CONTRACT_TYPE": "Contract Type",
   "TITLE.STATUS_REMARKS": "Status Remarks",
-  "TITLE.CHANGE_ITEM_STATUS": "Change item status"
+  "TITLE.CHANGE_ITEM_STATUS": "Change item status",
+  "TITLE.QUANTITY_TOTAL": "Quantity total",
+  "TITLE.QUANTITY_APPROVED": "Quantity Approved",
+  "TITLE.DELIVERY_ORDER_STATUS": "Delivery Order Status",
+  "MESSAGE.DATA_IS_CORRECT": "Are you sure the data is correct?"
 }

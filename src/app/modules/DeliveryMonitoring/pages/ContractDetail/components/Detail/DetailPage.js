@@ -106,6 +106,9 @@ const DetailPage = ({
     name: Yup.string()
       .min(3, "Input minimal 3 karakter")
       .required("Scope of work can not empty"),
+    start_date: Yup.date()
+      .required("Date can not empty")
+      .nullable(),
     due_date: Yup.date()
       .required("Date can not empty")
       .nullable(),
@@ -113,6 +116,7 @@ const DetailPage = ({
 
   const initialValues = {
     name: "",
+    start_date: format(new Date(), "yyy-MM-dd"),
     due_date: format(new Date(), "yyy-MM-dd"),
     status: 876,
   };
@@ -164,12 +168,14 @@ const DetailPage = ({
         const requestData = update.update
           ? {
               name: values.name,
+              start_date: values.start_date,
               due_date: values.due_date,
               task_status_id: values.status,
             }
           : {
               contract_id: contractId,
               name: values.name,
+              start_date: values.start_date,
               due_date: values.due_date,
               task_items: dataSubmitItems.task_items,
               task_services: dataSubmitItems.task_services,
@@ -204,6 +210,9 @@ const DetailPage = ({
 
         formik.setValues({
           name: items.name,
+          start_date: items.start_date
+            ? format(new Date(items.start_date), "yyy-MM-dd")
+            : format(new Date(), "yyy-MM-dd"),
           due_date: items.due_date
             ? format(new Date(items.due_date), "yyy-MM-dd")
             : format(new Date(), "yyy-MM-dd"),

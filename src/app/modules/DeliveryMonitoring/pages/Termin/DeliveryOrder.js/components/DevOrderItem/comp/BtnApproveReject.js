@@ -1,5 +1,6 @@
 import { Button } from "react-bootstrap";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 
 const BtnApproveReject = ({ onChange }) => {
   const [active, setActive] = React.useState(null);
@@ -23,7 +24,7 @@ const BtnApproveReject = ({ onChange }) => {
           active === false || active === null ? "outline-" : ""
         }success`}
       >
-        Terima
+        <FormattedMessage id="TITLE.APPROVE" />
       </Button>
       <Button
         style={{
@@ -36,7 +37,7 @@ const BtnApproveReject = ({ onChange }) => {
           active === true || active === null ? "outline-" : ""
         }danger`}
       >
-        Tolak
+        <FormattedMessage id="TITLE.REJECT" />
       </Button>
     </div>
   );

@@ -11,6 +11,7 @@ const apiHelper = {
     }
   },
   fetchGlobalApi: ({ url, params, type }) => {
+    console.log(`===>>>url`, url, params, type);
     switch (type) {
       case "post":
         return Axios.post(url, params);

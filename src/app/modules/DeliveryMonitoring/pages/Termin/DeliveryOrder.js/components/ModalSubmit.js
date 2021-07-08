@@ -22,6 +22,7 @@ import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 const tableHeader = [
   "",
   <FormattedMessage id="TITLE.NAME" />,
+  <FormattedMessage id="TITLE.QTY_AVAILABLE" />,
   <FormattedMessage id="TITLE.QUANTITY" />,
   <FormattedMessage id="TITLE.UNIT_PRICE" />,
 ];
@@ -97,6 +98,7 @@ const ModalSubmit = ({
                     />
                   </TableCell>
                   <TableCell>{item?.item?.desc}</TableCell>
+                  <TableCell>{item?.qty}</TableCell>
                   <TableCell>
                     <Form.Control
                       type="number"

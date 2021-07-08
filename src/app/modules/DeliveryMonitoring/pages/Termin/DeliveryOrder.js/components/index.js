@@ -4,6 +4,7 @@ import TableHistory from "./TableHistory";
 import RowCollapse from "./RowCollapse";
 import BtnAction from "./BtnAction";
 import DeliveryOrderItem from "./DeliveryOrderItem";
+import ModalSubmitItem from "./ModalSubmitItem";
 
 export {
   ModalSubmit,
@@ -12,4 +13,5 @@ export {
   RowCollapse,
   BtnAction,
   DeliveryOrderItem,
+  ModalSubmitItem,
 };

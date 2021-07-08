@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@material-ui/core";
-import React from "react";
+import React, { createContext } from "react";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
@@ -8,7 +8,8 @@ import {
   ModalDetail,
   RowCollapse,
   BtnAction,
-  DeliveryOrderItem,
+  // DeliveryOrderItem,
+  ModalSubmitItem,
 } from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
@@ -18,12 +19,16 @@ import {
   formatInitialDate,
   formatUpdateDate,
 } from "../../../../../libs/date";
-import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
+// import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import useToast from "../../../../../components/toast";
 import * as Option from "../../../../../service/Option";
 import DevOrderItem from "./components/DevOrderItem";
+import {
+  fetch_api_sg,
+  getLoading,
+} from "../../../../../../redux/globalReducer";
 
 const tblHeadDlvItem = [
   {
@@ -69,6 +74,8 @@ const initialValues = {
   status_remarks: "",
 };
 
+export const DeliveryOrderContext = createContext({});
+
 const DeliveryOrder = ({
   taskId,
   items,
@@ -77,14 +84,18 @@ const DeliveryOrder = ({
   setTempOrderItems,
   saveDataTask,
   updateOrderItems,
+  setUpdateOrderItems,
   status,
+  fetchApi,
+  loadings,
 }) => {
   const [open, setOpen] = React.useState({
     submit: false,
     delete: false,
     detail: false,
-    change_status: false,
+    confirm: false,
     tempParams: {},
+    tempItems: [],
   });
   const [tableContent, setTableContent] = React.useState([]);
   const [loading, setLoading] = React.useState({
@@ -92,7 +103,7 @@ const DeliveryOrder = ({
     submit: false,
     detail: false,
     delete: false,
-    change_status: false,
+    confirm: false,
   });
   const [isUpdate, setIsUpdate] = React.useState(false);
   const [options, setOptions] = React.useState([]);
@@ -100,8 +111,9 @@ const DeliveryOrder = ({
   const excludeAction = isVendor ? ["change_status"] : ["update", "delete"];
   const [Toast, setToast] = useToast();
   const [dataOrderItem, setDataOrderItem] = React.useState({});
+  const [itemForm, setItemForm] = React.useState({});
 
-  const handleVisible = (key, tempParams = {}, state) => {
+  const handleVisible = (key, tempParams = {}, tempItems = [], state) => {
     // console.log(`tempParams`, tempParams);
     // if (key === "change_status") {
     //   setOpen((prev) => ({
@@ -110,12 +122,20 @@ const DeliveryOrder = ({
     //     tempParams: { ...tempParams },
     //   }));
     // } else {
-    if (dataOrderItem !== {}) setDataOrderItem({});
-    setOpen((prev) => ({
-      ...prev,
-      [key]: state !== undefined ? state : !prev[key],
-      tempParams: { ...tempParams },
-    }));
+    // if (dataOrderItem !== {}) setDataOrderItem({});
+    if (key === "confirm") {
+      setOpen((prev) => ({
+        ...prev,
+        [key]: state !== undefined ? state : !prev[key],
+        tempItems: [...tempItems],
+      }));
+    } else {
+      setOpen((prev) => ({
+        ...prev,
+        [key]: state !== undefined ? state : !prev[key],
+        tempParams: { ...tempParams },
+      }));
+    }
     // }
   };
 
@@ -287,6 +307,26 @@ const DeliveryOrder = ({
     }
   };
 
+  const handleConfirmItem = React.useCallback(() => {
+    // console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
+    fetchApi({
+      key: keys.submit_item,
+      type: "post",
+      url: `delivery/task-delivery-item/${dataOrderItem.id}/status`,
+      alertAppear: "both",
+      params: {
+        items: Object.values(itemForm).map((el) => ({
+          ...el,
+          qty_approved: parseFloat(el.qty_approved),
+        })),
+      },
+      onSuccess: (res) => {
+        getTask();
+        handleVisible("confirm", {});
+      },
+    });
+  }, [dataOrderItem, itemForm, fetchApi]);
+
   const handleModal = (type, data) => {
     const option = ["update", "detail"];
     if (option.includes(type)) {
@@ -307,6 +347,28 @@ const DeliveryOrder = ({
     }
   };
 
+  const processingData = (oldItems, itemForm) => {
+    let olds = [...oldItems];
+    let news = [...itemForm];
+    let result = [];
+    olds.forEach((item1, index1) => {
+      news.forEach((item2, index2) => {
+        if (item1.id === item2.id) {
+          let objData = {};
+          objData = {
+            name: item1?.item?.desc,
+            qty: item1?.qty,
+            qty_approved: item2?.qty_approved,
+            approve_status: item2.approve_status,
+            reject_text: item2.reject_text,
+          };
+          result.push(objData);
+        }
+      });
+    });
+    return result;
+  };
+
   const handleAction = (type, data) => {
     // console.log(`type`, type);
     // console.log(`data`, data);
@@ -317,7 +379,6 @@ const DeliveryOrder = ({
         handleVisible("submit", data);
         break;
       case "delete":
-        setIsUpdate(false);
         handleVisible("delete", data);
         break;
       case "update":
@@ -326,19 +387,24 @@ const DeliveryOrder = ({
         handleModal("update", data);
         break;
       case "detail":
-        setIsUpdate(false);
         handleVisible("detail", data);
         handleModal("detail", data);
         break;
 
       case "change_status":
-        // console.log(`type`, type, data);
-        // console.log(`data`, data);
-        // handleVisible("change_status", data, true);
         setDataOrderItem({});
         setTimeout(() => {
           setDataOrderItem(data);
+          // setUpdateOrderItems(data?.task_delivery_items);
         }, 350);
+        break;
+
+      case "confirm":
+        const dataArr = processingData(
+          data?.task_delivery_items,
+          Object.values(itemForm)
+        );
+        handleVisible("confirm", data, dataArr);
         break;
 
       default:
@@ -407,12 +473,35 @@ const DeliveryOrder = ({
     setTempOrderItems(temp.map((item) => ({ ...item, checked: false })));
   };
 
+  const addClassToOptions = (data) => {
+    data.map((item, index) => {
+      switch (item.name) {
+        case "WAITING APPROVAL":
+          item.class = "dark";
+          break;
+
+        case "APPROVED":
+          item.class = "success";
+          break;
+
+        case "REJECTED":
+          item.class = "danger";
+          break;
+
+        default:
+          break;
+      }
+    });
+  };
+
   const getOptions = async () => {
     try {
       setLoading(true);
       const {
         data: { data },
       } = await Option.getAllOptions();
+
+      addClassToOptions(data?.approve_status);
 
       setOptions(data?.approve_status);
     } catch (error) {
@@ -429,8 +518,19 @@ const DeliveryOrder = ({
   }, [orderItems]);
 
   return (
-    <React.Fragment>
+    <DeliveryOrderContext.Provider value={{ handleAction, options }}>
       <Toast />
+
+      <ModalSubmitItem
+        visible={open.confirm}
+        onClose={() => handleVisible("confirm")}
+        title={<FormattedMessage id="MESSAGE.DATA_IS_CORRECT" />}
+        textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
+        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        onSubmit={() => handleConfirmItem()}
+        loading={loadings.submit_item}
+        data={open.tempItems}
+      />
 
       <ModalConfirmation
         visible={open.delete}
@@ -506,23 +606,47 @@ const DeliveryOrder = ({
             /> */}
         </CardContent>
       </Card>
-      {<DevOrderItem data={dataOrderItem} />}
-    </React.Fragment>
+      {
+        <DevOrderItem
+          data={dataOrderItem}
+          options={options}
+          setItem={setItemForm}
+          handleAction={handleAction}
+          // handleSubmit={() => handleAction("confirm", null)}
+        />
+      }
+    </DeliveryOrderContext.Provider>
   );
 };
 
-const mapState = ({ auth, deliveryMonitoring }) => ({
-  items: deliveryMonitoring.dataBarang,
-  orderItems: deliveryMonitoring.dataTask?.task_deliveries,
-  tempOrderItems: deliveryMonitoring.dataTempOrderItems,
-  updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
-  status: auth.user.data.status,
-});
+const keys = {
+  submit_item: "submit-item",
+};
+
+const mapState = (state) => {
+  const { auth, deliveryMonitoring } = state;
+  return {
+    items: deliveryMonitoring.dataBarang,
+    orderItems: deliveryMonitoring.dataTask?.task_deliveries,
+    tempOrderItems: deliveryMonitoring.dataTempOrderItems,
+    updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
+    status: auth.user.data.status,
+    loadings: {
+      submit_item: getLoading(state, keys.submit_item),
+    },
+  };
+};
 
 const mapDispatch = (dispatch) => ({
   setTempOrderItems: (payload) => {
     dispatch({
       type: actionTypes.SetDataTempOrderItems,
+      payload: payload,
+    });
+  },
+  setUpdateOrderItems: (payload) => {
+    dispatch({
+      type: actionTypes.SetDataUpdateOrderItems,
       payload: payload,
     });
   },
@@ -532,6 +656,7 @@ const mapDispatch = (dispatch) => ({
       payload: payload,
     });
   },
+  fetchApi: (payload) => dispatch(fetch_api_sg(payload)),
 });
 
 export default connect(mapState, mapDispatch)(DeliveryOrder);

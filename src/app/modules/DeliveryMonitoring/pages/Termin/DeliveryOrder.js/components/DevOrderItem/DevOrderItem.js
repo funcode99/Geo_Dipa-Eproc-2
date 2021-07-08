@@ -6,9 +6,12 @@ import { formData } from "./formDataOItem";
 import CardOrderItem from "./comp/CardOrderItem";
 import { Row } from "react-bootstrap";
 import ButtonSubmit from "../../../../../../../components/buttonAction/ButtonSubmit";
+import { DeliveryOrderContext } from "../../DeliveryOrder";
 
-const DevOrderItem = ({ data }) => {
+const DevOrderItem = ({ data, ...other }) => {
+  const { handleAction } = other;
   const [visible, setVisible] = React.useState(false);
+  // const [itemForm, setItemForm] = React.useState({});
 
   React.useEffect(() => {
     if (Object.keys(data).length) setVisible(true);
@@ -22,7 +25,10 @@ const DevOrderItem = ({ data }) => {
     }),
     [data]
   );
-  //   console.log(`data`, data, values);
+
+  // React.useEffect(() => {
+  //   console.log(`itemForm`, itemForm, Object.values(itemForm));
+  // }, [itemForm]);
 
   return (
     visible &&
@@ -34,7 +40,9 @@ const DevOrderItem = ({ data }) => {
           subheader={
             data?.date !== null ? formatDate(new Date(data?.date)) : null
           }
-          action={<ButtonSubmit />}
+          action={
+            <ButtonSubmit handleSubmit={() => handleAction("confirm", data)} />
+          }
         />
         <CardContent>
           <FormBuilder
@@ -44,7 +52,7 @@ const DevOrderItem = ({ data }) => {
           />
           {/* <Row> */}
           {data?.task_delivery_items.map((el, id) => (
-            <CardOrderItem key={id} data={el} />
+            <CardOrderItem key={id} data={el} {...other} />
           ))}
           {/* {data?.task_delivery_items.map((el, id) => (
             <CardOrderItem key={id} data={el} />
