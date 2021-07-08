@@ -2,15 +2,14 @@ import { makeStyles, Paper } from "@material-ui/core";
 import React from "react";
 import SVG from "react-inlinesvg";
 import { FormattedMessage } from "react-intl";
-import { shallowEqual, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
-import useToast from "../../../../components/toast";
 import { formatDate } from "../../../../libs/date";
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
+import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,16 +25,16 @@ const useStyles = makeStyles((theme) => ({
 
 const tableHeaderContractsNew = [
   {
+    id: "procurement_title",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
+  },
+  {
     id: "contract_no",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
   },
   {
     id: "po_number",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
-  },
-  {
-    id: "procurement_title",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
   },
   {
     id: "po_date",
@@ -64,25 +63,23 @@ const tableHeaderContractsNew = [
   },
 ];
 
-export const ContractsPage = () => {
+const keys = {
+  fetch: "get-data-contracts",
+};
+
+export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
   const classes = useStyles();
-  const [Toast, setToast] = useToast();
-  const [loading, setLoading] = React.useState(false);
   const [newContent, setNewContent] = React.useState([]);
-  let status = useSelector(
-    (state) => state.auth.user.data.status,
-    shallowEqual
-  );
 
   const generateTableContent = (data) => {
     let dataArr = data.map((item, id) => ({
-      contract_no: item?.contract_no,
-      po_number: item?.purch_order_no,
       procurement_title: (
         <NavLink to={`/${status}/delivery-monitoring/contract/${item.id}`}>
           {item?.contract_name}
         </NavLink>
       ),
+      contract_no: item?.contract_no,
+      po_number: item?.purch_order_no,
       po_date:
         item?.issued_date !== null
           ? formatDate(new Date(item?.issued_date))
@@ -114,33 +111,19 @@ export const ContractsPage = () => {
         />
       ),
     }));
-    console.log(`data`, data);
-    // data.forEach((item) => {
-    //   let objData = {
-    //   };
-    //   dataArr.push(objData);
-    // });
-    // console.log(`objData`, dataArr);
     setNewContent(dataArr);
   };
 
   const getDataContracts = async () => {
-    try {
-      setLoading(true);
-      const {
-        data: { data },
-      } = await deliveryMonitoring.getDataContracts();
-      generateTableContent(data);
-    } catch (error) {
-      if (
-        error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
-      ) {
-        setToast("Error API, please contact developer!");
-      }
-    } finally {
-      setLoading(false);
-    }
+    fetch_api_sg({
+      keys: keys.fetch,
+      type: "get",
+      url: `/delivery/contract`,
+      onSuccess: (res) => {
+        // console.log(`res.data`, res.data);
+        generateTableContent(res.data);
+      },
+    });
   };
 
   React.useEffect(() => {
@@ -150,7 +133,6 @@ export const ContractsPage = () => {
 
   return (
     <>
-      <Toast />
       <Subheader
         text="Daftar Kontrak & PO"
         IconComponent={
@@ -166,11 +148,22 @@ export const ContractsPage = () => {
           headerRows={tableHeaderContractsNew}
           rows={newContent}
           width={1500}
-          loading={false}
+          loading={loadings.fetch}
         />
       </Paper>
     </>
   );
 };
 
-export default ContractsPage;
+const mapState = (state) => ({
+  loadings: {
+    fetch: getLoading(state, keys.fetch),
+  },
+  status: state.auth.user.data.status,
+});
+
+const mapDispatch = {
+  fetch_api_sg,
+};
+
+export default connect(mapState, mapDispatch)(ContractsPage);
