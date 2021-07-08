@@ -957,17 +957,11 @@ function ContractSprPage(props) {
                         onChange={handleChangeBank}
                         disabled={loading || sppStatus}
                         className="custom-select custom-select-sm"
+                        value={sppData.bank_account_no}
                       >
                         {contractData["data_bank"]?.map((item, index) => {
                           return (
-                            <option
-                              key={index}
-                              defaultValue={index}
-                              selected={
-                                sppData.bank_account_no === item.account_number
-                              }
-                              value={index}
-                            >
+                            <option key={index} value={sppData.bank_account_no}>
                               {item.account_number} - {item.account_holder_name}
                             </option>
                           );

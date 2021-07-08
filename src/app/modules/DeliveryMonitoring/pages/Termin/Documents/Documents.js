@@ -24,6 +24,13 @@ import { MODAL } from "../../../../../../service/modalSession/ModalService";
 export const DocumentsContext = createContext({});
 
 const keyList = "fetch_deliverables";
+const keys = {
+  accept: "accept-deliverables",
+  reject: "reject-deliverables",
+  upload: "upload-deliverables",
+  resend: "resend-deliverables",
+  list: "list-deliverables",
+};
 
 const Documents = ({
   taskId,
@@ -86,31 +93,6 @@ const Documents = ({
   const handleAction = (type, params) => {
     console.log(`type`, type, params);
     handleVisible(type, params);
-    //   switch (type) {
-    //     case "create":
-    //       handleVisible(type, params);
-    //       break;
-    //     case "delete":
-    //       handleVisible(type, params);
-    //       break;
-    //     case "update":
-    //       // handleVisible(type, params);
-    //       break;
-    //     case "upload":
-    //       handleVisible(type, params);
-    //       break;
-    //     case "submit":
-    //       handleVisible(type, params);
-    //       break;
-    //     case "accept":
-    //       handleVisible(type, params);
-    //       break;
-    //     case "reject":
-    //       handleVisible(type, params);
-    //       break;
-    //     default:
-    //       break;
-    //   }
   };
 
   const handleLoading = React.useCallback(
@@ -121,14 +103,23 @@ const Documents = ({
   const fetchData = React.useCallback(() => {
     handleLoading("get", true);
     // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
-    deliveryMonitoring
-      .getTaskById(taskId)
-      .then((res) => {
-        console.log(`res`, res);
-        handleLoading("get", false);
-        if (res.data.status === true) setContent(res?.data?.data);
-      })
-      .catch((err) => console.log("err", err));
+    fetch_api_sg({
+      key: keys.list,
+      type: "get",
+      url: `/delivery/task/${taskId}`,
+      onSuccess: (res) => {
+        if (res.status === true) setContent(res?.data);
+      },
+    });
+
+    // deliveryMonitoring
+    //   .getTaskById(taskId)
+    //   .then((res) => {
+    //     console.log(`res`, res);
+    //     handleLoading("get", false);
+    //     if (res.data.status === true) setContent(res?.data?.data);
+    //   })
+    //   .catch((err) => console.log("err", err));
   }, [taskId]);
 
   // submit ke api
@@ -187,47 +178,97 @@ const Documents = ({
           }
           break;
         case "upload":
-          deliveryMonitoring
-            .postUploadDoc(open?.tempParams?.upload_id, params)
-            .then(handleSuccess)
-            .catch(handleError)
-            .finally(() => {
+          fetch_api_sg({
+            key: keys.upload,
+            type: "postForm",
+            alertAppear: "both",
+            params,
+            url: `delivery/task-document-upload/${open?.tempParams?.upload_id}`,
+            onSuccess: () => {
+              fetchData();
               handleLoading(type, false);
               handleVisible(type);
-            });
+            },
+          });
+          // deliveryMonitoring
+          //   .postUploadDoc(open?.tempParams?.upload_id, params)
+          //   .then(handleSuccess)
+          //   .catch(handleError)
+          //   .finally(() => {
+          //     handleLoading(type, false);
+          //     handleVisible(type);
+          //   });
           break;
         case "resend":
-          // RESEND MASIH PAKE API UPLOAD
-          deliveryMonitoring
-            .postUploadDoc(open?.tempParams?.resend_id, params)
-            .then(handleSuccess)
-            .catch(handleError)
-            .finally(() => {
+          fetch_api_sg({
+            key: keys.resend,
+            type: "postForm",
+            alertAppear: "both",
+            params,
+            url: `delivery/task-document-upload/${open?.tempParams?.resend_id}`,
+            onSuccess: () => {
+              fetchData();
               handleLoading(type, false);
               handleVisible(type);
-            });
+            },
+          });
+          // RESEND MASIH PAKE API UPLOAD
+          // deliveryMonitoring
+          //   .postUploadDoc(open?.tempParams?.resend_id, params)
+          //   .then(handleSuccess)
+          //   .catch(handleError)
+          //   .finally(() => {
+          //     handleLoading(type, false);
+          //     handleVisible(type);
+          //   });
           break;
         case "accept":
-          // console.log(`accept`, type, open?.tempParams?.accept_id);
-          deliveryMonitoring
-            .acceptDocId(open?.tempParams?.accept_id)
-            .then(handleSuccess)
-            .catch(handleError)
-            .finally(() => {
+          // console.log(`accept`, params, type, open?.tempParams?.accept_id);
+          fetch_api_sg({
+            key: keys.accept,
+            type: "post",
+            alertAppear: "both",
+            params,
+            url: `delivery/task-document/${open?.tempParams?.accept_id}/approve`,
+            onSuccess: () => {
+              fetchData();
               handleLoading(type, false);
               handleVisible(type);
-            });
+            },
+          });
+          // deliveryMonitoring
+          //   .acceptDocId(open?.tempParams?.accept_id, )
+          //   .then(handleSuccess)
+          //   .catch(handleError)
+          //   .finally(() => {
+          //     handleLoading(type, false);
+          //     handleVisible(type);
+          //   });
           break;
         case "reject":
-          // console.log(`reject`, type, open?.tempParams?.reject_id);
-          deliveryMonitoring
-            .rejectDocId(open?.tempParams?.reject_id)
-            .then(handleSuccess)
-            .catch(handleError)
-            .finally(() => {
+          // console.log(`reject`, type, open?.tempParams?.reject_id, params);
+          fetch_api_sg({
+            key: keys.reject,
+            type: "post",
+            alertAppear: "both",
+            params: {
+              remarks_status: params?.remarks,
+            },
+            url: `delivery/task-document/${open?.tempParams?.reject_id}/reject`,
+            onSuccess: () => {
+              fetchData();
               handleLoading(type, false);
               handleVisible(type);
-            });
+            },
+          });
+          // deliveryMonitoring
+          //   .rejectDocId(open?.tempParams?.reject_id)
+          //   .then(handleSuccess)
+          //   .catch(handleError)
+          //   .finally(() => {
+          //     handleLoading(type, false);
+          //     handleVisible(type);
+          //   });
           break;
         case "submit":
           // console.log(`submit`, type, open?.tempParams?.submit_id);
@@ -250,25 +291,6 @@ const Documents = ({
   React.useEffect(() => {
     if (taskId !== "") fetchData();
   }, [taskId]);
-
-  React.useEffect(() => {
-    // set_loading_rd(keyList);
-    // MODAL.showSnackbar("coba", "success", 5000);
-    // setTimeout(() => {
-    //   set_loading_done_rd(keyList);
-    // }, 2000);
-    // fetch_api_sg({
-    //   key: keyList,
-    //   url: `/delivery/task/${taskId}`,
-    //   type: "get",
-    //   alertAppear: "both",
-    //   onSuccess: (data) => {
-    //     console.log(`resnew`, data);
-    //     // if (res.data.status === true) setContent(res?.data?.data);
-    //   },
-    //   onFail: (err) => {},
-    // });
-  }, []);
 
   return (
     <DocumentsContext.Provider
@@ -299,12 +321,14 @@ const Documents = ({
         onClose={() => handleVisible("upload")}
         onSubmit={(params) => handleApi("upload", params)}
         additionalParams={open.tempParams}
+        loading={loadings.upload}
       />
       <ModalUploadDoc
         visible={open.resend}
         onClose={() => handleVisible("resend")}
         onSubmit={(params) => handleApi("resend", params)}
         additionalParams={open.tempParams}
+        loading={loadings.resend}
       />
       {/* <ModalEditDraft
         visible={open.edit}
@@ -322,6 +346,7 @@ const Documents = ({
           key={id}
           visible={open[type]}
           type={type}
+          loading={loadings[type]}
           onClose={() => handleVisible(type)}
           onSubmit={(params) => handleApi(type, params)}
           additionalParams={open.tempParams}
@@ -332,7 +357,7 @@ const Documents = ({
       <Card className="mt-5">
         <CardBody>
           <HeaderTableDoc />
-          <TableDoc />
+          <TableDoc loading={loadings.list} />
         </CardBody>
       </Card>
     </DocumentsContext.Provider>
@@ -346,7 +371,11 @@ Documents.defaultProps = {
 const mapState = (state) => ({
   // loadings: state.globalReducer.loadings,
   loadings: {
-    list: getLoading(state, keyList),
+    list: getLoading(state, keys.list),
+    accept: getLoading(state, keys.accept),
+    reject: getLoading(state, keys.reject),
+    upload: getLoading(state, keys.upload),
+    resend: getLoading(state, keys.resend),
   },
 });
 

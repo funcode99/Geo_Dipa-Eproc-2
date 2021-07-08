@@ -13,6 +13,9 @@ import {
 } from "../../../../../../../_metronic/_partials/controls";
 import ModalConfirmation from "../../../../../../components/modals/ModalConfirmation";
 import apiHelper from "../../../../../../service/helper/apiHelper";
+import urlHelper, {
+  openLinkTab,
+} from "../../../../../../service/helper/urlHelper";
 import { set_contract_id } from "../../../../_redux/deliveryMonitoringSlice";
 import TableGuarantee from "./components/TableGuarantee";
 
@@ -69,7 +72,11 @@ export class Jaminan extends PureComponent {
     switch (type) {
       case "preview": //okay
         // setType(params?.id);
-        window.open(params?.item?.file, "_blank");
+        // console.log(`addbase`, urlHelper.addBaseURL(params?.item?.file));
+        openLinkTab(params?.item?.file);
+
+        // window.open(urlHelper.addBaseURL(params?.item?.file), "_blank");
+        // window.open(params?.item?.file, "_blank");
         break;
       case "approve":
         // setType(params?.id);

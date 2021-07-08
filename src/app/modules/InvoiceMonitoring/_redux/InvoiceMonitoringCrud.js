@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DEV_NODE, API_EPROC } from "../../../../redux/BaseHost";
+import { DEV_NODE, API_EPROC, DEV_RUBY } from "../../../../redux/BaseHost";
 
 export function getPicContract(data) {
   return axios.post(`/invoice/get_pic_contract/${data.id}`, data);
@@ -180,6 +180,16 @@ export async function getFileEproc(data) {
   return axios.post(`${API_EPROC}/api/get_file`, data);
 }
 
+export async function getFileRuby(fileName) {
+  return axios.get(`${DEV_RUBY + fileName}`);
+}
+
+export async function getFileMonitoring(fileName, ident_name) {
+  return axios.get(
+    `/invoice/get_file_softcopy?filename=${fileName}&ident_name=${ident_name}`
+  );
+}
+
 export async function getListSpt(params) {
   return axios.get(`/invoice/list_spt${params ? "?" + params : ""}`);
 }
@@ -211,6 +221,15 @@ export async function softcopy_save(data) {
 }
 export async function sendRejectedDocSoftCopyLast(data) {
   return axios.post(`/invoice/softcopy_rejected_save`, data);
+}
+export async function sendAddRejectedDocSoftCopy(
+  document_monitoring_id,
+  created_by_id
+) {
+  return axios.post(
+    `/invoice/softcopy_rejected_status/${document_monitoring_id}`,
+    { created_by_id }
+  );
 }
 export async function sendRejectSoftCopyStatus(id, data) {
   return axios.post(`/invoice/softcopy_rejected/${id}`, data);
@@ -255,4 +274,7 @@ export async function finance_director_approve_bkb(
     id,
     finance_director_approved_id,
   });
+}
+export async function updateSoftCopyByUser(id, file) {
+  return axios.post(`/invoice/softcopy_update/${id}`, file);
 }
