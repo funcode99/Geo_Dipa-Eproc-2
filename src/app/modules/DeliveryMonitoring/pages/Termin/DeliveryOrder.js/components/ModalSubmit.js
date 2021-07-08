@@ -98,7 +98,7 @@ const ModalSubmit = ({
                     />
                   </TableCell>
                   <TableCell>{item?.item?.desc}</TableCell>
-                  <TableCell>{item?.qty}</TableCell>
+                  <TableCell>{item?.qty_avail}</TableCell>
                   <TableCell>
                     <Form.Control
                       type="number"
