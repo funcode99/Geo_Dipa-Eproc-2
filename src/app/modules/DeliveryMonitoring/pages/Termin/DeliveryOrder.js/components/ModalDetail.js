@@ -45,7 +45,6 @@ const ModalDetail = ({
   userStatus,
   loading,
   options,
-  handleError,
 }) => {
   const classes = useStyles();
   const isClient = userStatus === "client";
