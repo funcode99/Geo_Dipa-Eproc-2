@@ -100,7 +100,6 @@ const DeliveryOrder = ({
   const [options, setOptions] = React.useState([]);
   const isVendor = status === "vendor";
   const excludeAction = isVendor ? ["change_status"] : ["update", "delete"];
-  const [Toast, setToast] = useToast();
   const [dataOrderItem, setDataOrderItem] = React.useState({});
   const [itemForm, setItemForm] = React.useState({});
 
@@ -440,8 +439,6 @@ const DeliveryOrder = ({
 
   return (
     <DeliveryOrderContext.Provider value={{ handleAction, options }}>
-      <Toast />
-
       <ModalSubmitItem
         visible={open.confirm}
         onClose={() => handleVisible("confirm")}
