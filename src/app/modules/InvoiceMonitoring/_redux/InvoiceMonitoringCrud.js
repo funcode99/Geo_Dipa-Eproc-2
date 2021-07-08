@@ -193,6 +193,10 @@ export async function getFileMonitoring(fileName, ident_name) {
   );
 }
 
+export async function getFileDelivery(fileName) {
+  return axios.get(`/${fileName}`);
+}
+
 export async function getListSpt(params) {
   return axios.get(`/invoice/list_spt${params ? "?" + params : ""}`);
 }
