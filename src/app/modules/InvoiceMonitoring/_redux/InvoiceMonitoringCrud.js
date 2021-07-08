@@ -54,7 +54,7 @@ export async function getContractPic(id, params) {
   );
 }
 export async function getBillingDocumentId(name) {
-  return axios.post(`/invoice/get_document_billing?ident_name=${name}`);
+  return axios.get(`/invoice/get_document_billing?ident_name=${name}`);
 }
 export async function saveSpp(data) {
   // axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
