@@ -49,9 +49,11 @@ import {
   getFileRuby,
   getFileMonitoring,
   sendAddRejectedDocSoftCopy,
+  getFileDelivery,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
+import { DEV_NODE } from "../../../../../redux/BaseHost";
 
 const styles = (theme) => ({
   root: {
@@ -265,6 +267,8 @@ function ItemContractInvoice(props) {
   const handleActionDeliverable = (type, data) => {
     if (type === "rejected") {
       setModalReject({ ...modalReject, statusDialog: true, data: data });
+    } else if (type === "approved") {
+      setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
     console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
@@ -357,6 +361,8 @@ function ItemContractInvoice(props) {
       getFileRuby(name);
     } else if (status === "monitoring") {
       getFileMonitoring(name, ident_name);
+    } else if (status === "delivery") {
+      getFileDelivery(name);
     }
   };
 
@@ -365,7 +371,7 @@ function ItemContractInvoice(props) {
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
-      window.open(url, "_blank");
+      window.open(DEV_NODE + "/" + url, "_blank");
     }, [url]);
     return (
       <div className={"d-flex flex-row align-items-center"}>
@@ -450,8 +456,74 @@ function ItemContractInvoice(props) {
     }
   };
 
-  const handleRejected = (e) => {
-    e.preventDefault();
+  const handleApprovedDeliverble = () => {
+    setModalApproved({ ...modalApproved, loading: true });
+    var data_1 = {
+      contract_id: contract,
+      term_id: termin,
+      softcopy_state: "APPROVED",
+      deliverables_id: modalApproved.data.id,
+      document_no: modalApproved.data.document.name,
+      created_by_id: user_id,
+    };
+    var data_2 = {
+      softcopy_approved_by_id: user_id,
+    };
+    if (modalApproved.data.document_monitoring === null) {
+      softcopy_save(data_1)
+        .then((result) => {
+          callApi();
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setModalApproved({
+            ...modalApproved,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else {
+      sendApprovedDocSoftCopyLast(
+        modalApproved.data.document_monitoring.id,
+        data_2
+      )
+        .then((results) => {
+          callApi();
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setModalApproved({
+            ...modalApproved,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
+  };
+
+  const handleRejected = () => {
     setModalReject({ ...modalReject, loading: true });
     var note = document.getElementById("commentRejected").value;
     var data_1 = {
@@ -492,6 +564,7 @@ function ItemContractInvoice(props) {
             statusDialog: false,
             loading: false,
           });
+                document.getElementById("commentRejected").value = "";
         }, 2500);
       })
       .catch((err) => {
@@ -530,6 +603,108 @@ function ItemContractInvoice(props) {
               statusDialog: false,
               loading: false,
             });
+                document.getElementById("commentRejected").value = "";
+              }, 2500);
+            })
+            .catch((err) => {
+              setModalReject({
+                ...modalReject,
+                loading: false,
+              });
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+            });
+        })
+        .catch((err) => {
+          setModalReject({
+            ...modalReject,
+            loading: false,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
+  };
+
+  const handleRejectedDeliverable = () => {
+    setModalReject({ ...modalReject, loading: true });
+    var note = document.getElementById("commentRejected").value;
+    var data_1 = {
+      contract_id: contract,
+      term_id: termin,
+      softcopy_state: "REJECTED",
+      deliverables_id: modalReject.data.id,
+      document_no: modalReject.data.document.name,
+      created_by_id: user_id,
+    };
+    var data_2 = {
+      document_monitoring_id: "",
+      contract_id: contract,
+      term_id: termin,
+      deliverables_id: modalReject.data.id,
+      document_no: modalReject.data.document.name,
+      created_at: window.moment(new Date()).format("YYYY-MM-DD"),
+      created_by_id: user_id,
+      rejected_by_id: user_id,
+      rejected_remark: note,
+      filename: modalReject.data.url,
+    };
+    if (modalReject.data.document_monitoring === null) {
+      softcopy_save(data_1)
+        .then((result) => {
+          data_2.document_monitoring_id = result.data.data.id;
+          sendRejectedDocSoftCopyLast(data_2)
+            .then((results) => {
+              callApi();
+              setModalReject({
+                ...modalReject,
+                statusReq: true,
+                loading: true,
+              });
+              setTimeout(() => {
+                setModalReject({
+                  ...modalReject,
+                  statusDialog: false,
+                  loading: false,
+                });
+                document.getElementById("commentRejected").value = "";
+              }, 2500);
+            })
+            .catch((err) => {
+              setModalReject({
+                ...modalReject,
+                loading: false,
+              });
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+            });
+        })
+        .catch((err) => {
+          setModalReject({
+            ...modalReject,
+            loading: false,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else {
+      data_2.document_monitoring_id = modalReject.data.document_monitoring.id;
+      sendAddRejectedDocSoftCopy(
+        modalReject.data.document_monitoring.id,
+        user_id
+      )
+        .then((results) => {
+          sendRejectedDocSoftCopyLast(data_2)
+            .then((results) => {
+              callApi();
+              setModalReject({
+                ...modalReject,
+                statusReq: true,
+                loading: true,
+              });
+              setTimeout(() => {
+                setModalReject({
+                  ...modalReject,
+                  statusDialog: false,
+                  loading: false,
+                });
+                document.getElementById("commentRejected").value = "";
           }, 2500);
         })
         .catch((err) => {
@@ -613,7 +788,11 @@ function ItemContractInvoice(props) {
             type="button"
             disabled={modalApproved.loading}
             onClick={() => {
+              if (modalApproved.data.url) {
+                handleApprovedDeliverble();
+              } else {
               handleApproved();
+              }
             }}
           >
             {!modalApproved.loading && (
@@ -659,7 +838,16 @@ function ItemContractInvoice(props) {
         maxWidth="xs"
         fullWidth={true}
       >
-        <form onSubmit={handleRejected}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (modalReject.data.url) {
+              handleRejectedDeliverable();
+            } else {
+              handleRejected();
+            }
+          }}
+        >
           <DialogTitle id="alert-dialog-slide-title">
             <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
             <span className="text-danger">
@@ -1037,7 +1225,15 @@ function ItemContractInvoice(props) {
                                               : "AVAILABLE",
                                             <BtnLihat url={els?.url} />,
                                             els?.remarks,
-                                            els?.url && (
+                                            els?.url &&
+                                              (els.document_monitoring ===
+                                                null ||
+                                                (els.document_monitoring
+                                                  ?.softcopy_state !==
+                                                  "REJECTED" &&
+                                                  els.document_monitoring
+                                                    ?.softcopy_state !==
+                                                    "APPROVED")) && (
                                               <ButtonAction
                                                 data={els}
                                                 handleAction={
@@ -1067,10 +1263,18 @@ function ItemContractInvoice(props) {
                                         : "AVAILABLE",
                                       <BtnLihat url={el?.url} />,
                                       el?.remarks,
-                                      el?.url && (
+                                      el?.url &&
+                                        (el.document_monitoring === null ||
+                                          (el.document_monitoring
+                                            ?.softcopy_state !== "REJECTED" &&
+                                            el.document_monitoring
+                                              ?.softcopy_state !==
+                                              "APPROVED")) && (
                                         <ButtonAction
                                           data={el}
-                                          handleAction={handleActionDeliverable}
+                                            handleAction={
+                                              handleActionDeliverable
+                                            }
                                           ops={data_opsDeliverable}
                                         />
                                       ),
