@@ -22,7 +22,7 @@ import {
 // import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import useToast from "../../../../../components/toast";
+// import useToast from "../../../../../components/toast";
 // import * as Option from "../../../../../service/Option";
 import DevOrderItem from "./components/DevOrderItem";
 import {
@@ -74,7 +74,44 @@ const initialValues = {
   status_remarks: "",
 };
 
-export const DeliveryOrderContext = createContext({});
+const addClassToOptions = (data) => {
+  data.map((item, index) => {
+    switch (item.name) {
+      case "WAITING APPROVAL":
+        item.class = "dark";
+        break;
+
+      case "APPROVED":
+        item.class = "success";
+        break;
+
+      case "REJECTED":
+        item.class = "danger";
+        break;
+
+      default:
+        break;
+    }
+  });
+};
+
+const changeSequenceOptions = (arr) => {
+  let temp = [];
+  arr.forEach((item) => {
+    if (item.code === "rejected") {
+      temp[0] = item;
+    }
+
+    if (item.code === "approved") {
+      temp[1] = item;
+    }
+
+    if (item.code === "waiting") {
+      temp[2] = item;
+    }
+  });
+  return temp;
+};
 
 const DeliveryOrder = ({
   taskId,
@@ -396,35 +433,14 @@ const DeliveryOrder = ({
     );
   };
 
-  const addClassToOptions = (data) => {
-    data.map((item, index) => {
-      switch (item.name) {
-        case "WAITING APPROVAL":
-          item.class = "dark";
-          break;
-
-        case "APPROVED":
-          item.class = "success";
-          break;
-
-        case "REJECTED":
-          item.class = "danger";
-          break;
-
-        default:
-          break;
-      }
-    });
-  };
-
   const getOptions = async () => {
     fetchApi({
       key: keys.option,
       type: "get",
       url: `/delivery/options`,
       onSuccess: (res) => {
-        console.log(`res.data`, res.data);
-        const approveStatusOptions = res?.data?.approve_status;
+        let approveStatusOptions = res?.data?.approve_status;
+        approveStatusOptions = changeSequenceOptions(approveStatusOptions);
         addClassToOptions(approveStatusOptions);
         setOptions(approveStatusOptions);
       },
@@ -438,7 +454,7 @@ const DeliveryOrder = ({
   }, [orderItems, items]);
 
   return (
-    <DeliveryOrderContext.Provider value={{ handleAction, options }}>
+    <React.Fragment>
       <ModalSubmitItem
         visible={open.confirm}
         onClose={() => handleVisible("confirm")}
@@ -532,7 +548,7 @@ const DeliveryOrder = ({
           // handleSubmit={() => handleAction("confirm", null)}
         />
       }
-    </DeliveryOrderContext.Provider>
+    </React.Fragment>
   );
 };
 

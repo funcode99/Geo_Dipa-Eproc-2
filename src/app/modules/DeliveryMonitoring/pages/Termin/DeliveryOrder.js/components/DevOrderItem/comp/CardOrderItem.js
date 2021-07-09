@@ -10,9 +10,9 @@ import {
 import BtnApproveReject from "./BtnApproveReject";
 import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../../../../../libs/currency";
-import { connect } from "react-redux";
-import { actionTypes } from "../../../../../../_redux/deliveryMonitoringAction";
-import { DeliveryOrderContext } from "../../../DeliveryOrder";
+// import { connect } from "react-redux";
+// import { actionTypes } from "../../../../../../_redux/deliveryMonitoringAction";
+// import { DeliveryOrderContext } from "../../../DeliveryOrder";
 
 // const componentStatus = [
 //   { label: "REJECTED", class: "danger" },
@@ -22,19 +22,16 @@ import { DeliveryOrderContext } from "../../../DeliveryOrder";
 
 const CardOrderItem = ({ data, options, setItem }) => {
   const formRef = React.useRef();
-  const [componentIndex, setComponentIndex] = React.useState(0);
+  const [componentIndex, setComponentIndex] = React.useState(2);
   const compUsed = options[componentIndex];
 
   const handleChange = (state) => {
-    setComponentIndex(state ? 1 : 2);
-    formRef.current.setFieldValue(
-      "approve_status_id",
-      options[state ? 1 : 2].id
-    );
-    formRef.current.setFieldValue(
-      "approve_status",
-      options[state ? 1 : 2].name
-    );
+    setComponentIndex(state ? 1 : 0);
+
+    formRef.current.setFieldValue("approve_status_id", options[state].id);
+
+    formRef.current.setFieldValue("approve_status", options[state].name);
+
     setTimeout(() => {
       getValue();
     }, 200);
