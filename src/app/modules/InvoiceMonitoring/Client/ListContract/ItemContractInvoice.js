@@ -46,14 +46,11 @@ import {
   sendRejectedDocSoftCopyLast,
   sendApprovedDocSoftCopyLast,
   updateSoftCopyByUser,
-  getFileRuby,
-  getFileMonitoring,
   sendAddRejectedDocSoftCopy,
-  getFileDelivery,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
-import { DEV_NODE } from "../../../../../redux/BaseHost";
+import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 
 const styles = (theme) => ({
   root: {
@@ -358,11 +355,15 @@ function ItemContractInvoice(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
     } else if (status === "ruby") {
-      getFileRuby(name);
+      window.open(DEV_RUBY + name, "_blank");
     } else if (status === "monitoring") {
-      getFileMonitoring(name, ident_name);
+      window.open(
+        DEV_NODE +
+          `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
+        "_blank"
+      );
     } else if (status === "delivery") {
-      getFileDelivery(name);
+      window.open(DEV_NODE + "/" + name, "_blank");
     }
   };
 
