@@ -81,7 +81,14 @@ class DialogGlobal extends React.Component {
   };
 
   render() {
-    const { children, title, textYes, textNo, btnAction } = this.props;
+    const {
+      children,
+      title,
+      textYes,
+      textNo,
+      btnAction,
+      disableBackdropClick = true,
+    } = this.props;
     return (
       <div>
         <Dialog
@@ -90,8 +97,11 @@ class DialogGlobal extends React.Component {
           open={this.state.open}
           maxWidth={"sm"}
           fullWidth={true}
+          disableBackdropClick={disableBackdropClick}
         >
-          <DialogTitle id="customized-dialog-title">{title}</DialogTitle>
+          <DialogTitle id="customized-dialog-title" onClose={this.close}>
+            {title}
+          </DialogTitle>
           <DialogContent dividers>{children}</DialogContent>
           <DialogActions>
             {btnAction}
