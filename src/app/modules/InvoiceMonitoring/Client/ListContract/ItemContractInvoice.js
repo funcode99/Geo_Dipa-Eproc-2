@@ -1233,7 +1233,9 @@ function ItemContractInvoice(props) {
                                                   "REJECTED" &&
                                                   els.document_monitoring
                                                     ?.softcopy_state !==
-                                                    "APPROVED")) && (
+                                                    "APPROVED")) &&
+                                              els.document_status?.name ===
+                                                "APPROVED" && (
                                               <ButtonAction
                                                 data={els}
                                                 handleAction={
@@ -1269,7 +1271,9 @@ function ItemContractInvoice(props) {
                                             ?.softcopy_state !== "REJECTED" &&
                                             el.document_monitoring
                                               ?.softcopy_state !==
-                                              "APPROVED")) && (
+                                              "APPROVED")) &&
+                                        el.document_status?.name ===
+                                          "APPROVED" && (
                                         <ButtonAction
                                           data={el}
                                             handleAction={
