@@ -187,14 +187,10 @@ export async function getFileRuby(fileName) {
   return axios.get(`${DEV_RUBY + fileName}`);
 }
 
-export async function getFileMonitoring(fileName, ident_name) {
-  return axios.get(
-    `/invoice/get_file_softcopy?filename=${fileName}&ident_name=${ident_name}`
-  );
-}
-
-export async function getFileDelivery(fileName) {
-  return axios.get(`/${fileName}`);
+export async function rejectDocId(document_id, remarks_status) {
+  return axios.post(`delivery/task-document/${document_id}/reject`, {
+    remarks_status,
+  });
 }
 
 export async function getListSpt(params) {

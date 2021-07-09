@@ -41,7 +41,7 @@ import {
   getFileEproc,
   getListDocSoftCopy,
   getDetailDocSoftCopy,
-  sendApprovedDocSoftCopy,
+  rejectDocId,
   softcopy_save,
   sendRejectedDocSoftCopyLast,
   sendApprovedDocSoftCopyLast,
@@ -654,6 +654,8 @@ function ItemContractInvoice(props) {
           data_2.document_monitoring_id = result.data.data.id;
           sendRejectedDocSoftCopyLast(data_2)
             .then((results) => {
+              rejectDocId(modalReject.data.id, note)
+                .then((results) => {
               callApi();
               setModalReject({
                 ...modalReject,
@@ -668,6 +670,17 @@ function ItemContractInvoice(props) {
                 });
                 document.getElementById("commentRejected").value = "";
               }, 2500);
+            })
+            .catch((err) => {
+              setModalReject({
+                ...modalReject,
+                loading: false,
+              });
+                  setToast(
+                    intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+                    5000
+                  );
+                });
             })
             .catch((err) => {
               setModalReject({
@@ -693,6 +706,8 @@ function ItemContractInvoice(props) {
         .then((results) => {
           sendRejectedDocSoftCopyLast(data_2)
             .then((results) => {
+              rejectDocId(modalReject.data.id, note)
+                .then((results) => {
               callApi();
               setModalReject({
                 ...modalReject,
@@ -711,6 +726,17 @@ function ItemContractInvoice(props) {
         .catch((err) => {
           setModalReject({
             ...modalReject,
+                loading: false,
+              });
+                  setToast(
+                    intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+                    5000
+                  );
+                });
+            })
+            .catch((err) => {
+              setModalReject({
+                ...modalReject,
                 loading: false,
               });
               setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -1073,6 +1099,12 @@ function ItemContractInvoice(props) {
                         <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />
                       </th>
                       <th className="bg-primary text-white align-middle">
+                        <FormattedMessage id="TITLE.STATUS" />
+                      </th>
+                      <th className="bg-primary text-white align-middle">
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />
+                      </th>
+                      <th className="bg-primary text-white align-middle">
                         <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
                       </th>
                     </tr>
@@ -1113,6 +1145,18 @@ function ItemContractInvoice(props) {
                                   .format("DD MMM YYYY")
                               : ""}
                         </td>
+                          <td>
+                            {(item.softcopy_state === "PENDING" ||
+                              item.softcopy_state === null) &&
+                            item.doc_file
+                              ? "WAITING TO APPROVE"
+                              : item.softcopy_state === "REJECTED"
+                              ? "REJECTED"
+                              : item.softcopy_state === "APPROVED"
+                              ? "APPROVED"
+                              : "WAITING"}
+                          </td>
+                          <td>{item.approved_by}</td>
                       <td className="align-middle">
                             {dataUser?.is_finance &&
                               (item.softcopy_state === null ||
