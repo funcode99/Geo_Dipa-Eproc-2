@@ -1156,7 +1156,11 @@ function ItemContractInvoice(props) {
                               ? "APPROVED"
                               : "WAITING"}
                           </td>
-                          <td>{item.approved_by}</td>
+                          <td>
+                            {item.softcopy_state === "APPROVED"
+                              ? item.approved_by
+                              : null}
+                          </td>
                       <td className="align-middle">
                             {dataUser?.is_finance &&
                               (item.softcopy_state === null ||
