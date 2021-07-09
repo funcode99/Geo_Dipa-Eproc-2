@@ -71,6 +71,7 @@ export function* saga() {
     if (key) yield put(set_loading_rd(key));
     try {
       let { data } = yield call(apiHelper.fetchGlobalApi, action.payload);
+      // let data = yield call(apiHelper.fetchGlobalApi, action.payload);
       console.log(`resnew`, data);
       if (data.status === true) {
         if (typeof onSuccess === "function") onSuccess(data);
