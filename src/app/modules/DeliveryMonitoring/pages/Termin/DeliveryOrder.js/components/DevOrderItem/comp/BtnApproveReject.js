@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-const BtnApproveReject = ({ onChange }) => {
+const BtnApproveReject = ({ onChange, isActive }) => {
   const [active, setActive] = React.useState(null);
   const handleActive = React.useCallback(
     (state) => {
@@ -11,6 +11,9 @@ const BtnApproveReject = ({ onChange }) => {
     },
     [setActive, onChange]
   );
+
+  const valueUsed = isActive !== undefined ? isActive : active;
+
   return (
     <div className={`d-flex justify-content-end mt-3`}>
       <Button
@@ -21,7 +24,7 @@ const BtnApproveReject = ({ onChange }) => {
           minWidth: 100,
         }}
         variant={`${
-          active === false || active === null ? "outline-" : ""
+          valueUsed === false || valueUsed === null ? "outline-" : ""
         }success`}
       >
         <FormattedMessage id="TITLE.APPROVE" />
@@ -34,7 +37,7 @@ const BtnApproveReject = ({ onChange }) => {
         }}
         onClick={() => handleActive(false)}
         variant={`${
-          active === true || active === null ? "outline-" : ""
+          valueUsed === true || valueUsed === null ? "outline-" : ""
         }danger`}
       >
         <FormattedMessage id="TITLE.REJECT" />

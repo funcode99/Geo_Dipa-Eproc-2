@@ -536,5 +536,10 @@
   "TITLE.QUANTITY_TOTAL": "Quantity total",
   "TITLE.QUANTITY_APPROVED": "Quantity Approved",
   "TITLE.DELIVERY_ORDER_STATUS": "Delivery Order Status",
-  "MESSAGE.DATA_IS_CORRECT": "Are you sure the data is correct?"
+  "MESSAGE.DATA_IS_CORRECT": "Are you sure the data is correct?",
+  "TITLE.APPROVAL_DELIVERY_ORDER_ITEMS": "Approval Delivery Order Items",
+  "TITLE.DELETE_DELIVERY_ORDER": "Delete Delivery Order",
+  "TITLE.UPDATE_DELIVERY_ORDER": "Update Delivery Order",
+  "TITLE.ADD_DELIVERY_ORDER": "Add Delivery Order",
+  "TITLE.DETAIL_DELIVERY_ORDER": "Detail Delivery Order"
 }

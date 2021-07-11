@@ -10,6 +10,7 @@ import {
   BtnAction,
   // DeliveryOrderItem,
   ModalSubmitItem,
+  ModalDelete,
 } from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
@@ -139,6 +140,10 @@ const DeliveryOrder = ({
   const excludeAction = isVendor ? ["change_status"] : ["update", "delete"];
   const [dataOrderItem, setDataOrderItem] = React.useState({});
   const [itemForm, setItemForm] = React.useState({});
+  const submitItemRef = React.useRef();
+  const deleteRef = React.useRef();
+  const submitRef = React.useRef();
+  const detailRef = React.useRef();
 
   const handleVisible = (key, tempParams = {}, tempItems = [], state) => {
     // console.log(`tempParams`, tempParams);
@@ -151,6 +156,8 @@ const DeliveryOrder = ({
     // } else {
     // if (dataOrderItem !== {}) setDataOrderItem({});
     if (key === "confirm") {
+      console.log(`key`, key);
+      console.log(`open`, open);
       setOpen((prev) => ({
         ...prev,
         [key]: state !== undefined ? state : !prev[key],
@@ -187,9 +194,13 @@ const DeliveryOrder = ({
   const formik = useFormik({
     initialValues,
     validationSchema: FormSchema,
-    onSubmit: async (values, { setStatus, setSubmitting }) => {
+    onSubmit: async (values, { setStatus, setSubmitting, resetForm }) => {
+      console.log(`masuk sini`);
+      console.log(`open`, open);
+
       // untuk update approval status
       if (open.detail) {
+        console.log(`masuk sini`);
         fetchApi({
           key: keys.detail,
           type: "post",
@@ -202,10 +213,11 @@ const DeliveryOrder = ({
           onSuccess: (res) => {
             // console.log(`res`, res);
             getTask();
-            handleVisible("detail", {});
+            // handleVisible("detail", {});
+            detailRef.current.close();
           },
           onFail: (error) => {
-            // console.log(`error`, error);
+            console.log(`error`, error);
             setSubmitting(false);
             setStatus("Failed Submit Data");
           },
@@ -224,6 +236,7 @@ const DeliveryOrder = ({
           handleErrorSubmit("item", true);
         } else {
           // console.log(`isUpdate`, isUpdate);
+
           fetchApi({
             key: keys.submit,
             type: isUpdate ? "put" : "post",
@@ -242,8 +255,10 @@ const DeliveryOrder = ({
             alertAppear: "both",
             onSuccess: (res) => {
               // console.log(`res`, res);
+              console.log(`open`, open);
               getTask();
-              handleVisible("submit", {});
+              // handleVisible("submit", {});
+              submitRef.current.close();
             },
             onFail: (error) => {
               // console.log(`error`, error);
@@ -266,6 +281,7 @@ const DeliveryOrder = ({
         // console.log(`res`, res);
         getTask();
         handleVisible("delete", {});
+        deleteRef.current.close();
       },
     });
   };
@@ -285,6 +301,7 @@ const DeliveryOrder = ({
       },
       onSuccess: (res) => {
         getTask();
+        submitItemRef.current.close();
         handleVisible("confirm", {});
       },
     });
@@ -340,18 +357,22 @@ const DeliveryOrder = ({
         setIsUpdate(false);
         handleModal("create");
         handleVisible("submit", data);
+        submitRef.current.open();
         break;
       case "delete":
         handleVisible("delete", data);
+        deleteRef.current.open();
         break;
       case "update":
         setIsUpdate(true);
         handleVisible("submit", data);
         handleModal("update", data);
+        submitRef.current.open();
         break;
       case "detail":
         handleVisible("detail", data);
         handleModal("detail", data);
+        detailRef.current.open();
         break;
 
       case "change_status":
@@ -368,6 +389,7 @@ const DeliveryOrder = ({
           Object.values(itemForm)
         );
         handleVisible("confirm", data, dataArr);
+        submitItemRef.current.open();
         break;
 
       default:
@@ -456,29 +478,29 @@ const DeliveryOrder = ({
   return (
     <React.Fragment>
       <ModalSubmitItem
+        innerRef={submitItemRef}
         visible={open.confirm}
-        onClose={() => handleVisible("confirm")}
-        title={<FormattedMessage id="MESSAGE.DATA_IS_CORRECT" />}
-        textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
-        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        onClose={() => handleVisible("confirm", {}, [])}
         onSubmit={() => handleConfirmItem()}
         loading={loadings.submit_item}
         data={open.tempItems}
       />
 
-      <ModalConfirmation
+      <ModalDelete
+        innerRef={deleteRef}
         visible={open.delete}
-        onClose={() => handleVisible("delete")}
-        title={<FormattedMessage id="TITLE.MODAL_DELETE.TITLE" />}
-        subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
-        textYes={<FormattedMessage id="BUTTON.DELETE" />}
-        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
-        submitColor="danger"
+        onClose={() => handleVisible("delete", {})}
+        // title={<FormattedMessage id="TITLE.MODAL_DELETE.TITLE" />}
+        // subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
+        // textYes={<FormattedMessage id="BUTTON.DELETE" />}
+        // textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        // submitColor="danger"
         onSubmit={() => handleDelete()}
         loading={loadings.delete}
       />
 
       <ModalSubmit
+        innerRef={submitRef}
         visible={open.submit}
         onClose={() => handleVisible("submit")}
         formik={formik}
@@ -490,6 +512,7 @@ const DeliveryOrder = ({
       />
 
       <ModalDetail
+        innerRef={detailRef}
         visible={open.detail}
         onClose={() => handleVisible("detail")}
         formik={formik}

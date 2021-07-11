@@ -72,6 +72,8 @@ class DialogGlobal extends React.Component {
   };
 
   close = () => {
+    const { onClose } = this.props;
+    if (typeof onClose === "function") onClose();
     this.setState({ open: false });
   };
 
@@ -97,11 +99,12 @@ class DialogGlobal extends React.Component {
       btnNoProps,
       loading,
       disableBackdropClick = true,
+      isSubmit = true,
     } = this.props;
     return (
       <div>
         <Dialog
-          // onClose={this.close}
+          onClose={this.close}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
           maxWidth={"sm"}
@@ -111,18 +114,21 @@ class DialogGlobal extends React.Component {
           <DialogTitle id="customized-dialog-title" onClose={this.close}>
             {title}
           </DialogTitle>
-          <DialogContent dividers>{children}</DialogContent>
+          <DialogContent dividers>{this.state.open && children}</DialogContent>
+
           <DialogActions>
             {btnAction}
             {loading && <CircularProgress size="0.875rem" color="inherit" />}
-            <Button
-              variant="contained"
-              className={"bg-primary text-light"}
-              onClick={this.handleYes}
-              {...btnYesProps}
-            >
-              {textYes ? textYes : <FormattedMessage id="TITLE.SAVE" />}
-            </Button>
+            {isSubmit && (
+              <Button
+                variant="contained"
+                className={"bg-primary text-light"}
+                onClick={this.handleYes}
+                {...btnYesProps}
+              >
+                {textYes ? textYes : <FormattedMessage id="TITLE.SAVE" />}
+              </Button>
+            )}
             <Button
               variant="contained"
               className={"bg-danger text-light"}

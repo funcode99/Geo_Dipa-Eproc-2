@@ -25,12 +25,20 @@ const CardOrderItem = ({ data, options, setItem }) => {
   const [componentIndex, setComponentIndex] = React.useState(2);
   const compUsed = options[componentIndex];
 
+  console.log(`data`, data);
+
   const handleChange = (state) => {
     setComponentIndex(state ? 1 : 0);
 
-    formRef.current.setFieldValue("approve_status_id", options[state].id);
+    formRef.current.setFieldValue(
+      "approve_status_id",
+      options[state ? 1 : 0].id
+    );
 
-    formRef.current.setFieldValue("approve_status", options[state].name);
+    formRef.current.setFieldValue(
+      "approve_status",
+      options[state ? 1 : 0].name
+    );
 
     setTimeout(() => {
       getValue();
@@ -39,7 +47,7 @@ const CardOrderItem = ({ data, options, setItem }) => {
 
   const initValues = React.useMemo(
     () => ({
-      qty_approved: data?.qty_approved || "0",
+      qty_approved: data?.qty_approved || data.qty,
       reject_text: data?.reject_text || "",
       id: data?.id,
       approve_status_id: data?.approve_status_id,
@@ -98,7 +106,12 @@ const CardOrderItem = ({ data, options, setItem }) => {
       />
       <Divider />
       <div>
-        <BtnApproveReject onChange={handleChange} />
+        <BtnApproveReject
+          onChange={handleChange}
+          isActive={
+            componentIndex === 1 ? true : componentIndex === 0 ? false : null
+          }
+        />
       </div>
     </ExpansionBox>
   );
