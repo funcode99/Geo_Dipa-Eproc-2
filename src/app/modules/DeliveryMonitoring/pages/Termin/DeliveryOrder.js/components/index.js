@@ -5,6 +5,7 @@ import RowCollapse from "./RowCollapse";
 import BtnAction from "./BtnAction";
 import DeliveryOrderItem from "./DeliveryOrderItem";
 import ModalSubmitItem from "./ModalSubmitItem";
+import ModalDelete from "./ModalDelete";
 
 export {
   ModalSubmit,
@@ -14,4 +15,5 @@ export {
   BtnAction,
   DeliveryOrderItem,
   ModalSubmitItem,
+  ModalDelete,
 };

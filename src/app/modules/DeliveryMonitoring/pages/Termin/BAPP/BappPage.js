@@ -22,6 +22,11 @@ import urlHelper, {
 } from "../../../../../service/helper/urlHelper";
 import ModalUploadSigned from "./components/ModalUploadSigned";
 import ModalPreview from "./components/ModalPreview";
+import StepperDoc from "./components/StepperDoc";
+import {
+  fetch_api_sg,
+  getLoading,
+} from "../../../../../../redux/globalReducer";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -52,10 +57,19 @@ const validationVendor = object().shape({
   tanggal_bapp: validation.require("Tanggal BAPP"),
 });
 
-const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
+const BappPage = ({
+  status,
+  taskId,
+  fetchApi,
+  contract,
+  taskNews,
+  saveTask,
+  loadings,
+}) => {
   const [Toast, setToast] = useToast();
   const uploadRef = React.useRef();
-  const previewRef = React.useRef();
+  const approveRef = React.useRef();
+  const rejectRef = React.useRef();
   const [loading, setLoading] = React.useState({
     get: false,
     submit: false,
@@ -273,27 +287,94 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
         break;
       case "approve":
         console.log(`type`, type);
-        previewRef.current.open();
+        approveRef.current.open();
+        break;
+      case "reject":
+        console.log(`type`, type);
+        rejectRef.current.open();
         break;
       default:
         break;
     }
   };
 
-  // untuk buka / tutup modal
-  const handleVisible = (key, tempParams = {}) => {
-    setOpen((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-      tempParams: { ...prev.tempParams, ...tempParams },
-    }));
+  const handleApi = (type, params) => {
+    console.log(`type`, type, params);
+    switch (type) {
+      case "upload_s":
+        fetchApi({
+          type: keys.upload_s,
+          type: "postForm",
+          alertAppear: "both",
+          url: `/delivery/task-news/${taskNews.id}/upload`,
+          params: { file: params.data },
+          onSuccess: () => {
+            uploadRef.current.close();
+            fetchData({ visible: false, message: "" });
+          },
+        });
+        break;
+      case "approve":
+        fetchApi({
+          key: keys.approve_s,
+          type: "post",
+          alertAppear: "both",
+          url: `delivery/task-news/${taskNews.id}/status`,
+          params: {
+            approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
+          },
+          onSuccess: (res) => {
+            // this.handleRefresh();
+            fetchData({ visible: false, message: "" });
+
+            approveRef.current.close();
+          },
+        });
+        break;
+      case "reject":
+        fetchApi({
+          key: keys.approve_s,
+          type: "post",
+          alertAppear: "both",
+          url: `delivery/task-news/${taskNews.id}/status`,
+          params: {
+            approve_status_id: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
+            reject_text: params?.remarks,
+          },
+          onSuccess: (res) => {
+            // this.handleRefresh();
+            fetchData({ visible: false, message: "" });
+
+            rejectRef.current.close();
+          },
+        });
+        break;
+
+      default:
+        break;
+    }
   };
 
   return (
     <React.Fragment>
       <Toast />
-      <ModalUploadSigned innerRef={uploadRef} />
-      <ModalPreview innerRef={previewRef} />
+      <ModalUploadSigned
+        innerRef={uploadRef}
+        handleSubmit={(e) => handleApi("upload_s", e)}
+        loading={loadings.upload_s}
+      />
+      <ModalPreview
+        innerRef={approveRef}
+        handleSubmit={(e) => handleApi("approve", e)}
+        loading={loadings.approve_s}
+      />
+      <ModalPreview
+        innerRef={rejectRef}
+        handleSubmit={(e) => handleApi("reject", e)}
+        loading={loadings.approve_s}
+        withRemarks
+        title={"Reject Signed Document"}
+      />
 
       {/* <ModalConfirmation
         visible={open.submit}
@@ -338,6 +419,61 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
 
       <Card className="mt-5">
         <CardBody>
+          <StepperDoc
+            renderBtns={(idx) => {
+              switch (idx) {
+                case 0:
+                  return (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleAction("preview", taskNews)}
+                      disabled={taskNews ? false : true}
+                    >
+                      <FormattedMessage id="TITLE.PREVIEW" />
+                    </Button>
+                  );
+                case 1:
+                  return (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleAction("uploadSign")}
+                    >
+                      <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
+                    </Button>
+                  );
+                case 2:
+                  return (
+                    <div>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleAction("approve")}
+                      >
+                        <FormattedMessage id="TITLE.APPROVE" />
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={"bg-danger text-white"}
+                        onClick={() => handleAction("reject")}
+                      >
+                        <FormattedMessage id="TITLE.REJECT" />
+                      </Button>
+                    </div>
+                  );
+
+                default:
+                  return "Unknown step";
+              }
+            }}
+          />
+        </CardBody>
+      </Card>
+
+      <Card className="mt-5">
+        <CardBody>
           <Row className="mb-5">
             <Col md={12}>
               <ButtonGroup size="medium" color="secondary" variant="contained">
@@ -376,12 +512,24 @@ const BappPage = ({ status, taskId, contract, taskNews, saveTask }) => {
   );
 };
 
-const mapState = ({ auth, deliveryMonitoring }) => ({
-  status: auth.user.data.status,
-  contract: deliveryMonitoring.dataContractById,
-  taskNews: deliveryMonitoring.dataTask?.news,
-  taskId: deliveryMonitoring.dataTask?.id,
-});
+const keys = {
+  upload_s: "upload-signed",
+  approve_s: "approve-signed",
+};
+
+const mapState = (state) => {
+  const { auth, deliveryMonitoring } = state;
+  return {
+    status: auth.user.data.status,
+    contract: deliveryMonitoring.dataContractById,
+    taskNews: deliveryMonitoring.dataTask?.news,
+    taskId: deliveryMonitoring.dataTask?.id,
+    loadings: {
+      upload_s: getLoading(state, keys.upload_s),
+      approve_s: getLoading(state, keys.approve_s),
+    },
+  };
+};
 
 const mapDispatch = (dispatch) => ({
   saveTask: (payload) => {
@@ -390,6 +538,7 @@ const mapDispatch = (dispatch) => ({
       payload: payload,
     });
   },
+  fetchApi: (payload) => dispatch(fetch_api_sg(payload)),
 });
 
 export default connect(mapState, mapDispatch)(BappPage);
