@@ -10,10 +10,11 @@ import {
   BtnAction,
   // DeliveryOrderItem,
   ModalSubmitItem,
+  ModalDelete,
 } from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
-import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
+// import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
 import {
   formatDate,
   formatInitialDate,
@@ -22,8 +23,8 @@ import {
 // import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import useToast from "../../../../../components/toast";
-import * as Option from "../../../../../service/Option";
+// import useToast from "../../../../../components/toast";
+// import * as Option from "../../../../../service/Option";
 import DevOrderItem from "./components/DevOrderItem";
 import {
   fetch_api_sg,
@@ -74,7 +75,44 @@ const initialValues = {
   status_remarks: "",
 };
 
-export const DeliveryOrderContext = createContext({});
+const addClassToOptions = (data) => {
+  data.map((item, index) => {
+    switch (item.name) {
+      case "WAITING APPROVAL":
+        item.class = "dark";
+        break;
+
+      case "APPROVED":
+        item.class = "success";
+        break;
+
+      case "REJECTED":
+        item.class = "danger";
+        break;
+
+      default:
+        break;
+    }
+  });
+};
+
+const changeSequenceOptions = (arr) => {
+  let temp = [];
+  arr.forEach((item) => {
+    if (item.code === "rejected") {
+      temp[0] = item;
+    }
+
+    if (item.code === "approved") {
+      temp[1] = item;
+    }
+
+    if (item.code === "waiting") {
+      temp[2] = item;
+    }
+  });
+  return temp;
+};
 
 const DeliveryOrder = ({
   taskId,
@@ -83,8 +121,6 @@ const DeliveryOrder = ({
   tempOrderItems,
   setTempOrderItems,
   saveDataTask,
-  updateOrderItems,
-  setUpdateOrderItems,
   status,
   fetchApi,
   loadings,
@@ -98,20 +134,16 @@ const DeliveryOrder = ({
     tempItems: [],
   });
   const [tableContent, setTableContent] = React.useState([]);
-  const [loading, setLoading] = React.useState({
-    fetch: false,
-    submit: false,
-    detail: false,
-    delete: false,
-    confirm: false,
-  });
   const [isUpdate, setIsUpdate] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const isVendor = status === "vendor";
   const excludeAction = isVendor ? ["change_status"] : ["update", "delete"];
-  const [Toast, setToast] = useToast();
   const [dataOrderItem, setDataOrderItem] = React.useState({});
   const [itemForm, setItemForm] = React.useState({});
+  const submitItemRef = React.useRef();
+  const deleteRef = React.useRef();
+  const submitRef = React.useRef();
+  const detailRef = React.useRef();
 
   const handleVisible = (key, tempParams = {}, tempItems = [], state) => {
     // console.log(`tempParams`, tempParams);
@@ -124,6 +156,8 @@ const DeliveryOrder = ({
     // } else {
     // if (dataOrderItem !== {}) setDataOrderItem({});
     if (key === "confirm") {
+      console.log(`key`, key);
+      console.log(`open`, open);
       setOpen((prev) => ({
         ...prev,
         [key]: state !== undefined ? state : !prev[key],
@@ -139,55 +173,16 @@ const DeliveryOrder = ({
     // }
   };
 
-  const handleError = (type, err) => {
-    switch (type) {
-      case "api":
-        if (
-          err.response?.code !== 400 &&
-          err.response?.data.message !== "TokenExpiredError"
-        ) {
-          getTask({ visible: "true", message: err.response?.data.message });
-          // setToast(err.response?.data.message, 5000);
-        }
-        break;
-
-      case "options":
-        if (
-          err.response?.code !== 400 &&
-          err.response?.data.message !== "TokenExpiredError"
-        ) {
-          setToast(err.response?.data.message, 5000);
-        }
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  const getTask = (toast = { visible: false, message: "" }) => {
-    handleLoading("fetch", true);
-
-    deliveryMonitoring
-      .getTaskById(taskId)
-      .then((res) => {
-        if (res.data.status === true) {
-          // console.log(`res.data.data`, res.data.data);
-          saveDataTask(res.data.data);
-          // generateTableContent(orderItems);
-          if (toast.visible) {
-            setToast(toast.message, 5000);
-          }
-        }
-      })
-      .catch((err) => handleError("api", err))
-      .finally(() => handleLoading("fetch", false));
-  };
-
-  const handleSuccess = (res) => {
-    if (res?.data?.status === true) {
-      getTask({ visible: "true", message: res?.data?.message });
-    }
+  const getTask = () => {
+    fetchApi({
+      keys: keys.fetch,
+      type: "get",
+      url: `/delivery/task/${taskId}`,
+      onSuccess: (res) => {
+        // console.log(`res`, res.data);
+        saveDataTask(res?.data);
+      },
+    });
   };
 
   const [errors, setErrors] = React.useState({});
@@ -199,36 +194,34 @@ const DeliveryOrder = ({
   const formik = useFormik({
     initialValues,
     validationSchema: FormSchema,
-    onSubmit: async (values, { setStatus, setSubmitting }) => {
+    onSubmit: async (values, { setStatus, setSubmitting, resetForm }) => {
+      console.log(`masuk sini`);
+      console.log(`open`, open);
+
       // untuk update approval status
       if (open.detail) {
-        console.log(`values`, values);
-
-        try {
-          const requestData = {
+        console.log(`masuk sini`);
+        fetchApi({
+          key: keys.detail,
+          type: "post",
+          url: `delivery/task-delivery/${open?.tempParams?.id}/status`,
+          params: {
             approve_status_id: values.status,
             reject_text: values.status_remarks,
-          };
-
-          handleLoading("detail", true);
-
-          const res = await deliveryMonitoring.postDeliveryItem(
-            "delivery_order_status",
-            open?.tempParams?.id,
-            requestData
-          );
-
-          if (res.data.status === true) {
-            handleSuccess(res);
-          }
-        } catch (error) {
-          setSubmitting(false);
-          setStatus("Failed Submit Data");
-          handleError("api", error);
-        } finally {
-          handleLoading("detail", false);
-          handleVisible("detail");
-        }
+          },
+          alertAppear: "both",
+          onSuccess: (res) => {
+            // console.log(`res`, res);
+            getTask();
+            // handleVisible("detail", {});
+            detailRef.current.close();
+          },
+          onFail: (error) => {
+            console.log(`error`, error);
+            setSubmitting(false);
+            setStatus("Failed Submit Data");
+          },
+        });
       }
 
       // untuk create atau update data
@@ -242,10 +235,15 @@ const DeliveryOrder = ({
         if (open.submit && submitItem.length < 1) {
           handleErrorSubmit("item", true);
         } else {
-          try {
-            let requestData = {};
+          // console.log(`isUpdate`, isUpdate);
 
-            requestData = {
+          fetchApi({
+            key: keys.submit,
+            type: isUpdate ? "put" : "post",
+            url: isUpdate
+              ? `/delivery/task-delivery/${open?.tempParams?.id}`
+              : `/delivery/task-delivery/${taskId}`,
+            params: {
               name: values.name,
               date: values.date,
               remarks: values.remarks,
@@ -253,58 +251,39 @@ const DeliveryOrder = ({
                 task_item_id: item.id,
                 qty: item.qty,
               })),
-            };
-            handleLoading("submit", true);
-
-            let res = {};
-            if (isUpdate) {
-              res = await deliveryMonitoring.postDeliveryItem(
-                "update",
-                open?.tempParams?.id,
-                requestData
-              );
-            } else if (open.submit) {
-              res = await deliveryMonitoring.postDeliveryItem(
-                "create",
-                taskId,
-                requestData
-              );
-            }
-            if (res.data.status === true) {
-              handleSuccess(res);
-            }
-          } catch (error) {
-            setSubmitting(false);
-            setStatus("Failed Submit Data");
-            handleError("api", error);
-          } finally {
-            handleLoading("submit", false);
-            handleVisible("submit");
-          }
+            },
+            alertAppear: "both",
+            onSuccess: (res) => {
+              // console.log(`res`, res);
+              console.log(`open`, open);
+              getTask();
+              // handleVisible("submit", {});
+              submitRef.current.close();
+            },
+            onFail: (error) => {
+              // console.log(`error`, error);
+              setSubmitting(false);
+              setStatus("Failed Submit Data");
+            },
+          });
         }
       }
     },
   });
 
   const handleDelete = async () => {
-    try {
-      handleLoading("delete", true);
-      // console.log(open.tempParams);
-      // const itemId = open?.tempParams?.id;
-      const res = await deliveryMonitoring.postDeliveryItem(
-        "delete",
-        open?.tempParams?.id
-      );
-      if (res?.data?.status === true) {
-        handleSuccess(res);
-      }
-    } catch (error) {
-      handleError(error);
-      // console.error(error);
-    } finally {
-      handleLoading("delete", false);
-      handleVisible("delete");
-    }
+    fetchApi({
+      key: keys.delete,
+      type: "delete",
+      url: `/delivery/task-delivery/${open?.tempParams?.id}`,
+      alertAppear: "both",
+      onSuccess: (res) => {
+        // console.log(`res`, res);
+        getTask();
+        handleVisible("delete", {});
+        deleteRef.current.close();
+      },
+    });
   };
 
   const handleConfirmItem = React.useCallback(() => {
@@ -322,6 +301,7 @@ const DeliveryOrder = ({
       },
       onSuccess: (res) => {
         getTask();
+        submitItemRef.current.close();
         handleVisible("confirm", {});
       },
     });
@@ -377,18 +357,22 @@ const DeliveryOrder = ({
         setIsUpdate(false);
         handleModal("create");
         handleVisible("submit", data);
+        submitRef.current.open();
         break;
       case "delete":
         handleVisible("delete", data);
+        deleteRef.current.open();
         break;
       case "update":
         setIsUpdate(true);
         handleVisible("submit", data);
         handleModal("update", data);
+        submitRef.current.open();
         break;
       case "detail":
         handleVisible("detail", data);
         handleModal("detail", data);
+        detailRef.current.open();
         break;
 
       case "change_status":
@@ -405,6 +389,7 @@ const DeliveryOrder = ({
           Object.values(itemForm)
         );
         handleVisible("confirm", data, dataArr);
+        submitItemRef.current.open();
         break;
 
       default:
@@ -463,92 +448,63 @@ const DeliveryOrder = ({
     setTableContent(dataArr);
   };
 
-  const handleLoading = React.useCallback(
-    (key, state) => setLoading((prev) => ({ ...prev, [key]: state })),
-    [setLoading]
-  );
-
   const setInitAvailItems = (data) => {
     let temp = data.filter((item) => item.checked === true);
-    setTempOrderItems(temp.map((item) => ({ ...item, checked: false })));
-  };
-
-  const addClassToOptions = (data) => {
-    data.map((item, index) => {
-      switch (item.name) {
-        case "WAITING APPROVAL":
-          item.class = "dark";
-          break;
-
-        case "APPROVED":
-          item.class = "success";
-          break;
-
-        case "REJECTED":
-          item.class = "danger";
-          break;
-
-        default:
-          break;
-      }
-    });
+    setTempOrderItems(
+      temp.map((item) => ({ ...item, checked: false, qty_avail: item.qty }))
+    );
   };
 
   const getOptions = async () => {
-    try {
-      setLoading(true);
-      const {
-        data: { data },
-      } = await Option.getAllOptions();
-
-      addClassToOptions(data?.approve_status);
-
-      setOptions(data?.approve_status);
-    } catch (error) {
-      handleError("options", error);
-    } finally {
-      // setLoading(false);
-    }
+    fetchApi({
+      key: keys.option,
+      type: "get",
+      url: `/delivery/options`,
+      onSuccess: (res) => {
+        let approveStatusOptions = res?.data?.approve_status;
+        approveStatusOptions = changeSequenceOptions(approveStatusOptions);
+        addClassToOptions(approveStatusOptions);
+        setOptions(approveStatusOptions);
+      },
+    });
   };
 
   React.useEffect(() => {
     generateTableContent(orderItems);
     setInitAvailItems(items);
     getOptions();
-  }, [orderItems]);
+  }, [orderItems, items]);
 
   return (
-    <DeliveryOrderContext.Provider value={{ handleAction, options }}>
-      <Toast />
-
+    <React.Fragment>
       <ModalSubmitItem
+        innerRef={submitItemRef}
         visible={open.confirm}
-        onClose={() => handleVisible("confirm")}
-        title={<FormattedMessage id="MESSAGE.DATA_IS_CORRECT" />}
-        textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
-        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        onClose={() => handleVisible("confirm", {}, [])}
         onSubmit={() => handleConfirmItem()}
         loading={loadings.submit_item}
         data={open.tempItems}
       />
 
-      <ModalConfirmation
+      <ModalDelete
+        innerRef={deleteRef}
         visible={open.delete}
-        onClose={() => handleVisible("delete")}
-        title={<FormattedMessage id="TITLE.MODAL_DELETE.TITLE" />}
-        subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
-        textYes={<FormattedMessage id="BUTTON.DELETE" />}
-        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
-        submitColor="danger"
+        onClose={() => handleVisible("delete", {})}
+        // title={<FormattedMessage id="TITLE.MODAL_DELETE.TITLE" />}
+        // subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
+        // textYes={<FormattedMessage id="BUTTON.DELETE" />}
+        // textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        // submitColor="danger"
         onSubmit={() => handleDelete()}
-        loading={loading.delete}
+        loading={loadings.delete}
       />
 
       <ModalSubmit
+        innerRef={submitRef}
         visible={open.submit}
         onClose={() => handleVisible("submit")}
         formik={formik}
-        loading={loading.submit}
+        loading={loadings.submit}
         errors={errors}
         handleError={handleErrorSubmit}
         updateData={open.tempParams}
@@ -556,14 +512,14 @@ const DeliveryOrder = ({
       />
 
       <ModalDetail
+        innerRef={detailRef}
         visible={open.detail}
         onClose={() => handleVisible("detail")}
         formik={formik}
         updateData={open.tempParams}
         userStatus={status}
         options={options}
-        handleError={handleError}
-        loading={loading.detail}
+        loading={loadings.detail}
       />
 
       <Card>
@@ -589,7 +545,7 @@ const DeliveryOrder = ({
             rows={tableContent}
             // width={1000}
             maxHeight={300}
-            loading={loading.fetch}
+            loading={loadings.fetch}
             withSearch={false}
             withPagination={false}
             renderRows={({ item, index }) => {
@@ -615,12 +571,17 @@ const DeliveryOrder = ({
           // handleSubmit={() => handleAction("confirm", null)}
         />
       }
-    </DeliveryOrderContext.Provider>
+    </React.Fragment>
   );
 };
 
 const keys = {
   submit_item: "submit-item",
+  fetch: "fetch-task",
+  submit: "submit-delivery-order",
+  detail: "update-delivery-order-status",
+  delete: "delete-delivery-order",
+  option: "approve-status-option",
 };
 
 const mapState = (state) => {
@@ -633,6 +594,11 @@ const mapState = (state) => {
     status: auth.user.data.status,
     loadings: {
       submit_item: getLoading(state, keys.submit_item),
+      fetch: getLoading(state, keys.fetch),
+      submit: getLoading(state, keys.submit),
+      detail: getLoading(state, keys.detail),
+      delete: getLoading(state, keys.delete),
+      option: getLoading(state, keys.option),
     },
   };
 };

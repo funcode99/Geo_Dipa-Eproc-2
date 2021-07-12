@@ -19,6 +19,7 @@ import { StyledModal } from "../../../../../../components/modals";
 import { Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Send } from "@material-ui/icons";
+import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -38,6 +39,7 @@ const tableHeader = [
 ];
 
 const ModalDetail = ({
+  innerRef,
   visible,
   onClose,
   formik,
@@ -45,7 +47,6 @@ const ModalDetail = ({
   userStatus,
   loading,
   options,
-  handleError,
 }) => {
   const classes = useStyles();
   const isClient = userStatus === "client";
@@ -53,11 +54,22 @@ const ModalDetail = ({
 
   return (
     <React.Fragment>
-      <StyledModal
-        visible={visible}
+      <DialogGlobal
+        // visible={visible}
+        ref={innerRef}
+        title={<FormattedMessage id="TITLE.DETAIL_DELIVERY_ORDER" />}
+        textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
+        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        onYes={formik.handleSubmit}
+        onNo={onClose}
         onClose={onClose}
-        hideCloseIcon={false}
-        disableBackdrop
+        btnNoProps={{
+          className: "bg-secondary text-black",
+        }}
+        loading={loading}
+        isSubmit={isClient}
+        // hideCloseIcon={false}
+        // disableBackdrop
         minWidth="40vw"
         maxwidth="70vw"
       >
@@ -202,7 +214,7 @@ const ModalDetail = ({
               {...formik.getFieldProps("status_remarks")}
             />
 
-            {isClient && (
+            {/* {isClient && (
               <div className="d-flex justify-content-end w-100 mt-7">
                 <Button
                   disabled={loading}
@@ -220,10 +232,10 @@ const ModalDetail = ({
                   )}
                 </Button>
               </div>
-            )}
+            )} */}
           </React.Fragment>
         </form>
-      </StyledModal>
+      </DialogGlobal>
     </React.Fragment>
   );
 };

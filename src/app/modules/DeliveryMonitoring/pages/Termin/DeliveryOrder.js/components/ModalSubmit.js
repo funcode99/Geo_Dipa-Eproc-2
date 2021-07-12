@@ -18,6 +18,7 @@ import { StyledModal } from "../../../../../../components/modals";
 import { Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 
 const tableHeader = [
   "",
@@ -28,6 +29,7 @@ const tableHeader = [
 ];
 
 const ModalSubmit = ({
+  innerRef,
   visible,
   onClose,
   tempOrderItems,
@@ -58,19 +60,42 @@ const ModalSubmit = ({
 
   return (
     <React.Fragment>
-      <StyledModal
-        visible={visible}
+      <DialogGlobal
+        // visible={visible}
+        ref={innerRef}
+        title={
+          isUpdate ? (
+            <FormattedMessage id="TITLE.UPDATE_DELIVERY_ORDER" />
+          ) : (
+            <FormattedMessage id="TITLE.ADD_DELIVERY_ORDER" />
+          )
+        }
+        textYes={
+          isUpdate ? (
+            <FormattedMessage id="TITLE.UPDATE" />
+          ) : (
+            <FormattedMessage id="TITLE.ADD" />
+          )
+        }
+        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        onYes={formik.handleSubmit}
         onClose={onClose}
-        hideCloseIcon={false}
-        disableBackdrop
+        onNo={onClose}
+        btnNoProps={{
+          className: "bg-secondary text-black",
+        }}
+        loading={loading}
+        // isAction={false}
+        // hideCloseIcon={false}
+        // disableBackdrop
         minWidth="40vw"
         maxwidth="70vw"
       >
-        <h3 className="mb-7">
+        {/* <h3 className="mb-7">
           {isUpdate && <FormattedMessage id="TITLE.UPDATE" />}
           {!isUpdate && <FormattedMessage id="TITLE.ADD" />}{" "}
           <FormattedMessage id="TITLE.DELIVERY_ORDER" />
-        </h3>
+        </h3> */}
 
         <Table size="small">
           <TableHead>
@@ -98,7 +123,7 @@ const ModalSubmit = ({
                     />
                   </TableCell>
                   <TableCell>{item?.item?.desc}</TableCell>
-                  <TableCell>{item?.qty}</TableCell>
+                  <TableCell>{item?.qty_avail}</TableCell>
                   <TableCell>
                     <Form.Control
                       type="number"
@@ -188,8 +213,9 @@ const ModalSubmit = ({
               : null}
           </span>
 
-          <div className="d-flex justify-content-end w-100 mt-7">
+          {/* <div className="d-flex justify-content-end w-100 mt-7">
             <Button
+              size="small"
               disabled={loading}
               type="submit"
               variant="contained"
@@ -205,9 +231,9 @@ const ModalSubmit = ({
                 <Send />
               )}
             </Button>
-          </div>
+          </div> */}
         </form>
-      </StyledModal>
+      </DialogGlobal>
     </React.Fragment>
   );
 };

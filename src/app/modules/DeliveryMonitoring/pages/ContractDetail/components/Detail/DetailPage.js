@@ -1,15 +1,6 @@
 import React from "react";
 import { FormDetail, Item } from "./index";
-import {
-  CardContent,
-  Collapse,
-  Container,
-  FormControlLabel,
-  Paper,
-  Switch,
-} from "@material-ui/core";
-import { Card } from "@material-ui/core";
-import CustomTable from "../../../../../../components/tables";
+import { Container } from "@material-ui/core";
 import ButtonAction from "../../../../../../components/buttonAction/ButtonAction";
 import { formatDate } from "../../../../../../libs/date";
 import { format } from "date-fns";
@@ -18,15 +9,18 @@ import * as Yup from "yup";
 import useToast from "../../../../../../components/toast";
 import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
-import { connect, shallowEqual, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import ModalTerm from "./ModalTerm";
 import { FormattedMessage } from "react-intl";
 import ModalConfirmation from "../../../../../../components/modals/ModalConfirmation";
-import * as Option from "../../../../../../service/Option";
 import { rupiah } from "../../../../../../libs/currency";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
 import { NavLink } from "react-router-dom";
+import {
+  fetch_api_sg,
+  getLoading,
+} from "../../../../../../../redux/globalReducer";
 
 const tableHeaderTerminNew = [
   {
@@ -73,6 +67,30 @@ const tableHeaderTerminNew = [
   },
 ];
 
+const FormSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(3, "Input minimal 3 karakter")
+    .required("Scope of work can not empty"),
+  start_date: Yup.date()
+    .required("Date can not empty")
+    .nullable(),
+  due_date: Yup.date()
+    .required("Date can not empty")
+    .nullable(),
+});
+
+const initialValues = {
+  name: "",
+  start_date: format(new Date(), "yyy-MM-dd"),
+  due_date: format(new Date(), "yyy-MM-dd"),
+  status: 876,
+};
+
+const keys = {
+  option: "task-status-option",
+  fetch: "get-data-contract-by-id",
+};
+
 const DetailPage = ({
   contractId,
   contract,
@@ -80,46 +98,18 @@ const DetailPage = ({
   saveSubmitItems,
   saveContractById,
   authStatus,
+  fetch_api_sg,
+  loadings,
 }) => {
-  const [tableContent, setTableContent] = React.useState([]);
   const [newContent, setNewContent] = React.useState([]);
   const [confirm, setConfirm] = React.useState({ show: false, id: "" });
   const [modals, setModals] = React.useState(false);
   const [update, setUpdate] = React.useState({ id: "", update: false });
-  const [show, setShow] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
   const [options, setOptions] = React.useState();
   const [showForm, setShowForm] = React.useState(false);
   const { tasks } = contract;
-
-  const handleShow = React.useCallback(() => setShow((prev) => !prev), [
-    setShow,
-  ]);
-
-  // React.useEffect(() => {
-  //   setTimeout(() => {
-  //   }, 550);
-  // }, [])
-
-  const FormSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(3, "Input minimal 3 karakter")
-      .required("Scope of work can not empty"),
-    start_date: Yup.date()
-      .required("Date can not empty")
-      .nullable(),
-    due_date: Yup.date()
-      .required("Date can not empty")
-      .nullable(),
-  });
-
-  const initialValues = {
-    name: "",
-    start_date: format(new Date(), "yyy-MM-dd"),
-    due_date: format(new Date(), "yyy-MM-dd"),
-    status: 876,
-  };
 
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
@@ -326,31 +316,26 @@ const DetailPage = ({
 
   const getContractById = React.useCallback(
     (contractId, toast = { visible: false, message: "" }) => {
-      enableLoading();
+      // enableLoading();
 
-      deliveryMonitoring
-        .getContractById(contractId)
-        .then((res) => {
-          const {
-            data: { data },
-          } = res;
-
-          addCheckedField(data?.services, "jasa");
-          addCheckedField(data?.items, "barang");
-
-          saveContractById(data);
-
-          generateTableContent(data?.tasks);
+      fetch_api_sg({
+        keys: keys.fetch,
+        type: "get",
+        url: `/delivery/contract/${contractId}`,
+        onSuccess: (res) => {
+          console.log(`res`, res.data);
+          addCheckedField(res?.data?.services, "jasa");
+          addCheckedField(res?.data?.items, "barang");
+          saveContractById(res?.data);
+          generateTableContent(res?.data?.tasks);
           setShowForm(true);
-
           if (toast.visible) {
             setToast(toast.message, 5000);
           }
-        })
-        .catch((err) => handleError(err))
-        .finally(disableLoading());
+        },
+      });
     },
-    [generateTableContent, handleError, saveContractById, setToast, contractId]
+    [generateTableContent, saveContractById, setToast, fetch_api_sg]
   );
 
   const handleSuccess = React.useCallback(
@@ -397,20 +382,16 @@ const DetailPage = ({
   };
 
   const getOptions = async () => {
-    try {
-      setLoading(true);
-      const {
-        data: { data },
-      } = await Option.getAllOptions();
-
-      // console.log(`data`, data);
-
-      setOptions(data.task_status);
-    } catch (error) {
-      setToast("Error API, please contact developer!", 5000);
-    } finally {
-      setLoading(false);
-    }
+    fetch_api_sg({
+      key: keys.option,
+      type: "get",
+      url: `/delivery/options`,
+      onSuccess: (res) => {
+        // console.log(`res.data`, res.data);
+        const taskStatusOptions = res?.data?.task_status;
+        setOptions(taskStatusOptions);
+      },
+    });
   };
 
   React.useEffect(() => {
@@ -456,7 +437,7 @@ const DetailPage = ({
             headerRows={tableHeaderTerminNew}
             rows={newContent}
             width={1500}
-            loading={false}
+            loading={loadings.fetch}
             withSearch={false}
           />
         </ExpansionBox>
@@ -465,11 +446,18 @@ const DetailPage = ({
   );
 };
 
-const mapState = ({ deliveryMonitoring, auth }) => ({
-  dataSubmitItems: deliveryMonitoring.dataSubmitItems,
-  contract: deliveryMonitoring.dataContractById,
-  authStatus: auth.user.data.status,
-});
+const mapState = (state) => {
+  const { deliveryMonitoring, auth } = state;
+  return {
+    dataSubmitItems: deliveryMonitoring.dataSubmitItems,
+    contract: deliveryMonitoring.dataContractById,
+    authStatus: auth.user.data.status,
+    loadings: {
+      fetch: getLoading(state, keys.option),
+      option: getLoading(state, keys.option),
+    },
+  };
+};
 
 const mapDispatch = (dispatch) => ({
   saveSubmitItems: (payload) => {
@@ -484,6 +472,7 @@ const mapDispatch = (dispatch) => ({
       payload: payload,
     });
   },
+  fetch_api_sg: (payload) => dispatch(fetch_api_sg(payload)),
 });
 
 export default connect(mapState, mapDispatch)(DetailPage);

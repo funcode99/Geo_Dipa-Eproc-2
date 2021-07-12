@@ -536,5 +536,9 @@
   "TITLE.QUANTITY_APPROVED": "Kuantitas Diterima",
   "TITLE.DELIVERY_ORDER_STATUS": "Status Pengiriman",
   "MESSAGE.DATA_IS_CORRECT": "Apakah anda yakin datanya sudah sesuai?",
-  "TITLE.MAIL_CODE": "Kode Surat"
+  "TITLE.APPROVAL_DELIVERY_ORDER_ITEMS": "Persetujuan Pengiriman Barang Pesanan",
+  "TITLE.DELETE_DELIVERY_ORDER": "Hapus Pengiriman Pesanan",
+  "TITLE.UPDATE_DELIVERY_ORDER": "Perbarui Pengiriman Pesanan",
+  "TITLE.ADD_DELIVERY_ORDER": "Tambah Pengiriman Pesanan",
+  "TITLE.DETAIL_DELIVERY_ORDER": "Detail Pengiriman Pesanan"
 }

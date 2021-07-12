@@ -1,13 +1,19 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
+import {
+  withStyles,
+  Button,
+  Dialog,
+  DialogTitle as MuiDialogTitle,
+  DialogContent as MuiDialogContent,
+  DialogActions as MuiDialogActions,
+  IconButton,
+  Typography,
+  CircularProgress,
+} from "@material-ui/core";
+// import MuiDialogTitle from "@material-ui/core/DialogTitle";
+// import MuiDialogContent from "@material-ui/core/DialogContent";
+// import MuiDialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
 import { FormattedMessage } from "react-intl";
 
 const styles = (theme) => ({
@@ -66,6 +72,8 @@ class DialogGlobal extends React.Component {
   };
 
   close = () => {
+    const { onClose } = this.props;
+    if (typeof onClose === "function") onClose();
     this.setState({ open: false });
   };
 
@@ -81,7 +89,18 @@ class DialogGlobal extends React.Component {
   };
 
   render() {
-    const { children, title, textYes, textNo } = this.props;
+    const {
+      children,
+      title,
+      textYes,
+      textNo,
+      btnAction,
+      btnYesProps,
+      btnNoProps,
+      loading,
+      disableBackdropClick = true,
+      isSubmit = true,
+    } = this.props;
     return (
       <div>
         <Dialog
@@ -90,21 +109,31 @@ class DialogGlobal extends React.Component {
           open={this.state.open}
           maxWidth={"sm"}
           fullWidth={true}
+          disableBackdropClick={disableBackdropClick}
         >
-          <DialogTitle id="customized-dialog-title">{title}</DialogTitle>
-          <DialogContent dividers>{children}</DialogContent>
+          <DialogTitle id="customized-dialog-title" onClose={this.close}>
+            {title}
+          </DialogTitle>
+          <DialogContent dividers>{this.state.open && children}</DialogContent>
+
           <DialogActions>
-            <Button
-              variant="contained"
-              className={"bg-primary text-light"}
-              onClick={this.handleYes}
-            >
-              {textYes ? textYes : <FormattedMessage id="TITLE.SAVE" />}
-            </Button>
+            {btnAction}
+            {loading && <CircularProgress size="0.875rem" color="inherit" />}
+            {isSubmit && (
+              <Button
+                variant="contained"
+                className={"bg-primary text-light"}
+                onClick={this.handleYes}
+                {...btnYesProps}
+              >
+                {textYes ? textYes : <FormattedMessage id="TITLE.SAVE" />}
+              </Button>
+            )}
             <Button
               variant="contained"
               className={"bg-danger text-light"}
               onClick={this.close}
+              {...btnNoProps}
             >
               {textNo ? textNo : <FormattedMessage id="TITLE.CANCEL" />}
             </Button>
