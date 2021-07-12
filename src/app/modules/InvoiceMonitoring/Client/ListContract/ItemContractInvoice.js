@@ -275,10 +275,10 @@ function ItemContractInvoice(props) {
     sendNotifSoftCopySupportDeliverables(termin)
       .then((result) => {
         setLoading(false);
-        if (result.data.data.message == "OK") {
-          setToast("Berhasil", 5000);
+        if (result.data.message == "OK") {
+          setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 5000);
         } else {
-          setToast("Data Kosong", 5000);
+          setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_FAILED" }), 5000);
         }
       })
       .catch((error) => {

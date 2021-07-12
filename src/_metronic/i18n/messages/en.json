@@ -172,6 +172,8 @@
   "REQ.DELETE_ACCOUNT_SUCCESS": "Account successfully deleted.",
   "REQ.ASSIGN_ACCOUNT_SUCCESS": "PIC successfully assigned. Email notification has been sent.",
   "REQ.REQUEST_FAILED": "Request failed. System error, Please try again later.",
+  "REQ.SOFTCOPY_SUCCESS": "Email notification has been sent.",
+  "REQ.SOFTCOPY_FAILED": "You have not Reject or Approve any document.",
   "TITLE.TABLE.NO_DATA_AVAILABLE": "No data available",
   "TITLE.TABLE.WAITING_DATA": "Please wait, load data ...",
   "TITLE.ERROR_REQUEST": "An error occurred while trying to access server.",
