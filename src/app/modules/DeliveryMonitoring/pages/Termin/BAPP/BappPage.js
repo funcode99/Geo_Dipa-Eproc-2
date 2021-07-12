@@ -417,7 +417,7 @@ const BappPage = ({
         </CardBody>
       </Card>
 
-      <Card className="mt-5">
+      {/* <Card className="mt-5">
         <CardBody>
           <StepperDoc
             renderBtns={(idx) => {
@@ -470,7 +470,7 @@ const BappPage = ({
             }}
           />
         </CardBody>
-      </Card>
+      </Card> */}
 
       <Card className="mt-5">
         <CardBody>

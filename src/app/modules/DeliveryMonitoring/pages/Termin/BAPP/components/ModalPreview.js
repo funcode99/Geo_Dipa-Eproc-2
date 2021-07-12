@@ -46,7 +46,7 @@ const ModalPreview = ({
       }}
       btnNoProps={{
         // loading: loading,
-        className: "bg-secondary text-white",
+        className: "bg-secondary text-secondary",
       }}
       btnAction={
         <Button
@@ -58,7 +58,7 @@ const ModalPreview = ({
           }}
           style={{ marginRight: "auto" }}
         >
-          LIHAT DOKUMEN SELENGKAPNYA
+          LIHAT DOKUMEN SELENGKAPNYA (DUMMY)
         </Button>
       }
     >
