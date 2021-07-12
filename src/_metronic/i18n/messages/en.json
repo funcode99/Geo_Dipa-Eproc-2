@@ -545,5 +545,6 @@
   "TITLE.ADD_DELIVERY_ORDER": "Add Delivery Order",
   "TITLE.DETAIL_DELIVERY_ORDER": "Detail Delivery Order",
   "TITLE.MAIL_CODE": "Mail Code",
-  "TITLE.SUBMIT_TERM_ITEMS": "Submit Term Items"
+  "TITLE.SUBMIT_TERM_ITEMS": "Submit Term Items",
+  "TITLE.TAX": "Tax"
 }

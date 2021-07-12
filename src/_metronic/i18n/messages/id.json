@@ -544,5 +544,6 @@
   "TITLE.ADD_DELIVERY_ORDER": "Tambah Pengiriman Pesanan",
   "TITLE.DETAIL_DELIVERY_ORDER": "Detail Pengiriman Pesanan",
   "TITLE.MAIL_CODE": "Kode Surat",
-  "TITLE.SUBMIT_TERM_ITEMS": "Kirim Item Termin"
+  "TITLE.SUBMIT_TERM_ITEMS": "Kirim Item Termin",
+  "TITLE.TAX": "Pajak"
 }
