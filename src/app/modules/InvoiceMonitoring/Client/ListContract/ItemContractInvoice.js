@@ -47,6 +47,7 @@ import {
   sendApprovedDocSoftCopyLast,
   updateSoftCopyByUser,
   sendAddRejectedDocSoftCopy,
+sendNotifSoftCopySupportDeliverables
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useHistory, useParams } from "react-router-dom";
@@ -268,6 +269,22 @@ function ItemContractInvoice(props) {
       setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
     console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
+  };
+
+  const handleSendNotif = (type, data) => {
+    sendNotifSoftCopySupportDeliverables(termin)
+      .then((result) => {
+        setLoading(false);
+        if (result.data.data.message == "OK") {
+          setToast("Berhasil", 5000);
+        } else {
+          setToast("Data Kosong", 5000);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   };
 
   const callApi = () => {
@@ -1350,7 +1367,7 @@ function ItemContractInvoice(props) {
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
-            <button type="button" className="btn btn-sm btn-primary">
+            <button type="button" onClick={handleSendNotif} className="btn btn-sm btn-primary">
               Send Notif
             </button>
           </CardHeaderToolbar>
