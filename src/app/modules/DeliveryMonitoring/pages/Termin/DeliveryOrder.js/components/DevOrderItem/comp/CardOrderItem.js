@@ -1,18 +1,11 @@
 import { Divider } from "@material-ui/core";
 import React from "react";
-// import { Card } from "react-bootstrap";
 import ExpansionBox from "../../../../../../../../components/boxes/ExpansionBox";
 import FormBuilder from "../../../../../../../../components/builder/FormBuilder";
-import {
-  formData2,
-  // formData3
-} from "../formDataOItem";
+import { formData2 } from "../formDataOItem";
 import BtnApproveReject from "./BtnApproveReject";
 import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../../../../../libs/currency";
-// import { connect } from "react-redux";
-// import { actionTypes } from "../../../../../../_redux/deliveryMonitoringAction";
-// import { DeliveryOrderContext } from "../../../DeliveryOrder";
 
 // const componentStatus = [
 //   { label: "REJECTED", class: "danger" },
@@ -20,15 +13,26 @@ import { rupiah } from "../../../../../../../../libs/currency";
 //   { label: "WAITING APPROVE", class: "dark" },
 // ];
 
+const handleReadOnly = (arr, state) => {
+  let tempArr = [...arr[0]];
+  tempArr.map((item) => {
+    if (item.name === "qty_approved") item.readOnly = state;
+  });
+
+  return [tempArr];
+};
+
 const CardOrderItem = ({ data, options, setItem }) => {
   const formRef = React.useRef();
   const [componentIndex, setComponentIndex] = React.useState(2);
   const compUsed = options[componentIndex];
-
-  console.log(`data`, data);
+  const [formDataUsed, setFormDataUsed] = React.useState(formData2);
 
   const handleChange = (state) => {
     setComponentIndex(state ? 1 : 0);
+
+    const updateFormData = handleReadOnly(formDataUsed, !state);
+    setFormDataUsed(updateFormData);
 
     formRef.current.setFieldValue(
       "approve_status_id",
@@ -68,6 +72,9 @@ const CardOrderItem = ({ data, options, setItem }) => {
     options.forEach((item, index) => {
       if (item.id === data.approve_status_id) {
         setComponentIndex(index);
+        const state = index > 0 ? true : false;
+        const updateFormData = handleReadOnly(formDataUsed, !state);
+        setFormDataUsed(updateFormData);
       }
     });
   }, [data]);
@@ -95,7 +102,7 @@ const CardOrderItem = ({ data, options, setItem }) => {
       <FormBuilder
         ref={formRef}
         withSubmit={false}
-        formData={formData2}
+        formData={formDataUsed}
         initial={initValues}
         fieldProps={{
           onBlur: () => {

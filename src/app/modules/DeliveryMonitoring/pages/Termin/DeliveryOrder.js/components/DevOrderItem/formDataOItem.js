@@ -24,6 +24,7 @@ export const formData2 = [
       type: "number",
       min: 0,
       step: 0.1,
+      readOnly: false,
     },
     {
       name: "reject_text",
