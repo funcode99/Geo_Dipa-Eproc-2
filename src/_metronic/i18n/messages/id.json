@@ -313,8 +313,8 @@
   "CONTRACT_DETAIL.TABLE_ACTION.EDIT": "Edit Termin",
   "CONTRACT_DETAIL.TABLE_ACTION.DELETE": "Hapus Termin",
   "CONTRACT_DETAIL.TABLE_ACTION.DETAIL": "Rincian Termin",
-  "CONTRACT_DETAIL.MODAL_TITLE.UPDATE": "Perbarui",
-  "CONTRACT_DETAIL.MODAL_TITLE.CREATE": "Tambah",
+  "CONTRACT_DETAIL.MODAL_TITLE.UPDATE": "Perbarui Termin",
+  "CONTRACT_DETAIL.MODAL_TITLE.CREATE": "Tambah Termin",
   "CONTRACT_DETAIL.MODAL_TITLE.TERM": "Termin",
   "CONTRACT_DETAIL.MODAL_DELETE.TITLE": "Yakin ingin menghapus termin ini?",
   "CONTRACT_DETAIL.MODAL_DELETE.SUBTITLE": "Setelah dihapus, termin tidak akan lagi ditampilkan",
@@ -544,5 +544,5 @@
   "TITLE.ADD_DELIVERY_ORDER": "Tambah Pengiriman Pesanan",
   "TITLE.DETAIL_DELIVERY_ORDER": "Detail Pengiriman Pesanan",
   "TITLE.MAIL_CODE": "Kode Surat",
-  "TITLE.TAX": "Pajak"
+  "TITLE.SUBMIT_TERM_ITEMS": "Kirim Item Termin"
 }

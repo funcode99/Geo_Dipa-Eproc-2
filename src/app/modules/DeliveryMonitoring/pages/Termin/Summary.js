@@ -1,7 +1,6 @@
 import {
   TableCell,
   TableRow,
-  CircularProgress,
   Button,
   TableBody,
   Checkbox,
@@ -21,13 +20,13 @@ import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
-import { StyledTableHead } from "../../../../components/tables/style";
-import { StyledHead, StyledTable, StyledTableRow } from "./style";
 import { rupiah } from "../../../../libs/currency";
 import Navs from "../../../../components/navs";
-import { StyledModal } from "../../../../components/modals";
 import { FormattedMessage } from "react-intl";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
+import DialogGlobal from "../../../../components/modals/DialogGlobal";
+import { connect } from "react-redux";
+import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 
 const tHeadSubmitItems = [
   "No",
@@ -51,7 +50,7 @@ const navLists = [
   { id: "link-barang", label: <FormattedMessage id="SUMMARY.NAV.ITEM" /> },
 ];
 
-export default function Summary({ taskId = "" }) {
+function Summary({ taskId = "", loadings, fetch_api_sg }) {
   const [loading, setLoading] = React.useState(false);
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
@@ -65,6 +64,7 @@ export default function Summary({ taskId = "" }) {
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
+  const submitRef = React.useRef();
 
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
@@ -480,33 +480,53 @@ export default function Summary({ taskId = "" }) {
   };
 
   const handleSubmit = async () => {
-    try {
-      enableLoading();
+    console.log({
+      task_items: itemBarang,
+      task_services: itemJasa,
+    });
 
-      const requestData = {
+    fetch_api_sg({
+      keys: keys.submit,
+      type: "post",
+      url: `/delivery/task/${taskId}`,
+      params: {
         task_items: itemBarang,
         task_services: itemJasa,
-      };
-
-      const {
-        data: { status },
-      } = await deliveryMonitoring.submitItems(requestData, taskId);
-
-      if (status) {
-        setToast(<FormattedMessage id="MESSAGE.SUCCESS_SUBMIT_ITEM" />, 5000);
+      },
+      alertAppear: "both",
+      onSuccess: (res) => {
         getAllItems(taskId);
-        handleVisibleModal("submit");
-      }
-    } catch (error) {
-      if (
-        error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
-      ) {
-        setToast(error.response?.data.message, 5000);
-      }
-    } finally {
-      disableLoading();
-    }
+        submitRef.current.close();
+      },
+    });
+
+    // try {
+    //   enableLoading();
+
+    //   const requestData = {
+    //     task_items: itemBarang,
+    //     task_services: itemJasa,
+    //   };
+
+    //   const {
+    //     data: { status },
+    //   } = await deliveryMonitoring.submitItems(requestData, taskId);
+
+    //   if (status) {
+    //     setToast(<FormattedMessage id="MESSAGE.SUCCESS_SUBMIT_ITEM" />, 5000);
+    //     getAllItems(taskId);
+    //     handleVisibleModal("submit");
+    //   }
+    // } catch (error) {
+    //   if (
+    //     error.response?.status !== 400 &&
+    //     error.response?.data.message !== "TokenExpiredError"
+    //   ) {
+    //     setToast(error.response?.data.message, 5000);
+    //   }
+    // } finally {
+    //   disableLoading();
+    // }
   };
 
   return (
@@ -514,23 +534,31 @@ export default function Summary({ taskId = "" }) {
       <Toast />
 
       {/* Modal ketika klik submit */}
-      <StyledModal
-        visible={showModal.submit}
-        onClose={() => handleVisibleModal("submit")}
-        minWidth="40vw"
-        maxWidth="70vw"
+      <DialogGlobal
+        ref={submitRef}
+        // visible={showModal.submit}
+        // onClose={() => handleVisibleModal("submit")}
+        onYes={() => handleSubmit()}
+        textYes={<FormattedMessage id="TITLE.YES" />}
+        title={<FormattedMessage id="TITLE.SUBMIT_TERM_ITEMS" />}
+        loading={loadings.submit}
+        btnNoProps={{
+          className: "bg-secondary text-black",
+        }}
+        // minWidth="40vw"
+        // maxWidth="70vw"
       >
         {itemJasa.length > 0 && (
           <div className="mb-5">
             <h4>
               <FormattedMessage id="TITLE.SERVICE" />
             </h4>
-            <Table style={{ width: 450 }} size="small">
-              <colgroup>
+            <Table size="small">
+              {/* <colgroup>
                 <col width="50px" />
                 <col width="200px" />
                 <col width="50px" />
-              </colgroup>
+              </colgroup> */}
               <TableHead>
                 <TableRow>
                   {tHeadSubmitItems.map((item, index) => (
@@ -558,12 +586,12 @@ export default function Summary({ taskId = "" }) {
             <h4>
               <FormattedMessage id="TITLE.ITEM" />
             </h4>
-            <Table style={{ width: 450 }} size="small">
-              <colgroup>
+            <Table size="small">
+              {/* <colgroup>
                 <col width="50px" />
                 <col width="200px" />
                 <col width="50px" />
-              </colgroup>
+              </colgroup> */}
               <TableHead>
                 <TableRow>
                   {tHeadSubmitItems.map((item, index) => (
@@ -591,7 +619,7 @@ export default function Summary({ taskId = "" }) {
             <h6 className="mb-5">
               <FormattedMessage id="MESSAGE.SUBMIT_ITEM" />
             </h6>
-            <div className="d-flex justify-content-end w-100">
+            {/* <div className="d-flex justify-content-end w-100">
               <Button
                 className="btn btn-secondary border-success mr-3"
                 onClick={() => handleVisibleModal("submit")}
@@ -605,7 +633,7 @@ export default function Summary({ taskId = "" }) {
                 <FormattedMessage id="TITLE.YES" />
                 {loading ? <CircularProgress /> : null}
               </Button>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div className="d-flex justify-content-center align-items-center flex-column">
@@ -615,7 +643,7 @@ export default function Summary({ taskId = "" }) {
             <p className="mb-5">
               <FormattedMessage id="MESSAGE.NO_ITEMS" />
             </p>
-            <div className="d-flex justify-content-end">
+            {/* <div className="d-flex justify-content-end">
               <Button
                 className="btn btn-secondary border-success mr-3"
                 onClick={() => handleVisibleModal("submit")}
@@ -629,10 +657,11 @@ export default function Summary({ taskId = "" }) {
                 <FormattedMessage id="TITLE.YES" />
                 {loading ? <CircularProgress /> : null}
               </Button>
-            </div>
+            </div> */}
           </div>
         )}
-      </StyledModal>
+      </DialogGlobal>
+
       <Card>
         <CardBody>
           <Navs
@@ -1022,7 +1051,8 @@ export default function Summary({ taskId = "" }) {
               variant="contained"
               color="secondary"
               size="medium"
-              onClick={() => handleVisibleModal("submit")}
+              // onClick={() => handleVisibleModal("submit")}
+              onClick={() => submitRef.current.open()}
             >
               <span className="mr-1">
                 <FormattedMessage id="BUTTON.SUBMIT" />
@@ -1035,3 +1065,20 @@ export default function Summary({ taskId = "" }) {
     </div>
   );
 }
+
+const keys = {
+  submit: "submit-term-item",
+};
+
+const mapState = (state) => ({
+  loadings: {
+    submit: getLoading(state, keys.submit),
+  },
+});
+
+const mapDispatch = {
+  fetch_api_sg,
+};
+
+export default connect(mapState, mapDispatch)(Summary);
+// export default Summary;

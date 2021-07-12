@@ -1,5 +1,4 @@
 import React from "react";
-import { StyledModal } from "../../../../../../components/modals";
 import { FormattedMessage } from "react-intl";
 import {
   Table,
@@ -11,12 +10,11 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Button,
-  CircularProgress,
   makeStyles,
 } from "@material-ui/core";
 import { rupiah } from "../../../../../../libs/currency";
 import { connect } from "react-redux";
+import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -26,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ModalTerm = ({
+  innerRef,
   visible,
   onClose,
   update,
@@ -35,25 +34,34 @@ const ModalTerm = ({
   options,
 }) => {
   const classes = useStyles();
-
   return (
-    <StyledModal
-      visible={visible}
-      onClose={onClose}
-      hideCloseIcon={false}
-      disableBackdrop
-      minWidth="40vw"
-      maxwidth="70vw"
-    >
-      <h3 className={update.update ? "mb-7" : "mb-5"}>
-        {update.update ? (
+    <DialogGlobal
+      // visible={visible}
+      ref={innerRef}
+      title={
+        update.update ? (
           <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.UPDATE" />
         ) : (
           <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.CREATE" />
-        )}{" "}
-        <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.TERM" />
-      </h3>
-
+        )
+      }
+      onClose={onClose}
+      onYes={formik.handleSubmit}
+      onNo={onClose}
+      textYes={
+        update.update ? (
+          <FormattedMessage id="BUTTON.UPDATE" />
+        ) : (
+          <FormattedMessage id="BUTTON.CREATE" />
+        )
+      }
+      btnNoProps={{
+        className: "bg-secondary text-black",
+      }}
+      loading={loading}
+      minWidth="40vw"
+      maxwidth="70vw"
+    >
       {!update.update &&
         dataSubmitItems?.task_items?.length === 0 &&
         dataSubmitItems?.task_services?.length === 0 && (
@@ -242,24 +250,8 @@ const ModalTerm = ({
             </p>
           </React.Fragment>
         ) : null}
-
-        <div className="d-flex">
-          <Button
-            disabled={loading}
-            className="btn btn-primary ml-auto"
-            type="submit"
-            variant="contained"
-          >
-            {loading ? <CircularProgress /> : null}&nbsp;
-            {update.update ? (
-              <FormattedMessage id="BUTTON.UPDATE" />
-            ) : (
-              <FormattedMessage id="BUTTON.CREATE" />
-            )}
-          </Button>
-        </div>
       </form>
-    </StyledModal>
+    </DialogGlobal>
   );
 };
 
