@@ -202,6 +202,7 @@ const PurchGroup = (props) => {
     var data = {
       email: dialogState.data.email,
       updated_by_id: user_id,
+      mail_code: dialogState.data.mail_code,
     };
     updatePurchGroup(dialogState.data.id, data)
       .then((result) => {
@@ -305,6 +306,25 @@ const PurchGroup = (props) => {
                 onChange={(e) => {
                   let dataEdit_ = Object.assign({}, dialogState);
                   dataEdit_.data.email = e.target.value;
+                  setDialogState({ ...dataEdit_ });
+                }}
+              />
+            </div>
+          </div>
+          <div className="form-group row">
+            <label htmlFor="static_5" className="col-sm-5 col-form-label">
+              <FormattedMessage id="TITLE.MAIL_CODE" />
+            </label>
+            <div className="col-sm-7">
+              <input
+                type="email"
+                className="form-control"
+                id="static_5"
+                disabled={onSubmit}
+                value={dialogState.data?.mail_code || ""}
+                onChange={(e) => {
+                  let dataEdit_ = Object.assign({}, dialogState);
+                  dataEdit_.data.mail_code = e.target.value;
                   setDialogState({ ...dataEdit_ });
                 }}
               />
@@ -485,7 +505,7 @@ const PurchGroup = (props) => {
                         <FormattedMessage id="TITLE.NO" />
                       </th>
                       <th
-                        className="bg-primary text-white align-middle td-35 pointer"
+                        className="bg-primary text-white align-middle td-25 pointer"
                         id="name"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -518,13 +538,16 @@ const PurchGroup = (props) => {
 
                         <FormattedMessage id="TITLE.NAME" />
                       </th>
-                      <th className="bg-primary text-white align-middle td-10">
+                      <th className="bg-primary text-white align-middle td-5">
                         <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" />
                       </th>
-                      <th className="bg-primary text-white align-middle td-15">
+                      <th className="bg-primary text-white align-middle td-17">
+                        <FormattedMessage id="TITLE.MAIL_CODE" />
+                      </th>
+                      <th className="bg-primary text-white align-middle td-14">
                         <FormattedMessage id="TITLE.FROM_DATE" />
                       </th>
-                      <th className="bg-primary text-white align-middle td-15">
+                      <th className="bg-primary text-white align-middle td-14">
                         <FormattedMessage id="TITLE.THRU_DATE" />
                       </th>
                       <th className="bg-primary text-white align-middle td-20">
@@ -542,6 +565,7 @@ const PurchGroup = (props) => {
                           <td>{index + 1 + paginations.numberColum}</td>
                           <td>{item.full_name}</td>
                           <td>{item.code}</td>
+                          <td>{item.mail_code}</td>
                           <td>
                             {item.from_date
                               ? window

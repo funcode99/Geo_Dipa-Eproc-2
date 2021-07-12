@@ -541,5 +541,6 @@
   "TITLE.DELETE_DELIVERY_ORDER": "Delete Delivery Order",
   "TITLE.UPDATE_DELIVERY_ORDER": "Update Delivery Order",
   "TITLE.ADD_DELIVERY_ORDER": "Add Delivery Order",
-  "TITLE.DETAIL_DELIVERY_ORDER": "Detail Delivery Order"
+  "TITLE.DETAIL_DELIVERY_ORDER": "Detail Delivery Order",
+  "TITLE.MAIL_CODE": "Mail Code"
 }
