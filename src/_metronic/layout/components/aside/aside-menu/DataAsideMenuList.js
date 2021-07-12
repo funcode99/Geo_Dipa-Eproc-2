@@ -140,6 +140,11 @@ export const DataAsideMenuListClient = [
         title: "TITLE.PURCHASE_GROUPS",
         subMenu: null,
       },
+      {
+        rootPath: "/client/master/tax",
+        title: "TITLE.TAX",
+        subMenu: null,
+      },
     ],
   },
 ];

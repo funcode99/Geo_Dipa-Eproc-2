@@ -10,6 +10,8 @@ import AsyncData from "./pages/AsyncData";
 import Email from "./pages/Email";
 import ItemEmail from "./pages/Email/ItemEmail";
 import PurchGroup from "./pages/PurchGroup";
+import Tax from "./pages/Tax";
+import ItemTax from "./pages/Tax/ItemTax";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -32,6 +34,8 @@ function RootMasterData() {
       <Route path="/client/master/email/:id" component={ItemEmail} />
       <Route path="/client/master/email" component={Email} />
       <Route path="/client/master/purch_group" component={PurchGroup} />
+      <Route path="/client/master/tax/:id" component={ItemTax} />
+      <Route path="/client/master/tax" component={Tax} />
     </Switch>
   );
 }
