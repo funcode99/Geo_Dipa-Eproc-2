@@ -23,7 +23,7 @@ import {
   getFileInvoice,
   getAllApprovedInvoice,
   getBillingDocumentId,
-  softcopy_save
+  softcopy_save,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -53,7 +53,7 @@ function ContractInvoicePage(props) {
   const [historyInvoiceData, setHistoryInvoiceData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
-  const [invoiceBillingId, setInvoiceBillingId] = useState('');
+  const [invoiceBillingId, setInvoiceBillingId] = useState("");
 
   const [Toast, setToast] = useToast();
 
@@ -63,7 +63,7 @@ function ContractInvoicePage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const invoiceName = "INVOICE"
+  const invoiceName = "INVOICE";
   const { intl, classes } = props;
 
   const initialValues = {};
@@ -130,18 +130,12 @@ function ContractInvoicePage(props) {
   const getBillingDocumentIdData = useCallback(() => {
     getBillingDocumentId(invoiceName)
       .then((response) => {
-        setInvoiceBillingId(response.data.data.id)
+        setInvoiceBillingId(response.data.data.id);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  }, [
-    invoiceName,
-    setInvoiceBillingId,
-    formik,
-    intl,
-    setToast,
-  ]);
+  }, [invoiceName, setInvoiceBillingId, formik, intl, setToast]);
 
   const getInvoiceData = useCallback(() => {
     getInvoice(contract_id, termin)
@@ -664,6 +658,21 @@ function ContractInvoicePage(props) {
                     id="priceTaxInvoice"
                     defaultValue={contractData["termin_value_ppn_new"]}
                     disabled
+                  />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label
+                  htmlFor="priceTaxInvoice"
+                  className="col-sm-5 col-form-label"
+                >
+                  <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />
+                </label>
+                <div className="col-sm-7">
+                  <input
+                    type="number"
+                    className="form-control"
+                    defaultValue={""}
                   />
                 </div>
               </div>
