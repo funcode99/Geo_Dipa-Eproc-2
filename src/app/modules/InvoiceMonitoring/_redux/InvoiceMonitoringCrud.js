@@ -281,3 +281,6 @@ export async function finance_director_approve_bkb(
 export async function updateSoftCopyByUser(id, file) {
   return axios.post(`/invoice/softcopy_update/${id}`, file);
 }
+export async function sendNotifSoftCopySupportDeliverables(id) {
+  return axios.post(`/invoice/softcopy_notif/${id}`);
+}
