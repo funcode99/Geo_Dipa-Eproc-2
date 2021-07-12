@@ -31,10 +31,30 @@ import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
+import Select from "react-select";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const groupStyles = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+};
+
+const groupBadgeStyles = {
+  backgroundColor: "#EBECF0",
+  borderRadius: "2em",
+  color: "#172B4D",
+  display: "inline-block",
+  fontSize: 12,
+  fontWeight: "normal",
+  lineHeight: "1",
+  minWidth: 1,
+  padding: "0.16666666666667em 0.5em",
+  textAlign: "center",
+};
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
@@ -184,6 +204,13 @@ function ContractTaxPage(props) {
 
   useEffect(getContractData, []);
   useEffect(getTaxData, []);
+
+  const formatGroupLabel = (data) => (
+    <div style={groupStyles}>
+      <span>{data.label}</span>
+      <span style={groupBadgeStyles}>{data.options.length}</span>
+    </div>
+  );
 
   return (
     <React.Fragment>
@@ -628,6 +655,32 @@ function ContractTaxPage(props) {
                     defaultValue={contractData["termin_value_ppn_new"]}
                     disabled
                   />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="priceTax" className="col-sm-5 col-form-label">
+                  <FormattedMessage id="TITLE.TAX" />
+                </label>
+                <div className="col-sm-7">
+                  <Select
+                    isMulti
+                    // value={optionSelected}
+                    // onChange={(e) => handleSelectChange(e)}
+                    // options={content?.data?.map((el) => ({
+                    //   label: el.name,
+                    //   options: el?.documents?.reverse().map((el2) => ({
+                    //     value: JSON.stringify(el2),
+                    //     // value: el2?.id,
+                    //     label: `${el2?.name} ${
+                    //       el2?.periode?.hasOwnProperty("name")
+                    //         ? `(${el2?.periode?.name})`
+                    //         : ""
+                    //     }`,
+                    //   })),
+                    // }))}
+                    formatGroupLabel={formatGroupLabel}
+                  />
+                  {/* app/modules/DeliveryMonitoring/pages/Termin/Documents/component/ModalAddDeliverables.js */}
                 </div>
               </div>
             </div>
