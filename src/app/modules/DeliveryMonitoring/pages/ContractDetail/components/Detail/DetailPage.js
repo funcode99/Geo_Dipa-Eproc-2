@@ -1,5 +1,5 @@
 import React from "react";
-import { FormDetail, Item } from "./index";
+import { FormDetail, Item, ModalDelete, ModalTerm } from "./index";
 import { Container } from "@material-ui/core";
 import ButtonAction from "../../../../../../components/buttonAction/ButtonAction";
 import { formatDate } from "../../../../../../libs/date";
@@ -7,12 +7,9 @@ import { format } from "date-fns";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useToast from "../../../../../../components/toast";
-import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 import { connect } from "react-redux";
-import ModalTerm from "./ModalTerm";
 import { FormattedMessage } from "react-intl";
-import ModalConfirmation from "../../../../../../components/modals/ModalConfirmation";
 import { rupiah } from "../../../../../../libs/currency";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
@@ -86,11 +83,6 @@ const initialValues = {
   status: 876,
 };
 
-const keys = {
-  option: "task-status-option",
-  fetch: "get-data-contract-by-id",
-};
-
 const DetailPage = ({
   contractId,
   contract,
@@ -105,11 +97,12 @@ const DetailPage = ({
   const [confirm, setConfirm] = React.useState({ show: false, id: "" });
   const [modals, setModals] = React.useState(false);
   const [update, setUpdate] = React.useState({ id: "", update: false });
-  const [loading, setLoading] = React.useState(false);
   const [Toast, setToast] = useToast();
   const [options, setOptions] = React.useState();
   const [showForm, setShowForm] = React.useState(false);
   const { tasks } = contract;
+  const submitRef = React.useRef();
+  const deleteRef = React.useRef();
 
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
@@ -135,27 +128,17 @@ const DetailPage = ({
     saveSubmitItems(initialSubmitItems);
   }, [saveSubmitItems]);
 
-  const handleError = React.useCallback(
-    (err) => {
-      if (
-        err.response?.code !== 400 &&
-        err.response?.data.message !== "TokenExpiredError"
-      ) {
-        console.log("handle error");
-        setToast(err.response?.data.message, 5000);
-      }
-    },
-    [setToast]
-  );
-
   const formik = useFormik({
     initialValues,
     validationSchema: FormSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
-      try {
-        enableLoading();
-
-        const requestData = update.update
+      fetch_api_sg({
+        key: keys.submit,
+        type: update.update ? "put" : "post",
+        url: update.update
+          ? `/delivery/task/${update.id}`
+          : `/delivery/task-item`,
+        params: update.update
           ? {
               name: values.name,
               start_date: values.start_date,
@@ -169,23 +152,23 @@ const DetailPage = ({
               due_date: values.due_date,
               task_items: dataSubmitItems.task_items,
               task_services: dataSubmitItems.task_services,
-            };
-
-        const res = update.update
-          ? await deliveryMonitoring.submitTask(requestData, update)
-          : await deliveryMonitoring.submitTask(requestData);
-
-        if (res.data.status === true) {
-          handleSuccess(res);
-        }
-      } catch (error) {
-        setSubmitting(false);
-        setStatus("Failed Submit Data");
-        handleError(error);
-      } finally {
-        disableLoading();
-        setModals(false);
-      }
+            },
+        alertAppear: "both",
+        onSuccess: (res) => {
+          // console.log(`res`, res);
+          getContractById(contractId);
+          setTimeout(() => {
+            setInitialSubmitItems();
+          }, 500);
+          setModals(false);
+          submitRef.current.close();
+        },
+        onFail: (err) => {
+          // console.log(`err`, err);
+          setSubmitting(false);
+          setStatus("Failed Submit Data");
+        },
+      });
     },
   });
 
@@ -230,6 +213,7 @@ const DetailPage = ({
       }
 
       setModals(true);
+      submitRef.current.open();
     },
     [dataSubmitItems, formik, initialValues, saveSubmitItems]
   );
@@ -239,10 +223,12 @@ const DetailPage = ({
       switch (type) {
         case "update":
           // console.log("masuk sini", data);
+
           handleModal("update", data);
           break;
         case "delete":
           setConfirm({ show: true, id: data.id });
+          deleteRef.current.open();
           break;
         default:
           break;
@@ -323,7 +309,7 @@ const DetailPage = ({
         type: "get",
         url: `/delivery/contract/${contractId}`,
         onSuccess: (res) => {
-          console.log(`res`, res.data);
+          // console.log(`res`, res.data);
           addCheckedField(res?.data?.services, "jasa");
           addCheckedField(res?.data?.items, "barang");
           saveContractById(res?.data);
@@ -338,47 +324,23 @@ const DetailPage = ({
     [generateTableContent, saveContractById, setToast, fetch_api_sg]
   );
 
-  const handleSuccess = React.useCallback(
-    (res) => {
-      if (res?.data?.status === true) {
-        getContractById(contractId, {
-          visible: true,
-          message: res?.data?.message,
-        });
-        setInitialSubmitItems();
-      }
-    },
-    [getContractById, setInitialSubmitItems, contractId]
-  );
-
-  const enableLoading = () => {
-    setLoading(true);
-  };
-
-  const disableLoading = () => {
-    setLoading(false);
-  };
-
   const handleClose = () => {
     setModals(false);
   };
 
   const handleDelete = async () => {
-    try {
-      enableLoading();
-      await deliveryMonitoring.deleteTask(confirm.id);
-      setConfirm({ ...confirm, show: false });
-      getContractById(contractId, {
-        visible: true,
-        message: "Successfully delete data.",
-      });
-    } catch (error) {
-      handleError(error);
-      // console.error(error);
-    } finally {
-      disableLoading();
-      setModals(false);
-    }
+    fetch_api_sg({
+      key: keys.delete,
+      type: "delete",
+      url: `/delivery/task/${confirm.id}`,
+      alertAppear: "both",
+      onSuccess: (res) => {
+        //console.log(`res`, res);
+        getContractById(contractId);
+        setConfirm({ ...confirm, show: false, id: "" });
+        deleteRef.current.close();
+      },
+    });
   };
 
   const getOptions = async () => {
@@ -409,25 +371,21 @@ const DetailPage = ({
       <Toast />
 
       <ModalTerm
+        innerRef={submitRef}
         visible={modals}
         onClose={handleClose}
         update={update}
-        loading={loading}
+        loading={loadings.submit}
         formik={formik}
         options={options}
       />
 
-      <ModalConfirmation
+      <ModalDelete
+        innerRef={deleteRef}
         visible={confirm.show}
-        onClose={() => setConfirm({ ...confirm, show: false })}
-        title={<FormattedMessage id="CONTRACT_DETAIL.MODAL_DELETE.TITLE" />}
-        subTitle={
-          <FormattedMessage id="CONTRACT_DETAIL.MODAL_DELETE.SUBTITLE" />
-        }
-        textYes={<FormattedMessage id="BUTTON.DELETE" />}
-        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+        onClose={() => setConfirm({ ...confirm, show: false, id: "" })}
         onSubmit={() => handleDelete()}
-        submitColor="danger"
+        loading={loadings.delete}
       />
       {showForm && <FormDetail contractId={contractId} />}
       <Item handleClick={() => handleModal("create")} />
@@ -446,6 +404,13 @@ const DetailPage = ({
   );
 };
 
+const keys = {
+  option: "task-status-option",
+  fetch: "get-data-contract-by-id",
+  submit: "post-term",
+  delete: "delete-term",
+};
+
 const mapState = (state) => {
   const { deliveryMonitoring, auth } = state;
   return {
@@ -453,8 +418,10 @@ const mapState = (state) => {
     contract: deliveryMonitoring.dataContractById,
     authStatus: auth.user.data.status,
     loadings: {
-      fetch: getLoading(state, keys.option),
+      fetch: getLoading(state, keys.fetch),
       option: getLoading(state, keys.option),
+      submit: getLoading(state, keys.submit),
+      delete: getLoading(state, keys.delete),
     },
   };
 };
