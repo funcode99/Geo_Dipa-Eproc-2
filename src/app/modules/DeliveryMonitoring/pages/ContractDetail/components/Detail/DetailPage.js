@@ -6,7 +6,6 @@ import { formatDate } from "../../../../../../libs/date";
 import { format } from "date-fns";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import useToast from "../../../../../../components/toast";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
@@ -97,7 +96,6 @@ const DetailPage = ({
   const [confirm, setConfirm] = React.useState({ show: false, id: "" });
   const [modals, setModals] = React.useState(false);
   const [update, setUpdate] = React.useState({ id: "", update: false });
-  const [Toast, setToast] = useToast();
   const [options, setOptions] = React.useState();
   const [showForm, setShowForm] = React.useState(false);
   const { tasks } = contract;
@@ -315,13 +313,10 @@ const DetailPage = ({
           saveContractById(res?.data);
           generateTableContent(res?.data?.tasks);
           setShowForm(true);
-          if (toast.visible) {
-            setToast(toast.message, 5000);
-          }
         },
       });
     },
-    [generateTableContent, saveContractById, setToast, fetch_api_sg]
+    [generateTableContent, saveContractById, fetch_api_sg]
   );
 
   const handleClose = () => {
@@ -368,8 +363,6 @@ const DetailPage = ({
 
   return (
     <React.Fragment>
-      <Toast />
-
       <ModalTerm
         innerRef={submitRef}
         visible={modals}
