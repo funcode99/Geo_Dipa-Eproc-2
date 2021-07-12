@@ -212,6 +212,7 @@ const Item = ({ handleClick }) => {
           service_id: items.id,
           qty: qtyValue,
           name: items.short_text,
+          price: items.net_value,
         },
         "jasa"
       );
@@ -223,6 +224,7 @@ const Item = ({ handleClick }) => {
           item_id: items.id,
           qty: qtyValue,
           name: items.desc,
+          price: items.unit_price,
         },
         "barang"
       );
@@ -492,7 +494,9 @@ const Item = ({ handleClick }) => {
               size="medium"
               onClick={handleClick}
             >
-              <span className="mr-1">Submit</span>
+              <span className="mr-1">
+                <FormattedMessage id="BUTTON.SUBMIT" />
+              </span>
               <Send />
             </Button>
           </div>
