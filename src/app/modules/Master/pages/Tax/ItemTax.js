@@ -9,16 +9,27 @@ import {
   makeStyles,
   TablePagination,
 } from "@material-ui/core";
-import { Card, CardBody } from "../../../../_metronic/_partials/controls";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardHeaderIcon,
+  CardHeaderToolbar,
+} from "../../../../../_metronic/_partials/controls";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
-import { SubWrap } from "./style";
-import { getListPurchGroup, updatePurchGroup } from "../service/MasterCrud";
-import useToast from "../../../components/toast";
-import ButtonAction from "../../../components/buttonAction/ButtonAction";
+import { SubWrap } from "../style";
+import {
+  getTaxItem,
+  createGroupTaxItem,
+  editGroupTaxItem,
+} from "../../service/MasterCrud";
+import useToast from "../../../../components/toast";
+import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
 import { useHistory, useParams, Link } from "react-router-dom";
+import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -37,7 +48,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
-const PurchGroup = (props) => {
+const contohSchedule = [
+  { label: "Hari H", value: "0" },
+  { label: "3 Hari Sebelum Jatuh Tempo", value: "3" },
+  { label: "1 Minggu Sebelum Jatuh Tempo", value: "7" },
+  { label: "30 Hari Sebelum Jatuh Tempo", value: "30" },
+];
+const ItemTax = (props) => {
   const { intl } = props;
   const classes = useStyles();
   const [filterTable, setFilterTable] = useState({});
@@ -67,6 +84,7 @@ const PurchGroup = (props) => {
     rowsPerPage: 10,
   });
   const history = useHistory();
+
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
     shallowEqual
@@ -78,6 +96,7 @@ const PurchGroup = (props) => {
   const [onSubmit, setOnSubmit] = useState(false);
   const [statusSubmit, setStatusSubmit] = useState(false);
   const [errOnSubmit, setErrOnSubmit] = useState(false);
+  const { id } = useParams();
 
   const requestFilterSort = useCallback(
     (updateFilterTable, updateSortTable) => {
@@ -95,7 +114,7 @@ const PurchGroup = (props) => {
       filterSorts = Object.assign({}, filterSorts, pagination);
       setFilterSort({ ...filterSorts });
       let params = new URLSearchParams(filterSorts).toString();
-      getListPurchGroup(params)
+      getTaxItem(id, params)
         .then((result) => {
           setLoading(false);
           setData(result.data.data);
@@ -193,36 +212,113 @@ const PurchGroup = (props) => {
       ...dialogState,
       status: true,
       data: Object.assign({}, data),
+      duplicateData: false,
     });
+    setErrOnSubmit(false);
+  };
+
+  const handleCreate = () => {
+    setDialogState({
+      ...dialogState,
+      status: true,
+      data: {},
+      duplicateData: false,
+    });
+    setErrOnSubmit(false);
   };
 
   const sendUpdate = () => {
     setOnSubmit(true);
     setErrOnSubmit(false);
-    var data = {
-      email: dialogState.data.email,
-      updated_by_id: user_id,
-      mail_code: dialogState.data.mail_code,
+    var data_ = {
+      master_tax_id: data.id,
+      description: dialogState.data.description,
+      value: dialogState.data.value,
     };
-    updatePurchGroup(dialogState.data.id, data)
-      .then((result) => {
-        setStatusSubmit(true);
-        setTimeout(() => {
-          setDialogState(false);
+    console.log("dialogState", dialogState);
+    if (dialogState.data.id) {
+      data_.updated_by_id = user_id;
+      editGroupTaxItem(dialogState.data.id, data_)
+        .then((result) => {
+          if (result.data.message === "Duplicate Tax Name") {
+            let dataEdit_ = Object.assign({}, dialogState);
+            dataEdit_.duplicateData = true;
+            setDialogState({ ...dataEdit_ });
+            setOnSubmit(false);
+            // setErrOnSubmit(true);
+          } else {
+            setStatusSubmit(true);
+            setTimeout(() => {
+              let dataEdit_ = Object.assign({}, dialogState);
+              dataEdit_.status = false;
+              setDialogState({ ...dataEdit_ });
+              setOnSubmit(false);
+              setStatusSubmit(false);
+              requestFilterSort();
+            }, 2000);
+          }
+        })
+        .catch((err) => {
           setOnSubmit(false);
-          setStatusSubmit(false);
-          requestFilterSort();
-        }, 2000);
-      })
-      .catch((err) => {
-        setOnSubmit(false);
-        setErrOnSubmit(true);
-      });
+          setErrOnSubmit(true);
+        });
+    } else {
+      data_.created_by_id = user_id;
+      createGroupTaxItem(data_)
+        .then((result) => {
+          if (result.data.message === "Duplicate Tax Name") {
+            let dataEdit_ = Object.assign({}, dialogState);
+            dataEdit_.duplicateData = true;
+            setDialogState({ ...dataEdit_ });
+            setOnSubmit(false);
+            // setErrOnSubmit(true);
+          } else {
+            setStatusSubmit(true);
+            setTimeout(() => {
+              let dataEdit_ = Object.assign({}, dialogState);
+              dataEdit_.status = false;
+              setDialogState({ ...dataEdit_ });
+              setOnSubmit(false);
+              setStatusSubmit(false);
+              requestFilterSort();
+            }, 2000);
+          }
+        })
+        .catch((err) => {
+          setOnSubmit(false);
+          setErrOnSubmit(true);
+        });
+    }
   };
 
   return (
     <React.Fragment>
       <Toast />
+      <div className="d-flex align-items-center flex-wrap mr-1">
+        <SubWrap className="mr-2 iconWrap">
+          <span className="svg-icon menu-icon">
+            <SVG src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")} />
+          </span>
+        </SubWrap>
+        <div className="d-flex align-items-baseline mr-5 w-75">
+          <h2 className="text-dark font-weight-bold my-2 mr-5 text-truncate">
+            {data?.type_tax + " - " + data?.group_tax || "-"}
+          </h2>
+        </div>
+      </div>
+
+      <SubBreadcrumbs
+        items={[
+          {
+            label: "Master Tax",
+            to: `/client/master/tax`,
+          },
+          {
+            label: data?.group_tax,
+            to: "/",
+          },
+        ]}
+      />
       <Dialog
         open={dialogState.status}
         keepMounted
@@ -233,103 +329,84 @@ const PurchGroup = (props) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Edit <FormattedMessage id="TITLE.PURCHASE_GROUPS" />
+          <FormattedMessage id="TITLE.TAX" />
         </DialogTitle>
         <DialogContent>
           <div className="form-group row">
             <label htmlFor="static_1" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.NAME" />
+              {/* <FormattedMessage id="TITLE.NAME" /> */}
+              Type Pajak
             </label>
             <div className="col-sm-7">
               <input
                 type="text"
-                disabled
                 className="form-control"
                 id="static_1"
-                value={dialogState.data?.full_name || ""}
+                disabled
+                value={data?.type_tax || ""}
               />
             </div>
           </div>
           <div className="form-group row">
             <label htmlFor="static_2" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" />
+              {/* <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" /> */}
+              Group Pajak
             </label>
             <div className="col-sm-7">
               <input
                 type="text"
-                disabled
                 className="form-control"
                 id="static_2"
-                value={dialogState.data?.code || ""}
+                disabled
+                value={data?.group_tax || ""}
               />
             </div>
           </div>
           <div className="form-group row">
             <label htmlFor="static_3" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.FROM_DATE" />
+              {/* <FormattedMessage id="TITLE.NAME" /> */}
+              Nama Pajak
             </label>
             <div className="col-sm-7">
               <input
                 type="text"
-                disabled
                 className="form-control"
                 id="static_3"
-                value={dialogState.data?.from_date || ""}
+                value={dialogState.data?.description || ""}
+                onChange={(e) => {
+                  let dataEdit_ = Object.assign({}, dialogState);
+                  dataEdit_.data.description = e.target.value;
+                  setDialogState({ ...dataEdit_ });
+                }}
               />
             </div>
           </div>
           <div className="form-group row">
             <label htmlFor="static_4" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.THRU_DATE" />
+              {/* <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" /> */}
+              Nilai Pajak
             </label>
             <div className="col-sm-7">
               <input
-                type="text"
-                disabled
+                type="number"
                 className="form-control"
                 id="static_4"
-                value={dialogState.data?.thru_date || ""}
-              />
-            </div>
-          </div>
-          <div className="form-group row">
-            <label htmlFor="static_5" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.EMAIL" />
-            </label>
-            <div className="col-sm-7">
-              <input
-                type="email"
-                className="form-control"
-                id="static_5"
-                disabled={onSubmit}
-                value={dialogState.data?.email || ""}
+                value={dialogState.data?.value || ""}
                 onChange={(e) => {
                   let dataEdit_ = Object.assign({}, dialogState);
-                  dataEdit_.data.email = e.target.value;
+                  dataEdit_.data.value = e.target.value;
                   setDialogState({ ...dataEdit_ });
                 }}
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label htmlFor="static_6" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.MAIL_CODE" />
-            </label>
-            <div className="col-sm-7">
-              <input
-                type="email"
-                className="form-control"
-                id="static_6"
-                disabled={onSubmit}
-                value={dialogState.data?.mail_code || ""}
-                onChange={(e) => {
-                  let dataEdit_ = Object.assign({}, dialogState);
-                  dataEdit_.data.mail_code = e.target.value;
-                  setDialogState({ ...dataEdit_ });
-                }}
-              />
+          {dialogState.duplicateData && !onSubmit && (
+            <div>
+              <p className="text-danger font-italic" style={{ fontSize: 11 }}>
+                Error: Duplicate Tax Name
+              </p>
             </div>
-          </div>
+          )}
           {errOnSubmit && !onSubmit && (
             <div>
               <p className="text-danger font-italic" style={{ fontSize: 11 }}>
@@ -345,9 +422,7 @@ const PurchGroup = (props) => {
             disabled={onSubmit}
             className={`btn btn-primary font-weight-bold btn-sm`}
             onClick={() => {
-              let dataEdit_ = Object.assign({}, dialogState);
-              dataEdit_.status = false;
-              setDialogState({ ...dataEdit_ });
+              sendUpdate();
             }}
           >
             {!onSubmit && (
@@ -374,7 +449,9 @@ const PurchGroup = (props) => {
           </button>
           <button
             onClick={() => {
-              setDialogState(false);
+              let dataEdit_ = Object.assign({}, dialogState);
+              dataEdit_.status = false;
+              setDialogState({ ...dataEdit_ });
             }}
             disabled={onSubmit}
             className="btn btn-sm btn-danger"
@@ -383,19 +460,14 @@ const PurchGroup = (props) => {
           </button>
         </DialogActions>
       </Dialog>
-      <div className="d-flex align-items-center flex-wrap mr-1">
-        <SubWrap className="mr-2 iconWrap">
-          <span className="svg-icon menu-icon">
-            <SVG src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")} />
-          </span>
-        </SubWrap>
-        <div className="d-flex align-items-baseline mr-5">
-          <h2 className="text-dark font-weight-bold my-2 mr-5">
-            Master <FormattedMessage id="TITLE.PURCHASE_GROUPS" />
-          </h2>
-        </div>
-      </div>
       <Card className={classes.paper}>
+        <CardHeader title="">
+          <CardHeaderToolbar>
+            <button className="btn btn-sm btn-primary" onClick={handleCreate}>
+              <FormattedMessage id="BUTTON.CREATE" />
+            </button>
+          </CardHeaderToolbar>
+        </CardHeader>
         <CardBody>
           {/* begin: Filter Table */}
           <form id="filter-form-all" className="panel-filter-table mb-1">
@@ -507,7 +579,7 @@ const PurchGroup = (props) => {
                         <FormattedMessage id="TITLE.NO" />
                       </th>
                       <th
-                        className="bg-primary text-white align-middle td-25 pointer"
+                        className="bg-primary text-white align-middle td-49 pointer"
                         id="name"
                         onClick={(e) => {
                           let sortDatas = sortData;
@@ -537,62 +609,50 @@ const PurchGroup = (props) => {
                             )}
                           </span>
                         )}
-
-                        <FormattedMessage id="TITLE.NAME" />
+                        {/* <FormattedMessage id="TITLE.NAME" /> */}
+                        Nama Pajak
                       </th>
-                      <th className="bg-primary text-white align-middle td-5">
-                        <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" />
+                      <th className="bg-primary text-white align-middle td-10">
+                        {/* <FormattedMessage id="TITLE.SCHEDULED" /> */}
+                        Nilai Pajak
                       </th>
-                      <th className="bg-primary text-white align-middle td-17">
-                        <FormattedMessage id="TITLE.MAIL_CODE" />
+                      <th className="bg-primary text-white align-middle td-15">
+                        <FormattedMessage id="TITLE.UPDATED_DATE" />
                       </th>
-                      <th className="bg-primary text-white align-middle td-14">
-                        <FormattedMessage id="TITLE.FROM_DATE" />
+                      <th className="bg-primary text-white align-middle td-22">
+                        Diperbaharui Oleh
                       </th>
-                      <th className="bg-primary text-white align-middle td-14">
-                        <FormattedMessage id="TITLE.THRU_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle td-20">
-                        <FormattedMessage id="TITLE.EMAIL" />
-                      </th>
-                      <th className="bg-primary text-white align-middle td-3">
+                      <th className="bg-primary text-white align-middle td-2">
                         <FormattedMessage id="TITLE.TABLE_HEADER.ACTION" />
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, index) => {
-                      return (
-                        <tr key={index.toString()}>
-                          <td>{index + 1 + paginations.numberColum}</td>
-                          <td>{item.full_name}</td>
-                          <td>{item.code}</td>
-                          <td>{item.mail_code}</td>
-                          <td>
-                            {item.from_date
-                              ? window
-                                  .moment(new Date(item.from_date))
-                                  .format("DD MMM YYYY")
-                              : null}
-                          </td>
-                          <td>
-                            {item.thru_date
-                              ? window
-                                  .moment(new Date(item.thru_date))
-                                  .format("DD MMM YYYY")
-                              : null}
-                          </td>
-                          <td>{item.email}</td>
-                          <td>
-                            <ButtonAction
-                              data={item}
-                              handleAction={handleAction}
-                              ops={data_ops}
-                            />
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {data?.master_tax_items &&
+                      data?.master_tax_items.rows.map((item, index) => {
+                        return (
+                          <tr key={index.toString()}>
+                            <td>{index + 1 + paginations.numberColum}</td>
+                            <td>{item.description}</td>
+                            <td>{item.value + "%"}</td>
+                            <td>
+                              {item.updated_at
+                                ? window
+                                    .moment(new Date(item.updated_at))
+                                    .format("DD MMM YYYY")
+                                : ""}
+                            </td>
+                            <td>{item?.fullname}</td>
+                            <td>
+                              <ButtonAction
+                                data={item}
+                                handleAction={handleAction}
+                                ops={data_ops}
+                              />
+                            </td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>
@@ -632,4 +692,4 @@ const PurchGroup = (props) => {
   );
 };
 
-export default injectIntl(connect(null, null)(PurchGroup));
+export default injectIntl(connect(null, null)(ItemTax));

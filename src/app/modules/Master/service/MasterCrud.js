@@ -171,6 +171,30 @@ export function updateEmail(data) {
   return axios.post(`data/update_email`, data);
 }
 
+export function getListTax() {
+  return axios.get(`data/get_tax`);
+}
+
+export function createGroupTax(data) {
+  return axios.post(`data/create_group_tax`, data);
+}
+
+export function editGroupTax(id, data) {
+  return axios.post(`data/update_group_tax/${id}`, data);
+}
+
+export function createGroupTaxItem(data) {
+  return axios.post(`data/create_group_tax_item`, data);
+}
+
+export function editGroupTaxItem(id, data) {
+  return axios.post(`data/update_group_tax_item/${id}`, data);
+}
+
+export function getTaxItem(id, params) {
+  return axios.get(`data/get_tax_by_id/${id}`);
+}
+
 // master data invoice periods
 
 export function getInvoicePeriods() {
