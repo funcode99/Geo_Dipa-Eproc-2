@@ -536,5 +536,6 @@
   "TITLE.QUANTITY_TOTAL": "Quantity total",
   "TITLE.QUANTITY_APPROVED": "Quantity Approved",
   "TITLE.DELIVERY_ORDER_STATUS": "Delivery Order Status",
-  "MESSAGE.DATA_IS_CORRECT": "Are you sure the data is correct?"
+  "MESSAGE.DATA_IS_CORRECT": "Are you sure the data is correct?",
+  "TITLE.MAIL_CODE": "Mail Code"
 }

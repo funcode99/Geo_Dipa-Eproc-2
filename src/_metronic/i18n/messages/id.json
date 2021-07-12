@@ -535,5 +535,6 @@
   "TITLE.QUANTITY_TOTAL": "Total Kuantitas",
   "TITLE.QUANTITY_APPROVED": "Kuantitas Diterima",
   "TITLE.DELIVERY_ORDER_STATUS": "Status Pengiriman",
-  "MESSAGE.DATA_IS_CORRECT": "Apakah anda yakin datanya sudah sesuai?"
+  "MESSAGE.DATA_IS_CORRECT": "Apakah anda yakin datanya sudah sesuai?",
+  "TITLE.MAIL_CODE": "Kode Surat"
 }
