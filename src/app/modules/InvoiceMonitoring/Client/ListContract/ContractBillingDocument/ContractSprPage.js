@@ -199,7 +199,7 @@ function ContractSprPage(props) {
 
   const approveSppData = () => {
     setLoading(true);
-    approveSpp(sppData.id, { approved_by_id: user_id })
+    approveSpp(sppData.id, { approved_by_id: user_id, contract_id: contract_id, term_id: termin })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
         setLoading(false);

@@ -145,7 +145,7 @@ function ContractReceiptPage(props) {
 
   const approveReceiptData = () => {
     setLoading(true);
-    approveReceipt(receiptData.id, { approved_by_id: user_id })
+    approveReceipt(receiptData.id, { approved_by_id: user_id, contract_id: contract_id, term_id: termin })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
         setLoading(false);
