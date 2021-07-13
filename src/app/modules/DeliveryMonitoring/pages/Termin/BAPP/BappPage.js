@@ -67,9 +67,11 @@ const BappPage = ({
   loadings,
 }) => {
   const [Toast, setToast] = useToast();
+  const isReject = taskNews?.approve_status?.code === "rejected";
   const uploadRef = React.useRef();
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
+  const [stepActive, setStepActive] = React.useState(0);
   const [loading, setLoading] = React.useState({
     get: false,
     submit: false,
@@ -256,6 +258,17 @@ const BappPage = ({
     }
   }, [taskId, fetchData]);
 
+  // buat ganti state step
+  React.useEffect(() => {
+    if (taskNews) {
+      if (taskNews?.file) {
+        if (isReject) setStepActive(1);
+        else setStepActive(2);
+      }
+    }
+  }, [taskNews]);
+  console.log(`taskNews`, taskNews, loadings);
+
   let disabledInput = Object.keys(initialValues);
   let allowedClient = ["hasil_pekerjaan"];
   let allowedVendor = ["nomor_bapp", "tanggal_bapp"];
@@ -277,20 +290,24 @@ const BappPage = ({
         openLinkTab(params?.file);
         // window.open(urlHelper.addBaseURL(params?.file), "_blank");
         break;
+      case "skip":
+        setStepActive(1);
+        // window.open(urlHelper.addBaseURL(params?.file), "_blank");
+        break;
       case "uploadSign":
-        console.log(`type`, type);
+        // console.log(`type`, type);
         // handleVisible(type);
         uploadRef.current.open();
         break;
       case "upload":
-        console.log(`type`, type);
+        // console.log(`type`, type);
         break;
       case "approve":
-        console.log(`type`, type);
+        // console.log(`type`, type);
         approveRef.current.open();
         break;
       case "reject":
-        console.log(`type`, type);
+        // console.log(`type`, type);
         rejectRef.current.open();
         break;
       default:
@@ -303,7 +320,7 @@ const BappPage = ({
     switch (type) {
       case "upload_s":
         fetchApi({
-          type: keys.upload_s,
+          key: keys.upload_s,
           type: "postForm",
           alertAppear: "both",
           url: `/delivery/task-news/${taskNews.id}/upload`,
@@ -367,6 +384,7 @@ const BappPage = ({
         innerRef={approveRef}
         handleSubmit={(e) => handleApi("approve", e)}
         loading={loadings.approve_s}
+        file={taskNews?.file_upload}
       />
       <ModalPreview
         innerRef={rejectRef}
@@ -374,6 +392,7 @@ const BappPage = ({
         loading={loadings.approve_s}
         withRemarks
         title={"Reject Signed Document"}
+        file={taskNews?.file_upload}
       />
 
       {/* <ModalConfirmation
@@ -417,27 +436,42 @@ const BappPage = ({
         </CardBody>
       </Card>
 
-      {/* <Card className="mt-5">
+      <Card className="mt-5">
         <CardBody>
           <StepperDoc
+            taskNews={taskNews}
+            active={stepActive}
+            isReject={isReject}
             renderBtns={(idx) => {
               switch (idx) {
                 case 0:
                   return (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleAction("preview", taskNews)}
-                      disabled={taskNews ? false : true}
-                    >
-                      <FormattedMessage id="TITLE.PREVIEW" />
-                    </Button>
+                    <div className="mt-2">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={"mr-2"}
+                        onClick={() => handleAction("preview", taskNews)}
+                        disabled={taskNews ? false : true}
+                      >
+                        <FormattedMessage id="TITLE.PREVIEW" />
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleAction("skip", taskNews)}
+                        disabled={taskNews ? false : true}
+                      >
+                        <FormattedMessage id="TITLE.SKIP" />
+                      </Button>
+                    </div>
                   );
                 case 1:
                   return (
                     <Button
                       variant="contained"
                       color="secondary"
+                      className="mt-2"
                       onClick={() => handleAction("uploadSign")}
                     >
                       <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
@@ -445,10 +479,11 @@ const BappPage = ({
                   );
                 case 2:
                   return (
-                    <div>
+                    <div className="mt-2">
                       <Button
                         variant="contained"
                         color="secondary"
+                        className={"mr-3"}
                         onClick={() => handleAction("approve")}
                       >
                         <FormattedMessage id="TITLE.APPROVE" />
@@ -470,7 +505,7 @@ const BappPage = ({
             }}
           />
         </CardBody>
-      </Card> */}
+      </Card>
 
       <Card className="mt-5">
         <CardBody>
