@@ -25,6 +25,8 @@ import {
   getAllApprovedSpp,
   getFileSpp,
   getFileBank,
+  getBillingDocumentId,
+  softcopy_save,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -102,6 +104,7 @@ function ContractSprPage(props) {
   const [historySppData, setHistorySppData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
+  const [invoiceBillingId, setInvoiceBillingId] = useState("");
 
   const [Toast, setToast] = useToast();
 
@@ -112,6 +115,7 @@ function ContractSprPage(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const { intl, classes } = props;
+  const invoiceName = "SPP";
 
   const initialValues = {
     rejected_remark: "",
@@ -199,6 +203,14 @@ function ContractSprPage(props) {
 
   const approveSppData = () => {
     setLoading(true);
+    var data_1 = {
+      contract_id: contract_id,
+      term_id: termin,
+      softcopy_state: "APPROVED",
+      billing_id: invoiceBillingId,
+      document_no: sppData?.spr_no,
+      created_by_id: user_id,
+    };
     approveSpp(sppData.id, { approved_by_id: user_id, contract_id: contract_id, term_id: termin })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -206,6 +218,7 @@ function ContractSprPage(props) {
         setModalApprove(false);
         setIsSubmit(true);
         getHistorySppData(sppData.id);
+        softcopy_save(data_1);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -241,8 +254,19 @@ function ContractSprPage(props) {
     setModalHistory(true);
   };
 
+  const getBillingDocumentIdData = useCallback(() => {
+    getBillingDocumentId(invoiceName)
+      .then((response) => {
+        setInvoiceBillingId(response.data.data.id);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [invoiceName, setInvoiceBillingId, formik, intl, setToast]);
+
   useEffect(getContractData, []);
   useEffect(getSppData, []);
+  useEffect(getBillingDocumentIdData, []);
 
   return (
     <React.Fragment>
@@ -958,26 +982,6 @@ function ContractSprPage(props) {
                   />
                 </div>
               </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="priceTaxSpp"
-                  className="col-sm-5 col-form-label"
-                >
-                  <FormattedMessage
-                    id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN"
-                    values={{ termin: contractData["termin_name"] }}
-                  />
-                </label>
-                <div className="col-sm-7">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceTaxSpp"
-                    defaultValue={contractData["termin_value_ppn_new"]}
-                    disabled
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </CardBody>
@@ -989,7 +993,8 @@ function ContractSprPage(props) {
               isSubmit ||
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
-              sppData === null
+              sppData === null ||
+              props.verificationStafStatus
             }
             className="btn btn-primary mx-1"
           >
@@ -1002,7 +1007,8 @@ function ContractSprPage(props) {
               isSubmit ||
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
-              sppData === null
+              sppData === null ||
+              props.verificationStafStatus
             }
             className="btn btn-danger mx-1"
           >

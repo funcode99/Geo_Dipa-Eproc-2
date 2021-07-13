@@ -22,6 +22,9 @@ import {
   getAllApprovedTax,
   rejectTax,
   rejectTaxStatus,
+  getBillingDocumentId,
+  softcopy_save,
+  getListTax,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -69,6 +72,9 @@ function ContractTaxPage(props) {
   const [historyTaxData, setHistoryTaxData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
+  const [invoiceBillingId, setInvoiceBillingId] = useState("");
+  const [listTax, setListTax] = useState([]);
+  const [optionSelected, setOptionSelected] = useState([]);
 
   const [Toast, setToast] = useToast();
 
@@ -81,6 +87,7 @@ function ContractTaxPage(props) {
   const { intl, classes } = props;
 
   const initialValues = {};
+  const invoiceName = "TAX";
 
   const TaxSchema = Yup.object().shape({
     rejected_remark: Yup.string().required(
@@ -141,6 +148,17 @@ function ContractTaxPage(props) {
       });
   }, [contract_id, formik, intl, setToast, user_id]);
 
+  const getListTaxs = () => {
+    getListTax()
+      .then((response) => {
+        console.log("getListTax", response.data.data);
+        setListTax(response.data.data);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  };
+
   const getTaxData = useCallback(() => {
     getTax(contract_id, termin)
       .then((response) => {
@@ -188,6 +206,14 @@ function ContractTaxPage(props) {
 
   const approveTaxData = () => {
     setLoading(true);
+    var data_1 = {
+      contract_id: contract_id,
+      term_id: termin,
+      softcopy_state: "APPROVED",
+      billing_id: invoiceBillingId,
+      document_no: taxData?.tax_no,
+      created_by_id: user_id,
+    };
     approveTax(taxData.id, { approved_by_id: user_id, contract_id: contract_id, term_id: termin })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -195,6 +221,7 @@ function ContractTaxPage(props) {
         setModalApprove(false);
         setIsSubmit(true);
         getHistoryTaxData(taxData.id);
+        softcopy_save(data_1);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -202,8 +229,20 @@ function ContractTaxPage(props) {
       });
   };
 
+  const getBillingDocumentIdData = useCallback(() => {
+    getBillingDocumentId(invoiceName)
+      .then((response) => {
+        setInvoiceBillingId(response.data.data.id);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [invoiceName, setInvoiceBillingId, formik, intl, setToast]);
+
   useEffect(getContractData, []);
+  useEffect(getListTaxs, []);
   useEffect(getTaxData, []);
+  useEffect(getBillingDocumentIdData, []);
 
   const formatGroupLabel = (data) => (
     <div style={groupStyles}>
@@ -228,6 +267,22 @@ function ContractTaxPage(props) {
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.APPROVED.APPROVE_TITLE" />
         </DialogTitle>
         <DialogContent>
+          <div>
+            <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
+            {optionSelected.length > 0 ? (
+              <ol>
+                {optionSelected.map((item, index) => {
+                  return (
+                    <li key={index.toString()}>
+                      <span className="text-danger">{item.label}</span>
+                    </li>
+                  );
+                })}
+              </ol>
+            ) : (
+              <FormattedMessage id="TITLE.NOTHING" />
+            )}
+          </div>
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.APPROVED.APPROVE_BODY" />
         </DialogContent>
         <DialogActions>
@@ -595,11 +650,11 @@ function ContractTaxPage(props) {
               <div className="form-group row">
                 <label
                   htmlFor="priceContract"
-                  className="col-sm-5 col-form-label"
+                  className="col-sm-4 col-form-label"
                 >
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -610,10 +665,10 @@ function ContractTaxPage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="poNumber" className="col-sm-5 col-form-label">
+                <label htmlFor="poNumber" className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -624,13 +679,13 @@ function ContractTaxPage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="priceStep1" className="col-sm-5 col-form-label">
+                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
                   <FormattedMessage
                     id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE"
                     values={{ termin: contractData["termin_name"] }}
                   />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -641,43 +696,31 @@ function ContractTaxPage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="priceTax" className="col-sm-5 col-form-label">
-                  <FormattedMessage
-                    id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN"
-                    values={{ termin: contractData["termin_name"] }}
-                  />
-                </label>
-                <div className="col-sm-7">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceTax"
-                    defaultValue={contractData["termin_value_ppn_new"]}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label htmlFor="priceTax" className="col-sm-5 col-form-label">
+                <label htmlFor="priceTax" className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.TAX" />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <Select
                     isMulti
-                    // value={optionSelected}
-                    // onChange={(e) => handleSelectChange(e)}
-                    // options={content?.data?.map((el) => ({
-                    //   label: el.name,
-                    //   options: el?.documents?.reverse().map((el2) => ({
-                    //     value: JSON.stringify(el2),
-                    //     // value: el2?.id,
-                    //     label: `${el2?.name} ${
-                    //       el2?.periode?.hasOwnProperty("name")
-                    //         ? `(${el2?.periode?.name})`
-                    //         : ""
-                    //     }`,
-                    //   })),
-                    // }))}
+                    value={optionSelected}
+                    onChange={(e) => {
+                      setOptionSelected(e);
+                    }}
+                    isDisabled={
+                      isSubmit ||
+                      taxData?.state === "REJECTED" ||
+                      taxData?.state === "APPROVED" ||
+                      taxData === null ||
+                      props.verificationStafStatus
+                    }
+                    options={listTax.map((el) => ({
+                      label: el.type_tax + " - " + el.group_tax,
+                      options: el?.master_tax_items.map((el2) => ({
+                        value: JSON.stringify(el2),
+                        // value: el2?.id,
+                        label: `${el2?.description} - ${el2?.value}% - Nilai`,
+                      })),
+                    }))}
                     formatGroupLabel={formatGroupLabel}
                   />
                   {/* app/modules/DeliveryMonitoring/pages/Termin/Documents/component/ModalAddDeliverables.js */}
@@ -694,7 +737,8 @@ function ContractTaxPage(props) {
               isSubmit ||
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
-              taxData === null
+              taxData === null ||
+              props.verificationStafStatus
             }
             className="btn btn-primary mx-1"
           >
@@ -707,7 +751,8 @@ function ContractTaxPage(props) {
               isSubmit ||
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
-              taxData === null
+              taxData === null ||
+              props.verificationStafStatus
             }
             className="btn btn-danger mx-1"
           >

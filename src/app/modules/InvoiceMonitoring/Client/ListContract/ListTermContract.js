@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // useState
+import React, { useState, useEffect } from "react";
 import { connect, useSelector, shallowEqual } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
@@ -6,16 +6,18 @@ import {
   makeStyles,
   Paper,
   LinearProgress,
+  TableRow,
+  TableCell,
 } from "@material-ui/core";
 import { rupiah } from "../../../../libs/currency";
 import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import { useSubheader } from "../../../../../_metronic/layout";
 import { Form, Row, Col } from "react-bootstrap";
-import ButtonAction from "../../../../components/buttonAction/ButtonAction";
-import { useHistory, useParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { getTermContract } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
+import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,17 +25,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const data_ops = [
-  {
-    label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
-    icon: "fas fa-search text-primary",
-    type: "open",
-  },
-];
-
 const ListTermContract = (props) => {
-  const is_finance = useSelector((state) => state.auth.user.data.is_finance, shallowEqual);
-  const is_main = useSelector((state) => state.auth.user.data.is_main, shallowEqual);
+  const is_finance = useSelector(
+    (state) => state.auth.user.data.is_finance,
+    shallowEqual
+  );
+  const is_main = useSelector(
+    (state) => state.auth.user.data.is_main,
+    shallowEqual
+  );
   const suhbeader = useSubheader();
   const { intl } = props;
   suhbeader.setTitle(
@@ -43,7 +43,6 @@ const ListTermContract = (props) => {
   );
   const { contract } = useParams();
   const classes = useStyles();
-  const history = useHistory();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [Toast, setToast] = useToast();
@@ -60,6 +59,43 @@ const ListTermContract = (props) => {
       });
   };
   useEffect(getData, []);
+
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.TABLE_HEAD.WEIGHT" }),
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.TAB.PRICE" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.TABLE_HEAD.STATUS" }),
+    },
+  ];
 
   return (
     <Container className="px-0">
@@ -229,74 +265,47 @@ const ListTermContract = (props) => {
           </Row>
         </Form>
 
-        {/* begin: Table */}
-        <div className="table-wrapper-scroll-y my-custom-scrollbar">
-          <div className="segment-table">
-            <div className="hecto-10">
-              <table className="table-bordered overflow-auto">
-                <thead>
-                  <tr>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="TITLE.TABLE_HEADER.NO" />
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK" />
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.WEIGHT" />
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS" />
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS" />
-                    </th>
-                    <th className="bg-primary text-white align-middle">
-                      <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data &&
-                    data?.data_termin &&
-                    data?.data_termin.map((value, index) => {
-                      return (
-                        <tr key={index.toString()}>
-                          <td className="align-middle text-center">
-                            {index + 1}
-                          </td>
-                          <td>
-                            {(is_main && is_finance) || (value?.prices <= 500000000) || (is_main) || (!is_main && value?.authority == 'Unit') ? <Link
-                              to={`/client/invoice_monitoring/contract/${contract}/${value.task_id}`}
-                            >
-                              {value?.task_name}
-                            </Link> : <span>{value?.task_name}</span>}
-                          </td>
-                          <td>
-                            {window
-                              .moment(new Date(value?.due_date))
-                              .format("DD MMM YYYY")}
-                          </td>
-                          <td>{value?.bobot + "%"}</td>
-                          <td>{rupiah(value?.prices || 0)}</td>
-                          <td>{value?.progress}</td>
-                          <td>Doc Progress</td>
-                          <td>{value?.name}</td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        {/* end: Table */}
+        <TableOnly
+          dataHeader={headerTable}
+          loading={loading}
+          // err={err}
+          hecto={10}
+        >
+          {data &&
+            data?.data_termin &&
+            data?.data_termin.map((value, index) => {
+              return (
+                <TableRow key={index.toString()}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>
+                    {" "}
+                    {(is_main && is_finance) ||
+                    value?.prices <= 500000000 ||
+                    is_main ||
+                    (!is_main && value?.authority == "Unit") ? (
+                      <Link
+                        to={`/client/invoice_monitoring/contract/${contract}/${value.task_id}`}
+                      >
+                        {value?.task_name}
+                      </Link>
+                    ) : (
+                      <span>{value?.task_name}</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {window
+                      .moment(new Date(value?.due_date))
+                      .format("DD MMM YYYY")}
+                  </TableCell>
+                  <TableCell>{value?.bobot + "%"}</TableCell>
+                  <TableCell>{rupiah(value?.prices || 0)}</TableCell>
+                  <TableCell>{value?.progress}</TableCell>
+                  <TableCell>Doc Progress</TableCell>
+                  <TableCell>{value?.name}</TableCell>
+                </TableRow>
+              );
+            })}
+        </TableOnly>
       </Paper>
     </Container>
   );

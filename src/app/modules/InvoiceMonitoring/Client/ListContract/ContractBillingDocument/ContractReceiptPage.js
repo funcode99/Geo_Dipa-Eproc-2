@@ -22,6 +22,8 @@ import {
   getAllApprovedReceipt,
   rejectReceipt,
   rejectReceiptStatus,
+  getBillingDocumentId,
+  softcopy_save,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -49,6 +51,7 @@ function ContractReceiptPage(props) {
   const [historyReceiptData, setHistoryReceiptData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
+  const [invoiceBillingId, setInvoiceBillingId] = useState("");
 
   const [Toast, setToast] = useToast();
 
@@ -61,6 +64,7 @@ function ContractReceiptPage(props) {
   const { intl, classes } = props;
 
   const initialValues = {};
+  const invoiceName = "RECEIPT";
 
   const RecepitSchema = Yup.object().shape({
     rejected_remark: Yup.string().required(
@@ -145,6 +149,14 @@ function ContractReceiptPage(props) {
 
   const approveReceiptData = () => {
     setLoading(true);
+    var data_1 = {
+      contract_id: contract_id,
+      term_id: termin,
+      softcopy_state: "APPROVED",
+      billing_id: invoiceBillingId,
+      document_no: receiptData?.spr_no,
+      created_by_id: user_id,
+    };
     approveReceipt(receiptData.id, { approved_by_id: user_id, contract_id: contract_id, term_id: termin })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -152,6 +164,7 @@ function ContractReceiptPage(props) {
         setModalApprove(false);
         setIsSubmit(true);
         getHistoryReceiptData(receiptData.id);
+        softcopy_save(data_1);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -182,8 +195,19 @@ function ContractReceiptPage(props) {
     [intl, setToast]
   );
 
+  const getBillingDocumentIdData = useCallback(() => {
+    getBillingDocumentId(invoiceName)
+      .then((response) => {
+        setInvoiceBillingId(response.data.data.id);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [invoiceName, setInvoiceBillingId, formik, intl, setToast]);
+
   useEffect(getContractData, []);
   useEffect(getReceiptData, []);
+  useEffect(getBillingDocumentIdData, []);
 
   return (
     <React.Fragment>
@@ -608,26 +632,6 @@ function ContractReceiptPage(props) {
                   />
                 </div>
               </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="priceTaxInvoice"
-                  className="col-sm-5 col-form-label"
-                >
-                  <FormattedMessage
-                    id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN"
-                    values={{ termin: contractData["termin_name"] }}
-                  />
-                </label>
-                <div className="col-sm-7">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceTaxReceipt"
-                    defaultValue={contractData["termin_value_ppn_new"]}
-                    disabled
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </CardBody>
@@ -639,7 +643,8 @@ function ContractReceiptPage(props) {
               isSubmit ||
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
-              receiptData === null
+              receiptData === null ||
+              props.verificationStafStatus
             }
             className="btn btn-primary mx-1"
           >
@@ -652,7 +657,8 @@ function ContractReceiptPage(props) {
               isSubmit ||
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
-              receiptData === null
+              receiptData === null ||
+              props.verificationStafStatus
             }
             className="btn btn-danger mx-1"
           >

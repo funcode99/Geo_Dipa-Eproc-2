@@ -284,3 +284,6 @@ export async function updateSoftCopyByUser(id, file) {
 export async function sendNotifSoftCopySupportDeliverables(id) {
   return axios.post(`/invoice/softcopy_notif/${id}`);
 }
+export async function getListTax() {
+  return axios.get(`/invoice/get_tax_selected`);
+}

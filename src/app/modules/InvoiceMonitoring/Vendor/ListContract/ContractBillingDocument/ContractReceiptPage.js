@@ -648,7 +648,7 @@ function ContractReceiptPage(props) {
                     />
                   </div>
                 </div>
-                <div className="form-group row">
+                {/* <div className="form-group row">
                   <label
                     htmlFor="priceTaxInvoice"
                     className="col-sm-5 col-form-label"
@@ -667,7 +667,7 @@ function ContractReceiptPage(props) {
                       disabled
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </CardBody>
