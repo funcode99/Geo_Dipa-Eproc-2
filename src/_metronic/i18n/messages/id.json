@@ -545,5 +545,9 @@
   "TITLE.DETAIL_DELIVERY_ORDER": "Detail Pengiriman Pesanan",
   "TITLE.MAIL_CODE": "Kode Surat",
   "TITLE.SUBMIT_TERM_ITEMS": "Kirim Item Termin",
-  "TITLE.TAX": "Pajak"
+  "TITLE.TAX": "Pajak",
+  "TITLE.DOCUMENT_TYPE": "Tipe Dokumen",
+  "TITLE.IS_REQUIRED": "harus diisi",
+  "TITLE.IS_INVALID": "tidak valid",
+  "TITLE.SELECT_DOCUMENT_TYPE": "Pilih tipe dokumen"
 }

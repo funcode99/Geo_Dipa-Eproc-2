@@ -17,7 +17,6 @@ import {
 import { Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import { rupiah } from "../../../../libs/currency";
@@ -111,14 +110,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
     }));
   };
 
-  const enableLoading = () => {
-    setLoading(true);
-  };
-
-  const disableLoading = () => {
-    setLoading(false);
-  };
-
   const addShowField = (data) => {
     data.forEach((item) => {
       item.show = false;
@@ -178,37 +169,26 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
   };
 
   const getAllItems = async (taskId) => {
-    try {
-      enableLoading();
+    setInitialData();
 
-      setInitialData();
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/delivery/task/${taskId}`,
+      onSuccess: (res) => {
+        const tempDataJasa = res.data.task_item_services;
+        const tempDataBarang = res.data.task_items;
 
-      const {
-        data: { data },
-      } = await deliveryMonitoring.getTaskById(taskId);
+        addShowField(tempDataJasa);
+        addCheckedAndErrorField(tempDataJasa, "jasa");
+        addCheckedAndErrorField(tempDataBarang, "barang");
 
-      const tempDataJasa = data.task_item_services;
-      const tempDataBarang = data.task_items;
+        setInitialSubmitItems(tempDataJasa, "jasa");
+        setInitialSubmitItems(tempDataBarang, "barang");
 
-      addShowField(tempDataJasa);
-      addCheckedAndErrorField(tempDataJasa, "jasa");
-      addCheckedAndErrorField(tempDataBarang, "barang");
-
-      setInitialSubmitItems(tempDataJasa, "jasa");
-      setInitialSubmitItems(tempDataBarang, "barang");
-
-      setDataFromAPI(tempDataJasa, tempDataBarang);
-    } catch (error) {
-      if (
-        error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
-      ) {
-        setToast(<FormattedMessage id="MESSAGE.ERROR_API" />, 5000);
-      }
-      console.log(`error`, error);
-    } finally {
-      disableLoading();
-    }
+        setDataFromAPI(tempDataJasa, tempDataBarang);
+      },
+    });
   };
 
   React.useEffect(() => {
@@ -486,7 +466,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
     });
 
     fetch_api_sg({
-      keys: keys.submit,
+      key: keys.submit,
       type: "post",
       url: `/delivery/task/${taskId}`,
       params: {
@@ -674,7 +654,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
             <TablePaginationCustom
               headerRows={theadItems}
               rows={dataJasa}
-              loading={loading}
+              loading={loadings.fetch}
               maxHeight={300}
               headerProps={{ sortable: false }}
               withSearch={false}
@@ -885,7 +865,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
             <TablePaginationCustom
               headerRows={theadItems}
               rows={dataBarang}
-              loading={loading}
+              loading={loadings.fetch}
               withSearch={false}
               withPagination={false}
               renderRows={({ item, index }) => {
@@ -1068,11 +1048,13 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
 
 const keys = {
   submit: "submit-term-item",
+  fetch: "get-task-by-id",
 };
 
 const mapState = (state) => ({
   loadings: {
     submit: getLoading(state, keys.submit),
+    fetch: getLoading(state, keys.fetch),
   },
 });
 
