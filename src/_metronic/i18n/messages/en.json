@@ -550,5 +550,8 @@
   "TITLE.DOCUMENT_TYPE": "Document Type",
   "TITLE.IS_REQUIRED": "is required",
   "TITLE.IS_INVALID": "is invalid",
-  "TITLE.SELECT_DOCUMENT_TYPE": "Select document type"
+  "TITLE.SELECT_DOCUMENT_TYPE": "Select document type",
+  "TITLE.PERCENTAGE": "Percentage",
+  "TITLE.FINE_ATTACHMENT": "Attached fines:",
+  "TITLE.NOTHING": "Nothing"
 }
