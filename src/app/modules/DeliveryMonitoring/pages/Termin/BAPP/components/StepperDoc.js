@@ -29,34 +29,7 @@ function getSteps() {
   return ["Document Ready", "Upload Signed Document", "Approval"];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return (
-        <div>
-          <Typography>Dokumen BAPP siap diunduh.</Typography>
-          {/* <UploadInput /> */}
-        </div>
-      );
-    case 1:
-      return (
-        <div>
-          <Typography>
-            Upload Dokumen yang telah ditandatangani kedua belah pihak. /
-            Dokumen yang telah anda masukkan ditolak, mohon upload dokumen lain.
-          </Typography>
-        </div>
-      );
-    case 2:
-      return "Menunggu proses approval.";
-    case 3:
-      return `Tahapan proses pada dokumen BAPP telah selesai.`;
-    default:
-      return "Unknown step";
-  }
-}
-
-export default function StepperDoc({ renderBtns }) {
+export default function StepperDoc({ renderBtns, active, taskNews, isReject }) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -73,9 +46,45 @@ export default function StepperDoc({ renderBtns }) {
     setActiveStep(0);
   };
 
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <div>
+            <Typography>Dokumen BAPP siap diunduh.</Typography>
+            {/* <UploadInput /> */}
+          </div>
+        );
+      case 1:
+        return (
+          <div>
+            <Typography>
+              {isReject
+                ? "Dokumen yang telah anda masukkan ditolak, mohon upload dokumen lain."
+                : "Upload Dokumen yang telah ditandatangani kedua belah pihak."}
+            </Typography>
+            {isReject && taskNews?.reject_text && (
+              <React.Fragment>
+                <strong>Alasan penolakan :</strong>
+                <Typography>{taskNews?.reject_text}</Typography>
+              </React.Fragment>
+            )}
+          </div>
+        );
+      case 2:
+        return "Menunggu proses approval.";
+      case 3:
+        return `Tahapan proses pada dokumen BAPP telah selesai.`;
+      default:
+        return "Unknown step";
+    }
+  }
+
+  const stepUsed = active !== undefined ? active : activeStep;
+
   return (
     <div className={classes.root}>
-      <Stepper activeStep={activeStep} orientation="vertical">
+      <Stepper activeStep={stepUsed} orientation="vertical">
         {steps.map((label, index) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
@@ -83,10 +92,10 @@ export default function StepperDoc({ renderBtns }) {
               {getStepContent(index)}
               {renderBtns(index)}
               {/* <Typography>{getStepContent(index)}</Typography> */}
-              <div className={classes.actionsContainer}>
+              {/* <div className={classes.actionsContainer}>
                 <div>
                   <Button
-                    disabled={activeStep === 0}
+                    disabled={stepUsed === 0}
                     onClick={handleBack}
                     className={classes.button}
                   >
@@ -98,22 +107,22 @@ export default function StepperDoc({ renderBtns }) {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    {stepUsed === steps.length - 1 ? "Finish" : "Next"}
                   </Button>
                 </div>
-              </div>
+              </div> */}
             </StepContent>
           </Step>
         ))}
       </Stepper>
-      {activeStep === steps.length && (
+      {/* {stepUsed === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
           <Button onClick={handleReset} className={classes.button}>
             Reset
           </Button>
         </Paper>
-      )}
+      )} */}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 import { Form } from "react-bootstrap";
+import { openLinkTab } from "../../../../../../service/helper/urlHelper";
 
 const ModalPreview = ({
   innerRef,
@@ -13,6 +14,7 @@ const ModalPreview = ({
   title,
   withRemarks,
   handleSubmit,
+  file,
 }) => {
   function onDocumentLoadSuccess({ numPages }) {
     // setNumPages(numPages);
@@ -51,14 +53,15 @@ const ModalPreview = ({
       btnAction={
         <Button
           onClick={() => {
-            window.open(
-              "http://192.168.0.168:5000/task-document/BAPPBAST.pdf",
-              "_blank"
-            );
+            // window.open(
+            //   "http://192.168.0.168:5000/task-document/BAPPBAST.pdf",
+            //   "_blank"
+            // );
+            openLinkTab(file);
           }}
           style={{ marginRight: "auto" }}
         >
-          LIHAT DOKUMEN SELENGKAPNYA (DUMMY)
+          LIHAT DOKUMEN BERTANDATANGAN
         </Button>
       }
     >
