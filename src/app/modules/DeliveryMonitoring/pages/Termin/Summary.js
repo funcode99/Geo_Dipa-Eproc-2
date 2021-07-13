@@ -172,7 +172,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
     setInitialData();
 
     fetch_api_sg({
-      keys: keys.fetch,
+      key: keys.fetch,
       type: "get",
       url: `/delivery/task/${taskId}`,
       onSuccess: (res) => {
@@ -466,7 +466,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
     });
 
     fetch_api_sg({
-      keys: keys.submit,
+      key: keys.submit,
       type: "post",
       url: `/delivery/task/${taskId}`,
       params: {

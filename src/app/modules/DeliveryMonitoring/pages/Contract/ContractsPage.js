@@ -116,7 +116,7 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
 
   const getDataContracts = async () => {
     fetch_api_sg({
-      keys: keys.fetch,
+      key: keys.fetch,
       type: "get",
       url: `/delivery/contract`,
       onSuccess: (res) => {
