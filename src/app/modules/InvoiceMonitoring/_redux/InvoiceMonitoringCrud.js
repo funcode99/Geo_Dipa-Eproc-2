@@ -287,3 +287,6 @@ export async function sendNotifSoftCopySupportDeliverables(id) {
 export async function getListTax() {
   return axios.get(`/invoice/get_tax_selected`);
 }
+export async function approveHardCopy(id, data) {
+  return axios.post(`/invoice/hardcopy_approved/${id}`, data);
+}
