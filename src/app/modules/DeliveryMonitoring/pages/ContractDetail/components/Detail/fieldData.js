@@ -27,4 +27,29 @@ const theadItem = [
   { id: "unit-price", label: <FormattedMessage id="TITLE.UNIT_PRICE" /> },
 ];
 
-export { theadService, theadItem };
+const docOptions = {
+  docType: [
+    { value: "spmk", label: "SPMK" },
+    { value: "skpp", label: "SKPP" },
+  ],
+};
+
+const fieldKickOff = [
+  {
+    name: "docType",
+    typeInput: "SelectInputCustom",
+    label: <FormattedMessage id="TITLE.DOCUMENT_TYPE" />,
+  },
+  {
+    name: "docFile",
+    typeInput: "UploadInput",
+    label: <FormattedMessage id="TITLE.FILE" />,
+  },
+  {
+    name: "docDate",
+    typeInput: "SelectDateInput",
+    label: <FormattedMessage id="LABEL.DOCUMENT_DATE" />,
+  },
+];
+
+export { theadService, theadItem, fieldKickOff, docOptions };

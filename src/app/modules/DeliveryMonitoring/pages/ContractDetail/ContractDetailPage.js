@@ -10,6 +10,7 @@ import {
   FindInPage,
   MonetizationOn,
 } from "@material-ui/icons";
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
@@ -32,6 +33,7 @@ import Denda from "./components/Denda";
 import BAST from "./components/BAST";
 import DetailPage from "./components/Detail/DetailPage";
 import { compose } from "redux";
+import KickOffDetail from "./components/Detail/KickOffDetail";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +47,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TabLists = [
+  {
+    id: "kick-off",
+    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+    label: "Kick Off",
+    icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
+  },
   {
     id: "detail",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
@@ -99,7 +107,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   const [Toast, setToast] = useToast();
   // const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
-  const [tabActive, setTabActive] = React.useState(0);
+  const [tabActive, setTabActive] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   // let authStatus = useSelector(
   //   (state) => state.auth.user.data.status,
@@ -227,14 +235,15 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        {tabActive === 0 && <DetailPage contractId={contract_id} />}
-        {tabActive === 1 && <ParaPihak />}
-        {tabActive === 2 && <DokContract />}
-        {tabActive === 3 && <HargaPekerjaan />}
-        {tabActive === 4 && <JangkaWaktu />}
-        {tabActive === 5 && <Jaminan />}
-        {tabActive === 6 && <Denda />}
-        {tabActive === 7 && <ParaPihak2 />}
+        {tabActive === 0 && <KickOffDetail />}
+        {tabActive === 1 && <DetailPage contractId={contract_id} />}
+        {tabActive === 2 && <ParaPihak />}
+        {tabActive === 3 && <DokContract />}
+        {tabActive === 4 && <HargaPekerjaan />}
+        {tabActive === 5 && <JangkaWaktu />}
+        {tabActive === 6 && <Jaminan />}
+        {tabActive === 7 && <Denda />}
+        {tabActive === 8 && <ParaPihak2 />}
         {/* {tabActive === 8 && <BAST />} */}
       </Paper>
     </React.Fragment>

@@ -2,7 +2,6 @@ import { Card, CardContent } from "@material-ui/core";
 import React, { createContext } from "react";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
-import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 import {
   ModalSubmit,
   ModalDetail,
@@ -14,17 +13,13 @@ import {
 } from "./components";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
 import { FormattedMessage } from "react-intl";
-// import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
 import {
   formatDate,
   formatInitialDate,
   formatUpdateDate,
 } from "../../../../../libs/date";
-// import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-// import useToast from "../../../../../components/toast";
-// import * as Option from "../../../../../service/Option";
 import DevOrderItem from "./components/DevOrderItem";
 import {
   fetch_api_sg,

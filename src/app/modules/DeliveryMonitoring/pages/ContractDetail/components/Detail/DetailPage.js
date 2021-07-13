@@ -35,7 +35,10 @@ const tableHeaderTerminNew = [
     id: "due_date",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />,
   },
-  { id: "bobot", label: "Bobot" },
+  {
+    id: "bobot",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.WEIGHT" />,
+  },
   {
     id: "price",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
