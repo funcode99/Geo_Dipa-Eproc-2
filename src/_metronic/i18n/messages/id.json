@@ -545,5 +545,8 @@
   "TITLE.DETAIL_DELIVERY_ORDER": "Detail Pengiriman Pesanan",
   "TITLE.MAIL_CODE": "Kode Surat",
   "TITLE.SUBMIT_TERM_ITEMS": "Kirim Item Termin",
-  "TITLE.TAX": "Pajak"
+  "TITLE.TAX": "Pajak",
+  "TITLE.PERCENTAGE": "Persentase",
+  "TITLE.FINE_ATTACHMENT": "Denda yang dilampirkan:",
+  "TITLE.NOTHING": "Tidak ada"
 }

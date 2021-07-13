@@ -1179,7 +1179,7 @@ function ContractSprPage(props) {
                     />
                   </div>
                 </div>
-                <div className="form-group row">
+                {/* <div className="form-group row">
                   <label
                     htmlFor="priceTaxSpp"
                     className="col-sm-5 col-form-label"
@@ -1198,7 +1198,7 @@ function ContractSprPage(props) {
                       disabled
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </CardBody>

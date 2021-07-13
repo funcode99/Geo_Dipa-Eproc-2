@@ -27,31 +27,31 @@ import {
   DialogTitle,
   Slide,
   IconButton,
+  TableRow,
+  TableCell,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/components/RowAccordion";
 import { formatDate } from "../../../../libs/date";
-import BtnAksi from "../../../DeliveryMonitoring/pages/Termin/Documents/components/BtnAksi";
 import {
   getDeliverableInInvoive,
-  getContractSoftCopy,
   getContractDistributionSPK,
   getContractDistributionAgreement,
   getFileEproc,
   getListDocSoftCopy,
-  getDetailDocSoftCopy,
   rejectDocId,
   softcopy_save,
   sendRejectedDocSoftCopyLast,
   sendApprovedDocSoftCopyLast,
   updateSoftCopyByUser,
   sendAddRejectedDocSoftCopy,
-sendNotifSoftCopySupportDeliverables
+  sendNotifSoftCopySupportDeliverables,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
+import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 
 const styles = (theme) => ({
   root: {
@@ -130,6 +130,18 @@ const data_opsDeliverable = [
   },
 ];
 
+const StatusRemarks = ({ status, remarks }) => {
+  const isRejected = status === "REJECTED";
+  return (
+    <div className="d-flex flex-column flex-grow-1">
+      <p className="text-dark-75 font-size-lg mb-1">{status || "-"}</p>
+      <span className="text-muted font-weight-bold">
+        {isRejected ? remarks : null}
+      </span>
+    </div>
+  );
+};
+
 export const DialogTitleFile = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
@@ -153,8 +165,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const navLists = [
   {
-    id: "SPR",
-    label: "SPR",
+    id: "SPP",
+    label: "SPP",
   },
   {
     id: "Invoice",
@@ -174,52 +186,11 @@ function ItemContractInvoice(props) {
   const { intl } = props;
   const [navActive, setNavActive] = useState(navLists[0].id);
   const [dataDeliverables, setDataDeliverables] = useState([]);
-  const [dataSoftCopy, setDataSoftCopy] = useState({});
   const classes = useStyles();
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
-  const [loadingRequest, setLoadingRequest] = useState(false);
-  const [contractFilename, setContractFilename] = useState(false);
-  const [theadDocuments] = useState([
-    { id: "action", label: "" },
-    {
-      id: "doc-name",
-      label: intl.formatMessage({
-        id: "TITLE.DOCUMENT_NAME",
-      }),
-    },
-    {
-      id: "due-date",
-      label: intl.formatMessage({
-        id: "CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE",
-      }),
-    },
-    {
-      id: "dokumen-progress",
-      label: intl.formatMessage({
-        id: "CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS",
-      }),
-    },
-    {
-      id: "deliv-dokumen",
-      label: intl.formatMessage({
-        id: "CONTRACT_DETAIL.TABLE_HEAD.DELIVERABLES_DOCUMENT",
-      }),
-    },
-    {
-      id: "remarks",
-      label: intl.formatMessage({
-        id: "TITLE.REMARKS",
-      }),
-    },
-    {
-      id: "aksi",
-      label: intl.formatMessage({
-        id: "MENU.ACTIONS",
-      }),
-    },
-  ]);
+  const [loadingDeliverables, setLoadingDeliverables] = useState(false);
   const [modalReject, setModalReject] = useState({
     statusDialog: false,
     data: {},
@@ -241,11 +212,92 @@ function ItemContractInvoice(props) {
   });
   const user_id = useSelector((state) => state.auth.user.data.user_id);
   const dataUser = useSelector((state) => state.auth.user.data);
+  let verificationStafStatus = false;
+  let monitoring_role = dataUser.monitoring_role
+    ? dataUser.monitoring_role
+    : [];
+  verificationStafStatus =
+    monitoring_role.findIndex((element) => element === "Verification Staff") >=
+    0;
   const [uploadFilename, setUploadFilename] = useState(
     intl.formatMessage({
       id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
     })
   );
+
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.NO_DOCUMENT",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.STATUS" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.ACTION",
+      }),
+    },
+  ];
+  const headerTableDeliverables = [
+    { title: "" },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.STATUS",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.PERCENTAGE",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.DELIVERABLES_DOCUMENT",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.REMARKS",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "MENU.ACTIONS",
+      }),
+    },
+  ];
 
   const handleAction = (type, data) => {
     if (type === "rejected") {
@@ -288,44 +340,14 @@ function ItemContractInvoice(props) {
   };
 
   const callApi = () => {
-    setLoading(true);
+    setLoadingDeliverables(true);
     getDeliverableInInvoive(termin)
       .then((result) => {
-        setLoading(false);
+        setLoadingDeliverables(false);
         setDataDeliverables(result.data.data.task_documents);
       })
       .catch((error) => {
-        setLoading(false);
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      });
-  };
-
-  const getContractDistributionSPKData = () => {
-    setLoading(true);
-    getContractDistributionSPK(contract)
-      .then((result) => {
-        setLoading(false);
-        if (result.data !== "DATA NOT FOUND!") {
-          setContractFilename(result.data.data.items.data.fileName);
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      });
-  };
-
-  const getContractDistributionAgreementData = () => {
-    setLoading(true);
-    getContractDistributionAgreement(contract)
-      .then((result) => {
-        setLoading(false);
-        if (result.data !== "DATA NOT FOUND!") {
-          setContractFilename(result.data.data.items.data.fileName);
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
+        setLoadingDeliverables(false);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
@@ -335,7 +357,7 @@ function ItemContractInvoice(props) {
     getListDocSoftCopy(contract, termin)
       .then((result) => {
         setLoading(false);
-            setDataDocSoftCopy(result.data.data);
+        setDataDocSoftCopy(result.data.data);
       })
       .catch((err) => {
         setLoading(false);
@@ -360,17 +382,17 @@ function ItemContractInvoice(props) {
   const getFileContract = (name, status, ident_name) => {
     console.log(name, status);
     if (status === "eproc") {
-    getFileEproc({ filename: name })
-      .then((result) => {
-        var a = document.createElement("a");
-        a.href = result.data.data.items.respons;
-        a.download = name;
-        a.click();
-        a.remove();
-      })
-      .catch((error) => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      });
+      getFileEproc({ filename: name })
+        .then((result) => {
+          var a = document.createElement("a");
+          a.href = result.data.data.items.respons;
+          a.download = name;
+          a.click();
+          a.remove();
+        })
+        .catch((error) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
     } else if (status === "ruby") {
       window.open(DEV_RUBY + name, "_blank");
     } else if (status === "monitoring") {
@@ -422,28 +444,28 @@ function ItemContractInvoice(props) {
     };
     if (modalApproved.data.softcopy_state === null) {
       softcopy_save(data_1)
-      .then((result) => {
-        setModalApproved({
-          ...modalApproved,
-          statusReq: true,
-          loading: true,
-        });
-        setTimeout(() => {
-                callApiContractSoftCopy();
+        .then((result) => {
           setModalApproved({
             ...modalApproved,
-            statusDialog: false,
-            loading: false,
+            statusReq: true,
+            loading: true,
           });
-        }, 2500);
-      })
-      .catch((err) => {
-        setModalApproved({
-          ...modalApproved,
-          loading: true,
+          setTimeout(() => {
+            callApiContractSoftCopy();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setModalApproved({
+            ...modalApproved,
+            loading: true,
+          });
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      });
     } else {
       sendApprovedDocSoftCopyLast(
         modalApproved.data.document_monitoring_id,
@@ -566,32 +588,32 @@ function ItemContractInvoice(props) {
     };
     if (modalReject.data.softcopy_state === null) {
       softcopy_save(data_1)
-      .then((result) => {
+        .then((result) => {
           data_2.document_monitoring_id = result.data.data.id;
           sendRejectedDocSoftCopyLast(data_2)
             .then((results) => {
-        setModalReject({
-          ...modalReject,
-          statusReq: true,
-          loading: true,
-        });
-        setTimeout(() => {
+              setModalReject({
+                ...modalReject,
+                statusReq: true,
+                loading: true,
+              });
+              setTimeout(() => {
                 callApiContractSoftCopy();
-          setModalReject({
-            ...modalReject,
-            statusDialog: false,
-            loading: false,
-          });
+                setModalReject({
+                  ...modalReject,
+                  statusDialog: false,
+                  loading: false,
+                });
                 document.getElementById("commentRejected").value = "";
-        }, 2500);
-      })
-      .catch((err) => {
-        setModalReject({
-          ...modalReject,
+              }, 2500);
+            })
+            .catch((err) => {
+              setModalReject({
+                ...modalReject,
                 loading: false,
-        });
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      });
+              });
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+            });
         })
         .catch((err) => {
           setModalReject({
@@ -607,20 +629,20 @@ function ItemContractInvoice(props) {
         user_id
       )
         .then((results) => {
-      sendRejectedDocSoftCopyLast(data_2)
-        .then((results) => {
-          setModalReject({
-            ...modalReject,
-            statusReq: true,
-            loading: true,
-          });
-          setTimeout(() => {
-            callApiContractSoftCopy();
-            setModalReject({
-              ...modalReject,
-              statusDialog: false,
-              loading: false,
-            });
+          sendRejectedDocSoftCopyLast(data_2)
+            .then((results) => {
+              setModalReject({
+                ...modalReject,
+                statusReq: true,
+                loading: true,
+              });
+              setTimeout(() => {
+                callApiContractSoftCopy();
+                setModalReject({
+                  ...modalReject,
+                  statusDialog: false,
+                  loading: false,
+                });
                 document.getElementById("commentRejected").value = "";
               }, 2500);
             })
@@ -673,26 +695,26 @@ function ItemContractInvoice(props) {
             .then((results) => {
               rejectDocId(modalReject.data.id, note)
                 .then((results) => {
-              callApi();
-              setModalReject({
-                ...modalReject,
-                statusReq: true,
-                loading: true,
-              });
-              setTimeout(() => {
-                setModalReject({
-                  ...modalReject,
-                  statusDialog: false,
-                  loading: false,
-                });
-                document.getElementById("commentRejected").value = "";
-              }, 2500);
-            })
-            .catch((err) => {
-              setModalReject({
-                ...modalReject,
-                loading: false,
-              });
+                  callApi();
+                  setModalReject({
+                    ...modalReject,
+                    statusReq: true,
+                    loading: true,
+                  });
+                  setTimeout(() => {
+                    setModalReject({
+                      ...modalReject,
+                      statusDialog: false,
+                      loading: false,
+                    });
+                    document.getElementById("commentRejected").value = "";
+                  }, 2500);
+                })
+                .catch((err) => {
+                  setModalReject({
+                    ...modalReject,
+                    loading: false,
+                  });
                   setToast(
                     intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
                     5000
@@ -725,26 +747,26 @@ function ItemContractInvoice(props) {
             .then((results) => {
               rejectDocId(modalReject.data.id, note)
                 .then((results) => {
-              callApi();
-              setModalReject({
-                ...modalReject,
-                statusReq: true,
-                loading: true,
-              });
-              setTimeout(() => {
-                setModalReject({
-                  ...modalReject,
-                  statusDialog: false,
-                  loading: false,
-                });
-                document.getElementById("commentRejected").value = "";
-          }, 2500);
-        })
-        .catch((err) => {
-          setModalReject({
-            ...modalReject,
-                loading: false,
-              });
+                  callApi();
+                  setModalReject({
+                    ...modalReject,
+                    statusReq: true,
+                    loading: true,
+                  });
+                  setTimeout(() => {
+                    setModalReject({
+                      ...modalReject,
+                      statusDialog: false,
+                      loading: false,
+                    });
+                    document.getElementById("commentRejected").value = "";
+                  }, 2500);
+                })
+                .catch((err) => {
+                  setModalReject({
+                    ...modalReject,
+                    loading: false,
+                  });
                   setToast(
                     intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
                     5000
@@ -835,7 +857,7 @@ function ItemContractInvoice(props) {
               if (modalApproved.data.url) {
                 handleApprovedDeliverble();
               } else {
-              handleApproved();
+                handleApproved();
               }
             }}
           >
@@ -937,9 +959,9 @@ function ItemContractInvoice(props) {
               disabled={modalReject.loading}
             >
               {!modalReject.loading && (
-              <span>
-                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" />
-              </span>
+                <span>
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" />
+                </span>
               )}
               {modalReject.loading &&
                 (modalReject.statusReq && modalReject.loading ? (
@@ -1093,123 +1115,94 @@ function ItemContractInvoice(props) {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          {/* begin: Table */}
-          <div
-            className="table-wrapper-scroll-y my-custom-scrollbar"
-            style={{ width: "100%" }}
-          >
-            <div className="segment-table">
-              <div className="hecto-8">
-                <table className="table-bordered overflow-auto">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.TABLE_HEADER.NO" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.NO_DOCUMENT" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.STATUS" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataDocSoftCopy.map((item, index) => {
-                      return (
-                        <tr key={index.toString()}>
-                          <td className="align-middle">{item.seq}</td>
-                          <td>{item.document_name}</td>
-                          {item.doc_no ? (
-                            item.doc_file ? (
-                        <td>
-                                <a
-                                  href="#"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    getFileContract(
-                                      item.doc_file,
-                                      item.doc_status,
-                                      item.ident_name
-                                    );
-                                  }}
-                                >
-                                  {item.doc_no}
+          <div style={{ width: "100%" }}>
+            <TableOnly
+              dataHeader={headerTable}
+              loading={loading}
+              // err={err}
+              hecto={8}
+            >
+              {dataDocSoftCopy.map((item, index) => {
+                return (
+                  <TableRow key={index.toString()}>
+                    <TableCell>{item.seq}</TableCell>
+                    <TableCell>{item.document_name}</TableCell>
+                    {item.doc_no ? (
+                      item.doc_file ? (
+                        <TableCell>
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              getFileContract(
+                                item.doc_file,
+                                item.doc_status,
+                                item.ident_name
+                              );
+                            }}
+                          >
+                            {item.doc_no}
                           </a>
-                        </td>
+                        </TableCell>
                       ) : (
-                              <td>{item.doc_no} (file tidak tersedia)</td>
-                            )
-                          ) : (
-                            <td></td>
-                          )}
-                          <td className="align-middle">
-                            {item.softcopy_approved_at
-                              ? window
-                                  .moment(new Date(item.softcopy_approved_at))
-                                  .format("DD MMM YYYY")
-                              : ""}
-                        </td>
-                          <td>
-                            {(item.softcopy_state === "PENDING" ||
-                              item.softcopy_state === null) &&
-                            item.doc_file
-                              ? "WAITING TO APPROVE"
-                              : item.softcopy_state === "REJECTED"
-                              ? "REJECTED"
-                              : item.softcopy_state === "APPROVED"
-                              ? "APPROVED"
-                              : "WAITING"}
-                          </td>
-                          <td>
-                            {item.softcopy_state === "APPROVED"
-                              ? item.approved_by
-                              : null}
-                          </td>
-                      <td className="align-middle">
-                            {dataUser?.is_finance &&
-                              (item.softcopy_state === null ||
-                              item.softcopy_state === "PENDING") &&
-                              item.doc_no &&
-                              item.doc_file && (
-                        <ButtonAction
-                              data={item}
-                          handleAction={handleAction}
-                          ops={data_ops}
-                        />
-                              )}
-                            {!dataUser?.is_finance &&
-                              item.softcopy_state === "REJECTED" &&
-                              item.doc_no &&
-                              item.seq === 1 && (
-                                <ButtonAction
-                                  data={Object.assign({}, item)}
-                                  handleAction={handleAction}
-                                  ops={data_ops_user}
-                                />
-                              )}
-                      </td>
-                    </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                        <TableCell>
+                          {item.doc_no} (file tidak tersedia)
+                        </TableCell>
+                      )
+                    ) : (
+                      <TableCell></TableCell>
+                    )}
+                    <TableCell>
+                      {item.softcopy_approved_at
+                        ? window
+                            .moment(new Date(item.softcopy_approved_at))
+                            .format("DD MMM YYYY")
+                        : ""}
+                    </TableCell>
+                    <TableCell>
+                      {(item.softcopy_state === "PENDING" ||
+                        item.softcopy_state === null) &&
+                      item.doc_file
+                        ? "WAITING TO APPROVE"
+                        : item.softcopy_state === "REJECTED"
+                        ? "REJECTED"
+                        : item.softcopy_state === "APPROVED"
+                        ? "APPROVED"
+                        : "WAITING"}
+                    </TableCell>
+                    <TableCell>
+                      {item.softcopy_state === "APPROVED"
+                        ? item.approved_by
+                        : null}
+                    </TableCell>
+                    <TableCell>
+                      {dataUser?.is_finance &&
+                        (item.softcopy_state === null ||
+                          item.softcopy_state === "PENDING") &&
+                        item.doc_no &&
+                        item.doc_file && (
+                          <ButtonAction
+                            data={item}
+                            handleAction={handleAction}
+                            ops={data_ops}
+                          />
+                        )}
+                      {!dataUser?.is_finance &&
+                        item.softcopy_state === "REJECTED" &&
+                        item.doc_no &&
+                        item.seq === 1 && (
+                          <ButtonAction
+                            data={Object.assign({}, item)}
+                            handleAction={handleAction}
+                            ops={data_ops_user}
+                          />
+                        )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableOnly>
           </div>
-          {/* end: Table */}
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
@@ -1227,147 +1220,145 @@ function ItemContractInvoice(props) {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          {/* begin: Table */}
-          <div
-            className="table-wrapper-scroll-y my-custom-scrollbar"
-            style={{ width: "100%" }}
-          >
-            <div className="segment-table">
-              <div className="hecto-17">
-                <table className="table-bordered overflow-auto">
-                  <thead>
-                    <tr>
-                      {theadDocuments.map((item) => (
-                        <th
-                          className="bg-primary text-white align-middle"
-                          key={item.id}
-                        >
-                          {item.label}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataDeliverables?.map((el, id) => {
-                      // Jenis Dokumen
-                      return (
-                        <RowAccordion
-                          key={id}
-                          dataAll={el}
-                          data={["accordIcon", el.name, "-", "-", "-", "-", ""]}
-                        >
-                          {(item) => {
-                            const isPeriodic = item.is_periodic;
-                            // Periode Dokumen
-                            return isPeriodic
-                              ? item?.periodes?.map((el, id) => (
+          <div style={{ width: "100%" }}>
+            <TableOnly
+              dataHeader={headerTableDeliverables}
+              loading={loadingDeliverables}
+              // err={err}
+              hecto={17}
+            >
+              {dataDeliverables?.map((el, id) => {
+                // Jenis Dokumen
+                return (
+                  <RowAccordion
+                    key={id}
+                    dataAll={el}
+                    data={["accordIcon", el.name, "-", "-", "-", "-", "-", ""]}
+                  >
+                    {(item) => {
+                      const isPeriodic = item.is_periodic;
+                      // Periode Dokumen
+                      return isPeriodic
+                        ? item?.periodes?.map((el, id) => (
+                            <RowAccordion
+                              key={id}
+                              classBtn={"pl-8"}
+                              dataAll={el}
+                              data={[
+                                "accordIcon",
+                                el?.name,
+                                "-",
+                                "-",
+                                "-",
+                                "-",
+                                "-",
+                                "-",
+                              ]}
+                            >
+                              {/* Dokumen */}
+                              {(item2) =>
+                                item2?.documents?.map((els, idx) => (
                                   <RowAccordion
-                                    key={id}
-                                    classBtn={"pl-12"}
-                                    dataAll={el}
+                                    key={idx}
+                                    classBtn={"pl-13"}
                                     data={[
                                       "accordIcon",
-                                      el?.name,
-                                      "-",
-                                      "-",
-                                      "-",
-                                      "-",
-                                      "",
-                                    ]}
-                                  >
-                                    {/* Dokumen */}
-                                    {(item2) =>
-                                      item2?.documents?.map((els, idx) => (
-                                        <RowAccordion
-                                          key={idx}
-                                          classBtn={"pl-17"}
-                                          data={[
-                                            "accordIcon",
-                                            els?.document_custom_name ??
-                                              els?.document?.name,
-                                            formatDate(new Date(els?.due_date)),
-                                            els?.url === null
-                                              ? "WAITING TO UPLOAD"
-                                              : "AVAILABLE",
-                                            <BtnLihat url={els?.url} />,
-                                            els?.remarks,
-                                            els?.url &&
-                                              (els.document_monitoring ===
-                                                null ||
-                                                (els.document_monitoring
-                                                  ?.softcopy_state !==
-                                                  "REJECTED" &&
-                                                  els.document_monitoring
-                                                    ?.softcopy_state !==
-                                                    "APPROVED")) &&
-                                              els.document_status?.name ===
-                                                "APPROVED" && (
-                                              <ButtonAction
-                                                data={els}
-                                                handleAction={
-                                                  handleActionDeliverable
-                                                }
-                                                ops={data_opsDeliverable}
-                                              />
-                                            ),
-                                          ]}
-                                        />
-                                      ))
-                                    }
-                                  </RowAccordion>
-                                ))
-                              : item?.documents?.map((el, id) => (
-                                  <RowAccordion
-                                    //  Dokumen
-                                    key={id}
-                                    classBtn={"pl-17"}
-                                    data={[
-                                      "accordIcon",
-                                      el?.document_custom_name ??
-                                        el?.document?.name,
-                                      formatDate(new Date(el?.due_date)),
-                                      el?.url === null
-                                        ? "WAITING TO UPLOAD"
-                                        : "AVAILABLE",
-                                      <BtnLihat url={el?.url} />,
-                                      el?.remarks,
-                                      el?.url &&
-                                        (el.document_monitoring === null ||
-                                          (el.document_monitoring
+                                      els?.document_custom_name ??
+                                        els?.document?.name,
+                                      formatDate(new Date(els?.due_date)),
+                                      <StatusRemarks
+                                        status={
+                                          els?.document_status?.name ===
+                                            "APPROVED" &&
+                                          (els?.document_monitoring === null ||
+                                            els?.document_monitoring ===
+                                              "PENDING")
+                                            ? "WAITING TO APPROVE"
+                                            : els?.document_status?.name
+                                        }
+                                        remarks={els?.remarks_status}
+                                      />,
+                                      els?.percentage && els?.percentage + "%",
+                                      <BtnLihat url={els?.url} />,
+                                      els?.remarks,
+                                      els?.url &&
+                                        (els.document_monitoring === null ||
+                                          (els.document_monitoring
                                             ?.softcopy_state !== "REJECTED" &&
-                                            el.document_monitoring
+                                            els.document_monitoring
                                               ?.softcopy_state !==
                                               "APPROVED")) &&
-                                        el.document_status?.name ===
+                                        els.document_status?.name ===
                                           "APPROVED" && (
-                                        <ButtonAction
-                                          data={el}
+                                          <ButtonAction
+                                            data={els}
                                             handleAction={
                                               handleActionDeliverable
                                             }
-                                          ops={data_opsDeliverable}
-                                        />
-                                      ),
+                                            ops={data_opsDeliverable}
+                                          />
+                                        ),
                                     ]}
                                   />
-                                ));
-                          }}
-                        </RowAccordion>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                                ))
+                              }
+                            </RowAccordion>
+                          ))
+                        : item?.documents?.map((el, id) => (
+                            <RowAccordion
+                              //  Dokumen
+                              key={id}
+                              classBtn={"pl-13"}
+                              data={[
+                                "accordIcon",
+                                el?.document_custom_name ?? el?.document?.name,
+                                formatDate(new Date(el?.due_date)),
+                                <StatusRemarks
+                                  status={
+                                    el?.document_status?.name === "APPROVED" &&
+                                    (el?.document_monitoring === null ||
+                                      el?.document_monitoring === "PENDING")
+                                      ? "WAITING TO APPROVE"
+                                      : el?.document_status?.name
+                                  }
+                                  remarks={el?.remarks_status}
+                                />,
+                                el?.percentage && el?.percentage + "%",
+                                <BtnLihat url={el?.url} />,
+                                el?.remarks,
+                                el?.url &&
+                                  (el.document_monitoring === null ||
+                                    (el.document_monitoring?.softcopy_state !==
+                                      "REJECTED" &&
+                                      el.document_monitoring?.softcopy_state !==
+                                        "APPROVED")) &&
+                                  el.document_status?.name === "APPROVED" && (
+                                    <ButtonAction
+                                      data={el}
+                                      handleAction={handleActionDeliverable}
+                                      ops={data_opsDeliverable}
+                                    />
+                                  ),
+                              ]}
+                            />
+                          ));
+                    }}
+                  </RowAccordion>
+                );
+              })}
+            </TableOnly>
           </div>
-          {/* end: Table */}
         </ExpansionPanelDetails>
       </ExpansionPanel>
 
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
-            <button type="button" onClick={handleSendNotif} className="btn btn-sm btn-primary">
+            <button
+              type="button"
+              onClick={handleSendNotif}
+              className="btn btn-sm btn-primary"
+            >
               Send Notif
             </button>
           </CardHeaderToolbar>
@@ -1378,13 +1369,14 @@ function ItemContractInvoice(props) {
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
           />
 
-          {navActive === "SPR" && (
+          {navActive === "SPP" && (
             <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
               <ContractSprPage
                 {...props}
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
+                verificationStafStatus={!verificationStafStatus}
               />
             </div>
           )}
@@ -1396,6 +1388,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
+                verificationStafStatus={!verificationStafStatus}
               />
             </div>
           )}
@@ -1407,6 +1400,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
+                verificationStafStatus={!verificationStafStatus}
               />
             </div>
           )}
@@ -1418,6 +1412,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
+                verificationStafStatus={!verificationStafStatus}
               />
             </div>
           )}

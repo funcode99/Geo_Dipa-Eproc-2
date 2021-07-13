@@ -2,18 +2,23 @@ import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector, shallowEqual } from "react-redux";
 import { rupiah } from "../../../../libs/currency";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Card, CardBody, CardFooter } from "../../../../../_metronic/_partials/controls";
-// import "react-select2-wrapper/css/select2.css";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+} from "../../../../../_metronic/_partials/controls";
+import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import {
   getPicContract,
   getPicVendor,
   getContractSummary,
   getContractAuthority,
   createContractAuthority,
-  updateContractAuthority
+  updateContractAuthority,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
+import { TableRow, TableCell } from "@material-ui/core";
 
 function ItemContractSummary(props) {
   const { intl, getData } = props;
@@ -68,6 +73,37 @@ function ItemContractSummary(props) {
       nameDoc: null,
     },
   ]);
+
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.STATUS",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.UPLOAD_DATE" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+    },
+  ];
 
   const [picContractData, setPicContractData] = useState([]);
   const [picVendorData, setPicVendorData] = useState([]);
@@ -136,32 +172,40 @@ function ItemContractSummary(props) {
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
-          ? response["data"]["data"]["data"]["address"]["postal_address"]
-          : null
-          } ${response["data"]["data"]["data"]["address"]["sub_district"]
-            ? response["data"]["data"]["data"]["address"]["sub_district"][
-            "name"
-            ]
+        response["data"]["data"]["full_address_party_2"] = `${
+          response["data"]["data"]["data"]["address"]["postal_address"]
+            ? response["data"]["data"]["data"]["address"]["postal_address"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["district"]
+        } ${
+          response["data"]["data"]["data"]["address"]["sub_district"]
+            ? response["data"]["data"]["data"]["address"]["sub_district"][
+                "name"
+              ]
+            : null
+        } ${
+          response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["province"]
+        } ${
+          response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["postal_code"]
+        } ${
+          response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
-          }`;
-        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
-          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
-          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
+        }`;
+        response["data"]["data"]["full_data_party_2"] = `${
+          response["data"]["data"]["full_name"]
+        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
+          response["data"]["data"]["data"]["phone_number"]["number"]
+        } ${
+          response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
-              response["data"]["data"]["data"]["phone_number"]["ext"]
-            )
+                response["data"]["data"]["data"]["phone_number"]["ext"]
+              )
             : ""
-          }`;
+        }`;
         response["data"]["data"][
           "full_data_party_1"
         ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
@@ -189,19 +233,15 @@ function ItemContractSummary(props) {
   const getContractAuthorityData = useCallback(() => {
     getContractAuthority(contract_id)
       .then((response) => {
-        if (response['data']['data']) {
-          setContractAuthority(response['data']['data']['authority'])
-          setContractAuthorityExist(true)
+        if (response["data"]["data"]) {
+          setContractAuthority(response["data"]["data"]["authority"]);
+          setContractAuthorityExist(true);
         }
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  }, [
-    contract_id,
-    intl,
-    setToast
-  ]);
+  }, [contract_id, intl, setToast]);
 
   const setTimePIcker = (from_time, thru_time) => {
     window.$("#kt_daterangepicker_1").daterangepicker({
@@ -218,7 +258,7 @@ function ItemContractSummary(props) {
   };
 
   const handleSelect = (e) => {
-    setContractAuthority(e.target.value)
+    setContractAuthority(e.target.value);
   };
 
   const handleSubmit = () => {
@@ -228,7 +268,7 @@ function ItemContractSummary(props) {
       authority: contractAuthority,
       created_by_id: user_id,
       updated_by_id: user_id,
-      term_id: termin
+      term_id: termin,
     };
     if (contractAuthorityExist) {
       updateContractAuthority(data)
@@ -491,56 +531,26 @@ function ItemContractSummary(props) {
               <FormattedMessage id="TITLE.BILLING_DOCUMENT" />
             </h6>
           </div>
-          {/* begin: Table */}
-          <div className="table-wrapper-scroll-y my-custom-scrollbar">
-            <div className="segment-table">
-              <div className="hecto-10">
-                <table className="table-bordered overflow-auto">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.NO" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.STATUS" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.UPLOAD_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((item, index) => {
-                      return (
-                        <tr key={index.toString()}>
-                          <td className="align-middle text-center">
-                            {index + 1}
-                          </td>
-                          <td>{item.name}</td>
-                          <td>{item.status}</td>
-                          <td className="align-middle text-center">
-                            {item.approvedBy}
-                          </td>
-                          <td className="align-middle">{item.date}</td>
-                          <td className="align-middle">{item.nameDoc}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          {/* end: Table */}
+
+          <TableOnly
+            dataHeader={headerTable}
+            loading={loading}
+            // err={err}
+            hecto={10}
+          >
+            {data.map((item, index) => {
+              return (
+                <TableRow key={index.toString()}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.status}</TableCell>
+                  <TableCell>{item.approvedBy}</TableCell>
+                  <TableCell>{item.date}</TableCell>
+                  <TableCell>{item.nameDoc}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableOnly>
         </CardBody>
       </Card>
     </React.Fragment>

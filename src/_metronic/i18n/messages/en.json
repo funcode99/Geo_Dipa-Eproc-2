@@ -546,5 +546,8 @@
   "TITLE.DETAIL_DELIVERY_ORDER": "Detail Delivery Order",
   "TITLE.MAIL_CODE": "Mail Code",
   "TITLE.SUBMIT_TERM_ITEMS": "Submit Term Items",
-  "TITLE.TAX": "Tax"
+  "TITLE.TAX": "Tax",
+  "TITLE.PERCENTAGE": "Percentage",
+  "TITLE.FINE_ATTACHMENT": "Attached fines:",
+  "TITLE.NOTHING": "Nothing"
 }

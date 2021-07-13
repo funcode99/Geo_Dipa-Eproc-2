@@ -646,26 +646,6 @@ function ContractInvoicePage(props) {
                   htmlFor="priceTaxInvoice"
                   className="col-sm-5 col-form-label"
                 >
-                  <FormattedMessage
-                    id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN"
-                    values={{ termin: contractData["termin_name"] }}
-                  />
-                </label>
-                <div className="col-sm-7">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceTaxInvoice"
-                    defaultValue={contractData["termin_value_ppn_new"]}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="priceTaxInvoice"
-                  className="col-sm-5 col-form-label"
-                >
                   <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />
                 </label>
                 <div className="col-sm-7">
@@ -687,7 +667,8 @@ function ContractInvoicePage(props) {
               isSubmit ||
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
-              invoiceData === null
+              invoiceData === null ||
+              props.verificationStafStatus
             }
             className="btn btn-primary mx-1"
           >
@@ -700,7 +681,8 @@ function ContractInvoicePage(props) {
               isSubmit ||
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
-              invoiceData === null
+              invoiceData === null ||
+              props.verificationStafStatus
             }
             className="btn btn-danger mx-1"
           >

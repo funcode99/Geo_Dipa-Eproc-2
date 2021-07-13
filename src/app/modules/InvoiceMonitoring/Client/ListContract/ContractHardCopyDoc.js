@@ -6,10 +6,7 @@ import {
   CardBody,
   CardFooter,
 } from "../../../../../_metronic/_partials/controls";
-import {
-  getInvoice,
-  createBkb
-} from "../../_redux/InvoiceMonitoringCrud";
+import { getInvoice, createBkb } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
 // import * as Yup from "yup";
@@ -597,10 +594,14 @@ function ContractHardCopyDoc(props) {
           </ExpansionPanel>
         </CardBody>
         <CardFooter>
-          <button type="button" className="btn btn-sm btn-primary" onClick={handleSubmit}>
+          <button
+            type="button"
+            className="btn btn-sm btn-primary mx-1"
+            onClick={handleSubmit}
+          >
             Send Notif
           </button>
-          <button type="button" className="btn btn-sm btn-primary">
+          <button type="button" className="btn btn-sm btn-primary mx-1">
             Print Kelengkapan Dokumen
           </button>
         </CardFooter>

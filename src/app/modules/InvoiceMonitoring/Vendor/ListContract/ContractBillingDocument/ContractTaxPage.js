@@ -266,7 +266,10 @@ function ContractTaxPage(props) {
   const getInvoiceData = useCallback(() => {
     getInvoice(contract_id, termin)
       .then((response) => {
-        if (response.data.data?.state == "PENDING" || response.data.data?.state == "APPROVED") {
+        if (
+          response.data.data?.state == "PENDING" ||
+          response.data.data?.state == "APPROVED"
+        ) {
           formik.setFieldValue(
             "invoice_date",
             new Date(response.data.data.from_time)
@@ -702,7 +705,7 @@ function ContractTaxPage(props) {
                     />
                   </div>
                 </div>
-                <div className="form-group row">
+                {/* <div className="form-group row">
                   <label htmlFor="priceTax" className="col-sm-5 col-form-label">
                     <FormattedMessage
                       id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE_PPN"
@@ -718,7 +721,7 @@ function ContractTaxPage(props) {
                       disabled
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </CardBody>
