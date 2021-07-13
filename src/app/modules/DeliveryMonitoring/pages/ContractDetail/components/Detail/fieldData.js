@@ -27,4 +27,22 @@ const theadItem = [
   { id: "unit-price", label: <FormattedMessage id="TITLE.UNIT_PRICE" /> },
 ];
 
-export { theadService, theadItem };
+const fieldKickOff = [
+  {
+    name: "docType",
+    typeInput: "SelectInputCustom",
+    label: "Tipe Dokumen",
+  },
+  {
+    name: "docFile",
+    typeInput: "UploadInput",
+    label: "File Dokumen",
+  },
+  {
+    name: "docDate",
+    typeInput: "SelectDateInput",
+    label: "Tanggal Dokumen",
+  },
+];
+
+export { theadService, theadItem, fieldKickOff };
