@@ -9,7 +9,8 @@ import {
 import {
   createBkb, getFileEproc, getListDocSoftCopy, approveHardCopy,
   rejectHardCopyStatus, rejectHardCopyHistory, getDeliverableInInvoive, getHardcopyBillingDocument,
-  getFileSpp, getFileInvoice, getFileReceipt, getFileTax
+  getFileSpp, getFileInvoice, getFileReceipt, getFileTax,
+  sendNotifHardCopy, checkBkbExist
 } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
@@ -301,6 +302,16 @@ function ContractHardCopyDoc(props) {
     console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
 
+  const checkBkb = () => {
+    checkBkbExist(termin)
+      .then((result) => {
+        setInvoiceBkbExist(result.data.data.isExist);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
   const callApi = () => {
     setLoadingDeliverables(true);
     getDeliverableInInvoive(termin)
@@ -350,28 +361,25 @@ function ContractHardCopyDoc(props) {
       created_by_id: user_id,
       updated_by_id: user_id,
     };
-    if (invoiceBkbExist) {
-      // updateContractAuthority(data)
-      //   .then((response) => {
-      //     setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-      //     setLoading(false);
-      //   })
-      //   .catch((error) => {
-      //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      //     setLoading(false);
-      //   });
-    } else {
-      createBkb(data)
-        .then((response) => {
-          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-          setLoading(false);
-          setInvoiceBkbExist(true);
-        })
-        .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-          setLoading(false);
-        });
-    }
+    sendNotifHardCopy({ contract_id: contract_id, term_id: termin })
+      .then((response) => {
+        if (!invoiceBkbExist) {
+          createBkb(data)
+            .then((response) => {
+              setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+              setLoading(false);
+              setInvoiceBkbExist(true);
+            })
+            .catch((error) => {
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+              setLoading(false);
+            });
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoading(false);
+      });
   };
 
   const getFileContract = (name, status, ident_name) => {
@@ -500,6 +508,7 @@ function ContractHardCopyDoc(props) {
   useEffect(callApi, []);
   useEffect(callApiContractSoftCopy, []);
   useEffect(callApiBillingHardCopy, []);
+  useEffect(checkBkb, []);
 
   return (
     <React.Fragment>
