@@ -553,6 +553,11 @@
   "TITLE.IS_INVALID": "is invalid",
   "TITLE.SELECT_DOCUMENT_TYPE": "Select document type",
   "TITLE.PERCENTAGE": "Percentage",
-  "TITLE.FINE_ATTACHMENT": "Attached fines:",
-  "TITLE.NOTHING": "Nothing"
+  "TITLE.FINE_ATTACHMENT": "Tax levied:",
+  "TITLE.NOTHING": "Nothing",
+  "TITLE.TYPE_TAX": "Tax Type",
+  "TITLE.GROUP_TAX": "Tax Group",
+  "TITLE.UPDATE_BY": "Update By",
+  "TITLE.TAX_NAME": "Tax Name",
+  "TITLE.TAX_VALUE": "Tax Value"
 }

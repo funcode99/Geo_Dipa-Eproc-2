@@ -171,8 +171,8 @@ export function updateEmail(data) {
   return axios.post(`data/update_email`, data);
 }
 
-export function getListTax() {
-  return axios.get(`data/get_tax`);
+export function getListTax(params) {
+  return axios.get(`data/get_tax${params ? "?" + params : ""}`);
 }
 
 export function createGroupTax(data) {
@@ -192,7 +192,7 @@ export function editGroupTaxItem(id, data) {
 }
 
 export function getTaxItem(id, params) {
-  return axios.get(`data/get_tax_by_id/${id}`);
+  return axios.get(`data/get_tax_by_id/${id}${params ? "?" + params : ""}`);
 }
 
 // master data invoice periods
