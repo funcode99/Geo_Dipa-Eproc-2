@@ -4,14 +4,16 @@ import { FormattedMessage } from "react-intl";
 
 const validation = {
   require: (text) => {
-    return string().required(
-      `${text} ${(<FormattedMessage id="TITLE.IS_REQUIRED" />)}.`
-    );
+    return string().required(`${text} harus diisi.`);
   },
-  date: (text) => {
+
+  date: (message) => {
     return date()
-      .required(`${text} ${(<FormattedMessage id="TITLE.IS_INVALID" />)}.`)
+      .required(message)
       .nullable();
+  },
+  string: (message) => {
+    return string().required(message);
   },
 };
 
