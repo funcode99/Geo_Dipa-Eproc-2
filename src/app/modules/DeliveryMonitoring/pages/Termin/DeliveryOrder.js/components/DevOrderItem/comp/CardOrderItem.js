@@ -34,6 +34,10 @@ const CardOrderItem = ({ data, options, setItem }) => {
     const updateFormData = handleReadOnly(formDataUsed, !state);
     setFormDataUsed(updateFormData);
 
+    if (!state) {
+      formRef.current.setFieldValue("qty_approved", "0");
+    }
+
     formRef.current.setFieldValue(
       "approve_status_id",
       options[state ? 1 : 0].id
