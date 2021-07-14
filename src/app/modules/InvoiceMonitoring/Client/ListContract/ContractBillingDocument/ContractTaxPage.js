@@ -252,6 +252,7 @@ function ContractTaxPage(props) {
       billing_id: invoiceBillingId,
       document_no: taxData?.tax_no,
       created_by_id: user_id,
+      filename: taxData?.file_name
     };
     approveTax(taxData.id, {
       approved_by_id: user_id,
