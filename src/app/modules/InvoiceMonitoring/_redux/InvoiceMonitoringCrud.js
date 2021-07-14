@@ -289,4 +289,12 @@ export async function getListTax() {
 }
 export async function approveHardCopy(id, data) {
   return axios.post(`/invoice/hardcopy_approved/${id}`, data);
+}export async function rejectHardCopyStatus(id, data) {
+  return axios.post(`/invoice/hardcopy_rejected/${id}`, data);
+}
+export async function rejectHardCopyHistory(data) {
+  return axios.post(`/invoice/hardtcopy_rejected_save/`, data);
+}
+export async function getHardcopyBillingDocument(id) {
+  return axios.get(`/invoice/get_hardcopy_billing_document/${id}`);
 }

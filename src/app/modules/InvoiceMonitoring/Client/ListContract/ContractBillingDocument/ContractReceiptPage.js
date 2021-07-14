@@ -197,6 +197,7 @@ function ContractReceiptPage(props) {
       billing_id: invoiceBillingId,
       document_no: receiptData?.spr_no,
       created_by_id: user_id,
+      filename: receiptData?.file_name
     };
     approveReceipt(receiptData.id, {
       approved_by_id: user_id,

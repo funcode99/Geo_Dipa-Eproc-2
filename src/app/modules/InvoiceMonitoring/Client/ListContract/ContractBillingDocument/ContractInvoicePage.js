@@ -211,6 +211,7 @@ function ContractInvoicePage(props) {
       billing_id: invoiceBillingId,
       document_no: invoiceData?.invoice_no,
       created_by_id: user_id,
+      filename: invoiceData?.file_name
     };
     approveInvoice(invoiceData.id, {
       approved_by_id: user_id,
