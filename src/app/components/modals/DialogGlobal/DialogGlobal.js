@@ -124,7 +124,7 @@ class DialogGlobal extends React.Component {
                 className={"bg-primary text-light"}
                 onClick={this.handleYes}
                 {...btnYesProps}
-                disabled={loading}
+                disabled={loading || btnYesProps?.disabled}
               >
                 {loading && (
                   <CircularProgress

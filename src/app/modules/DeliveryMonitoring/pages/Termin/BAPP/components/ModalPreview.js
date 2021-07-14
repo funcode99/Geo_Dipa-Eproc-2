@@ -45,6 +45,7 @@ const ModalPreview = ({
           ? "bg-danger text-light"
           : "bg-primary text-light",
         disabled: !checked || (withRemarks && remarks === false),
+        // disabled: !checked,
       }}
       btnNoProps={{
         // loading: loading,

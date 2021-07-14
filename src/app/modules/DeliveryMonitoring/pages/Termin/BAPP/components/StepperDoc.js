@@ -51,7 +51,11 @@ export default function StepperDoc({ renderBtns, active, taskNews, isReject }) {
       case 0:
         return (
           <div>
-            <Typography>Dokumen BAPP siap diunduh.</Typography>
+            <Typography>
+              {taskNews
+                ? "Dokumen BAPP siap diunduh."
+                : "Menunggu kelengkapan form."}
+            </Typography>
             {/* <UploadInput /> */}
           </div>
         );
