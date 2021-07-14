@@ -140,7 +140,7 @@ export function asyncSchedule(po) {
 }
 
 export function getListEmail(params) {
-  return axios.get(`data/list_email`);
+  return axios.get(`data/list_email${params ? "?" + params : ""}`);
 }
 
 export function getEmail(id) {
@@ -155,8 +155,8 @@ export function getListParameter() {
   return axios.get(`data/list_parameter_email`);
 }
 
-export function getListPurchGroup() {
-  return axios.get(`data/purch_group`);
+export function getListPurchGroup(params) {
+  return axios.get(`data/purch_group${params ? "?" + params : ""}`);
 }
 
 export function updatePurchGroup(id, data) {
