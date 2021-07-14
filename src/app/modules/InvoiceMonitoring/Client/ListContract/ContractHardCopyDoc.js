@@ -6,7 +6,11 @@ import {
   CardBody,
   CardFooter,
 } from "../../../../../_metronic/_partials/controls";
-import { createBkb, getFileEproc, getListDocSoftCopy, approveHardCopy, rejectHardCopyStatus, rejectHardCopyHistory, getDeliverableInInvoive, getHardcopyBillingDocument } from "../../_redux/InvoiceMonitoringCrud";
+import {
+  createBkb, getFileEproc, getListDocSoftCopy, approveHardCopy,
+  rejectHardCopyStatus, rejectHardCopyHistory, getDeliverableInInvoive, getHardcopyBillingDocument,
+  getFileSpp, getFileInvoice, getFileReceipt, getFileTax
+} from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
 // import * as Yup from "yup";
@@ -911,15 +915,11 @@ function ContractHardCopyDoc(props) {
                           item.doc_file ? (
                             <TableCell>
                               <a
-                                href="#"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  getFileContract(
-                                    item.doc_file,
-                                    item.doc_status,
-                                    item.ident_name
-                                  );
-                                }}
+                                href={
+                                  item.doc_status == 'INVOICE' ? getFileInvoice + item.doc_file
+                                    : item.doc_status == 'SPP' ? getFileSpp + item.doc_file
+                                      : item.doc_status == 'RECEIPT' ? getFileReceipt + item.doc_file
+                                        : getFileTax + item.doc_file}
                               >
                                 {item.doc_no}
                               </a>

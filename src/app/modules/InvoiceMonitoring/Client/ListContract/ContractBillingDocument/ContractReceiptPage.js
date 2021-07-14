@@ -195,7 +195,7 @@ function ContractReceiptPage(props) {
       term_id: termin,
       softcopy_state: "APPROVED",
       billing_id: invoiceBillingId,
-      document_no: receiptData?.spr_no,
+      document_no: receiptData?.receipt_no,
       created_by_id: user_id,
       filename: receiptData?.file_name
     };
