@@ -48,12 +48,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
-const contohSchedule = [
-  { label: "Hari H", value: "0" },
-  { label: "3 Hari Sebelum Jatuh Tempo", value: "3" },
-  { label: "1 Minggu Sebelum Jatuh Tempo", value: "7" },
-  { label: "30 Hari Sebelum Jatuh Tempo", value: "30" },
-];
+
 const ItemTax = (props) => {
   const { intl } = props;
   const classes = useStyles();
@@ -314,8 +309,7 @@ const ItemTax = (props) => {
         <DialogContent>
           <div className="form-group row">
             <label htmlFor="static_1" className="col-sm-5 col-form-label">
-              {/* <FormattedMessage id="TITLE.NAME" /> */}
-              Type Pajak
+              <FormattedMessage id="TITLE.TYPE_TAX" />
             </label>
             <div className="col-sm-7">
               <input
@@ -329,8 +323,7 @@ const ItemTax = (props) => {
           </div>
           <div className="form-group row">
             <label htmlFor="static_2" className="col-sm-5 col-form-label">
-              {/* <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" /> */}
-              Group Pajak
+              <FormattedMessage id="TITLE.GROUP_TAX" />
             </label>
             <div className="col-sm-7">
               <input
@@ -344,8 +337,7 @@ const ItemTax = (props) => {
           </div>
           <div className="form-group row">
             <label htmlFor="static_3" className="col-sm-5 col-form-label">
-              {/* <FormattedMessage id="TITLE.NAME" /> */}
-              Nama Pajak
+              <FormattedMessage id="TITLE.TAX_NAME" />
             </label>
             <div className="col-sm-7">
               <input
@@ -363,8 +355,7 @@ const ItemTax = (props) => {
           </div>
           <div className="form-group row">
             <label htmlFor="static_4" className="col-sm-5 col-form-label">
-              {/* <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.CODE" /> */}
-              Nilai Pajak
+              <FormattedMessage id="TITLE.TAX_VALUE" />
             </label>
             <div className="col-sm-7">
               <input

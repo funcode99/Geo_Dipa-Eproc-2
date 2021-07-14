@@ -6,6 +6,8 @@ import {
   DialogContent,
   DialogTitle,
   Slide,
+  TableRow,
+  TableCell,
 } from "@material-ui/core";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
@@ -35,6 +37,7 @@ import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
+import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -75,6 +78,44 @@ function ContractInvoicePage(props) {
       })
     ),
   });
+
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id:
+          "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id:
+          "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.FILE" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.STATUS",
+      }),
+    },
+  ];
 
   const formik = useFormik({
     initialValues,
@@ -171,7 +212,11 @@ function ContractInvoicePage(props) {
       document_no: invoiceData?.invoice_no,
       created_by_id: user_id,
     };
-    approveInvoice(invoiceData.id, { approved_by_id: user_id, contract_id: contract_id, term_id: termin })
+    approveInvoice(invoiceData.id, {
+      approved_by_id: user_id,
+      contract_id: contract_id,
+      term_id: termin,
+    })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
         setLoading(false);
@@ -596,11 +641,11 @@ function ContractInvoicePage(props) {
               <div className="form-group row">
                 <label
                   htmlFor="priceContract"
-                  className="col-sm-5 col-form-label"
+                  className="col-sm-4 col-form-label"
                 >
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -611,10 +656,10 @@ function ContractInvoicePage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="poNumber" className="col-sm-5 col-form-label">
+                <label htmlFor="poNumber" className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -625,13 +670,13 @@ function ContractInvoicePage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="priceStep1" className="col-sm-5 col-form-label">
+                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
                   <FormattedMessage
                     id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE"
                     values={{ termin: contractData["termin_name"] }}
                   />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -644,11 +689,11 @@ function ContractInvoicePage(props) {
               <div className="form-group row">
                 <label
                   htmlFor="priceTaxInvoice"
-                  className="col-sm-5 col-form-label"
+                  className="col-sm-4 col-form-label"
                 >
                   <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="number"
                     className="form-control"
@@ -693,83 +738,51 @@ function ContractInvoicePage(props) {
               <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.HISTORY" />
             </h6>
           </div>
-          {/* begin: Table */}
-          <div className="table-wrapper-scroll-y my-custom-scrollbar">
-            <div className="segment-table">
-              <div className="hecto-10">
-                <table className="table-bordered overflow-auto">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white align-middle">
-                        <span>No</span>
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.FILE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.STATUS" />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {historyInvoiceData?.map((item, index) => {
-                      return (
-                        <tr key={index.toString()}>
-                          <td className="align-middle text-center">
-                            {index + 1}
-                          </td>
-                          <td>{item.invoice_no}</td>
-                          <td>{item.from_time}</td>
-                          <td className="align-middle text-center">
-                            <a href={getFileInvoice + item.file_name}>
-                              {item.file_name}
-                            </a>
-                          </td>
-                          <td className="align-middle">
-                            {item.created_by_name}
-                          </td>
-                          <td className="align-middle">
-                            {moment(new Date(item.created_at)).format(
-                              "YYYY-MM-DD HH:mm:ss"
-                            )}
-                          </td>
-                          <td className="align-middle">
-                            <span
-                              className={`${
-                                item.state === "REJECTED"
-                                  ? "text-danger"
-                                  : "text-success"
-                              } pointer font-weight-bold`}
-                              onClick={() => handleHistory(index)}
-                            >
-                              {item.state === "REJECTED" ? (
-                                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
-                              ) : (
-                                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
-                              )}{" "}
-                              <i className="fas fa-caret-down"></i>
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+
+          <TableOnly
+            dataHeader={headerTable}
+            loading={loading}
+            // err={err}
+            hecto={10}
+          >
+            {historyInvoiceData.map((item, index) => {
+              return (
+                <TableRow key={index.toString()}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{item.from_time}</TableCell>
+                  <TableCell>{item.spr_date}</TableCell>
+                  <TableCell>
+                    <a href={getFileInvoice + item.file_name}>
+                      {item.file_name}
+                    </a>
+                  </TableCell>
+                  <TableCell>{item.created_by_name}</TableCell>
+                  <TableCell>
+                    {moment(new Date(item.created_at)).format(
+                      "YYYY-MM-DD HH:mm:ss"
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className={`${
+                        item.state === "REJECTED"
+                          ? "text-danger"
+                          : "text-success"
+                      } pointer font-weight-bold`}
+                      onClick={() => handleHistory(index)}
+                    >
+                      {item.state === "REJECTED" ? (
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
+                      ) : (
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
+                      )}{" "}
+                      <i className="fas fa-caret-down"></i>
+                    </span>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableOnly>
         </CardFooter>
       </Card>
     </React.Fragment>

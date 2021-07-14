@@ -14,6 +14,8 @@ import {
   DialogTitle,
   Slide,
   IconButton,
+  TableRow,
+  TableCell,
 } from "@material-ui/core";
 import {
   getContractSummary,
@@ -39,6 +41,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import moment from "moment";
+import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 
 const styles = (theme) => ({
   root: {
@@ -89,6 +92,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function ContractSprPage(props) {
+  const { intl, classes } = props;
   const [loading, setLoading] = useState(false);
   const [contractData, setContractData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -106,6 +110,42 @@ function ContractSprPage(props) {
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
 
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_NUMBER",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.FILE" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.STATUS",
+      }),
+    },
+  ];
+
   const [Toast, setToast] = useToast();
 
   const user_id = useSelector(
@@ -114,7 +154,6 @@ function ContractSprPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes } = props;
   const invoiceName = "SPP";
 
   const initialValues = {
@@ -211,7 +250,11 @@ function ContractSprPage(props) {
       document_no: sppData?.spr_no,
       created_by_id: user_id,
     };
-    approveSpp(sppData.id, { approved_by_id: user_id, contract_id: contract_id, term_id: termin })
+    approveSpp(sppData.id, {
+      approved_by_id: user_id,
+      contract_id: contract_id,
+      term_id: termin,
+    })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
         setLoading(false);
@@ -693,15 +736,13 @@ function ContractSprPage(props) {
                   </div>
                 </div>
                 <div className="form-group row mb-0">
-                  <label className="col-sm-12 col-form-label">
+                  <label className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_ADDRESS" />
                   </label>
-                  <div className="col-sm-12">
-                    <textarea
-                      disabled
-                      className="form-control"
-                      defaultValue={modalHistoryData["bank_address"]}
-                    ></textarea>
+                  <div className="col-sm-8">
+                    <span className="form-control-plaintext">
+                      : {modalHistoryData["bank_address"]}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -937,11 +978,11 @@ function ContractSprPage(props) {
               <div className="form-group row">
                 <label
                   htmlFor="priceContract"
-                  className="col-sm-5 col-form-label"
+                  className="col-sm-4 col-form-label"
                 >
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -952,10 +993,10 @@ function ContractSprPage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="poNumber" className="col-sm-5 col-form-label">
+                <label htmlFor="poNumber" className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -966,13 +1007,13 @@ function ContractSprPage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="priceStep1" className="col-sm-5 col-form-label">
+                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
                   <FormattedMessage
                     id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE"
                     values={{ termin: contractData["termin_name"] }}
                   />
                 </label>
-                <div className="col-sm-7">
+                <div className="col-sm-8">
                   <input
                     type="text"
                     className="form-control"
@@ -1019,83 +1060,49 @@ function ContractSprPage(props) {
               <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.HISTORY" />
             </h6>
           </div>
-          {/* begin: Table */}
-          <div className="table-wrapper-scroll-y my-custom-scrollbar">
-            <div className="segment-table">
-              <div className="hecto-10">
-                <table className="table-bordered overflow-auto">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.NO" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_NUMBER" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.FILE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.STATUS" />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {historySppData?.map((item, index) => {
-                      return (
-                        <tr key={index.toString()}>
-                          <td className="align-middle text-center">
-                            {index + 1}
-                          </td>
-                          <td>{item.spr_no}</td>
-                          <td>{item.spr_date}</td>
-                          <td className="align-middle text-center">
-                            <a href={getFileSpp + item.file_name}>
-                              {item.file_name}
-                            </a>
-                          </td>
-                          <td className="align-middle">
-                            {item.created_by_name}
-                          </td>
-                          <td className="align-middle">
-                            {moment(new Date(item.created_at)).format(
-                              "YYYY-MM-DD HH:mm:ss"
-                            )}
-                          </td>
-                          <td className="align-middle">
-                            <span
-                              className={`${
-                                item.state === "REJECTED"
-                                  ? "text-danger"
-                                  : "text-success"
-                              } pointer font-weight-bold`}
-                              onClick={() => handleHistory(index)}
-                            >
-                              {item.state === "REJECTED" ? (
-                                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
-                              ) : (
-                                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
-                              )}{" "}
-                              <i className="fas fa-caret-down"></i>
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+
+          <TableOnly
+            dataHeader={headerTable}
+            loading={loading}
+            // err={err}
+            hecto={10}
+          >
+            {historySppData.map((item, index) => {
+              return (
+                <TableRow key={index.toString()}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{item.spr_no}</TableCell>
+                  <TableCell>{item.spr_date}</TableCell>
+                  <TableCell>
+                    <a href={getFileSpp + item.file_name}>{item.file_name}</a>
+                  </TableCell>
+                  <TableCell>{item.created_by_name}</TableCell>
+                  <TableCell>
+                    {moment(new Date(item.created_at)).format(
+                      "YYYY-MM-DD HH:mm:ss"
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className={`${
+                        item.state === "REJECTED"
+                          ? "text-danger"
+                          : "text-success"
+                      } pointer font-weight-bold`}
+                      onClick={() => handleHistory(index)}
+                    >
+                      {item.state === "REJECTED" ? (
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
+                      ) : (
+                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
+                      )}{" "}
+                      <i className="fas fa-caret-down"></i>
+                    </span>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableOnly>
         </CardFooter>
       </Card>
     </React.Fragment>
