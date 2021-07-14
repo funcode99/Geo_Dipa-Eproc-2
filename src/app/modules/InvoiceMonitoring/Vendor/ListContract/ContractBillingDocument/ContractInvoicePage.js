@@ -4,6 +4,8 @@ import {
   DialogContent,
   DialogTitle,
   DialogActions,
+  TableRow,
+  TableCell,
 } from "@material-ui/core";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
@@ -32,6 +34,7 @@ import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
+import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 
 function ContractInvoicePage(props) {
   const [loading, setLoading] = useState(false);
@@ -81,6 +84,44 @@ function ContractInvoicePage(props) {
     tax_bool: false,
     tax_date: new Date(Date.now()),
   };
+
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id:
+          "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id:
+          "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.FILE" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.STATUS",
+      }),
+    },
+  ];
 
   const InvoiceSchema = Yup.object().shape({
     file: Yup.mixed()
@@ -774,59 +815,31 @@ function ContractInvoicePage(props) {
                 <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.HISTORY" />
               </h6>
             </div>
-            {/* begin: Table */}
-            <div className="table-wrapper-scroll-y my-custom-scrollbar">
-              <div className="segment-table">
-                <div className="hecto-10">
-                  <table className="table-bordered overflow-auto">
-                    <thead>
-                      <tr>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.NO" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.FILE" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.STATUS" />
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {historyInvoiceData?.map((item, index) => {
+
+            <TableOnly
+              dataHeader={headerTable}
+              loading={loading}
+              // err={err}
+              hecto={10}
+            >
+              {historyInvoiceData.map((item, index) => {
                         return (
-                          <tr key={index.toString()}>
-                            <td className="align-middle text-center">
-                              {index + 1}
-                            </td>
-                            <td>{item.invoice_no}</td>
-                            <td>{item.from_time}</td>
-                            <td className="align-middle text-center">
+                  <TableRow key={index.toString()}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.invoice_no}</TableCell>
+                    <TableCell>{item.from_time}</TableCell>
+                    <TableCell>
                               <a href={getFileInvoice + item.file_name}>
                                 {item.file_name}
                               </a>
-                            </td>
-                            <td className="align-middle">
-                              {item.created_by_name}
-                            </td>
-                            <td className="align-middle">
+                    </TableCell>
+                    <TableCell>{item.created_by_name}</TableCell>
+                    <TableCell>
                               {moment(new Date(item.created_at)).format(
                                 "YYYY-MM-DD HH:mm:ss"
                               )}
-                            </td>
-                            <td className="align-middle">
+                    </TableCell>
+                    <TableCell>
                               <span
                                 className={`${
                                   item.state === "REJECTED"
@@ -842,15 +855,11 @@ function ContractInvoicePage(props) {
                                 )}{" "}
                                 <i className="fas fa-caret-down"></i>
                               </span>
-                            </td>
-                          </tr>
+                    </TableCell>
+                  </TableRow>
                         );
                       })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+            </TableOnly>
           </CardFooter>
         </form>
       </Card>

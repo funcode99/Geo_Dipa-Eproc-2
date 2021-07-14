@@ -36,8 +36,6 @@ import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/com
 import { formatDate } from "../../../../libs/date";
 import {
   getDeliverableInInvoive,
-  getContractDistributionSPK,
-  getContractDistributionAgreement,
   getFileEproc,
   getListDocSoftCopy,
   rejectDocId,
@@ -380,7 +378,6 @@ function ItemContractInvoice(props) {
   };
 
   const getFileContract = (name, status, ident_name) => {
-    console.log(name, status);
     if (status === "eproc") {
       getFileEproc({ filename: name })
         .then((result) => {

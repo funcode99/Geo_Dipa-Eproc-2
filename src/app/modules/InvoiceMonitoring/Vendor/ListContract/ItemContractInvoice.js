@@ -22,26 +22,20 @@ import {
   DialogTitle,
   Slide,
   IconButton,
+  TableRow,
+  TableCell,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import {
-  getDeliverableInInvoive,
-  getContractSoftCopy,
-  getContractDistributionSPK,
-  getContractDistributionAgreement,
   getFileEproc,
   getListDocSoftCopy,
-  getDetailDocSoftCopy,
-  sendApprovedDocSoftCopy,
-  softcopy_save,
-  sendRejectedDocSoftCopyLast,
-  sendApprovedDocSoftCopyLast,
   updateSoftCopyByUser,
-  getFileRuby,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
+import TableOnly from "../../../../components/tableCustomV1/tableOnly";
+import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 
 const styles = (theme) => ({
   root: {
@@ -146,6 +140,42 @@ function ItemContractInvoice(props) {
   const { contract, termin } = useParams();
   const user_id = useSelector((state) => state.auth.user.data.user_id);
 
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.NO_DOCUMENT",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.STATUS" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.ACTION",
+      }),
+    },
+  ];
+
   const handleAction = (type, data) => {
     if (type === "upload") {
       setModalUpload({
@@ -209,8 +239,15 @@ function ItemContractInvoice(props) {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     } else if (status === "ruby") {
-      getFileRuby(name);
+      window.open(DEV_RUBY + name, "_blank");
     } else if (status === "monitoring") {
+      window.open(
+        DEV_NODE +
+          `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
+        "_blank"
+      );
+    } else if (status === "delivery") {
+      window.open(DEV_NODE + "/" + name, "_blank");
     }
   };
 
@@ -367,43 +404,22 @@ function ItemContractInvoice(props) {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          {/* begin: Table */}
-          <div
-            className="table-wrapper-scroll-y my-custom-scrollbar"
-            style={{ width: "100%" }}
+          <div style={{ width: "100%" }}>
+            <TableOnly
+              dataHeader={headerTable}
+              loading={loading}
+              // err={err}
+              hecto={8}
           >
-            <div className="segment-table">
-              <div className="hecto-8">
-                <table className="table-bordered overflow-auto">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.TABLE_HEADER.NO" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.NO_DOCUMENT" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
                     {dataDocSoftCopy.map((item, index) => {
                       return (
                         item.seq === 5 && (
-                          <tr key={index.toString()}>
-                            <td className="align-middle">{1}</td>
-                            <td>{item.document_name}</td>
+                    <TableRow key={index.toString()}>
+                      <TableCell>{1}</TableCell>
+                      <TableCell>{item.document_name}</TableCell>
                             {item.doc_no ? (
                               item.doc_file ? (
-                                <td>
+                          <TableCell>
                                   <a
                                     href="#"
                                     onClick={(e) => {
@@ -417,21 +433,39 @@ function ItemContractInvoice(props) {
                                   >
                                     {item.doc_no}
                                   </a>
-                                </td>
+                          </TableCell>
                               ) : (
-                                <td>{item.doc_no} (file tidak tersedia)</td>
+                          <TableCell>
+                            {item.doc_no} (file tidak tersedia)
+                          </TableCell>
                               )
                             ) : (
-                              <td></td>
+                        <TableCell></TableCell>
                             )}
-                            <td className="align-middle">
+                      <TableCell>
                               {item.softcopy_approved_at
                                 ? window
                                     .moment(new Date(item.softcopy_approved_at))
                                     .format("DD MMM YYYY")
                                 : ""}
-                            </td>
-                            <td className="align-middle">
+                      </TableCell>
+                      <TableCell>
+                        {(item.softcopy_state === "PENDING" ||
+                          item.softcopy_state === null) &&
+                        item.doc_file
+                          ? "WAITING TO APPROVE"
+                          : item.softcopy_state === "REJECTED"
+                          ? "REJECTED"
+                          : item.softcopy_state === "APPROVED"
+                          ? "APPROVED"
+                          : "WAITING"}
+                      </TableCell>
+                      <TableCell>
+                        {item.softcopy_state === "APPROVED"
+                          ? item.approved_by
+                          : null}
+                      </TableCell>
+                      <TableCell>
                               {item.softcopy_state === "REJECTED" &&
                                 item.doc_no &&
                                 item.seq === 5 && (
@@ -441,17 +475,13 @@ function ItemContractInvoice(props) {
                                     ops={data_ops}
                                   />
                                 )}
-                            </td>
-                          </tr>
+                      </TableCell>
+                    </TableRow>
                         )
                       );
                     })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            </TableOnly>
           </div>
-          {/* end: Table */}
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <Card>
