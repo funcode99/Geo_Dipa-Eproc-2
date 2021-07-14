@@ -22,7 +22,7 @@ const UploadInput = ({ onChange, classLabel, value, ...other }) => {
           className="form-control"
           style={{ backgroundColor: other.disabled ? "#ebebeb" : undefined }}
         >
-          {value?.path ?? "Pilih File ..."}
+          {value?.path ?? <FormattedMessage id="TITLE.CHOOSE_FILE" />}
         </span>
         {/* <span className={`input-group-text`}>
           <a download={"sppData?.file_name"} href={"sppData?.file"}>
