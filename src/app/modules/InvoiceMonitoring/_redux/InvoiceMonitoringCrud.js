@@ -298,8 +298,9 @@ export async function rejectHardCopyHistory(data) {
 }
 export async function getHardcopyBillingDocument(id) {
   return axios.get(`/invoice/get_hardcopy_billing_document/${id}`);
-}export async function sendNotifHardCopy(data) {
-  return axios.get(`/invoice/hardcopy_notif/`, data);
+}
+export async function sendNotifHardCopy(data) {
+  return axios.post(`/invoice/hardcopy_notif/`, data);
 }
 export async function checkBkbExist(id) {
   return axios.get(`/invoice/check_bkb_exist/${id}`);

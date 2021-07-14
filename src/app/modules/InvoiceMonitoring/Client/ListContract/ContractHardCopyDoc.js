@@ -363,16 +363,17 @@ function ContractHardCopyDoc(props) {
     };
     sendNotifHardCopy({ contract_id: contract_id, term_id: termin })
       .then((response) => {
-        if (!invoiceBkbExist) {
+        setLoading(false);
+        if (invoiceBkbExist) {
+          setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
+        } else {
           createBkb(data)
             .then((response) => {
-              setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-              setLoading(false);
               setInvoiceBkbExist(true);
+              setToast(intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }), 10000);
             })
             .catch((error) => {
               setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-              setLoading(false);
             });
         }
       })
