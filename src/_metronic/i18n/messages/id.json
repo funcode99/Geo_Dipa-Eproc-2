@@ -174,6 +174,7 @@
   "REQ.REQUEST_FAILED": "Permintaan gagal dilakukan. Kesalahan Sistem, Silakan coba lagi.",
   "REQ.SOFTCOPY_SUCCESS": "Notifikasi email telah dikirimkan.",
   "REQ.SOFTCOPY_FAILED": "Kamu belum melakukan Reject ataupun Approve.",
+  "REQ.HARDCOPY_SUCCESS": "Notifikasi email telah dikirimkan. Bkb berhasil dibuat!",
   "TITLE.TABLE.NO_DATA_AVAILABLE": "Tidak ada data",
   "TITLE.TABLE.WAITING_DATA": "Mohon tunggu, memuat data...",
   "TITLE.ERROR_REQUEST": "Terjadi kesalahan saat mengakses server.",
