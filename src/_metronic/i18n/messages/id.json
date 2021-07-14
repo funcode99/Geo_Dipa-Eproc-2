@@ -551,6 +551,11 @@
   "TITLE.IS_INVALID": "tidak valid",
   "TITLE.SELECT_DOCUMENT_TYPE": "Pilih tipe dokumen",
   "TITLE.PERCENTAGE": "Persentase",
-  "TITLE.FINE_ATTACHMENT": "Denda yang dilampirkan:",
-  "TITLE.NOTHING": "Tidak ada"
+  "TITLE.FINE_ATTACHMENT": "Pajak yang dikenakan:",
+  "TITLE.NOTHING": "Tidak ada",
+  "TITLE.TYPE_TAX": "Tipe Pajak",
+  "TITLE.GROUP_TAX": "Group Pajak",
+  "TITLE.UPDATE_BY": "Diperbarui Oleh",
+  "TITLE.TAX_NAME": "Nama Pajak",
+  "TITLE.TAX_VALUE": "Nilai Pajak"
 }
