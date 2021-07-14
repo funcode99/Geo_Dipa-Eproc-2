@@ -16,12 +16,18 @@ import validation from "../../../../../../service/helper/validationHelper";
 import { FormattedMessage } from "react-intl";
 import * as Yup from "yup";
 import { set_contract_id } from "../../../../_redux/deliveryMonitoringSlice";
+import { DEV_NODE } from "../../../../../../../redux/BaseHost";
 
 const formValidation = Yup.object().shape({
-  docType: Yup.string().required(
+  docType: validation.string(
     <FormattedMessage id="TITLE.SELECT_DOCUMENT_TYPE" />
   ),
-  docDate: validation.date(<FormattedMessage id="LABEL.DOCUMENT_DATE" />),
+  docFile: validation.string(
+    <FormattedMessage id="TITLE.CHOOSE_DOCUMENT_FILE" />
+  ),
+  docDate: validation.date(
+    <FormattedMessage id="TITLE.DOUMENT_DATE_IS_REQUIRED" />
+  ),
 });
 
 const setDefaultDocType = (name) => {
@@ -34,11 +40,12 @@ const KickOffDetail = ({
   contractId,
   contractStart,
 }) => {
+  console.log(`contractStart`, contractStart);
   const initValues = React.useMemo(
     () => ({
-      docType: setDefaultDocType(contractStart.name) || "",
-      docFile: "",
-      docDate: contractStart.date || formatInitialDate(),
+      docType: setDefaultDocType(contractStart?.name) || "",
+      docFile: DEV_NODE + "/" + contractStart?.file || "",
+      docDate: contractStart?.date || formatInitialDate(),
     }),
     [contractStart]
   );

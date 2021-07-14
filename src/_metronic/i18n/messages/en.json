@@ -559,5 +559,8 @@
   "TITLE.GROUP_TAX": "Tax Group",
   "TITLE.UPDATE_BY": "Update By",
   "TITLE.TAX_NAME": "Tax Name",
-  "TITLE.TAX_VALUE": "Tax Value"
+  "TITLE.TAX_VALUE": "Tax Value",
+  "TITLE.DOUMENT_DATE_IS_REQUIRED": "Document date is required",
+  "TITLE.CHOOSE_FILE": "Choose File ...",
+  "TITLE.CHOOSE_DOCUMENT_FILE": "Choose document file"
 }

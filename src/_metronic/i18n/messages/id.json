@@ -558,5 +558,8 @@
   "TITLE.GROUP_TAX": "Group Pajak",
   "TITLE.UPDATE_BY": "Diperbarui Oleh",
   "TITLE.TAX_NAME": "Nama Pajak",
-  "TITLE.TAX_VALUE": "Nilai Pajak"
+  "TITLE.TAX_VALUE": "Nilai Pajak",
+  "TITLE.DOUMENT_DATE_IS_REQUIRED": "Tanggal dokumen wajib diisi",
+  "TITLE.CHOOSE_FILE": "Pilih File ...",
+  "TITLE.CHOOSE_DOCUMENT_FILE": "Pilih file dokumen"
 }
