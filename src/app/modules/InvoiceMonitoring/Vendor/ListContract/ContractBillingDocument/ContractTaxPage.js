@@ -11,6 +11,8 @@ import {
   DialogContent,
   DialogTitle,
   DialogActions,
+  TableRow,
+  TableCell,
 } from "@material-ui/core";
 import {
   getContractSummary,
@@ -30,6 +32,7 @@ import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
+import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
@@ -73,6 +76,42 @@ function ContractTaxPage(props) {
     invoice_bool: false,
     invoice_date: new Date(Date.now()),
   };
+
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NUMBER",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.FILE" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.STATUS",
+      }),
+    },
+  ];
 
   const TaxSchema = Yup.object().shape({
     file: Yup.mixed()
@@ -746,83 +785,49 @@ function ContractTaxPage(props) {
                 <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.HISTORY" />
               </h6>
             </div>
-            {/* begin: Table */}
-            <div className="table-wrapper-scroll-y my-custom-scrollbar">
-              <div className="segment-table">
-                <div className="hecto-10">
-                  <table className="table-bordered overflow-auto">
-                    <thead>
-                      <tr>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.NO" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NUMBER" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_DATE" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.FILE" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_BY" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
-                        </th>
-                        <th className="bg-primary text-white align-middle">
-                          <FormattedMessage id="TITLE.STATUS" />
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {historyTaxData?.map((item, index) => {
-                        return (
-                          <tr key={index.toString()}>
-                            <td className="align-middle text-center">
-                              {index + 1}
-                            </td>
-                            <td>{item.tax_no}</td>
-                            <td>{item.tax_date}</td>
-                            <td className="align-middle text-center">
-                              <a href={getFileTax + item.file_name}>
-                                {item.file_name}
-                              </a>
-                            </td>
-                            <td className="align-middle">
-                              {item.created_by_name}
-                            </td>
-                            <td className="align-middle">
-                              {moment(new Date(item.created_at)).format(
-                                "YYYY-MM-DD HH:mm:ss"
-                              )}
-                            </td>
-                            <td className="align-middle">
-                              <span
-                                className={`${
-                                  item.state === "REJECTED"
-                                    ? "text-danger"
-                                    : "text-success"
-                                } pointer font-weight-bold`}
-                                onClick={() => handleHistory(index)}
-                              >
-                                {item.state === "REJECTED" ? (
-                                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
-                                ) : (
-                                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
-                                )}{" "}
-                                <i className="fas fa-caret-down"></i>
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+
+            <TableOnly
+              dataHeader={headerTable}
+              loading={loading}
+              // err={err}
+              hecto={10}
+            >
+              {historyTaxData.map((item, index) => {
+                return (
+                  <TableRow key={index.toString()}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.tax_no}</TableCell>
+                    <TableCell>{item.tax_date}</TableCell>
+                    <TableCell>
+                      <a href={getFileTax + item.file_name}>{item.file_name}</a>
+                    </TableCell>
+                    <TableCell>{item.created_by_name}</TableCell>
+                    <TableCell>
+                      {moment(new Date(item.created_at)).format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        className={`${
+                          item.state === "REJECTED"
+                            ? "text-danger"
+                            : "text-success"
+                        } pointer font-weight-bold`}
+                        onClick={() => handleHistory(index)}
+                      >
+                        {item.state === "REJECTED" ? (
+                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
+                        ) : (
+                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
+                        )}{" "}
+                        <i className="fas fa-caret-down"></i>
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableOnly>
           </CardFooter>
         </form>
       </Card>

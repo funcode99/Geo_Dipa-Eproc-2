@@ -29,6 +29,8 @@ import useToast from "../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import StyledSelect from "../../../../components/select-multiple";
+import { TableRow, TableCell } from "@material-ui/core";
+import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -87,6 +89,37 @@ function ItemContractSummary(props) {
       nameDoc: null,
     },
   ]);
+
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.STATUS",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.UPLOAD_DATE" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+    },
+  ];
 
   const [openModalEmail, setopenModalEmail] = useState(false);
   const [openModalDeletePIC, setOpenModalDeletePIC] = useState(false);
@@ -961,56 +994,26 @@ function ItemContractSummary(props) {
               <FormattedMessage id="TITLE.BILLING_DOCUMENT" />
             </h6>
           </div>
-          {/* begin: Table */}
-          <div className="table-wrapper-scroll-y my-custom-scrollbar">
-            <div className="segment-table">
-              <div className="hecto-10">
-                <table className="table-bordered overflow-auto">
-                  <thead>
-                    <tr>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.NO" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.STATUS" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED_BY" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.UPLOAD_DATE" />
-                      </th>
-                      <th className="bg-primary text-white align-middle">
-                        <FormattedMessage id="TITLE.DOCUMENT_NAME" />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((item, index) => {
-                      return (
-                        <tr key={index.toString()}>
-                          <td className="align-middle text-center">
-                            {index + 1}
-                          </td>
-                          <td>{item.name}</td>
-                          <td>{item.status}</td>
-                          <td className="align-middle text-center">
-                            {item.approvedBy}
-                          </td>
-                          <td className="align-middle">{item.date}</td>
-                          <td className="align-middle">{item.nameDoc}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          {/* end: Table */}
+
+          <TableOnly
+            dataHeader={headerTable}
+            loading={loading}
+            // err={err}
+            hecto={10}
+          >
+            {data.map((item, index) => {
+              return (
+                <TableRow key={index.toString()}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.status}</TableCell>
+                  <TableCell>{item.approvedBy}</TableCell>
+                  <TableCell>{item.date}</TableCell>
+                  <TableCell>{item.nameDoc}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableOnly>
         </CardBody>
       </Card>
     </React.Fragment>

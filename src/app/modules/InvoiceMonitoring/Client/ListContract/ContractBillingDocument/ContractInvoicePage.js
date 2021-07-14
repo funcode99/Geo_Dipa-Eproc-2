@@ -750,8 +750,8 @@ function ContractInvoicePage(props) {
               return (
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
+                  <TableCell>{item.invoice_no}</TableCell>
                   <TableCell>{item.from_time}</TableCell>
-                  <TableCell>{item.spr_date}</TableCell>
                   <TableCell>
                     <a href={getFileInvoice + item.file_name}>
                       {item.file_name}
