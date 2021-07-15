@@ -201,6 +201,7 @@ function ContractTaxPage(props) {
   const getTaxData = useCallback(() => {
     getTax(contract_id, termin)
       .then((response) => {
+        setOptionSelected(response.data.data.tax_selected);
         setTaxData(response.data.data);
         if (response.data.data) {
           getHistoryTaxData(response["data"]["data"]["id"]);
@@ -258,6 +259,7 @@ function ContractTaxPage(props) {
       approved_by_id: user_id,
       contract_id: contract_id,
       term_id: termin,
+      tax_selected: optionSelected,
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -452,7 +454,8 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
                         }`}
                       ></i>
                     </span>
@@ -471,7 +474,8 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
                         }`}
                       ></i>
                     </span>

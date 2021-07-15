@@ -397,7 +397,8 @@ function ContractReceiptPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
                         }`}
                       ></i>
                     </span>
@@ -416,7 +417,8 @@ function ContractReceiptPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
                         }`}
                       ></i>
                     </span>
