@@ -29,6 +29,13 @@ export const QRCodeG = ({ value, size = 72 }) => {
       includeMargin={dataQr.includeMargin}
       renderAs={dataQr.renderAs}
       imageSettings={dataQr.imageSettings}
+      className="pointer"
+      onClick={() => {
+        var string = dataQr.value;
+        if (string.indexOf("http") === 0) {
+          window.open(dataQr.value, "_blank");
+        }
+      }}
     />
   );
 };

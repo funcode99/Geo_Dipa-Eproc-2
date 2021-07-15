@@ -284,8 +284,8 @@ export async function updateSoftCopyByUser(id, file) {
 export async function sendNotifSoftCopySupportDeliverables(id) {
   return axios.post(`/invoice/softcopy_notif/${id}`);
 }
-export async function getListTax() {
-  return axios.get(`/invoice/get_tax_selected`);
+export async function getListTax(contract_id, term_id) {
+  return axios.get(`/invoice/get_tax_selected/${contract_id}/${term_id}`);
 }
 export async function approveHardCopy(id, data) {
   return axios.post(`/invoice/hardcopy_approved/${id}`, data);
