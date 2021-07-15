@@ -331,11 +331,11 @@ const ItemContract = (props) => {
           {tabActive === 0 && (
             <ItemContractSummary {...props} getData={getSetData} />
           )}
-          {tabActive === 1 && <ItemContractInvoice {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress}/>}
-          {tabActive === 2 && <ContractHardCopyDoc {...props} />}
-          {tabActive === 3 && <ItemContractBKB {...props} />}
-          {tabActive === 4 && <ItemContractFormVerification {...props} />}
-          {tabActive === 5 && <ItemContractRoutingSlip {...props} />}
+          {tabActive === 1 && <ItemContractInvoice {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
+          {tabActive === 2 && <ContractHardCopyDoc {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
+          {tabActive === 3 && <ItemContractBKB {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
+          {tabActive === 4 && <ItemContractFormVerification {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
+          {tabActive === 5 && <ItemContractRoutingSlip {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
         </Container>
       </Paper>
     </Container>
