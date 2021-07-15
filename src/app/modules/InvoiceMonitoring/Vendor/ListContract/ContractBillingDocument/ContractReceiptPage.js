@@ -720,7 +720,7 @@ function ContractReceiptPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 receiptStatus ||
-                progressTermin.ident_name !== "BILLING_SOFTCOPY"
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />

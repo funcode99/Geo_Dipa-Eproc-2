@@ -802,7 +802,7 @@ function ContractInvoicePage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 invoiceStatus ||
-                progressTermin.ident_name !== "BILLING_SOFTCOPY"
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />

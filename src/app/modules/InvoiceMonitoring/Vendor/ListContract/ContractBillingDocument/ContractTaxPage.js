@@ -772,7 +772,7 @@ function ContractTaxPage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 taxStatus ||
-                progressTermin.ident_name !== "BILLING_SOFTCOPY"
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />

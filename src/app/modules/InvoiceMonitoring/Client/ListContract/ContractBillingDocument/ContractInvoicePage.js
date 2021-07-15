@@ -715,7 +715,7 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
               props.verificationStafStatus ||
-              progressTermin.ident_name !== "BILLING_SOFTCOPY"
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
