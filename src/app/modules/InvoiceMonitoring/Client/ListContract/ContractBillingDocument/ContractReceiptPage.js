@@ -706,7 +706,7 @@ function ContractReceiptPage(props) {
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
               props.verificationStafStatus ||
-              progressTermin.ident_name !== "BILLING_SOFTCOPY"
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >
