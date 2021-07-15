@@ -865,7 +865,9 @@ function ContractHardCopyDoc(props) {
                                 }
                               </RowAccordion>
                             ))
-                            : item?.documents?.map((el, id) => (
+                            : item?.documents?.map((el, id) => {
+                              if (el?.document_monitoring?.softcopy_state === "APPROVED") {
+                                return (
                               <RowAccordion
                                 //  Dokumen
                                 key={id}
@@ -904,7 +906,9 @@ function ContractHardCopyDoc(props) {
                                   ),
                                 ]}
                               />
-                            ));
+                                )
+                              }
+                            })
                         }}
                       </RowAccordion>
                     );
