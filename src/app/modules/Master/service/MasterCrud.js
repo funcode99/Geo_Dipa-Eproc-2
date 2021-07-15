@@ -139,6 +139,10 @@ export function asyncSchedule(po) {
   return axios.get(`sap/schedules/${po}`);
 }
 
+export function asyncItem(po) {
+  return axios.get(`sap/purch_order_item/${po}`);
+}
+
 export function getListEmail(params) {
   return axios.get(`data/list_email${params ? "?" + params : ""}`);
 }

@@ -437,6 +437,7 @@
   "TITLE.SYNCHRONIZE": "Synchronize",
   "TITLE.PO_SERVICES": "Purchase Order Services",
   "TITLE.PO_SCHEDULES": "Purchase Order Schedule",
+  "TITLE.PO_ITEM": "Purchase Order Item",
   "TITLE.SPAN_PO_ASYNC": "By Number Purchase Order SAP:",
   "TITLE.EMAIL": "Email",
   "TITLE.UPDATED_DATE": "Updated Date",

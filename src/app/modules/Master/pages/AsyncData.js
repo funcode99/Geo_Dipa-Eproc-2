@@ -12,7 +12,7 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
 import { SubWrap } from "./style";
-import { asyncService, asyncSchedule } from "../service/MasterCrud";
+import { asyncService, asyncSchedule, asyncItem } from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import { Form, Row, Col } from "react-bootstrap";
 
@@ -32,6 +32,7 @@ const AsyncData = (props) => {
   const [Toast, setToast] = useToast();
   const [poService, setPoService] = useState(false);
   const [poSchedule, setPoSchedule] = useState(false);
+  const [poItem, setPoItem] = useState(false);
   const [poAsync, setPoAsync] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
   const [errLoadingSync, setErrLoadingSync] = useState(false);
@@ -95,12 +96,77 @@ const AsyncData = (props) => {
           setStatusSync(false);
           setLoadingSync(false);
         });
+    } else if (stateSync === "item") {
+      asyncItem(numberPo)
+        .then(async (result) => {
+          setStatusSync(false);
+          setTimeout(() => {
+            setLoadingSync(false);
+          }, 2000);
+        })
+        .catch(async (err) => {
+          let errSyncs = Object.assign({}, errSync);
+          if (err.response?.data.message === "Number Purch Order Invalid.") {
+            errSyncs.status = true;
+            errSyncs.message = err.response?.data.message;
+            setErrSync({
+              ...errSyncs,
+            });
+          } else {
+            setErrLoadingSync(true);
+          }
+          setStatusSync(false);
+          setLoadingSync(false);
+        });
     }
   };
 
   return (
     <React.Fragment>
       <Toast />
+      <Dialog
+        open={poItem}
+        keepMounted
+        maxWidth={"xs"}
+        fullWidth={true}
+        TransitionComponent={Transition}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="TITLE.FEATURES" />
+        </DialogTitle>
+        <DialogContent>
+          <div>
+            <ul>
+              <li>
+                Melakukan Sinkronisasi Data berdasarkan nomor Purch Order SAP.
+              </li>
+              <li>Menambahkan Item PO berdasarkan data SAP.</li>
+              <li>
+                Melakukan penyamaan data dengan data SAP.
+                <ul>
+                  <li>Penyamaan data QUANTITY mengikuti data SAP.</li>
+                  <li>Penyamaan data SHORT_TEXT mengikuti data SAP.</li>
+                  <li>Penyamaan data NET_PRICE mengikuti data SAP.</li>
+                </ul>
+              </li>
+              <li>Menjalankan Async PO Schedules.</li>
+              <li>Menjalankan Async PO Service.</li>
+            </ul>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={() => {
+              setPoItem(false);
+            }}
+          >
+            <FormattedMessage id="TITLE.UNDERSTAND" />
+          </button>
+        </DialogActions>
+      </Dialog>
       <Dialog
         open={poService}
         keepMounted
@@ -397,6 +463,48 @@ const AsyncData = (props) => {
                       className="btn btn-light btn-sm text-primary"
                       onClick={() => {
                         stateErrSync("schedule");
+                        setPoAsync(true);
+                      }}
+                    >
+                      <i className="fas fa-sync text-primary"></i>
+                      <FormattedMessage id="TITLE.SYNCHRONIZE_DATA" />
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="pl-0 py-4">
+                    <div className="symbol symbol-50 symbol-light mr-1">
+                      <span className="symbol-label">
+                        <h1 className="h-50 align-self-center">P</h1>
+                      </span>
+                    </div>
+                  </td>
+                  <td className="pl-0">
+                    <span className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg user-select-none">
+                      <FormattedMessage id="TITLE.PO_ITEM" />
+                    </span>
+                    <div>
+                      <span className="font-weight-bolder text-muted font-size-xs">
+                        <FormattedMessage id="TITLE.SPAN_PO_ASYNC" />
+                      </span>
+                    </div>
+                  </td>
+                  <td className="text-left">
+                    <span
+                      className="btn btn-light btn-sm text-warning"
+                      onClick={() => {
+                        setPoItem(true);
+                      }}
+                    >
+                      <i className="fas fa-info-circle text-warning"></i>
+                      <FormattedMessage id="TITLE.FEATURES" />
+                    </span>
+                  </td>
+                  <td className="text-left pr-0">
+                    <span
+                      className="btn btn-light btn-sm text-primary"
+                      onClick={() => {
+                        stateErrSync("item");
                         setPoAsync(true);
                       }}
                     >

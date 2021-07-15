@@ -212,12 +212,13 @@ function ContractInvoicePage(props) {
       billing_id: invoiceBillingId,
       document_no: invoiceData?.invoice_no,
       created_by_id: user_id,
-      filename: invoiceData?.file_name
+      filename: invoiceData?.file_name,
     };
     approveInvoice(invoiceData.id, {
       approved_by_id: user_id,
       contract_id: contract_id,
       term_id: termin,
+      penalty: invoiceData?.penalty,
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -701,9 +702,15 @@ function ContractInvoicePage(props) {
                 </label>
                 <div className="col-sm-8">
                   <input
-                    type="number"
+                    type="text"
+                    value={invoiceData?.penalty}
                     className="form-control"
-                    defaultValue={""}
+                    onChange={(e) => {
+                      setInvoiceData({
+                        ...invoiceData,
+                        penalty: e.target.value,
+                      });
+                    }}
                   />
                 </div>
               </div>
