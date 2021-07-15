@@ -45,6 +45,7 @@ import {
   updateSoftCopyByUser,
   sendAddRejectedDocSoftCopy,
   sendNotifSoftCopySupportDeliverables,
+  createTerminProgress
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
@@ -181,13 +182,14 @@ const navLists = [
 ];
 
 function ItemContractInvoice(props) {
-  const { intl } = props;
+  const { intl, progressTermin } = props;
   const [navActive, setNavActive] = useState(navLists[0].id);
   const [dataDeliverables, setDataDeliverables] = useState([]);
   const classes = useStyles();
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
+  const [isAccept, setIsAccept] = useState(false);
   const [loadingDeliverables, setLoadingDeliverables] = useState(false);
   const [modalReject, setModalReject] = useState({
     statusDialog: false,
@@ -321,7 +323,21 @@ function ItemContractInvoice(props) {
     console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
 
-  const handleSendNotif = (type, data) => {
+  const handleAcceptSoftcopy = () => {
+    setLoading(true);
+    createTerminProgress({ term_id: termin, created_by_id: user_id })
+      .then((result) => {
+        setLoading(false);
+        setIsAccept(true);
+        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 5000);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  const handleSendNotif = () => {
     sendNotifSoftCopySupportDeliverables(termin)
       .then((result) => {
         setLoading(false);
@@ -1177,7 +1193,7 @@ function ItemContractInvoice(props) {
                         (item.softcopy_state === null ||
                           item.softcopy_state === "PENDING") &&
                         item.doc_no &&
-                        item.doc_file && (
+                        item.doc_file && !loading && (
                           <ButtonAction
                             data={item}
                             handleAction={handleAction}
@@ -1286,7 +1302,7 @@ function ItemContractInvoice(props) {
                                               ?.softcopy_state !==
                                               "APPROVED")) &&
                                         els.document_status?.name ===
-                                          "APPROVED" && (
+                                    "APPROVED" && !loading &&  (
                                           <ButtonAction
                                             data={els}
                                             handleAction={
@@ -1353,8 +1369,17 @@ function ItemContractInvoice(props) {
           <CardHeaderToolbar>
             <button
               type="button"
+              onClick={handleAcceptSoftcopy}
+              className="btn btn-sm btn-primary mr-2"
+              disabled={loading || progressTermin || isAccept}
+            >
+              Accept Softcopy
+            </button>
+            <button
+              type="button"
               onClick={handleSendNotif}
               className="btn btn-sm btn-primary"
+              disabled={loading}
             >
               Send Notif
             </button>
