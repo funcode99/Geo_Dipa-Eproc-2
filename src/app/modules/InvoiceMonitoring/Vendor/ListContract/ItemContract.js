@@ -83,7 +83,7 @@ const ItemContract = (props) => {
   const getTerminProgressData = () => {
     getTerminProgress(termin)
       .then((result) => {
-        setTerminProgress(result.data.data.progress_type);
+        setTerminProgress(result.data.data?.progress_type);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
