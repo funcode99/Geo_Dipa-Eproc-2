@@ -64,7 +64,7 @@ function ContractReceiptPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes } = props;
+  const { intl, classes, progressTermin } = props;
 
   const initialValues = {};
   const invoiceName = "RECEIPT";
@@ -690,7 +690,8 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -704,7 +705,8 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

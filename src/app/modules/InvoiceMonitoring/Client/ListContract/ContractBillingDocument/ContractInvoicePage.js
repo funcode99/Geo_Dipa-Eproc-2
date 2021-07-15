@@ -67,7 +67,7 @@ function ContractInvoicePage(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const invoiceName = "INVOICE";
-  const { intl, classes } = props;
+  const { intl, classes, progressTermin } = props;
 
   const initialValues = {};
 
@@ -714,7 +714,8 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -728,7 +729,8 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

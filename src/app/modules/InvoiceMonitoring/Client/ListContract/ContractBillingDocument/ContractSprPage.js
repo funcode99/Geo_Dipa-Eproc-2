@@ -92,7 +92,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function ContractSprPage(props) {
-  const { intl, classes } = props;
+  const { intl, classes, progressTermin } = props;
   const [loading, setLoading] = useState(false);
   const [contractData, setContractData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -1036,7 +1036,8 @@ function ContractSprPage(props) {
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
               sppData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -1050,7 +1051,8 @@ function ContractSprPage(props) {
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
               sppData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

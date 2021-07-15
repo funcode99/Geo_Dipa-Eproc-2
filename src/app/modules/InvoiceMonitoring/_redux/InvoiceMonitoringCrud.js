@@ -305,3 +305,9 @@ export async function sendNotifHardCopy(data) {
 export async function checkBkbExist(id) {
   return axios.get(`/invoice/check_bkb_exist/${id}`);
 }
+export async function getTerminProgress(id) {
+  return axios.get(`/invoice/get_invoice_progress/${id}`);
+}
+export async function createTerminProgress(data) {
+  return axios.post(`/invoice/invoice_progress_save/`, data);
+}

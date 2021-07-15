@@ -59,7 +59,7 @@ function ContractInvoicePage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes, supportedFormats } = props;
+  const { intl, classes, supportedFormats, progressTermin } = props;
 
   const initialValues = {
     draft_no: "",
@@ -799,7 +799,10 @@ function ContractInvoicePage(props) {
               type="submit"
               className="btn btn-primary mx-1"
               disabled={
-                (formik.touched && !formik.isValid) || loading || invoiceStatus
+                (formik.touched && !formik.isValid) ||
+                loading ||
+                invoiceStatus ||
+                progressTermin.ident_name !== "BILLING_SOFTCOPY"
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />

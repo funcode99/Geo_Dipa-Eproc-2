@@ -87,7 +87,7 @@ function ContractTaxPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes } = props;
+  const { intl, classes, progressTermin } = props;
 
   const initialValues = {};
   const invoiceName = "TAX";
@@ -783,7 +783,8 @@ function ContractTaxPage(props) {
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
               taxData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -797,7 +798,8 @@ function ContractTaxPage(props) {
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
               taxData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

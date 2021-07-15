@@ -1,4 +1,4 @@
-import React from "react"; // useState
+import React, { useEffect } from "react"; // useState
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { useParams } from "react-router-dom";
@@ -27,6 +27,10 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import { withStyles } from "@material-ui/core/styles";
 import Steppers from "../../../../components/steppersCustom/Steppers";
+import {
+  getTerminProgress
+} from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
 
 const styles = (theme) => ({
   root: {
@@ -128,8 +132,10 @@ const DialogTitle = withStyles(styles)((props) => {
 
 const ItemContract = (props) => {
   const { intl } = props;
+  const termin = props.match.params.termin;
   const suhbeader = useSubheader();
   const classes = useStyles();
+  const [Toast, setToast] = useToast();
   const [tabActive, setTabActive] = React.useState(0);
   const [dialogLeader, setDialogLeader] = React.useState(false);
   const [dataOne, setDataOne] = React.useState([]);
@@ -137,6 +143,7 @@ const ItemContract = (props) => {
   const [dataTwo, setDataTwo] = React.useState([]);
   const [dataTwoValue, setDataTwoValue] = React.useState([]);
   const [data, setData] = React.useState({});
+  const [terminProgress, setTerminProgress] = React.useState(null);
   const [dataProgress, setDataProgress] = React.useState([
     {
       label: "Delivery Document",
@@ -194,8 +201,21 @@ const ItemContract = (props) => {
     setData(data);
   };
 
+  const getTerminProgressData = () => {
+    getTerminProgress(termin)
+      .then((result) => {
+        setTerminProgress(result.data.data.progress_type);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  useEffect(getTerminProgressData, []);
+
   return (
     <Container className="px-0">
+      <Toast />
       <Dialog
         open={dialogLeader}
         TransitionComponent={Transition}
@@ -311,7 +331,7 @@ const ItemContract = (props) => {
           {tabActive === 0 && (
             <ItemContractSummary {...props} getData={getSetData} />
           )}
-          {tabActive === 1 && <ItemContractInvoice {...props} />}
+          {tabActive === 1 && <ItemContractInvoice {...props} progressTermin={terminProgress} />}
           {tabActive === 2 && <ContractHardCopyDoc {...props} />}
           {tabActive === 3 && <ItemContractBKB {...props} />}
           {tabActive === 4 && <ItemContractFormVerification {...props} />}
