@@ -182,14 +182,13 @@ const navLists = [
 ];
 
 function ItemContractInvoice(props) {
-  const { intl, progressTermin } = props;
+  const { intl, progressTermin, setProgressTermin } = props;
   const [navActive, setNavActive] = useState(navLists[0].id);
   const [dataDeliverables, setDataDeliverables] = useState([]);
   const classes = useStyles();
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
-  const [isAccept, setIsAccept] = useState(false);
   const [loadingDeliverables, setLoadingDeliverables] = useState(false);
   const [modalReject, setModalReject] = useState({
     statusDialog: false,
@@ -327,8 +326,8 @@ function ItemContractInvoice(props) {
     setLoading(true);
     createTerminProgress({ term_id: termin, created_by_id: user_id })
       .then((result) => {
+        setProgressTermin(result.data.data)
         setLoading(false);
-        setIsAccept(true);
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 5000);
       })
       .catch((error) => {

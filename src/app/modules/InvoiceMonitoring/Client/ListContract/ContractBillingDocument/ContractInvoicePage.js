@@ -26,6 +26,7 @@ import {
   getAllApprovedInvoice,
   getBillingDocumentId,
   softcopy_save,
+  getTerminProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -67,7 +68,7 @@ function ContractInvoicePage(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const invoiceName = "INVOICE";
-  const { intl, classes, progressTermin } = props;
+  const { intl, classes, progressTermin, setProgressTermin } = props;
 
   const initialValues = {};
 
@@ -225,6 +226,10 @@ function ContractInvoicePage(props) {
         setIsSubmit(true);
         getHistoryInvoiceData(invoiceData.id);
         softcopy_save(data_1);
+        getTerminProgress(termin)
+          .then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+          })
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
