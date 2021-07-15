@@ -27,6 +27,7 @@ import {
   getBillingDocumentId,
   softcopy_save,
   getListTax,
+  getTerminProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -87,7 +88,7 @@ function ContractTaxPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes, progressTermin } = props;
+  const { intl, classes, progressTermin, setProgressTermin } = props;
 
   const initialValues = {};
   const invoiceName = "TAX";
@@ -265,6 +266,10 @@ function ContractTaxPage(props) {
         setIsSubmit(true);
         getHistoryTaxData(taxData.id);
         softcopy_save(data_1);
+        getTerminProgress(termin)
+          .then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+          })
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -447,8 +452,7 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${
-                          pageNumber === 1 ? "" : "text-secondary"
+                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
                         }`}
                       ></i>
                     </span>
@@ -467,8 +471,7 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${
-                          pageNumber === numPages ? "" : "text-secondary"
+                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
                         }`}
                       ></i>
                     </span>
