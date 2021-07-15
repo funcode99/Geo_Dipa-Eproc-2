@@ -188,9 +188,8 @@ function ContractTaxPage(props) {
   }, [contract_id, formik, intl, setToast, user_id]);
 
   const getListTaxs = () => {
-    getListTax()
+    getListTax(contract_id, termin)
       .then((response) => {
-        console.log("getListTax", response.data.data);
         setListTax(response.data.data);
       })
       .catch((error) => {
@@ -252,7 +251,7 @@ function ContractTaxPage(props) {
       billing_id: invoiceBillingId,
       document_no: taxData?.tax_no,
       created_by_id: user_id,
-      filename: taxData?.file_name
+      filename: taxData?.file_name,
     };
     approveTax(taxData.id, {
       approved_by_id: user_id,
@@ -313,7 +312,7 @@ function ContractTaxPage(props) {
         <DialogContent>
           <div>
             <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
-            {optionSelected.length > 0 ? (
+            {optionSelected && optionSelected.length > 0 ? (
               <ol>
                 {optionSelected.map((item, index) => {
                   return (
@@ -762,7 +761,9 @@ function ContractTaxPage(props) {
                       options: el?.master_tax_items.map((el2) => ({
                         value: JSON.stringify(el2),
                         // value: el2?.id,
-                        label: `${el2?.description} - ${el2?.value}% - Nilai`,
+                        label: `${el2?.description} - ${el2?.value}% - ${rupiah(
+                          el2.tax_value
+                        )}`,
                       })),
                     }))}
                     formatGroupLabel={formatGroupLabel}
