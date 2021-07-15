@@ -1370,7 +1370,7 @@ function ItemContractInvoice(props) {
               type="button"
               onClick={handleAcceptSoftcopy}
               className="btn btn-sm btn-primary mr-2"
-              disabled={loading || progressTermin || isAccept}
+              disabled={loading || progressTermin}
             >
               Accept Softcopy
             </button>
