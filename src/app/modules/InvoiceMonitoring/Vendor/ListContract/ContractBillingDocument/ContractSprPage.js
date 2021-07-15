@@ -1249,7 +1249,7 @@ function ContractSprPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 sppStatus ||
-                progressTermin.ident_name !== "BILLING_SOFTCOPY"
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />
