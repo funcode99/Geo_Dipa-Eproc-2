@@ -10,7 +10,7 @@ import {
   createBkb, getFileEproc, getListDocSoftCopy, approveHardCopy,
   rejectHardCopyStatus, rejectHardCopyHistory, getDeliverableInInvoive, getHardcopyBillingDocument,
   getFileSpp, getFileInvoice, getFileReceipt, getFileTax,
-  sendNotifHardCopy, checkBkbExist
+  sendNotifHardCopy, checkBkbExist, getInvoice
 } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ContractHardCopyDoc(props) {
-  const { intl } = props;
+  const { intl, progressTermin, setProgressTermin } = props;
   const classes = useStyles();
   const [Toast, setToast] = useToast();
   const [dataReject, setDataReject] = useState({});
@@ -506,10 +506,26 @@ function ContractHardCopyDoc(props) {
       });
   };
 
+  const getInvoiceData = useCallback(() => {
+    getInvoice(contract_id, termin)
+      .then((response) => {
+        setInvoiceData(response.data.data);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [
+    contract_id,
+    setInvoiceData,
+    intl,
+    setToast,
+  ]);
+
   useEffect(callApi, []);
   useEffect(callApiContractSoftCopy, []);
   useEffect(callApiBillingHardCopy, []);
   useEffect(checkBkb, []);
+  useEffect(getInvoiceData, []);
 
   return (
     <React.Fragment>
@@ -734,10 +750,12 @@ function ContractHardCopyDoc(props) {
                             : null}
                         </TableCell>
                         <TableCell>
-                          {dataUser?.is_finance &&
-                            (item.hardcopy_state === null ||
-                              item.hardcopy_state === "REJECTED") &&
-                            (item.softcopy_state !== null) && (
+                          {
+                            dataUser?.is_finance &&
+                            (item.hardcopy_state === null || item.hardcopy_state === "REJECTED") &&
+                            (item.softcopy_state !== null) &&
+                            progressTermin?.ident_name === "HARDCOPY" &&
+                            (
                               <ButtonAction
                                 data={item}
                                 handleAction={handleAction}
@@ -828,8 +846,9 @@ function ContractHardCopyDoc(props) {
                                             <BtnLihat url={els?.url} />,
                                             els.document_monitoring?.hardcopy_state === "APPROVED" ? '-' : els?.document_monitoring.hardcopy_history[0]?.rejected_re,
                                             els?.url &&
-                                            (els.document_monitoring?.hardcopy_state === null ||
-                                              els.document_monitoring?.hardcopy_state === "REJECTED") && (
+                                            (els.document_monitoring?.hardcopy_state === null || els.document_monitoring?.hardcopy_state === "REJECTED") &&
+                                            progressTermin?.ident_name === "HARDCOPY" &&
+                                            (
                                               <ButtonAction
                                                 data={els}
                                                 handleAction={
@@ -846,7 +865,9 @@ function ContractHardCopyDoc(props) {
                                 }
                               </RowAccordion>
                             ))
-                            : item?.documents?.map((el, id) => (
+                            : item?.documents?.map((el, id) => {
+                              if (el?.document_monitoring?.softcopy_state === "APPROVED") {
+                                return (
                               <RowAccordion
                                 //  Dokumen
                                 key={id}
@@ -874,7 +895,9 @@ function ContractHardCopyDoc(props) {
                                       "REJECTED" &&
                                       el.document_monitoring?.softcopy_state !==
                                       "APPROVED")) &&
-                                  el.document_status?.name === "APPROVED" && (
+                                  el.document_status?.name === "APPROVED" &&
+                                  progressTermin?.ident_name === "HARDCOPY" &&
+                                  (
                                     <ButtonAction
                                       data={el}
                                       handleAction={handleActionDeliverable}
@@ -883,7 +906,9 @@ function ContractHardCopyDoc(props) {
                                   ),
                                 ]}
                               />
-                            ));
+                                )
+                              }
+                            })
                         }}
                       </RowAccordion>
                     );
@@ -967,7 +992,8 @@ function ContractHardCopyDoc(props) {
                           {dataUser?.is_finance &&
                             (item.hardcopy_state === null ||
                               item.hardcopy_state === "REJECTED") &&
-                            (item.softcopy_state !== null) && (
+                            (item.softcopy_state !== null) &&
+                            progressTermin?.ident_name === "HARDCOPY" && (
                               <ButtonAction
                                 data={item}
                                 handleAction={handleAction}
@@ -989,10 +1015,15 @@ function ContractHardCopyDoc(props) {
             type="button"
             className="btn btn-sm btn-primary mx-1"
             onClick={handleSubmit}
+            disabled={loading || progressTermin?.ident_name !== "HARDCOPY"}
           >
             Send Notif
           </button>
-          <button type="button" className="btn btn-sm btn-primary mx-1">
+          <button
+            type="button"
+            className="btn btn-sm btn-primary mx-1"
+            disabled={loading || progressTermin?.ident_name !== "HARDCOPY"}
+          >
             Print Kelengkapan Dokumen
           </button>
         </CardFooter>

@@ -1,4 +1,4 @@
-import React from "react"; // useState
+import React, { useEffect } from "react"; // useState
 import { connect } from "react-redux";
 import {
   // FormattedMessage,
@@ -12,6 +12,10 @@ import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from "./ItemContractSummary";
 import ItemContractInvoice from "./ItemContractInvoice";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
+import {
+  getTerminProgress
+} from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -62,8 +66,11 @@ const ItemContract = (props) => {
       id: "TITLE.CONTRACT_TERM",
     })
   );
+  const termin = props.match.params.termin;
+  const [Toast, setToast] = useToast();
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
+  const [terminProgress, setTerminProgress] = React.useState(null);
   const [data, setData] = React.useState({});
 
   function handleChangeTab(event, newTabActive) {
@@ -73,8 +80,21 @@ const ItemContract = (props) => {
     setData(data);
   };
 
+  const getTerminProgressData = () => {
+    getTerminProgress(termin)
+      .then((result) => {
+        setTerminProgress(result.data.data?.progress_type);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  useEffect(getTerminProgressData, []);
+
   return (
     <Container className="px-0">
+      <Toast />
       <Subheader
         text={(data?.contract_no || "") + " - " + (data.contract_name || "")}
         IconComponent={
@@ -115,9 +135,9 @@ const ItemContract = (props) => {
         <hr className="p-0 m-0" />
         <Container className="p-0">
           {tabActive === 0 && (
-            <ItemContractSummary {...props} getData={getSetData} />
+            <ItemContractSummary {...props} getData={getSetData} progressTermin={terminProgress} />
           )}
-          {tabActive === 1 && <ItemContractInvoice {...props} />}
+          {tabActive === 1 && <ItemContractInvoice {...props} progressTermin={terminProgress} />}
         </Container>
       </Paper>
     </Container>

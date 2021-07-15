@@ -29,6 +29,7 @@ import {
   getFileBank,
   getBillingDocumentId,
   softcopy_save,
+  getTerminProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -92,7 +93,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function ContractSprPage(props) {
-  const { intl, classes } = props;
+  const { intl, classes, progressTermin, setProgressTermin } = props;
   const [loading, setLoading] = useState(false);
   const [contractData, setContractData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -263,6 +264,10 @@ function ContractSprPage(props) {
         setIsSubmit(true);
         getHistorySppData(sppData.id);
         softcopy_save(data_1);
+        getTerminProgress(termin)
+          .then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+          })
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -1036,7 +1041,8 @@ function ContractSprPage(props) {
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
               sppData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -1050,7 +1056,8 @@ function ContractSprPage(props) {
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
               sppData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

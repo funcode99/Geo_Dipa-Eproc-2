@@ -26,6 +26,7 @@ import {
   getAllApprovedInvoice,
   getBillingDocumentId,
   softcopy_save,
+  getTerminProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -67,7 +68,7 @@ function ContractInvoicePage(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const invoiceName = "INVOICE";
-  const { intl, classes } = props;
+  const { intl, classes, progressTermin, setProgressTermin } = props;
 
   const initialValues = {};
 
@@ -211,12 +212,13 @@ function ContractInvoicePage(props) {
       billing_id: invoiceBillingId,
       document_no: invoiceData?.invoice_no,
       created_by_id: user_id,
-      filename: invoiceData?.file_name
+      filename: invoiceData?.file_name,
     };
     approveInvoice(invoiceData.id, {
       approved_by_id: user_id,
       contract_id: contract_id,
       term_id: termin,
+      penalty: invoiceData?.penalty,
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -225,6 +227,10 @@ function ContractInvoicePage(props) {
         setIsSubmit(true);
         getHistoryInvoiceData(invoiceData.id);
         softcopy_save(data_1);
+        getTerminProgress(termin)
+          .then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+          })
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -696,9 +702,15 @@ function ContractInvoicePage(props) {
                 </label>
                 <div className="col-sm-8">
                   <input
-                    type="number"
+                    type="text"
+                    value={invoiceData?.penalty}
                     className="form-control"
-                    defaultValue={""}
+                    onChange={(e) => {
+                      setInvoiceData({
+                        ...invoiceData,
+                        penalty: e.target.value,
+                      });
+                    }}
                   />
                 </div>
               </div>
@@ -714,7 +726,8 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -728,7 +741,8 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

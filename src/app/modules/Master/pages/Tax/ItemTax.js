@@ -169,7 +169,8 @@ const ItemTax = (props) => {
     setErrOnSubmit(false);
   };
 
-  const sendUpdate = () => {
+  const sendUpdate = (e) => {
+    e.preventDefault();
     setOnSubmit(true);
     setErrOnSubmit(false);
     var data_ = {
@@ -177,7 +178,6 @@ const ItemTax = (props) => {
       description: dialogState.data.description,
       value: dialogState.data.value,
     };
-    console.log("dialogState", dialogState);
     if (dialogState.data.id) {
       data_.updated_by_id = user_id;
       editGroupTaxItem(dialogState.data.id, data_)
@@ -306,6 +306,7 @@ const ItemTax = (props) => {
         <DialogTitle id="alert-dialog-title">
           <FormattedMessage id="TITLE.TAX" />
         </DialogTitle>
+        <form onSubmit={sendUpdate}>
         <DialogContent>
           <div className="form-group row">
             <label htmlFor="static_1" className="col-sm-5 col-form-label">
@@ -350,6 +351,7 @@ const ItemTax = (props) => {
                   dataEdit_.data.description = e.target.value;
                   setDialogState({ ...dataEdit_ });
                 }}
+                  required
               />
             </div>
           </div>
@@ -368,6 +370,7 @@ const ItemTax = (props) => {
                   dataEdit_.data.value = e.target.value;
                   setDialogState({ ...dataEdit_ });
                 }}
+                  required
               />
             </div>
           </div>
@@ -392,9 +395,6 @@ const ItemTax = (props) => {
             type="submit"
             disabled={onSubmit}
             className={`btn btn-primary font-weight-bold btn-sm`}
-            onClick={() => {
-              sendUpdate();
-            }}
           >
             {!onSubmit && (
               <span>
@@ -430,6 +430,7 @@ const ItemTax = (props) => {
             <FormattedMessage id="TITLE.CANCEL" />
           </button>
         </DialogActions>
+        </form>
       </Dialog>
       <Card className={classes.paper}>
         <CardHeader title="">

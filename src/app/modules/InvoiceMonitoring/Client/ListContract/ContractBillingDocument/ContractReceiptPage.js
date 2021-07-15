@@ -26,6 +26,7 @@ import {
   rejectReceiptStatus,
   getBillingDocumentId,
   softcopy_save,
+  getTerminProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -64,7 +65,7 @@ function ContractReceiptPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes } = props;
+  const { intl, classes, progressTermin, setProgressTermin } = props;
 
   const initialValues = {};
   const invoiceName = "RECEIPT";
@@ -211,6 +212,10 @@ function ContractReceiptPage(props) {
         setIsSubmit(true);
         getHistoryReceiptData(receiptData.id);
         softcopy_save(data_1);
+        getTerminProgress(termin)
+          .then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+          })
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -690,7 +695,8 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -704,7 +710,8 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

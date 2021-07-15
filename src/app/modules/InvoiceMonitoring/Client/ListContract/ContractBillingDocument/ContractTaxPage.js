@@ -27,6 +27,7 @@ import {
   getBillingDocumentId,
   softcopy_save,
   getListTax,
+  getTerminProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -87,7 +88,7 @@ function ContractTaxPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes } = props;
+  const { intl, classes, progressTermin, setProgressTermin } = props;
 
   const initialValues = {};
   const invoiceName = "TAX";
@@ -188,9 +189,8 @@ function ContractTaxPage(props) {
   }, [contract_id, formik, intl, setToast, user_id]);
 
   const getListTaxs = () => {
-    getListTax()
+    getListTax(contract_id, termin)
       .then((response) => {
-        console.log("getListTax", response.data.data);
         setListTax(response.data.data);
       })
       .catch((error) => {
@@ -201,6 +201,7 @@ function ContractTaxPage(props) {
   const getTaxData = useCallback(() => {
     getTax(contract_id, termin)
       .then((response) => {
+        setOptionSelected(response.data.data.tax_selected);
         setTaxData(response.data.data);
         if (response.data.data) {
           getHistoryTaxData(response["data"]["data"]["id"]);
@@ -252,12 +253,13 @@ function ContractTaxPage(props) {
       billing_id: invoiceBillingId,
       document_no: taxData?.tax_no,
       created_by_id: user_id,
-      filename: taxData?.file_name
+      filename: taxData?.file_name,
     };
     approveTax(taxData.id, {
       approved_by_id: user_id,
       contract_id: contract_id,
       term_id: termin,
+      tax_selected: optionSelected,
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -266,6 +268,10 @@ function ContractTaxPage(props) {
         setIsSubmit(true);
         getHistoryTaxData(taxData.id);
         softcopy_save(data_1);
+        getTerminProgress(termin)
+          .then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+          })
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -313,7 +319,7 @@ function ContractTaxPage(props) {
         <DialogContent>
           <div>
             <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
-            {optionSelected.length > 0 ? (
+            {optionSelected && optionSelected.length > 0 ? (
               <ol>
                 {optionSelected.map((item, index) => {
                   return (
@@ -762,7 +768,9 @@ function ContractTaxPage(props) {
                       options: el?.master_tax_items.map((el2) => ({
                         value: JSON.stringify(el2),
                         // value: el2?.id,
-                        label: `${el2?.description} - ${el2?.value}% - Nilai`,
+                        label: `${el2?.description} - ${el2?.value}% - ${rupiah(
+                          el2.tax_value
+                        )}`,
                       })),
                     }))}
                     formatGroupLabel={formatGroupLabel}
@@ -782,7 +790,8 @@ function ContractTaxPage(props) {
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
               taxData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -796,7 +805,8 @@ function ContractTaxPage(props) {
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
               taxData === null ||
-              props.verificationStafStatus
+              props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

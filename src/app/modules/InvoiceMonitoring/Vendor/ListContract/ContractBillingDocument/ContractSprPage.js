@@ -37,7 +37,7 @@ import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 
 function ContractSprPage(props) {
-  const { intl, classes, supportedFormats } = props;
+  const { intl, classes, supportedFormats, progressTermin } = props;
 
   const [loading, setLoading] = useState(false);
   const [contractData, setContractData] = useState({});
@@ -1246,7 +1246,10 @@ function ContractSprPage(props) {
               type="submit"
               className="btn btn-primary mx-1"
               disabled={
-                loading || (formik.touched && !formik.isValid) || sppStatus
+                loading ||
+                (formik.touched && !formik.isValid) ||
+                sppStatus ||
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />

@@ -56,7 +56,7 @@ function ContractReceiptPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes, supportedFormats } = props;
+  const { intl, classes, supportedFormats, progressTermin } = props;
 
   const initialValues = {
     draft_no: "",
@@ -717,7 +717,10 @@ function ContractReceiptPage(props) {
               type="submit"
               className="btn btn-primary mx-1"
               disabled={
-                loading || (formik.touched && !formik.isValid) || receiptStatus
+                loading ||
+                (formik.touched && !formik.isValid) ||
+                receiptStatus ||
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />
