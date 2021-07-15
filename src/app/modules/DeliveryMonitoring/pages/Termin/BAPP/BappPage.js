@@ -75,7 +75,7 @@ const BappPage = ({
   const uploadRef = React.useRef();
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
-  const [stepActive, setStepActive] = React.useState(3);
+  const [stepActive, setStepActive] = React.useState(0);
   const [loading, setLoading] = React.useState({
     get: false,
     submit: false,

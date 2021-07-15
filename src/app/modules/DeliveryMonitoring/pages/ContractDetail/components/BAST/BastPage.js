@@ -23,6 +23,10 @@ import TablePaginationCustom from "../../../../../../components/tables/TablePagi
 import urlHelper, {
   openLinkTab,
 } from "../../../../../../service/helper/urlHelper";
+import StepperDoc from "../../../Termin/BAPP/components/StepperDoc";
+import ModalUploadSigned from "../../../Termin/BAPP/components/ModalUploadSigned";
+import ModalPreview from "../../../Termin/BAPP/components/ModalPreview";
+import { fetch_api_sg } from "../../../../../../../redux/globalReducer";
 
 const tableHeader = [
   {
@@ -64,14 +68,20 @@ const RowNormal = ({ data }) => {
   );
 };
 
-const BastPage = ({ status, contract, saveContract }) => {
+const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
   const formikRef = React.useRef();
   const [Toast, setToast] = useToast();
   const isClient = status === "client";
+  const uploadRef = React.useRef();
+  const approveRef = React.useRef();
+  const rejectRef = React.useRef();
   const [loadings, setLoadings] = React.useState({
     fetch: false,
     post: false,
   });
+  const [stepActive, setStepActive] = React.useState(0);
+  const isReject = taskNews?.approve_status?.code === "rejected";
+
   const handleLoading = React.useCallback(
     (key, state) => setLoadings((prev) => ({ ...prev, [key]: state })),
     [setLoadings]
@@ -93,6 +103,13 @@ const BastPage = ({ status, contract, saveContract }) => {
       },
     }),
     [news, contract_name, vendor, contract_no, purch_order_no]
+  );
+
+  const fetchData = React.useCallback(
+    (toast = { visible: false, message: "" }) => {
+      console.log(`aja`);
+    },
+    []
   );
 
   const handleError = React.useCallback(
@@ -174,6 +191,22 @@ const BastPage = ({ status, contract, saveContract }) => {
     }
   }, [news]);
 
+  // buat ganti state step
+  React.useEffect(() => {
+    const isApproved = taskNews?.approve_status?.code === "approved";
+
+    if (taskNews) {
+      if (isApproved) setStepActive(3);
+      else if (taskNews?.file_upload) {
+        if (isReject) setStepActive(1);
+        else setStepActive(2);
+      } else if (taskNews?.file) {
+        if (taskNews?.review_text !== null) setStepActive(1);
+        else setStepActive(0);
+      }
+    }
+  }, [taskNews]);
+
   let disabledInput = Object.keys(initialValues);
   let allowedClient = ["hasil_pekerjaan"];
   let allowedVendor = ["nomor_bast", "tanggal_bast"];
@@ -184,12 +217,83 @@ const BastPage = ({ status, contract, saveContract }) => {
         openLinkTab(params?.file);
         // window.open(urlHelper.addBaseURL(params?.file), "_blank");
         break;
+      case "skip":
+        setStepActive(1);
+        // window.open(urlHelper.addBaseURL(params?.file), "_blank");
+        break;
+      case "uploadSign":
+        // console.log(`type`, type);
+        // handleVisible(type);
+        uploadRef.current.open();
+        break;
       case "upload":
-        console.log(`type`, type);
+        // console.log(`type`, type);
         break;
       case "approve":
-        console.log(`type`, type);
+        // console.log(`type`, type);
+        approveRef.current.open();
         break;
+      case "reject":
+        // console.log(`type`, type);
+        rejectRef.current.open();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleApi = (type, params) => {
+    console.log(`type`, type, params);
+    switch (type) {
+      case "upload_s":
+        fetchApi({
+          key: keys.upload_s,
+          type: "postForm",
+          alertAppear: "both",
+          url: `/delivery/task-news/${taskNews.id}/upload`,
+          params: { file: params.data },
+          onSuccess: () => {
+            uploadRef.current.close();
+            fetchData({ visible: false, message: "" });
+          },
+        });
+        break;
+      case "approve":
+        fetchApi({
+          key: keys.approve_s,
+          type: "post",
+          alertAppear: "both",
+          url: `delivery/task-news/${taskNews.id}/status`,
+          params: {
+            approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
+          },
+          onSuccess: (res) => {
+            // this.handleRefresh();
+            fetchData({ visible: false, message: "" });
+
+            approveRef.current.close();
+          },
+        });
+        break;
+      case "reject":
+        fetchApi({
+          key: keys.approve_s,
+          type: "post",
+          alertAppear: "both",
+          url: `delivery/task-news/${taskNews.id}/status`,
+          params: {
+            approve_status_id: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
+            reject_text: params?.remarks,
+          },
+          onSuccess: (res) => {
+            // this.handleRefresh();
+            fetchData({ visible: false, message: "" });
+
+            rejectRef.current.close();
+          },
+        });
+        break;
+
       default:
         break;
     }
@@ -198,6 +302,26 @@ const BastPage = ({ status, contract, saveContract }) => {
   return (
     <React.Fragment>
       <Toast />
+      <ModalUploadSigned
+        innerRef={uploadRef}
+        handleSubmit={(e) => handleApi("upload_s", e)}
+        loading={loadings.upload_s}
+        file={taskNews?.file_upload}
+      />
+      <ModalPreview
+        innerRef={approveRef}
+        handleSubmit={(e) => handleApi("approve", e)}
+        loading={loadings.approve_s}
+        file={taskNews?.file_upload}
+      />
+      <ModalPreview
+        innerRef={rejectRef}
+        handleSubmit={(e) => handleApi("reject", e)}
+        loading={loadings.approve_s}
+        withRemarks
+        title={"Reject Signed Document"}
+        file={taskNews?.file_upload}
+      />
       {/* <Card>
         <CardBody> */}
       <Card>
@@ -231,6 +355,87 @@ const BastPage = ({ status, contract, saveContract }) => {
               </Row>
             )}
           </FormBuilder>
+        </CardBody>
+      </Card>
+
+      <Card className="mt-5">
+        <CardBody>
+          <StepperDoc
+            taskNews={taskNews}
+            active={stepActive}
+            isReject={isReject}
+            renderBtns={(idx) => {
+              switch (idx) {
+                case 0:
+                  return (
+                    <div className="mt-2">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={"mr-2"}
+                        onClick={() => handleAction("preview", taskNews)}
+                        disabled={taskNews ? false : true}
+                      >
+                        <FormattedMessage id="TITLE.PREVIEW" />
+                      </Button>
+                      {/* <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleAction("skip", taskNews)}
+                        disabled={taskNews ? false : true}
+                      >
+                        <FormattedMessage id="TITLE.SKIP" />
+                      </Button> */}
+                    </div>
+                  );
+                case 1:
+                  return (
+                    <div className="mt-2">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleAction("uploadSign")}
+                      >
+                        <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        className={"ml-2"}
+                        onClick={() => handleAction("preview", taskNews)}
+                        disabled={taskNews ? false : true}
+                      >
+                        <FormattedMessage id="TITLE.PREVIEW" />
+                      </Button>
+                    </div>
+                  );
+                case 2:
+                  return (
+                    <div className="mt-2">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={"mr-3"}
+                        onClick={() => handleAction("approve")}
+                      >
+                        <FormattedMessage id="TITLE.APPROVE" />
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={"bg-danger text-white"}
+                        onClick={() => handleAction("reject")}
+                      >
+                        <FormattedMessage id="TITLE.REJECT" />
+                      </Button>
+                    </div>
+                  );
+
+                default:
+                  return "Unknown step";
+              }
+            }}
+          />
         </CardBody>
       </Card>
 
@@ -301,10 +506,14 @@ const BastPage = ({ status, contract, saveContract }) => {
   );
 };
 
+const keys = {
+  upload_s: "upload-signed",
+  approve_s: "approve-signed",
+};
 const mapState = ({ auth, deliveryMonitoring }) => ({
   status: auth.user.data.status,
   contract: deliveryMonitoring.dataContractById,
-  news: deliveryMonitoring.dataContractById?.news,
+  taskNews: deliveryMonitoring.dataContractById?.news,
 });
 
 export default connect(mapState, {
@@ -312,4 +521,5 @@ export default connect(mapState, {
     type: actionTypes.SetContractById,
     payload: payload,
   }),
+  fetchApi: (payload) => fetch_api_sg(payload),
 })(BastPage);
