@@ -7,15 +7,27 @@ import {
   CardFooter,
 } from "../../../../../_metronic/_partials/controls";
 import {
-  createBkb, getFileEproc, getListDocSoftCopy, approveHardCopy,
-  rejectHardCopyStatus, rejectHardCopyHistory, getDeliverableInInvoive, getHardcopyBillingDocument,
-  getFileSpp, getFileInvoice, getFileReceipt, getFileTax,
-  sendNotifHardCopy, checkBkbExist, getInvoice
+  createBkb,
+  getFileEproc,
+  getListDocSoftCopy,
+  approveHardCopy,
+  rejectHardCopyStatus,
+  rejectHardCopyHistory,
+  getDeliverableInInvoive,
+  getHardcopyBillingDocument,
+  getFileSpp,
+  getFileInvoice,
+  getFileReceipt,
+  getFileTax,
+  sendNotifHardCopy,
+  checkBkbExist,
+  getInvoice,
+  getContractSummary,
 } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
 // import * as Yup from "yup";
-// import { rupiah } from "../../../../../libs/currency";
+import { rupiah } from "../../../../libs/currency";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import {
   ExpansionPanel,
@@ -38,6 +50,7 @@ import { formatDate } from "../../../../libs/date";
 import useToast from "../../../../components/toast";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -263,6 +276,7 @@ function ContractHardCopyDoc(props) {
   ];
 
   const [dataDeliverables, setDataDeliverables] = useState([]);
+  const [contractData, setContractData] = useState({});
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
@@ -323,6 +337,14 @@ function ContractHardCopyDoc(props) {
         setLoadingDeliverables(false);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
+
+    getContractSummary(contract_id, termin)
+      .then((result) => {
+        setContractData(result.data.data);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   };
 
   const callApiContractSoftCopy = () => {
@@ -336,7 +358,7 @@ function ContractHardCopyDoc(props) {
         setLoading(false);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
-  }
+  };
 
   const callApiBillingHardCopy = () => {
     setLoading(true);
@@ -349,7 +371,7 @@ function ContractHardCopyDoc(props) {
         setLoading(false);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
-  }
+  };
 
   const handleSubmit = () => {
     setLoading(true);
@@ -370,7 +392,10 @@ function ContractHardCopyDoc(props) {
           createBkb(data)
             .then((response) => {
               setInvoiceBkbExist(true);
-              setToast(intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }), 10000);
+              setToast(
+                intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
+                10000
+              );
             })
             .catch((error) => {
               setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -415,11 +440,10 @@ function ContractHardCopyDoc(props) {
     var data = {
       hardcopy_approved_by_id: user_id,
     };
-    const document_monitoring_id = modalApproved.data.document_monitoring ? modalApproved.data.document_monitoring.id : modalApproved.data.document_monitoring_id
-    approveHardCopy(
-      document_monitoring_id,
-      data
-    )
+    const document_monitoring_id = modalApproved.data.document_monitoring
+      ? modalApproved.data.document_monitoring.id
+      : modalApproved.data.document_monitoring_id;
+    approveHardCopy(document_monitoring_id, data)
       .then((results) => {
         setModalApproved({
           ...modalApproved,
@@ -453,17 +477,31 @@ function ContractHardCopyDoc(props) {
     setModalReject({ ...modalReject, loading: true });
     var note = document.getElementById("commentRejected").value;
     var data = {
-      document_monitoring_id: modalReject.data.document_monitoring ? modalReject.data.document_monitoring.id : modalReject.data.document_monitoring_id,
+      document_monitoring_id: modalReject.data.document_monitoring
+        ? modalReject.data.document_monitoring.id
+        : modalReject.data.document_monitoring_id,
       contract_id: contract_id,
       term_id: termin,
-      document_id: modalReject.data.document_monitoring ? modalReject.data.document_monitoring.document_id : modalReject.data.document_id,
-      deliverables_id: modalReject.data.document_monitoring ? modalReject.data.document_monitoring.deliverables_id : modalReject.data.deliverables_id,
-      billing_id: modalReject.data.document_monitoring ? modalReject.data.document_monitoring.billing_id : modalReject.data.billing_id,
-      document_no: modalReject.data.document_monitoring ? modalReject.data.document_monitoring.document_no : modalReject.data.document_no,
-      created_at: modalReject.data.document_monitoring ? modalReject.data.document_monitoring.created_at : modalReject.data.created_at,
-      created_by_id: modalReject.data.document_monitoring ? modalReject.data.document_monitoring.created_by_id : modalReject.data.created_by_id,
+      document_id: modalReject.data.document_monitoring
+        ? modalReject.data.document_monitoring.document_id
+        : modalReject.data.document_id,
+      deliverables_id: modalReject.data.document_monitoring
+        ? modalReject.data.document_monitoring.deliverables_id
+        : modalReject.data.deliverables_id,
+      billing_id: modalReject.data.document_monitoring
+        ? modalReject.data.document_monitoring.billing_id
+        : modalReject.data.billing_id,
+      document_no: modalReject.data.document_monitoring
+        ? modalReject.data.document_monitoring.document_no
+        : modalReject.data.document_no,
+      created_at: modalReject.data.document_monitoring
+        ? modalReject.data.document_monitoring.created_at
+        : modalReject.data.created_at,
+      created_by_id: modalReject.data.document_monitoring
+        ? modalReject.data.document_monitoring.created_by_id
+        : modalReject.data.created_by_id,
       rejected_by_id: user_id,
-      rejected_remark: note
+      rejected_remark: note,
     };
     rejectHardCopyStatus(data.document_monitoring_id, {})
       .then((result) => {
@@ -514,18 +552,30 @@ function ContractHardCopyDoc(props) {
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
-  }, [
-    contract_id,
-    setInvoiceData,
-    intl,
-    setToast,
-  ]);
+  }, [contract_id, setInvoiceData, intl, setToast]);
 
   useEffect(callApi, []);
   useEffect(callApiContractSoftCopy, []);
   useEffect(callApiBillingHardCopy, []);
   useEffect(checkBkb, []);
   useEffect(getInvoiceData, []);
+
+  const print = () => {
+    var printContents = window.$("#printPerlengkapan").html();
+    window.$("#printPerlengkapan").removeClass("px-5");
+    window.$("#printPerlengkapan").removeClass("mx-5");
+    window.$("#printPerlengkapan").removeClass("d-none");
+    window.$("#root").css("display", "none");
+    window.$("#print-content").addClass("p-5");
+    window.$("#print-content").html(printContents);
+    window.print();
+    window.$("#root").removeAttr("style");
+    window.$("#printPerlengkapan").addClass("px-5");
+    window.$("#printPerlengkapan").addClass("mx-5");
+    window.$("#printPerlengkapan").addClass("d-none");
+    window.$("#print-content").removeClass("p-5");
+    window.$("#print-content").html("");
+  };
 
   return (
     <React.Fragment>
@@ -750,12 +800,11 @@ function ContractHardCopyDoc(props) {
                             : null}
                         </TableCell>
                         <TableCell>
-                          {
-                            dataUser?.is_finance &&
-                            (item.hardcopy_state === null || item.hardcopy_state === "REJECTED") &&
-                            (item.softcopy_state !== null) &&
-                            progressTermin?.ident_name === "HARDCOPY" &&
-                            (
+                          {dataUser?.is_finance &&
+                            (item.hardcopy_state === null ||
+                              item.hardcopy_state === "REJECTED") &&
+                            item.softcopy_state !== null &&
+                            progressTermin?.ident_name === "HARDCOPY" && (
                               <ButtonAction
                                 data={item}
                                 handleAction={handleAction}
@@ -800,7 +849,16 @@ function ContractHardCopyDoc(props) {
                       <RowAccordion
                         key={id}
                         dataAll={el}
-                        data={["accordIcon", el.name, "-", "-", "-", "-", "-", ""]}
+                        data={[
+                          "accordIcon",
+                          el.name,
+                          "-",
+                          "-",
+                          "-",
+                          "-",
+                          "-",
+                          "",
+                        ]}
                       >
                         {(item) => {
                           const isPeriodic = item.is_periodic;
@@ -825,7 +883,10 @@ function ContractHardCopyDoc(props) {
                                 {/* Dokumen */}
                                 {(item2) =>
                                   item2?.documents?.map((els, idx) => {
-                                    if (els?.document_monitoring?.softcopy_state === "APPROVED") {
+                                      if (
+                                        els?.document_monitoring
+                                          ?.softcopy_state === "APPROVED"
+                                      ) {
                                       return (
                                         <RowAccordion
                                           key={idx}
@@ -834,21 +895,35 @@ function ContractHardCopyDoc(props) {
                                             "accordIcon",
                                             els?.document_custom_name ??
                                             els?.document?.name,
-                                            formatDate(new Date(els?.due_date)),
+                                              formatDate(
+                                                new Date(els?.due_date)
+                                              ),
                                             <StatusRemarks
                                               status={
-                                                els?.document_monitoring.hardcopy_state !== null
-                                                  ? els?.document_monitoring.hardcopy_state
+                                                  els?.document_monitoring
+                                                    .hardcopy_state !== null
+                                                    ? els?.document_monitoring
+                                                        .hardcopy_state
                                                   : "WAITING TO APPROVED"
                                               }
                                             />,
-                                            els?.percentage && els?.percentage + "%",
+                                              els?.percentage &&
+                                                els?.percentage + "%",
                                             <BtnLihat url={els?.url} />,
-                                            els.document_monitoring?.hardcopy_state === "APPROVED" ? '-' : els?.document_monitoring.hardcopy_history[0]?.rejected_re,
+                                              els.document_monitoring
+                                                ?.hardcopy_state === "APPROVED"
+                                                ? "-"
+                                                : els?.document_monitoring
+                                                    .hardcopy_history[0]
+                                                    ?.rejected_re,
                                             els?.url &&
-                                            (els.document_monitoring?.hardcopy_state === null || els.document_monitoring?.hardcopy_state === "REJECTED") &&
-                                            progressTermin?.ident_name === "HARDCOPY" &&
-                                            (
+                                                (els.document_monitoring
+                                                  ?.hardcopy_state === null ||
+                                                  els.document_monitoring
+                                                    ?.hardcopy_state ===
+                                                    "REJECTED") &&
+                                                progressTermin?.ident_name ===
+                                                  "HARDCOPY" && (
                                               <ButtonAction
                                                 data={els}
                                                 handleAction={
@@ -859,14 +934,17 @@ function ContractHardCopyDoc(props) {
                                             ),
                                           ]}
                                         />
-                                      )
+                                        );
                                     }
                                   })
                                 }
                               </RowAccordion>
                             ))
                             : item?.documents?.map((el, id) => {
-                              if (el?.document_monitoring?.softcopy_state === "APPROVED") {
+                                if (
+                                  el?.document_monitoring?.softcopy_state ===
+                                  "APPROVED"
+                                ) {
                                 return (
                               <RowAccordion
                                 //  Dokumen
@@ -874,13 +952,16 @@ function ContractHardCopyDoc(props) {
                                 classBtn={"pl-13"}
                                 data={[
                                   "accordIcon",
-                                  el?.document_custom_name ?? el?.document?.name,
+                                        el?.document_custom_name ??
+                                          el?.document?.name,
                                   formatDate(new Date(el?.due_date)),
                                   <StatusRemarks
                                     status={
-                                      el?.document_status?.name === "APPROVED" &&
+                                            el?.document_status?.name ===
+                                              "APPROVED" &&
                                         (el?.document_monitoring === null ||
-                                          el?.document_monitoring === "PENDING")
+                                              el?.document_monitoring ===
+                                                "PENDING")
                                         ? "WAITING TO APPROVE"
                                         : el?.document_status?.name
                                     }
@@ -891,24 +972,28 @@ function ContractHardCopyDoc(props) {
                                   el?.remarks,
                                   el?.url &&
                                   (el.document_monitoring === null ||
-                                    (el.document_monitoring?.softcopy_state !==
-                                      "REJECTED" &&
-                                      el.document_monitoring?.softcopy_state !==
+                                            (el.document_monitoring
+                                              ?.softcopy_state !== "REJECTED" &&
+                                              el.document_monitoring
+                                                ?.softcopy_state !==
                                       "APPROVED")) &&
-                                  el.document_status?.name === "APPROVED" &&
-                                  progressTermin?.ident_name === "HARDCOPY" &&
-                                  (
+                                          el.document_status?.name ===
+                                            "APPROVED" &&
+                                          progressTermin?.ident_name ===
+                                            "HARDCOPY" && (
                                     <ButtonAction
                                       data={el}
-                                      handleAction={handleActionDeliverable}
+                                              handleAction={
+                                                handleActionDeliverable
+                                              }
                                       ops={data_opsDeliverable}
                                     />
                                   ),
                                 ]}
                               />
-                                )
+                                  );
                               }
-                            })
+                              });
                         }}
                       </RowAccordion>
                     );
@@ -951,10 +1036,14 @@ function ContractHardCopyDoc(props) {
                             <TableCell>
                               <a
                                 href={
-                                  item.doc_status == 'INVOICE' ? getFileInvoice + item.doc_file
-                                    : item.doc_status == 'SPP' ? getFileSpp + item.doc_file
-                                      : item.doc_status == 'RECEIPT' ? getFileReceipt + item.doc_file
-                                        : getFileTax + item.doc_file}
+                                  item.doc_status == "INVOICE"
+                                    ? getFileInvoice + item.doc_file
+                                    : item.doc_status == "SPP"
+                                    ? getFileSpp + item.doc_file
+                                    : item.doc_status == "RECEIPT"
+                                    ? getFileReceipt + item.doc_file
+                                    : getFileTax + item.doc_file
+                                }
                               >
                                 {item.doc_no}
                               </a>
@@ -992,7 +1081,7 @@ function ContractHardCopyDoc(props) {
                           {dataUser?.is_finance &&
                             (item.hardcopy_state === null ||
                               item.hardcopy_state === "REJECTED") &&
-                            (item.softcopy_state !== null) &&
+                            item.softcopy_state !== null &&
                             progressTermin?.ident_name === "HARDCOPY" && (
                               <ButtonAction
                                 data={item}
@@ -1022,12 +1111,263 @@ function ContractHardCopyDoc(props) {
           <button
             type="button"
             className="btn btn-sm btn-primary mx-1"
+            onClick={print}
             disabled={loading || progressTermin?.ident_name !== "HARDCOPY"}
           >
             Print Kelengkapan Dokumen
           </button>
         </CardFooter>
       </Card>
+      <div className="px-5 mx-5 d-none" id="printPerlengkapan">
+        <div>
+          <div className="row">
+            <div className="col-sm-12">
+              <h6 className="text-uppercase text-center">
+                <FormattedMessage id="TITLE.PAYMENT_RECEIPT" />
+              </h6>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-4 d-flex align-items-center">
+              <img
+                src={toAbsoluteUrl("/media/logos/logo-eprocurement.png")}
+                style={{ width: 300 }}
+                alt="IconGde"
+              />
+            </div>
+            <div className="col-sm-8">
+              <div className="form-group row mb-1">
+                <label className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.VENDOR_NAME" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    defaultValue={contractData?.full_name}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="form-group row mb-1">
+                <label className="col-sm-4 col-form-label">
+                  <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK" />
+                </label>
+                <div className="col-sm-8">
+                  <textarea
+                    readOnly
+                    className="form-control"
+                    defaultValue={contractData?.termin_name}
+                  ></textarea>
+                </div>
+              </div>
+              <div className="form-group row mb-1">
+                <label className="col-sm-4 col-form-label">
+                  <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={rupiah(contractData?.termin_value)}
+                    onChange={(e) => {}}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="form-group row mb-1">
+                <label className="col-sm-4 col-form-label">Tanggal Masuk</label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    defaultValue="25 Maret 2020"
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="form-group row mb-1">
+                <label className="col-sm-4 col-form-label">
+                  Jatuh Tempo Pembayaran
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    defaultValue="25 Maret 2020 - 30 Maret 2020"
+                    readOnly
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="row">
+              <div className="col-sm-4">
+                <h6 className="font-weight-bold">
+                  <FormattedMessage id="TITLE.ATTACHMENT_DOC" />
+                </h6>
+              </div>
+              <div className="col-sm-3">
+                <h6 className="font-weight-bold">
+                  <FormattedMessage id="LABEL.DOCUMENT_DATE" />
+                </h6>
+              </div>
+              <div className="col-sm-5">
+                <h6 className="font-weight-bold">
+                  <FormattedMessage id="TITLE.INFORMATION" />
+                </h6>
+              </div>
+            </div>
+            {dataDocHardCopy.map((item, index) => {
+              return (
+                <div className="row mt-3">
+                  <div className="col-sm-4">
+                    <label
+                      className={
+                        item.hardcopy_state === "APPROVED"
+                          ? "checkboxs-true"
+                          : item.hardcopy_state === "REJECTED"
+                          ? "checkboxs-false"
+                          : "checkboxs"
+                      }
+                    >
+                      <input
+                        type="checkbox"
+                        checked={true}
+                        onChange={(e) => {}}
+                      />
+                      <span></span>
+                    </label>
+                    <span className="ml-2">{item.document_name}</span>
+                  </div>
+                  <div className="col-sm-3 border-bottom">
+                    <span>
+                      {item.hardcopy_approved_at
+                        ? window
+                            .moment(new Date(item.hardcopy_approved_at))
+                            .format("DD MMM YYYY")
+                        : null}
+                    </span>
+                  </div>
+                  <div className="col-sm-5 border-bottom">
+                    <span>Note Rejected</span>
+                  </div>
+                </div>
+              );
+            })}
+            {dataBillingHardCopy.map((item, index) => {
+              return (
+                <div className="row mt-3">
+                  <div className="col-sm-4">
+                    <label
+                      className={
+                        item.hardcopy_state === "APPROVED"
+                          ? "checkboxs-true"
+                          : item.hardcopy_state === "REJECTED"
+                          ? "checkboxs-false"
+                          : "checkboxs"
+                      }
+                    >
+                      <input
+                        type="checkbox"
+                        checked={true}
+                        onChange={(e) => {}}
+                      />
+                      <span></span>
+                    </label>
+                    <span className="ml-2">{item.document_name}</span>
+                  </div>
+                  <div className="col-sm-3 border-bottom">
+                    <span>
+                      {item.hardcopy_approved_at
+                        ? window
+                            .moment(new Date(item.hardcopy_approved_at))
+                            .format("DD MMM YYYY")
+                        : null}
+                    </span>
+                  </div>
+                  <div className="col-sm-5 border-bottom">
+                    <span>Note Rejected</span>
+                  </div>
+                </div>
+              );
+            })}
+            <div className="row mt-3">
+              <div className="col-sm-4">
+                <label className="checkboxs-true">
+                  <input type="checkbox" checked={true} onChange={(e) => {}} />
+                  <span></span>
+                </label>
+                <span className="ml-2">Lainnya</span>
+              </div>
+              <div className="col-sm-3 border-bottom">
+                <span></span>
+              </div>
+              <div className="col-sm-5 border-bottom">
+                <span></span>
+              </div>
+            </div>
+            <div className="row mt-2">
+              <div className="col-sm-4 border-bottom">
+                <span>1. Test</span>
+              </div>
+              <div className="col-sm-3 border-bottom">
+                <span>12 Desember 2020</span>
+              </div>
+              <div className="col-sm-5 border-bottom">
+                <span>Test</span>
+              </div>
+            </div>
+            <div className="row mt-2">
+              <div className="col-sm-4 border-bottom">
+                <span>2.</span>
+              </div>
+              <div className="col-sm-3 border-bottom">
+                <span></span>
+              </div>
+              <div className="col-sm-5 border-bottom">
+                <span></span>
+              </div>
+            </div>
+            <div className="row mt-2">
+              <div className="col-sm-4 border-bottom">
+                <span>3.</span>
+              </div>
+              <div className="col-sm-3 border-bottom">
+                <span></span>
+              </div>
+              <div className="col-sm-5 border-bottom">
+                <span></span>
+              </div>
+            </div>
+          </div>
+          <div className="row mt-4">
+            <div className="col-sm-12">
+              <span className="font-italic">
+                *Proses pembayaran dihitung sejak dokumen penagihan diterima
+                dengan lengkap
+              </span>
+            </div>
+          </div>
+          <div className="row mt-5">
+            <div className="col-sm-6">
+              <span>Disertakan Oleh</span>
+              <div
+                className="w-50 border-bottom"
+                style={{ minHeight: 80 }}
+              ></div>
+            </div>
+            <div className="col-sm-6">
+              <span>DIterima Oleh</span>
+              <div
+                className="w-50 border-bottom"
+                style={{ minHeight: 80 }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </React.Fragment>
   );
 }

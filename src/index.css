@@ -1448,3 +1448,63 @@ th {
 #NumberFormat-text {
   background-color: #f3f6f9;
 }
+
+label.checkboxs-false,
+label.checkboxs-true,
+label.checkboxs {
+  margin-left: -10px;
+}
+
+label.checkboxs-true input[type="checkbox"],
+label.checkboxs-false input[type="checkbox"],
+label.checkboxs input[type="checkbox"] {
+  display: none;
+}
+label.checkboxs-true span,
+label.checkboxs-false span,
+label.checkboxs span {
+  display: inline-block;
+  border: 1.5px solid #bbb;
+  border-radius: 2px;
+  width: 13px;
+  height: 13px;
+  background: white;
+  vertical-align: middle;
+  margin: 2px;
+  position: relative;
+  transition: width 0.1s, height 0.1s, margin 0.1s;
+}
+label.checkboxs-true :checked + span {
+  background: #0000ffb8;
+  border: 1.5px solid #0000ffb8 !important;
+  margin: 2px;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+}
+label.checkboxs-true :checked + span:after {
+  content: "\2714";
+  font-size: 12px;
+  position: absolute;
+  top: -4px;
+  left: 1px;
+  color: white;
+}
+label.checkboxs-false :checked + span {
+  background: red;
+  border: 1.5px solid red !important;
+  margin: 2px;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+}
+label.checkboxs-false :checked + span:after {
+  content: "\1F5D9";
+  font-size: 12px;
+  position: absolute;
+  top: -5px;
+  left: -1px;
+  color: white;
+}
+label.checkboxs :checked + span {
+  background: white;
+  margin: 2px;
+}
