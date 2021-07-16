@@ -554,7 +554,8 @@
   "TITLE.IS_INVALID": "tidak valid",
   "TITLE.SELECT_DOCUMENT_TYPE": "Pilih tipe dokumen",
   "TITLE.PERCENTAGE": "Persentase",
-  "TITLE.FINE_ATTACHMENT": "Pajak yang dikenakan:",
+  "TITLE.TAX_ATTACHMENT": "Pajak yang dikenakan:",
+  "TITLE.FINE_ATTACHMENT": "Denda yang dikenakan:",
   "TITLE.NOTHING": "Tidak ada",
   "TITLE.TYPE_TAX": "Tipe Pajak",
   "TITLE.GROUP_TAX": "Group Pajak",
@@ -563,5 +564,7 @@
   "TITLE.TAX_VALUE": "Nilai Pajak",
   "TITLE.DOUMENT_DATE_IS_REQUIRED": "Tanggal dokumen wajib diisi",
   "TITLE.CHOOSE_FILE": "Pilih File ...",
-  "TITLE.CHOOSE_DOCUMENT_FILE": "Pilih file dokumen"
+  "TITLE.CHOOSE_DOCUMENT_FILE": "Pilih file dokumen",
+  "TITLE.PAYMENT_RECEIPT": "Tanda Terima Dokumen Pembayaran",
+  "TITLE.ATTACHMENT_DOC": "Lampiran Dokumen"
 }

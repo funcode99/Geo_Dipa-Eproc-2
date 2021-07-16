@@ -609,7 +609,7 @@ function ContractInvoicePage(props) {
                     />
                   </div>
                   {formik.touched.invoice_no && formik.errors.invoice_no ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.invoice_no}
                     </span>
                   ) : null}
@@ -635,7 +635,7 @@ function ContractInvoicePage(props) {
                     />
                   </div>
                   {formik.touched.dateInvoice && formik.errors.from_time ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.from_time}
                     </span>
                   ) : null}
@@ -655,7 +655,7 @@ function ContractInvoicePage(props) {
                     ></textarea>
                   </div>
                   {formik.touched.description && formik.errors.description ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.description}
                     </span>
                   ) : null}
@@ -706,7 +706,7 @@ function ContractInvoicePage(props) {
                     )}
                   </label>
                   {formik.touched.file && formik.errors.file ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.file}
                     </span>
                   ) : null}

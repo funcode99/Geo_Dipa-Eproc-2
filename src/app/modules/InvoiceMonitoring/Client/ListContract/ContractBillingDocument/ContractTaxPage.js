@@ -27,7 +27,7 @@ import {
   getBillingDocumentId,
   softcopy_save,
   getListTax,
-  getTerminProgress
+  getTerminProgress,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -39,6 +39,7 @@ import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import Select from "react-select";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
+import NumberFormat from "react-number-format";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -268,10 +269,9 @@ function ContractTaxPage(props) {
         setIsSubmit(true);
         getHistoryTaxData(taxData.id);
         softcopy_save(data_1);
-        getTerminProgress(termin)
-          .then((result) => {
+        getTerminProgress(termin).then((result) => {
             setProgressTermin(result.data.data?.progress_type);
-          })
+        });
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -318,7 +318,7 @@ function ContractTaxPage(props) {
         </DialogTitle>
         <DialogContent>
           <div>
-            <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
+            <FormattedMessage id="TITLE.TAX_ATTACHMENT" />
             {optionSelected && optionSelected.length > 0 ? (
               <ol>
                 {optionSelected.map((item, index) => {
@@ -646,12 +646,15 @@ function ContractTaxPage(props) {
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
                 </label>
                 <div className="col-sm-8">
-                  <input
-                    type="text"
+                  <NumberFormat
+                    id={"NumberFormat-text"}
+                    value={taxData?.npwp}
+                    displayType={"text"}
                     className="form-control"
-                    id="npwpTax"
-                    disabled
-                    defaultValue={taxData?.npwp}
+                    format="##.###.###.#-###.###"
+                    mask="_"
+                    allowEmptyFormatting={true}
+                    allowLeadingZeros={true}
                   />
                 </div>
               </div>

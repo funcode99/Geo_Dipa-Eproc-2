@@ -844,7 +844,7 @@ function ContractSprPage(props) {
                     />
                   </div>
                   {formik.touched.spr_no && formik.errors.spr_no ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.spr_no}
                     </span>
                   ) : null}
@@ -864,7 +864,7 @@ function ContractSprPage(props) {
                     />
                   </div>
                   {formik.touched.spr_date && formik.errors.spr_date ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.spr_date}
                     </span>
                   ) : null}
@@ -884,7 +884,7 @@ function ContractSprPage(props) {
                     ></textarea>
                   </div>
                   {formik.touched.description && formik.errors.description ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.description}
                     </span>
                   ) : null}
@@ -940,7 +940,7 @@ function ContractSprPage(props) {
                     onChange={(e) => handleUpload(e)}
                   />
                   {formik.touched.file && formik.errors.file ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.file}
                     </span>
                   ) : null}
@@ -1028,7 +1028,7 @@ function ContractSprPage(props) {
                     </div>
                     {formik.touched.bank_account_no &&
                     formik.errors.bank_account_no ? (
-                      <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                      <span className="col-sm-8 offset-sm-4 text-left text-danger">
                         {formik.errors.bank_account_no}
                       </span>
                     ) : null}
@@ -1053,7 +1053,7 @@ function ContractSprPage(props) {
                   </div>
                   {formik.touched.bank_account_name &&
                   formik.errors.bank_account_name ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.bank_account_name}
                     </span>
                   ) : null}
@@ -1075,7 +1075,7 @@ function ContractSprPage(props) {
                     />
                   </div>
                   {formik.touched.bank_name && formik.errors.bank_name ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.bank_name}
                     </span>
                   ) : null}
@@ -1097,7 +1097,7 @@ function ContractSprPage(props) {
                     ></textarea>
                   </div>
                   {formik.touched.bank_address && formik.errors.bank_address ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.bank_address}
                     </span>
                   ) : null}
@@ -1152,7 +1152,7 @@ function ContractSprPage(props) {
                       )}
                     </label>
                     {formik.touched.file_bank && formik.errors.file_bank ? (
-                      <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                      <span className="col-sm-8 offset-sm-4 text-left text-danger">
                         {formik.errors.file_bank}
                       </span>
                     ) : null}

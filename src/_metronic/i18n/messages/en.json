@@ -555,7 +555,8 @@
   "TITLE.IS_INVALID": "is invalid",
   "TITLE.SELECT_DOCUMENT_TYPE": "Select document type",
   "TITLE.PERCENTAGE": "Percentage",
-  "TITLE.FINE_ATTACHMENT": "Tax levied:",
+  "TITLE.TAX_ATTACHMENT": "Tax levied:",
+  "TITLE.FINE_ATTACHMENT": "Fines imposed:",
   "TITLE.NOTHING": "Nothing",
   "TITLE.TYPE_TAX": "Tax Type",
   "TITLE.GROUP_TAX": "Tax Group",
@@ -564,5 +565,7 @@
   "TITLE.TAX_VALUE": "Tax Value",
   "TITLE.DOUMENT_DATE_IS_REQUIRED": "Document date is required",
   "TITLE.CHOOSE_FILE": "Choose File ...",
-  "TITLE.CHOOSE_DOCUMENT_FILE": "Choose document file"
+  "TITLE.CHOOSE_DOCUMENT_FILE": "Choose document file",
+  "TITLE.PAYMENT_RECEIPT": "Payment Document Receipt",
+  "TITLE.ATTACHMENT_DOC": "Document Attachment"
 }
