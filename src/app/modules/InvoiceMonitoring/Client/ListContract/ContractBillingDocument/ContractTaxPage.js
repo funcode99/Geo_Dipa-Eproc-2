@@ -39,6 +39,7 @@ import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import Select from "react-select";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
+import NumberFormat from "react-number-format";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
