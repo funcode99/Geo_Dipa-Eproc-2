@@ -1,9 +1,11 @@
+import Button from "@material-ui/core/Button";
 import React from "react";
 import { Document, Page } from "react-pdf";
 import UploadInput from "../../../../../../components/input/UploadInput";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
+import { openLinkTab } from "../../../../../../service/helper/urlHelper";
 
-const ModalUploadSigned = ({ innerRef, loading, handleSubmit }) => {
+const ModalUploadSigned = ({ innerRef, loading, file, handleSubmit }) => {
   const [dataForm, setDataForm] = React.useState({});
   const _onChange = (file) => {
     // console.log(`file`, file);
@@ -19,12 +21,22 @@ const ModalUploadSigned = ({ innerRef, loading, handleSubmit }) => {
       onYes={_handleSubmit}
       textYes={"Kirim"}
       loading={loading}
-      btnYesProps={
-        {
-          // loading: loading,
-        }
+      btnAction={
+        file && (
+          <Button
+            onClick={() => {
+              // window.open(
+              //   "http://192.168.0.168:5000/task-document/BAPPBAST.pdf",
+              //   "_blank"
+              // );
+              openLinkTab(file);
+            }}
+            style={{ marginRight: "auto" }}
+          >
+            LIHAT DOKUMEN LAMA
+          </Button>
+        )
       }
-      //   {...other}
     >
       <UploadInput value={dataForm} onChange={_onChange} />
     </DialogGlobal>

@@ -73,11 +73,6 @@ const ModalDetail = ({
         minWidth="40vw"
         maxwidth="70vw"
       >
-        <h3 className="mb-7">
-          <FormattedMessage id="TITLE.DETAIL" />{" "}
-          <FormattedMessage id="TITLE.DELIVERY_ORDER" />
-        </h3>
-
         <Table size="small">
           <TableHead>
             <TableRow>

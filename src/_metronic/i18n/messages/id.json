@@ -380,6 +380,7 @@
   "TITLE.ACCEPT_DOCUMENT": "Terima Dokumen",
   "TITLE.REJECT_DOCUMENT": "Tolak Dokumen",
   "TITLE.EDIT": "Edit Data",
+  "TITLE.SKIP": "Lewati",
   "TITLE.SPT_NO": "No SPT",
   "TITLE.CEK_NO": "No CEK",
   "TITLE.TOTAL_PAYMENT": "Total Payment",
@@ -561,6 +562,7 @@
   "TITLE.UPDATE_BY": "Diperbarui Oleh",
   "TITLE.TAX_NAME": "Nama Pajak",
   "TITLE.TAX_VALUE": "Nilai Pajak",
-  "TITLE.PAYMENT_RECEIPT": "Tanda Terima Dokumen Pembayaran",
-  "TITLE.ATTACHMENT_DOC": "Lampiran Dokumen"
+  "TITLE.DOUMENT_DATE_IS_REQUIRED": "Tanggal dokumen wajib diisi",
+  "TITLE.CHOOSE_FILE": "Pilih File ...",
+  "TITLE.CHOOSE_DOCUMENT_FILE": "Pilih file dokumen"
 }

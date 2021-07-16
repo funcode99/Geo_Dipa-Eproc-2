@@ -118,14 +118,21 @@ class DialogGlobal extends React.Component {
 
           <DialogActions>
             {btnAction}
-            {loading && <CircularProgress size="0.875rem" color="inherit" />}
             {isSubmit && (
               <Button
                 variant="contained"
                 className={"bg-primary text-light"}
                 onClick={this.handleYes}
                 {...btnYesProps}
+                disabled={loading || btnYesProps?.disabled}
               >
+                {loading && (
+                  <CircularProgress
+                    size="0.875rem"
+                    className="mr-3"
+                    color="inherit"
+                  />
+                )}
                 {textYes ? textYes : <FormattedMessage id="TITLE.SAVE" />}
               </Button>
             )}

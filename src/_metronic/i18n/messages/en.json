@@ -380,6 +380,7 @@
   "TITLE.ACCEPT_DOCUMENT": "Accept Document",
   "TITLE.REJECT_DOCUMENT": "Reject Document",
   "TITLE.EDIT": "Edit Data",
+  "TITLE.SKIP": "Skip",
   "TITLE.SPT_NO": "No SPT",
   "TITLE.CEK_NO": "No CEK",
   "TITLE.TOTAL_PAYMENT": "Total Payment",
@@ -562,6 +563,7 @@
   "TITLE.UPDATE_BY": "Update By",
   "TITLE.TAX_NAME": "Tax Name",
   "TITLE.TAX_VALUE": "Tax Value",
-  "TITLE.PAYMENT_RECEIPT": "Payment Document Receipt",
-  "TITLE.ATTACHMENT_DOC": "Document Attachment"
+  "TITLE.DOUMENT_DATE_IS_REQUIRED": "Document date is required",
+  "TITLE.CHOOSE_FILE": "Choose File ...",
+  "TITLE.CHOOSE_DOCUMENT_FILE": "Choose document file"
 }
