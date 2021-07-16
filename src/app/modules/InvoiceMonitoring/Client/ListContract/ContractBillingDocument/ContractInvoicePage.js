@@ -289,7 +289,7 @@ function ContractInvoicePage(props) {
           <div>
             <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
             <span className="text-danger">
-              {rupiah(invoiceData?.pinalty || 0)}
+              {rupiah(invoiceData?.penalty || 0)}
             </span>
           </div>
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.APPROVED.APPROVE_BODY" />
