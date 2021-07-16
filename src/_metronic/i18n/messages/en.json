@@ -561,5 +561,7 @@
   "TITLE.GROUP_TAX": "Tax Group",
   "TITLE.UPDATE_BY": "Update By",
   "TITLE.TAX_NAME": "Tax Name",
-  "TITLE.TAX_VALUE": "Tax Value"
+  "TITLE.TAX_VALUE": "Tax Value",
+  "TITLE.PAYMENT_RECEIPT": "Payment Document Receipt",
+  "TITLE.ATTACHMENT_DOC": "Document Attachment"
 }
