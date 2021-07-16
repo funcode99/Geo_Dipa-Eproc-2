@@ -648,7 +648,7 @@ function ContractTaxPage(props) {
                 <div className="col-sm-8">
                   <NumberFormat
                     id={"NumberFormat-text"}
-                    defaultValue={taxData?.npwp}
+                    value={taxData?.npwp}
                     displayType={"text"}
                     className="form-control"
                     format="##.###.###.#-###.###"
