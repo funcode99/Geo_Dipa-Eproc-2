@@ -27,7 +27,7 @@ import {
   getBillingDocumentId,
   softcopy_save,
   getListTax,
-  getTerminProgress
+  getTerminProgress,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -268,10 +268,9 @@ function ContractTaxPage(props) {
         setIsSubmit(true);
         getHistoryTaxData(taxData.id);
         softcopy_save(data_1);
-        getTerminProgress(termin)
-          .then((result) => {
+        getTerminProgress(termin).then((result) => {
             setProgressTermin(result.data.data?.progress_type);
-          })
+        });
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -318,7 +317,7 @@ function ContractTaxPage(props) {
         </DialogTitle>
         <DialogContent>
           <div>
-            <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
+            <FormattedMessage id="TITLE.TAX_ATTACHMENT" />
             {optionSelected && optionSelected.length > 0 ? (
               <ol>
                 {optionSelected.map((item, index) => {
