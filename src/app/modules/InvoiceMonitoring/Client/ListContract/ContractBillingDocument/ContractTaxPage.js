@@ -645,12 +645,15 @@ function ContractTaxPage(props) {
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
                 </label>
                 <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="npwpTax"
-                    disabled
+                  <NumberFormat
+                    id={"NumberFormat-text"}
                     defaultValue={taxData?.npwp}
+                    displayType={"text"}
+                    className="form-control"
+                    format="##.###.###.#-###.###"
+                    mask="_"
+                    allowEmptyFormatting={true}
+                    allowLeadingZeros={true}
                   />
                 </div>
               </div>
