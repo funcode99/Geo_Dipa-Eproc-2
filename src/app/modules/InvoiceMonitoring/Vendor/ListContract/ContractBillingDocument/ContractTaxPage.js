@@ -33,6 +33,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
+import NumberFormat from "react-number-format";
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
@@ -571,7 +572,7 @@ function ContractTaxPage(props) {
                     />
                   </div>
                   {formik.touched.tax_no && formik.errors.tax_no ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.tax_no}
                     </span>
                   ) : null}
@@ -592,7 +593,7 @@ function ContractTaxPage(props) {
                     />
                   </div>
                   {formik.touched.dateTax && formik.errors.tax_date ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.tax_date}
                     </span>
                   ) : null}
@@ -602,16 +603,27 @@ function ContractTaxPage(props) {
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
                   </label>
                   <div className="col-sm-8">
-                    <input
-                      type="text"
+                    <NumberFormat
+                      id={
+                        loading || taxStatus
+                          ? "NumberFormat-text"
+                          : "NumberFormat-input"
+                      }
+                      value={taxData?.npwp}
+                      displayType={loading || taxStatus ? "text" : "input"}
                       className="form-control"
-                      id="npwpTax"
-                      disabled={loading || taxStatus}
-                      {...formik.getFieldProps("npwp")}
+                      format="##.###.###.#-###.###"
+                      mask="_"
+                      allowEmptyFormatting={true}
+                      allowLeadingZeros={true}
+                      onValueChange={(e) => {
+                        console.log(e);
+                        formik.setFieldValue("npwp", e.floatValue);
+                      }}
                     />
                   </div>
                   {formik.touched.npwp && formik.errors.npwp ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.npwp}
                     </span>
                   ) : null}
@@ -631,7 +643,7 @@ function ContractTaxPage(props) {
                     ></textarea>
                   </div>
                   {formik.touched.tax_date && formik.errors.tax_date ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.tax_date}
                     </span>
                   ) : null}
@@ -679,7 +691,7 @@ function ContractTaxPage(props) {
                     )}
                   </label>
                   {formik.touched.file && formik.errors.file ? (
-                    <span className="col-sm-8 offset-sm-4 text-center text-danger">
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.file}
                     </span>
                   ) : null}

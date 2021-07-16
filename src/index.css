@@ -1445,3 +1445,6 @@ th {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+#NumberFormat-text {
+  background-color: #f3f6f9;
+}

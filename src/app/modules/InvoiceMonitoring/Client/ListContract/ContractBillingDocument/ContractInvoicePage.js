@@ -26,7 +26,7 @@ import {
   getAllApprovedInvoice,
   getBillingDocumentId,
   softcopy_save,
-  getTerminProgress
+  getTerminProgress,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -39,6 +39,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
+import NumberFormat from "react-number-format";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -227,10 +228,9 @@ function ContractInvoicePage(props) {
         setIsSubmit(true);
         getHistoryInvoiceData(invoiceData.id);
         softcopy_save(data_1);
-        getTerminProgress(termin)
-          .then((result) => {
+        getTerminProgress(termin).then((result) => {
             setProgressTermin(result.data.data?.progress_type);
-          })
+        });
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -286,6 +286,12 @@ function ContractInvoicePage(props) {
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.APPROVED.APPROVE_TITLE" />
         </DialogTitle>
         <DialogContent>
+          <div>
+            <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
+            <span className="text-danger">
+              {rupiah(invoiceData?.pinalty || 0)}
+            </span>
+          </div>
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.APPROVED.APPROVE_BODY" />
         </DialogContent>
         <DialogActions>
@@ -701,14 +707,38 @@ function ContractInvoicePage(props) {
                   <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />
                 </label>
                 <div className="col-sm-8">
-                  <input
-                    type="text"
+                  <NumberFormat
+                    id={
+                      isSubmit ||
+                      invoiceData?.state === "REJECTED" ||
+                      invoiceData?.state === "APPROVED" ||
+                      invoiceData === null ||
+                      props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                        ? "NumberFormat-text"
+                        : "NumberFormat-input"
+                    }
                     value={invoiceData?.penalty}
+                    displayType={
+                      isSubmit ||
+                      invoiceData?.state === "REJECTED" ||
+                      invoiceData?.state === "APPROVED" ||
+                      invoiceData === null ||
+                      props.verificationStafStatus ||
+              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                        ? "text"
+                        : "input"
+                    }
                     className="form-control"
-                    onChange={(e) => {
+                    thousandSeparator={"."}
+                    decimalSeparator={","}
+                    allowEmptyFormatting={true}
+                    allowLeadingZeros={true}
+                    prefix={"Rp "}
+                    onValueChange={(e) => {
                       setInvoiceData({
                         ...invoiceData,
-                        penalty: e.target.value,
+                        penalty: e.floatValue,
                       });
                     }}
                   />
