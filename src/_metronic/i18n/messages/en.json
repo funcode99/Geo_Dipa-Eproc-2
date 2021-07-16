@@ -565,5 +565,7 @@
   "TITLE.TAX_VALUE": "Tax Value",
   "TITLE.DOUMENT_DATE_IS_REQUIRED": "Document date is required",
   "TITLE.CHOOSE_FILE": "Choose File ...",
-  "TITLE.CHOOSE_DOCUMENT_FILE": "Choose document file"
+  "TITLE.CHOOSE_DOCUMENT_FILE": "Choose document file",
+  "TITLE.PAYMENT_RECEIPT": "Payment Document Receipt",
+  "TITLE.ATTACHMENT_DOC": "Document Attachment"
 }
