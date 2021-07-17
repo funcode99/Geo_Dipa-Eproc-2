@@ -72,7 +72,7 @@ export function* saga() {
     try {
       let { data } = yield call(apiHelper.fetchGlobalApi, action.payload);
       // let data = yield call(apiHelper.fetchGlobalApi, action.payload);
-      console.log(`resnew`, data);
+      console.log(`resnew + ${key}`, data);
       if (data.status === true) {
         if (typeof onSuccess === "function") onSuccess(data);
         if (alertAppear === "both")

@@ -31,6 +31,18 @@ export const formData2 = [
       label: <FormattedMessage id="TITLE.REMARKS" />,
     },
   ],
+  [
+    {
+      name: "spec",
+      label: <FormattedMessage id="TITLE.SPESIFICATION" />,
+      disabled: true,
+    },
+    {
+      name: "desc",
+      label: <FormattedMessage id="TITLE.DESCRIPTION" />,
+      disabled: true,
+    },
+  ],
 ];
 export const formData3 = [
   {

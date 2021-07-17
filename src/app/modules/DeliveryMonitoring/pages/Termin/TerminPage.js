@@ -22,6 +22,7 @@ import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import Steppers from "../../../../components/steppersCustom/Steppers";
 import SAGRPage from "./ServiceAccGR/SAGRPage";
 import BeritaAcara from "./BeritaAcara";
+import { fetch_api_sg } from "../../../../../redux/globalReducer";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,9 +30,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TerminPage = ({ items }) => {
+const keys = {
+  task_id: "task_id_service",
+};
+
+const TerminPage = ({ items, fetch_api_sg, loadings }) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
+  const [stepperProg, setStepperProg] = React.useState([]);
   // const [tabList, setTabList] = React.useState(TabLists);
   const dispatch = useDispatch();
   const { dataContractById, dataTask } = useSelector(
@@ -74,19 +80,19 @@ const TerminPage = ({ items }) => {
   const dataProgress = [
     {
       label: "Create Term",
-      status: "COMPLETE",
+      status: "NO STARTED",
     },
     {
       label: "Create Deliverables",
-      status: "COMPLETE",
+      status: "NO STARTED",
     },
     {
       label: "Upload Deliverables",
-      status: "COMPLETE",
+      status: "NO STARTED",
     },
     {
       label: "Create Delivery Order",
-      status: "ON PROGRESS",
+      status: "NO STARTED",
     },
     {
       label: "Create BAPP",
@@ -106,10 +112,11 @@ const TerminPage = ({ items }) => {
   const getDataTask = React.useCallback(() => {
     // handleLoading("get", true);
     // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
+    fetchDataStepper();
     deliveryMonitoring
       .getTaskById(task_id)
       .then((res) => {
-        // console.log(`res`, res);
+        // console.log(`resold`, res);
         // handleLoading("get", false);
         if (res.data.status === true) {
           dispatch({
@@ -119,7 +126,7 @@ const TerminPage = ({ items }) => {
         }
       })
       .catch((err) => console.log("err", err));
-  }, [task_id, dispatch]);
+  }, [task_id, dispatch, fetchDataStepper]);
 
   React.useEffect(() => {
     if (!task_id) {
@@ -134,6 +141,26 @@ const TerminPage = ({ items }) => {
     // console.log(newTabActive);
     setTabActive(newTabActive);
   }
+
+  const fetchDataStepper = () => {
+    fetch_api_sg({
+      key: keys.task_id,
+      type: "get",
+      url: `/delivery/task/${task_id}/item-service`,
+      onSuccess: (res) => {
+        const stateLib = {
+          done: "COMPLETE",
+          on: "ON PROGRESS",
+          wait: "NO STARTED",
+        };
+        const mappedStepper = res.data.task_steppers.map((el) => ({
+          label: el.label,
+          status: stateLib[el.state],
+        }));
+        setStepperProg(mappedStepper);
+      },
+    });
+  };
 
   // console.log(TabLists);
 
@@ -161,7 +188,9 @@ const TerminPage = ({ items }) => {
           },
         ]}
       />
-      <Steppers steps={dataProgress} />
+      {dataProgress.length > 0 && (
+        <Steppers steps={stepperProg.length > 0 ? stepperProg : dataProgress} />
+      )}
       <Paper className={classes.paper}>
         <Container>
           <Tabs
@@ -206,5 +235,5 @@ const mapState = ({ deliveryMonitoring }) => ({
   items: deliveryMonitoring.dataContractById?.items,
 });
 
-export default connect(mapState, null)(TerminPage);
+export default connect(mapState, { fetch_api_sg })(TerminPage);
 // export default TerminPage;

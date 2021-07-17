@@ -39,11 +39,14 @@ function getSteps() {
 
 const Steppers = (props) => {
   const { intl, steps = getSteps() } = props;
-  const [activeStep] = React.useState(
-    steps.findIndex((item) => {
-      return item.status === "ON PROGRESS";
-    })
-  );
+  const [activeStep, setActiveStep] = React.useState(null);
+  React.useEffect(() => {
+    setActiveStep(
+      steps.findIndex((item) => {
+        return item.status === "ON PROGRESS";
+      })
+    );
+  }, [steps]);
   return (
     <React.Fragment>
       {steps && steps.length > 0 && (

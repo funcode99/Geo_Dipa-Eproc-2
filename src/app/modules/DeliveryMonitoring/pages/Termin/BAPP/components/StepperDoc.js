@@ -29,7 +29,13 @@ function getSteps() {
   return ["Document Ready", "Upload Signed Document", "Approval"];
 }
 
-export default function StepperDoc({ renderBtns, active, taskNews, isReject }) {
+export default function StepperDoc({
+  renderBtns,
+  docType = "BAPP",
+  active,
+  taskNews,
+  isReject,
+}) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -53,7 +59,7 @@ export default function StepperDoc({ renderBtns, active, taskNews, isReject }) {
           <div>
             <Typography>
               {taskNews
-                ? "Dokumen BAPP siap diunduh."
+                ? `Dokumen ${docType} siap diunduh.`
                 : "Menunggu kelengkapan form."}
             </Typography>
             {/* <UploadInput /> */}
@@ -78,7 +84,7 @@ export default function StepperDoc({ renderBtns, active, taskNews, isReject }) {
       case 2:
         return "Menunggu proses approval.";
       case 3:
-        return `Tahapan proses pada dokumen BAPP telah selesai.`;
+        return `Tahapan proses pada dokumen ${docType} telah selesai.`;
       default:
         return "Unknown step";
     }

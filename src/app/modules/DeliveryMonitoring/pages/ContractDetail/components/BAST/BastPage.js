@@ -26,7 +26,10 @@ import urlHelper, {
 import StepperDoc from "../../../Termin/BAPP/components/StepperDoc";
 import ModalUploadSigned from "../../../Termin/BAPP/components/ModalUploadSigned";
 import ModalPreview from "../../../Termin/BAPP/components/ModalPreview";
-import { fetch_api_sg } from "../../../../../../../redux/globalReducer";
+import {
+  fetch_api_sg,
+  getLoading,
+} from "../../../../../../../redux/globalReducer";
 
 const tableHeader = [
   {
@@ -68,7 +71,14 @@ const RowNormal = ({ data }) => {
   );
 };
 
-const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
+const BastPage = ({
+  status,
+  contract,
+  taskNews,
+  fetchApi,
+  loadings_sg,
+  saveContract,
+}) => {
   const formikRef = React.useRef();
   const [Toast, setToast] = useToast();
   const isClient = status === "client";
@@ -79,7 +89,7 @@ const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
     fetch: false,
     post: false,
   });
-  const [stepActive, setStepActive] = React.useState(0);
+  const [stepActive, setStepActive] = React.useState(null);
   const isReject = taskNews?.approve_status?.code === "rejected";
 
   const handleLoading = React.useCallback(
@@ -108,6 +118,14 @@ const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
   const fetchData = React.useCallback(
     (toast = { visible: false, message: "" }) => {
       console.log(`aja`);
+      fetchApi({
+        keys: keys.fetch,
+        type: "get",
+        url: `/delivery/contract/${contract.id}`,
+        onSuccess: (res) => {
+          saveContract(res?.data);
+        },
+      });
     },
     []
   );
@@ -195,7 +213,7 @@ const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
   React.useEffect(() => {
     const isApproved = taskNews?.approve_status?.code === "approved";
 
-    if (taskNews) {
+    if (taskNews.approve_status) {
       if (isApproved) setStepActive(3);
       else if (taskNews?.file_upload) {
         if (isReject) setStepActive(1);
@@ -305,19 +323,19 @@ const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
       <ModalUploadSigned
         innerRef={uploadRef}
         handleSubmit={(e) => handleApi("upload_s", e)}
-        loading={loadings.upload_s}
+        loading={loadings_sg.upload_s}
         file={taskNews?.file_upload}
       />
       <ModalPreview
         innerRef={approveRef}
         handleSubmit={(e) => handleApi("approve", e)}
-        loading={loadings.approve_s}
+        loading={loadings_sg.approve_s}
         file={taskNews?.file_upload}
       />
       <ModalPreview
         innerRef={rejectRef}
         handleSubmit={(e) => handleApi("reject", e)}
-        loading={loadings.approve_s}
+        loading={loadings_sg.approve_s}
         withRemarks
         title={"Reject Signed Document"}
         file={taskNews?.file_upload}
@@ -361,6 +379,7 @@ const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
       <Card className="mt-5">
         <CardBody>
           <StepperDoc
+            docType={"BAST"}
             taskNews={taskNews}
             active={stepActive}
             isReject={isReject}
@@ -445,15 +464,15 @@ const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
             <Col md={12}>
               <ButtonGroup size="medium" color="secondary" variant="contained">
                 <Button
-                  onClick={() => handleAction("preview", news?.file)}
-                  disabled={news ? false : true}
+                  onClick={() => handleAction("preview", taskNews)}
+                  disabled={taskNews ? false : true}
                 >
                   <FormattedMessage id="TITLE.PREVIEW" />
                 </Button>
-                <Button>
+                <Button onClick={() => handleAction("uploadSign")}>
                   <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
                 </Button>
-                <Button>
+                <Button onClick={() => handleAction("approve")}>
                   <FormattedMessage id="TITLE.APPROVE" />
                 </Button>
               </ButtonGroup>
@@ -494,7 +513,7 @@ const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
               <TablePaginationCustom
                 headerRows={tableHeader}
                 rows={content}
-                loading={loadings.fetch}
+                loading={loadings_sg.fetch}
               />
             </Col>
           </Row>
@@ -509,12 +528,21 @@ const BastPage = ({ status, contract, taskNews, fetchApi, saveContract }) => {
 const keys = {
   upload_s: "upload-signed",
   approve_s: "approve-signed",
+  fetch: "get-data-contract-by-id",
 };
-const mapState = ({ auth, deliveryMonitoring }) => ({
-  status: auth.user.data.status,
-  contract: deliveryMonitoring.dataContractById,
-  taskNews: deliveryMonitoring.dataContractById?.news,
-});
+const mapState = (state) => {
+  const { auth, deliveryMonitoring } = state;
+  return {
+    status: auth.user.data.status,
+    contract: deliveryMonitoring.dataContractById,
+    taskNews: deliveryMonitoring.dataContractById?.news,
+    loadings_sg: {
+      upload_s: getLoading(state, keys.upload_s),
+      approve_s: getLoading(state, keys.approve_s),
+      fetch: getLoading(state, keys.fetch),
+    },
+  };
+};
 
 export default connect(mapState, {
   saveContract: (payload) => ({

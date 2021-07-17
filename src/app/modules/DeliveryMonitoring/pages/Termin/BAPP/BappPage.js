@@ -75,7 +75,7 @@ const BappPage = ({
   const uploadRef = React.useRef();
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
-  const [stepActive, setStepActive] = React.useState(0);
+  const [stepActive, setStepActive] = React.useState(null);
   const [loading, setLoading] = React.useState({
     get: false,
     submit: false,
@@ -266,7 +266,7 @@ const BappPage = ({
   React.useEffect(() => {
     const isApproved = taskNews?.approve_status?.code === "approved";
 
-    if (taskNews) {
+    if (taskNews?.approve_status) {
       if (isApproved) setStepActive(3);
       else if (taskNews?.file_upload) {
         if (isReject) setStepActive(1);

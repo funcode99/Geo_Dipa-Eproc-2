@@ -174,7 +174,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      url: `/delivery/task/${taskId}`,
+      url: `/delivery/task/${taskId}/item-service`,
       onSuccess: (res) => {
         const tempDataJasa = res.data.task_item_services;
         const tempDataBarang = res.data.task_items;
