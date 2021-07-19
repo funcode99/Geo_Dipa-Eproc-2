@@ -28,7 +28,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import { withStyles } from "@material-ui/core/styles";
 import Steppers from "../../../../components/steppersCustom/Steppers";
 import {
-  getTerminProgress
+  getTerminProgress,
+  getProgressTypes
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 
@@ -144,44 +145,7 @@ const ItemContract = (props) => {
   const [dataTwoValue, setDataTwoValue] = React.useState([]);
   const [data, setData] = React.useState({});
   const [terminProgress, setTerminProgress] = React.useState(null);
-  const [dataProgress, setDataProgress] = React.useState([
-    {
-      label: "Delivery Document",
-      status: "COMPLETE",
-    },
-    {
-      label: "Contract Document",
-      status: "COMPLETE",
-    },
-    {
-      label: "Document SPP",
-      status: "COMPLETE",
-    },
-    {
-      label: "Document Invoice",
-      status: "COMPLETE",
-    },
-    {
-      label: "Document Receipt",
-      status: "COMPLETE",
-    },
-    {
-      label: "Document Tax Invoice",
-      status: "ON PROGRESS",
-    },
-    {
-      label: "Verification Document Softcopy",
-      status: "NO STARTED",
-    },
-    {
-      label: "Verification Document Hardcopy",
-      status: "NO STARTED",
-    },
-    {
-      label: "Payment Invoice",
-      status: "NO STARTED",
-    },
-  ]);
+  const [dataProgress, setDataProgress] = React.useState([]);
 
   suhbeader.setTitle(
     intl.formatMessage({
@@ -202,9 +166,20 @@ const ItemContract = (props) => {
   };
 
   const getTerminProgressData = () => {
-    getTerminProgress(termin)
-      .then((result) => {
-        setTerminProgress(result.data.data?.progress_type);
+    getProgressTypes()
+      .then((resultTypes) => {
+        getTerminProgress(termin)
+          .then((result) => {
+            const progress = result.data.data ? result.data.data?.progress_type?.seq : 1
+            const data = resultTypes.data.data.map(function (row) {
+              return { label: row?.name, status: row.seq < progress ? "COMPLETE" : row.seq === progress ? "ON PROGRESS" : "NO STARTED" }
+            })
+            setDataProgress(data)
+            setTerminProgress(result.data.data?.progress_type);
+          })
+          .catch((error) => {
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);

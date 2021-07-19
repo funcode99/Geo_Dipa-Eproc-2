@@ -310,4 +310,6 @@ export async function getTerminProgress(id) {
 }
 export async function createTerminProgress(data) {
   return axios.post(`/invoice/invoice_progress_save/`, data);
+}export async function getProgressTypes() {
+  return axios.get(`/invoice/get_all_progress_types/`);
 }
