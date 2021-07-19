@@ -19,7 +19,7 @@ const handleReadOnly = (arr, state) => {
     if (item.name === "qty_approved") item.readOnly = state;
   });
 
-  return [tempArr];
+  return [tempArr, arr[1]];
 };
 
 const CardOrderItem = ({ data, options, setItem }) => {
