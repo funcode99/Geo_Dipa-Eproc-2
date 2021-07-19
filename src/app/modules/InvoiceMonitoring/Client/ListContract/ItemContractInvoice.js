@@ -450,6 +450,7 @@ function ItemContractInvoice(props) {
       document_id: modalApproved.data.document_id,
       document_no: modalApproved.data.doc_no,
       created_by_id: user_id,
+      filename: modalApproved.data.doc_file
     };
     var data_2 = {
       softcopy_approved_by_id: user_id,
@@ -585,6 +586,7 @@ function ItemContractInvoice(props) {
       document_id: modalReject.data.document_id,
       document_no: modalReject.data.doc_no,
       created_by_id: user_id,
+      ilename: modalReject.data.doc_file,
     };
     var data_2 = {
       document_monitoring_id: "",
