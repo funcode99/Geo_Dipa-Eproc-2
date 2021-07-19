@@ -170,7 +170,7 @@ const ItemContract = (props) => {
       .then((resultTypes) => {
         getTerminProgress(termin)
           .then((result) => {
-            const progress = result.data.data ? result.data.data?.progress_type?.seq : 1
+            const progress = result.data.data ? result.data.data?.progress_type?.seq : "2"
             const data = resultTypes.data.data.map(function (row) {
               return { label: row?.name, status: row.seq < progress ? "COMPLETE" : row.seq === progress ? "ON PROGRESS" : "NO STARTED" }
             })
