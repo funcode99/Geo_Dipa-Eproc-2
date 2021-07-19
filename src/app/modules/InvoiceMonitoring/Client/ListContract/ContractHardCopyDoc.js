@@ -140,6 +140,11 @@ function ContractHardCopyDoc(props) {
   const [loadingDeliverables, setLoadingDeliverables] = useState(false);
   const [dataDocHardCopy, setDataDocHardCopy] = useState([]);
   const [dataBillingHardCopy, setDataBillingHardCopy] = useState([]);
+  const [loadingLoadData, setLoadingLoadData] = useState({
+    billingHardCopy: true,
+    deliverableHardCopy: true,
+    contractHardCopy: true,
+  });
 
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
@@ -332,6 +337,7 @@ function ContractHardCopyDoc(props) {
       .then((result) => {
         setLoadingDeliverables(false);
         setDataDeliverables(result.data.data.task_documents);
+        setLoadingLoadData({ ...loadingLoadData, deliverableHardCopy: false });
       })
       .catch((error) => {
         setLoadingDeliverables(false);
@@ -353,6 +359,9 @@ function ContractHardCopyDoc(props) {
       .then((result) => {
         setLoading(false);
         setDataDocHardCopy(result.data.data);
+        var loadingLoadDatas = loadingLoadData;
+        loadingLoadDatas.contractHardCopy = false;
+        setLoadingLoadData(loadingLoadDatas);
       })
       .catch((err) => {
         setLoading(false);
@@ -366,6 +375,9 @@ function ContractHardCopyDoc(props) {
       .then((result) => {
         setLoading(false);
         setDataBillingHardCopy(result.data.data);
+        var loadingLoadDatas = loadingLoadData;
+        loadingLoadDatas.billingHardCopy = false;
+        setLoadingLoadData(loadingLoadDatas);
       })
       .catch((err) => {
         setLoading(false);
@@ -1112,8 +1124,19 @@ function ContractHardCopyDoc(props) {
             type="button"
             className="btn btn-sm btn-primary mx-1"
             onClick={print}
-            disabled={loading || progressTermin?.ident_name !== "HARDCOPY"}
+            disabled={
+              loading ||
+              progressTermin?.ident_name !== "HARDCOPY" ||
+              loadingLoadData.billingHardCopy ||
+              loadingLoadData.deliverableHardCopy ||
+              loadingLoadData.contractHardCopy
+            }
           >
+            {loadingLoadData.billingHardCopy ||
+            loadingLoadData.deliverableHardCopy ||
+            loadingLoadData.contractHardCopy ? (
+              <i className="fas fa-spinner fa-pulse px-1"></i>
+            ) : null}
             Print Kelengkapan Dokumen
           </button>
         </CardFooter>
