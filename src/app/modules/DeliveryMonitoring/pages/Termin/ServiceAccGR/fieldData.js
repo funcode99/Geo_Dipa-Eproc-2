@@ -45,4 +45,52 @@ const formData2 = [
   },
 ];
 
-export { formData1, formData2 };
+const tableHeader1 = [
+  { id: "no", label: <FormattedMessage id="TITLE.NO" /> },
+  { id: "service", label: <FormattedMessage id="TITLE.SERVICE" /> },
+  { id: "qty", label: <FormattedMessage id="TITLE.QUANTITY" /> },
+  { id: "uom", label: "UoM" },
+  { id: "unit_price", label: <FormattedMessage id="TITLE.UNIT_PRICE" /> },
+  { id: "net_value", label: <FormattedMessage id="TITLE.NET_VALUE" /> },
+];
+
+const tableHeader2 = [
+  { id: "no", label: <FormattedMessage id="TITLE.NO" /> },
+  { id: "name", label: <FormattedMessage id="TITLE.NAME" /> },
+  { id: "position", label: <FormattedMessage id="TITLE.POSITION" /> },
+  { id: "activity", label: <FormattedMessage id="TITLE.ACTIVITY" /> },
+  { id: "start_date", label: <FormattedMessage id="TITLE.START_DATE" /> },
+  { id: "end_date", label: <FormattedMessage id="TITLE.END_DATE" /> },
+  { id: "comment", label: <FormattedMessage id="TITLE.COMMENT" /> },
+];
+
+const detailSA = {
+  client: {
+    name: "PT. GEO DIPA ENERGI",
+    address1: "Plant Bandung",
+    address2: "Jl. Aditiawarman Kv.55",
+    address3: "Jaksel",
+  },
+  document: {
+    number: "1000006788",
+    posting_date: "01.11.2020",
+    document_date: "30.04.2020",
+  },
+  vendor: {
+    name: "Company The Jakarta consulting Group",
+    address1: "Wisma 46 Kota BNI Lt 32",
+    address2: "Jl. Jend Sudirman Kav 1",
+    address3: "Jakarta 10220",
+    vendor_number: "30000210",
+  },
+  contract: {
+    po_number: "8000003580",
+    purch_group: "T01 - PST-GA",
+    telephone: "021 7245673",
+    currency: "IDR",
+    external_number: "",
+    ref_qa: "BAPP APRIL 20",
+  },
+};
+
+export { formData1, formData2, tableHeader1, tableHeader2, detailSA };
