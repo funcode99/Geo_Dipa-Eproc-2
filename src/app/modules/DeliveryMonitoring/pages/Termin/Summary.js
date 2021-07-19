@@ -50,20 +50,16 @@ const navLists = [
 ];
 
 function Summary({ taskId = "", loadings, fetch_api_sg }) {
-  const [loading, setLoading] = React.useState(false);
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
   const [itemJasa, setItemJasa] = React.useState([]);
-  const [showModal, setShowModal] = React.useState({
-    submit: false,
-    success: false,
-  });
   const [Toast, setToast] = useToast();
   const { dataJasa, dataBarang } = useSelector(
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
   const submitRef = React.useRef();
+  const [qtyErrors, setQtyErrors] = React.useState([]);
 
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
@@ -101,13 +97,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
 
       setItemBarang(tempSubmitBarang);
     }
-  };
-
-  const handleVisibleModal = (key) => {
-    setShowModal((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
   };
 
   const addShowField = (data) => {
@@ -359,13 +348,22 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
     //validate quantity number
     if (!isValidQty || floatQty < minValue || floatQty > floatQtyAvailable) {
       removeFromSubmitItem(itemId, "barang");
-      setToast(
-        <FormattedMessage
-          id="MESSAGE.VALIDATE_QTY"
-          values={{ minValue, floatQtyAvailable }}
-        />
-      );
+      let temp = [...qtyErrors];
+      const find = temp.find((item) => item === itemId);
+      if (!find) {
+        setQtyErrors([...qtyErrors, itemId]);
+      }
+      // setToast(
+      //   <FormattedMessage
+      //     id="MESSAGE.VALIDATE_QTY"
+      //     values={{ minValue, floatQtyAvailable }}
+      //   />
+      // );
     } else {
+      let temp = [...qtyErrors];
+      temp = temp.filter((item) => item !== itemId);
+      setQtyErrors(temp);
+
       const tempSubmitItems = itemBarang;
 
       const submitItem = {
@@ -413,13 +411,22 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
       floatQtyValue > floatQtyAvailable
     ) {
       removeFromSubmitItem(serviceId, "jasa");
-      setToast(
-        <FormattedMessage
-          id="MESSAGE.VALIDATE_QTY"
-          values={{ minValue, floatQtyAvailable }}
-        />
-      );
+      let temp = [...qtyErrors];
+      const find = temp.find((item) => item === serviceId);
+      if (!find) {
+        setQtyErrors([...qtyErrors, serviceId]);
+      }
+      // setToast(
+      //   <FormattedMessage
+      //     id="MESSAGE.VALIDATE_QTY"
+      //     values={{ minValue, floatQtyAvailable }}
+      //   />
+      // );
     } else {
+      let temp = [...qtyErrors];
+      temp = temp.filter((item) => item !== serviceId);
+      setQtyErrors(temp);
+
       const tempSubmitJasa = itemJasa;
 
       const submitItem = {
@@ -460,11 +467,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
   };
 
   const handleSubmit = async () => {
-    console.log({
-      task_items: itemBarang,
-      task_services: itemJasa,
-    });
-
     fetch_api_sg({
       key: keys.submit,
       type: "post",
@@ -742,7 +744,9 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                     }}
                                     max={service.qty_available}
                                     disabled={!service.checked}
-                                    defaultValue={service.qty_available}
+                                    defaultValue={parseFloat(
+                                      service.qty_available
+                                    ).toFixed(1)}
                                     onChange={(e) =>
                                       addSubmitJasa(
                                         e.target.value,
@@ -751,15 +755,17 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                         service.short_text
                                       )
                                     }
-                                    // onBlur={(e) =>
-                                    //   addSubmitJasa(
-                                    //     e.target.value,
-                                    //     service.qty_available,
-                                    //     service.id,
-                                    //     service.short_text
-                                    //   )
-                                    // }
                                   />
+                                  {qtyErrors.find(
+                                    (el) => el === service.id
+                                  ) && (
+                                    <span className="text-danger">
+                                      Max qty{" "}
+                                      {parseFloat(
+                                        service.qty_available
+                                      ).toFixed(1)}
+                                    </span>
+                                  )}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {item?.measurement_unit?.ident_name}
@@ -767,7 +773,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                 <TableCell className="align-middle">
                                   {rupiah(service.net_value)}
                                 </TableCell>
-                                {/* <TableCell className="align-middle"></TableCell> */}
                               </TableRow>
                             );
                           } else {
@@ -818,7 +823,9 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                       ) + parseFloat(service.qty)
                                     ).toFixed(1)}
                                     disabled={!service.checked}
-                                    defaultValue={service.qty}
+                                    defaultValue={parseFloat(
+                                      service.qty
+                                    ).toFixed(1)}
                                     onChange={(e) =>
                                       addSubmitJasa(
                                         e.target.value,
@@ -831,15 +838,19 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                         service.service.short_text
                                       )
                                     }
-                                    // onBlur={(e) =>
-                                    //   addSubmitJasa(
-                                    //     e.target.value,
-                                    //     service.service.quantity,
-                                    //     service.service.id,
-                                    //     service.service.short_text
-                                    //   )
-                                    // }
                                   />
+                                  {qtyErrors.find(
+                                    (el) => el === service.service.id
+                                  ) && (
+                                    <span className="text-danger">
+                                      Max qty{" "}
+                                      {(
+                                        parseFloat(
+                                          service.service.qty_available
+                                        ) + parseFloat(service.qty)
+                                      ).toFixed(1)}
+                                    </span>
+                                  )}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {item?.measurement_unit?.ident_name}
@@ -847,7 +858,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                 <TableCell className="align-middle">
                                   {rupiah(service.service.net_value)}
                                 </TableCell>
-                                {/* <TableCell className="align-middle"></TableCell> */}
                               </TableRow>
                             );
                           }
@@ -916,7 +926,9 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                           step={0.1}
                           max={item.qty_available}
                           disabled={!item.checked}
-                          defaultValue={item.qty_available}
+                          defaultValue={parseFloat(item.qty_available).toFixed(
+                            1
+                          )}
                           onChange={(e) =>
                             addSubmitBarang(
                               e.target.value,
@@ -925,15 +937,12 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                               item.desc
                             )
                           }
-                          // onBlur={(e) =>
-                          //   addSubmitBarang(
-                          //     e.target.value,
-                          //     item.qty_available,
-                          //     item.id,
-                          //     item.desc
-                          //   )
-                          // }
                         />
+                        {qtyErrors.find((el) => el === item.id) && (
+                          <span className="text-danger">
+                            Max qty {parseFloat(item.qty_available).toFixed(1)}
+                          </span>
+                        )}
                       </TableCell>
                       <TableCell className="align-middle">
                         {item?.measurement_unit?.ident_name}
@@ -991,7 +1000,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                             parseFloat(item.item.qty_available)
                           ).toFixed(1)}
                           disabled={!item.checked}
-                          defaultValue={item.qty}
+                          defaultValue={parseFloat(item.qty).toFixed(1)}
                           onChange={(e) =>
                             addSubmitBarang(
                               e.target.value,
@@ -1003,15 +1012,16 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                               item.item.desc
                             )
                           }
-                          // onBlur={(e) =>
-                          //   addSubmitBarang(
-                          //     e.target.value,
-                          //     item.item.qty_available,
-                          //     item.item.id,
-                          //     item.item.desc
-                          //   )
-                          // }
                         />
+                        {qtyErrors.find((el) => el === item.item.id) && (
+                          <span className="text-danger">
+                            Max qty{" "}
+                            {(
+                              parseFloat(item.qty) +
+                              parseFloat(item.item.qty_available)
+                            ).toFixed(1)}
+                          </span>
+                        )}
                       </TableCell>
                       <TableCell className="align-middle">
                         {item?.item?.measurement_unit?.ident_name}

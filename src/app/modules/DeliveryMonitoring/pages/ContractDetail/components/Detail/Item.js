@@ -28,7 +28,7 @@ const Item = ({ handleClick }) => {
   const [Toast, setToast] = useToast();
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [loading, setLoading] = React.useState(false);
-  const [errors, setErrors] = React.useState([]);
+  const [qtyErrors, setQtyErrors] = React.useState([]);
 
   const changeChecked = (item) => {
     item.checked = !item.checked;
@@ -193,10 +193,10 @@ const Item = ({ handleClick }) => {
     ) {
       // console.log('salah');
       removeFromSubmitItem(items, type);
-      let temp = [...errors];
+      let temp = [...qtyErrors];
       const find = temp.find((item) => item === items.id);
       if (!find) {
-        setErrors([...errors, items.id]);
+        setQtyErrors([...qtyErrors, items.id]);
       }
 
       // setToast(
@@ -206,9 +206,9 @@ const Item = ({ handleClick }) => {
       //   />
       // );
     } else {
-      let temp = [...errors];
+      let temp = [...qtyErrors];
       temp = temp.filter((item) => item !== items.id);
-      setErrors(temp);
+      setQtyErrors(temp);
     }
   };
 
@@ -325,7 +325,7 @@ const Item = ({ handleClick }) => {
                                   handleInputQty(e.target.value, item2, "jasa")
                                 }
                               />
-                              {errors.find((error) => error === item2.id) && (
+                              {qtyErrors.find((el) => el === item2.id) && (
                                 <span className="text-danger">
                                   Max qty{" "}
                                   {parseFloat(item2.qty_available).toFixed(1)}
@@ -389,7 +389,7 @@ const Item = ({ handleClick }) => {
                           handleInputQty(e.target.value, item, "barang")
                         }
                       />
-                      {errors.find((error) => error === item.id) ? (
+                      {qtyErrors.find((el) => el === item.id) ? (
                         <span className="text-danger">
                           Max qty {parseFloat(item.qty_available).toFixed(1)}
                         </span>
