@@ -28,6 +28,7 @@ const Item = ({ handleClick }) => {
   const [Toast, setToast] = useToast();
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [loading, setLoading] = React.useState(false);
+  const [qtyErrors, setQtyErrors] = React.useState([]);
 
   const changeChecked = (item) => {
     item.checked = !item.checked;
@@ -192,12 +193,22 @@ const Item = ({ handleClick }) => {
     ) {
       // console.log('salah');
       removeFromSubmitItem(items, type);
-      setToast(
-        <FormattedMessage
-          id="MESSAGE.VALIDATE_QTY"
-          values={{ minValue, floatQtyAvailable }}
-        />
-      );
+      let temp = [...qtyErrors];
+      const find = temp.find((item) => item === items.id);
+      if (!find) {
+        setQtyErrors([...qtyErrors, items.id]);
+      }
+
+      // setToast(
+      //   <FormattedMessage
+      //     id="MESSAGE.VALIDATE_QTY"
+      //     values={{ minValue, floatQtyAvailable }}
+      //   />
+      // );
+    } else {
+      let temp = [...qtyErrors];
+      temp = temp.filter((item) => item !== items.id);
+      setQtyErrors(temp);
     }
   };
 
@@ -314,6 +325,12 @@ const Item = ({ handleClick }) => {
                                   handleInputQty(e.target.value, item2, "jasa")
                                 }
                               />
+                              {qtyErrors.find((el) => el === item2.id) && (
+                                <span className="text-danger">
+                                  Max qty{" "}
+                                  {parseFloat(item2.qty_available).toFixed(1)}
+                                </span>
+                              )}
                             </TableCell>
                             <TableCell>
                               {el?.measurement_unit?.ident_name}
@@ -372,6 +389,11 @@ const Item = ({ handleClick }) => {
                           handleInputQty(e.target.value, item, "barang")
                         }
                       />
+                      {qtyErrors.find((el) => el === item.id) ? (
+                        <span className="text-danger">
+                          Max qty {parseFloat(item.qty_available).toFixed(1)}
+                        </span>
+                      ) : null}
                     </TableCell>
                     <TableCell>{item?.measurement_unit?.ident_name}</TableCell>
                     <TableCell>{rupiah(item?.unit_price)}</TableCell>
