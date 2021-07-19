@@ -586,7 +586,7 @@ function ItemContractInvoice(props) {
       document_id: modalReject.data.document_id,
       document_no: modalReject.data.doc_no,
       created_by_id: user_id,
-      ilename: modalReject.data.doc_file,
+      filename: modalReject.data.doc_file,
     };
     var data_2 = {
       document_monitoring_id: "",
