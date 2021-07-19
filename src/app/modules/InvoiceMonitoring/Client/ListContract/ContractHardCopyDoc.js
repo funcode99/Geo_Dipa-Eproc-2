@@ -1221,7 +1221,7 @@ function ContractHardCopyDoc(props) {
             </div>
             {dataDocHardCopy.map((item, index) => {
               return (
-                <div className="row mt-3">
+                <div className="row mt-3" key={index.toString()}>
                   <div className="col-sm-4">
                     <label
                       className={
@@ -1255,10 +1255,157 @@ function ContractHardCopyDoc(props) {
                   </div>
                 </div>
               );
+            })}
+            {dataDeliverables?.map((item, index) => {
+              const isPeriodic = item.is_periodic;
+              return isPeriodic
+                ? item?.periodes?.map((els, idx) => {
+              return (
+                      <div key={idx.toString()}>
+                <div className="row mt-3">
+                  <div className="col-sm-4">
+                            <label className="checkboxs-minus">
+                              <input
+                                type="checkbox"
+                                checked={true}
+                                onChange={(e) => {}}
+                              />
+                              <span></span>
+                            </label>
+                            <span className="ml-2">
+                              {item.name + " - " + els.name}
+                            </span>
+                          </div>
+                          <div className="col-sm-3 border-bottom">
+                            <span></span>
+                          </div>
+                          <div className="col-sm-5 border-bottom">
+                            <span></span>
+                          </div>
+                        </div>
+                        {els.documents.map((el, id) => {
+                          if (
+                            el?.document_monitoring?.softcopy_state ===
+                            "APPROVED"
+                          ) {
+                            return (
+                              <div className="row mt-2" key={id.toString()}>
+                                <div className="col-sm-4">
+                    <label
+                      className={
+                                      el?.document_monitoring
+                                        ?.hardcopy_state === "APPROVED"
+                          ? "checkboxs-true"
+                                        : el?.document_monitoring
+                                            ?.hardcopy_state === "REJECTED"
+                          ? "checkboxs-false"
+                          : "checkboxs"
+                      }
+                    >
+                      <input
+                        type="checkbox"
+                        checked={true}
+                        onChange={(e) => {}}
+                      />
+                      <span></span>
+                    </label>
+                                  <span>
+                                    {el.document.name +
+                                      " - " +
+                                      window
+                                        .moment(new Date(el.due_date))
+                                        .format("DD MMM YYYY")}
+                                  </span>
+                  </div>
+                  <div className="col-sm-3 border-bottom">
+                    <span>
+                                    {el?.document_monitoring
+                                      ?.hardcopy_approved_at
+                        ? window
+                                          .moment(
+                                            new Date(
+                                              el?.document_monitoring?.hardcopy_approved_at
+                                            )
+                                          )
+                            .format("DD MMM YYYY")
+                        : null}
+                    </span>
+                  </div>
+                  <div className="col-sm-5 border-bottom">
+                                  <span>
+                                    {el?.document_monitoring?.hardcopy_history
+                                      .length > 0 &&
+                                      el?.document_monitoring?.hardcopy_history[
+                                        el?.document_monitoring
+                                          ?.hardcopy_history.length - 1
+                                      ].rejected_re}
+                                  </span>
+                  </div>
+                </div>
+              );
+                          }
+            })}
+                      </div>
+                    );
+                  })
+                : item?.documents?.map((el, id) => {
+                    if (
+                      el?.document_monitoring?.softcopy_state === "APPROVED"
+                    ) {
+                      return (
+                        <div className="row mt-3" key={id.toString()}>
+              <div className="col-sm-4">
+                            <label
+                              className={
+                                el.document_monitoring.hardcopy_state ===
+                                "APPROVED"
+                                  ? "checkboxs-true"
+                                  : el.document_monitoring.hardcopy_state ===
+                                    "REJECTED"
+                                  ? "checkboxs-false"
+                                  : "checkboxs"
+                              }
+                            >
+                              <input
+                                type="checkbox"
+                                checked={true}
+                                onChange={(e) => {}}
+                              />
+                  <span></span>
+                </label>
+                            <span className="ml-2">{el.document.name}</span>
+              </div>
+              <div className="col-sm-3 border-bottom">
+                            <span>
+                              {el?.document_monitoring?.hardcopy_approved_at
+                                ? window
+                                    .moment(
+                                      new Date(
+                                        el?.document_monitoring?.hardcopy_approved_at
+                                      )
+                                    )
+                                    .format("DD MMM YYYY")
+                                : null}
+                            </span>
+              </div>
+              <div className="col-sm-5 border-bottom">
+                            <span>
+                              {el?.document_monitoring?.hardcopy_history
+                                .length > 0 &&
+                                el?.document_monitoring?.hardcopy_history[
+                                  el?.document_monitoring?.hardcopy_history
+                                    .length - 1
+                                ].rejected_re}
+                            </span>
+              </div>
+              </div>
+                      );
+                    }
+                  });
             })}
             {dataBillingHardCopy.map((item, index) => {
               return (
-                <div className="row mt-3">
+                <div className="row mt-3" key={index.toString()}>
                   <div className="col-sm-4">
                     <label
                       className={
@@ -1274,11 +1421,11 @@ function ContractHardCopyDoc(props) {
                         checked={true}
                         onChange={(e) => {}}
                       />
-                      <span></span>
+                <span></span>
                     </label>
                     <span className="ml-2">{item.document_name}</span>
-                  </div>
-                  <div className="col-sm-3 border-bottom">
+              </div>
+              <div className="col-sm-3 border-bottom">
                     <span>
                       {item.hardcopy_approved_at
                         ? window
@@ -1286,61 +1433,13 @@ function ContractHardCopyDoc(props) {
                             .format("DD MMM YYYY")
                         : null}
                     </span>
-                  </div>
-                  <div className="col-sm-5 border-bottom">
+              </div>
+              <div className="col-sm-5 border-bottom">
                     <span>Note Rejected</span>
-                  </div>
-                </div>
+              </div>
+            </div>
               );
             })}
-            <div className="row mt-3">
-              <div className="col-sm-4">
-                <label className="checkboxs-true">
-                  <input type="checkbox" checked={true} onChange={(e) => {}} />
-                  <span></span>
-                </label>
-                <span className="ml-2">Lainnya</span>
-              </div>
-              <div className="col-sm-3 border-bottom">
-                <span></span>
-              </div>
-              <div className="col-sm-5 border-bottom">
-                <span></span>
-              </div>
-            </div>
-            <div className="row mt-2">
-              <div className="col-sm-4 border-bottom">
-                <span>1. Test</span>
-              </div>
-              <div className="col-sm-3 border-bottom">
-                <span>12 Desember 2020</span>
-              </div>
-              <div className="col-sm-5 border-bottom">
-                <span>Test</span>
-              </div>
-            </div>
-            <div className="row mt-2">
-              <div className="col-sm-4 border-bottom">
-                <span>2.</span>
-              </div>
-              <div className="col-sm-3 border-bottom">
-                <span></span>
-              </div>
-              <div className="col-sm-5 border-bottom">
-                <span></span>
-              </div>
-            </div>
-            <div className="row mt-2">
-              <div className="col-sm-4 border-bottom">
-                <span>3.</span>
-              </div>
-              <div className="col-sm-3 border-bottom">
-                <span></span>
-              </div>
-              <div className="col-sm-5 border-bottom">
-                <span></span>
-              </div>
-            </div>
           </div>
           <div className="row mt-4">
             <div className="col-sm-12">

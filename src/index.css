@@ -1451,17 +1451,27 @@ th {
 
 label.checkboxs-false,
 label.checkboxs-true,
+label.checkboxs-minus,
 label.checkboxs {
   margin-left: -10px;
 }
 
+.row.mt-2 .col-sm-4 label.checkboxs-false,
+.row.mt-2 .col-sm-4 label.checkboxs-true,
+.row.mt-2 .col-sm-4 label.checkboxs-minus,
+.row.mt-2 .col-sm-4 label.checkboxs {
+  margin-left: 5px;
+}
+
 label.checkboxs-true input[type="checkbox"],
 label.checkboxs-false input[type="checkbox"],
+label.checkboxs-minus input[type="checkbox"],
 label.checkboxs input[type="checkbox"] {
   display: none;
 }
 label.checkboxs-true span,
 label.checkboxs-false span,
+label.checkboxs-minus span,
 label.checkboxs span {
   display: inline-block;
   border: 1.5px solid #bbb;
@@ -1507,4 +1517,19 @@ label.checkboxs-false :checked + span:after {
 label.checkboxs :checked + span {
   background: white;
   margin: 2px;
+}
+label.checkboxs-minus :checked + span {
+  background: white;
+  border: 1.5px solid #bbb !important;
+  margin: 2px;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+}
+label.checkboxs-minus :checked + span:after {
+  content: "\2212";
+  font-size: 22px;
+  position: absolute;
+  top: -11px;
+  left: -1px;
+  color: #bbb;
 }
