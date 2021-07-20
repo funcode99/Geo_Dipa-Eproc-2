@@ -17,12 +17,18 @@ import {
   fetch_api_sg,
   getLoading,
 } from "../../../../../../../redux/globalReducer";
+import ModalApproveTermin from "./ModalApproveTermin";
 
 const tableHeaderTerminNew = [
   {
     id: "number",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.NO" />,
   },
+  // {
+  //   id: "action",
+  //   label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
+  //   sortable: false,
+  // },
   {
     id: "scope_of_work",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK" />,
@@ -104,6 +110,7 @@ const DetailPage = ({
   const { tasks } = contract;
   const submitRef = React.useRef();
   const deleteRef = React.useRef();
+  const approveRef = React.useRef();
 
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
@@ -231,6 +238,10 @@ const DetailPage = ({
           setConfirm({ show: true, id: data.id });
           deleteRef.current.open();
           break;
+        case "approve":
+          console.log(`type`, type, data);
+          approveRef.current.open(data.name);
+          break;
         default:
           break;
       }
@@ -277,6 +288,15 @@ const DetailPage = ({
                     color: "black",
                   },
                 },
+              },
+              {
+                label: "TITLE.APPROVE",
+                icon: "fas fa-check-circle text-success",
+                // disabled:
+                //   item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+                //     ? true
+                //     : false,
+                type: "approve",
               },
               {
                 label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
@@ -375,6 +395,8 @@ const DetailPage = ({
         formik={formik}
         options={options}
       />
+
+      <ModalApproveTermin ref={approveRef} />
 
       <ModalDelete
         innerRef={deleteRef}
