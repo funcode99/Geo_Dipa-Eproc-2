@@ -346,7 +346,7 @@ const DeliveryOrder = ({
 
   const handleAction = (type, data) => {
     // console.log(`type`, type);
-    // console.log(`data`, data);
+    console.log(`data`, data);
     switch (type) {
       case "create":
         setIsUpdate(false);

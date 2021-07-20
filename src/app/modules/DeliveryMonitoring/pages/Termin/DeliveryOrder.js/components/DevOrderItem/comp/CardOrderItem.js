@@ -25,7 +25,7 @@ const handleReadOnly = (arr, state) => {
 const CardOrderItem = ({ data, options, setItem }) => {
   const formRef = React.useRef();
   const [componentIndex, setComponentIndex] = React.useState(2);
-  const compUsed = options[componentIndex];
+  const compUsed = options?.[componentIndex] ?? {};
   const [formDataUsed, setFormDataUsed] = React.useState(formData2);
 
   const handleChange = (state) => {
@@ -66,10 +66,11 @@ const CardOrderItem = ({ data, options, setItem }) => {
 
   const getValue = () => {
     // console.log(`formRef`, formRef?.current?.values);
-    setItem((prev) => ({
-      ...prev,
-      [formRef?.current?.values?.id]: formRef?.current?.values,
-    }));
+    if (setItem)
+      setItem((prev) => ({
+        ...prev,
+        [formRef?.current?.values?.id]: formRef?.current?.values,
+      }));
   };
 
   React.useEffect(() => {
