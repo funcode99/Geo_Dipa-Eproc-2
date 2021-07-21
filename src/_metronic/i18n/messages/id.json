@@ -567,5 +567,8 @@
   "TITLE.CHOOSE_DOCUMENT_FILE": "Pilih file dokumen",
   "TITLE.PAYMENT_RECEIPT": "Tanda Terima Dokumen Pembayaran",
   "TITLE.ATTACHMENT_DOC": "Lampiran Dokumen",
-  "TITLE.SPESIFICATION": "Spesifikasi"
+  "TITLE.SPESIFICATION": "Spesifikasi",
+  "TITLE.PO_DOCUMENT": "Dokumen PO",
+  "TITLE.CHOOSE_PO_DOCUMENT": "Pilih dokumen PO",
+  "TITLE.SELECT_CONTRACT_TYPE": "Pilih tipe kontrak"
 }

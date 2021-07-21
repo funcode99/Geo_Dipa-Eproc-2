@@ -32,9 +32,19 @@ const docOptions = {
     { value: "spmk", label: "SPMK" },
     { value: "skpp", label: "SKPP" },
   ],
+  contractType: [
+    { value: "full_payment", label: "Full Payment" },
+    { value: "term", label: "Term" },
+    { value: "confirmation_order", label: "Confirmation Order" },
+  ],
 };
 
 const fieldKickOff = [
+  {
+    name: "poFile",
+    typeInput: "UploadInput",
+    label: <FormattedMessage id="TITLE.PO_DOCUMENT" />,
+  },
   {
     name: "docType",
     typeInput: "SelectInputCustom",
@@ -49,6 +59,11 @@ const fieldKickOff = [
     name: "docDate",
     typeInput: "SelectDateInput",
     label: <FormattedMessage id="LABEL.DOCUMENT_DATE" />,
+  },
+  {
+    name: "contractType",
+    typeInput: "SelectInputCustom",
+    label: <FormattedMessage id="TITLE.CONTRACT_TYPE" />,
   },
 ];
 

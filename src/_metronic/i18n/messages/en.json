@@ -568,5 +568,8 @@
   "TITLE.CHOOSE_DOCUMENT_FILE": "Choose document file",
   "TITLE.PAYMENT_RECEIPT": "Payment Document Receipt",
   "TITLE.ATTACHMENT_DOC": "Document Attachment",
-  "TITLE.SPESIFICATION": "Spesification"
+  "TITLE.SPESIFICATION": "Spesification",
+  "TITLE.PO_DOCUMENT": "PO Document",
+  "TITLE.CHOOSE_PO_DOCUMENT": "Choose PO document",
+  "TITLE.SELECT_CONTRACT_TYPE": "Select contract type"
 }
