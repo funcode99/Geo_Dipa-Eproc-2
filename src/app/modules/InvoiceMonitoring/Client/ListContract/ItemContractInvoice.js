@@ -337,7 +337,7 @@ function ItemContractInvoice(props) {
   };
 
   const handleSendNotif = () => {
-    sendNotifSoftCopySupportDeliverables(termin)
+    sendNotifSoftCopySupportDeliverables(termin, { created_by_id: user_id })
       .then((result) => {
         setLoading(false);
         if (result.data.message == "OK") {

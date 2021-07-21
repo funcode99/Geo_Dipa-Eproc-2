@@ -281,8 +281,8 @@ export async function finance_director_approve_bkb(
 export async function updateSoftCopyByUser(id, file) {
   return axios.post(`/invoice/softcopy_update/${id}`, file);
 }
-export async function sendNotifSoftCopySupportDeliverables(id) {
-  return axios.post(`/invoice/softcopy_notif/${id}`);
+export async function sendNotifSoftCopySupportDeliverables(id, data) {
+  return axios.post(`/invoice/softcopy_notif/${id}`, data);
 }
 export async function getListTax(contract_id, term_id) {
   return axios.get(`/invoice/get_tax_selected/${contract_id}/${term_id}`);
@@ -310,6 +310,7 @@ export async function getTerminProgress(id) {
 }
 export async function createTerminProgress(data) {
   return axios.post(`/invoice/invoice_progress_save/`, data);
-}export async function getProgressTypes() {
+}
+export async function getProgressTypes() {
   return axios.get(`/invoice/get_all_progress_types/`);
 }
