@@ -562,7 +562,7 @@ const FormDetail = (props) => {
                   />
                 </Col>
               </Form.Group>
-              <Form.Group as={Row}>
+              {/* <Form.Group as={Row}>
                 <Form.Label column md="4">
                   <FormattedMessage id="TITLE.CONTRACT_TYPE" />
                 </Form.Label>
@@ -573,7 +573,7 @@ const FormDetail = (props) => {
                     <option>Confirmation Order</option>
                   </Form.Control>
                 </Col>
-              </Form.Group>
+              </Form.Group> */}
             </Col>
 
             <Col>

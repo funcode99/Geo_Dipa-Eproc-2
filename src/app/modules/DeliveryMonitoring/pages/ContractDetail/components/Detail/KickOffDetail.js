@@ -19,6 +19,7 @@ import { set_contract_id } from "../../../../_redux/deliveryMonitoringSlice";
 import { DEV_NODE } from "../../../../../../../redux/BaseHost";
 
 const formValidation = Yup.object().shape({
+  // poFile: validation.string(<FormattedMessage id="TITLE.CHOOSE_PO_DOCUMENT" />),
   docType: validation.string(
     <FormattedMessage id="TITLE.SELECT_DOCUMENT_TYPE" />
   ),
@@ -28,10 +29,13 @@ const formValidation = Yup.object().shape({
   docDate: validation.date(
     <FormattedMessage id="TITLE.DOUMENT_DATE_IS_REQUIRED" />
   ),
+  // contractType: validation.string(
+  //   <FormattedMessage id="TITLE.SELECT_CONTRACT_TYPE" />
+  // ),
 });
 
-const setDefaultDocType = (name) => {
-  return docOptions.docType.find((item) => item.value === name);
+const setDefaultSelect = (options, name) => {
+  return docOptions[options].find((item) => item.value === name);
 };
 
 const KickOffDetail = ({
@@ -39,13 +43,17 @@ const KickOffDetail = ({
   fetch_api_sg,
   contractId,
   contractStart,
+  status,
 }) => {
-  console.log(`contractStart`, contractStart);
+  const isClient = status === "client";
+
   const initValues = React.useMemo(
     () => ({
-      docType: setDefaultDocType(contractStart?.name) || "",
-      docFile: DEV_NODE + "/" + contractStart?.file || "",
+      poFile: "",
+      docType: setDefaultSelect("docType", contractStart?.name) || "",
+      docFile: contractStart?.file ? DEV_NODE + "/" + contractStart?.file : "",
       docDate: contractStart?.date || formatInitialDate(),
+      contractType: "",
     }),
     [contractStart]
   );
@@ -96,7 +104,8 @@ const KickOffDetail = ({
           fieldProps={{
             listOptions: docOptions,
           }}
-        ></FormBuilder>
+          withSubmit={isClient}
+        />
       </CardBody>
     </Card>
   );
@@ -114,6 +123,7 @@ const mapState = (state) => ({
   },
   contractId: state.deliveryMonitoring.dataContractById.id,
   contractStart: state.deliveryMonitoring.dataContractById.contract_start,
+  status: state.auth.user.data.status,
 });
 
 const mapDispatch = {
