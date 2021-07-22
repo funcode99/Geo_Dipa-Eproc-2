@@ -244,7 +244,9 @@ const TerminPage = ({ items, fetch_api_sg, loadings }) => {
           {/* {isItemExists && tabActive === 3 && <ServAccGR />} */}
           {isItemExists && tabActive === 3 && <SAGRPage />}
 
-          {tabActive === 0 && <Documents taskId={task_id} />}
+          {tabActive === 0 && (
+            <Documents loadStepper={fetchDataStepper} taskId={task_id} />
+          )}
         </Container>
         {/* )} */}
       </Paper>

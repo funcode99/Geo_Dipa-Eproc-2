@@ -6,6 +6,7 @@ import { Form, Row, Col } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
 import { FormControl } from "react-bootstrap";
 import ButtonSubmit from "../../../../../../components/buttonAction/ButtonSubmit";
+import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 
 const ModalUploadDoc = ({
   visible,
@@ -41,10 +42,23 @@ const ModalUploadDoc = ({
     <React.Fragment>
       <Toast />
 
-      <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
+      {/* <StyledModal visible={visible} onClose={onClose} minWidth="30vw"> */}
+      <DialogGlobal
+        title={"Upload Dokumen"}
+        visible={visible}
+        onClose={onClose}
+        onYes={handleSubmit}
+        textYes={"Submit"}
+        loading={loading}
+        isCancel={false}
+        btnYesProps={{
+          disabled: file === false && remarks === false,
+          // className: "btn btn-primary",
+        }}
+      >
         {/* <form onSubmit={() => onSubmit(optionSelected)}> */}
-        <div className="d-flex align-items-start flex-column">
-          <h3>Upload Dokumen</h3>
+        <div className="d-flex align-items-start">
+          {/* <h3>Upload Dokumen</h3> */}
           <h6> Silahkan pilih dokumen yang akan di-upload</h6>
         </div>
         <Form>
@@ -81,23 +95,24 @@ const ModalUploadDoc = ({
             <Form.File onChange={handleSelectChange} size="sm" />
           </Form.Group>
         </Form>
-        <div className="d-flex mt-5">
+        {/* <div className="d-flex mt-5">
           <ButtonSubmit
             handleSubmit={handleSubmit}
             disabled={file === false && remarks === false}
             loading={loading}
             classBtn={"ml-auto"}
           />
-          {/* <button
+          <button
             disabled={file === false && remarks === false}
             onClick={handleSubmit}
             className="btn btn-primary ml-auto"
           >
             Kirim
-          </button> */}
-        </div>
+          </button>
+        </div> */}
         {/* </form> */}
-      </StyledModal>
+      </DialogGlobal>
+      {/* </StyledModal> */}
     </React.Fragment>
   );
 };

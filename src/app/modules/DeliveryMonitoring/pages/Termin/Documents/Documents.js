@@ -38,6 +38,7 @@ const Documents = ({
   set_loading_rd,
   set_loading_done_rd,
   fetch_api_sg,
+  loadStepper,
 }) => {
   const [loading, setLoading] = React.useState({
     get: false,
@@ -74,6 +75,7 @@ const Documents = ({
     (res) => {
       if (res?.data?.status === true) {
         fetchData();
+        loadStepper();
         setToast(res?.data?.message);
       }
     },
@@ -186,6 +188,7 @@ const Documents = ({
             url: `delivery/task-document-upload/${open?.tempParams?.upload_id}`,
             onSuccess: () => {
               fetchData();
+              loadStepper();
               handleLoading(type, false);
               handleVisible(type);
             },
@@ -310,11 +313,13 @@ const Documents = ({
         visible={open.delete}
         onClose={() => handleVisible("delete")}
         onSubmit={(params) => handleApi("delete", params)}
+        loading={loadings.delete}
       />
       <ModalAddDeliverables
         visible={open.create}
         onClose={() => handleVisible("create")}
         onSubmit={(params) => handleApi("create", params)}
+        loading={loadings.create}
       />
       <ModalUploadDoc
         visible={open.upload}

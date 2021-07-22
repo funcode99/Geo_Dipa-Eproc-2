@@ -175,7 +175,8 @@ const TableDoc = ({ loading }) => {
                           status={el?.document_status?.name}
                           remarks={el?.remarks_status}
                         />,
-                        el?.percentage && el?.percentage + "%",
+                        // el?.percentage && el?.percentage + "%",
+                        "-",
                         <BtnLihat url={el?.url} />,
                         el?.remarks,
                         <BtnAksi item={el} handleAction={handleAction} />,

@@ -4,6 +4,7 @@ import { FormControl } from "react-bootstrap";
 import { InputGroup } from "react-bootstrap";
 import { StyledModal } from "../../modals";
 import { Form, Row, Col } from "react-bootstrap";
+import DialogGlobal from "../DialogGlobal";
 
 const ModalConfirmation = ({
   visible = false,
@@ -44,10 +45,28 @@ const ModalConfirmation = ({
   }, [visible]);
   // console.log(`other`, other);
   return (
-    <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
-      <div className="d-flex align-items-center flex-column">
+    // <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
+    <DialogGlobal
+      title={title}
+      visible={visible}
+      onYes={_handleSubmit}
+      textYes={textYes}
+      textNo={textNo}
+      loading={loading}
+      btnYesProps={{
+        // loading: loading,
+        className: `btn btn-${submitColor}`,
+        disabled: loading || disRemarks,
+        // disabled: !checked,
+      }}
+      btnNoProps={{
+        className: "btn btn-light",
+      }}
+      isCancel={false}
+    >
+      <div>
         {children}
-        <h3>{title}</h3>
+        {/* <h3>{title}</h3> */}
         {subTitle && <h6>{subTitle}</h6>}
         {additionalParams?.isPeriodic && !isReject && (
           <React.Fragment>
@@ -94,7 +113,7 @@ const ModalConfirmation = ({
           </Form.Group>
         )}
       </div>
-      <div className="d-flex justify-content-center mt-9">
+      {/* <div className="d-flex justify-content-center mt-9">
         <button
           disabled={loading || disRemarks}
           className={`btn btn-${submitColor} mr-8`}
@@ -106,8 +125,9 @@ const ModalConfirmation = ({
         <button className="btn btn-light" onClick={onClose}>
           {textNo}
         </button>
-      </div>
-    </StyledModal>
+      </div> */}
+    </DialogGlobal>
+    // {/* </StyledModal> */}
   );
 };
 

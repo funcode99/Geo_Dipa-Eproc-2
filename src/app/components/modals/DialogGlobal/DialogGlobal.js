@@ -60,10 +60,17 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-class DialogGlobal extends React.Component {
+class DialogGlobal extends React.PureComponent {
   state = {
     open: false,
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    const { visible } = this.props;
+    if (visible !== undefined) {
+      if (visible !== prevProps.visible) this.setState({ open: visible });
+    }
+  }
 
   open = () => {
     this.setState({
@@ -119,6 +126,17 @@ class DialogGlobal extends React.Component {
 
           <DialogActions>
             {btnAction}
+
+            {isCancel && (
+              <Button
+                variant="contained"
+                className={"bg-danger text-light "}
+                onClick={this.close}
+                {...btnNoProps}
+              >
+                {textNo ? textNo : <FormattedMessage id="TITLE.CANCEL" />}
+              </Button>
+            )}
             {isSubmit && (
               <Button
                 variant="contained"
@@ -135,16 +153,6 @@ class DialogGlobal extends React.Component {
                   />
                 )}
                 {textYes ? textYes : <FormattedMessage id="TITLE.SAVE" />}
-              </Button>
-            )}
-            {isCancel && (
-              <Button
-                variant="contained"
-                className={"bg-danger text-light"}
-                onClick={this.close}
-                {...btnNoProps}
-              >
-                {textNo ? textNo : <FormattedMessage id="TITLE.CANCEL" />}
               </Button>
             )}
           </DialogActions>
