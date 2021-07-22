@@ -25,16 +25,16 @@ const useStyles = makeStyles((theme) => ({
 
 const tableHeaderContractsNew = [
   {
-    id: "procurement_title",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
-  },
-  {
     id: "contract_no",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
   },
   {
     id: "po_number",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
+  },
+  {
+    id: "procurement_title",
+    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
   },
   {
     id: "po_date",
@@ -73,13 +73,13 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
 
   const generateTableContent = (data) => {
     let dataArr = data.map((item, id) => ({
-      procurement_title: (
+      contract_no: (
         <NavLink to={`/${status}/delivery-monitoring/contract/${item.id}`}>
-          {item?.contract_name}
+          {item?.contract_no}
         </NavLink>
       ),
-      contract_no: item?.contract_no,
       po_number: item?.purch_order_no,
+      procurement_title: item?.contract_name,
       po_date:
         item?.issued_date !== null
           ? formatDate(new Date(item?.issued_date))

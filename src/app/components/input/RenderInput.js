@@ -26,6 +26,8 @@ const RenderInput = ({
   formik,
   disabledFields = [],
   listOptions,
+  labelSize = 4,
+  formInputSize = 8,
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom";
@@ -42,8 +44,10 @@ const RenderInput = ({
       {name && (
         <div>
           <div className="form-group row">
-            <label className="col-sm-4 col-form-label">{label}</label>
-            <div className="col-sm-8">
+            <label className={`col-sm-${labelSize} col-form-label`}>
+              {label}
+            </label>
+            <div className={`col-sm-${formInputSize}`}>
               <Component
                 // labelClass="mb-1"
                 value={values[name] || ""}

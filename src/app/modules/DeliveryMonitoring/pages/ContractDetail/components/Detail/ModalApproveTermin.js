@@ -1,6 +1,7 @@
 import React from "react";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
+import { FormattedMessage } from "react-intl";
 
 const ModalApproveTermin = React.forwardRef(({}, ref) => {
   const [checked, setChecked] = React.useState(false);
@@ -24,13 +25,14 @@ const ModalApproveTermin = React.forwardRef(({}, ref) => {
     <DialogGlobal
       ref={innerRef}
       title={"Persetujuan Termin (UNDER DEVELOPMENT)"}
-      textYes={"Terima"}
-      textNo={"Batalkan"}
+      textYes={<FormattedMessage id="TITLE.APPROVE" />}
+      // textNo={<FormattedMessage id="TITLE.CANCEL" />}
       onYes={_handleSubmit}
       btnYesProps={{
         className: checked ? "bg-primary text-light" : "bg-secondary",
         disabled: !checked,
       }}
+      isCancel={false}
     >
       <FormControlLabel
         control={
@@ -41,7 +43,13 @@ const ModalApproveTermin = React.forwardRef(({}, ref) => {
             color="primary"
           />
         }
-        label={`Dengan ini saya menyetujui termin \"${terminTitle}\" `}
+        label={
+          <FormattedMessage
+            id="TITLE.I_APPROVED"
+            values={{ termTitle: terminTitle }}
+          />
+        }
+        // label={`Dengan ini saya menyetujui termin \"${terminTitle}\" `}
       />
     </DialogGlobal>
   );

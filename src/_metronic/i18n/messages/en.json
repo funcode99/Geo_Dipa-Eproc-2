@@ -571,5 +571,6 @@
   "TITLE.SPESIFICATION": "Spesification",
   "TITLE.PO_DOCUMENT": "PO Document",
   "TITLE.CHOOSE_PO_DOCUMENT": "Choose PO document",
-  "TITLE.SELECT_CONTRACT_TYPE": "Select contract type"
+  "TITLE.SELECT_CONTRACT_TYPE": "Select contract type",
+  "TITLE.I_APPROVED": "I approved the {termTitle}"
 }

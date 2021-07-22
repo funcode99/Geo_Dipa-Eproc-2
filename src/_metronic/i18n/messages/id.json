@@ -570,5 +570,6 @@
   "TITLE.SPESIFICATION": "Spesifikasi",
   "TITLE.PO_DOCUMENT": "Dokumen PO",
   "TITLE.CHOOSE_PO_DOCUMENT": "Pilih dokumen PO",
-  "TITLE.SELECT_CONTRACT_TYPE": "Pilih tipe kontrak"
+  "TITLE.SELECT_CONTRACT_TYPE": "Pilih tipe kontrak",
+  "TITLE.I_APPROVED": "Dengan ini saya menyetujui termin {termTitle}"
 }
