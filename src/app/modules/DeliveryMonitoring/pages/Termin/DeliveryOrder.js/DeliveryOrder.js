@@ -25,34 +25,7 @@ import {
   fetch_api_sg,
   getLoading,
 } from "../../../../../../redux/globalReducer";
-
-const tblHeadDlvItem = [
-  {
-    id: "no",
-    label: <FormattedMessage id="TITLE.NO" />,
-  },
-  {
-    id: "desc",
-    label: <FormattedMessage id="TITLE.DESCRIPTION" />,
-  },
-  {
-    id: "date",
-    label: <FormattedMessage id="TITLE.DATE" />,
-  },
-  {
-    id: "remarks",
-    label: <FormattedMessage id="TITLE.REMARKS" />,
-  },
-  {
-    id: "approve_status",
-    label: <FormattedMessage id="TITLE.STATUS" />,
-  },
-  {
-    id: "action",
-    label: <FormattedMessage id="TITLE.ACTION" />,
-    sortable: false,
-  },
-];
+import { tblHeadDlvItem } from "./components/fieldData";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required(<FormattedMessage id="TITLE.DESC_IS_REQUIRE" />),
@@ -172,10 +145,12 @@ const DeliveryOrder = ({
     fetchApi({
       keys: keys.fetch,
       type: "get",
-      url: `/delivery/task/${taskId}`,
+      url: `/delivery/task/${taskId}/delivery-order`,
       onSuccess: (res) => {
         // console.log(`res`, res.data);
         saveDataTask(res?.data);
+        generateTableContent(res?.data.task_deliveries);
+        setInitAvailItems(items);
       },
     });
   };
@@ -465,10 +440,11 @@ const DeliveryOrder = ({
   };
 
   React.useEffect(() => {
-    generateTableContent(orderItems);
+    getTask();
+    // generateTableContent(orderItems);
     setInitAvailItems(items);
     getOptions();
-  }, [orderItems, items]);
+  }, [items]);
 
   return (
     <React.Fragment>
@@ -583,7 +559,7 @@ const mapState = (state) => {
   const { auth, deliveryMonitoring } = state;
   return {
     items: deliveryMonitoring.dataBarang,
-    orderItems: deliveryMonitoring.dataTask?.task_deliveries,
+    orderItems: deliveryMonitoring.dataOrderItems.task_deliveries,
     tempOrderItems: deliveryMonitoring.dataTempOrderItems,
     updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
     status: auth.user.data.status,
@@ -613,7 +589,7 @@ const mapDispatch = (dispatch) => ({
   },
   saveDataTask: (payload) => {
     dispatch({
-      type: actionTypes.SetDataTask,
+      type: actionTypes.SetDataOrderItems,
       payload: payload,
     });
   },

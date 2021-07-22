@@ -113,20 +113,21 @@ const TerminPage = ({ items, fetch_api_sg, loadings }) => {
     // handleLoading("get", true);
     // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
     fetchDataStepper();
-    deliveryMonitoring
-      .getTaskById(task_id)
-      .then((res) => {
-        // console.log(`resold`, res);
-        // handleLoading("get", false);
-        if (res.data.status === true) {
-          dispatch({
-            type: actionTypes.SetDataTask,
-            payload: res?.data?.data,
-          });
-        }
-      })
-      .catch((err) => console.log("err", err));
-  }, [task_id, dispatch, fetchDataStepper]);
+    // fetchDataTask();
+    // deliveryMonitoring
+    //   .getTaskById(task_id)
+    //   .then((res) => {
+    //     // console.log(`resold`, res);
+    //     // handleLoading("get", false);
+    //     if (res.data.status === true) {
+    //       dispatch({
+    //         type: actionTypes.SetDataTask,
+    //         payload: res?.data?.data,
+    //       });
+    //     }
+    //   })
+    //   .catch((err) => console.log("err", err));
+  }, [fetchDataStepper]);
 
   React.useEffect(() => {
     if (!task_id) {
@@ -148,6 +149,11 @@ const TerminPage = ({ items, fetch_api_sg, loadings }) => {
       type: "get",
       url: `/delivery/task/${task_id}/item-service`,
       onSuccess: (res) => {
+        dispatch({
+          type: actionTypes.SetDataTask,
+          payload: res?.data,
+        });
+
         const stateLib = {
           done: "COMPLETE",
           on: "ON PROGRESS",
