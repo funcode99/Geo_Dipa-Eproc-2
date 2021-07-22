@@ -313,4 +313,6 @@ export async function createTerminProgress(data) {
 }
 export async function getProgressTypes() {
   return axios.get(`/invoice/get_all_progress_types/`);
+}export async function getRoutingSlip(id) {
+  return axios.get(`/invoice/get_routing_slip/${id}`);
 }

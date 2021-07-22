@@ -1,8 +1,5 @@
-import React, {
-  // useState,
-  useEffect,
-} from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, useCallback } from "react";
+import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Card,
@@ -12,25 +9,36 @@ import {
   CardHeaderToolbar,
 } from "../../../../../_metronic/_partials/controls";
 import // Table,
-// Form,
-// Col,
-// Row,
-// Pagination
-"react-bootstrap";
+  // Form,
+  // Col,
+  // Row,
+  // Pagination
+  "react-bootstrap";
 import // Dialog,
-// DialogActions,
-// DialogContent,
-// DialogTitle,
-// Slide
-"@material-ui/core";
+  // DialogActions,
+  // DialogContent,
+  // DialogTitle,
+  // Slide
+  "@material-ui/core";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import {
+  getRoutingSlip
+} from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
 
 // const Transition = React.forwardRef(function Transition(props, ref) {
 //     return <Slide direction="up" ref={ref} {...props} />;
 // });
 
 function ItemContractRoutingSlip(props) {
-  useEffect(() => {});
+
+  const { intl } = props;
+  const contract_id = props.match.params.contract;
+  const termin = props.match.params.termin;
+  const [Toast, setToast] = useToast();
+
+  const [loading, setLoading] = useState(false);
+  const [slipData, setSlipData] = useState({});
 
   const print = () => {
     var printContents = window.$("#printRoutingSlip").html();
@@ -43,8 +51,24 @@ function ItemContractRoutingSlip(props) {
     window.$("#print-content").html("");
   };
 
+  const callApiRoutingSlip = () => {
+    setLoading(true);
+    getRoutingSlip(termin)
+      .then((result) => {
+        setLoading(false);
+        setSlipData(result.data.data);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }
+
+  useEffect(callApiRoutingSlip, []);
+
   return (
     <React.Fragment>
+      <Toast />
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
@@ -83,7 +107,7 @@ function ItemContractRoutingSlip(props) {
                     <span>Nama Supplier</span>
                   </div>
                   <div className="col-sm-10">
-                    <span>PT. Ecolab International Indonesia</span>
+                    <span>{slipData?.vendor?.party?.full_name}</span>
                   </div>
                 </div>
                 <div className="row">
@@ -91,7 +115,7 @@ function ItemContractRoutingSlip(props) {
                     <span>No. Invoice</span>
                   </div>
                   <div className="col-sm-10">
-                    <span>249714 / 8000005793</span>
+                    <span>{slipData?.invoice_no}</span>
                   </div>
                 </div>
                 <div className="row">
@@ -99,7 +123,11 @@ function ItemContractRoutingSlip(props) {
                     <span>Tanggal Invoice</span>
                   </div>
                   <div className="col-sm-10">
-                    <span>12 Maret 2021</span>
+                    <span>
+                      {window
+                        .moment(new Date(slipData?.invoice_date))
+                        .format("DD MMM YYYY")}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -112,22 +140,78 @@ function ItemContractRoutingSlip(props) {
                 <thead>
                   <tr>
                     <td className="td-1">No</td>
-                    <td className="td-18 text-center">Pejabat Keuangan</td>
-                    <td className="td-18 text-center">Tanggal Masuk</td>
-                    <td className="td-10 text-center">Jam Masuk</td>
-                    <td className="td-23 text-center">Paraf Penerima</td>
-                    <td className="td-30 text-center">Keterangan</td>
+                    <td className="td-20 text-center">Pejabat Keuangan</td>
+                    <td className="td-20 text-center">Tanggal Masuk</td>
+                    <td className="td-20 text-center">Tanggal Keluar</td>
+                    <td className="td-10 text-center">Paraf Penerima</td>
+                    <td className="td-29 text-center">Keterangan</td>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>1</td>
                     <td>Merry</td>
-                    <td>20 Maret 2020</td>
-                    <td>13.30</td>
+                    <td>-</td>
+                    <td>-</td>
                     <td></td>
-                    <td></td>
+                    <td>SA / GR Terbit</td>
                   </tr>
+                  {slipData?.support_deliverables_document_softcopy_date_out && <tr>
+                    <td>2</td>
+                    <td>{slipData?.support_deliverbables_creator?.party?.full_name}</td>
+                    <td>-</td>
+                    <td>
+                      {window
+                        .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
+                        .format("DD MMM YYYY")}
+                    </td>
+                    <td></td>
+                    <td>Softcopy Dokumen Pendukung</td>
+                  </tr>}
+                  {slipData?.support_deliverables_document_softcopy_date_out && <tr>
+                    <td>3</td>
+                    <td>{slipData?.support_deliverbables_creator?.party?.full_name}</td>
+                    <td>-</td>
+                    <td>
+                      {window
+                        .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
+                        .format("DD MMM YYYY")}
+                    </td>
+                    <td></td>
+                    <td>Softcopy Dokumen Deliverables</td>
+                  </tr>}
+                  {slipData?.billing_document_softcopy_date_in && <tr>
+                    <td>4</td>
+                    <td>{slipData?.billing_creator?.party?.full_name}</td>
+                    <td>
+                      {window
+                        .moment(new Date(slipData?.billing_document_softcopy_date_in))
+                        .format("DD MMM YYYY")}
+                    </td>
+                    <td>
+                      {window
+                        .moment(new Date(slipData?.billing_document_softcopy_date_out))
+                        .format("DD MMM YYYY")}
+                    </td>
+                    <td></td>
+                    <td>Softcopy Dokumen Tagihan</td>
+                  </tr>}
+                  {slipData?.hardcopy_date_in && <tr>
+                    <td>5</td>
+                    <td>{slipData?.hardcopy_creator?.party?.full_name}</td>
+                    <td>
+                      {window
+                        .moment(new Date(slipData?.hardcopy_date_in))
+                        .format("DD MMM YYYY")}
+                    </td>
+                    <td>
+                      {window
+                        .moment(new Date(slipData?.hardcopy_date_out))
+                        .format("DD MMM YYYY")}
+                    </td>
+                    <td></td>
+                    <td>Hardcopy Dokumen</td>
+                  </tr>}
                 </tbody>
               </table>
             </div>
