@@ -18,6 +18,7 @@ import {
   getLoading,
 } from "../../../../../../../redux/globalReducer";
 import ModalApproveTermin from "./ModalApproveTermin";
+import { MODAL } from "../../../../../../../service/modalSession/ModalService";
 
 const tableHeaderTerminNew = [
   {
@@ -242,6 +243,9 @@ const DetailPage = ({
           console.log(`type`, type, data);
           approveRef.current.open(data.name);
           break;
+        case "reject":
+          console.log(`type`, type, data);
+          MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
         default:
           break;
       }
@@ -297,6 +301,11 @@ const DetailPage = ({
                 //     ? true
                 //     : false,
                 type: "approve",
+              },
+              {
+                label: "TITLE.REJECT",
+                icon: "fas fa-times-circle text-warning",
+                type: "reject",
               },
               {
                 label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
