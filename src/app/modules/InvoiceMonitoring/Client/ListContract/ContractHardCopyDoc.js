@@ -140,11 +140,9 @@ function ContractHardCopyDoc(props) {
   const [loadingDeliverables, setLoadingDeliverables] = useState(false);
   const [dataDocHardCopy, setDataDocHardCopy] = useState([]);
   const [dataBillingHardCopy, setDataBillingHardCopy] = useState([]);
-  const [loadingLoadData, setLoadingLoadData] = useState({
-    billingHardCopy: true,
-    deliverableHardCopy: true,
-    contractHardCopy: true,
-  });
+  const [billingHardCopy, setBillingHardCopy] = useState(true);
+  const [deliverableHardCopy, setDeliverableHardCopy] = useState(true);
+  const [contractHardCopy, setContractHardCopy] = useState(true);
 
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
@@ -337,7 +335,7 @@ function ContractHardCopyDoc(props) {
       .then((result) => {
         setLoadingDeliverables(false);
         setDataDeliverables(result.data.data.task_documents);
-        setLoadingLoadData({ ...loadingLoadData, deliverableHardCopy: false });
+        setDeliverableHardCopy(false);
       })
       .catch((error) => {
         setLoadingDeliverables(false);
@@ -359,9 +357,7 @@ function ContractHardCopyDoc(props) {
       .then((result) => {
         setLoading(false);
         setDataDocHardCopy(result.data.data);
-        var loadingLoadDatas = loadingLoadData;
-        loadingLoadDatas.contractHardCopy = false;
-        setLoadingLoadData(loadingLoadDatas);
+        setContractHardCopy(false);
       })
       .catch((err) => {
         setLoading(false);
@@ -375,9 +371,7 @@ function ContractHardCopyDoc(props) {
       .then((result) => {
         setLoading(false);
         setDataBillingHardCopy(result.data.data);
-        var loadingLoadDatas = loadingLoadData;
-        loadingLoadDatas.billingHardCopy = false;
-        setLoadingLoadData(loadingLoadDatas);
+        setBillingHardCopy(false);
       })
       .catch((err) => {
         setLoading(false);
@@ -395,7 +389,7 @@ function ContractHardCopyDoc(props) {
       created_by_id: user_id,
       updated_by_id: user_id,
     };
-    sendNotifHardCopy({ contract_id: contract_id, term_id: termin, user_id: user_id })
+    sendNotifHardCopy({ contract_id: contract_id, term_id: termin })
       .then((response) => {
         setLoading(false);
         if (invoiceBkbExist) {
@@ -1127,14 +1121,12 @@ function ContractHardCopyDoc(props) {
             disabled={
               loading ||
               progressTermin?.ident_name !== "HARDCOPY" ||
-              loadingLoadData.billingHardCopy ||
-              loadingLoadData.deliverableHardCopy ||
-              loadingLoadData.contractHardCopy
+              billingHardCopy ||
+              deliverableHardCopy ||
+              contractHardCopy
             }
           >
-            {loadingLoadData.billingHardCopy ||
-            loadingLoadData.deliverableHardCopy ||
-            loadingLoadData.contractHardCopy ? (
+            {billingHardCopy || deliverableHardCopy || contractHardCopy ? (
               <i className="fas fa-spinner fa-pulse px-1"></i>
             ) : null}
             Print Kelengkapan Dokumen
