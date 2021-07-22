@@ -9,16 +9,16 @@ import {
   BookmarkBorderOutlined,
   LocalShipping,
 } from "@material-ui/icons";
-import ServAccGR from "../ServiceAccGR/pages/ServiceAccDetail";
+// import ServAccGR from "../ServiceAccGR/pages/ServiceAccDetail";
 import Documents from "./Documents";
-import BAPP from "./BAPP";
+// import BAPP from "./BAPP";
 import DeliveryOrder from "./DeliveryOrder.js";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import { useSelector, shallowEqual, useDispatch, connect } from "react-redux";
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { useHistory, useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+// import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import Steppers from "../../../../components/steppersCustom/Steppers";
 import SAGRPage from "./ServiceAccGR/SAGRPage";
 import BeritaAcara from "./BeritaAcara";
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 const keys = {
   task_id: "task_id_service",
+  task_service_and_item: "task_service_and_item",
 };
 
 const TerminPage = ({ items, fetch_api_sg, loadings }) => {
@@ -109,11 +110,25 @@ const TerminPage = ({ items, fetch_api_sg, loadings }) => {
     return task?.name ?? "";
   }, [dataContractById, task_id]);
 
+  const fetchDataTask = () => {
+    fetch_api_sg({
+      key: keys.task_service_and_item,
+      type: "get",
+      url: `/delivery/task/${task_id}/item-service`,
+      onSuccess: (res) => {
+        dispatch({
+          type: actionTypes.SetDataTask,
+          payload: res?.data,
+        });
+      },
+    });
+  };
+
   const getDataTask = React.useCallback(() => {
     // handleLoading("get", true);
     // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
     fetchDataStepper();
-    // fetchDataTask();
+    fetchDataTask();
     // deliveryMonitoring
     //   .getTaskById(task_id)
     //   .then((res) => {
