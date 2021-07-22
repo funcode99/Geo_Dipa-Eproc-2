@@ -395,7 +395,7 @@ function ContractHardCopyDoc(props) {
       created_by_id: user_id,
       updated_by_id: user_id,
     };
-    sendNotifHardCopy({ contract_id: contract_id, term_id: termin })
+    sendNotifHardCopy({ contract_id: contract_id, term_id: termin, user_id: user_id })
       .then((response) => {
         setLoading(false);
         if (invoiceBkbExist) {
