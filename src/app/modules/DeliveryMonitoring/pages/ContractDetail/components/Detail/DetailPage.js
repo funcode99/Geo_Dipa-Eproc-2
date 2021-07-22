@@ -246,6 +246,7 @@ const DetailPage = ({
         case "reject":
           console.log(`type`, type, data);
           MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
+          break;
         default:
           break;
       }

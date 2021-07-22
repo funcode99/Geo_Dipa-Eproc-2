@@ -100,6 +100,7 @@ class DialogGlobal extends React.Component {
       loading,
       disableBackdropClick = true,
       isSubmit = true,
+      isCancel = true,
     } = this.props;
     return (
       <div>
@@ -136,14 +137,16 @@ class DialogGlobal extends React.Component {
                 {textYes ? textYes : <FormattedMessage id="TITLE.SAVE" />}
               </Button>
             )}
-            <Button
-              variant="contained"
-              className={"bg-danger text-light"}
-              onClick={this.close}
-              {...btnNoProps}
-            >
-              {textNo ? textNo : <FormattedMessage id="TITLE.CANCEL" />}
-            </Button>
+            {isCancel && (
+              <Button
+                variant="contained"
+                className={"bg-danger text-light"}
+                onClick={this.close}
+                {...btnNoProps}
+              >
+                {textNo ? textNo : <FormattedMessage id="TITLE.CANCEL" />}
+              </Button>
+            )}
           </DialogActions>
         </Dialog>
       </div>
