@@ -32,6 +32,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
+import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 
 function ContractReceiptPage(props) {
   const [loading, setLoading] = useState(false);
@@ -52,6 +53,10 @@ function ContractReceiptPage(props) {
 
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+  let dataFormReceiptVendor = useSelector(
+    (state) => state.invoiceMonitoring.dataReceiptVendor,
     shallowEqual
   );
   const contract_id = props.match.params.contract;
@@ -170,6 +175,38 @@ function ContractReceiptPage(props) {
     getReceipt(contract_id, termin)
       .then((response) => {
         if (!response["data"]["data"]) {
+          formik.setFieldValue(
+            "receipt_no",
+            dataFormReceiptVendor.receipt_no
+              ? dataFormReceiptVendor.receipt_no
+              : ""
+          );
+          formik.setFieldValue(
+            "receipt_date",
+            dataFormReceiptVendor.receipt_date
+              ? window
+                  .moment(new Date(dataFormReceiptVendor.receipt_date))
+                  .format("YYYY-MM-DD")
+              : ""
+          );
+          formik.setFieldValue(
+            "description",
+            dataFormReceiptVendor.description
+              ? dataFormReceiptVendor.description
+              : ""
+          );
+          setReceiptData({
+            ...receiptData,
+            receipt_no: dataFormReceiptVendor.receipt_no
+              ? dataFormReceiptVendor.receipt_no
+              : "",
+            receipt_date: dataFormReceiptVendor.receipt_date
+              ? dataFormReceiptVendor.receipt_date
+              : "",
+            description: dataFormReceiptVendor.description
+              ? dataFormReceiptVendor.description
+              : "",
+          });
           setReceiptStatus(false);
         } else {
           getHistoryReceiptData(response["data"]["data"]["id"]);
@@ -190,6 +227,10 @@ function ContractReceiptPage(props) {
             formik.setFieldValue(
               "receipt_date",
               response["data"]["data"]["receipt_date"]
+                ? window
+                    .moment(new Date(response["data"]["data"]["receipt_date"]))
+                    .format("YYYY-MM-DD")
+                : ""
             );
             formik.setFieldValue(
               "description",
@@ -525,6 +566,11 @@ function ContractReceiptPage(props) {
                       id="numberReceipt"
                       disabled={loading || receiptStatus}
                       {...formik.getFieldProps("receipt_no")}
+                      onChange={(e) => {
+                        dataFormReceiptVendor.receipt_no = e.target.value;
+                        props.set_data_receipt_vendor(dataFormReceiptVendor);
+                        formik.setFieldValue("receipt_no", e.target.value);
+                      }}
                     />
                   </div>
                   {formik.touched.receipt_no && formik.errors.receipt_no ? (
@@ -546,10 +592,19 @@ function ContractReceiptPage(props) {
                       className="form-control"
                       id="dateReceipt"
                       disabled={loading || receiptStatus}
-                      defaultValue={
-                        receiptData ? receiptData["receipt_date"] : null
-                      }
-                      onChange={handleDate}
+                      {...formik.getFieldProps("receipt_date")}
+                      onChange={(e) => {
+                        dataFormReceiptVendor.receipt_date = window
+                          .moment(new Date(e.target.value))
+                          .format("YYYY-MM-DD");
+                        props.set_data_receipt_vendor(dataFormReceiptVendor);
+                        formik.setFieldValue(
+                          "receipt_date",
+                          window
+                            .moment(new Date(e.target.value))
+                            .format("YYYY-MM-DD")
+                        );
+                      }}
                     />
                   </div>
                   {formik.touched.receipt_date && formik.errors.receipt_date ? (
@@ -570,6 +625,11 @@ function ContractReceiptPage(props) {
                       id="note"
                       disabled={loading || receiptStatus}
                       {...formik.getFieldProps("description")}
+                      onChange={(e) => {
+                        dataFormReceiptVendor.description = e.target.value;
+                        props.set_data_receipt_vendor(dataFormReceiptVendor);
+                        formik.setFieldValue("description", e.target.value);
+                      }}
                     ></textarea>
                   </div>
                   {formik.touched.description && formik.errors.description ? (
@@ -787,4 +847,4 @@ function ContractReceiptPage(props) {
     </React.Fragment>
   );
 }
-export default injectIntl(connect(null, null)(ContractReceiptPage));
+export default injectIntl(connect(null, invoice.actions)(ContractReceiptPage));

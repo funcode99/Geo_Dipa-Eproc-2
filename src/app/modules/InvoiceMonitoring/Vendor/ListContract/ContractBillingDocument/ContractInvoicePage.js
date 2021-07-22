@@ -35,6 +35,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
+import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 
 function ContractInvoicePage(props) {
   const [loading, setLoading] = useState(false);
@@ -55,6 +56,10 @@ function ContractInvoicePage(props) {
 
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+  let dataFormInvoice = useSelector(
+    (state) => state.invoiceMonitoring.dataInvoiceVendor,
     shallowEqual
   );
   const contract_id = props.match.params.contract;
@@ -188,6 +193,14 @@ function ContractInvoicePage(props) {
           .then((response) => {
             getInvoice(contract_id, termin).then((responses) => {
               setInvoiceData(responses["data"]["data"]);
+              formik.setFieldValue(
+                "from_time",
+                responses["data"]["data"]["from_time"]
+                  ? window
+                      .moment(new Date(responses["data"]["data"]["from_time"]))
+                      .format("YYYY-MM-DD")
+                  : ""
+              );
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
               setLoading(false);
@@ -204,6 +217,14 @@ function ContractInvoicePage(props) {
             setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
             setLoading(false);
             setInvoiceData(response["data"]["data"]);
+            formik.setFieldValue(
+              "from_time",
+              response["data"]["data"]["from_time"]
+                ? window
+                    .moment(new Date(response["data"]["data"]["from_time"]))
+                    .format("YYYY-MM-DD")
+                : ""
+            );
             setUploadFilename(response["data"]["data"]["file_name"]);
           })
           .catch((error) => {
@@ -295,6 +316,34 @@ function ContractInvoicePage(props) {
     getInvoice(contract_id, termin)
       .then((response) => {
         if (!response["data"]["data"]) {
+          formik.setFieldValue(
+            "invoice_no",
+            dataFormInvoice.invoice_no ? dataFormInvoice.invoice_no : ""
+          );
+          formik.setFieldValue(
+            "from_time",
+            dataFormInvoice.from_time
+              ? window
+                  .moment(new Date(dataFormInvoice.from_time))
+                  .format("YYYY-MM-DD")
+              : ""
+          );
+          formik.setFieldValue(
+            "description",
+            dataFormInvoice.description ? dataFormInvoice.description : ""
+          );
+          setInvoiceData({
+            ...invoiceData,
+            invoice_no: dataFormInvoice.invoice_no
+              ? dataFormInvoice.invoice_no
+              : "",
+            from_time: dataFormInvoice.from_time
+              ? dataFormInvoice.from_time
+              : "",
+            description: dataFormInvoice.description
+              ? dataFormInvoice.description
+              : "",
+          });
           setInvoiceStatus(false);
         } else {
           gethistoryInvoiceData(response["data"]["data"]["id"]);
@@ -326,6 +375,14 @@ function ContractInvoicePage(props) {
             );
             setUploadFilename(response["data"]["data"]["file_name"]);
             setInvoiceData(response["data"]["data"]);
+            formik.setFieldValue(
+              "from_time",
+              response["data"]["data"]["from_time"]
+                ? window
+                    .moment(new Date(response["data"]["data"]["from_time"]))
+                    .format("YYYY-MM-DD")
+                : ""
+            );
           }
         }
       })
@@ -605,7 +662,11 @@ function ContractInvoicePage(props) {
                       defaultValue={
                         invoiceData ? invoiceData["invoice_no"] : null
                       }
-                      {...formik.getFieldProps("invoice_no")}
+                      onChange={(e) => {
+                        dataFormInvoice.invoice_no = e.target.value;
+                        props.set_data_invoice_vendor(dataFormInvoice);
+                        formik.setFieldValue("invoice_no", e.target.value);
+                      }}
                     />
                   </div>
                   {formik.touched.invoice_no && formik.errors.invoice_no ? (
@@ -628,10 +689,19 @@ function ContractInvoicePage(props) {
                       id="dateInvoice"
                       disabled={loading || invoiceStatus}
                       onBlur={formik.handleBlur}
-                      defaultValue={
-                        invoiceData ? invoiceData["from_time"] : null
-                      }
-                      onChange={(e) => handleDate(e)}
+                      {...formik.getFieldProps("from_time")}
+                      onChange={(e) => {
+                        dataFormInvoice.from_time = window
+                          .moment(new Date(e.target.value))
+                          .format("YYYY-MM-DD");
+                        props.set_data_invoice_vendor(dataFormInvoice);
+                        formik.setFieldValue(
+                          "from_time",
+                          window
+                            .moment(new Date(e.target.value))
+                            .format("YYYY-MM-DD")
+                        );
+                      }}
                     />
                   </div>
                   {formik.touched.dateInvoice && formik.errors.from_time ? (
@@ -651,7 +721,14 @@ function ContractInvoicePage(props) {
                       className="form-control"
                       id="note"
                       disabled={loading || invoiceStatus}
-                      {...formik.getFieldProps("description")}
+                      defaultValue={
+                        invoiceData ? invoiceData["description"] : null
+                      }
+                      onChange={(e) => {
+                        dataFormInvoice.description = e.target.value;
+                        props.set_data_invoice_vendor(dataFormInvoice);
+                        formik.setFieldValue("description", e.target.value);
+                      }}
                     ></textarea>
                   </div>
                   {formik.touched.description && formik.errors.description ? (
@@ -826,42 +903,42 @@ function ContractInvoicePage(props) {
               hecto={10}
             >
               {historyInvoiceData.map((item, index) => {
-                        return (
+                return (
                   <TableRow key={index.toString()}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.invoice_no}</TableCell>
                     <TableCell>{item.from_time}</TableCell>
                     <TableCell>
-                              <a href={getFileInvoice + item.file_name}>
-                                {item.file_name}
-                              </a>
+                      <a href={getFileInvoice + item.file_name}>
+                        {item.file_name}
+                      </a>
                     </TableCell>
                     <TableCell>{item.created_by_name}</TableCell>
                     <TableCell>
-                              {moment(new Date(item.created_at)).format(
-                                "YYYY-MM-DD HH:mm:ss"
-                              )}
+                      {moment(new Date(item.created_at)).format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
                     </TableCell>
                     <TableCell>
-                              <span
-                                className={`${
-                                  item.state === "REJECTED"
-                                    ? "text-danger"
-                                    : "text-success"
-                                } pointer font-weight-bold`}
-                                onClick={() => handleHistory(index)}
-                              >
-                                {item.state === "REJECTED" ? (
-                                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
-                                ) : (
-                                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
-                                )}{" "}
-                                <i className="fas fa-caret-down"></i>
-                              </span>
+                      <span
+                        className={`${
+                          item.state === "REJECTED"
+                            ? "text-danger"
+                            : "text-success"
+                        } pointer font-weight-bold`}
+                        onClick={() => handleHistory(index)}
+                      >
+                        {item.state === "REJECTED" ? (
+                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.REJECTED" />
+                        ) : (
+                          <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.APPROVED" />
+                        )}{" "}
+                        <i className="fas fa-caret-down"></i>
+                      </span>
                     </TableCell>
                   </TableRow>
-                        );
-                      })}
+                );
+              })}
             </TableOnly>
           </CardFooter>
         </form>
@@ -869,4 +946,4 @@ function ContractInvoicePage(props) {
     </React.Fragment>
   );
 }
-export default injectIntl(connect(null, null)(ContractInvoicePage));
+export default injectIntl(connect(null, invoice.actions)(ContractInvoicePage));

@@ -34,6 +34,7 @@ import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
+import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
@@ -54,6 +55,10 @@ function ContractTaxPage(props) {
 
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+  let dataFormTaxVendor = useSelector(
+    (state) => state.invoiceMonitoring.dataTaxVendor,
     shallowEqual
   );
   const contract_id = props.match.params.contract;
@@ -266,6 +271,39 @@ function ContractTaxPage(props) {
     getTax(contract_id, termin)
       .then((response) => {
         if (!response["data"]["data"]) {
+          formik.setFieldValue(
+            "tax_no",
+            dataFormTaxVendor.tax_no ? dataFormTaxVendor.tax_no : ""
+          );
+          formik.setFieldValue(
+            "tax_date",
+            dataFormTaxVendor.tax_date
+              ? window
+                  .moment(new Date(dataFormTaxVendor.tax_date))
+                  .format("YYYY-MM-DD")
+              : ""
+          );
+          formik.setFieldValue(
+            "description",
+            dataFormTaxVendor.description ? dataFormTaxVendor.description : ""
+          );
+          formik.setFieldValue(
+            "npwp",
+            dataFormTaxVendor.npwp ? dataFormTaxVendor.npwp : null
+          );
+          setTaxData({
+            ...taxData,
+            invoice_no: dataFormTaxVendor.invoice_no
+              ? dataFormTaxVendor.invoice_no
+              : "",
+            from_time: dataFormTaxVendor.from_time
+              ? dataFormTaxVendor.from_time
+              : "",
+            description: dataFormTaxVendor.description
+              ? dataFormTaxVendor.description
+              : "",
+            npwp: dataFormTaxVendor.npwp ? dataFormTaxVendor.npwp : null,
+          });
           setTaxStatus(false);
         } else {
           getHistoryTaxData(response["data"]["data"]["id"]);
@@ -283,6 +321,10 @@ function ContractTaxPage(props) {
             formik.setFieldValue(
               "tax_date",
               response["data"]["data"]["tax_date"]
+                ? window
+                    .moment(new Date(response["data"]["data"]["tax_date"]))
+                    .format("YYYY-MM-DD")
+                : ""
             );
             formik.setFieldValue("npwp", response["data"]["data"]["npwp"]);
             formik.setFieldValue(
@@ -569,6 +611,11 @@ function ContractTaxPage(props) {
                       id="numberTax"
                       disabled={loading || taxStatus}
                       {...formik.getFieldProps("tax_no")}
+                      onChange={(e) => {
+                        dataFormTaxVendor.tax_no = e.target.value;
+                        props.set_data_tax_vendor(dataFormTaxVendor);
+                        formik.setFieldValue("tax_no", e.target.value);
+                      }}
                     />
                   </div>
                   {formik.touched.tax_no && formik.errors.tax_no ? (
@@ -588,8 +635,19 @@ function ContractTaxPage(props) {
                       id="dateTax"
                       disabled={loading || taxStatus}
                       onBlur={formik.handleBlur}
-                      defaultValue={taxData ? taxData["tax_date"] : null}
-                      onChange={(e) => handleDate(e)}
+                      {...formik.getFieldProps("tax_date")}
+                      onChange={(e) => {
+                        dataFormTaxVendor.tax_date = window
+                          .moment(new Date(e.target.value))
+                          .format("YYYY-MM-DD");
+                        props.set_data_tax_vendor(dataFormTaxVendor);
+                        formik.setFieldValue(
+                          "tax_date",
+                          window
+                            .moment(new Date(e.target.value))
+                            .format("YYYY-MM-DD")
+                        );
+                      }}
                     />
                   </div>
                   {formik.touched.dateTax && formik.errors.tax_date ? (
@@ -609,7 +667,7 @@ function ContractTaxPage(props) {
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
-                      value={taxData?.npwp}
+                      value={formik.values.npwp}
                       displayType={loading || taxStatus ? "text" : "input"}
                       className="form-control"
                       format="##.###.###.#-###.###"
@@ -617,7 +675,8 @@ function ContractTaxPage(props) {
                       allowEmptyFormatting={true}
                       allowLeadingZeros={true}
                       onValueChange={(e) => {
-                        console.log(e);
+                        dataFormTaxVendor.npwp = e.floatValue;
+                        props.set_data_tax_vendor(dataFormTaxVendor);
                         formik.setFieldValue("npwp", e.floatValue);
                       }}
                     />
@@ -640,6 +699,11 @@ function ContractTaxPage(props) {
                       id="note"
                       disabled={loading || taxStatus}
                       {...formik.getFieldProps("description")}
+                      onChange={(e) => {
+                        dataFormTaxVendor.description = e.target.value;
+                        props.set_data_tax_vendor(dataFormTaxVendor);
+                        formik.setFieldValue("description", e.target.value);
+                      }}
                     ></textarea>
                   </div>
                   {formik.touched.tax_date && formik.errors.tax_date ? (
@@ -849,4 +913,4 @@ function ContractTaxPage(props) {
     </React.Fragment>
   );
 }
-export default injectIntl(connect(null, null)(ContractTaxPage));
+export default injectIntl(connect(null, invoice.actions)(ContractTaxPage));

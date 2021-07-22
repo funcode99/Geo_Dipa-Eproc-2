@@ -40,11 +40,9 @@ function ItemContractFormVerification(props) {
   const [dataDocHardCopy, setDataDocHardCopy] = useState([]);
   const [dataBillingHardCopy, setDataBillingHardCopy] = useState([]);
   const [dataDeliverables, setDataDeliverables] = useState([]);
-  const [loadingLoadData, setLoadingLoadData] = useState({
-    billingHardCopy: true,
-    deliverableHardCopy: true,
-    contractHardCopy: true,
-  });
+  const [billingHardCopy, setBillingHardCopy] = useState(true);
+  const [deliverableHardCopy, setDeliverableHardCopy] = useState(true);
+  const [contractHardCopy, setContractHardCopy] = useState(true);
   const [Toast, setToast] = useToast();
 
   const contract_id = props.match.params.contract;
@@ -55,7 +53,7 @@ function ItemContractFormVerification(props) {
     getDeliverableInInvoive(termin)
       .then((result) => {
         setDataDeliverables(result.data.data.task_documents);
-        setLoadingLoadData({ ...loadingLoadData, deliverableHardCopy: false });
+        setDeliverableHardCopy(false);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -74,9 +72,7 @@ function ItemContractFormVerification(props) {
     getListDocSoftCopy(contract_id, termin)
       .then((result) => {
         setDataDocHardCopy(result.data.data);
-        var loadingLoadDatas = loadingLoadData;
-        loadingLoadDatas.contractHardCopy = false;
-        setLoadingLoadData(loadingLoadDatas);
+        setContractHardCopy(false);
       })
       .catch((err) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -87,9 +83,7 @@ function ItemContractFormVerification(props) {
     getHardcopyBillingDocument(termin)
       .then((result) => {
         setDataBillingHardCopy(result.data.data);
-        var loadingLoadDatas = loadingLoadData;
-        loadingLoadDatas.billingHardCopy = false;
-        setLoadingLoadData(loadingLoadDatas);
+        setBillingHardCopy(false);
       })
       .catch((err) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -122,14 +116,10 @@ function ItemContractFormVerification(props) {
               onClick={print}
               className="btn btn-sm btn-primary"
               disabled={
-                loadingLoadData.billingHardCopy ||
-                loadingLoadData.deliverableHardCopy ||
-                loadingLoadData.contractHardCopy
+                billingHardCopy || deliverableHardCopy || contractHardCopy
               }
             >
-              {loadingLoadData.billingHardCopy ||
-              loadingLoadData.deliverableHardCopy ||
-              loadingLoadData.contractHardCopy ? (
+              {billingHardCopy || deliverableHardCopy || contractHardCopy ? (
                 <i className="fas fa-spinner fa-pulse px-1"></i>
               ) : (
                 <i className="fas fa-print"></i>

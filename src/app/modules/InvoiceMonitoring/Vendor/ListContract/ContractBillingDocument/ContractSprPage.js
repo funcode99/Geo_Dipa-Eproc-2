@@ -35,6 +35,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
+import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 
 function ContractSprPage(props) {
   const { intl, classes, supportedFormats, progressTermin } = props;
@@ -106,6 +107,10 @@ function ContractSprPage(props) {
 
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+  let dataFormSprVendor = useSelector(
+    (state) => state.invoiceMonitoring.dataSprVendor,
     shallowEqual
   );
   // const vendor_id = useSelector((state) => state.auth.user.data.vendor_id, shallowEqual);
@@ -293,6 +298,32 @@ function ContractSprPage(props) {
     getSpp(contract_id, termin)
       .then((response) => {
         if (!response["data"]["data"]) {
+          formik.setFieldValue(
+            "spr_no",
+            dataFormSprVendor.spr_no ? dataFormSprVendor.spr_no : ""
+          );
+          formik.setFieldValue(
+            "spr_date",
+            dataFormSprVendor.spr_date
+              ? window
+                  .moment(new Date(dataFormSprVendor.spr_date))
+                  .format("YYYY-MM-DD")
+              : ""
+          );
+          formik.setFieldValue(
+            "description",
+            dataFormSprVendor.description ? dataFormSprVendor.description : ""
+          );
+          setSppData({
+            ...sppData,
+            spr_no: dataFormSprVendor.spr_no ? dataFormSprVendor.spr_no : "",
+            spr_date: dataFormSprVendor.spr_date
+              ? dataFormSprVendor.spr_date
+              : "",
+            description: dataFormSprVendor.description
+              ? dataFormSprVendor.description
+              : "",
+          });
           setSppStatus(false);
         } else {
           getHistorySppData(response["data"]["data"]["id"]);
@@ -311,6 +342,10 @@ function ContractSprPage(props) {
             formik.setFieldValue(
               "spr_date",
               response["data"]["data"]["spr_date"]
+                ? window
+                    .moment(new Date(response["data"]["data"]["spr_date"]))
+                    .format("YYYY-MM-DD")
+                : ""
             );
             formik.setFieldValue(
               "description",
@@ -839,8 +874,12 @@ function ContractSprPage(props) {
                       className="form-control"
                       id="numberSpp"
                       disabled={loading || sppStatus}
-                      defaultValue={sppData.spr_no}
                       {...formik.getFieldProps("spr_no")}
+                      onChange={(e) => {
+                        dataFormSprVendor.spr_no = e.target.value;
+                        props.set_data_spr_vendor(dataFormSprVendor);
+                        formik.setFieldValue("spr_no", e.target.value);
+                      }}
                     />
                   </div>
                   {formik.touched.spr_no && formik.errors.spr_no ? (
@@ -858,9 +897,20 @@ function ContractSprPage(props) {
                       type="date"
                       className="form-control"
                       id="dateSpp"
-                      defaultValue={sppData.spr_date}
                       disabled={loading || sppStatus}
-                      onChange={(e) => handleDate(e)}
+                      {...formik.getFieldProps("spr_date")}
+                      onChange={(e) => {
+                        dataFormSprVendor.spr_date = window
+                          .moment(new Date(e.target.value))
+                          .format("YYYY-MM-DD");
+                        props.set_data_spr_vendor(dataFormSprVendor);
+                        formik.setFieldValue(
+                          "spr_date",
+                          window
+                            .moment(new Date(e.target.value))
+                            .format("YYYY-MM-DD")
+                        );
+                      }}
                     />
                   </div>
                   {formik.touched.spr_date && formik.errors.spr_date ? (
@@ -881,6 +931,11 @@ function ContractSprPage(props) {
                       id="note"
                       disabled={loading || sppStatus}
                       {...formik.getFieldProps("description")}
+                      onChange={(e) => {
+                        dataFormSprVendor.description = e.target.value;
+                        props.set_data_spr_vendor(dataFormSprVendor);
+                        formik.setFieldValue("description", e.target.value);
+                      }}
                     ></textarea>
                   </div>
                   {formik.touched.description && formik.errors.description ? (
@@ -1314,4 +1369,4 @@ function ContractSprPage(props) {
     </React.Fragment>
   );
 }
-export default injectIntl(connect(null, null)(ContractSprPage));
+export default injectIntl(connect(null, invoice.actions)(ContractSprPage));
