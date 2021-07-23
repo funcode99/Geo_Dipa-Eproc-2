@@ -317,6 +317,25 @@ const DeliveryOrder = ({
     return result;
   };
 
+  const createItemForm = (arrItems) => {
+    let temp = [...arrItems];
+    let result = [];
+    temp.forEach((el) => {
+      let objData = {};
+      if (el?.approve_status?.code !== "waiting") {
+        objData = {
+          name: el?.item?.desc,
+          qty: el?.qty,
+          qty_approved: el?.qty_approved,
+          approve_status: el?.approve_status?.name,
+          reject_text: el?.reject_text,
+        };
+      }
+      result.push(objData);
+    });
+    return result;
+  };
+
   const handleAction = (type, data) => {
     // console.log(`type`, type);
     // console.log(`data`, data);
@@ -352,10 +371,17 @@ const DeliveryOrder = ({
         break;
 
       case "confirm":
-        const dataArr = processingData(
-          data?.task_delivery_items,
-          Object.values(itemForm)
-        );
+        let dataArr = [];
+
+        if (Object.keys(itemForm).length === 0) {
+          dataArr = createItemForm(data?.task_delivery_items);
+        } else {
+          dataArr = processingData(
+            data?.task_delivery_items,
+            Object.values(itemForm)
+          );
+        }
+
         setTimeout(() => {
           handleVisible("confirm", data, dataArr);
           submitItemRef.current.open();
