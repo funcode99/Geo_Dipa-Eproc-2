@@ -170,37 +170,52 @@ const BastPage = ({
 
   const _handleSubmit = (data) => {
     // console.log(`data`, data);
-    handleLoading("post", true);
     let params = {};
+    let url = "";
     switch (status) {
       case "vendor":
+        url = `delivery/task-news/${contract?.id}/bast`;
         params = {
-          url: `delivery/task-news/${contract?.id}/bast`,
+          // url: `delivery/task-news/${contract?.id}/bast`,
           no: data.nomor_bast,
           date: data.tanggal_bast,
         };
         break;
       case "client":
+        url = `delivery/task-news/${contract?.news?.id}/review`;
         params = {
-          url: `delivery/task-news/${contract?.news?.id}/review`,
+          // url: `delivery/task-news/${contract?.news?.id}/review`,
           review_text: data.hasil_pekerjaan,
         };
         break;
       default:
         break;
     }
-    // console.log(`params`, params);
-    handleLoading("post", true);
 
-    deliveryMonitoring
-      .postCreateBAST(params)
-      .then(handleSuccess)
-      .catch(handleError)
-      .finally(() => {
-        // setTimeout(() => {
-        handleLoading("post", false);
-        // }, 3000);
-      });
+    fetchApi({
+      key: keys.submit,
+      type: "post",
+      params,
+      url,
+      onSuccess: (res) => {
+        // handleLoading("get", false);
+        // console.log(`res`, res);
+        fetchData();
+      },
+      onFail: (err) => console.log("err baru", err),
+    });
+    // console.log(`params`, params);
+    // handleLoading("post", true);
+
+    // deliveryMonitoring
+    //   .postCreateBAST(params)
+    //   .then(handleSuccess)
+    //   .catch(handleError)
+    //   .finally(() => {
+    //     // setTimeout(() => {
+    //     handleLoading("post", false);
+    //     // }, 3000);
+    //   });
   };
 
   React.useEffect(() => {
@@ -349,7 +364,7 @@ const BastPage = ({
             // ref={formikRef}
             onSubmit={_handleSubmit}
             // formData={formData3}
-            loading={loadings.post}
+            loading={loadings_sg.submit}
             initial={initialValues}
             validation={isClient ? validationClient : validationVendor}
             fieldProps={{
@@ -431,22 +446,26 @@ const BastPage = ({
                 case 2:
                   return (
                     <div className="mt-2">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={"mr-3"}
-                        onClick={() => handleAction("approve")}
-                      >
-                        <FormattedMessage id="TITLE.APPROVE" />
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={"bg-danger text-white"}
-                        onClick={() => handleAction("reject")}
-                      >
-                        <FormattedMessage id="TITLE.REJECT" />
-                      </Button>
+                      {isClient && (
+                        <React.Fragment>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            className={"mr-3"}
+                            onClick={() => handleAction("approve")}
+                          >
+                            <FormattedMessage id="TITLE.APPROVE" />
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            className={"bg-danger text-white"}
+                            onClick={() => handleAction("reject")}
+                          >
+                            <FormattedMessage id="TITLE.REJECT" />
+                          </Button>
+                        </React.Fragment>
+                      )}
                     </div>
                   );
 
@@ -529,6 +548,7 @@ const keys = {
   upload_s: "upload-signed",
   approve_s: "approve-signed",
   fetch: "get-data-contract-by-id",
+  submit: "submit_news_bast",
 };
 const mapState = (state) => {
   const { auth, deliveryMonitoring } = state;
@@ -540,6 +560,7 @@ const mapState = (state) => {
       upload_s: getLoading(state, keys.upload_s),
       approve_s: getLoading(state, keys.approve_s),
       fetch: getLoading(state, keys.fetch),
+      submit: getLoading(state, keys.submit),
     },
   };
 };

@@ -1,4 +1,4 @@
-import Axios from "axios";
+import axios from "axios";
 import _ from "lodash";
 
 const apiHelper = {
@@ -14,19 +14,19 @@ const apiHelper = {
     console.log(`===>>>url`, url, params, type);
     switch (type) {
       case "post":
-        return Axios.post(url, params);
+        return axios.post(url, params);
       case "postForm":
         let newParams = new FormData();
         Object.keys(params).forEach((element) => {
           newParams.append(element, params[element]);
         });
-        return Axios.post(url, newParams);
+        return axios.post(url, newParams);
       case "get":
-        return Axios.get(url);
+        return axios.get(url);
       case "put":
-        return Axios.put(url, params);
+        return axios.put(url, params);
       case "delete":
-        return Axios.delete(url);
+        return axios.delete(url);
       default:
         throw "please set type !";
     }

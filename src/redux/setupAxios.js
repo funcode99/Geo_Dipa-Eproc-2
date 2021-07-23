@@ -21,8 +21,8 @@ export default function setupAxios(axios, store) {
 
   axios.interceptors.response.use(
     function(response) {
-    // console.log("respons:", response );
-    return response;
+      // console.log("respons:", response );
+      return response;
     },
     function(error) {
       if (
@@ -30,25 +30,25 @@ export default function setupAxios(axios, store) {
         (error.response?.data.message === "TokenExpiredError" ||
           error.response?.data.message === "UNAUTORIZED")
       ) {
-      var title = "";
-      var message = "";
-      var button = "";
+        var title = "";
+        var message = "";
+        var button = "";
         if (
           localStorage.getItem("i18nConfig") &&
           JSON.parse(localStorage.getItem("i18nConfig")).selectedLang === "id"
         ) {
-        title = "Sesi Masuk";
-        message = "Waktu sesi Anda sudah berakhir. Silakan masuk lagi !!";
-        button = "Keluar";
+          title = "Sesi Masuk";
+          message = "Waktu sesi Anda sudah berakhir. Silakan masuk lagi !!";
+          button = "Keluar";
         } else {
-        title = "Session Log In";
-        message = "Your session time is over. Please sign in again !!";
-        button = "Sign Out";
+          title = "Session Log In";
+          message = "Your session time is over. Please sign in again !!";
+          button = "Sign Out";
+        }
+        MODAL.showSession(title, message, button);
       }
-      MODAL.showSession(title, message, button);
-    }
       console.log("Error interceptors.response => ", error);
-    return Promise.reject(error);
+      return Promise.reject(error);
     }
   );
 }

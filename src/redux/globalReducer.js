@@ -83,10 +83,20 @@ export function* saga() {
       }
     } catch (err) {
       console.log(`err`, err);
-      if (typeof onFail === "function") onFail(err);
-      MODAL.showSnackbar(
-        err?.message ?? "Error API, please contact developer!"
-      );
+      if (
+        err.response?.code !== 400 &&
+        err.response?.data.message !== "TokenExpiredError"
+      ) {
+        if (typeof onFail === "function") onFail(err.response?.data);
+        MODAL.showSnackbar(
+          err.response?.data?.message ?? "Error API, please contact developer!"
+        );
+      } else {
+        if (typeof onFail === "function") onFail(err);
+        MODAL.showSnackbar(
+          err?.message ?? "Error API, please contact developer!"
+        );
+      }
     }
     // yield delay(1000);
     if (key) yield put(set_loading_done_rd(key));

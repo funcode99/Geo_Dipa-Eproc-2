@@ -155,6 +155,7 @@ const BappPage = ({
 
   const handleError = React.useCallback(
     (err) => {
+      console.log(`err lama`, err);
       if (
         err.response?.code !== 400 &&
         err.response?.data.message !== "TokenExpiredError"
@@ -186,7 +187,8 @@ const BappPage = ({
     let dataArr = data.map((item, id) => ({
       no: (id += 1),
       user: item?.vendor?.username || item?.user?.username,
-      date: formatDateWTime(new Date(item?.createdAt)),
+      date: formatDate(new Date(item?.createdAt)),
+      // date: formatDateWTime(new Date(item?.createdAt)),
       activity: item?.description,
     }));
     setContent(dataArr);
@@ -244,11 +246,13 @@ const BappPage = ({
   );
 
   const _handleSubmit = (data) => {
-    handleLoading("submit", true);
+    // handleLoading("submit", true);
 
     let params = {};
+    let url = ``;
     switch (status) {
       case "vendor":
+        url = `delivery/task-news/${taskId}`;
         params = {
           url: `delivery/task-news/${taskId}`,
           no: data.nomor_bapp,
@@ -256,6 +260,7 @@ const BappPage = ({
         };
         break;
       case "client":
+        url = `delivery/task-news/${taskNews?.id}/review`;
         params = {
           url: `delivery/task-news/${taskNews?.id}/review`,
           review_text: data.hasil_pekerjaan,
@@ -265,11 +270,24 @@ const BappPage = ({
         break;
     }
 
-    deliveryMonitoring
-      .postCreateBAPP(params)
-      .then((res) => handleSuccess(res))
-      .catch((err) => handleError(err))
-      .finally(handleLoading("submit", false));
+    fetchApi({
+      key: keys.submit,
+      type: "post",
+      params,
+      url,
+      onSuccess: (res) => {
+        // handleLoading("get", false);
+        console.log(`res`, res);
+        fetchData({ visible: true, message: res?.data?.message });
+      },
+      onFail: (err) => console.log("err baru", err),
+    });
+
+    // deliveryMonitoring
+    //   .postCreateBAPP(params)
+    //   .then((res) => handleSuccess(res))
+    //   .catch((err) => handleError(err))
+    //   .finally(handleLoading("submit", false));
   };
 
   React.useEffect(() => {
@@ -460,7 +478,7 @@ const BappPage = ({
                   : !allowedVendor.includes(item)
               ),
             }}
-            loading={loading.submit}
+            loading={loadings.submit}
             disabledButton={isDisabled}
           />
         </CardBody>
@@ -520,22 +538,26 @@ const BappPage = ({
                 case 2:
                   return (
                     <div className="mt-2">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={"mr-3"}
-                        onClick={() => handleAction("approve")}
-                      >
-                        <FormattedMessage id="TITLE.APPROVE" />
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={"bg-danger text-white"}
-                        onClick={() => handleAction("reject")}
-                      >
-                        <FormattedMessage id="TITLE.REJECT" />
-                      </Button>
+                      {isClient && (
+                        <React.Fragment>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            className={"mr-3"}
+                            onClick={() => handleAction("approve")}
+                          >
+                            <FormattedMessage id="TITLE.APPROVE" />
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            className={"bg-danger text-white"}
+                            onClick={() => handleAction("reject")}
+                          >
+                            <FormattedMessage id="TITLE.REJECT" />
+                          </Button>
+                        </React.Fragment>
+                      )}
                     </div>
                   );
 
@@ -591,6 +613,7 @@ const keys = {
   upload_s: "upload-signed",
   approve_s: "approve-signed",
   fetch: "fetch_news_bapp",
+  submit: "submit_news_bapp",
 };
 
 const mapState = (state) => {
@@ -603,6 +626,8 @@ const mapState = (state) => {
     loadings: {
       upload_s: getLoading(state, keys.upload_s),
       approve_s: getLoading(state, keys.approve_s),
+      fetch: getLoading(state, keys.fetch),
+      submit: getLoading(state, keys.submit),
     },
   };
 };
