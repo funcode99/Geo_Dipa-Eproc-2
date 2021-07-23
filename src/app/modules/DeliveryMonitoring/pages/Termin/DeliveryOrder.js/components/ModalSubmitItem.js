@@ -1,4 +1,6 @@
 import {
+  Checkbox,
+  FormControlLabel,
   Table,
   TableBody,
   TableCell,
@@ -56,61 +58,77 @@ const ModalSubmitItem = ({
   // itemForm = [],
   ...other
 }) => {
+  const [checked, setChecked] = React.useState(false);
+
+  const handleCheck = () => {
+    setChecked((prev) => !prev);
+  };
+
   return (
-    <React.Fragment>
-      <DialogGlobal
-        ref={innerRef}
-        visible={visible}
-        title={<FormattedMessage id="TITLE.APPROVAL_DELIVERY_ORDER_ITEMS" />}
-        textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
-        textNo={<FormattedMessage id="BUTTON.CANCEL" />}
-        onYes={onSubmit}
-        onNo={onClose}
-        loading={loading}
-        btnNoProps={{
-          className: "bg-secondary text-black",
-        }}
+    <DialogGlobal
+      ref={innerRef}
+      visible={visible}
+      title={<FormattedMessage id="TITLE.APPROVAL_DELIVERY_ORDER_ITEMS" />}
+      textYes={<FormattedMessage id="BUTTON.SUBMIT" />}
+      textNo={<FormattedMessage id="BUTTON.CANCEL" />}
+      onYes={onSubmit}
+      loading={loading}
+      isCancel={false}
+      btnYesProps={{
+        className: checked ? "bg-primary text-light" : "bg-secondary",
+        disabled: !checked,
+      }}
+    >
+      <Table
+        // style={{ width: 450 }}
+        size="small"
+        className="mb-3"
       >
-        <Table
-          // style={{ width: 450 }}
-          size="small"
-          className="mb-3"
-        >
-          {/* <colgroup>
+        {/* <colgroup>
           <col width="50px" />
           <col width="200px" />
           <col width="50px" />
         </colgroup> */}
-          <TableHead>
-            <TableRow>
-              {tHeadSubmitItems.map((item, index) => (
-                <TableCell
-                  key={index}
-                  // align={index > 1 ? "right" : "left"}
-                >
-                  {item}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{(index += 1)}</TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.qty}</TableCell>
-                <TableCell>{item.qty_approved}</TableCell>
-                <TableCell>{item.approve_status}</TableCell>
-                <TableCell>{item.reject_text}</TableCell>
-              </TableRow>
+        <TableHead>
+          <TableRow>
+            {tHeadSubmitItems.map((item, index) => (
+              <TableCell
+                key={index}
+                // align={index > 1 ? "right" : "left"}
+              >
+                {item}
+              </TableCell>
             ))}
-          </TableBody>
-        </Table>
-        <h4 className="text-center mt-5">
-          <FormattedMessage id="MESSAGE.DATA_IS_CORRECT" />
-        </h4>
-      </DialogGlobal>
-    </React.Fragment>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map((item, index) => (
+            <TableRow key={index}>
+              <TableCell>{(index += 1)}</TableCell>
+              <TableCell>{item.name}</TableCell>
+              <TableCell>{item.qty}</TableCell>
+              <TableCell>{item.qty_approved}</TableCell>
+              <TableCell>{item.approve_status}</TableCell>
+              <TableCell>{item.reject_text}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <FormControlLabel
+        className="mt-3"
+        control={
+          <Checkbox
+            checked={checked}
+            onChange={handleCheck}
+            name="checkedB"
+            color="primary"
+          />
+        }
+        label={
+          <FormattedMessage id="TITLE.I_AGREE_TO_THE_DELIVERY_OF_THESE_ITEMS" />
+        }
+      />
+    </DialogGlobal>
   );
 };
 

@@ -105,7 +105,7 @@ const DeliveryOrder = ({
   const [isUpdate, setIsUpdate] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const isVendor = status === "vendor";
-  const excludeAction = isVendor ? ["change_status"] : ["update", "delete"];
+  const excludeAction = isVendor ? [""] : ["update", "delete"];
   const [dataOrderItem, setDataOrderItem] = React.useState({});
   const [itemForm, setItemForm] = React.useState({});
   const submitItemRef = React.useRef();
@@ -124,8 +124,6 @@ const DeliveryOrder = ({
     // } else {
     // if (dataOrderItem !== {}) setDataOrderItem({});
     if (key === "confirm") {
-      console.log(`key`, key);
-      console.log(`open`, open);
       setOpen((prev) => ({
         ...prev,
         [key]: state !== undefined ? state : !prev[key],
@@ -321,7 +319,7 @@ const DeliveryOrder = ({
 
   const handleAction = (type, data) => {
     // console.log(`type`, type);
-    console.log(`data`, data);
+    // console.log(`data`, data);
     switch (type) {
       case "create":
         setIsUpdate(false);
@@ -358,8 +356,10 @@ const DeliveryOrder = ({
           data?.task_delivery_items,
           Object.values(itemForm)
         );
-        handleVisible("confirm", data, dataArr);
-        submitItemRef.current.open();
+        setTimeout(() => {
+          handleVisible("confirm", data, dataArr);
+          submitItemRef.current.open();
+        }, 200);
         break;
 
       default:
@@ -382,6 +382,7 @@ const DeliveryOrder = ({
             history: item?.task_delivery_histories,
             action: (
               <BtnAction
+                isVendor={isVendor}
                 status={item?.approve_status?.code}
                 label="TITLE.MORE"
                 data={item}
@@ -394,8 +395,12 @@ const DeliveryOrder = ({
                     type: "detail",
                   },
                   {
-                    label: "TITLE.CHANGE_ITEM_STATUS",
-                    icon: "fas fa-edit text-primary",
+                    label: isVendor
+                      ? "TITLE.DETAIL_ITEMS"
+                      : "TITLE.CHANGE_ITEM_STATUS",
+                    icon: isVendor
+                      ? "fas fa-eye text-grey"
+                      : "fas fa-edit text-primary",
                     type: "change_status",
                   },
                   {
@@ -461,11 +466,6 @@ const DeliveryOrder = ({
         innerRef={deleteRef}
         visible={open.delete}
         onClose={() => handleVisible("delete", {})}
-        // title={<FormattedMessage id="TITLE.MODAL_DELETE.TITLE" />}
-        // subTitle={<FormattedMessage id="TITLE.MODAL_DELETE.SUBTITLE" />}
-        // textYes={<FormattedMessage id="BUTTON.DELETE" />}
-        // textNo={<FormattedMessage id="BUTTON.CANCEL" />}
-        // submitColor="danger"
         onSubmit={() => handleDelete()}
         loading={loadings.delete}
       />
@@ -539,6 +539,7 @@ const DeliveryOrder = ({
           options={options}
           setItem={setItemForm}
           handleAction={handleAction}
+          isVendor={isVendor}
           // handleSubmit={() => handleAction("confirm", null)}
         />
       }
