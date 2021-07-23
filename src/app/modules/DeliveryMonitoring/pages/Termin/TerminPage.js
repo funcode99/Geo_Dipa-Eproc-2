@@ -35,7 +35,7 @@ const keys = {
   task_service_and_item: "task_service_and_item",
 };
 
-const TerminPage = ({ items, fetch_api_sg, loadings }) => {
+const TerminPage = ({ items, fetch_api_sg, loadings, dataBarang }) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
   const [stepperProg, setStepperProg] = React.useState([]);
@@ -50,7 +50,17 @@ const TerminPage = ({ items, fetch_api_sg, loadings }) => {
   );
   const history = useHistory();
   const { task_id } = useParams();
-  const isItemExists = Array.isArray(items) && items.length > 0;
+
+  const checkDataBarang = () => {
+    const temp = [...dataBarang];
+    const find = temp?.find((el) => el.checked === true);
+
+    if (find) return true;
+    if (!find) return false;
+  };
+
+  const isItemExists =
+    Array.isArray(items) && items.length > 0 && checkDataBarang();
 
   const TabLists = React.useMemo(
     () => [
@@ -256,6 +266,7 @@ const TerminPage = ({ items, fetch_api_sg, loadings }) => {
 
 const mapState = ({ deliveryMonitoring }) => ({
   items: deliveryMonitoring.dataContractById?.items,
+  dataBarang: deliveryMonitoring.dataBarang,
 });
 
 export default connect(mapState, { fetch_api_sg })(TerminPage);
