@@ -112,6 +112,7 @@ const DetailPage = ({
   const submitRef = React.useRef();
   const deleteRef = React.useRef();
   const approveRef = React.useRef();
+  const rejectRef = React.useRef();
 
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
@@ -245,7 +246,8 @@ const DetailPage = ({
           break;
         case "reject":
           console.log(`type`, type, data);
-          MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
+          // MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
+          rejectRef.current.open(data.name);
           break;
         default:
           break;
@@ -407,6 +409,7 @@ const DetailPage = ({
       />
 
       <ModalApproveTermin ref={approveRef} />
+      <ModalApproveTermin ref={rejectRef} isReject={true} />
 
       <ModalDelete
         innerRef={deleteRef}
