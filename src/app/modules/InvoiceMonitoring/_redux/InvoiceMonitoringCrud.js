@@ -313,6 +313,16 @@ export async function createTerminProgress(data) {
 }
 export async function getProgressTypes() {
   return axios.get(`/invoice/get_all_progress_types/`);
-}export async function getRoutingSlip(id) {
+}
+export async function getRoutingSlip(id) {
   return axios.get(`/invoice/get_routing_slip/${id}`);
+}
+export async function getListMismatch(contract_id, term) {
+  return axios.get(`invoice/get_mismatch_list/${contract_id}/${term}`);
+}
+export async function getListMailTo() {
+  return axios.get(`invoice/get_mail_to`);
+}
+export async function saveMismatch(data) {
+  return axios.post(`invoice/save_mismatch`, data);
 }
