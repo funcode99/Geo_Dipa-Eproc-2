@@ -792,13 +792,18 @@ function ContractHardCopyDoc(props) {
                             : ""}
                         </TableCell>
                         <TableCell>
-                          {item.softcopy_state === null
+                          <StatusRemarks
+                            status={
+                              item.softcopy_state === null
                             ? "WAITING SOFTCOPY APPROVED"
                             : item.hardcopy_state === null
                               ? "WAITING TO APPROVE"
                               : item.hardcopy_state === "REJECTED"
                                 ? "REJECTED"
-                                : "APPROVED"}
+                                    : "APPROVED"
+                            }
+                            remarks={item.hardcopy_state === "REJECTED" ? item?.hardcopy_rejected_remark : ''}
+                          />
                         </TableCell>
                         <TableCell>
                           {item.hardcopy_state === "APPROVED"
@@ -806,11 +811,12 @@ function ContractHardCopyDoc(props) {
                             : null}
                         </TableCell>
                         <TableCell>
-                          {dataUser?.is_finance &&
-                            (item.hardcopy_state === null ||
-                              item.hardcopy_state === "REJECTED") &&
-                            item.softcopy_state !== null &&
-                            progressTermin?.ident_name === "HARDCOPY" && (
+                          {
+                            dataUser?.is_finance &&
+                            (item.hardcopy_state === null || item.hardcopy_state === "REJECTED") &&
+                            (item.softcopy_state !== null) &&
+                            progressTermin?.ident_name === "HARDCOPY" &&
+                            (
                               <ButtonAction
                                 data={item}
                                 handleAction={handleAction}
@@ -906,10 +912,8 @@ function ContractHardCopyDoc(props) {
                                               ),
                                             <StatusRemarks
                                               status={
-                                                  els?.document_monitoring
-                                                    .hardcopy_state !== null
-                                                    ? els?.document_monitoring
-                                                        .hardcopy_state
+                                                els?.document_monitoring.hardcopy_state !== null
+                                                  ? els?.document_monitoring.hardcopy_state
                                                   : "WAITING TO APPROVED"
                                               }
                                             />,
@@ -963,13 +967,9 @@ function ContractHardCopyDoc(props) {
                                   formatDate(new Date(el?.due_date)),
                                   <StatusRemarks
                                     status={
-                                            el?.document_status?.name ===
-                                              "APPROVED" &&
-                                        (el?.document_monitoring === null ||
-                                              el?.document_monitoring ===
-                                                "PENDING")
-                                        ? "WAITING TO APPROVE"
-                                        : el?.document_status?.name
+                                          el?.document_monitoring.hardcopy_state !== null
+                                            ? el?.document_monitoring.hardcopy_state
+                                            : "WAITING TO APPROVED"
                                     }
                                     remarks={el?.remarks_status}
                                   />,
@@ -977,16 +977,9 @@ function ContractHardCopyDoc(props) {
                                   <BtnLihat url={el?.url} />,
                                   el?.remarks,
                                   el?.url &&
-                                  (el.document_monitoring === null ||
-                                            (el.document_monitoring
-                                              ?.softcopy_state !== "REJECTED" &&
-                                              el.document_monitoring
-                                                ?.softcopy_state !==
-                                      "APPROVED")) &&
-                                          el.document_status?.name ===
-                                            "APPROVED" &&
-                                          progressTermin?.ident_name ===
-                                            "HARDCOPY" && (
+                                      (el.document_monitoring?.hardcopy_state === null || el.document_monitoring?.hardcopy_state === "REJECTED") &&
+                                      progressTermin?.ident_name === "HARDCOPY" &&
+                                      (
                                     <ButtonAction
                                       data={el}
                                               handleAction={
@@ -1070,13 +1063,18 @@ function ContractHardCopyDoc(props) {
                             : ""}
                         </TableCell>
                         <TableCell>
-                          {item.softcopy_state === null
+                          <StatusRemarks
+                            status={
+                              item.softcopy_state === null
                             ? "WAITING SOFTCOPY APPROVED"
                             : item.hardcopy_state === null
                               ? "WAITING TO APPROVE"
                               : item.hardcopy_state === "REJECTED"
                                 ? "REJECTED"
-                                : "APPROVED"}
+                                    : "APPROVED"
+                            }
+                            remarks={item.hardcopy_state === "REJECTED" ? item?.hardcopy_rejected_remark : ''}
+                          />
                         </TableCell>
                         <TableCell>
                           {item.hardcopy_state === "APPROVED"
