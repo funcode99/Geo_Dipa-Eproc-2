@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, connect } from "react-redux";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 import { Form, Container } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
@@ -20,7 +20,7 @@ const navLists = [
   { id: "link-barang", label: <FormattedMessage id="SUMMARY.NAV.ITEM" /> },
 ];
 
-const Item = ({ handleClick }) => {
+const Item = ({ handleClick, status }) => {
   const { dataContractById, dataSubmitItems } = useSelector(
     (state) => state.deliveryMonitoring
   );
@@ -29,6 +29,7 @@ const Item = ({ handleClick }) => {
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [loading, setLoading] = React.useState(false);
   const [qtyErrors, setQtyErrors] = React.useState([]);
+  const isClient = status === "client";
 
   const changeChecked = (item) => {
     item.checked = !item.checked;
@@ -309,22 +310,32 @@ const Item = ({ handleClick }) => {
                             <TableCell></TableCell>
                             <TableCell>{item2?.quantity}</TableCell>
                             <TableCell>
-                              <Form.Control
-                                type="number"
-                                size="sm"
-                                min="0.1"
-                                step="0.1"
-                                style={{
-                                  width: 80,
-                                  flex: "none",
-                                }}
-                                max={item2?.qty_available}
-                                disabled={!item2.checked ? true : false}
-                                defaultValue={item2.qty_available}
-                                onChange={(e) =>
-                                  handleInputQty(e.target.value, item2, "jasa")
-                                }
-                              />
+                              {isClient ? (
+                                <Form.Control
+                                  type="number"
+                                  size="sm"
+                                  min="0.1"
+                                  step="0.1"
+                                  style={{
+                                    width: 80,
+                                    flex: "none",
+                                  }}
+                                  max={item2?.qty_available}
+                                  disabled={!item2.checked ? true : false}
+                                  defaultValue={parseFloat(
+                                    item2.qty_available
+                                  ).toFixed(1)}
+                                  onChange={(e) =>
+                                    handleInputQty(
+                                      e.target.value,
+                                      item2,
+                                      "jasa"
+                                    )
+                                  }
+                                />
+                              ) : (
+                                parseFloat(item2.qty_available).toFixed(1)
+                              )}
                               {qtyErrors.find((el) => el === item2.id) && (
                                 <span className="text-danger">
                                   Max qty{" "}
@@ -373,22 +384,28 @@ const Item = ({ handleClick }) => {
                     <TableCell></TableCell>
                     <TableCell>{item?.qty}</TableCell>
                     <TableCell>
-                      <Form.Control
-                        type="number"
-                        size="sm"
-                        min="0.1"
-                        step="0.1"
-                        style={{
-                          width: 80,
-                          flex: "none",
-                        }}
-                        max={item?.qty_available}
-                        disabled={!item.checked ? true : false}
-                        defaultValue={item.qty_available}
-                        onChange={(e) =>
-                          handleInputQty(e.target.value, item, "barang")
-                        }
-                      />
+                      {isClient ? (
+                        <Form.Control
+                          type="number"
+                          size="sm"
+                          min="0.1"
+                          step="0.1"
+                          style={{
+                            width: 80,
+                            flex: "none",
+                          }}
+                          max={item?.qty_available}
+                          disabled={!item.checked ? true : false}
+                          defaultValue={parseFloat(item.qty_available).toFixed(
+                            1
+                          )}
+                          onChange={(e) =>
+                            handleInputQty(e.target.value, item, "barang")
+                          }
+                        />
+                      ) : (
+                        parseFloat(item.qty_available).toFixed(1)
+                      )}
                       {qtyErrors.find((el) => el === item.id) ? (
                         <span className="text-danger">
                           Max qty {parseFloat(item.qty_available).toFixed(1)}
@@ -509,23 +526,31 @@ const Item = ({ handleClick }) => {
             </TableItem>
           )} */}
 
-          <div className="d-flex justify-content-end w-100 mt-4">
-            <Button
-              variant="contained"
-              color="secondary"
-              size="medium"
-              onClick={handleClick}
-            >
-              <span className="mr-1">
-                <FormattedMessage id="BUTTON.SUBMIT" />
-              </span>
-              <Send />
-            </Button>
-          </div>
+          {isClient && (
+            <div className="d-flex justify-content-end w-100 mt-4">
+              <Button
+                variant="contained"
+                color="secondary"
+                size="medium"
+                onClick={handleClick}
+              >
+                <span className="mr-1">
+                  <FormattedMessage id="BUTTON.SUBMIT" />
+                </span>
+                <Send />
+              </Button>
+            </div>
+          )}
         </ExpansionBox>
       </Container>
     </React.Fragment>
   );
 };
 
-export default Item;
+const mapState = (state) => ({
+  status: state.auth.user.data.status,
+});
+
+const mapDispatch = () => ({});
+
+export default connect(mapState, mapDispatch)(Item);
