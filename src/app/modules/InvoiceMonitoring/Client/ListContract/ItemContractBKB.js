@@ -646,27 +646,75 @@ function ItemContractBKB(props) {
             <div className="row mt-3" style={{ minHeight: 300 }}>
               <div className="col-sm-7 border">
                 <div className="row border-bottom">
-                  <div className="col-sm-5 d-flex justify-content-between">
-                    <span>
+                  <div className="col-sm-12 row">
+                    <span className="col-sm-4">
                       <FormattedMessage id="TITLE.NO_VENDOR" />
                     </span>
-                    <span>:</span>
+                    <span className="col-sm-8">:0000086765</span>
                   </div>
                 </div>
                 <div className="row border-bottom">
-                  <div className="col-sm-5 d-flex justify-content-between">
-                    <span>
+                  <div className="col-sm-12">
+                    <div className="form-group row mb-0">
+                      <label
+                        htmlFor="colFormLabelSm"
+                        className="col-sm-4 col-form-label col-form-label-sm"
+                      >
                       <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
-                    </span>
-                    <span>:</span>
+                      </label>
+                      <div className="col-sm-8 pr-0">
+                        <div className="input-group input-group-sm">
+                          <input
+                            type="text"
+                            className="form-control"
+                            aria-label="Small"
+                            aria-describedby="inputGroup-sizing-sm"
+                            id="colFormLabelSm"
+                          />
+                          <div className="input-group-prepend">
+                            <button
+                              type="button"
+                              className="input-group-text btn btn-sm btn-primary"
+                              id="inputGroup-sizing-sm"
+                            >
+                              Simpan
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="row border-bottom">
-                  <div className="col-sm-5 d-flex justify-content-between">
-                    <span>
+                  <div className="col-sm-12">
+                    <div className="form-group row mb-0">
+                      <label
+                        htmlFor="colFormLabelSm-1"
+                        className="col-sm-4 col-form-label col-form-label-sm"
+                      >
                       <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
-                    </span>
-                    <span>:</span>
+                      </label>
+                      <div className="col-sm-8 pr-0">
+                        <div className="input-group input-group-sm">
+                          <input
+                            type="text"
+                            className="form-control"
+                            aria-label="Small"
+                            aria-describedby="inputGroup-sizing-sm"
+                            id="colFormLabelSm-1"
+                          />
+                          <div className="input-group-prepend">
+                            <button
+                              type="button"
+                              className="input-group-text btn btn-sm btn-primary"
+                              id="inputGroup-sizing-sm"
+                            >
+                              Simpan
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

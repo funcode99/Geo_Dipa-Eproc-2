@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"; // useState
-import { connect } from "react-redux";
+import { connect, useSelector, shallowEqual } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 import Tabs from "../../../../components/tabsCustomV1";
@@ -29,7 +29,10 @@ import { withStyles } from "@material-ui/core/styles";
 import Steppers from "../../../../components/steppersCustom/Steppers";
 import {
   getTerminProgress,
-  getProgressTypes
+  getProgressTypes,
+  getListMismatch,
+  getListMailTo,
+  saveMismatch,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 
@@ -134,6 +137,7 @@ const DialogTitle = withStyles(styles)((props) => {
 const ItemContract = (props) => {
   const { intl } = props;
   const termin = props.match.params.termin;
+  const contract = props.match.params.contract;
   const suhbeader = useSubheader();
   const classes = useStyles();
   const [Toast, setToast] = useToast();
@@ -143,9 +147,16 @@ const ItemContract = (props) => {
   const [dataOneValue, setDataOneValue] = React.useState([]);
   const [dataTwo, setDataTwo] = React.useState([]);
   const [dataTwoValue, setDataTwoValue] = React.useState([]);
+  const [dataDeskripsi, setDataDeskripsi] = React.useState("");
   const [data, setData] = React.useState({});
   const [terminProgress, setTerminProgress] = React.useState(null);
   const [dataProgress, setDataProgress] = React.useState([]);
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+  const [onSubmit, setOnSubmit] = React.useState(false);
+  const [statusSubmit, setStatusSubmit] = React.useState(false);
 
   suhbeader.setTitle(
     intl.formatMessage({
@@ -170,11 +181,21 @@ const ItemContract = (props) => {
       .then((resultTypes) => {
         getTerminProgress(termin)
           .then((result) => {
-            const progress = result.data.data ? result.data.data?.progress_type?.seq : "2"
-            const data = resultTypes.data.data.map(function (row) {
-              return { label: row?.name, status: row.seq < progress ? "COMPLETE" : row.seq === progress ? "ON PROGRESS" : "NO STARTED" }
-            })
-            setDataProgress(data)
+            const progress = result.data.data
+              ? result.data.data?.progress_type?.seq
+              : "2";
+            const data = resultTypes.data.data.map(function(row) {
+              return {
+                label: row?.name,
+                status:
+                  row.seq < progress
+                    ? "COMPLETE"
+                    : row.seq === progress
+                    ? "ON PROGRESS"
+                    : "NO STARTED",
+              };
+            });
+            setDataProgress(data);
             setTerminProgress(result.data.data?.progress_type);
           })
           .catch((error) => {
@@ -186,6 +207,68 @@ const ItemContract = (props) => {
       });
   };
 
+  const getMisMatch = () => {
+    getListMismatch(contract, termin)
+      .then((result) => {
+        console.log("getListMismatch", result);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+    getListMailTo()
+      .then(async (result) => {
+        console.log("getListMailTo", result);
+        if (result.data && result.data.data) {
+          var waiting = new Promise((resolve, reject) => {
+            for (let i = 0; i < result.data.data.length; i++) {
+              var data = result.data.data[i];
+              data.label =
+                data.full_name + " - " + data.code + " - " + data.email;
+              data.value = data.party_id;
+              if (i === result.data.data.length - 1) resolve();
+            }
+          });
+        }
+        await waiting;
+        setDataTwo(result.data?.data);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  const sendMismatch = (e) => {
+    e.preventDefault();
+    setOnSubmit(true);
+    var data = {
+      contract_id: contract,
+      term_id: termin,
+      mismatch_data: dataOneValue,
+      remark: dataDeskripsi,
+      mail_to: dataTwoValue,
+      created_by_id: user_id,
+    };
+    saveMismatch(data)
+      .then((result) => {
+        setStatusSubmit(true);
+        setTimeout(() => {
+          setDialogLeader(false);
+          setOnSubmit(false);
+          setStatusSubmit(false);
+        }, 2000);
+      })
+      .catch((err) => {
+        setOnSubmit(false);
+        setToast(
+          intl.formatMessage({
+            id: "REQ.REQUEST_FAILED",
+          }),
+          5000
+        );
+      });
+  };
+
+  useEffect(getMisMatch, []);
   useEffect(getTerminProgressData, []);
 
   return (
@@ -200,7 +283,7 @@ const ItemContract = (props) => {
         maxWidth="md"
         fullWidth={true}
       >
-        <form noValidate autoComplete="off">
+        <form autoComplete="off" onSubmit={sendMismatch}>
           <DialogTitle
             id="alert-dialog-slide-title"
             onClose={() => {
@@ -233,6 +316,11 @@ const ItemContract = (props) => {
                   cols=""
                   id="inputNote"
                   className="form-control"
+                  value={dataDeskripsi}
+                  onChange={(e) => {
+                    setDataDeskripsi(e.target.value);
+                  }}
+                  required
                 ></textarea>
               </div>
             </div>
@@ -245,6 +333,9 @@ const ItemContract = (props) => {
                   isDisabled={false}
                   options={dataTwo}
                   value={dataTwoValue}
+                  onChange={(e) => {
+                    setDataTwoValue(e);
+                  }}
                   id="toSend"
                 />
               </div>
@@ -253,12 +344,34 @@ const ItemContract = (props) => {
           <DialogActions>
             <button
               className="btn btn-primary"
-              type="button"
-              onClick={() => setDialogLeader(false)}
+              type="submit"
+              disabled={
+                dataTwoValue.length === 0 ||
+                dataOneValue.length === 0 ||
+                onSubmit
+              }
             >
+              {!onSubmit && (
               <span>
-                <FormattedMessage id="TITLE.SEND" />
+                  <FormattedMessage id="TITLE.SAVE" />
               </span>
+              )}
+              {onSubmit &&
+                (statusSubmit && onSubmit ? (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                    </span>
+                    <span className="ml-2 fas fa-check"></span>
+                  </div>
+                ) : (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.WAITING" />
+                    </span>
+                    <span className="ml-2 mr-4 spinner spinner-white"></span>
+                  </div>
+                ))}
             </button>
           </DialogActions>
         </form>
@@ -306,11 +419,41 @@ const ItemContract = (props) => {
           {tabActive === 0 && (
             <ItemContractSummary {...props} getData={getSetData} />
           )}
-          {tabActive === 1 && <ItemContractInvoice {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
-          {tabActive === 2 && <ContractHardCopyDoc {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
-          {tabActive === 3 && <ItemContractBKB {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
-          {tabActive === 4 && <ItemContractFormVerification {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
-          {tabActive === 5 && <ItemContractRoutingSlip {...props} progressTermin={terminProgress} setProgressTermin={setTerminProgress} />}
+          {tabActive === 1 && (
+            <ItemContractInvoice
+              {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+            />
+          )}
+          {tabActive === 2 && (
+            <ContractHardCopyDoc
+              {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+            />
+          )}
+          {tabActive === 3 && (
+            <ItemContractBKB
+              {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+            />
+          )}
+          {tabActive === 4 && (
+            <ItemContractFormVerification
+              {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+            />
+          )}
+          {tabActive === 5 && (
+            <ItemContractRoutingSlip
+              {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+            />
+          )}
         </Container>
       </Paper>
     </Container>

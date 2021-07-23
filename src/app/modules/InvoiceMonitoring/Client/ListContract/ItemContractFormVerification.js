@@ -263,7 +263,11 @@ function ItemContractFormVerification(props) {
                       </span>
                     </div>
                     <div className="col-sm-5 border-bottom">
-                      <span>Note Rejected</span>
+                      <span>
+                        {item.hardcopy_state === "REJECTED"
+                          ? item.hardcopy_rejected_remark
+                          : null}
+                      </span>
                     </div>
                   </div>
                 );
@@ -345,13 +349,16 @@ function ItemContractFormVerification(props) {
                                   </div>
                                   <div className="col-sm-5 border-bottom">
                                     <span>
-                                      {el?.document_monitoring?.hardcopy_history
-                                        .length > 0 &&
+                                      {el?.document_monitoring
+                                        ?.hardcopy_state === "REJECTED"
+                                        ? el?.document_monitoring
+                                            ?.hardcopy_history.length > 0 &&
                                         el?.document_monitoring
                                           ?.hardcopy_history[
                                           el?.document_monitoring
                                             ?.hardcopy_history.length - 1
-                                        ].rejected_re}
+                                          ].rejected_re
+                                        : null}
                                     </span>
                                   </div>
                                 </div>
@@ -403,12 +410,15 @@ function ItemContractFormVerification(props) {
                             </div>
                             <div className="col-sm-5 border-bottom">
                               <span>
-                                {el?.document_monitoring?.hardcopy_history
+                                {el?.document_monitoring?.hardcopy_state ===
+                                "REJECTED"
+                                  ? el?.document_monitoring?.hardcopy_history
                                   .length > 0 &&
                                   el?.document_monitoring?.hardcopy_history[
                                     el?.document_monitoring?.hardcopy_history
                                       .length - 1
-                                  ].rejected_re}
+                                    ].rejected_re
+                                  : null}
                               </span>
                             </div>
                           </div>
@@ -448,7 +458,11 @@ function ItemContractFormVerification(props) {
                       </span>
                     </div>
                     <div className="col-sm-5 border-bottom">
-                      <span>Note Rejected</span>
+                      <span>
+                        {item.hardcopy_state === "REJECTED"
+                          ? item.hardcopy_rejected_remark
+                          : null}
+                      </span>
                     </div>
                   </div>
                 );

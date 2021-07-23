@@ -912,10 +912,21 @@ function ContractHardCopyDoc(props) {
                                               ),
                                             <StatusRemarks
                                               status={
-                                                els?.document_monitoring.hardcopy_state !== null
-                                                  ? els?.document_monitoring.hardcopy_state
+                                                  els?.document_monitoring
+                                                    .hardcopy_state !== null
+                                                    ? els?.document_monitoring
+                                                        .hardcopy_state
                                                   : "WAITING TO APPROVED"
                                               }
+                                                remarks={
+                                                  els?.document_monitoring
+                                                    .hardcopy_state ===
+                                                  "REJECTED"
+                                                    ? els?.document_monitoring
+                                                        .hardcopy_history[0]
+                                                        ?.rejected_re
+                                                    : null
+                                                }
                                             />,
                                               els?.percentage &&
                                                 els?.percentage + "%",
@@ -967,19 +978,35 @@ function ContractHardCopyDoc(props) {
                                   formatDate(new Date(el?.due_date)),
                                   <StatusRemarks
                                     status={
-                                          el?.document_monitoring.hardcopy_state !== null
-                                            ? el?.document_monitoring.hardcopy_state
+                                            el?.document_monitoring
+                                              .hardcopy_state !== null
+                                              ? el?.document_monitoring
+                                                  .hardcopy_state
                                             : "WAITING TO APPROVED"
                                     }
-                                    remarks={el?.remarks_status}
+                                          remarks={
+                                            el?.document_monitoring
+                                              .hardcopy_state === "REJECTED"
+                                              ? el?.document_monitoring
+                                                  .hardcopy_history[0]
+                                                  ?.rejected_re
+                                              : null
+                                          }
                                   />,
                                   el?.percentage && el?.percentage + "%",
                                   <BtnLihat url={el?.url} />,
                                   el?.remarks,
                                   el?.url &&
-                                      (el.document_monitoring?.hardcopy_state === null || el.document_monitoring?.hardcopy_state === "REJECTED") &&
-                                      progressTermin?.ident_name === "HARDCOPY" &&
-                                      (
+                                          (el.document_monitoring === null ||
+                                            (el.document_monitoring
+                                              ?.softcopy_state !== "REJECTED" &&
+                                              el.document_monitoring
+                                                ?.softcopy_state !==
+                                                "APPROVED")) &&
+                                          el.document_status?.name ===
+                                            "APPROVED" &&
+                                          progressTermin?.ident_name ===
+                                            "HARDCOPY" && (
                                     <ButtonAction
                                       data={el}
                                               handleAction={
@@ -1264,7 +1291,11 @@ function ContractHardCopyDoc(props) {
                     </span>
                   </div>
                   <div className="col-sm-5 border-bottom">
-                    <span>Note Rejected</span>
+                    <span>
+                      {item.hardcopy_state === "REJECTED"
+                        ? item.hardcopy_rejected_remark
+                        : null}
+                    </span>
                   </div>
                 </div>
               );
@@ -1346,12 +1377,16 @@ function ContractHardCopyDoc(props) {
                   </div>
                   <div className="col-sm-5 border-bottom">
                                   <span>
-                                    {el?.document_monitoring?.hardcopy_history
-                                      .length > 0 &&
-                                      el?.document_monitoring?.hardcopy_history[
+                                    {el?.document_monitoring?.hardcopy_state ===
+                                    "REJECTED"
+                                      ? el?.document_monitoring
+                                          ?.hardcopy_history.length > 0 &&
+                                        el?.document_monitoring
+                                          ?.hardcopy_history[
                                         el?.document_monitoring
                                           ?.hardcopy_history.length - 1
-                                      ].rejected_re}
+                                        ].rejected_re
+                                      : null}
                                   </span>
                   </div>
                 </div>
@@ -1403,12 +1438,15 @@ function ContractHardCopyDoc(props) {
               </div>
               <div className="col-sm-5 border-bottom">
                             <span>
-                              {el?.document_monitoring?.hardcopy_history
+                              {el?.document_monitoring?.hardcopy_state ===
+                              "REJECTED"
+                                ? el?.document_monitoring?.hardcopy_history
                                 .length > 0 &&
                                 el?.document_monitoring?.hardcopy_history[
                                   el?.document_monitoring?.hardcopy_history
                                     .length - 1
-                                ].rejected_re}
+                                  ].rejected_re
+                                : null}
                             </span>
               </div>
               </div>
@@ -1448,7 +1486,11 @@ function ContractHardCopyDoc(props) {
                     </span>
               </div>
               <div className="col-sm-5 border-bottom">
-                    <span>Note Rejected</span>
+                    <span>
+                      {item.hardcopy_state === "REJECTED"
+                        ? item.hardcopy_rejected_remark
+                        : null}
+                    </span>
               </div>
             </div>
               );
