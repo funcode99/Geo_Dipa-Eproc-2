@@ -270,7 +270,7 @@ const DeliveryOrder = ({
       onSuccess: (res) => {
         getTask();
         submitItemRef.current.close();
-        handleVisible("confirm", {});
+        handleVisible("confirm", {}, []);
       },
     });
   }, [dataOrderItem, itemForm, fetchApi]);
@@ -330,8 +330,8 @@ const DeliveryOrder = ({
           approve_status: el?.approve_status?.name,
           reject_text: el?.reject_text,
         };
+        result.push(objData);
       }
-      result.push(objData);
     });
     return result;
   };
