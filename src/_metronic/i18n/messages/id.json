@@ -571,5 +571,8 @@
   "TITLE.PO_DOCUMENT": "Dokumen PO",
   "TITLE.CHOOSE_PO_DOCUMENT": "Pilih dokumen PO",
   "TITLE.SELECT_CONTRACT_TYPE": "Pilih tipe kontrak",
-  "TITLE.I_APPROVED": "Dengan ini saya menyetujui termin {termTitle}"
+  "TITLE.I_APPROVED": "Dengan ini saya menyetujui termin {termTitle}",
+  "TITLE.I_AGREE_TO_THE_DELIVERY_OF_THESE_ITEMS": "Saya menyetujui pengiriman item-item tersebut.",
+  "TITLE.DETAIL_ITEMS": "Detail items",
+  "TITLE.NO_ITEMS_DELIVERY_ORDER": "Tidak ada item yang dipilih untuk delivery order ini."
 }

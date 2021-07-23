@@ -572,5 +572,8 @@
   "TITLE.PO_DOCUMENT": "PO Document",
   "TITLE.CHOOSE_PO_DOCUMENT": "Choose PO document",
   "TITLE.SELECT_CONTRACT_TYPE": "Select contract type",
-  "TITLE.I_APPROVED": "I approved the {termTitle}"
+  "TITLE.I_APPROVED": "I approved the {termTitle}",
+  "TITLE.I_AGREE_TO_THE_DELIVERY_OF_THESE_ITEMS": "I agree to the delivery of these items.",
+  "TITLE.DETAIL_ITEMS": "Detail items",
+  "TITLE.NO_ITEMS_DELIVERY_ORDER": "No items have been selected for this delivery order."
 }

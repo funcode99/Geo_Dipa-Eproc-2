@@ -29,6 +29,7 @@ export const formData2 = [
     {
       name: "reject_text",
       label: <FormattedMessage id="TITLE.REMARKS" />,
+      readOnly: false,
     },
   ],
   [
