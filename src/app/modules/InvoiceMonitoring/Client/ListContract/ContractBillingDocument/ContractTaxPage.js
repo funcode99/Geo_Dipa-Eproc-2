@@ -251,7 +251,7 @@ function ContractTaxPage(props) {
       contract_id: contract_id,
       term_id: termin,
       softcopy_state: "APPROVED",
-      billing_id: invoiceBillingId,
+      document_id: invoiceBillingId,
       document_no: taxData?.tax_no,
       created_by_id: user_id,
       filename: taxData?.file_name,
