@@ -247,7 +247,7 @@ function ContractSprPage(props) {
       contract_id: contract_id,
       term_id: termin,
       softcopy_state: "APPROVED",
-      billing_id: invoiceBillingId,
+      document_id: invoiceBillingId,
       document_no: sppData?.spr_no,
       created_by_id: user_id,
       filename: sppData?.file_name
@@ -464,7 +464,7 @@ function ContractSprPage(props) {
                       <i
                         className={`fas fa-chevron-left ${
                           pageNumber === 1 ? "" : "text-secondary"
-                        }`}
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -484,7 +484,7 @@ function ContractSprPage(props) {
                       <i
                         className={`fas fa-chevron-right ${
                           pageNumber === numPages ? "" : "text-secondary"
-                        }`}
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -534,7 +534,7 @@ function ContractSprPage(props) {
                       <i
                         className={`fas fa-chevron-left ${
                           pageNumberBank === 1 ? "" : "text-secondary"
-                        }`}
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -556,7 +556,7 @@ function ContractSprPage(props) {
                           pageNumberBank === numPagesBank
                             ? ""
                             : "text-secondary"
-                        }`}
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -659,11 +659,11 @@ function ContractSprPage(props) {
                       :{" "}
                       {modalHistoryData["state"] === "REJECTED"
                         ? moment(
-                            new Date(modalHistoryData["rejected_at"])
-                          ).format("YYYY-MM-DD HH:mm:ss")
+                          new Date(modalHistoryData["rejected_at"])
+                        ).format("YYYY-MM-DD HH:mm:ss")
                         : moment(
-                            new Date(modalHistoryData["approved_at"])
-                          ).format("YYYY-MM-DD HH:mm:ss")}
+                          new Date(modalHistoryData["approved_at"])
+                        ).format("YYYY-MM-DD HH:mm:ss")}
                     </span>
                   </div>
                 </div>
@@ -1096,7 +1096,7 @@ function ContractSprPage(props) {
                         item.state === "REJECTED"
                           ? "text-danger"
                           : "text-success"
-                      } pointer font-weight-bold`}
+                        } pointer font-weight-bold`}
                       onClick={() => handleHistory(index)}
                     >
                       {item.state === "REJECTED" ? (

@@ -494,9 +494,6 @@ function ContractHardCopyDoc(props) {
       deliverables_id: modalReject.data.document_monitoring
         ? modalReject.data.document_monitoring.deliverables_id
         : modalReject.data.deliverables_id,
-      billing_id: modalReject.data.document_monitoring
-        ? modalReject.data.document_monitoring.billing_id
-        : modalReject.data.billing_id,
       document_no: modalReject.data.document_monitoring
         ? modalReject.data.document_monitoring.document_no
         : modalReject.data.document_no,
