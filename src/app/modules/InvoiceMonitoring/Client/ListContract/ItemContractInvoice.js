@@ -454,6 +454,7 @@ function ItemContractInvoice(props) {
     };
     var data_2 = {
       softcopy_approved_by_id: user_id,
+      term_id: termin
     };
     if (modalApproved.data.softcopy_state === null) {
       softcopy_save(data_1)
@@ -521,6 +522,7 @@ function ItemContractInvoice(props) {
     };
     var data_2 = {
       softcopy_approved_by_id: user_id,
+      term_id: termin
     };
     if (modalApproved.data.document_monitoring === null) {
       softcopy_save(data_1)
