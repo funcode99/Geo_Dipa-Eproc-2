@@ -566,5 +566,6 @@
   "TITLE.CHOOSE_FILE": "Pilih File ...",
   "TITLE.CHOOSE_DOCUMENT_FILE": "Pilih file dokumen",
   "TITLE.PAYMENT_RECEIPT": "Tanda Terima Dokumen Pembayaran",
-  "TITLE.ATTACHMENT_DOC": "Lampiran Dokumen"
+  "TITLE.ATTACHMENT_DOC": "Lampiran Dokumen",
+  "MENU.INVOICE_MONITORING.CONTRACT_TROUBLES": "Troubled Contract"
 }
