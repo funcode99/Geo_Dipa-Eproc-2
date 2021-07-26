@@ -4,7 +4,7 @@ import FormBuilder from "../../../../../components/builder/FormBuilder";
 import formData from "./fieldData";
 import validation from "../../../../../service/helper/validationHelper";
 import { object } from "yup";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Dropdown } from "react-bootstrap";
 import TitleField from "../../../../../components/input/TitleField";
 import TableBuilder from "../../../../../components/builder/TableBuilder";
 import { connect } from "react-redux";
@@ -184,7 +184,7 @@ const BappPage = ({
 
   const generateTableContent = (data) => {
     // console.log(`data`, data);
-    let dataArr = data.map((item, id) => ({
+    let dataArr = data?.map((item, id) => ({
       no: (id += 1),
       user: item?.vendor?.username || item?.user?.username,
       date: formatDate(new Date(item?.createdAt)),
@@ -334,6 +334,9 @@ const BappPage = ({
       case "preview":
         openLinkTab(params?.file);
         // window.open(urlHelper.addBaseURL(params?.file), "_blank");
+        break;
+      case "preview_signed":
+        openLinkTab(params?.file_upload);
         break;
       case "skip":
         setStepActive(1);
@@ -524,7 +527,7 @@ const BappPage = ({
                       >
                         <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
                       </Button>
-                      <Button
+                      {/* <Button
                         variant="outlined"
                         color="secondary"
                         className={"ml-2"}
@@ -532,7 +535,54 @@ const BappPage = ({
                         disabled={taskNews ? false : true}
                       >
                         <FormattedMessage id="TITLE.PREVIEW" />
-                      </Button>
+                      </Button> */}
+                      <Dropdown
+                        className="dropdown-inline ml-2"
+                        drop="down"
+                        alignRight
+                      >
+                        <Dropdown.Toggle
+                          id="dropdown-toggle-top2"
+                          variant="transparent"
+                          className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                        >
+                          <FormattedMessage id="TITLE.PREVIEW" />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                          <ul className="navi navi-hover">
+                            <li className="navi-item">
+                              <Dropdown.Item
+                                // href="#"
+                                className="navi-link"
+                                onClick={() =>
+                                  handleAction("preview", taskNews)
+                                }
+                              >
+                                <span className="navi-icon">
+                                  <i className="flaticon2-graph-1"></i>
+                                </span>
+                                <span className="navi-text">Document</span>
+                              </Dropdown.Item>
+                            </li>
+                            <li className="navi-item">
+                              <Dropdown.Item
+                                // href="#"
+                                className="navi-link"
+                                onClick={() =>
+                                  handleAction("preview_signed", taskNews)
+                                }
+                              >
+                                <span className="navi-icon">
+                                  <i className="flaticon2-writing"></i>
+                                </span>
+                                <span className="navi-text">
+                                  Signed Document
+                                </span>
+                              </Dropdown.Item>
+                            </li>
+                          </ul>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </div>
                   );
                 case 2:

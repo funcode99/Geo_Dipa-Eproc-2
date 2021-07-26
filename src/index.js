@@ -4,6 +4,7 @@
  */
 import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
+import "./_metronic/_assets/css/style.bundle.min.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
@@ -23,11 +24,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import {
   MetronicLayoutProvider,
   MetronicSplashScreenProvider,
-  MetronicSubheaderProvider
+  MetronicSubheaderProvider,
 } from "./_metronic/layout";
-import {MetronicI18nProvider} from "./_metronic/i18n";
+import { MetronicI18nProvider } from "./_metronic/i18n";
 import moment from "moment";
-import $ from 'jquery';
+import $ from "jquery";
 import "moment/locale/id";
 
 /**
@@ -57,8 +58,8 @@ window.$ = $;
 global.jQuery = $;
 window.moment = moment;
 
-require('daterangepicker/daterangepicker.js');
-require('daterangepicker/daterangepicker.css');
+require("daterangepicker/daterangepicker.js");
+require("daterangepicker/daterangepicker.css");
 
 ReactDOM.render(
   <MetronicI18nProvider>

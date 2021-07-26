@@ -42,6 +42,54 @@ const HeaderTableDoc = ({ params }) => {
           </button>
         )}
       </div>
+      <div className="kt-portlet__body">
+        <div className="kt-widget25">
+          <div className="kt-widget25__items">
+            <div className="kt-widget25__item">
+              <span className="kt-widget25__number">63%</span>
+              <div className="progress kt-progress--sm">
+                <div
+                  className="progress-bar kt-bg-danger"
+                  role="progressbar"
+                  style={{ width: "63%" }}
+                  aria-valuenow="50"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <span className="kt-widget25__desc">Laporan Harian</span>
+            </div>
+            <div className="kt-widget25__item">
+              <span className="kt-widget25__number">39%</span>
+              <div className="progress m-progress--sm">
+                <div
+                  className="progress-bar kt-bg-success"
+                  role="progressbar"
+                  style={{ width: "39%" }}
+                  aria-valuenow="50"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <span className="kt-widget25__desc">Laporan Mingguan</span>
+            </div>
+            <div className="kt-widget25__item">
+              <span className="kt-widget25__number">54%</span>
+              <div className="progress m-progress--sm">
+                <div
+                  className="progress-bar kt-bg-warning"
+                  role="progressbar"
+                  style={{ width: "54%" }}
+                  aria-valuenow="50"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <span className="kt-widget25__desc">Laporan Bulanan</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </React.Fragment>
   );
 };
