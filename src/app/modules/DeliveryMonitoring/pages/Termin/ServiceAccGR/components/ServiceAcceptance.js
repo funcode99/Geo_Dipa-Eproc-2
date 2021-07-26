@@ -1,11 +1,11 @@
 import React from "react";
 // import FieldBuilder from "../../../../../../components/builder/FieldBuilder";
 import {
+  detailSA,
   // formData1,
   // formData2,
   tableHeader1,
   tableHeader2,
-  detailSA,
 } from "../fieldData";
 // import { Row, Col, Container } from "react-bootstrap";
 // import FormBuilder from "../../../../../../components/builder/FormBuilder";
@@ -14,14 +14,18 @@ import {
   Card,
   CardBody,
 } from "../../../../../../../_metronic/_partials/controls";
-import RowAdditional from "./RowAdditional";
-import { classes } from "istanbul-lib-coverage";
 import DetailSA from "./DetailSA";
+import { connect } from "react-redux";
+import { rupiah } from "../../../../../../libs/currency";
+import FooterSA from "./FooterSA";
+import RowAdditional from "./RowAdditional";
 
-const ServiceAcceptance = () => {
+const ServiceAcceptance = ({ task_sa }) => {
+  // const { sa_header, sa_items } = task_sa;
+
   return (
     <React.Fragment>
-      <DetailSA data={detailSA} />
+      {task_sa ? <DetailSA data={task_sa?.sa_header} /> : <DetailSA />}
       {/* <FormBuilder
         // ref={formikRef}
         // onSubmit={_handleSubmit}
@@ -53,27 +57,48 @@ const ServiceAcceptance = () => {
 
       <Card className="my-5">
         <CardBody>
-          <TablePaginationCustom
-            headerRows={tableHeader1}
-            // width={1210}
-            withPagination={false}
-            withSearch={false}
-            rows={[1].map((el, id) => ({
-              no: id + 1,
-              service: "Mobilisasi & Demobilisasi",
-              qty: 1,
-              uom: "AU",
-              unit_price: "Rp 20.000.000,00",
-              net_value: "Rp 20.000.000,00",
-            }))}
-            footerComponent={
-              <React.Fragment>
-                <RowAdditional label={"Subtotal"} value={"Rp 20.000.000,00"} />
-                <RowAdditional label={"PPN 10%"} value={`10%`} />
-                <RowAdditional label={"Total"} value={"Rp 21.000.000,00"} />
-              </React.Fragment>
-            }
-          />
+          {task_sa ? (
+            <TablePaginationCustom
+              headerRows={tableHeader1}
+              // width={1210}
+              withPagination={false}
+              withSearch={false}
+              rows={task_sa?.sa_items.map((el, id) => ({
+                no: id + 1,
+                service: el?.short_text,
+                qty: el?.actual_qty,
+                uom: el?.base_uom,
+                unit_price: rupiah(el?.price_unit),
+                net_value: rupiah(el?.net_value),
+              }))}
+              footerComponent={<FooterSA data={task_sa?.sa_items} />}
+            />
+          ) : (
+            <TablePaginationCustom
+              headerRows={tableHeader1}
+              // width={1210}
+              withPagination={false}
+              withSearch={false}
+              rows={[1].map((el, id) => ({
+                no: id + 1,
+                service: "Mobilisasi & Demobilisasi",
+                qty: 1,
+                uom: "AU",
+                unit_price: "Rp 20.000.000,00",
+                net_value: "Rp 20.000.000,00",
+              }))}
+              footerComponent={
+                <React.Fragment>
+                  <RowAdditional
+                    label={"Subtotal"}
+                    value={"Rp 20.000.000,00"}
+                  />
+                  <RowAdditional label={"PPN 10%"} value={`10%`} />
+                  <RowAdditional label={"Total"} value={"Rp 21.000.000,00"} />
+                </React.Fragment>
+              }
+            />
+          )}
         </CardBody>
       </Card>
 
@@ -100,4 +125,10 @@ const ServiceAcceptance = () => {
   );
 };
 
-export default ServiceAcceptance;
+const mapState = (state) => ({
+  task_sa: state.deliveryMonitoring.dataTask?.task_sa,
+});
+
+const mapDispatch = {};
+
+export default connect(mapState, mapDispatch)(ServiceAcceptance);
