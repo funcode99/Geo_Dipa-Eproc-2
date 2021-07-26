@@ -82,11 +82,14 @@ export function* saga() {
         MODAL.showSnackbar(data?.message ?? "Failed");
       }
     } catch (err) {
-      console.log(`err`, err);
       if (
-        err.response?.code !== 400 &&
-        err.response?.data.message !== "TokenExpiredError"
+        (err.response?.status === 400 || err.response?.status === 401) &&
+        (err.response?.data.message === "TokenExpiredError" ||
+          err.response?.data.message === "UNAUTORIZED")
       ) {
+        // UDAH DI HANDLE DI setupAxios, gausah nampil apa2
+      } else if (err.hasOwnProperty("response")) {
+        console.log(`err`, err.response.status, err.response?.data.message);
         if (typeof onFail === "function") onFail(err.response?.data);
         MODAL.showSnackbar(
           err.response?.data?.message ?? "Error API, please contact developer!"
