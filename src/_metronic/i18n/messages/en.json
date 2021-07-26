@@ -425,6 +425,7 @@
   "TITLE.CONTRACT_ITEM": "Contract Item",
   "TITLE.CONTRACT_TERM": "Contract Term",
   "TITLE.DOCUMENT_CONTRACT": "Contract Document",
+  "TITLE.DOCUMENT_BILLING": "Billing Document",
   "TITLE.DESCRIPTION": "Description",
   "TITLE.UNIT_PRICE": "Unit Price",
   "TITLE.DESC_IS_REQUIRE": "Description is required.",
