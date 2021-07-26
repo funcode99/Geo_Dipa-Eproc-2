@@ -209,28 +209,51 @@ const ItemContract = (props) => {
 
   const getMisMatch = () => {
     getListMismatch(contract, termin)
-      .then((result) => {
-        console.log("getListMismatch", result);
+      .then(async (result) => {
+        if (result.data && result.data.data) {
+          var waiting = new Promise((resolve, reject) => {
+            for (let i = 0; i < result.data.data.length; i++) {
+              var data = result.data.data[i];
+              data.label = data.group_name + " - " + data.ident_name;
+              data.value = JSON.stringify(data);
+              delete data.contract_id;
+              delete data.document_name;
+              delete data.document_name_eng;
+              delete data.document_no;
+              delete data.group_name;
+              delete data.group_name_eng;
+              delete data.ident_name;
+              delete data.term_id;
+              if (i === result.data.data.length - 1) resolve();
+            }
+          });
+          await waiting;
+          setDataOne(result.data?.data);
+        }
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
     getListMailTo()
       .then(async (result) => {
-        console.log("getListMailTo", result);
         if (result.data && result.data.data) {
           var waiting = new Promise((resolve, reject) => {
             for (let i = 0; i < result.data.data.length; i++) {
               var data = result.data.data[i];
               data.label =
                 data.full_name + " - " + data.code + " - " + data.email;
-              data.value = data.party_id;
+              data.value = JSON.stringify(data);
+              delete data.code;
+              delete data.email;
+              delete data.full_name;
+              delete data.party_id;
+              delete data.purch_group_id;
               if (i === result.data.data.length - 1) resolve();
             }
           });
-        }
         await waiting;
         setDataTwo(result.data?.data);
+        }
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -302,6 +325,9 @@ const ItemContract = (props) => {
                   isDisabled={false}
                   options={dataOne}
                   value={dataOneValue}
+                  onChange={(e) => {
+                    setDataOneValue(e);
+                  }}
                   id="notFit"
                 />
               </div>
@@ -346,8 +372,8 @@ const ItemContract = (props) => {
               className="btn btn-primary"
               type="submit"
               disabled={
-                dataTwoValue.length === 0 ||
-                dataOneValue.length === 0 ||
+                dataTwoValue?.length === 0 ||
+                dataOneValue?.length === 0 ||
                 onSubmit
               }
             >
