@@ -445,6 +445,7 @@ function ContractHardCopyDoc(props) {
     setModalApproved({ ...modalApproved, loading: true });
     var data = {
       hardcopy_approved_by_id: user_id,
+      term_id: termin
     };
     const document_monitoring_id = modalApproved.data.document_monitoring
       ? modalApproved.data.document_monitoring.id

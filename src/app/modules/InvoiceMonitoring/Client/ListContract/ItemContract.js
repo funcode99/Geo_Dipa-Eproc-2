@@ -181,21 +181,16 @@ const ItemContract = (props) => {
       .then((resultTypes) => {
         getTerminProgress(termin)
           .then((result) => {
-            const progress = result.data.data
-              ? result.data.data?.progress_type?.seq
-              : "2";
-            const data = resultTypes.data.data.map(function(row) {
-              return {
-                label: row?.name,
-                status:
-                  row.seq < progress
-                    ? "COMPLETE"
-                    : row.seq === progress
-                    ? "ON PROGRESS"
-                    : "NO STARTED",
-              };
-            });
-            setDataProgress(data);
+            const progress = result.data.data ? result.data.data?.progress_type?.seq : "2"
+            const name = result.data.data ? result.data.data?.progress_type?.ident_name : ""
+            const data = resultTypes.data.data.map(function (row) {
+              if (name == "HARDCOPY" && row?.ident_name == "BKB") {
+                return { label: row?.name, status: "ON PROGRESS" }
+              } else {
+                return { label: row?.name, status: row.seq < progress ? "COMPLETE" : row.seq === progress ? "ON PROGRESS" : "NO STARTED" }
+              }
+            })
+            setDataProgress(data)
             setTerminProgress(result.data.data?.progress_type);
           })
           .catch((error) => {
