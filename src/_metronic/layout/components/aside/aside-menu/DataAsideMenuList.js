@@ -81,6 +81,11 @@ export const DataAsideMenuListClient = [
           },
         ],
       },
+      {
+        rootPath: "/client/invoice_monitoring/mismatch",
+        title: "MENU.INVOICE_MONITORING.CONTRACT_TROUBLES",
+        subMenu: null,
+      },
     ],
   },
   {
