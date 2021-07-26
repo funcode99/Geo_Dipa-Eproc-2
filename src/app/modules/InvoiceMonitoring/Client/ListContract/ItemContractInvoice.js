@@ -1287,7 +1287,7 @@ function ItemContractInvoice(props) {
                                           els?.document_status?.name ===
                                             "APPROVED" &&
                                           (els?.document_monitoring === null ||
-                                            els?.document_monitoring ===
+                                            els?.document_monitoring?.softcopy_state ===
                                               "PENDING")
                                             ? "WAITING TO APPROVE"
                                             : els?.document_status?.name
@@ -1333,7 +1333,7 @@ function ItemContractInvoice(props) {
                                   status={
                                     el?.document_status?.name === "APPROVED" &&
                                     (el?.document_monitoring === null ||
-                                      el?.document_monitoring === "PENDING")
+                                      el?.document_monitoring?.softcopy_state === "PENDING")
                                       ? "WAITING TO APPROVE"
                                       : el?.document_status?.name
                                   }
