@@ -1,9 +1,12 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { Box } from "@material-ui/core";
+import { detailSA } from "../fieldData";
+import { formatSADate } from "../../../../../../libs/date";
 
 const DetailSA = ({ data }) => {
-  const { client, document, vendor, contract } = data;
+  const { client, document, vendor, contract } = detailSA;
+
   return (
     <div style={{ fontSize: "0.875rem" }}>
       <Row className="mt-5">
@@ -20,7 +23,9 @@ const DetailSA = ({ data }) => {
             <Col xs={6} className="pr-0">
               <Box border={1} padding={1} paddingBottom={0}>
                 <p className="mb-0">Number:</p>
-                <p className="mb-0">{document?.number}</p>
+                <p className="mb-0">
+                  {data ? data?.sheet_no : document.number}
+                </p>
               </Box>
             </Col>
             <Col xs={6} className="pl-0">
@@ -34,13 +39,17 @@ const DetailSA = ({ data }) => {
             <Col xs={6} className="pr-0">
               <Box border={1} padding={1} paddingTop={0}>
                 <p className="mb-0">Posting date:</p>
-                <p className="mb-0">{document?.posting_date}</p>
+                <p className="mb-0">
+                  {data ? formatSADate(data?.post_date) : document.posting_date}
+                </p>
               </Box>
             </Col>
             <Col xs={6} className="pl-0">
               <Box border={1} padding={1} paddingTop={0}>
                 <p className="mb-0">Document date:</p>
-                <p className="mb-0">{document?.document_date}</p>
+                <p className="mb-0">
+                  {data ? formatSADate(data?.doc_date) : document.document_date}
+                </p>
               </Box>
             </Col>
           </Row>
@@ -69,7 +78,9 @@ const DetailSA = ({ data }) => {
                 <p className="mb-0">:</p>
               </Col>
               <Col xs={7} className="pl-0">
-                <p className="mb-0">{contract?.po_number}</p>
+                <p className="mb-0">
+                  {data ? data?.po_number : contract.po_number}
+                </p>
               </Col>
             </Row>
             <Row>
@@ -80,7 +91,7 @@ const DetailSA = ({ data }) => {
                 <p className="mb-0">:</p>
               </Col>
               <Col xs={7} className="pl-0">
-                <p className="mb-0">{contract?.purch_group}</p>
+                <p className="mb-0">{contract?.purch_group} (static)</p>
               </Col>
             </Row>
             <Row>
@@ -91,7 +102,7 @@ const DetailSA = ({ data }) => {
                 <p className="mb-0">:</p>
               </Col>
               <Col xs={7} className="pl-0">
-                <p className="mb-0">{contract?.telephone}</p>
+                <p className="mb-0">{contract?.telephone} (static)</p>
               </Col>
             </Row>
             <Row>
@@ -102,7 +113,9 @@ const DetailSA = ({ data }) => {
                 <p className="mb-0">:</p>
               </Col>
               <Col xs={7} className="pl-0">
-                <p className="mb-0">{contract?.currency}</p>
+                <p className="mb-0">
+                  {data ? data?.currency : contract.currency}
+                </p>
               </Col>
             </Row>
             <Row>
@@ -113,7 +126,9 @@ const DetailSA = ({ data }) => {
                 <p className="mb-0">:</p>
               </Col>
               <Col xs={7} className="pl-0">
-                <p className="mb-0">{contract?.external_number}</p>
+                <p className="mb-0">
+                  {data ? data?.ext_number : contract.external_number}
+                </p>
               </Col>
             </Row>
             <Row>
@@ -126,7 +141,9 @@ const DetailSA = ({ data }) => {
                 <p className="mb-0">:</p>
               </Col>
               <Col xs={4} className="pl-0">
-                <p className="mb-0">{contract?.ref_qa}</p>
+                <p className="mb-0">
+                  {data ? data?.ref_doc_no : contract.ref_qa}
+                </p>
               </Col>
             </Row>
           </Box>

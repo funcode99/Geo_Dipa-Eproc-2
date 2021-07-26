@@ -17,4 +17,14 @@ const formatUpdateDate = (date) => {
   return format(new Date(date), "yyy-MM-dd");
 };
 
-export { formatDate, formatInitialDate, formatUpdateDate, formatDateWTime };
+const formatSADate = (date) => {
+  return format(new Date(date), "dd.MM.yyyy");
+};
+
+export {
+  formatDate,
+  formatInitialDate,
+  formatUpdateDate,
+  formatDateWTime,
+  formatSADate,
+};
