@@ -8,7 +8,7 @@ import { Row } from "react-bootstrap";
 import ButtonSubmit from "../../../../../../../components/buttonAction/ButtonSubmit";
 import { DeliveryOrderContext } from "../../DeliveryOrder";
 
-const DevOrderItem = ({ data, ...other }) => {
+const DevOrderItem = ({ data, isVendor, ...other }) => {
   const { handleAction } = other;
   const [visible, setVisible] = React.useState(false);
   // const [itemForm, setItemForm] = React.useState({});
@@ -41,7 +41,11 @@ const DevOrderItem = ({ data, ...other }) => {
             data?.date !== null ? formatDate(new Date(data?.date)) : null
           }
           action={
-            <ButtonSubmit handleSubmit={() => handleAction("confirm", data)} />
+            !isVendor && (
+              <ButtonSubmit
+                handleSubmit={() => handleAction("confirm", data)}
+              />
+            )
           }
         />
         <CardContent>
@@ -52,7 +56,7 @@ const DevOrderItem = ({ data, ...other }) => {
           />
           {/* <Row> */}
           {data?.task_delivery_items.map((el, id) => (
-            <CardOrderItem key={id} data={el} {...other} />
+            <CardOrderItem key={id} data={el} isVendor={isVendor} {...other} />
           ))}
           {/* {data?.task_delivery_items.map((el, id) => (
             <CardOrderItem key={id} data={el} />

@@ -49,21 +49,19 @@ const navLists = [
   { id: "link-barang", label: <FormattedMessage id="SUMMARY.NAV.ITEM" /> },
 ];
 
-function Summary({ taskId = "", loadings, fetch_api_sg }) {
-  const [loading, setLoading] = React.useState(false);
+function Summary({ taskId = "", loadings, fetch_api_sg, status }) {
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
   const [itemJasa, setItemJasa] = React.useState([]);
-  const [showModal, setShowModal] = React.useState({
-    submit: false,
-    success: false,
-  });
   const [Toast, setToast] = useToast();
   const { dataJasa, dataBarang } = useSelector(
     (state) => state.deliveryMonitoring
   );
   const dispatch = useDispatch();
   const submitRef = React.useRef();
+  const [qtyErrors, setQtyErrors] = React.useState([]);
+
+  const isClient = status === "client";
 
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
@@ -101,13 +99,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
 
       setItemBarang(tempSubmitBarang);
     }
-  };
-
-  const handleVisibleModal = (key) => {
-    setShowModal((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
   };
 
   const addShowField = (data) => {
@@ -174,7 +165,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      url: `/delivery/task/${taskId}`,
+      url: `/delivery/task/${taskId}/item-service`,
       onSuccess: (res) => {
         const tempDataJasa = res.data.task_item_services;
         const tempDataBarang = res.data.task_items;
@@ -359,13 +350,22 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
     //validate quantity number
     if (!isValidQty || floatQty < minValue || floatQty > floatQtyAvailable) {
       removeFromSubmitItem(itemId, "barang");
-      setToast(
-        <FormattedMessage
-          id="MESSAGE.VALIDATE_QTY"
-          values={{ minValue, floatQtyAvailable }}
-        />
-      );
+      let temp = [...qtyErrors];
+      const find = temp.find((item) => item === itemId);
+      if (!find) {
+        setQtyErrors([...qtyErrors, itemId]);
+      }
+      // setToast(
+      //   <FormattedMessage
+      //     id="MESSAGE.VALIDATE_QTY"
+      //     values={{ minValue, floatQtyAvailable }}
+      //   />
+      // );
     } else {
+      let temp = [...qtyErrors];
+      temp = temp.filter((item) => item !== itemId);
+      setQtyErrors(temp);
+
       const tempSubmitItems = itemBarang;
 
       const submitItem = {
@@ -413,13 +413,22 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
       floatQtyValue > floatQtyAvailable
     ) {
       removeFromSubmitItem(serviceId, "jasa");
-      setToast(
-        <FormattedMessage
-          id="MESSAGE.VALIDATE_QTY"
-          values={{ minValue, floatQtyAvailable }}
-        />
-      );
+      let temp = [...qtyErrors];
+      const find = temp.find((item) => item === serviceId);
+      if (!find) {
+        setQtyErrors([...qtyErrors, serviceId]);
+      }
+      // setToast(
+      //   <FormattedMessage
+      //     id="MESSAGE.VALIDATE_QTY"
+      //     values={{ minValue, floatQtyAvailable }}
+      //   />
+      // );
     } else {
+      let temp = [...qtyErrors];
+      temp = temp.filter((item) => item !== serviceId);
+      setQtyErrors(temp);
+
       const tempSubmitJasa = itemJasa;
 
       const submitItem = {
@@ -460,11 +469,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
   };
 
   const handleSubmit = async () => {
-    console.log({
-      task_items: itemBarang,
-      task_services: itemJasa,
-    });
-
     fetch_api_sg({
       key: keys.submit,
       type: "post",
@@ -729,37 +733,47 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                 <TableCell>{service?.quantity}</TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
-                                  <Form.Control
-                                    type="number"
-                                    size="sm"
-                                    min="0.1"
-                                    step="0.1"
-                                    // min="1"
-                                    // step="1"
-                                    style={{
-                                      width: 80,
-                                      flex: "none",
-                                    }}
-                                    max={service.qty_available}
-                                    disabled={!service.checked}
-                                    defaultValue={service.qty_available}
-                                    onChange={(e) =>
-                                      addSubmitJasa(
-                                        e.target.value,
-                                        service.qty_available,
-                                        service.id,
-                                        service.short_text
-                                      )
-                                    }
-                                    // onBlur={(e) =>
-                                    //   addSubmitJasa(
-                                    //     e.target.value,
-                                    //     service.qty_available,
-                                    //     service.id,
-                                    //     service.short_text
-                                    //   )
-                                    // }
-                                  />
+                                  {isClient ? (
+                                    <React.Fragment>
+                                      <Form.Control
+                                        type="number"
+                                        size="sm"
+                                        min="0.1"
+                                        step="0.1"
+                                        // min="1"
+                                        // step="1"
+                                        style={{
+                                          width: 80,
+                                          flex: "none",
+                                        }}
+                                        max={service.qty_available}
+                                        disabled={!service.checked}
+                                        defaultValue={parseFloat(
+                                          service.qty_available
+                                        ).toFixed(1)}
+                                        onChange={(e) =>
+                                          addSubmitJasa(
+                                            e.target.value,
+                                            service.qty_available,
+                                            service.id,
+                                            service.short_text
+                                          )
+                                        }
+                                      />
+                                      {qtyErrors.find(
+                                        (el) => el === service.id
+                                      ) && (
+                                        <span className="text-danger">
+                                          Max qty{" "}
+                                          {parseFloat(
+                                            service.qty_available
+                                          ).toFixed(1)}
+                                        </span>
+                                      )}
+                                    </React.Fragment>
+                                  ) : (
+                                    parseFloat(service.qty_available).toFixed(1)
+                                  )}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {item?.measurement_unit?.ident_name}
@@ -767,7 +781,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                 <TableCell className="align-middle">
                                   {rupiah(service.net_value)}
                                 </TableCell>
-                                {/* <TableCell className="align-middle"></TableCell> */}
                               </TableRow>
                             );
                           } else {
@@ -803,43 +816,55 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                 <TableCell>{service?.qty}</TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
-                                  <Form.Control
-                                    type="number"
-                                    size="sm"
-                                    min="0.1"
-                                    step="0.1"
-                                    style={{
-                                      width: 80,
-                                      flex: "none",
-                                    }}
-                                    max={(
-                                      parseFloat(
-                                        service.service.qty_available
-                                      ) + parseFloat(service.qty)
-                                    ).toFixed(1)}
-                                    disabled={!service.checked}
-                                    defaultValue={service.qty}
-                                    onChange={(e) =>
-                                      addSubmitJasa(
-                                        e.target.value,
-                                        (
+                                  {isClient ? (
+                                    <React.Fragment>
+                                      <Form.Control
+                                        type="number"
+                                        size="sm"
+                                        min="0.1"
+                                        step="0.1"
+                                        style={{
+                                          width: 80,
+                                          flex: "none",
+                                        }}
+                                        max={(
                                           parseFloat(
                                             service.service.qty_available
                                           ) + parseFloat(service.qty)
-                                        ).toFixed(1),
-                                        service.service.id,
-                                        service.service.short_text
-                                      )
-                                    }
-                                    // onBlur={(e) =>
-                                    //   addSubmitJasa(
-                                    //     e.target.value,
-                                    //     service.service.quantity,
-                                    //     service.service.id,
-                                    //     service.service.short_text
-                                    //   )
-                                    // }
-                                  />
+                                        ).toFixed(1)}
+                                        disabled={!service.checked}
+                                        defaultValue={parseFloat(
+                                          service.qty
+                                        ).toFixed(1)}
+                                        onChange={(e) =>
+                                          addSubmitJasa(
+                                            e.target.value,
+                                            (
+                                              parseFloat(
+                                                service.service.qty_available
+                                              ) + parseFloat(service.qty)
+                                            ).toFixed(1),
+                                            service.service.id,
+                                            service.service.short_text
+                                          )
+                                        }
+                                      />
+                                      {qtyErrors.find(
+                                        (el) => el === service.service.id
+                                      ) && (
+                                        <span className="text-danger">
+                                          Max qty{" "}
+                                          {(
+                                            parseFloat(
+                                              service.service.qty_available
+                                            ) + parseFloat(service.qty)
+                                          ).toFixed(1)}
+                                        </span>
+                                      )}
+                                    </React.Fragment>
+                                  ) : (
+                                    parseFloat(service.qty).toFixed(1)
+                                  )}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {item?.measurement_unit?.ident_name}
@@ -847,7 +872,6 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                                 <TableCell className="align-middle">
                                   {rupiah(service.service.net_value)}
                                 </TableCell>
-                                {/* <TableCell className="align-middle"></TableCell> */}
                               </TableRow>
                             );
                           }
@@ -905,35 +929,41 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                       </TableCell>
                       <TableCell className="align-middle">{item.qty}</TableCell>
                       <TableCell className="align-middle">
-                        <Form.Control
-                          type="number"
-                          size="sm"
-                          style={{
-                            width: 80,
-                            flex: "none",
-                          }}
-                          min={0.1}
-                          step={0.1}
-                          max={item.qty_available}
-                          disabled={!item.checked}
-                          defaultValue={item.qty_available}
-                          onChange={(e) =>
-                            addSubmitBarang(
-                              e.target.value,
-                              item.qty_available,
-                              item.id,
-                              item.desc
-                            )
-                          }
-                          // onBlur={(e) =>
-                          //   addSubmitBarang(
-                          //     e.target.value,
-                          //     item.qty_available,
-                          //     item.id,
-                          //     item.desc
-                          //   )
-                          // }
-                        />
+                        {isClient ? (
+                          <React.Fragment>
+                            <Form.Control
+                              type="number"
+                              size="sm"
+                              style={{
+                                width: 80,
+                                flex: "none",
+                              }}
+                              min={0.1}
+                              step={0.1}
+                              max={item.qty_available}
+                              disabled={!item.checked}
+                              defaultValue={parseFloat(
+                                item.qty_available
+                              ).toFixed(1)}
+                              onChange={(e) =>
+                                addSubmitBarang(
+                                  e.target.value,
+                                  item.qty_available,
+                                  item.id,
+                                  item.desc
+                                )
+                              }
+                            />
+                            {qtyErrors.find((el) => el === item.id) && (
+                              <span className="text-danger">
+                                Max qty{" "}
+                                {parseFloat(item.qty_available).toFixed(1)}
+                              </span>
+                            )}
+                          </React.Fragment>
+                        ) : (
+                          parseFloat(item.qty_available).toFixed(1)
+                        )}
                       </TableCell>
                       <TableCell className="align-middle">
                         {item?.measurement_unit?.ident_name}
@@ -977,41 +1007,48 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
                         {item.item.qty}
                       </TableCell>
                       <TableCell className="align-middle">
-                        <Form.Control
-                          type="number"
-                          size="sm"
-                          min={0.1}
-                          step={0.1}
-                          style={{
-                            width: 80,
-                            flex: "none",
-                          }}
-                          max={(
-                            parseFloat(item.qty) +
-                            parseFloat(item.item.qty_available)
-                          ).toFixed(1)}
-                          disabled={!item.checked}
-                          defaultValue={item.qty}
-                          onChange={(e) =>
-                            addSubmitBarang(
-                              e.target.value,
-                              (
+                        {isClient ? (
+                          <React.Fragment>
+                            <Form.Control
+                              type="number"
+                              size="sm"
+                              min={0.1}
+                              step={0.1}
+                              style={{
+                                width: 80,
+                                flex: "none",
+                              }}
+                              max={(
                                 parseFloat(item.qty) +
                                 parseFloat(item.item.qty_available)
-                              ).toFixed(1),
-                              item.item.id,
-                              item.item.desc
-                            )
-                          }
-                          // onBlur={(e) =>
-                          //   addSubmitBarang(
-                          //     e.target.value,
-                          //     item.item.qty_available,
-                          //     item.item.id,
-                          //     item.item.desc
-                          //   )
-                          // }
-                        />
+                              ).toFixed(1)}
+                              disabled={!item.checked}
+                              defaultValue={parseFloat(item.qty).toFixed(1)}
+                              onChange={(e) =>
+                                addSubmitBarang(
+                                  e.target.value,
+                                  (
+                                    parseFloat(item.qty) +
+                                    parseFloat(item.item.qty_available)
+                                  ).toFixed(1),
+                                  item.item.id,
+                                  item.item.desc
+                                )
+                              }
+                            />
+                            {qtyErrors.find((el) => el === item.item.id) && (
+                              <span className="text-danger">
+                                Max qty{" "}
+                                {(
+                                  parseFloat(item.qty) +
+                                  parseFloat(item.item.qty_available)
+                                ).toFixed(1)}
+                              </span>
+                            )}
+                          </React.Fragment>
+                        ) : (
+                          parseFloat(item.qty).toFixed(1)
+                        )}
                       </TableCell>
                       <TableCell className="align-middle">
                         {item?.item?.measurement_unit?.ident_name}
@@ -1026,20 +1063,22 @@ function Summary({ taskId = "", loadings, fetch_api_sg }) {
             />
           )}
 
-          <div className="mt-4 d-flex justify-content-end w-100">
-            <Button
-              variant="contained"
-              color="secondary"
-              size="medium"
-              // onClick={() => handleVisibleModal("submit")}
-              onClick={() => submitRef.current.open()}
-            >
-              <span className="mr-1">
-                <FormattedMessage id="BUTTON.SUBMIT" />
-              </span>
-              <Send />
-            </Button>
-          </div>
+          {isClient && (
+            <div className="mt-4 d-flex justify-content-end w-100">
+              <Button
+                variant="contained"
+                color="secondary"
+                size="medium"
+                // onClick={() => handleVisibleModal("submit")}
+                onClick={() => submitRef.current.open()}
+              >
+                <span className="mr-1">
+                  <FormattedMessage id="BUTTON.SUBMIT" />
+                </span>
+                <Send />
+              </Button>
+            </div>
+          )}
         </CardBody>
       </Card>
     </div>
@@ -1056,6 +1095,7 @@ const mapState = (state) => ({
     submit: getLoading(state, keys.submit),
     fetch: getLoading(state, keys.fetch),
   },
+  status: state.auth.user.data.status,
 });
 
 const mapDispatch = {

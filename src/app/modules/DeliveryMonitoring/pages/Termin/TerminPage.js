@@ -9,19 +9,20 @@ import {
   BookmarkBorderOutlined,
   LocalShipping,
 } from "@material-ui/icons";
-import ServAccGR from "../ServiceAccGR/pages/ServiceAccDetail";
+// import ServAccGR from "../ServiceAccGR/pages/ServiceAccDetail";
 import Documents from "./Documents";
-import BAPP from "./BAPP";
+// import BAPP from "./BAPP";
 import DeliveryOrder from "./DeliveryOrder.js";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import { useSelector, shallowEqual, useDispatch, connect } from "react-redux";
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { useHistory, useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+// import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import Steppers from "../../../../components/steppersCustom/Steppers";
 import SAGRPage from "./ServiceAccGR/SAGRPage";
 import BeritaAcara from "./BeritaAcara";
+import { fetch_api_sg } from "../../../../../redux/globalReducer";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,9 +30,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TerminPage = ({ items }) => {
+const keys = {
+  task_id: "task_id_service",
+  task_service_and_item: "task_service_and_item",
+};
+
+const TerminPage = ({ items, fetch_api_sg, loadings, dataBarang }) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
+  const [stepperProg, setStepperProg] = React.useState([]);
   // const [tabList, setTabList] = React.useState(TabLists);
   const dispatch = useDispatch();
   const { dataContractById, dataTask } = useSelector(
@@ -43,7 +50,17 @@ const TerminPage = ({ items }) => {
   );
   const history = useHistory();
   const { task_id } = useParams();
-  const isItemExists = Array.isArray(items) && items.length > 0;
+
+  const checkDataBarang = () => {
+    const temp = [...dataBarang];
+    const find = temp?.find((el) => el.checked === true);
+
+    if (find) return true;
+    if (!find) return false;
+  };
+
+  const isItemExists =
+    Array.isArray(items) && items.length > 0 && checkDataBarang();
 
   const TabLists = React.useMemo(
     () => [
@@ -74,19 +91,19 @@ const TerminPage = ({ items }) => {
   const dataProgress = [
     {
       label: "Create Term",
-      status: "COMPLETE",
+      status: "NO STARTED",
     },
     {
       label: "Create Deliverables",
-      status: "COMPLETE",
+      status: "NO STARTED",
     },
     {
       label: "Upload Deliverables",
-      status: "COMPLETE",
+      status: "NO STARTED",
     },
     {
       label: "Create Delivery Order",
-      status: "ON PROGRESS",
+      status: "NO STARTED",
     },
     {
       label: "Create BAPP",
@@ -103,23 +120,39 @@ const TerminPage = ({ items }) => {
     return task?.name ?? "";
   }, [dataContractById, task_id]);
 
+  const fetchDataTask = () => {
+    fetch_api_sg({
+      key: keys.task_service_and_item,
+      type: "get",
+      url: `/delivery/task/${task_id}/item-service`,
+      onSuccess: (res) => {
+        dispatch({
+          type: actionTypes.SetDataTask,
+          payload: res?.data,
+        });
+      },
+    });
+  };
+
   const getDataTask = React.useCallback(() => {
     // handleLoading("get", true);
     // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
-    deliveryMonitoring
-      .getTaskById(task_id)
-      .then((res) => {
-        // console.log(`res`, res);
-        // handleLoading("get", false);
-        if (res.data.status === true) {
-          dispatch({
-            type: actionTypes.SetDataTask,
-            payload: res?.data?.data,
-          });
-        }
-      })
-      .catch((err) => console.log("err", err));
-  }, [task_id, dispatch]);
+    fetchDataStepper();
+    fetchDataTask();
+    // deliveryMonitoring
+    //   .getTaskById(task_id)
+    //   .then((res) => {
+    //     // console.log(`resold`, res);
+    //     // handleLoading("get", false);
+    //     if (res.data.status === true) {
+    //       dispatch({
+    //         type: actionTypes.SetDataTask,
+    //         payload: res?.data?.data,
+    //       });
+    //     }
+    //   })
+    //   .catch((err) => console.log("err", err));
+  }, [fetchDataStepper]);
 
   React.useEffect(() => {
     if (!task_id) {
@@ -134,6 +167,31 @@ const TerminPage = ({ items }) => {
     // console.log(newTabActive);
     setTabActive(newTabActive);
   }
+
+  const fetchDataStepper = () => {
+    fetch_api_sg({
+      key: keys.task_id,
+      type: "get",
+      url: `/delivery/task/${task_id}/item-service`,
+      onSuccess: (res) => {
+        dispatch({
+          type: actionTypes.SetDataTask,
+          payload: res?.data,
+        });
+
+        const stateLib = {
+          done: "COMPLETE",
+          on: "ON PROGRESS",
+          wait: "NO STARTED",
+        };
+        const mappedStepper = res.data.task_steppers.map((el) => ({
+          label: el.label,
+          status: stateLib[el.state],
+        }));
+        setStepperProg(mappedStepper);
+      },
+    });
+  };
 
   // console.log(TabLists);
 
@@ -161,7 +219,9 @@ const TerminPage = ({ items }) => {
           },
         ]}
       />
-      <Steppers steps={dataProgress} />
+      {dataProgress.length > 0 && (
+        <Steppers steps={stepperProg.length > 0 ? stepperProg : dataProgress} />
+      )}
       <Paper className={classes.paper}>
         <Container>
           <Tabs
@@ -194,7 +254,9 @@ const TerminPage = ({ items }) => {
           {/* {isItemExists && tabActive === 3 && <ServAccGR />} */}
           {isItemExists && tabActive === 3 && <SAGRPage />}
 
-          {tabActive === 0 && <Documents taskId={task_id} />}
+          {tabActive === 0 && (
+            <Documents loadStepper={fetchDataStepper} taskId={task_id} />
+          )}
         </Container>
         {/* )} */}
       </Paper>
@@ -204,7 +266,8 @@ const TerminPage = ({ items }) => {
 
 const mapState = ({ deliveryMonitoring }) => ({
   items: deliveryMonitoring.dataContractById?.items,
+  dataBarang: deliveryMonitoring.dataBarang,
 });
 
-export default connect(mapState, null)(TerminPage);
+export default connect(mapState, { fetch_api_sg })(TerminPage);
 // export default TerminPage;

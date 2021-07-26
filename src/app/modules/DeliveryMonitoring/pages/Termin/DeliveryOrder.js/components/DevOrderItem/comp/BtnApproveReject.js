@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-const BtnApproveReject = ({ onChange, isActive }) => {
+const BtnApproveReject = ({ onChange, isActive, readOnly }) => {
   const [active, setActive] = React.useState(null);
   const handleActive = React.useCallback(
     (state) => {
@@ -26,6 +26,7 @@ const BtnApproveReject = ({ onChange, isActive }) => {
         variant={`${
           valueUsed === false || valueUsed === null ? "outline-" : ""
         }success`}
+        disabled={readOnly}
       >
         <FormattedMessage id="TITLE.APPROVE" />
       </Button>
@@ -39,6 +40,7 @@ const BtnApproveReject = ({ onChange, isActive }) => {
         variant={`${
           valueUsed === true || valueUsed === null ? "outline-" : ""
         }danger`}
+        disabled={readOnly}
       >
         <FormattedMessage id="TITLE.REJECT" />
       </Button>

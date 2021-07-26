@@ -1,6 +1,7 @@
-import TitleField from "../../../../../../components/input/TitleField";
+import React from "react";
+import { FormattedMessage } from "react-intl";
 
-export const formData = [
+const formData = [
   {
     name: "date",
     label: "Delivery Date",
@@ -21,3 +22,33 @@ export const formData = [
     // min: 1,
   },
 ];
+
+const tblHeadDlvItem = [
+  {
+    id: "no",
+    label: <FormattedMessage id="TITLE.NO" />,
+  },
+  {
+    id: "desc",
+    label: <FormattedMessage id="TITLE.DESCRIPTION" />,
+  },
+  {
+    id: "date",
+    label: <FormattedMessage id="TITLE.DATE" />,
+  },
+  {
+    id: "remarks",
+    label: <FormattedMessage id="TITLE.REMARKS" />,
+  },
+  {
+    id: "approve_status",
+    label: <FormattedMessage id="TITLE.STATUS" />,
+  },
+  {
+    id: "action",
+    label: <FormattedMessage id="TITLE.ACTION" />,
+    sortable: false,
+  },
+];
+
+export { formData, tblHeadDlvItem };

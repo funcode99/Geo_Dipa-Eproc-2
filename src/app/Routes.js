@@ -20,6 +20,9 @@ const UserNewAccountHomePage = lazy(() =>
 const VerificationQrCode = lazy(() =>
   import("./modules/VerificationQrCode/VerificationQrCode")
 );
+const DeliveryOrderStatusPg = lazy(() =>
+  import("./modules/DeliveryMonitoring/pages/DeliveryOrderStatusPg")
+);
 
 export function Routes() {
   const { isAuthorized } = useSelector(
@@ -33,6 +36,7 @@ export function Routes() {
     <Switch>
       <Route path="/create-account" component={UserNewAccountHomePage} />
       <Route path="/qrcode" component={VerificationQrCode} />
+      <Route path="/update-do-status" component={DeliveryOrderStatusPg} />
       {!isAuthorized ? (
         /*Render auth page when user at `/auth` and not authorized.*/
         <Route>

@@ -4,6 +4,7 @@ import useToast from "../../../../../../components/toast";
 import * as documentOption from "../../../../../../service/Document";
 import Select from "react-select";
 import { Form, Row, Col } from "react-bootstrap";
+import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 
 const groupStyles = {
   display: "flex",
@@ -31,7 +32,7 @@ const formatGroupLabel = (data) => (
   </div>
 );
 
-const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
+const ModalAddDeliverables = ({ visible, onClose, onSubmit, loading }) => {
   const [content, setContent] = React.useState({
     loading: false,
     data: [],
@@ -136,15 +137,30 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
   return (
     <React.Fragment>
       <Toast />
-      <StyledModal
+      {/* <StyledModal
         visible={visible}
         onClose={handleClose}
         minWidth="30vw"
         maxWidth="35vw"
+      > */}
+      <DialogGlobal
+        title={"Tambah Dokumen Baru"}
+        visible={visible}
+        onClose={handleClose}
+        onYes={handleSubmit}
+        textYes={"Tambahkan"}
+        loading={loading}
+        isCancel={false}
+        btnYesProps={{
+          disabled:
+            optionSelected === false ||
+            (isCustom === true && remarks === false),
+          className: "btn btn-primary",
+        }}
       >
         {/* <form onSubmit={() => onSubmit(optionSelected)}> */}
         <div className="d-flex align-items-start flex-column">
-          <h3>Tambah Dokumen Baru</h3>
+          {/* <h3>Tambah Dokumen Baru</h3> */}
           <h6> Silahkan pilih jenis dokumen yang akan ditambahkan</h6>
         </div>
         <Select
@@ -152,6 +168,7 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
           value={optionSelected}
           onChange={(e) => handleSelectChange(e)}
           // defaultValue={}
+          menuPosition={"fixed"}
           options={content?.data?.map((el) => ({
             label: el.name,
             options: el?.documents?.reverse().map((el2) => ({
@@ -178,7 +195,8 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
             />
           </Form.Group>
         )}
-        {/* <div className="row">
+      </DialogGlobal>
+      {/* <div className="row">
           <div className="col-12">
             <select
               value={optionSelected}
@@ -199,7 +217,7 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
           </div>
         </div> */}
 
-        <div className="d-flex mt-5">
+      {/* <div className="d-flex mt-5">
           <button
             disabled={
               optionSelected === false ||
@@ -210,9 +228,9 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit }) => {
           >
             Tambahkan
           </button>
-        </div>
-        {/* </form> */}
-      </StyledModal>
+        </div> */}
+      {/* </form> */}
+      {/* </StyledModal> */}
     </React.Fragment>
   );
 };

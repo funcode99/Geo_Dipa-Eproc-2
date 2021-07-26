@@ -34,7 +34,7 @@ const FormDetail = (props) => {
   //   (state) => state.auth.user.data.user_id,
   //   shallowEqual
   //   );
-  const { user_id, dataLama } = props;
+  const { user_id, dataLama, status } = props;
   const dataContractById = React.useMemo(() => ({ ...dataLama }), [dataLama]);
 
   // console.log(`dataContractById`, dataContractById)
@@ -42,6 +42,7 @@ const FormDetail = (props) => {
   const contract_id = props.contractId;
   const monitoring_type = "DELIVERY";
   const vendor_id = dataContractById?.vendor?.id;
+  const isVendor = status === "vendor";
 
   const [Toast, setToast] = useToast();
   const [picVendorData, setPicVendorData] = useState([]);
@@ -562,18 +563,6 @@ const FormDetail = (props) => {
                   />
                 </Col>
               </Form.Group>
-              <Form.Group as={Row}>
-                <Form.Label column md="4">
-                  <FormattedMessage id="TITLE.CONTRACT_TYPE" />
-                </Form.Label>
-                <Col md="8">
-                  <Form.Control as="select">
-                    <option>Full Payment</option>
-                    <option>Term</option>
-                    <option>Confirmation Order</option>
-                  </Form.Control>
-                </Col>
-              </Form.Group>
             </Col>
 
             <Col>
@@ -644,6 +633,7 @@ const FormDetail = (props) => {
                     options={picVendorData}
                     value={picContractData}
                     onChange={handlePic}
+                    isDisabled={!isVendor}
                   ></StyledSelect>
                   <div className="input-group-prepend">
                     <span
@@ -662,20 +652,22 @@ const FormDetail = (props) => {
           <Row>
             <Col></Col>
             <Col>
-              <button
-                type="button"
-                className="btn btn-primary mx-1 float-right"
-                onClick={assignPic}
-                disabled={loading}
-              >
-                Simpan
-                {loading && (
-                  <span
-                    className="spinner-border spinner-border-sm ml-1"
-                    aria-hidden="true"
-                  ></span>
-                )}
-              </button>
+              {isVendor && (
+                <button
+                  type="button"
+                  className="btn btn-primary mx-1 float-right"
+                  onClick={assignPic}
+                  disabled={!isVendor || loading}
+                >
+                  Simpan
+                  {loading && (
+                    <span
+                      className="spinner-border spinner-border-sm ml-1"
+                      aria-hidden="true"
+                    ></span>
+                  )}
+                </button>
+              )}
             </Col>
           </Row>
         </Container>
@@ -687,6 +679,7 @@ const FormDetail = (props) => {
 const mapState = ({ auth, deliveryMonitoring }) => ({
   user_id: auth.user.data.user_id,
   dataLama: deliveryMonitoring.dataContractById,
+  status: auth.user.data.status,
 });
 
 export default React.memo(connect(mapState)(FormDetail), () => true);

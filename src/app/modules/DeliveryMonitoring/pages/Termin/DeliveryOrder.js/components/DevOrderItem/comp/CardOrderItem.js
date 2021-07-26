@@ -13,25 +13,30 @@ import { rupiah } from "../../../../../../../../libs/currency";
 //   { label: "WAITING APPROVE", class: "dark" },
 // ];
 
-const handleReadOnly = (arr, state) => {
+const handleReadOnly = (arr, inputName = "all", state) => {
   let tempArr = [...arr[0]];
-  tempArr.map((item) => {
-    if (item.name === "qty_approved") item.readOnly = state;
-  });
 
-  return [tempArr];
+  if (inputName === "all") {
+    tempArr.map((item) => (item.readOnly = state));
+  } else {
+    tempArr.map((item) => {
+      if (item.name === inputName) return (item.readOnly = state);
+    });
+  }
+
+  return [tempArr, arr[1]];
 };
 
-const CardOrderItem = ({ data, options, setItem }) => {
+const CardOrderItem = ({ data, options, setItem, isVendor }) => {
   const formRef = React.useRef();
   const [componentIndex, setComponentIndex] = React.useState(2);
-  const compUsed = options[componentIndex];
+  const compUsed = options?.[componentIndex] ?? {};
   const [formDataUsed, setFormDataUsed] = React.useState(formData2);
 
   const handleChange = (state) => {
     setComponentIndex(state ? 1 : 0);
 
-    const updateFormData = handleReadOnly(formDataUsed, !state);
+    const updateFormData = handleReadOnly(formDataUsed, "qty_approved", !state);
     setFormDataUsed(updateFormData);
 
     if (!state) {
@@ -66,10 +71,11 @@ const CardOrderItem = ({ data, options, setItem }) => {
 
   const getValue = () => {
     // console.log(`formRef`, formRef?.current?.values);
-    setItem((prev) => ({
-      ...prev,
-      [formRef?.current?.values?.id]: formRef?.current?.values,
-    }));
+    if (setItem)
+      setItem((prev) => ({
+        ...prev,
+        [formRef?.current?.values?.id]: formRef?.current?.values,
+      }));
   };
 
   React.useEffect(() => {
@@ -77,10 +83,19 @@ const CardOrderItem = ({ data, options, setItem }) => {
       if (item.id === data.approve_status_id) {
         setComponentIndex(index);
         const state = index > 0 ? true : false;
-        const updateFormData = handleReadOnly(formDataUsed, !state);
+        const updateFormData = handleReadOnly(
+          formDataUsed,
+          "qty_approved",
+          !state
+        );
         setFormDataUsed(updateFormData);
       }
     });
+
+    if (isVendor) {
+      const updateFormData = handleReadOnly(formDataUsed, "all", true);
+      setFormDataUsed(updateFormData);
+    }
   }, [data]);
 
   return (
@@ -122,6 +137,7 @@ const CardOrderItem = ({ data, options, setItem }) => {
           isActive={
             componentIndex === 1 ? true : componentIndex === 0 ? false : null
           }
+          readOnly={isVendor}
         />
       </div>
     </ExpansionBox>

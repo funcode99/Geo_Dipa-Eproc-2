@@ -32,23 +32,68 @@ const docOptions = {
     { value: "spmk", label: "SPMK" },
     { value: "skpp", label: "SKPP" },
   ],
+  contractType: [
+    { value: "full_payment", label: "Full Payment" },
+    { value: "term", label: "Term" },
+    { value: "confirmation_order", label: "Confirmation Order" },
+  ],
 };
 
 const fieldKickOff = [
   {
+    name: "poFile",
+    typeInput: "UploadInput",
+    label: <FormattedMessage id="TITLE.PO_DOCUMENT" />,
+    labelSize: 2,
+    formInputSize: 10,
+  },
+  {
     name: "docType",
     typeInput: "SelectInputCustom",
     label: <FormattedMessage id="TITLE.DOCUMENT_TYPE" />,
+    labelSize: 2,
+    formInputSize: 10,
   },
+  // {
+  //   name: "docFile",
+  //   typeInput: "UploadInput",
+  //   label: <FormattedMessage id="TITLE.FILE" />,
+  // },
+  // {
+  //   name: "docDate",
+  //   typeInput: "SelectDateInput",
+  //   label: <FormattedMessage id="LABEL.DOCUMENT_DATE" />,
+  // },
+  [
+    {
+      name: "skppFile",
+      typeInput: "UploadInput",
+      label: "SKPP",
+    },
+    {
+      name: "skppdate",
+      typeInput: "SelectDateInput",
+      label: <FormattedMessage id="TITLE.DATE" />,
+    },
+  ],
+  [
+    {
+      name: "spmkFile",
+      typeInput: "UploadInput",
+      label: "SPMK",
+    },
+    {
+      name: "spmkdate",
+      typeInput: "SelectDateInput",
+      label: <FormattedMessage id="TITLE.DATE" />,
+    },
+  ],
   {
-    name: "docFile",
-    typeInput: "UploadInput",
-    label: <FormattedMessage id="TITLE.FILE" />,
-  },
-  {
-    name: "docDate",
-    typeInput: "SelectDateInput",
-    label: <FormattedMessage id="LABEL.DOCUMENT_DATE" />,
+    name: "contractType",
+    typeInput: "SelectInputCustom",
+    label: <FormattedMessage id="TITLE.CONTRACT_TYPE" />,
+    labelSize: 2,
+    formInputSize: 10,
   },
 ];
 

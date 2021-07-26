@@ -71,11 +71,12 @@ const BappPage = ({
   loadings,
 }) => {
   const [Toast, setToast] = useToast();
+  // const [taskNews, setTaskNews] = React.useState({});
   const isReject = taskNews?.approve_status?.code === "rejected";
   const uploadRef = React.useRef();
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
-  const [stepActive, setStepActive] = React.useState(3);
+  const [stepActive, setStepActive] = React.useState(null);
   const [loading, setLoading] = React.useState({
     get: false,
     submit: false,
@@ -154,6 +155,7 @@ const BappPage = ({
 
   const handleError = React.useCallback(
     (err) => {
+      console.log(`err lama`, err);
       if (
         err.response?.code !== 400 &&
         err.response?.data.message !== "TokenExpiredError"
@@ -185,7 +187,8 @@ const BappPage = ({
     let dataArr = data.map((item, id) => ({
       no: (id += 1),
       user: item?.vendor?.username || item?.user?.username,
-      date: formatDateWTime(new Date(item?.createdAt)),
+      date: formatDate(new Date(item?.createdAt)),
+      // date: formatDateWTime(new Date(item?.createdAt)),
       activity: item?.description,
     }));
     setContent(dataArr);
@@ -193,25 +196,41 @@ const BappPage = ({
 
   const fetchData = React.useCallback(
     (toast = { visible: false, message: "" }) => {
-      handleLoading("get", true);
+      // handleLoading("get", true);
+      fetchApi({
+        key: keys.fetch,
+        type: "get",
+        url: `/delivery/task/${taskId}/news`,
+        onSuccess: (res) => {
+          // handleLoading("get", false);
+          console.log(`res`, res);
+          saveTask(res?.data);
+          generateTableContent(res?.data?.news?.news_histories);
+
+          updateExclude();
+
+          // uploadRef.current.close();
+          // fetchData({ visible: false, message: "" });
+        },
+      });
       // console.log();
-      deliveryMonitoring
-        .getTaskById(taskId)
-        .then((res) => {
-          // console.log(`res`, res);
-          handleLoading("get", false);
-          if (res.data.status === true) {
-            saveTask(res?.data?.data);
-            generateTableContent(res?.data?.data?.news?.news_histories);
+      // deliveryMonitoring
+      //   .getTaskById(taskId)
+      //   .then((res) => {
+      //     // console.log(`res`, res);
+      //     handleLoading("get", false);
+      //     if (res.data.status === true) {
+      //       saveTask(res?.data?.data);
+      //       generateTableContent(res?.data?.data?.news?.news_histories);
 
-            updateExclude();
+      //       updateExclude();
 
-            if (toast.visible === true) {
-              setToast(toast.message, 5000);
-            }
-          }
-        })
-        .catch((err) => console.log("err", err));
+      //       if (toast.visible === true) {
+      //         setToast(toast.message, 5000);
+      //       }
+      //     }
+      //   })
+      //   .catch((err) => console.log("err", err));
     },
     [taskId, handleLoading, saveTask, setToast]
   );
@@ -227,11 +246,13 @@ const BappPage = ({
   );
 
   const _handleSubmit = (data) => {
-    handleLoading("submit", true);
+    // handleLoading("submit", true);
 
     let params = {};
+    let url = ``;
     switch (status) {
       case "vendor":
+        url = `delivery/task-news/${taskId}`;
         params = {
           url: `delivery/task-news/${taskId}`,
           no: data.nomor_bapp,
@@ -239,6 +260,7 @@ const BappPage = ({
         };
         break;
       case "client":
+        url = `delivery/task-news/${taskNews?.id}/review`;
         params = {
           url: `delivery/task-news/${taskNews?.id}/review`,
           review_text: data.hasil_pekerjaan,
@@ -248,11 +270,24 @@ const BappPage = ({
         break;
     }
 
-    deliveryMonitoring
-      .postCreateBAPP(params)
-      .then((res) => handleSuccess(res))
-      .catch((err) => handleError(err))
-      .finally(handleLoading("submit", false));
+    fetchApi({
+      key: keys.submit,
+      type: "post",
+      params,
+      url,
+      onSuccess: (res) => {
+        // handleLoading("get", false);
+        console.log(`res`, res);
+        fetchData({ visible: true, message: res?.data?.message });
+      },
+      onFail: (err) => console.log("err baru", err),
+    });
+
+    // deliveryMonitoring
+    //   .postCreateBAPP(params)
+    //   .then((res) => handleSuccess(res))
+    //   .catch((err) => handleError(err))
+    //   .finally(handleLoading("submit", false));
   };
 
   React.useEffect(() => {
@@ -266,7 +301,7 @@ const BappPage = ({
   React.useEffect(() => {
     const isApproved = taskNews?.approve_status?.code === "approved";
 
-    if (taskNews) {
+    if (taskNews?.approve_status) {
       if (isApproved) setStepActive(3);
       else if (taskNews?.file_upload) {
         if (isReject) setStepActive(1);
@@ -382,6 +417,8 @@ const BappPage = ({
     }
   };
 
+  console.log(`res2`, taskNews);
+
   return (
     <React.Fragment>
       <Toast />
@@ -441,7 +478,7 @@ const BappPage = ({
                   : !allowedVendor.includes(item)
               ),
             }}
-            loading={loading.submit}
+            loading={loadings.submit}
             disabledButton={isDisabled}
           />
         </CardBody>
@@ -501,22 +538,26 @@ const BappPage = ({
                 case 2:
                   return (
                     <div className="mt-2">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={"mr-3"}
-                        onClick={() => handleAction("approve")}
-                      >
-                        <FormattedMessage id="TITLE.APPROVE" />
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={"bg-danger text-white"}
-                        onClick={() => handleAction("reject")}
-                      >
-                        <FormattedMessage id="TITLE.REJECT" />
-                      </Button>
+                      {isClient && (
+                        <React.Fragment>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            className={"mr-3"}
+                            onClick={() => handleAction("approve")}
+                          >
+                            <FormattedMessage id="TITLE.APPROVE" />
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            className={"bg-danger text-white"}
+                            onClick={() => handleAction("reject")}
+                          >
+                            <FormattedMessage id="TITLE.REJECT" />
+                          </Button>
+                        </React.Fragment>
+                      )}
                     </div>
                   );
 
@@ -558,7 +599,7 @@ const BappPage = ({
               <TablePaginationCustom
                 headerRows={tableHeader}
                 rows={content}
-                loading={loading.get}
+                loading={loadings.fetch}
               />
             </Col>
           </Row>
@@ -571,6 +612,8 @@ const BappPage = ({
 const keys = {
   upload_s: "upload-signed",
   approve_s: "approve-signed",
+  fetch: "fetch_news_bapp",
+  submit: "submit_news_bapp",
 };
 
 const mapState = (state) => {
@@ -583,6 +626,8 @@ const mapState = (state) => {
     loadings: {
       upload_s: getLoading(state, keys.upload_s),
       approve_s: getLoading(state, keys.approve_s),
+      fetch: getLoading(state, keys.fetch),
+      submit: getLoading(state, keys.submit),
     },
   };
 };
