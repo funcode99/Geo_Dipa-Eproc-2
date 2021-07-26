@@ -73,37 +73,32 @@ function ItemContractBKB(props) {
     getBkb(termin)
       .then((response) => {
         if (response["data"]["data"]) {
-          response["data"]["data"]["vendor_address"] = `${
-            response["data"]["data"]["vendor_data"]["address"]["postal_address"]
+          response["data"]["data"]["vendor_address"] = `${response["data"]["data"]["vendor_data"]["address"]["postal_address"]
+            ? response["data"]["data"]["vendor_data"]["address"][
+            "postal_address"
+            ]
+            : null
+            } ${response["data"]["data"]["vendor_data"]["address"]["sub_district"]
               ? response["data"]["data"]["vendor_data"]["address"][
-                  "postal_address"
-                ]
+              "sub_district"
+              ]["name"]
               : null
-          } ${
-            response["data"]["data"]["vendor_data"]["address"]["sub_district"]
-              ? response["data"]["data"]["vendor_data"]["address"][
-                  "sub_district"
-                ]["name"]
-              : null
-          } ${
-            response["data"]["data"]["vendor_data"]["address"]["district"]
+            } ${response["data"]["data"]["vendor_data"]["address"]["district"]
               ? response["data"]["data"]["vendor_data"]["address"]["district"][
-                  "name"
-                ]
+              "name"
+              ]
               : null
-          } ${
-            response["data"]["data"]["vendor_data"]["address"]["province"]
+            } ${response["data"]["data"]["vendor_data"]["address"]["province"]
               ? response["data"]["data"]["vendor_data"]["address"]["province"][
-                  "name"
-                ]
+              "name"
+              ]
               : null
-          } ${
-            response["data"]["data"]["vendor_data"]["address"]["postal_code"]
+            } ${response["data"]["data"]["vendor_data"]["address"]["postal_code"]
               ? response["data"]["data"]["vendor_data"]["address"][
-                  "postal_code"
-                ]
+              "postal_code"
+              ]
               : null
-          }`;
+            }`;
           setBkbData(response["data"]["data"]);
         }
       })
@@ -295,8 +290,8 @@ function ItemContractBKB(props) {
                     <span>
                       {bkbData
                         ? window
-                            .moment(new Date(bkbData?.created_at))
-                            .format("DD MMMM YYYY")
+                          .moment(new Date(bkbData?.from_time))
+                          .format("DD MMMM YYYY")
                         : "-"}
                     </span>
                   </div>
@@ -542,45 +537,28 @@ function ItemContractBKB(props) {
                   })}
                   <tr>
                     <td colSpan="3" className="text-right">
-                      PPN(10%)
-                    </td>
-                    <td>
-                      <div className="d-flex justify-content-between">
-                        <span>{bkbData?.symbol}</span>
-                        <span>
-                          {bkbData ? rupiah(bkbData?.tax_ppn_10).slice(3) : "-"}
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan="3" className="text-right">
                       <FormattedMessage id="TITLE.LESS" />:
                     </td>
                     <td></td>
                   </tr>
-                  <tr>
-                    <td colSpan="3" className="text-right">
-                      PPh23 (2%)
-                    </td>
-                    <td>
-                      <div className="d-flex justify-content-between">
-                        <span>{bkbData?.symbol}</span>
-                        <span>-</span>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan="3" className="text-right">
-                      PPh22 (1.5%)
-                    </td>
-                    <td>
-                      <div className="d-flex justify-content-between">
-                        <span>{bkbData?.symbol}</span>
-                        <span>-</span>
-                      </div>
-                    </td>
-                  </tr>
+                  {bkbData?.tax_selected?.map((row, key) => {
+                    const data = JSON.parse(row.value)
+                    return (
+                      <tr>
+                        <td colSpan="3" className="text-right">
+                          {data.description} - {data.value}%
+                        </td>
+                        <td>
+                          <div className="d-flex justify-content-between">
+                            <span>{bkbData?.symbol}</span>
+                            <span>
+                              {rupiah(data.tax_value).slice(3)}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
                   <tr>
                     <td colSpan="3" className="text-right">
                       <FormattedMessage id="TITLE.FINE_OR_OTHER" />
@@ -588,7 +566,9 @@ function ItemContractBKB(props) {
                     <td>
                       <div className="d-flex justify-content-between">
                         <span>{bkbData?.symbol}</span>
-                        <span>-</span>
+                        <span>{bkbData
+                            ? rupiah(bkbData?.penalty).slice(3)
+                            : "0"}</span>
                       </div>
                     </td>
                   </tr>
@@ -632,7 +612,7 @@ function ItemContractBKB(props) {
                 className="col-sm border d-flex align-items-end"
                 style={{ height: 80 }}
               >
-                <span className="mx-auto">Merry</span>
+                <span className="mx-auto">{bkbData?.archived_name}</span>
               </div>
               <div
                 className="col-sm border text-center"
@@ -650,7 +630,7 @@ function ItemContractBKB(props) {
                     <span className="col-sm-4">
                       <FormattedMessage id="TITLE.NO_VENDOR" />
                     </span>
-                    <span className="col-sm-8">:0000086765</span>
+                    <span className="col-sm-8">: {bkbData?.vendor_sap_no}</span>
                   </div>
                 </div>
                 <div className="row border-bottom">
@@ -824,10 +804,10 @@ function ItemContractBKB(props) {
                               <FormattedMessage id="TITLE.DATE" />:
                               {bkbData?.tax_man_approved_at
                                 ? window
-                                    .moment(
-                                      new Date(bkbData?.tax_man_approved_at)
-                                    )
-                                    .format("DD/MM/YYYY")
+                                  .moment(
+                                    new Date(bkbData?.tax_man_approved_at)
+                                  )
+                                  .format("DD/MM/YYYY")
                                 : ""}
                             </span>
                           </div>
@@ -883,10 +863,10 @@ function ItemContractBKB(props) {
                               <FormattedMessage id="TITLE.DATE" />:
                               {bkbData?.finance_man_approved_at
                                 ? window
-                                    .moment(
-                                      new Date(bkbData?.finance_man_approved_at)
-                                    )
-                                    .format("DD/MM/YYYY")
+                                  .moment(
+                                    new Date(bkbData?.finance_man_approved_at)
+                                  )
+                                  .format("DD/MM/YYYY")
                                 : ""}
                             </span>
                           </div>
@@ -942,12 +922,12 @@ function ItemContractBKB(props) {
                               <FormattedMessage id="TITLE.DATE" />:
                               {bkbData?.finance_director_approved_at
                                 ? window
-                                    .moment(
-                                      new Date(
-                                        bkbData?.finance_director_approved_at
-                                      )
+                                  .moment(
+                                    new Date(
+                                      bkbData?.finance_director_approved_at
                                     )
-                                    .format("DD/MM/YYYY")
+                                  )
+                                  .format("DD/MM/YYYY")
                                 : ""}
                             </span>
                           </div>
