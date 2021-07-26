@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Dropdown } from "react-bootstrap";
 import {
   Card,
   CardBody,
@@ -89,7 +89,7 @@ const BastPage = ({
     fetch: false,
     post: false,
   });
-  const [stepActive, setStepActive] = React.useState(null);
+  const [stepActive, setStepActive] = React.useState(1);
   const isReject = taskNews?.approve_status?.code === "rejected";
 
   const handleLoading = React.useCallback(
@@ -225,20 +225,20 @@ const BastPage = ({
   }, [news]);
 
   // buat ganti state step
-  React.useEffect(() => {
-    const isApproved = taskNews?.approve_status?.code === "approved";
+  // React.useEffect(() => {
+  //   const isApproved = taskNews?.approve_status?.code === "approved";
 
-    if (taskNews.approve_status) {
-      if (isApproved) setStepActive(3);
-      else if (taskNews?.file_upload) {
-        if (isReject) setStepActive(1);
-        else setStepActive(2);
-      } else if (taskNews?.file) {
-        if (taskNews?.review_text !== null) setStepActive(1);
-        else setStepActive(0);
-      }
-    }
-  }, [taskNews]);
+  //   if (taskNews.approve_status) {
+  //     if (isApproved) setStepActive(3);
+  //     else if (taskNews?.file_upload) {
+  //       if (isReject) setStepActive(1);
+  //       else setStepActive(2);
+  //     } else if (taskNews?.file) {
+  //       if (taskNews?.review_text !== null) setStepActive(1);
+  //       else setStepActive(0);
+  //     }
+  //   }
+  // }, [taskNews]);
 
   let disabledInput = Object.keys(initialValues);
   let allowedClient = ["hasil_pekerjaan"];
@@ -249,6 +249,9 @@ const BastPage = ({
       case "preview":
         openLinkTab(params?.file);
         // window.open(urlHelper.addBaseURL(params?.file), "_blank");
+        break;
+      case "preview_signed":
+        openLinkTab(params?.file_upload);
         break;
       case "skip":
         setStepActive(1);
@@ -432,7 +435,7 @@ const BastPage = ({
                       >
                         <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
                       </Button>
-                      <Button
+                      {/* <Button
                         variant="outlined"
                         color="secondary"
                         className={"ml-2"}
@@ -440,7 +443,54 @@ const BastPage = ({
                         disabled={taskNews ? false : true}
                       >
                         <FormattedMessage id="TITLE.PREVIEW" />
-                      </Button>
+                      </Button> */}
+                      <Dropdown
+                        className="dropdown-inline ml-2"
+                        drop="down"
+                        alignRight
+                      >
+                        <Dropdown.Toggle
+                          id="dropdown-toggle-top2"
+                          variant="transparent"
+                          className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                        >
+                          <FormattedMessage id="TITLE.PREVIEW" />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                          <ul className="navi navi-hover">
+                            <li className="navi-item">
+                              <Dropdown.Item
+                                // href="#"
+                                className="navi-link"
+                                onClick={() =>
+                                  handleAction("preview", taskNews)
+                                }
+                              >
+                                <span className="navi-icon">
+                                  <i className="flaticon2-graph-1"></i>
+                                </span>
+                                <span className="navi-text">Document</span>
+                              </Dropdown.Item>
+                            </li>
+                            <li className="navi-item">
+                              <Dropdown.Item
+                                // href="#"
+                                className="navi-link"
+                                onClick={() =>
+                                  handleAction("preview_signed", taskNews)
+                                }
+                              >
+                                <span className="navi-icon">
+                                  <i className="flaticon2-writing"></i>
+                                </span>
+                                <span className="navi-text">
+                                  Signed Document
+                                </span>
+                              </Dropdown.Item>
+                            </li>
+                          </ul>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </div>
                   );
                 case 2:
