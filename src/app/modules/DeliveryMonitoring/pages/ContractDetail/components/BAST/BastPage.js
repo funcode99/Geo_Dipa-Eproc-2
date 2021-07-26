@@ -89,7 +89,7 @@ const BastPage = ({
     fetch: false,
     post: false,
   });
-  const [stepActive, setStepActive] = React.useState(1);
+  const [stepActive, setStepActive] = React.useState(null);
   const isReject = taskNews?.approve_status?.code === "rejected";
 
   const handleLoading = React.useCallback(
@@ -225,20 +225,20 @@ const BastPage = ({
   }, [news]);
 
   // buat ganti state step
-  // React.useEffect(() => {
-  //   const isApproved = taskNews?.approve_status?.code === "approved";
+  React.useEffect(() => {
+    const isApproved = taskNews?.approve_status?.code === "approved";
 
-  //   if (taskNews.approve_status) {
-  //     if (isApproved) setStepActive(3);
-  //     else if (taskNews?.file_upload) {
-  //       if (isReject) setStepActive(1);
-  //       else setStepActive(2);
-  //     } else if (taskNews?.file) {
-  //       if (taskNews?.review_text !== null) setStepActive(1);
-  //       else setStepActive(0);
-  //     }
-  //   }
-  // }, [taskNews]);
+    if (taskNews.approve_status) {
+      if (isApproved) setStepActive(3);
+      else if (taskNews?.file_upload) {
+        if (isReject) setStepActive(1);
+        else setStepActive(2);
+      } else if (taskNews?.file) {
+        if (taskNews?.review_text !== null) setStepActive(1);
+        else setStepActive(0);
+      }
+    }
+  }, [taskNews]);
 
   let disabledInput = Object.keys(initialValues);
   let allowedClient = ["hasil_pekerjaan"];
