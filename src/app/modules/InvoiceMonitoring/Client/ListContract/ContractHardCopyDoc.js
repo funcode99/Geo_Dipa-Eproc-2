@@ -23,6 +23,7 @@ import {
   checkBkbExist,
   getInvoice,
   getContractSummary,
+  getTerminProgress
 } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
@@ -130,7 +131,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ContractHardCopyDoc(props) {
-  const { intl, progressTermin, setProgressTermin } = props;
+  const { intl, progressTermin, setProgressTermin, setDataProgress } = props;
   const classes = useStyles();
   const [Toast, setToast] = useToast();
   const [dataReject, setDataReject] = useState({});
@@ -464,6 +465,10 @@ function ContractHardCopyDoc(props) {
             callApiContractSoftCopy();
             callApiBillingHardCopy();
           }
+          getTerminProgress(termin)
+            .then((result) => {
+              setDataProgress(result.data.data?.data);
+            })
           setModalApproved({
             ...modalApproved,
             statusDialog: false,
@@ -1107,7 +1112,7 @@ function ContractHardCopyDoc(props) {
             type="button"
             className="btn btn-sm btn-primary mx-1"
             onClick={handleSubmit}
-            disabled={loading || progressTermin?.ident_name !== "HARDCOPY"}
+            disabled={loading}
           >
             Send Notif
           </button>
@@ -1117,7 +1122,6 @@ function ContractHardCopyDoc(props) {
             onClick={print}
             disabled={
               loading ||
-              progressTermin?.ident_name !== "HARDCOPY" ||
               billingHardCopy ||
               deliverableHardCopy ||
               contractHardCopy

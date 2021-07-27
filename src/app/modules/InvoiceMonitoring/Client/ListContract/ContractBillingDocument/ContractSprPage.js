@@ -93,7 +93,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function ContractSprPage(props) {
-  const { intl, classes, progressTermin, setProgressTermin } = props;
+  const { intl, classes, progressTermin, setProgressTermin, dataProgress, setDataProgress } = props;
   const [loading, setLoading] = useState(false);
   const [contractData, setContractData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -255,7 +255,7 @@ function ContractSprPage(props) {
     approveSpp(sppData.id, {
       approved_by_id: user_id,
       contract_id: contract_id,
-      term_id: termin,
+      term_id: termin
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -267,6 +267,7 @@ function ContractSprPage(props) {
         getTerminProgress(termin)
           .then((result) => {
             setProgressTermin(result.data.data?.progress_type);
+            setDataProgress(result.data.data?.data);
           })
       })
       .catch((error) => {
