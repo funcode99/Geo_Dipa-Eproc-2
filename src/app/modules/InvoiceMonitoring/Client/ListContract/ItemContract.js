@@ -181,16 +181,18 @@ const ItemContract = (props) => {
       .then((resultTypes) => {
         getTerminProgress(termin)
           .then((result) => {
-            const progress = result.data.data ? result.data.data?.progress_type?.seq : "2"
-            const name = result.data.data ? result.data.data?.progress_type?.ident_name : ""
-            const data = resultTypes.data.data.map(function (row) {
-              if (name == "HARDCOPY" && row?.ident_name == "BKB") {
-                return { label: row?.name, status: "ON PROGRESS" }
-              } else {
-                return { label: row?.name, status: row.seq < progress ? "COMPLETE" : row.seq === progress ? "ON PROGRESS" : "NO STARTED" }
-              }
-            })
-            setDataProgress(data)
+            // const progress = result.data.data ? result.data.data?.progress_type?.seq : "2"
+            const progress = "2"
+            // const name = result.data.data ? result.data.data?.progress_type?.ident_name : ""
+            if (result?.data?.data?.data) {
+              setDataProgress(result.data.data.data)
+            } else {
+              const data = resultTypes.data.data.map(function (row) {
+                return { label: row?.name, status: row.seq < progress ? "COMPLETE" : row.seq === progress ? "ON PROGRESS" : "NO STARTED", ident_name: row.ident_name }
+              })
+              setDataProgress(data)
+            }
+
             setTerminProgress(result.data.data?.progress_type);
           })
           .catch((error) => {
@@ -246,8 +248,8 @@ const ItemContract = (props) => {
               if (i === result.data.data.length - 1) resolve();
             }
           });
-        await waiting;
-        setDataTwo(result.data?.data);
+          await waiting;
+          setDataTwo(result.data?.data);
         }
       })
       .catch((error) => {
@@ -373,9 +375,9 @@ const ItemContract = (props) => {
               }
             >
               {!onSubmit && (
-              <span>
+                <span>
                   <FormattedMessage id="TITLE.SAVE" />
-              </span>
+                </span>
               )}
               {onSubmit &&
                 (statusSubmit && onSubmit ? (
@@ -445,6 +447,8 @@ const ItemContract = (props) => {
               {...props}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
+              dataProgress={dataProgress}
+              setDataProgress={setDataProgress}
             />
           )}
           {tabActive === 2 && (
@@ -452,6 +456,8 @@ const ItemContract = (props) => {
               {...props}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
+              dataProgress={dataProgress}
+              setDataProgress={setDataProgress}
             />
           )}
           {tabActive === 3 && (
@@ -459,6 +465,8 @@ const ItemContract = (props) => {
               {...props}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
+              dataProgress={dataProgress}
+              setDataProgress={setDataProgress}
             />
           )}
           {tabActive === 4 && (
@@ -466,6 +474,8 @@ const ItemContract = (props) => {
               {...props}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
+              dataProgress={dataProgress}
+              setDataProgress={setDataProgress}
             />
           )}
           {tabActive === 5 && (
@@ -473,6 +483,8 @@ const ItemContract = (props) => {
               {...props}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
+              dataProgress={dataProgress}
+              setDataProgress={setDataProgress}
             />
           )}
         </Container>

@@ -69,7 +69,7 @@ function ContractInvoicePage(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const invoiceName = "INVOICE";
-  const { intl, classes, progressTermin, setProgressTermin } = props;
+  const { intl, classes, progressTermin, setProgressTermin, setDataProgress } = props;
 
   const initialValues = {};
 
@@ -228,9 +228,11 @@ function ContractInvoicePage(props) {
         setIsSubmit(true);
         getHistoryInvoiceData(invoiceData.id);
         softcopy_save(data_1);
-        getTerminProgress(termin).then((result) => {
+        getTerminProgress(termin)
+          .then((result) => {
             setProgressTermin(result.data.data?.progress_type);
-        });
+            setDataProgress(result.data.data?.data);
+          })
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -415,7 +417,7 @@ function ContractInvoicePage(props) {
                       <i
                         className={`fas fa-chevron-left ${
                           pageNumber === 1 ? "" : "text-secondary"
-                        }`}
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -435,7 +437,7 @@ function ContractInvoicePage(props) {
                       <i
                         className={`fas fa-chevron-right ${
                           pageNumber === numPages ? "" : "text-secondary"
-                        }`}
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -534,11 +536,11 @@ function ContractInvoicePage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )
+                      "YYYY-MM-DD HH:mm:ss"
+                    )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )}
+                      "YYYY-MM-DD HH:mm:ss"
+                    )}
                 </span>
               </div>
             </div>
@@ -710,22 +712,22 @@ function ContractInvoicePage(props) {
                   <NumberFormat
                     id={
                       isSubmit ||
-                      invoiceData?.state === "REJECTED" ||
-                      invoiceData?.state === "APPROVED" ||
-                      invoiceData === null ||
-                      props.verificationStafStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                        invoiceData?.state === "REJECTED" ||
+                        invoiceData?.state === "APPROVED" ||
+                        invoiceData === null ||
+                        props.verificationStafStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
                         ? "NumberFormat-text"
                         : "NumberFormat-input"
                     }
                     value={invoiceData?.penalty}
                     displayType={
                       isSubmit ||
-                      invoiceData?.state === "REJECTED" ||
-                      invoiceData?.state === "APPROVED" ||
-                      invoiceData === null ||
-                      props.verificationStafStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                        invoiceData?.state === "REJECTED" ||
+                        invoiceData?.state === "APPROVED" ||
+                        invoiceData === null ||
+                        props.verificationStafStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
                         ? "text"
                         : "input"
                     }
@@ -813,7 +815,7 @@ function ContractInvoicePage(props) {
                         item.state === "REJECTED"
                           ? "text-danger"
                           : "text-success"
-                      } pointer font-weight-bold`}
+                        } pointer font-weight-bold`}
                       onClick={() => handleHistory(index)}
                     >
                       {item.state === "REJECTED" ? (

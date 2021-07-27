@@ -19,6 +19,7 @@ import {
   approveParkAP,
   submitParkBYR,
   approveParkBYR,
+  getTerminProgress
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -45,7 +46,7 @@ function ItemContractBKB(props) {
     minHeightAppv: 80,
   });
 
-  const { intl } = props;
+  const { intl, setProgressTermin, setDataProgress } = props;
   const termin = props.match.params.termin;
   const [Toast, setToast] = useToast();
 
@@ -243,6 +244,11 @@ function ItemContractBKB(props) {
             statusReq: true,
             loading: true,
           });
+          getTerminProgress(termin)
+            .then((result) => {
+              setProgressTermin(result.data.data?.progress_type);
+              setDataProgress(result.data.data?.data);
+            })
           setTimeout(() => {
             getBkbData();
             setModalApproved({
@@ -295,6 +301,11 @@ function ItemContractBKB(props) {
             statusReq: true,
             loading: true,
           });
+          getTerminProgress(termin)
+            .then((result) => {
+              setProgressTermin(result.data.data?.progress_type);
+              setDataProgress(result.data.data?.data);
+            })
           setTimeout(() => {
             getBkbData();
             setModalApproved({

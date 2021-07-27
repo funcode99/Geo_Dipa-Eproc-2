@@ -65,7 +65,7 @@ function ContractReceiptPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes, progressTermin, setProgressTermin } = props;
+  const { intl, classes, progressTermin, setProgressTermin, setDataProgress } = props;
 
   const initialValues = {};
   const invoiceName = "RECEIPT";
@@ -215,6 +215,7 @@ function ContractReceiptPage(props) {
         getTerminProgress(termin)
           .then((result) => {
             setProgressTermin(result.data.data?.progress_type);
+            setDataProgress(result.data.data?.data);
           })
       })
       .catch((error) => {
@@ -399,7 +400,7 @@ function ContractReceiptPage(props) {
                       <i
                         className={`fas fa-chevron-left ${
                           pageNumber === 1 ? "" : "text-secondary"
-                        }`}
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -419,7 +420,7 @@ function ContractReceiptPage(props) {
                       <i
                         className={`fas fa-chevron-right ${
                           pageNumber === numPages ? "" : "text-secondary"
-                        }`}
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -518,11 +519,11 @@ function ContractReceiptPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )
+                      "YYYY-MM-DD HH:mm:ss"
+                    )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )}
+                      "YYYY-MM-DD HH:mm:ss"
+                    )}
                 </span>
               </div>
             </div>
@@ -752,7 +753,7 @@ function ContractReceiptPage(props) {
                         item.state === "REJECTED"
                           ? "text-danger"
                           : "text-success"
-                      } pointer font-weight-bold`}
+                        } pointer font-weight-bold`}
                       onClick={() => handleHistory(index)}
                     >
                       {item.state === "REJECTED" ? (

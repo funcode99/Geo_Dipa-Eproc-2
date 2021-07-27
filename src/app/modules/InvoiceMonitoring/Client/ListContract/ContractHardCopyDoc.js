@@ -23,6 +23,7 @@ import {
   checkBkbExist,
   getInvoice,
   getContractSummary,
+  getTerminProgress
 } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
@@ -130,7 +131,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ContractHardCopyDoc(props) {
-  const { intl, progressTermin, setProgressTermin } = props;
+  const { intl, progressTermin, setProgressTermin, setDataProgress } = props;
   const classes = useStyles();
   const [Toast, setToast] = useToast();
   const [dataReject, setDataReject] = useState({});
@@ -464,6 +465,10 @@ function ContractHardCopyDoc(props) {
             callApiContractSoftCopy();
             callApiBillingHardCopy();
           }
+          getTerminProgress(termin)
+            .then((result) => {
+              setDataProgress(result.data.data?.data);
+            })
           setModalApproved({
             ...modalApproved,
             statusDialog: false,
