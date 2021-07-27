@@ -12,13 +12,15 @@ import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../../../libs/currency";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import {
   fetch_api_sg,
   getLoading,
 } from "../../../../../../../redux/globalReducer";
 import ModalApproveTermin from "./ModalApproveTermin";
 import { MODAL } from "../../../../../../../service/modalSession/ModalService";
+import StatusRemarks from "../../../../../../components/StatusRemarks";
+import { Button } from "react-bootstrap";
 
 const tableHeaderTerminNew = [
   {
@@ -66,6 +68,10 @@ const tableHeaderTerminNew = [
     id: "status",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
   },
+  // {
+  //   id: "approve_status",
+  //   label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />
+  // },
   {
     id: "action",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
@@ -113,6 +119,7 @@ const DetailPage = ({
   const deleteRef = React.useRef();
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
+  const history = useHistory();
 
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
@@ -242,12 +249,12 @@ const DetailPage = ({
           break;
         case "approve":
           console.log(`type`, type, data);
-          approveRef.current.open(data.name);
+          approveRef.current.open(data);
           break;
         case "reject":
           console.log(`type`, type, data);
           // MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
-          rejectRef.current.open(data.name);
+          rejectRef.current.open(data);
           break;
         default:
           break;
@@ -264,11 +271,26 @@ const DetailPage = ({
       arrData = data.map((item, index) => ({
         number: (index += 1),
         scope_of_work: (
-          <NavLink
-            to={`/${authStatus}/delivery-monitoring/contract/task/${item.id}`}
+          <Button
+            variant="link"
+            onClick={() => {
+              if (item?.approve_status?.name === "APPROVED")
+                history.push(
+                  `/${authStatus}/delivery-monitoring/contract/task/${item.id}`
+                );
+              else
+                MODAL.showSnackbar(
+                  "Mohon Approve termin ini terlebih dahulu",
+                  "warning"
+                );
+            }}
           >
+            {/* <NavLink
+            to={`/${authStatus}/delivery-monitoring/contract/task/${item.id}`}
+          > */}
             {item.name}
-          </NavLink>
+            {/* </NavLink> */}
+          </Button>
         ),
         start_date:
           item.start_date !== null
@@ -280,7 +302,15 @@ const DetailPage = ({
         price: rupiah(item.nett_amount),
         project_progress: item.progress,
         document_progress: "",
-        status: item?.task_status?.name,
+        // approve_status: item?.approve_status?.name,
+        // status: item?.approve_status?.name,
+        status: (
+          <StatusRemarks
+            status={item?.approve_status?.name}
+            remarks={item?.reject_text}
+          />
+        ),
+        // status: item?.task_status?.name, //DEPRECATED
         action: (
           <ButtonAction
             data={item}
@@ -396,6 +426,45 @@ const DetailPage = ({
     // eslint-disable-next-line
   }, []);
 
+  const handleApi = (type, params) => {
+    switch (type) {
+      case "approve":
+        fetch_api_sg({
+          key: keys.approve,
+          type: "post",
+          alertAppear: "both",
+          url: `delivery/task/${params?.id}/change-status`,
+          params: {
+            approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
+          },
+          onSuccess: (res) => {
+            getContractById(contractId);
+            approveRef.current.close();
+          },
+        });
+        break;
+      case "reject":
+        fetch_api_sg({
+          key: keys.reject,
+          type: "post",
+          alertAppear: "both",
+          url: `delivery/task/${params?.id}/change-status`,
+          params: {
+            approve_status_id: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
+            reject_text: params?.remarks_fill,
+          },
+          onSuccess: (res) => {
+            getContractById(contractId);
+            rejectRef.current.close();
+          },
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <React.Fragment>
       <ModalTerm
@@ -408,8 +477,17 @@ const DetailPage = ({
         options={options}
       />
 
-      <ModalApproveTermin ref={approveRef} />
-      <ModalApproveTermin ref={rejectRef} isReject={true} />
+      <ModalApproveTermin
+        ref={approveRef}
+        loading={loadings.approve}
+        onSubmit={(e) => handleApi("approve", e)}
+      />
+      <ModalApproveTermin
+        ref={rejectRef}
+        loading={loadings.reject}
+        onSubmit={(e) => handleApi("reject", e)}
+        isReject={true}
+      />
 
       <ModalDelete
         innerRef={deleteRef}
@@ -425,7 +503,7 @@ const DetailPage = ({
           <TablePaginationCustom
             headerRows={tableHeaderTerminNew}
             rows={newContent}
-            width={1500}
+            width={1700}
             loading={loadings.fetch}
             withSearch={false}
           />
@@ -440,6 +518,8 @@ const keys = {
   fetch: "get-data-contract-by-id",
   submit: "post-term",
   delete: "delete-term",
+  approve: "approve-termin",
+  reject: "reject-termin",
 };
 
 const mapState = (state) => {
@@ -453,6 +533,8 @@ const mapState = (state) => {
       option: getLoading(state, keys.option),
       submit: getLoading(state, keys.submit),
       delete: getLoading(state, keys.delete),
+      approve: getLoading(state, keys.approve),
+      reject: getLoading(state, keys.reject),
     },
   };
 };
