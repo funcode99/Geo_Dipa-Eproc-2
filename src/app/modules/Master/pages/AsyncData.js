@@ -12,7 +12,12 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
 import { SubWrap } from "./style";
-import { asyncService, asyncSchedule, asyncItem } from "../service/MasterCrud";
+import {
+  asyncService,
+  asyncSchedule,
+  asyncItem,
+  asyncHistory,
+} from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import { Form, Row, Col } from "react-bootstrap";
 
@@ -33,6 +38,7 @@ const AsyncData = (props) => {
   const [poService, setPoService] = useState(false);
   const [poSchedule, setPoSchedule] = useState(false);
   const [poItem, setPoItem] = useState(false);
+  const [poHistory, setPoHistory] = useState(false);
   const [poAsync, setPoAsync] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
   const [errLoadingSync, setErrLoadingSync] = useState(false);
@@ -107,6 +113,28 @@ const AsyncData = (props) => {
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
           if (err.response?.data.message === "Number Purch Order Invalid.") {
+            errSyncs.status = true;
+            errSyncs.message = err.response?.data.message;
+            setErrSync({
+              ...errSyncs,
+            });
+          } else {
+            setErrLoadingSync(true);
+          }
+          setStatusSync(false);
+          setLoadingSync(false);
+        });
+    } else if (stateSync === "history") {
+      asyncHistory(numberPo)
+        .then(async (result) => {
+          setStatusSync(false);
+          setTimeout(() => {
+            setLoadingSync(false);
+          }, 2000);
+        })
+        .catch(async (err) => {
+          let errSyncs = Object.assign({}, errSync);
+          if (err.response?.data.message === "Tidak memiliki History") {
             errSyncs.status = true;
             errSyncs.message = err.response?.data.message;
             setErrSync({
@@ -241,6 +269,42 @@ const AsyncData = (props) => {
             className="btn btn-sm btn-primary"
             onClick={() => {
               setPoSchedule(false);
+            }}
+          >
+            <FormattedMessage id="TITLE.UNDERSTAND" />
+          </button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={poHistory}
+        keepMounted
+        maxWidth={"xs"}
+        fullWidth={true}
+        TransitionComponent={Transition}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="TITLE.FEATURES" />
+        </DialogTitle>
+        <DialogContent>
+          <div>
+            <ul>
+              <li>
+                Melakukan Sinkronisasi Data berdasarkan nomor Purch Order SAP.
+              </li>
+              <li>
+                Menambahkan Item History berdasarkan data SAP dimana data
+                tersebut belum ada di database Eproc.
+              </li>
+            </ul>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={() => {
+              setPoHistory(false);
             }}
           >
             <FormattedMessage id="TITLE.UNDERSTAND" />
@@ -505,6 +569,48 @@ const AsyncData = (props) => {
                       className="btn btn-light btn-sm text-primary"
                       onClick={() => {
                         stateErrSync("item");
+                        setPoAsync(true);
+                      }}
+                    >
+                      <i className="fas fa-sync text-primary"></i>
+                      <FormattedMessage id="TITLE.SYNCHRONIZE_DATA" />
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="pl-0 py-4">
+                    <div className="symbol symbol-50 symbol-light mr-1">
+                      <span className="symbol-label">
+                        <h1 className="h-50 align-self-center">P</h1>
+                      </span>
+                    </div>
+                  </td>
+                  <td className="pl-0">
+                    <span className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg user-select-none">
+                      <FormattedMessage id="TITLE.PO_HISTORY" />
+                    </span>
+                    <div>
+                      <span className="font-weight-bolder text-muted font-size-xs">
+                        <FormattedMessage id="TITLE.SPAN_PO_ASYNC" />
+                      </span>
+                    </div>
+                  </td>
+                  <td className="text-left">
+                    <span
+                      className="btn btn-light btn-sm text-warning"
+                      onClick={() => {
+                        setPoHistory(true);
+                      }}
+                    >
+                      <i className="fas fa-info-circle text-warning"></i>
+                      <FormattedMessage id="TITLE.FEATURES" />
+                    </span>
+                  </td>
+                  <td className="text-left pr-0">
+                    <span
+                      className="btn btn-light btn-sm text-primary"
+                      onClick={() => {
+                        stateErrSync("history");
                         setPoAsync(true);
                       }}
                     >
