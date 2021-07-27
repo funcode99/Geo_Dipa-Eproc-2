@@ -260,6 +260,7 @@ const Item = ({ handleClick, status }) => {
 
           {navActive === "link-jasa" && (
             <TableItemNew
+              withPagination={false}
               tableHeader={theadService}
               dataRows={dataContractById.services}
               loading={loading}
@@ -358,6 +359,7 @@ const Item = ({ handleClick, status }) => {
           )}
           {navActive === "link-barang" && (
             <TableItemNew
+              withPagination={true}
               tableHeader={theadItem}
               dataRows={dataContractById.items}
               loading={loading}
