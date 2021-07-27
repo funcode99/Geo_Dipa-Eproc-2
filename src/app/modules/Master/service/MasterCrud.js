@@ -199,6 +199,10 @@ export function getTaxItem(id, params) {
   return axios.get(`data/get_tax_by_id/${id}${params ? "?" + params : ""}`);
 }
 
+export function asyncHistory(po) {
+  return axios.get(`sap/history/${po}`);
+}
+
 // master data invoice periods
 
 export function getInvoicePeriods() {
