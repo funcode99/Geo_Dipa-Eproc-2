@@ -15,6 +15,10 @@ import {
   tax_manager_approve_bkb,
   finance_manager_approve_bkb,
   finance_director_approve_bkb,
+  submitParkAP,
+  approveParkAP,
+  submitParkBYR,
+  approveParkBYR,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -46,6 +50,8 @@ function ItemContractBKB(props) {
   const [Toast, setToast] = useToast();
 
   const [bkbData, setBkbData] = useState(null);
+  const [parkApInput, setParkApInput] = useState('');
+  const [parkByrInput, setParkByrInput] = useState('');
 
   const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
   const monitoring_role = data_login.monitoring_role
@@ -62,12 +68,28 @@ function ItemContractBKB(props) {
   const [monitoringFinanceDirec] = useState(
     monitoring_role.findIndex((element) => element === "Direktur Keuangan") >= 0
   );
+  const [monitoringVerificationStaff] = useState(
+    monitoring_role.findIndex((element) => element === "Verification Staff") >= 0
+  );
   const [modalApproved, setModalApproved] = useState({
     statusDialog: false,
     data: {},
     loading: false,
     statusReq: false,
   });
+  const [modalSubmit, setModalSubmit] = useState({
+    statusDialog: false,
+    data: {},
+    loading: false,
+    statusReq: false,
+  });
+
+  const handleChangeParkAp = (e) => {
+    setParkApInput(e.target.value)
+  };
+  const handleChangeParkByr = (e) => {
+    setParkByrInput(e.target.value)
+  };
 
   const getBkbData = useCallback(() => {
     getBkb(termin)
@@ -182,12 +204,202 @@ function ItemContractBKB(props) {
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
+    } else if (modalApproved.data === "submitDataParkAp") {
+      const data = {
+        id: bkbData.id,
+        doc_park_ap_no: parkApInput,
+        doc_park_ap_submit_id: data_login.user_id
+      }
+      submitParkAP(data)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else if (modalApproved.data === "monitoringApproveParkAP") {
+      const data = {
+        id: bkbData.id,
+        doc_park_ap_approved_id: data_login.user_id,
+        desc: bkbData.desc,
+        term_id: termin
+      }
+      approveParkAP(data)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else if (modalApproved.data === "submitDataParkByr") {
+      const data = {
+        id: bkbData.id,
+        doc_park_byr_no: parkByrInput,
+        doc_park_byr_submit_id: data_login.user_id,
+        desc: bkbData.desc
+      }
+      submitParkBYR(data)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else if (modalApproved.data === "monitoringApproveParkBYR") {
+      const data = {
+        id: bkbData.id,
+        doc_park_byr_approved_id: data_login.user_id,
+        desc: bkbData.desc,
+        term_id: termin
+      }
+      approveParkBYR(data)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
     }
+  };
+
+  const handleSubmitParkAP = () => {
+
   };
 
   return (
     <React.Fragment>
       <Toast />
+      <Dialog
+        open={modalSubmit.statusDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
+            <span className="text-danger">
+              {" " + (modalSubmit.data.document_name || "")}
+            </span>
+          </DialogTitle>
+          <DialogContent>
+            <p>
+              <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY" />
+            </p>
+            <textarea
+              rows="2"
+              cols=""
+              className="form-control"
+              id="commentRejected"
+              placeholder={intl.formatMessage({
+                id:
+                  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY",
+              })}
+              required
+              disabled={modalSubmit.loading}
+            ></textarea>
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() =>
+                setModalSubmit({
+                  ...modalSubmit,
+                  statusDialog: false,
+                })
+              }
+              disabled={modalSubmit.loading}
+            >
+              <span>
+                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+              </span>
+            </button>
+            <button
+              className="btn btn-danger"
+              type="submit"
+              disabled={modalSubmit.loading}
+            >
+              {!modalSubmit.loading && (
+                <span>
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" />
+                </span>
+              )}
+              {modalSubmit.loading &&
+                (modalSubmit.statusReq && modalSubmit.loading ? (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                    </span>
+                    <span className="ml-2 fas fa-check"></span>
+                  </div>
+                ) : (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.WAITING" />
+                    </span>
+                    <span className="ml-2 mr-4 spinner spinner-white"></span>
+                  </div>
+                ))}
+            </button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <Dialog
         open={modalApproved.statusDialog}
         TransitionComponent={Transition}
@@ -567,8 +779,8 @@ function ItemContractBKB(props) {
                       <div className="d-flex justify-content-between">
                         <span>{bkbData?.symbol}</span>
                         <span>{bkbData
-                            ? rupiah(bkbData?.penalty).slice(3)
-                            : "0"}</span>
+                          ? rupiah(bkbData?.penalty).slice(3)
+                          : "0"}</span>
                       </div>
                     </td>
                   </tr>
@@ -610,18 +822,102 @@ function ItemContractBKB(props) {
             <div className="row">
               <div
                 className="col-sm border d-flex align-items-end"
-                style={{ height: 80 }}
+                style={{ height: 110 }}
               >
                 <span className="mx-auto">{bkbData?.archived_name}</span>
               </div>
               <div
-                className="col-sm border text-center"
-                style={{ height: 80 }}
-              ></div>
+                className="col-sm border"
+                style={{ height: 110 }}
+              >
+                <div
+                  className="text-center"
+                  style={{
+                    height: styleCustom.minHeightAppv,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                  }}
+                >
+                  {monitoringVerificationStaff &&
+                    bkbData?.doc_park_ap_approved_id == null &&
+                    bkbData?.doc_park_ap_no && (
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-sm"
+                        style={{ fontSize: 10, marginTop: 20 }}
+                        onClick={() => {
+                          setModalApproved({
+                            ...modalApproved,
+                            statusDialog: true,
+                            data: "monitoringApproveParkAP",
+                          });
+                        }}
+                      >
+                        <i
+                          className="fas fa-check-circle"
+                          style={{ fontSize: 8 }}
+                        ></i>
+                        <FormattedMessage id="TITLE.APPROVE" />
+                      </button>
+                    )}
+                  {bkbData?.doc_park_ap_approved_id && (
+                    <QRCodeG
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
+                    />
+                  )}
+                  <div className="d-flex align-items-end">
+                    <span className="mx-auto">
+                      {bkbData?.park_ap_approve_name}
+                    </span>
+                  </div>
+                </div>
+              </div>
               <div
                 className="col-sm border text-center"
-                style={{ height: 80 }}
-              ></div>
+                style={{ height: 110 }}
+              >
+                <div
+                  className="text-center"
+                  style={{
+                    height: styleCustom.minHeightAppv,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                  }}
+                >
+                  {monitoringVerificationStaff &&
+                    bkbData?.doc_park_byr_approved_id == null &&
+                    bkbData?.doc_park_byr_no && (
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-sm"
+                        style={{ fontSize: 10, marginTop: 20 }}
+                        onClick={() => {
+                          setModalApproved({
+                            ...modalApproved,
+                            statusDialog: true,
+                            data: "monitoringApproveParkBYR",
+                          });
+                        }}
+                      >
+                        <i
+                          className="fas fa-check-circle"
+                          style={{ fontSize: 8 }}
+                        ></i>
+                        <FormattedMessage id="TITLE.APPROVE" />
+                      </button>
+                    )}
+                  {bkbData?.doc_park_byr_approved_id && (
+                    <QRCodeG
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
+                    />
+                  )}
+                  <div className="d-flex align-items-end">
+                    <span className="mx-auto">
+                      {bkbData?.park_byr_approve_name}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="row mt-3" style={{ minHeight: 300 }}>
               <div className="col-sm-7 border">
@@ -633,70 +929,125 @@ function ItemContractBKB(props) {
                     <span className="col-sm-8">: {bkbData?.vendor_sap_no}</span>
                   </div>
                 </div>
-                <div className="row border-bottom">
-                  <div className="col-sm-12">
-                    <div className="form-group row mb-0">
-                      <label
-                        htmlFor="colFormLabelSm"
-                        className="col-sm-4 col-form-label col-form-label-sm"
-                      >
-                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
-                      </label>
-                      <div className="col-sm-8 pr-0">
-                        <div className="input-group input-group-sm">
-                          <input
-                            type="text"
-                            className="form-control"
-                            aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm"
-                            id="colFormLabelSm"
-                          />
-                          <div className="input-group-prepend">
-                            <button
-                              type="button"
-                              className="input-group-text btn btn-sm btn-primary"
-                              id="inputGroup-sizing-sm"
-                            >
-                              Simpan
-                            </button>
+                {bkbData?.doc_park_ap_no &&
+                  <div className="row border-bottom">
+                    <div className="col-sm-12 row">
+                      <span className="col-sm-4">
+                        <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
+                      </span>
+                      <span className="col-sm-8">: {bkbData?.doc_park_ap_no}</span>
+                    </div>
+                  </div>
+                }
+                {!bkbData?.doc_park_ap_no &&
+                  <div className="row border-bottom">
+                    <div className="col-sm-12">
+                      <div className="form-group row mb-0">
+                        <label
+                          htmlFor="parkApInput"
+                          className="col-sm-4 col-form-label col-form-label-sm"
+                        >
+                          <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
+                        </label>
+                        <div className="col-sm-8 pr-0">
+                          <div className="input-group input-group-sm">
+                            <input
+                              type="text"
+                              className="form-control"
+                              aria-label="Small"
+                              aria-describedby="inputGroup-sizing-sm"
+                              required
+                              id="parkApInput"
+                              disabled={modalApproved.loading}
+                              onChange={handleChangeParkAp}
+                              value={parkApInput}
+                            />
+                            <div className="input-group-prepend">
+                              <button
+                                type="button"
+                                className="input-group-text btn btn-sm btn-primary"
+                                id="inputGroup-sizing-sm"
+                                onClick={() => {
+                                  setModalApproved({
+                                    ...modalApproved,
+                                    statusDialog: true,
+                                    data: "submitDataParkAp",
+                                  });
+                                }}
+                                disabled={
+                                  modalApproved.loading ||
+                                  !parkApInput
+                                }
+                              >
+                                Simpan
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="row border-bottom">
-                  <div className="col-sm-12">
-                    <div className="form-group row mb-0">
-                      <label
-                        htmlFor="colFormLabelSm-1"
-                        className="col-sm-4 col-form-label col-form-label-sm"
-                      >
-                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
-                      </label>
-                      <div className="col-sm-8 pr-0">
-                        <div className="input-group input-group-sm">
-                          <input
-                            type="text"
-                            className="form-control"
-                            aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm"
-                            id="colFormLabelSm-1"
-                          />
-                          <div className="input-group-prepend">
-                            <button
-                              type="button"
-                              className="input-group-text btn btn-sm btn-primary"
-                              id="inputGroup-sizing-sm"
-                            >
-                              Simpan
-                            </button>
+                }
+                {bkbData?.doc_park_byr_no &&
+                  <div className="row border-bottom">
+                    <div className="col-sm-12 row">
+                      <span className="col-sm-4">
+                        <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
+                      </span>
+                      <span className="col-sm-8">: {bkbData?.doc_park_byr_no}</span>
+                    </div>
+                  </div>
+                }
+                {!bkbData?.doc_park_byr_no &&
+                  <div className="row border-bottom">
+                    <div className="col-sm-12">
+                      <div className="form-group row mb-0">
+                        <label
+                          htmlFor="colFormLabelSm-1"
+                          className="col-sm-4 col-form-label col-form-label-sm"
+                        >
+                          <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
+                        </label>
+                        <div className="col-sm-8 pr-0">
+                          <div className="input-group input-group-sm">
+                            <input
+                              type="text"
+                              className="form-control"
+                              aria-label="Small"
+                              aria-describedby="inputGroup-sizing-sm"
+                              id="colFormLabelSm-1"
+                              disabled={
+                                !bkbData?.doc_park_ap_approved_id
+                              }
+                              onChange={handleChangeParkByr}
+                              value={parkByrInput}
+                            />
+                            <div className="input-group-prepend">
+                              <button
+                                type="button"
+                                className="input-group-text btn btn-sm btn-primary"
+                                id="inputGroup-sizing-sm"
+                                disabled={
+                                  modalApproved.loading ||
+                                  !bkbData?.doc_park_ap_approved_id
+                                }
+                                onClick={() => {
+                                  setModalApproved({
+                                    ...modalApproved,
+                                    statusDialog: true,
+                                    data: "submitDataParkByr",
+                                  });
+                                }}
+                              >
+                                Simpan
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                }
               </div>
               <div className="col-sm-5 border">
                 <div className="row border-bottom">
@@ -705,6 +1056,14 @@ function ItemContractBKB(props) {
                       <FormattedMessage id="TITLE.INFORMATION_OR_NOTE" />
                     </span>
                   </div>
+                </div>
+                <div className="row p-3">
+                  {bkbData?.desc?.split(';').map((row, key) => {
+                    return (
+                      <span key={key}>{row}<br /></span>
+                    )
+                  })
+                  }
                 </div>
               </div>
             </div>

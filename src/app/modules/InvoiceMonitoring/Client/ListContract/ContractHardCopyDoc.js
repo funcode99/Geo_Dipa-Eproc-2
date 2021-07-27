@@ -1107,7 +1107,7 @@ function ContractHardCopyDoc(props) {
             type="button"
             className="btn btn-sm btn-primary mx-1"
             onClick={handleSubmit}
-            disabled={loading || progressTermin?.ident_name !== "HARDCOPY"}
+            disabled={loading}
           >
             Send Notif
           </button>
@@ -1117,7 +1117,6 @@ function ContractHardCopyDoc(props) {
             onClick={print}
             disabled={
               loading ||
-              progressTermin?.ident_name !== "HARDCOPY" ||
               billingHardCopy ||
               deliverableHardCopy ||
               contractHardCopy
