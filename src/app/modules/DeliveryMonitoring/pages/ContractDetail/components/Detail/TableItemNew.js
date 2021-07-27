@@ -22,6 +22,7 @@ const TableItemNew = ({
   loading,
   renderRows,
   tableHeader = theadItems,
+  withPagination = false,
 }) => {
   return (
     <TablePaginationCustom
@@ -30,7 +31,7 @@ const TableItemNew = ({
       // width={1207}
       loading={loading}
       withSearch={false}
-      withPagination={false}
+      withPagination={withPagination}
       renderRows={renderRows}
     />
   );
