@@ -7,6 +7,7 @@ import DashboardListSpt from "./ListSpt/DashboardListSpt";
 import ItemSpt from "./ListSpt/ItemSpt";
 import ListTermContract from "./ListContract/ListTermContract";
 import DashboardListMismatch from "./ListMismatch/DashboardListMismatch";
+import DashboardListBkb from "./ListBkb/DashboardListBkb";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -45,6 +46,10 @@ function RootClientInvoiceMonitoring(props) {
       <Route
         path="/client/invoice_monitoring/mismatch"
         component={DashboardListMismatch}
+      />
+      <Route
+        path="/client/invoice_monitoring/bkb"
+        component={DashboardListBkb}
       />
     </Switch>
   );
