@@ -1,20 +1,25 @@
-import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { useSubheader } from '../../../../_metronic/layout';
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { useSubheader } from "../../../../_metronic/layout";
 
 import {
   // FormattedMessage,
   injectIntl,
-} from 'react-intl';
-import { connect } from 'react-redux';
+} from "react-intl";
+import { connect } from "react-redux";
 
-import { ContractsPage, ContractDetailPage, TerminPage } from '../pages';
+import {
+  ContractsPage,
+  ContractDetailPage,
+  TerminPage,
+  TerminPageNew,
+} from "../pages";
 
 function RootClientDelivery(props) {
   // const { user } = useSelector((state) => state.auth);
   // const { intl } = props;
   const suhbeader = useSubheader();
-  suhbeader.setTitle('Delivery Monitoring');
+  suhbeader.setTitle("Delivery Monitoring");
   return (
     <Switch>
       <Redirect
@@ -25,8 +30,12 @@ function RootClientDelivery(props) {
 
       <Route
         path="/client/delivery-monitoring/contract/task/:task_id"
-        component={TerminPage}
+        component={TerminPageNew}
       />
+      {/* <Route
+        path="/client/delivery-monitoring/contract/task/:task_id"
+        component={TerminPage}
+      /> */}
 
       <Route
         path="/client/delivery-monitoring/contract/:contract_id"
