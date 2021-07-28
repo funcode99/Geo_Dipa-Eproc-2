@@ -25,7 +25,11 @@ const ServiceAcceptance = ({ task_sa }) => {
 
   return (
     <React.Fragment>
-      {task_sa ? <DetailSA data={task_sa?.sa_header} /> : <DetailSA />}
+      {task_sa ? (
+        <DetailSA data={task_sa?.sa_header} type="SA" />
+      ) : (
+        <DetailSA />
+      )}
       {/* <FormBuilder
         // ref={formikRef}
         // onSubmit={_handleSubmit}

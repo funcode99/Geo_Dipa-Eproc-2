@@ -54,6 +54,17 @@ const tableHeader1 = [
   { id: "net_value", label: <FormattedMessage id="TITLE.NET_VALUE" /> },
 ];
 
+const tblHeadGRItems = [
+  { id: "line", label: "Line" },
+  { id: "mat_no", label: "Material Number" },
+  { id: "desc", label: "Description" },
+  { id: "order_qty", label: "Order Qty" },
+  { id: "rcvd_qty", label: "Rcvd Qty" },
+  { id: "uom", label: "UoM" },
+  { id: "sloc", label: "SLoc" },
+  { id: "stor_bin", label: "Stor Bin" },
+];
+
 const tableHeader2 = [
   { id: "no", label: <FormattedMessage id="TITLE.NO" /> },
   { id: "name", label: <FormattedMessage id="TITLE.NAME" /> },
@@ -93,4 +104,41 @@ const detailSA = {
   },
 };
 
-export { formData1, formData2, tableHeader1, tableHeader2, detailSA };
+const detailGR = {
+  client: {
+    name: "PT. GEO DIPA ENERGI",
+    address1: "Plant Bandung",
+    address2: "Jl. Aditiawarman Kv.55",
+    address3: "Jaksel",
+  },
+  document: {
+    number: "1000006788",
+    posting_date: "01.11.2020",
+    document_date: "30.04.2020",
+  },
+  vendor: {
+    name: "Company The Jakarta consulting Group",
+    address1: "Wisma 46 Kota BNI Lt 32",
+    address2: "Jl. Jend Sudirman Kav 1",
+    address3: "Jakarta 10220",
+    vendor_number: "30000210",
+  },
+  contract: {
+    po_number: "8000003580",
+    movement_type: "101 - GR for acct assgmt",
+    purch_group: "T02 - PO-PST-UMUM & SDM",
+    telephone: "021 7245673",
+    delivery_note: "PI",
+    ref_qa: "BAPP APRIL 20",
+  },
+};
+
+export {
+  formData1,
+  formData2,
+  tableHeader1,
+  tableHeader2,
+  detailSA,
+  detailGR,
+  tblHeadGRItems,
+};

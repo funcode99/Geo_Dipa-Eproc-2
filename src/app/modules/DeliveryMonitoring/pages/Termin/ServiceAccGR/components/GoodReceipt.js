@@ -1,31 +1,26 @@
 import React from "react";
-import FieldBuilder from "../../../../../../components/builder/FieldBuilder";
-import { formData1, formData2, tableHeader1, tableHeader2 } from "../fieldData";
-import { Row, Col } from "react-bootstrap";
-import FormBuilder from "../../../../../../components/builder/FormBuilder";
+// import FieldBuilder from "../../../../../../components/builder/FieldBuilder";
+import { tblHeadGRItems, tableHeader2 } from "../fieldData";
+// import { Row, Col } from "react-bootstrap";
+// import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
-import { TableRow } from "@material-ui/core";
-import { TableCell } from "@material-ui/core";
+// import { TableRow } from "@material-ui/core";
+// import { TableCell } from "@material-ui/core";
 import {
   Card,
   CardBody,
 } from "../../../../../../../_metronic/_partials/controls";
 import RowAdditional from "./RowAdditional";
+import { connect } from "react-redux";
+import DetailGR from "./DetailGR";
 
-// const RowAdditional = ({ label, value }) => {
-//   return (
-//     <TableRow>
-//       <TableCell colSpan={4}></TableCell>
-//       <TableCell className="text-dark">{label}</TableCell>
-//       <TableCell className="text-dark text-left">{value}</TableCell>
-//     </TableRow>
-//   );
-// };
+const GoodReceipt = ({ task_gr }) => {
+  console.log(`task_gr`, task_gr);
 
-const GoodReceipt = () => {
   return (
     <React.Fragment>
-      <FormBuilder
+      {task_gr ? <DetailGR data={task_gr?.gr_header} /> : <DetailGR />}
+      {/* <FormBuilder
         // ref={formikRef}
         // onSubmit={_handleSubmit}
         // formData={formData3}
@@ -52,31 +47,45 @@ const GoodReceipt = () => {
             </Col>
           </Row>
         )}
-      </FormBuilder>
+      </FormBuilder> */}
 
       <Card className="my-5">
         <CardBody>
-          <TablePaginationCustom
-            headerRows={tableHeader1}
-            // width={1210}
-            withPagination={false}
-            withSearch={false}
-            rows={[1].map((el, id) => ({
-              no: id + 1,
-              service: "Mobilisasi & Demobilisasi",
-              qty: 1,
-              uom: "AU",
-              unit_price: "Rp 20.000.000,00",
-              net_value: "Rp 20.000.000,00",
-            }))}
-            footerComponent={
-              <React.Fragment>
-                <RowAdditional label={"Subtotal"} value={"Rp 20.000.000,00"} />
-                <RowAdditional label={"PPN 10%"} value={`10%`} />
-                <RowAdditional label={"Total"} value={"Rp 21.000.000,00"} />
-              </React.Fragment>
-            }
-          />
+          {task_gr ? (
+            <TablePaginationCustom
+              headerRows={tblHeadGRItems}
+              // width={1210}
+              withPagination={false}
+              withSearch={false}
+              rows={task_gr?.gr_items.map((el, id) => ({
+                line: el?.line_id,
+                mat_no: el?.mat_doc,
+                desc: "",
+                order_qty: el?.po_pr_qnt,
+                rcvd_qty: el?.entry_qnt,
+                uom: el?.entry_uom,
+                sloc: el?.stge_loc,
+                stor_bin: "",
+              }))}
+            />
+          ) : (
+            <TablePaginationCustom
+              headerRows={tblHeadGRItems}
+              // width={1210}
+              withPagination={false}
+              withSearch={false}
+              rows={[1].map((el, id) => ({
+                line: `000${id}`,
+                mat_no: "",
+                desc: "Voucher Pakaian Kantor Pusat",
+                order_qty: "3.330",
+                rcvd_qty: "3.330",
+                uom: "LBR",
+                sloc: "",
+                stor_bin: "",
+              }))}
+            />
+          )}
         </CardBody>
       </Card>
 
@@ -103,4 +112,10 @@ const GoodReceipt = () => {
   );
 };
 
-export default GoodReceipt;
+const mapState = (state) => ({
+  task_gr: state.deliveryMonitoring.dataTask?.task_gr,
+});
+
+const mapDispatch = {};
+
+export default connect(mapState, mapDispatch)(GoodReceipt);
