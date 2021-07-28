@@ -53,14 +53,9 @@ export const DataAsideMenuListClient = [
         ],
       },
       {
-        rootPath: "/client/invoice_monitoring-2/error-v",
+        rootPath: "/client/invoice_monitoring/bkb",
         title: "MENU.INVOICE_MONITORING.BKB_FV",
-        subMenu: [
-          {
-            rootPath: "/client/invoice_monitoring-2/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
       {
         rootPath: "/client/invoice_monitoring/spt",

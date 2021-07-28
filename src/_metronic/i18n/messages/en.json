@@ -579,5 +579,6 @@
   "TITLE.I_AGREE_TO_THE_DELIVERY_OF_THESE_ITEMS": "I agree to the delivery of these items.",
   "TITLE.DETAIL_ITEMS": "Detail items",
   "TITLE.NO_ITEMS_DELIVERY_ORDER": "No items have been selected for this delivery order.",
-  "MENU.INVOICE_MONITORING.CONTRACT_TROUBLES": "Troubled Contract"
+  "MENU.INVOICE_MONITORING.CONTRACT_TROUBLES": "Troubled Contract",
+  "TITLE.NO_BKB": "BKB Number"
 }
