@@ -652,6 +652,7 @@ function ContractInvoicePage(props) {
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_NUMBER" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -681,6 +682,7 @@ function ContractInvoicePage(props) {
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -713,6 +715,7 @@ function ContractInvoicePage(props) {
                 <div className="form-group row">
                   <label htmlFor="note" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DESCRIPTION" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <textarea
@@ -740,6 +743,7 @@ function ContractInvoicePage(props) {
                 <div className="form-group row">
                   <label htmlFor="upload" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_UPLOAD" />
+                    <span className="text-danger">*</span>
                   </label>
                   <label
                     htmlFor="upload"
