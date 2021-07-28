@@ -603,6 +603,7 @@ function ContractTaxPage(props) {
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NUMBER" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -627,6 +628,7 @@ function ContractTaxPage(props) {
                 <div className="form-group row">
                   <label htmlFor="dateTax" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_DATE" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -659,6 +661,7 @@ function ContractTaxPage(props) {
                 <div className="form-group row">
                   <label htmlFor="npwpTax" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <NumberFormat
@@ -690,6 +693,7 @@ function ContractTaxPage(props) {
                 <div className="form-group row">
                   <label htmlFor="note" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DESCRIPTION" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <textarea
@@ -715,6 +719,7 @@ function ContractTaxPage(props) {
                 <div className="form-group row">
                   <label htmlFor="upload" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_UPLOAD" />
+                    <span className="text-danger">*</span>
                   </label>
                   <label
                     htmlFor="upload"

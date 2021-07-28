@@ -867,6 +867,7 @@ function ContractSprPage(props) {
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_NUMBER" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -891,6 +892,7 @@ function ContractSprPage(props) {
                 <div className="form-group row">
                   <label htmlFor="dateSpp" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_DATE" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -922,6 +924,7 @@ function ContractSprPage(props) {
                 <div className="form-group row">
                   <label htmlFor="note" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DESCRIPTION" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <textarea
@@ -947,6 +950,7 @@ function ContractSprPage(props) {
                 <div className="form-group row">
                   <label htmlFor="upload" className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.SPP_UPLOAD" />
+                    <span className="text-danger">*</span>
                   </label>
                   <label
                     htmlFor="upload"
@@ -1006,6 +1010,7 @@ function ContractSprPage(props) {
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8 col-form-label">
                     <div className="form-check form-check-inline">
@@ -1017,8 +1022,9 @@ function ContractSprPage(props) {
                         disabled={loading || sppStatus}
                         onChange={handleRadio}
                         checked={bankReference}
+                        id="TRUE"
                       />
-                      <label className="form-check-label">
+                      <label className="form-check-label" htmlFor="TRUE">
                         <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE_TRUE" />
                       </label>
                     </div>
@@ -1031,8 +1037,9 @@ function ContractSprPage(props) {
                         disabled={loading || sppStatus}
                         onChange={handleRadio}
                         checked={!bankReference}
+                        id="FALSE"
                       />
-                      <label className="form-check-label">
+                      <label className="form-check-label" htmlFor="FALSE">
                         <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_REFFERENCE_FALSE" />
                       </label>
                     </div>
@@ -1045,6 +1052,7 @@ function ContractSprPage(props) {
                       className="col-sm-4 col-form-label"
                     >
                       <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NUMBER" />
+                      <span className="text-danger">*</span>
                     </label>
                     <div className="col-sm-8">
                       <select
@@ -1071,6 +1079,7 @@ function ContractSprPage(props) {
                       className="col-sm-4 col-form-label"
                     >
                       <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NUMBER" />
+                      <span className="text-danger">*</span>
                     </label>
                     <div className="col-sm-8">
                       <input
@@ -1095,6 +1104,7 @@ function ContractSprPage(props) {
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.ACCOUNT_NAME" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -1119,6 +1129,7 @@ function ContractSprPage(props) {
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_NAME" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <input
@@ -1141,6 +1152,7 @@ function ContractSprPage(props) {
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_ADDRESS" />
+                    <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
                     <textarea
@@ -1164,6 +1176,7 @@ function ContractSprPage(props) {
                       className="col-sm-4 col-form-label"
                     >
                       <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_UPLOAD" />
+                      <span className="text-danger">*</span>
                     </label>
                     <label
                       htmlFor="upload_bank"
