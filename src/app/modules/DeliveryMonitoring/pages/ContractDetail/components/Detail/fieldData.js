@@ -32,7 +32,7 @@ const docOptions = {
     { value: "spmk", label: "SPMK" },
     { value: "skpp", label: "SKPP" },
   ],
-  contractType: [
+  contract_type: [
     { value: "full_payment", label: "Full Payment" },
     { value: "term", label: "Term" },
     { value: "confirmation_order", label: "Confirmation Order" },
@@ -41,19 +41,19 @@ const docOptions = {
 
 const fieldKickOff = [
   {
-    name: "poFile",
+    name: "po_document",
     typeInput: "UploadInput",
     label: <FormattedMessage id="TITLE.PO_DOCUMENT" />,
     labelSize: 2,
     formInputSize: 10,
   },
-  {
-    name: "docType",
-    typeInput: "SelectInputCustom",
-    label: <FormattedMessage id="TITLE.DOCUMENT_TYPE" />,
-    labelSize: 2,
-    formInputSize: 10,
-  },
+  // {
+  //   name: "docType",
+  //   typeInput: "SelectInputCustom",
+  //   label: <FormattedMessage id="TITLE.DOCUMENT_TYPE" />,
+  //   labelSize: 2,
+  //   formInputSize: 10,
+  // },
   // {
   //   name: "docFile",
   //   typeInput: "UploadInput",
@@ -66,30 +66,30 @@ const fieldKickOff = [
   // },
   [
     {
-      name: "skppFile",
+      name: "skpp_document",
       typeInput: "UploadInput",
       label: "SKPP",
     },
     {
-      name: "skppdate",
+      name: "skpp_date",
       typeInput: "SelectDateInput",
       label: <FormattedMessage id="TITLE.DATE" />,
     },
   ],
   [
     {
-      name: "spmkFile",
+      name: "spmk_document",
       typeInput: "UploadInput",
       label: "SPMK",
     },
     {
-      name: "spmkdate",
+      name: "spmk_date",
       typeInput: "SelectDateInput",
       label: <FormattedMessage id="TITLE.DATE" />,
     },
   ],
   {
-    name: "contractType",
+    name: "contract_type",
     typeInput: "SelectInputCustom",
     label: <FormattedMessage id="TITLE.CONTRACT_TYPE" />,
     labelSize: 2,

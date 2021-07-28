@@ -19,16 +19,18 @@ import { set_contract_id } from "../../../../_redux/deliveryMonitoringSlice";
 import { DEV_NODE } from "../../../../../../../redux/BaseHost";
 
 const formValidation = Yup.object().shape({
-  // poFile: validation.string(<FormattedMessage id="TITLE.CHOOSE_PO_DOCUMENT" />),
-  docType: validation.string(
-    <FormattedMessage id="TITLE.SELECT_DOCUMENT_TYPE" />
-  ),
-  docFile: validation.string(
-    <FormattedMessage id="TITLE.CHOOSE_DOCUMENT_FILE" />
-  ),
-  docDate: validation.date(
-    <FormattedMessage id="TITLE.DOUMENT_DATE_IS_REQUIRED" />
-  ),
+  // po_document: validation.string(
+  //   <FormattedMessage id="TITLE.CHOOSE_PO_DOCUMENT" />
+  // ),
+  // docType: validation.string(
+  //   <FormattedMessage id="TITLE.SELECT_DOCUMENT_TYPE" />
+  // ),
+  // docFile: validation.string(
+  //   <FormattedMessage id="TITLE.CHOOSE_DOCUMENT_FILE" />
+  // ),
+  // docDate: validation.date(
+  //   <FormattedMessage id="TITLE.DOUMENT_DATE_IS_REQUIRED" />
+  // ),
   // contractType: validation.string(
   //   <FormattedMessage id="TITLE.SELECT_CONTRACT_TYPE" />
   // ),
@@ -49,11 +51,22 @@ const KickOffDetail = ({
 
   const initValues = React.useMemo(
     () => ({
-      poFile: "",
-      docType: setDefaultSelect("docType", contractStart?.name) || "",
-      docFile: contractStart?.file ? DEV_NODE + "/" + contractStart?.file : "",
-      docDate: contractStart?.date || formatInitialDate(),
-      contractType: "",
+      // docType: setDefaultSelect("docType", contractStart?.name) || "",
+      // docFile: contractStart?.file ? DEV_NODE + "/" + contractStart?.file : "",
+      // docDate: contractStart?.date || formatInitialDate(),
+      po_document: contractStart?.po_document
+        ? DEV_NODE + "/" + contractStart?.po_document
+        : "",
+      skpp_document: contractStart?.skpp_document
+        ? DEV_NODE + "/" + contractStart?.skpp_document
+        : "",
+      skpp_date: contractStart?.skpp_date || formatInitialDate(),
+      spmk_document: contractStart?.spmk_document
+        ? DEV_NODE + "/" + contractStart?.spmk_document
+        : "",
+      spmk_date: contractStart?.spmk_date || formatInitialDate(),
+      contract_type:
+        setDefaultSelect("contract_type", contractStart?.contract_type) || "",
     }),
     [contractStart]
   );
@@ -63,11 +76,14 @@ const KickOffDetail = ({
       key: keys.post,
       type: "postForm",
       alertAppear: "both",
-      url: `/delivery/contract/${contractId}/upload-contract-start`,
+      url: `/delivery/contract/${contractId}/contract-start`,
       params: {
-        name: data.docType.value,
-        file: data.docFile.data,
-        date: data.docDate,
+        po_document: data.po_document.data,
+        skpp_document: data.skpp_document.data,
+        skpp_date: data.skpp_date,
+        spmk_document: data.spmk_document.data,
+        spmk_date: data.spmk_date,
+        contract_type: data.contract_type.value,
       },
       onSuccess: () => {
         handleRefresh();
