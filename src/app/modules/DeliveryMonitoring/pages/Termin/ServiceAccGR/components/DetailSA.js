@@ -3,69 +3,89 @@ import { Row, Col } from "react-bootstrap";
 import { Box } from "@material-ui/core";
 import { detailSA } from "../fieldData";
 import { formatSADate } from "../../../../../../libs/date";
+import ColDetail from "./ColDetail";
 
-const DetailSA = ({ data }) => {
+const DetailSA = ({ data, type }) => {
   const { client, document, vendor, contract } = detailSA;
+
+  let dataSA = {};
+  if (type === "SA") dataSA = data;
+
+  const docValuesSA = React.useMemo(
+    () => [
+      {
+        label: "Number",
+        value: dataSA ? dataSA?.sheet_no : document.number || "",
+      },
+      {
+        label: "Page",
+        value: "1 of 1",
+      },
+      {
+        label: "Posting date",
+        value: dataSA ? formatSADate(dataSA?.doc_date) : document.document_date,
+      },
+      {
+        label: "Document date",
+        value: dataSA ? formatSADate(dataSA?.doc_date) : document.document_date,
+      },
+    ],
+    [dataSA, document]
+  );
 
   return (
     <div style={{ fontSize: "0.875rem" }}>
       <Row className="mt-5">
         <Col xs={6} className="pr-2">
           <Box border={1} padding={1}>
-            <p className="mb-0">{client?.name}</p>
-            <p className="mb-0">{client?.address1}</p>
-            <p className="mb-0">{client?.address2}</p>
-            <p className="mb-0">{client?.address3}</p>
+            {Object.values(client).map((el, id) => (
+              <p className="mb-0" key={id}>
+                {el}
+              </p>
+            ))}
           </Box>
         </Col>
         <Col xs={6} className="pl-2">
           <Row>
-            <Col xs={6} className="pr-0">
-              <Box border={1} padding={1} paddingBottom={0}>
-                <p className="mb-0">Number:</p>
-                <p className="mb-0">
-                  {data ? data?.sheet_no : document.number}
-                </p>
-              </Box>
-            </Col>
-            <Col xs={6} className="pl-0">
-              <Box border={1} padding={1} paddingBottom={0}>
-                <p className="mb-0">Page:</p>
-                <p className="mb-0">1 of 1</p>
-              </Box>
-            </Col>
+            <ColDetail
+              label={docValuesSA[0].label}
+              value={docValuesSA[0].value}
+              position="left"
+            />
+            <ColDetail
+              label={docValuesSA[1].label}
+              value={docValuesSA[1].value}
+              position="right"
+            />
           </Row>
           <Row>
-            <Col xs={6} className="pr-0">
-              <Box border={1} padding={1} paddingTop={0}>
-                <p className="mb-0">Posting date:</p>
-                <p className="mb-0">
-                  {data ? formatSADate(data?.post_date) : document.posting_date}
-                </p>
-              </Box>
-            </Col>
-            <Col xs={6} className="pl-0">
-              <Box border={1} padding={1} paddingTop={0}>
-                <p className="mb-0">Document date:</p>
-                <p className="mb-0">
-                  {data ? formatSADate(data?.doc_date) : document.document_date}
-                </p>
-              </Box>
-            </Col>
+            <ColDetail
+              label={docValuesSA[2].label}
+              value={docValuesSA[2].value}
+              position="left"
+            />
+            <ColDetail
+              label={docValuesSA[3].label}
+              value={docValuesSA[3].value}
+              position="right"
+            />
           </Row>
         </Col>
       </Row>
       <Row className="mt-4">
         <Col xs={6} className="pr-2">
           <Box border={1} padding={1}>
-            <p className="mb-0">{vendor?.name}</p>
-            <p className="mb-0">{vendor?.address1}</p>
-            <p className="mb-0">{vendor?.address2}</p>
-            <p className="mb-0">{vendor?.address3}</p>
-            <br />
-            <p className="mb-0">
-              Your vendor number with us: {vendor?.vendor_number}
-            </p>
+            {Object.values(vendor).map((el, id) =>
+              id === Object.values(vendor).length - 1 ? (
+                <p className="mb-0" key={id}>
+                  Your vendor number with us: {el}
+                </p>
+              ) : (
+                <p className="mb-0" key={id}>
+                  {el}
+                </p>
+              )
+            )}
           </Box>
         </Col>
         <Col xs={6} className="pl-2">
