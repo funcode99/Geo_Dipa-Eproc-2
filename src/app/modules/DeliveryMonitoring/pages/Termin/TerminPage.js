@@ -23,6 +23,7 @@ import Steppers from "../../../../components/steppersCustom/Steppers";
 import SAGRPage from "./ServiceAccGR/SAGRPage";
 import BeritaAcara from "./BeritaAcara";
 import { fetch_api_sg } from "../../../../../redux/globalReducer";
+import { MODAL } from "../../../../../service/modalSession/ModalService";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,7 +36,14 @@ const keys = {
   task_service_and_item: "task_service_and_item",
 };
 
-const TerminPage = ({ items, fetch_api_sg, loadings, dataBarang }) => {
+const TerminPage = ({
+  items,
+  fetch_api_sg,
+  loadings,
+  dataBarang,
+  task_sa,
+  task_gr,
+}) => {
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
   const [stepperProg, setStepperProg] = React.useState([]);
@@ -87,6 +95,10 @@ const TerminPage = ({ items, fetch_api_sg, loadings, dataBarang }) => {
     ],
     []
   );
+
+  const tabUsed = isItemExists
+    ? TabLists
+    : TabLists.filter((item) => item.id !== "delivery-order");
 
   const dataProgress = [
     {
@@ -164,8 +176,16 @@ const TerminPage = ({ items, fetch_api_sg, loadings, dataBarang }) => {
   }, []);
 
   function handleChangeTab(e, newTabActive) {
-    // console.log(newTabActive);
-    setTabActive(newTabActive);
+    const lastTabIndex = tabUsed.length - 1;
+    if (newTabActive === lastTabIndex) {
+      if (!task_sa && !task_gr) {
+        MODAL.showSnackbar("Mohon pastikan BAPP sudah di approve.", "warning");
+      } else {
+        setTabActive(newTabActive);
+      }
+    } else {
+      setTabActive(newTabActive);
+    }
   }
 
   const fetchDataStepper = () => {
@@ -192,8 +212,6 @@ const TerminPage = ({ items, fetch_api_sg, loadings, dataBarang }) => {
       },
     });
   };
-
-  // console.log(TabLists);
 
   return (
     <Container>
@@ -227,11 +245,7 @@ const TerminPage = ({ items, fetch_api_sg, loadings, dataBarang }) => {
           <Tabs
             tabActive={tabActive}
             handleChange={handleChangeTab}
-            tabLists={
-              isItemExists
-                ? TabLists
-                : TabLists.filter((item) => item.id !== "delivery-order")
-            }
+            tabLists={tabUsed}
           />
         </Container>
         <hr className="p-0 m-0" />
@@ -267,6 +281,8 @@ const TerminPage = ({ items, fetch_api_sg, loadings, dataBarang }) => {
 const mapState = ({ deliveryMonitoring }) => ({
   items: deliveryMonitoring.dataContractById?.items,
   dataBarang: deliveryMonitoring.dataBarang,
+  task_sa: deliveryMonitoring.dataTask?.task_sa,
+  task_gr: deliveryMonitoring.dataTask?.task_gr,
 });
 
 export default connect(mapState, { fetch_api_sg })(TerminPage);
