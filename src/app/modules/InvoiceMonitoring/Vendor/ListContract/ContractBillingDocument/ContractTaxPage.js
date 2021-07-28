@@ -81,6 +81,7 @@ function ContractTaxPage(props) {
     file: "",
     invoice_bool: false,
     invoice_date: new Date(Date.now()),
+    invoice_date_yesterday: new Date(Date.now() - 86400000),
   };
 
   const headerTable = [
@@ -148,7 +149,7 @@ function ContractTaxPage(props) {
         is: true,
         then: Yup.date()
           .min(
-            Yup.ref("invoice_date"),
+            Yup.ref("invoice_date_yesterday"),
             intl.formatMessage({
               id:
                 "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.DATE_VALIDATION",
@@ -352,9 +353,16 @@ function ContractTaxPage(props) {
           response.data.data?.state == "PENDING" ||
           response.data.data?.state == "APPROVED"
         ) {
+          // - 86400000
+          var d = new Date(response.data.data.from_time);
+          d.setDate(d.getDate()-1);
           formik.setFieldValue(
             "invoice_date",
             new Date(response.data.data.from_time)
+          );
+          formik.setFieldValue(
+            "invoice_date_yesterday",
+            new Date(d)
           );
           formik.setFieldValue("invoice_bool", true);
         }
@@ -652,7 +660,7 @@ function ContractTaxPage(props) {
                       }}
                     />
                   </div>
-                  {formik.touched.dateTax && formik.errors.tax_date ? (
+                  {formik.touched.tax_date && formik.errors.tax_date ? (
                     <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.tax_date}
                     </span>
@@ -710,9 +718,9 @@ function ContractTaxPage(props) {
                       }}
                     ></textarea>
                   </div>
-                  {formik.touched.tax_date && formik.errors.tax_date ? (
+                  {formik.touched.description && formik.errors.description ? (
                     <span className="col-sm-8 offset-sm-4 text-left text-danger">
-                      {formik.errors.tax_date}
+                      {formik.errors.description}
                     </span>
                   ) : null}
                 </div>
