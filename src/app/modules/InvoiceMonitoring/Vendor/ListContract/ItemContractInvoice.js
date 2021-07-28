@@ -105,7 +105,7 @@ function ItemContractInvoice(props) {
   const navLists = [
     {
       id: "SPR",
-      label: "SPR",
+      label: "SPP",
     },
     {
       id: "Invoice",
