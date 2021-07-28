@@ -89,7 +89,13 @@ function ContractTaxPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
-  const { intl, classes, progressTermin, setProgressTermin, setDataProgress } = props;
+  const {
+    intl,
+    classes,
+    progressTermin,
+    setProgressTermin,
+    setDataProgress,
+  } = props;
 
   const initialValues = {};
   const invoiceName = "TAX";
@@ -202,10 +208,12 @@ function ContractTaxPage(props) {
   const getTaxData = useCallback(() => {
     getTax(contract_id, termin)
       .then((response) => {
+        if (response.data.data !== null) {
         setOptionSelected(response.data.data.tax_selected);
         setTaxData(response.data.data);
         if (response.data.data) {
           getHistoryTaxData(response["data"]["data"]["id"]);
+        }
         }
       })
       .catch((error) => {
@@ -269,11 +277,10 @@ function ContractTaxPage(props) {
         setIsSubmit(true);
         getHistoryTaxData(taxData.id);
         softcopy_save(data_1);
-        getTerminProgress(termin)
-          .then((result) => {
+        getTerminProgress(termin).then((result) => {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
-          })
+        });
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
