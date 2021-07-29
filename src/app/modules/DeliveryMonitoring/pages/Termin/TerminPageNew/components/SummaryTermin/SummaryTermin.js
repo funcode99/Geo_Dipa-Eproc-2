@@ -16,41 +16,30 @@ import {
 } from "@material-ui/icons";
 import { Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { actionTypes } from "../../_redux/deliveryMonitoringAction";
-import useToast from "../../../../components/toast";
-import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
-import { rupiah } from "../../../../libs/currency";
-import Navs from "../../../../components/navs";
+import { actionTypes } from "../../../../../_redux/deliveryMonitoringAction";
+// import { actionTypes } from "../../_redux/deliveryMonitoringAction";
+import useToast from "../../../../../../../components/toast";
+import {
+  Card,
+  CardBody,
+} from "../../../../../../../../_metronic/_partials/controls";
+import { rupiah } from "../../../../../../../libs/currency";
+import Navs from "../../../../../../../components/navs";
 import { FormattedMessage } from "react-intl";
-import TablePaginationCustom from "../../../../components/tables/TablePagination";
-import DialogGlobal from "../../../../components/modals/DialogGlobal";
+import TablePaginationCustom from "../../../../../../../components/tables/TablePagination";
+import DialogGlobal from "../../../../../../../components/modals/DialogGlobal";
 import { connect } from "react-redux";
-import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
+import {
+  fetch_api_sg,
+  getLoading,
+} from "../../../../../../../../redux/globalReducer";
+import { NAV_LISTS, TABLE_HEAD_DATA, TABLE_ITEMS } from "./SUMMARY_DUMMY";
+import { TerminPageContext } from "../../TerminPageNew";
 
-const tHeadSubmitItems = [
-  "No",
-  <FormattedMessage id="TITLE.NAME" />,
-  <FormattedMessage id="TITLE.QUANTITY" />,
-];
-
-const theadItems = [
-  { id: "action", label: "" },
-  { id: "keterangan", label: "Keterangan" },
-  { id: "due-date", label: "Due Date" },
-  { id: "qty", label: "Qty" },
-  { id: "qty_avail", label: "Qty Available" },
-  { id: "uom", label: "Uom" },
-  { id: "net-value", label: "Net Value" },
-  // { id: 'wbs', label: 'WBS' },
-];
-
-const navLists = [
-  { id: "link-jasa", label: <FormattedMessage id="SUMMARY.NAV.SERVICE" /> },
-  { id: "link-barang", label: <FormattedMessage id="SUMMARY.NAV.ITEM" /> },
-];
-
-function SummaryTermin({ taskId = "", loadings, fetch_api_sg, status }) {
-  const [navActive, setNavActive] = React.useState(navLists[0].id);
+function SummaryTermin({ loadings, fetch_api_sg, status }) {
+  const { func, task_id } = React.useContext(TerminPageContext);
+  const taskId = task_id;
+  const [navActive, setNavActive] = React.useState(NAV_LISTS[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
   const [itemJasa, setItemJasa] = React.useState([]);
   const [Toast, setToast] = useToast();
@@ -169,7 +158,7 @@ function SummaryTermin({ taskId = "", loadings, fetch_api_sg, status }) {
       onSuccess: (res) => {
         const tempDataJasa = res.data.task_item_services;
         const tempDataBarang = res.data.task_items;
-
+        func.onRefresh();
         addShowField(tempDataJasa);
         addCheckedAndErrorField(tempDataJasa, "jasa");
         addCheckedAndErrorField(tempDataBarang, "barang");
@@ -539,13 +528,13 @@ function SummaryTermin({ taskId = "", loadings, fetch_api_sg, status }) {
             </h4>
             <Table size="small">
               {/* <colgroup>
-                  <col width="50px" />
-                  <col width="200px" />
-                  <col width="50px" />
-                </colgroup> */}
+                <col width="50px" />
+                <col width="200px" />
+                <col width="50px" />
+              </colgroup> */}
               <TableHead>
                 <TableRow>
-                  {tHeadSubmitItems.map((item, index) => (
+                  {TABLE_HEAD_DATA.map((item, index) => (
                     <TableCell key={index} align={index > 1 ? "right" : "left"}>
                       {item}
                     </TableCell>
@@ -572,13 +561,13 @@ function SummaryTermin({ taskId = "", loadings, fetch_api_sg, status }) {
             </h4>
             <Table size="small">
               {/* <colgroup>
-                  <col width="50px" />
-                  <col width="200px" />
-                  <col width="50px" />
-                </colgroup> */}
+                <col width="50px" />
+                <col width="200px" />
+                <col width="50px" />
+              </colgroup> */}
               <TableHead>
                 <TableRow>
-                  {tHeadSubmitItems.map((item, index) => (
+                  {TABLE_HEAD_DATA.map((item, index) => (
                     <TableCell key={index} align={index > 1 ? "right" : "left"}>
                       {item}
                     </TableCell>
@@ -604,20 +593,20 @@ function SummaryTermin({ taskId = "", loadings, fetch_api_sg, status }) {
               <FormattedMessage id="MESSAGE.SUBMIT_ITEM" />
             </h6>
             {/* <div className="d-flex justify-content-end w-100">
-                <Button
-                  className="btn btn-secondary border-success mr-3"
-                  onClick={() => handleVisibleModal("submit")}
-                >
-                  <FormattedMessage id="TITLE.CANCEL" />
-                </Button>
-                <Button
-                  className="btn btn-success"
-                  onClick={() => handleSubmit()}
-                >
-                  <FormattedMessage id="TITLE.YES" />
-                  {loading ? <CircularProgress /> : null}
-                </Button>
-              </div> */}
+              <Button
+                className="btn btn-secondary border-success mr-3"
+                onClick={() => handleVisibleModal("submit")}
+              >
+                <FormattedMessage id="TITLE.CANCEL" />
+              </Button>
+              <Button
+                className="btn btn-success"
+                onClick={() => handleSubmit()}
+              >
+                <FormattedMessage id="TITLE.YES" />
+                {loading ? <CircularProgress /> : null}
+              </Button>
+            </div> */}
           </div>
         ) : (
           <div className="d-flex justify-content-center align-items-center flex-column">
@@ -628,20 +617,20 @@ function SummaryTermin({ taskId = "", loadings, fetch_api_sg, status }) {
               <FormattedMessage id="MESSAGE.NO_ITEMS" />
             </p>
             {/* <div className="d-flex justify-content-end">
-                <Button
-                  className="btn btn-secondary border-success mr-3"
-                  onClick={() => handleVisibleModal("submit")}
-                >
-                  <FormattedMessage id="TITLE.CANCEL" />
-                </Button>
-                <Button
-                  className="btn btn-success"
-                  onClick={() => handleSubmit()}
-                >
-                  <FormattedMessage id="TITLE.YES" />
-                  {loading ? <CircularProgress /> : null}
-                </Button>
-              </div> */}
+              <Button
+                className="btn btn-secondary border-success mr-3"
+                onClick={() => handleVisibleModal("submit")}
+              >
+                <FormattedMessage id="TITLE.CANCEL" />
+              </Button>
+              <Button
+                className="btn btn-success"
+                onClick={() => handleSubmit()}
+              >
+                <FormattedMessage id="TITLE.YES" />
+                {loading ? <CircularProgress /> : null}
+              </Button>
+            </div> */}
           </div>
         )}
       </DialogGlobal>
@@ -649,14 +638,14 @@ function SummaryTermin({ taskId = "", loadings, fetch_api_sg, status }) {
       <Card>
         <CardBody>
           <Navs
-            navLists={navLists}
+            navLists={NAV_LISTS}
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
           />
 
           {/* component table jasa */}
           {navActive === "link-jasa" && (
             <TablePaginationCustom
-              headerRows={theadItems}
+              headerRows={TABLE_ITEMS}
               rows={dataJasa}
               loading={loadings.fetch}
               maxHeight={300}
@@ -887,7 +876,7 @@ function SummaryTermin({ taskId = "", loadings, fetch_api_sg, status }) {
 
           {navActive === "link-barang" && (
             <TablePaginationCustom
-              headerRows={theadItems}
+              headerRows={TABLE_ITEMS}
               rows={dataBarang}
               loading={loadings.fetch}
               withSearch={false}

@@ -17,6 +17,8 @@ import Steppers from "../../../../../../../components/steppersCustom/Steppers";
 import Tabs from "../../../../../../../components/tabs";
 import Summary from "../../../Summary";
 import Documents from "../../../Documents";
+import DeliveryOrder from "../../../DeliveryOrder.js/DeliveryOrder";
+import SummaryTermin from "../SummaryTermin/SummaryTermin";
 // import SummaryTermin from "../SummaryTermin";
 
 const TerminPaper = () => {
@@ -100,18 +102,18 @@ const TerminPaper = () => {
         </Container>
         <hr className="p-0 m-0" />
         <Container style={{ marginTop: 20, paddingBottom: 20 }}>
-          {/* {tabActive === 0 && <SummaryTermin taskId={task_id} />} */}
-          {tabActive === 0 && <Summary taskId={task_id} />}
+          {tabActive === 0 && <SummaryTermin />}
+          {/* {tabActive === 0 && <Summary taskId={task_id} />}
           {tabActive === 0 && (
             <Documents loadStepper={func.onRefresh} taskId={task_id} />
           )}
+          {isItemExists && tabActive === 1 && (
+            <DeliveryOrder taskId={task_id} />
+          )} */}
         </Container>
 
         {/* <Container style={{ marginTop: 20, paddingBottom: 20 }}>
 
-          {isItemExists && tabActive === 1 && (
-            <DeliveryOrder taskId={task_id} />
-          )}
           {!isItemExists && tabActive === 1 && <BeritaAcara />}
 
           {isItemExists && tabActive === 2 && <BeritaAcara />}

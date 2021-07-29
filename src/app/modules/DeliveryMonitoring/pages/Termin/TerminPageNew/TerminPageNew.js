@@ -56,6 +56,7 @@ export class TerminPageNew extends PureComponent {
               ...prev,
               termin: { ...prev.termin, stepper: mappedStepper },
             }));
+            if (typeof onSuccess === "function") onSuccess(res);
           },
           onFail,
         });
@@ -93,7 +94,12 @@ export class TerminPageNew extends PureComponent {
 }
 
 const mapState = (state) => {
-  const { dataContractById, dataBarang, dataTask } = state.deliveryMonitoring;
+  const {
+    dataContractById,
+    dataBarang,
+    dataTask,
+    dataJasa,
+  } = state.deliveryMonitoring;
   return {
     map_state: {
       loadings: {
@@ -102,7 +108,8 @@ const mapState = (state) => {
       authStatus: state.auth.user.data.status,
       dataContractById,
       items: dataContractById?.items,
-      dataBarang: dataBarang,
+      dataBarang,
+      dataJasa,
       task_sa: dataTask?.task_sa,
       task_gr: dataTask?.task_gr,
       dataTask,
