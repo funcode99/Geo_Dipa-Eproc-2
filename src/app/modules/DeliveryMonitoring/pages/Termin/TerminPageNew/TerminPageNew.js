@@ -26,7 +26,7 @@ export class TerminPageNew extends PureComponent {
 
   componentDidMount() {
     const { task_id } = this.props.match.params;
-    this.handleApiCenter({ key: KEYS_TERMIN.f_termin });
+    this.handleRefresh();
     if (!task_id) {
       this.props.history.goBack();
     }
@@ -80,6 +80,7 @@ export class TerminPageNew extends PureComponent {
           task_id,
           func: {
             onRefresh: this.handleRefresh,
+            handleApi: this.handleApiCenter,
           },
           ...map_state,
           states: this.state,
