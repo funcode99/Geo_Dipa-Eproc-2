@@ -66,7 +66,6 @@ const TerminPaper = () => {
       setTabActive(newTabActive);
     }
   }
-  console.log(`loadings[KEYS_TERMIN.f_termin]`, loadings[KEYS_TERMIN.f_termin]);
   return (
     <Container>
       <StyledSubheader
