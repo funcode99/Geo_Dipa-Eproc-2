@@ -96,32 +96,6 @@ function ItemContractBKB(props) {
     getBkb(termin)
       .then((response) => {
         if (response["data"]["data"]) {
-          response["data"]["data"]["vendor_address"] = `${response["data"]["data"]["vendor_data"]["address"]["postal_address"]
-            ? response["data"]["data"]["vendor_data"]["address"][
-            "postal_address"
-            ]
-            : null
-            } ${response["data"]["data"]["vendor_data"]["address"]["sub_district"]
-              ? response["data"]["data"]["vendor_data"]["address"][
-              "sub_district"
-              ]["name"]
-              : null
-            } ${response["data"]["data"]["vendor_data"]["address"]["district"]
-              ? response["data"]["data"]["vendor_data"]["address"]["district"][
-              "name"
-              ]
-              : null
-            } ${response["data"]["data"]["vendor_data"]["address"]["province"]
-              ? response["data"]["data"]["vendor_data"]["address"]["province"][
-              "name"
-              ]
-              : null
-            } ${response["data"]["data"]["vendor_data"]["address"]["postal_code"]
-              ? response["data"]["data"]["vendor_data"]["address"][
-              "postal_code"
-              ]
-              : null
-            }`;
           setBkbData(response["data"]["data"]);
         }
       })
