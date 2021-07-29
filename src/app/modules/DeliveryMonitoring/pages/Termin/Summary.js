@@ -26,6 +26,7 @@ import TablePaginationCustom from "../../../../components/tables/TablePagination
 import DialogGlobal from "../../../../components/modals/DialogGlobal";
 import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
+import { TerminPageContext } from "./TerminPageNew/TerminPageNew";
 
 const tHeadSubmitItems = [
   "No",
@@ -49,7 +50,9 @@ const navLists = [
   { id: "link-barang", label: <FormattedMessage id="SUMMARY.NAV.ITEM" /> },
 ];
 
-function Summary({ taskId = "", loadings, fetch_api_sg, status }) {
+function Summary({ loadings, fetch_api_sg, status }) {
+  const { func, task_id } = React.useContext(TerminPageContext);
+  const taskId = task_id;
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
   const [itemJasa, setItemJasa] = React.useState([]);
@@ -169,7 +172,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg, status }) {
       onSuccess: (res) => {
         const tempDataJasa = res.data.task_item_services;
         const tempDataBarang = res.data.task_items;
-
+        func.onRefresh();
         addShowField(tempDataJasa);
         addCheckedAndErrorField(tempDataJasa, "jasa");
         addCheckedAndErrorField(tempDataBarang, "barang");

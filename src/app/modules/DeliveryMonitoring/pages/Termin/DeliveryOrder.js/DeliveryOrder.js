@@ -26,6 +26,7 @@ import {
   getLoading,
 } from "../../../../../../redux/globalReducer";
 import { tblHeadDlvItem } from "./components/fieldData";
+import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required(<FormattedMessage id="TITLE.DESC_IS_REQUIRE" />),
@@ -83,7 +84,7 @@ const changeSequenceOptions = (arr) => {
 };
 
 const DeliveryOrder = ({
-  taskId,
+  // taskId,
   items,
   orderItems,
   tempOrderItems,
@@ -93,6 +94,8 @@ const DeliveryOrder = ({
   fetchApi,
   loadings,
 }) => {
+  const { func, task_id } = React.useContext(TerminPageContext);
+  const taskId = task_id;
   const [open, setOpen] = React.useState({
     submit: false,
     delete: false,
@@ -225,6 +228,8 @@ const DeliveryOrder = ({
               // console.log(`res`, res);
               console.log(`open`, open);
               getTask();
+              func.onRefresh();
+
               // handleVisible("submit", {});
               submitRef.current.close();
             },
@@ -247,6 +252,7 @@ const DeliveryOrder = ({
       alertAppear: "both",
       onSuccess: (res) => {
         // console.log(`res`, res);
+        func.onRefresh();
         getTask();
         handleVisible("delete", {});
         deleteRef.current.close();
@@ -269,6 +275,7 @@ const DeliveryOrder = ({
       },
       onSuccess: (res) => {
         getTask();
+        func.onRefresh();
         submitItemRef.current.close();
         handleVisible("confirm", {}, []);
       },

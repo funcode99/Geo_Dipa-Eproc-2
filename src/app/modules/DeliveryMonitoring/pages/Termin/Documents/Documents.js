@@ -20,6 +20,7 @@ import {
 } from "../../../../../../redux/globalReducer";
 import { connect } from "react-redux";
 import { MODAL } from "../../../../../../service/modalSession/ModalService";
+import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 
 export const DocumentsContext = createContext({});
 
@@ -33,13 +34,16 @@ const keys = {
 };
 
 const Documents = ({
-  taskId,
+  // taskId,
   loadings,
   set_loading_rd,
   set_loading_done_rd,
   fetch_api_sg,
-  loadStepper,
+  // loadStepper,
 }) => {
+  const { func, task_id } = React.useContext(TerminPageContext);
+  const taskId = task_id;
+  // const loadStepper = func.onRefresh();
   const [loading, setLoading] = React.useState({
     get: false,
     create: false,
@@ -75,7 +79,7 @@ const Documents = ({
     (res) => {
       if (res?.data?.status === true) {
         fetchData();
-        loadStepper();
+        func.onRefresh();
         setToast(res?.data?.message);
       }
     },
@@ -188,7 +192,7 @@ const Documents = ({
             url: `delivery/task-document-upload/${open?.tempParams?.upload_id}`,
             onSuccess: () => {
               fetchData();
-              loadStepper();
+              func.onRefresh();
               handleLoading(type, false);
               handleVisible(type);
             },
@@ -211,6 +215,7 @@ const Documents = ({
             url: `delivery/task-document-upload/${open?.tempParams?.resend_id}`,
             onSuccess: () => {
               fetchData();
+              func.onRefresh();
               handleLoading(type, false);
               handleVisible(type);
             },
@@ -235,6 +240,7 @@ const Documents = ({
             url: `delivery/task-document/${open?.tempParams?.accept_id}/approve`,
             onSuccess: () => {
               fetchData();
+              func.onRefresh();
               handleLoading(type, false);
               handleVisible(type);
             },
@@ -260,6 +266,7 @@ const Documents = ({
             url: `delivery/task-document/${open?.tempParams?.reject_id}/reject`,
             onSuccess: () => {
               fetchData();
+              func.onRefresh();
               handleLoading(type, false);
               handleVisible(type);
             },

@@ -8,7 +8,7 @@ import {
   BookmarkBorderOutlined,
   LocalShipping,
 } from "@material-ui/icons";
-import { DUMMY_STEPPER, TERMIN_TAB_LIST } from "../../STATIC_DATA";
+import { DUMMY_STEPPER, KEYS_TERMIN, TERMIN_TAB_LIST } from "../../STATIC_DATA";
 import { MODAL } from "../../../../../../../../service/modalSession/ModalService";
 import { Container, Paper } from "@material-ui/core";
 import StyledSubheader from "../../../../../../../components/subheader";
@@ -19,6 +19,8 @@ import Summary from "../../../Summary";
 import Documents from "../../../Documents";
 import DeliveryOrder from "../../../DeliveryOrder.js/DeliveryOrder";
 import SummaryTermin from "../SummaryTermin/SummaryTermin";
+import SAGRPage from "../../../ServiceAccGR/SAGRPage";
+import BeritaAcara from "../../../BeritaAcara";
 // import SummaryTermin from "../SummaryTermin";
 
 const TerminPaper = () => {
@@ -33,6 +35,7 @@ const TerminPaper = () => {
     dataContractById,
     authStatus,
     func,
+    loadings,
   } = React.useContext(TerminPageContext);
   const stepperProg = React.useMemo(() => states.termin.stepper, [states]);
   const classes = useStyles();
@@ -63,6 +66,7 @@ const TerminPaper = () => {
       setTabActive(newTabActive);
     }
   }
+  console.log(`loadings[KEYS_TERMIN.f_termin]`, loadings[KEYS_TERMIN.f_termin]);
   return (
     <Container>
       <StyledSubheader
@@ -87,11 +91,11 @@ const TerminPaper = () => {
           },
         ]}
       />
-      {DUMMY_STEPPER.length > 0 && (
-        <Steppers
-          steps={stepperProg.length > 0 ? stepperProg : DUMMY_STEPPER}
-        />
-      )}
+      {/* {DUMMY_STEPPER.length > 0 && ( */}
+      <Steppers
+        steps={loadings[KEYS_TERMIN.f_termin] ? DUMMY_STEPPER : stepperProg}
+      />
+      {/* )} */}
       <Paper className={classes.paper}>
         <Container>
           <Tabs
@@ -102,25 +106,18 @@ const TerminPaper = () => {
         </Container>
         <hr className="p-0 m-0" />
         <Container style={{ marginTop: 20, paddingBottom: 20 }}>
-          {tabActive === 0 && <SummaryTermin />}
-          {/* {tabActive === 0 && <Summary taskId={task_id} />}
-          {tabActive === 0 && (
-            <Documents loadStepper={func.onRefresh} taskId={task_id} />
-          )}
-          {isItemExists && tabActive === 1 && (
-            <DeliveryOrder taskId={task_id} />
-          )} */}
+          {/* {tabActive === 0 && <SummaryTermin />} */}
+          {tabActive === 0 && <Summary />}
+          {tabActive === 0 && <Documents />}
+          {isItemExists && tabActive === 1 && <DeliveryOrder />}
+          {!isItemExists && tabActive === 1 && <BeritaAcara />}
+          {isItemExists && tabActive === 2 && <BeritaAcara />}
+          {!isItemExists && tabActive === 2 && <SAGRPage />}
+          {isItemExists && tabActive === 3 && <SAGRPage />}
         </Container>
 
         {/* <Container style={{ marginTop: 20, paddingBottom: 20 }}>
 
-          {!isItemExists && tabActive === 1 && <BeritaAcara />}
-
-          {isItemExists && tabActive === 2 && <BeritaAcara />}
-
-          {!isItemExists && tabActive === 2 && <SAGRPage />}
-
-          {isItemExists && tabActive === 3 && <SAGRPage />}
 
         </Container> */}
         {/* )} */}
