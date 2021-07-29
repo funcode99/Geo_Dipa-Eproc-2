@@ -131,7 +131,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ContractHardCopyDoc(props) {
-  const { intl, progressTermin, setProgressTermin, setDataProgress } = props;
+  const { intl, progressTermin, setProgressTermin, setDataProgress, dataProgress } = props;
   const classes = useStyles();
   const [Toast, setToast] = useToast();
   const [dataReject, setDataReject] = useState({});
@@ -148,6 +148,10 @@ function ContractHardCopyDoc(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const dataUser = useSelector((state) => state.auth.user.data);
+
+  const indexHardCopy = dataProgress?.findIndex(row => row.ident_name == "HARDCOPY")
+  const statusHardCopy = dataProgress[indexHardCopy]?.status === "ON PROGRESS"
+
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
     shallowEqual
@@ -818,7 +822,7 @@ function ContractHardCopyDoc(props) {
                             dataUser?.is_finance &&
                             (item.hardcopy_state === null || item.hardcopy_state === "REJECTED") &&
                             (item.softcopy_state !== null) &&
-                            progressTermin?.ident_name === "HARDCOPY" &&
+                            statusHardCopy &&
                             (
                               <ButtonAction
                                 data={item}
@@ -936,8 +940,7 @@ function ContractHardCopyDoc(props) {
                                               els.document_monitoring
                                                 ?.hardcopy_state ===
                                               "REJECTED") &&
-                                            progressTermin?.ident_name ===
-                                            "HARDCOPY" && (
+                                            statusHardCopy && (
                                               <ButtonAction
                                                 data={els}
                                                 handleAction={
@@ -982,7 +985,7 @@ function ContractHardCopyDoc(props) {
                                       el?.remarks,
                                       el?.url &&
                                       (el.document_monitoring?.hardcopy_state === null || el.document_monitoring?.hardcopy_state === "REJECTED") &&
-                                      progressTermin?.ident_name === "HARDCOPY" &&
+                                      statusHardCopy &&
                                       (
                                         <ButtonAction
                                           data={el}
@@ -1090,7 +1093,7 @@ function ContractHardCopyDoc(props) {
                             (item.hardcopy_state === null ||
                               item.hardcopy_state === "REJECTED") &&
                             item.softcopy_state !== null &&
-                            progressTermin?.ident_name === "HARDCOPY" && (
+                            statusHardCopy && (
                               <ButtonAction
                                 data={item}
                                 handleAction={handleAction}
