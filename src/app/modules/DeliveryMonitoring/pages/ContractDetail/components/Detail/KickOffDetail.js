@@ -31,9 +31,9 @@ const formValidation = Yup.object().shape({
   // docDate: validation.date(
   //   <FormattedMessage id="TITLE.DOUMENT_DATE_IS_REQUIRED" />
   // ),
-  // contractType: validation.string(
-  //   <FormattedMessage id="TITLE.SELECT_CONTRACT_TYPE" />
-  // ),
+  contract_type: validation.string(
+    <FormattedMessage id="TITLE.SELECT_CONTRACT_TYPE" />
+  ),
 });
 
 const setDefaultSelect = (options, name) => {
@@ -55,15 +55,27 @@ const KickOffDetail = ({
       // docFile: contractStart?.file ? DEV_NODE + "/" + contractStart?.file : "",
       // docDate: contractStart?.date || formatInitialDate(),
       po_document: contractStart?.po_document
-        ? DEV_NODE + "/" + contractStart?.po_document
-        : "",
+        ? {
+            path_preview: contractStart?.po_document,
+          }
+        : {
+            path_preview: "",
+          },
       skpp_document: contractStart?.skpp_document
-        ? DEV_NODE + "/" + contractStart?.skpp_document
-        : "",
+        ? {
+            path_preview: contractStart?.skpp_document,
+          }
+        : {
+            path_preview: "",
+          },
       skpp_date: contractStart?.skpp_date || formatInitialDate(),
       spmk_document: contractStart?.spmk_document
-        ? DEV_NODE + "/" + contractStart?.spmk_document
-        : "",
+        ? {
+            path_preview: contractStart?.spmk_document,
+          }
+        : {
+            path_preview: "",
+          },
       spmk_date: contractStart?.spmk_date || formatInitialDate(),
       contract_type:
         setDefaultSelect("contract_type", contractStart?.contract_type) || "",
