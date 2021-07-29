@@ -847,7 +847,7 @@ function ItemContractBKB(props) {
                     )}
                   {bkbData?.doc_park_ap_approved_id && (
                     <QRCodeG
-                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.verif_staff_role_id}&type=APPROVED_PARK_AP`}
                     />
                   )}
                   <div className="d-flex align-items-end">
@@ -893,7 +893,7 @@ function ItemContractBKB(props) {
                     )}
                   {bkbData?.doc_park_byr_approved_id && (
                     <QRCodeG
-                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.verif_staff_role_id}&type=APPROVED_PARK_BYR`}
                     />
                   )}
                   <div className="d-flex align-items-end">
@@ -1133,7 +1133,7 @@ function ItemContractBKB(props) {
                             )}
                           {bkbData?.tax_man_approved_id && (
                             <QRCodeG
-                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}`}
+                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}&type=APPROVED_BKB`}
                             />
                           )}
                         </div>
@@ -1192,7 +1192,7 @@ function ItemContractBKB(props) {
                             )}
                           {bkbData?.finance_man_approved_id && (
                             <QRCodeG
-                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}`}
+                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}&type=APPROVED_BKB`}
                             />
                           )}
                         </div>
@@ -1251,7 +1251,7 @@ function ItemContractBKB(props) {
                             )}
                           {bkbData?.finance_director_approved_id && (
                             <QRCodeG
-                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}`}
+                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}&type=APPROVED_BKB`}
                             />
                           )}
                         </div>
