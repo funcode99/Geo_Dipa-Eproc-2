@@ -32,7 +32,7 @@ function VerificationQrCode(props) {
       setLoading(false);
       setTokenStatus(false);
     } else {
-      verificationQr(query.get("term_id"), query.get("role_id"))
+      verificationQr(query.get("term_id"), query.get("role_id"), query.get("type"))
         .then((result) => {
           setData(result.data.data);
           setLoading(false);
