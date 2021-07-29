@@ -34,7 +34,7 @@ const UploadInput = ({
         {isPreview && (
           <div className="input-group-append">
             <button
-              className={`input-group-text text-center btn btn-sm btn-outline-primary ${
+              className={`input-group-text text-center btn btn-sm btn-outline-secondary ${
                 value.path_preview ? "" : "disabled"
               }`}
               type="button"
