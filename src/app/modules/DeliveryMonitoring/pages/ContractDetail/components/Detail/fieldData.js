@@ -46,6 +46,7 @@ const fieldKickOff = [
     label: <FormattedMessage id="TITLE.PO_DOCUMENT" />,
     labelSize: 2,
     formInputSize: 10,
+    isPreview: true,
   },
   // {
   //   name: "docType",
@@ -69,6 +70,7 @@ const fieldKickOff = [
       name: "skpp_document",
       typeInput: "UploadInput",
       label: "SKPP",
+      isPreview: true,
     },
     {
       name: "skpp_date",
@@ -81,6 +83,7 @@ const fieldKickOff = [
       name: "spmk_document",
       typeInput: "UploadInput",
       label: "SPMK",
+      isPreview: true,
     },
     {
       name: "spmk_date",
