@@ -891,7 +891,7 @@ function Summary({ taskId = "", loadings, fetch_api_sg, status }) {
               rows={dataBarang}
               loading={loadings.fetch}
               withSearch={false}
-              withPagination={false}
+              withPagination={true}
               renderRows={({ item, index }) => {
                 // Check if already submit
                 if (item.item === undefined) {
