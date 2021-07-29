@@ -9,3 +9,8 @@ export const actionTypes = {
   SetDataTempOrderItems: "[Set Data Temp Order Items] Action",
   SetDataUpdateOrderItems: "[Set Data Update Order Items] Action",
 };
+
+export const save_data_task = (payload) => ({
+  type: actionTypes.SetDataTask,
+  payload,
+});
