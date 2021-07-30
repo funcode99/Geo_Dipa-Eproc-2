@@ -160,7 +160,7 @@ const ModalDetail = ({
             </InputLabel>
             <TextField
               labelid="delivery-order-status"
-              id="elivery-order-status-id"
+              id="delivery-order-status-id"
               name="approve_status"
               size="small"
               classes={{ root: classes.textField }}

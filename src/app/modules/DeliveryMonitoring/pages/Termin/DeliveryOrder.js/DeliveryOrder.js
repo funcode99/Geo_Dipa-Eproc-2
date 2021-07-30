@@ -287,6 +287,7 @@ const DeliveryOrder = ({
     if (option.includes(type)) {
       // console.log(`type`, type);
       // console.log(`data`, data);
+      const displayedStatus = ["approved", "rejected"];
 
       formik.setValues({
         name: data.name,
@@ -294,7 +295,9 @@ const DeliveryOrder = ({
           ? formatUpdateDate(new Date(data.date), "yyy-MM-dd")
           : formatUpdateDate(new Date(), "yyy-MM-dd"),
         remarks: data.remarks,
-        status: data.approve_status_id || initialValues.status,
+        status: displayedStatus.includes(data.approve_status.code)
+          ? data.approve_status_id
+          : initialValues.status,
         status_remarks: data.reject_text || initialValues.status_remarks,
       });
     } else if (type === "create") {
