@@ -197,12 +197,12 @@ export class HtmlClassService {
    * Init Subheader
    */
   initSubheader() {
-    const subheaderDisplay = objectPath.get(this.config, "subheader.display");
-    if (subheaderDisplay) {
-      document.body.classList.add("subheader-enabled");
-    } else {
-      return;
-    }
+    // const subheaderDisplay = objectPath.get(this.config, "subheader.display");
+    // if (subheaderDisplay) {
+    //   document.body.classList.add("subheader-enabled");
+    // } else {
+    //   return;
+    // }
 
     // Fixed content head
     const subheaderFixed = objectPath.get(this.config, "subheader.fixed");
