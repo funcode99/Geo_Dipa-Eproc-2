@@ -8,6 +8,7 @@ import ItemSpt from "./ListSpt/ItemSpt";
 import ListTermContract from "./ListContract/ListTermContract";
 import DashboardListMismatch from "./ListMismatch/DashboardListMismatch";
 import DashboardListBkb from "./ListBkb/DashboardListBkb";
+import Dashboard from "./Dashboard/Dashboard";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -22,7 +23,7 @@ function RootClientInvoiceMonitoring(props) {
       <Redirect
         exact
         from="/client/invoice_monitoring"
-        to="/client/invoice_monitoring/contract"
+        to="/client/invoice_monitoring/dashboard"
       />
       <Route
         path="/client/invoice_monitoring/contract/:contract/:termin"
@@ -50,6 +51,10 @@ function RootClientInvoiceMonitoring(props) {
       <Route
         path="/client/invoice_monitoring/bkb"
         component={DashboardListBkb}
+      />
+      <Route
+        path="/client/invoice_monitoring/dashboard"
+        component={Dashboard}
       />
     </Switch>
   );
