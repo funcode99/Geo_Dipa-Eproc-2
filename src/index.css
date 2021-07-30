@@ -1533,3 +1533,7 @@ label.checkboxs-minus :checked + span:after {
   left: -1px;
   color: #bbb;
 }
+
+.pointer.hover:hover {
+  background-color: #e1e1e1;
+}
