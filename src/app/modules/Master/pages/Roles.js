@@ -45,6 +45,16 @@ const TabLists = [
         id: 'accept',
         label: 'Acceptance',
         icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
+    },
+    {
+        id: 'accounting',
+        label: 'Accounting',
+        icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
+    },
+    {
+        id: 'delivery',
+        label: 'Delivery',
+        icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
     }
 ];
 
@@ -94,6 +104,8 @@ const Roles = (props) => {
                     {tabActiveMain === 1 && <RolesPage data={{ type: "Verification", authority: "Pusat" }} />}
                     {tabActiveMain === 2 && <RolesPage data={{ type: "Approval", authority: "Pusat" }} />}
                     {tabActiveMain === 3 && <RolesPage data={{ type: "Accept", authority: "Pusat" }} />}
+                    {tabActiveMain === 4 && <RolesPage data={{ type: "Accounting", authority: "Pusat" }} />}
+                    {tabActiveMain === 5 && <RolesPage data={{ type: "Delivery", authority: "Pusat" }} />}
                 </Container>
             </Paper>
             <Paper className={classes.paper}>
@@ -115,6 +127,8 @@ const Roles = (props) => {
                     {tabActiveUnit === 1 && <RolesPage data={{ type: "Verification", authority: "Unit" }} />}
                     {tabActiveUnit === 2 && <RolesPage data={{ type: "Approval", authority: "Unit" }} />}
                     {tabActiveUnit === 3 && <RolesPage data={{ type: "Accept", authority: "Unit" }} />}
+                    {tabActiveUnit === 4 && <RolesPage data={{ type: "Accounting", authority: "Unit" }} />}
+                    {tabActiveUnit === 5 && <RolesPage data={{ type: "Delivery", authority: "Unit" }} />}
                 </Container>
             </Paper>
         </Container>

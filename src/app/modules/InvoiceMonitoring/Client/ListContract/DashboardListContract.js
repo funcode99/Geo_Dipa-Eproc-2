@@ -46,6 +46,20 @@ function DashboardListContract(props) {
   const headerTable = [
     {
       title: intl.formatMessage({
+        id: "TITLE.NO",
+      }),
+      name: "no",
+      order: {
+        active: false,
+        status: false,
+      },
+      filter: {
+        active: false,
+        type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({
         id: "CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER",
       }),
       name: "contract_no",
@@ -221,6 +235,7 @@ function DashboardListContract(props) {
             {data.data.map((item, index) => {
               return (
                 <TableRow key={index.toString()}>
+                  <TableCell>{index+1}.</TableCell>
                   <TableCell>
                     <Link
                       to={

@@ -17,7 +17,7 @@ import {
   Flex,
   Input
 } from '../style';
-import { getRolesBKB, getRolesVerification, getRolesApproval, getRolesAcceptance, updateRoles } from '../../service/MasterCrud';
+import { getRolesBKB, getRolesVerification, getRolesApproval, getRolesAcceptance, getRolesAccounting, getRolesDelivery, updateRoles } from '../../service/MasterCrud';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { StyledModal } from '../../../../components/modals';
@@ -51,6 +51,14 @@ const RolesPage = (props) => {
         .catch(() => { setLoadData(false); setErrorData(true) })
     } else if (props.data.type === "Accept") {
       getRolesAcceptance(props.data.authority)
+        .then(response => { setRolesData(response.data.data); setLoadData(false) })
+        .catch(() => { setLoadData(false); setErrorData(true) })
+    } else if (props.data.type === "Accounting") {
+      getRolesAccounting(props.data.authority)
+        .then(response => { setRolesData(response.data.data); setLoadData(false) })
+        .catch(() => { setLoadData(false); setErrorData(true) })
+    } else if (props.data.type === "Delivery") {
+      getRolesDelivery(props.data.authority)
         .then(response => { setRolesData(response.data.data); setLoadData(false) })
         .catch(() => { setLoadData(false); setErrorData(true) })
     }
@@ -244,56 +252,50 @@ const RolesPage = (props) => {
           </form>
         </Flex>
       </StyledModal>
-      <div className="table-wrapper-scroll-y my-custom-scrollbar">
-        <div className="segment-table">
-          <div className="hecto-10">
-            <Table className="table-bordered overflow-auto">
-              <thead>
-                <tr>
-                  <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.TABLE_HEADER.NO" /></th>
-                  <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NAME" /></th>
-                  <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MIN" /></th>
-                  <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX" /></th>
-                  {props.data.type !== "Accept" && <th className="bg-primary text-white align-middle text-center"><FormattedMessage id="TITLE.TABLE_HEADER.ACTION" /></th>}
+      <Table className="table-bordered overflow-auto">
+        <thead>
+          <tr>
+            <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.TABLE_HEADER.NO" /></th>
+            <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.NAME" /></th>
+            <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MIN" /></th>
+            <th className="bg-primary text-white align-middle"><FormattedMessage id="TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX" /></th>
+            <th className="bg-primary text-white align-middle text-center"><FormattedMessage id="TITLE.TABLE_HEADER.ACTION" /></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rolesData.map((item, index) => {
+              return (
+                <tr key={index.toString()}>
+                  <td className="align-middle text-center">{index + 1}</td>
+                  <td>
+                    {item.name}
+                  </td>
+                  <td>
+                    {item.bkb_min_value ? rupiah(item.bkb_min_value) : item.verification_min_value ? rupiah(item.verification_min_value) : item.approval_min_value ? rupiah(item.approval_min_value) : '-'}
+                  </td>
+                  <td>
+                    {item.bkb_max_value ? rupiah(item.bkb_max_value) : item.verification_max_value ? rupiah(item.verification_max_value) : item.approval_max_value ? rupiah(item.approval_max_value) : '-'}
+                  </td>
+                  <td className="text-center">
+                    {props.data.type !== "Accept" && props.data.type !== "Accounting" && props.data.type !== "Delivery" && <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {
-                  rolesData.map((item, index) => {
-                    return (
-                      <tr key={index.toString()}>
-                        <td className="align-middle text-center">{index + 1}</td>
-                        <td>
-                          {item.name}
-                        </td>
-                        <td>
-                          {item.bkb_min_value ? rupiah(item.bkb_min_value) : item.verification_min_value ? rupiah(item.verification_min_value) : item.approval_min_value ? rupiah(item.approval_min_value) : '-'}
-                        </td>
-                        <td>
-                          {item.bkb_max_value ? rupiah(item.bkb_max_value) : item.verification_max_value ? rupiah(item.verification_max_value) : item.approval_max_value ? rupiah(item.approval_max_value) : '-'}
-                        </td>
-                        { props.data.type !== "Accept" && <td className="text-center">
-                          <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>
-                        </td>}
-                      </tr>
-                    )
-                  })
-                }
-              </tbody>
-            </Table>
-          </div>
-        </div>
-        <div className="table-loading-data">
-          <div className="text-center font-weight-bold">
-            <div className={`table-loading-data-potition ${errorData ? 'text-danger' : null}`}>
-              {loadData && <span>
-                <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
-                <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
-              </span>}
-              {errorData && <span>
-                <FormattedMessage id="TITLE.ERROR_REQUEST" />
-              </span>}
-            </div>
+              )
+            })
+          }
+        </tbody>
+      </Table>
+      <div className="table-loading-data">
+        <div className="text-center font-weight-bold">
+          <div className={`table-loading-data-potition ${errorData ? 'text-danger' : null}`}>
+            {loadData && <span>
+              <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+              <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+            </span>}
+            {errorData && <span>
+              <FormattedMessage id="TITLE.ERROR_REQUEST" />
+            </span>}
           </div>
         </div>
       </div>

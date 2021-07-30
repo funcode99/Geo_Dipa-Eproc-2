@@ -117,6 +117,14 @@ export function getRolesAcceptance(plant) {
   return axios.get(`data/get_role_acceptance?plant=${plant}`);
 }
 
+export function getRolesAccounting(plant) {
+  return axios.get(`data/get_role_accounting?plant=${plant}`);
+}
+
+export function getRolesDelivery(plant) {
+  return axios.get(`data/get_role_delivery?plant=${plant}`);
+}
+
 export function updateRoles(data) {
   return axios.post(`data/update_role/${data.id}`, data);
 }

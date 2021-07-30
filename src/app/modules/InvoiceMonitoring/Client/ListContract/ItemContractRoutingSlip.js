@@ -153,19 +153,19 @@ function ItemContractRoutingSlip(props) {
                   <tr>
                     <td>1</td>
                     <td>Merry</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td></td>
+                    <td className="text-center">-</td>
+                    <td className="text-center">-</td>
+                    <td className="text-center">-</td>
+                    <td className="text-center">-</td>
+                    <td className="text-center"></td>
                     <td>SA / GR Terbit</td>
                   </tr>
                   {slipData?.support_deliverables_document_softcopy_date_out && <tr>
                     <td>2</td>
                     <td>{slipData?.support_deliverbables_creator?.party?.full_name}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>
+                    <td className="text-center">-</td>
+                    <td className="text-center">-</td>
+                    <td className="text-center">
                       {slipData?.support_deliverables_document_softcopy_date_out ?
                         window
                           .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
@@ -173,7 +173,7 @@ function ItemContractRoutingSlip(props) {
                         : '-'
                       }
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.support_deliverables_document_softcopy_date_out ?
                         window
                           .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
@@ -187,9 +187,9 @@ function ItemContractRoutingSlip(props) {
                   {slipData?.support_deliverables_document_softcopy_date_out && <tr>
                     <td>3</td>
                     <td>{slipData?.support_deliverbables_creator?.party?.full_name}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>
+                    <td className="text-center">-</td>
+                    <td className="text-center">-</td>
+                    <td className="text-center">
                       {slipData?.support_deliverables_document_softcopy_date_out ?
                         window
                           .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
@@ -197,7 +197,7 @@ function ItemContractRoutingSlip(props) {
                         : '-'
                       }
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.support_deliverables_document_softcopy_date_out ?
                         window
                           .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
@@ -211,17 +211,17 @@ function ItemContractRoutingSlip(props) {
                   {slipData?.billing_document_softcopy_date_in && <tr>
                     <td>4</td>
                     <td>{slipData?.billing_creator?.party?.full_name}</td>
-                    <td>
+                    <td className="text-center">
                       {window
                         .moment(new Date(slipData?.billing_document_softcopy_date_in))
                         .format("DD MMM YYYY")}
                     </td>
-                    <td>
+                    <td className="text-center">
                       {window
                         .moment(new Date(slipData?.billing_document_softcopy_date_in))
                         .format("HH:mm")}
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.billing_document_softcopy_date_out ?
                         window
                           .moment(new Date(slipData?.billing_document_softcopy_date_out))
@@ -229,7 +229,7 @@ function ItemContractRoutingSlip(props) {
                         : '-'
                       }
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.billing_document_softcopy_date_out ?
                         window
                           .moment(new Date(slipData?.billing_document_softcopy_date_out))
@@ -243,17 +243,17 @@ function ItemContractRoutingSlip(props) {
                   {slipData?.hardcopy_date_in && <tr>
                     <td>5</td>
                     <td>{slipData?.hardcopy_creator?.party?.full_name}</td>
-                    <td>
+                    <td className="text-center">
                       {window
                         .moment(new Date(slipData?.hardcopy_date_in))
                         .format("DD MMM YYYY")}
                     </td>
-                    <td>
+                    <td className="text-center">
                       {window
                         .moment(new Date(slipData?.hardcopy_date_in))
                         .format("HH:mm")}
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.hardcopy_date_out ?
                         window
                           .moment(new Date(slipData?.hardcopy_date_out))
@@ -261,7 +261,7 @@ function ItemContractRoutingSlip(props) {
                         : '-'
                       }
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.hardcopy_date_out ?
                         window
                           .moment(new Date(slipData?.hardcopy_date_out))
@@ -275,24 +275,24 @@ function ItemContractRoutingSlip(props) {
                   {slipData?.park_ap_date_in && <tr>
                     <td>6</td>
                     <td>{slipData?.park_ap_creator?.party?.full_name}</td>
-                    <td>
+                    <td className="text-center">
                       {window
                         .moment(new Date(slipData?.park_ap_date_in))
                         .format("DD MMM YYYY")}
                     </td>
-                    <td>
+                    <td className="text-center">
                       {window
                         .moment(new Date(slipData?.park_ap_date_in))
                         .format("HH:mm")}
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.park_ap_date_out ? window
                         .moment(new Date(slipData?.park_ap_date_out))
                         .format("DD MMM YYYY")
                       : '-'
                       }
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.park_ap_date_out ? window
                         .moment(new Date(slipData?.park_ap_date_out))
                         .format("HH:mm")
@@ -300,29 +300,29 @@ function ItemContractRoutingSlip(props) {
                       }
                     </td>
                     <td></td>
-                    <td>Park AP Dokumen</td>
+                    <td>Approve Park AP Dokumen</td>
                   </tr>}
                   {slipData?.park_byr_date_in && <tr>
-                    <td>7</td>
+                    <td>8</td>
                     <td>{slipData?.park_byr_creator?.party?.full_name}</td>
-                    <td>
+                    <td className="text-center">
                       {window
                         .moment(new Date(slipData?.park_byr_date_in))
                         .format("DD MMM YYYY")}
                     </td>
-                    <td>
+                    <td className="text-center">
                       {window
                         .moment(new Date(slipData?.park_byr_date_in))
                         .format("HH:mm")}
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.park_byr_date_out ? window
                         .moment(new Date(slipData?.park_byr_date_out))
                         .format("DD MMM YYYY")
                       : '-'
                       }
                     </td>
-                    <td>
+                    <td className="text-center">
                       {slipData?.park_byr_date_out ? window
                         .moment(new Date(slipData?.park_byr_date_out))
                         .format("HH:mm")
@@ -330,7 +330,37 @@ function ItemContractRoutingSlip(props) {
                       }
                     </td>
                     <td></td>
-                    <td>Park BYR Dokumen</td>
+                    <td>Approve Park BYR Dokumen</td>
+                  </tr>}
+                  {slipData?.bkb_document_date_in && <tr>
+                    <td>7</td>
+                    <td>{slipData?.bkb_creator?.party?.full_name}</td>
+                    <td className="text-center">
+                      {window
+                        .moment(new Date(slipData?.bkb_document_date_in))
+                        .format("DD MMM YYYY")}
+                    </td>
+                    <td className="text-center">
+                      {window
+                        .moment(new Date(slipData?.bkb_document_date_in))
+                        .format("HH:mm")}
+                    </td>
+                    <td className="text-center">
+                      {slipData?.bkb_document_date_out ? window
+                        .moment(new Date(slipData?.bkb_document_date_out))
+                        .format("DD MMM YYYY")
+                      : '-'
+                      }
+                    </td>
+                    <td className="text-center">
+                      {slipData?.bkb_document_date_out ? window
+                        .moment(new Date(slipData?.bkb_document_date_out))
+                        .format("HH:mm")
+                      : '-'
+                      }
+                    </td>
+                    <td></td>
+                    <td>BKB Dokumen</td>
                   </tr>}
                 </tbody>
               </table>

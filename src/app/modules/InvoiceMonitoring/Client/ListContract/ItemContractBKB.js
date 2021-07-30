@@ -35,6 +35,7 @@ import {
   Slide,
   IconButton,
 } from "@material-ui/core";
+import { getRolesBKB } from "../../../Master/service/MasterCrud";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -49,8 +50,11 @@ function ItemContractBKB(props) {
   const { intl, setProgressTermin, setDataProgress } = props;
   const termin = props.match.params.termin;
   const [Toast, setToast] = useToast();
+  const main_authority = "Pusat"
+  const unit_authority = "Unit"
 
   const [bkbData, setBkbData] = useState(null);
+  const [mainRolesBKBData, setMainRolesBKBData] = useState(null);
   const [parkApInput, setParkApInput] = useState('');
   const [parkByrInput, setParkByrInput] = useState('');
 
@@ -104,7 +108,18 @@ function ItemContractBKB(props) {
       });
   }, [termin, intl, setToast]);
 
+  const getRolesBKBData = useCallback(() => {
+    getRolesBKB(main_authority)
+      .then((response) => {
+        setMainRolesBKBData(response["data"]["data"]);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(getBkbData, []);
+  useEffect(getRolesBKBData, []);
 
   const print = () => {
     var printContents = window.$("#printBkb").html();
@@ -120,7 +135,7 @@ function ItemContractBKB(props) {
   const handleApproved = () => {
     setModalApproved({ ...modalApproved, loading: true });
     if (modalApproved.data === "monitoringTax") {
-      tax_manager_approve_bkb(bkbData.id, data_login.user_id)
+      tax_manager_approve_bkb(bkbData.id, data_login.user_id, termin, bkbData.desc)
         .then((result) => {
           setModalApproved({
             ...modalApproved,
@@ -140,7 +155,7 @@ function ItemContractBKB(props) {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     } else if (modalApproved.data === "monitoringFinance") {
-      finance_manager_approve_bkb(bkbData.id, data_login.user_id)
+      finance_manager_approve_bkb(bkbData.id, data_login.user_id, termin, bkbData.desc)
         .then((result) => {
           setModalApproved({
             ...modalApproved,
@@ -160,7 +175,7 @@ function ItemContractBKB(props) {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     } else if (modalApproved.data === "monitoringFinanceDirec") {
-      finance_director_approve_bkb(bkbData.id, data_login.user_id)
+      finance_director_approve_bkb(bkbData.id, data_login.user_id, termin, bkbData.desc)
         .then((result) => {
           setModalApproved({
             ...modalApproved,
@@ -741,7 +756,7 @@ function ItemContractBKB(props) {
                   {bkbData?.tax_selected?.map((row, key) => {
                     const data = JSON.parse(row.value)
                     return (
-                      <tr>
+                      <tr key={key}>
                         <td colSpan="3" className="text-right">
                           {data.description} - {data.value}%
                         </td>
@@ -1014,7 +1029,8 @@ function ItemContractBKB(props) {
                                 id="inputGroup-sizing-sm"
                                 disabled={
                                   modalApproved.loading ||
-                                  !bkbData?.doc_park_ap_approved_id
+                                  !bkbData?.doc_park_ap_approved_id ||
+                                  !parkByrInput
                                 }
                                 onClick={() => {
                                   setModalApproved({
@@ -1078,6 +1094,7 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                   </div>
+
                   <div className="col-sm-8 border">
                     <div className="row border">
                       <div className="col-sm text-center">
@@ -1087,196 +1104,187 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                     <div className="row">
-                      <div className="col-sm border text-center px-0">
-                        <span style={{ fontSize: 10 }}>Tax &amp; Ass Man</span>
-                      </div>
-                      <div className="col-sm border text-center px-0">
-                        <span style={{ fontSize: 10 }}>Finance Manager</span>
-                      </div>
-                      <div className="col-sm border text-center px-0">
-                        <span style={{ fontSize: 10 }}>Direktur Keuangan</span>
-                      </div>
+                      {mainRolesBKBData?.map((row, key) => {
+                        if (parseFloat(bkbData?.sub_total) >= row?.bkb_min_value && parseFloat(bkbData?.sub_total) <= row?.bkb_max_value) {
+                          return (
+                            <div className="col-sm border text-center px-0">
+                              <span key={key} style={{ fontSize: 10 }}>{row?.name}</span>
+                            </div>
+                          )
+                        }
+                      }
+                      )}
                     </div>
                     <div className="row">
-                      <div
-                        className="col-sm border-right"
-                        style={{ height: styleCustom.heightAppvDiv }}
-                      >
-                        <div
-                          className="text-center"
-                          style={{
-                            height: styleCustom.minHeightAppv,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                          }}
-                        >
-                          {monitoringTax &&
-                            bkbData?.tax_man_approved_id === null && (
-                              <button
-                                type="button"
-                                className="btn btn-primary btn-sm"
-                                style={{ fontSize: 10, marginTop: 20 }}
-                                onClick={() => {
-                                  setModalApproved({
-                                    ...modalApproved,
-                                    statusDialog: true,
-                                    data: "monitoringTax",
-                                  });
+                      {mainRolesBKBData?.map((row, key) => {
+                        if (parseFloat(bkbData?.sub_total) >= row?.bkb_min_value && parseFloat(bkbData?.sub_total) <= row?.bkb_max_value) {
+                          return (
+                            <div
+                              className="col-sm border-right"
+                              style={{ height: styleCustom.heightAppvDiv }}
+                            >
+                              <div
+                                className="text-center"
+                                style={{
+                                  height: 100,
+                                  paddingTop: 5,
+                                  paddingBottom: 5,
                                 }}
                               >
-                                <i
-                                  className="fas fa-check-circle"
-                                  style={{ fontSize: 8 }}
-                                ></i>
-                                <FormattedMessage id="TITLE.APPROVE" />
-                              </button>
-                            )}
-                          {bkbData?.tax_man_approved_id && (
-                            <QRCodeG
-                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}&type=APPROVED_BKB`}
-                            />
-                          )}
-                        </div>
-                        <div className="d-flex align-items-end">
-                          <div>
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />:
-                              {bkbData?.tax_man_name}
-                            </span>
-                            <br />
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.DATE" />:
-                              {bkbData?.tax_man_approved_at
-                                ? window
-                                  .moment(
-                                    new Date(bkbData?.tax_man_approved_at)
-                                  )
-                                  .format("DD/MM/YYYY")
-                                : ""}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="col-sm border-right"
-                        style={{ height: styleCustom.heightAppvDiv }}
-                      >
-                        <div
-                          className="text-center"
-                          style={{
-                            height: styleCustom.minHeightAppv,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                          }}
-                        >
-                          {monitoringFinance &&
-                            bkbData?.finance_man_approved_id === null && (
-                              <button
-                                type="button"
-                                className="btn btn-primary btn-sm"
-                                style={{ fontSize: 10, marginTop: 20 }}
-                                onClick={() => {
-                                  setModalApproved({
-                                    ...modalApproved,
-                                    statusDialog: true,
-                                    data: "monitoringFinance",
-                                  });
-                                }}
+                                {monitoringFinanceDirec &&
+                                  bkbData?.finance_director_approved_id === null &&
+                                  bkbData?.finance_man_approved_id === null &&
+                                  bkbData?.tax_man_approved_id === null &&
+                                  row?.ident_name === "DIREKTUR_KEUANGAN" && 
+                                  bkbData?.doc_park_byr_approved_id && (
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary btn-sm"
+                                      style={{ fontSize: 10, marginTop: 20 }}
+                                      onClick={() => {
+                                        setModalApproved({
+                                          ...modalApproved,
+                                          statusDialog: true,
+                                          data: "monitoringFinanceDirec",
+                                        });
+                                      }}
+                                    >
+                                      <i
+                                        className="fas fa-check-circle"
+                                        style={{ fontSize: 8 }}
+                                      ></i>
+                                      <FormattedMessage id="TITLE.APPROVE" />
+                                    </button>
+                                  )}
+                                {monitoringFinance &&
+                                  bkbData?.finance_director_approved_id === null &&
+                                  bkbData?.finance_man_approved_id === null &&
+                                  bkbData?.tax_man_approved_id === null &&
+                                  row?.ident_name === "FINANCE_MANAGER" && 
+                                  bkbData?.doc_park_byr_approved_id && (
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary btn-sm"
+                                      style={{ fontSize: 10, marginTop: 20 }}
+                                      onClick={() => {
+                                        setModalApproved({
+                                          ...modalApproved,
+                                          statusDialog: true,
+                                          data: "monitoringFinance",
+                                        });
+                                      }}
+                                    >
+                                      <i
+                                        className="fas fa-check-circle"
+                                        style={{ fontSize: 8 }}
+                                      ></i>
+                                      <FormattedMessage id="TITLE.APPROVE" />
+                                    </button>
+                                  )}
+                                {monitoringTax &&
+                                  bkbData?.finance_director_approved_id === null &&
+                                  bkbData?.finance_man_approved_id === null &&
+                                  bkbData?.tax_man_approved_id === null &&
+                                  row?.ident_name === "TREASURY_ASSISTANT_MANAGER" && 
+                                  bkbData?.doc_park_byr_approved_id && (
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary btn-sm"
+                                      style={{ fontSize: 10, marginTop: 20 }}
+                                      onClick={() => {
+                                        setModalApproved({
+                                          ...modalApproved,
+                                          statusDialog: true,
+                                          data: "monitoringTax",
+                                        });
+                                      }}
+                                    >
+                                      <i
+                                        className="fas fa-check-circle"
+                                        style={{ fontSize: 8 }}
+                                      ></i>
+                                      <FormattedMessage id="TITLE.APPROVE" />
+                                    </button>
+                                  )}
+                                {bkbData?.finance_director_approved_id &&
+                                  row?.ident_name === "DIREKTUR_KEUANGAN" && (
+                                    <QRCodeG
+                                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}&type=APPROVED_BKB`}
+                                      size="90"
+                                    />
+                                  )}
+                                {bkbData?.finance_man_approved_id &&
+                                  row?.ident_name === "FINANCE_MANAGER" && (
+                                    <QRCodeG
+                                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}&type=APPROVED_BKB`}
+                                      size="90"
+                                    />
+                                  )}
+                                {bkbData?.tax_man_approved_id &&
+                                  row?.ident_name === "TREASURY_ASSISTANT_MANAGER" && (
+                                    <QRCodeG
+                                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}&type=APPROVED_BKB`}
+                                      size="90"
+                                    />
+                                  )}
+                              </div>
+                              <div
+                                className="text-center"
                               >
-                                <i
-                                  className="fas fa-check-circle"
-                                  style={{ fontSize: 8 }}
-                                ></i>
-                                <FormattedMessage id="TITLE.APPROVE" />
-                              </button>
-                            )}
-                          {bkbData?.finance_man_approved_id && (
-                            <QRCodeG
-                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}&type=APPROVED_BKB`}
-                            />
-                          )}
-                        </div>
-                        <div className="d-flex align-items-end">
-                          <div>
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />:
-                              {bkbData?.finance_man_name}
-                            </span>
-                            <br />
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.DATE" />:
-                              {bkbData?.finance_man_approved_at
-                                ? window
-                                  .moment(
-                                    new Date(bkbData?.finance_man_approved_at)
-                                  )
-                                  .format("DD/MM/YYYY")
-                                : ""}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="col-sm border-right"
-                        style={{ height: styleCustom.heightAppvDiv }}
-                      >
-                        <div
-                          className="text-center"
-                          style={{
-                            height: styleCustom.minHeightAppv,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                          }}
-                        >
-                          {monitoringFinanceDirec &&
-                            bkbData?.finance_director_approved_id === null && (
-                              <button
-                                type="button"
-                                className="btn btn-primary btn-sm"
-                                style={{ fontSize: 10, marginTop: 20 }}
-                                onClick={() => {
-                                  setModalApproved({
-                                    ...modalApproved,
-                                    statusDialog: true,
-                                    data: "monitoringFinanceDirec",
-                                  });
-                                }}
-                              >
-                                <i
-                                  className="fas fa-check-circle"
-                                  style={{ fontSize: 8 }}
-                                ></i>
-                                <FormattedMessage id="TITLE.APPROVE" />
-                              </button>
-                            )}
-                          {bkbData?.finance_director_approved_id && (
-                            <QRCodeG
-                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}&type=APPROVED_BKB`}
-                            />
-                          )}
-                        </div>
-                        <div className="d-flex align-items-end">
-                          <div>
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />:
-                              {bkbData?.finance_director_name}
-                            </span>
-                            <br />
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.DATE" />:
-                              {bkbData?.finance_director_approved_at
-                                ? window
-                                  .moment(
-                                    new Date(
-                                      bkbData?.finance_director_approved_at
-                                    )
-                                  )
-                                  .format("DD/MM/YYYY")
-                                : ""}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+                                <div>
+                                  <span style={{ fontSize: 10 }}>
+                                    <FormattedMessage id="TITLE.NAME" />:
+                                    {bkbData?.finance_director_approved_id &&
+                                      row?.ident_name === "DIREKTUR_KEUANGAN" && (
+                                        <span>{bkbData?.finance_director_name}</span>
+                                      )}
+                                    {bkbData?.finance_man_approved_id &&
+                                      row?.ident_name === "FINANCE_MANAGER" && (
+                                        <span>{bkbData?.finance_man_name}</span>
+                                      )}
+                                    {bkbData?.tax_man_approved_id &&
+                                      row?.ident_name === "TREASURY_ASSISTANT_MANAGER" && (
+                                        <span>{bkbData?.tax_man_name}</span>
+                                      )}
+                                  </span>
+                                  <br />
+                                  <span style={{ fontSize: 10 }}>
+                                    <FormattedMessage id="TITLE.DATE" />:
+                                    {bkbData?.finance_director_approved_at &&
+                                      row?.ident_name === "DIREKTUR_KEUANGAN"
+                                      ? window
+                                        .moment(
+                                          new Date(
+                                            bkbData?.finance_director_approved_at
+                                          )
+                                        )
+                                        .format("DD/MM/YYYY")
+                                      : ""}
+                                    {bkbData?.finance_man_approved_at &&
+                                      row?.ident_name === "FINANCE_MANAGER"
+                                      ? window
+                                        .moment(
+                                          new Date(bkbData?.finance_man_approved_at)
+                                        )
+                                        .format("DD/MM/YYYY")
+                                      : ""}
+                                    {bkbData?.tax_man_approved_at &&
+                                      row?.ident_name === "TREASURY_ASSISTANT_MANAGER"
+                                      ? window
+                                        .moment(
+                                          new Date(bkbData?.tax_man_approved_at)
+                                        )
+                                        .format("DD/MM/YYYY")
+                                      : ""}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                      }
+                      )}
+
                     </div>
                   </div>
                 </div>
