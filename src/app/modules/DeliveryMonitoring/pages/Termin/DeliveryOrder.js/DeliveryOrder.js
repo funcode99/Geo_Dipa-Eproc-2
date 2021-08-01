@@ -378,11 +378,9 @@ const DeliveryOrder = ({
         break;
 
       case "change_status":
+        // dibuat gini supaya ke refresh data yang munculs
         setDataOrderItem({});
-        setTimeout(() => {
-          setDataOrderItem(data);
-          // setUpdateOrderItems(data?.task_delivery_items);
-        }, 350);
+        setTimeout(() => setDataOrderItem(data), 350);
         break;
 
       case "confirm":

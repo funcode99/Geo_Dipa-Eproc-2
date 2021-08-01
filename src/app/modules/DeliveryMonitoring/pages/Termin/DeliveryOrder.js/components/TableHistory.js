@@ -51,7 +51,7 @@ const TableHistory = ({ data = initData, tableHeader = initTHead }) => {
         <TableRow>
           {initTHead.map((item, index) => {
             return (
-              <TableCell colo key={index} align={item?.align ?? "left"}>
+              <TableCell key={index} align={item?.align ?? "left"}>
                 {item?.label}
               </TableCell>
             );

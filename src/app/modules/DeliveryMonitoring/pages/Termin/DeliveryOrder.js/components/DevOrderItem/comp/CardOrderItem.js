@@ -64,6 +64,8 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
       id: data?.id,
       approve_status_id: data?.approve_status_id,
       approve_status: data?.approve_status?.name,
+      spec: data?.item?.product?.name,
+      desc: data?.item?.product?.desc,
     }),
     [data]
   );
@@ -99,7 +101,9 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
 
   return (
     <ExpansionBox
-      custTitle={data?.item?.desc}
+      custTitle={`${data?.item?.desc}${
+        data?.item?.product ? " - " + data?.item?.product?.code : ""
+      }`}
       defaultExpanded={false}
       //   classCont={"col-12"}
       rightComponent={

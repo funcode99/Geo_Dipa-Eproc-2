@@ -43,7 +43,7 @@ const RowCollapse = ({ row, childData }) => {
             <Box
               margin={1}
               style={{
-                height: 300,
+                maxHeight: 300,
                 overflowY: "scroll",
               }}
             >

@@ -175,7 +175,7 @@ function Summary({}) {
     func.handleApi({
       key: KEYS_TERMIN.f_termin,
       onSuccess: (res) => {
-        console.log(`fetch_baru`, res);
+        // console.log(`fetch_baru`, res);
         const tempDataJasa = res.data.task_item_services;
         const tempDataBarang = res.data.task_items;
         addShowField(tempDataJasa);
