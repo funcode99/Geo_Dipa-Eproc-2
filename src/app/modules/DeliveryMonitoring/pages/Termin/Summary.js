@@ -27,6 +27,7 @@ import DialogGlobal from "../../../../components/modals/DialogGlobal";
 import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 import { TerminPageContext } from "./TerminPageNew/TerminPageNew";
+import { KEYS_TERMIN } from "./TerminPageNew/STATIC_DATA";
 
 const tHeadSubmitItems = [
   "No",
@@ -50,8 +51,14 @@ const navLists = [
   { id: "link-barang", label: <FormattedMessage id="SUMMARY.NAV.ITEM" /> },
 ];
 
-function Summary({ loadings, fetch_api_sg, status }) {
-  const { func, task_id } = React.useContext(TerminPageContext);
+function Summary({}) {
+  const {
+    func,
+    task_id,
+    loadings,
+    fetch_api_sg,
+    authStatus,
+  } = React.useContext(TerminPageContext);
   const taskId = task_id;
   const [navActive, setNavActive] = React.useState(navLists[0].id);
   const [itemBarang, setItemBarang] = React.useState([]);
@@ -64,7 +71,7 @@ function Summary({ loadings, fetch_api_sg, status }) {
   const submitRef = React.useRef();
   const [qtyErrors, setQtyErrors] = React.useState([]);
 
-  const isClient = status === "client";
+  const isClient = authStatus === "client";
 
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
@@ -165,14 +172,12 @@ function Summary({ loadings, fetch_api_sg, status }) {
   const getAllItems = async (taskId) => {
     setInitialData();
 
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/delivery/task/${taskId}/item-service`,
+    func.handleApi({
+      key: KEYS_TERMIN.f_termin,
       onSuccess: (res) => {
+        console.log(`fetch_baru`, res);
         const tempDataJasa = res.data.task_item_services;
         const tempDataBarang = res.data.task_items;
-        func.onRefresh();
         addShowField(tempDataJasa);
         addCheckedAndErrorField(tempDataJasa, "jasa");
         addCheckedAndErrorField(tempDataBarang, "barang");
@@ -183,6 +188,16 @@ function Summary({ loadings, fetch_api_sg, status }) {
         setDataFromAPI(tempDataJasa, tempDataBarang);
       },
     });
+
+    // fetch_api_sg({
+    //   key: keys.fetch,
+    //   type: "get",
+    //   url: `/delivery/task/${taskId}/item-service`,
+    //   onSuccess: (res) => {
+    //     console.log(`fetch_lama`, res);
+
+    //   },
+    // });
   };
 
   React.useEffect(() => {
@@ -472,20 +487,32 @@ function Summary({ loadings, fetch_api_sg, status }) {
   };
 
   const handleSubmit = async () => {
-    fetch_api_sg({
-      key: keys.submit,
-      type: "post",
-      url: `/delivery/task/${taskId}`,
+    func.handleApi({
+      key: KEYS_TERMIN.p_t_summary,
       params: {
         task_items: itemBarang,
         task_services: itemJasa,
       },
-      alertAppear: "both",
       onSuccess: (res) => {
         getAllItems(taskId);
         submitRef.current.close();
       },
     });
+
+    // fetch_api_sg({
+    //   key: keys.submit,
+    //   type: "post",
+    //   url: `/delivery/task/${taskId}`,
+    //   params: {
+    //   task_items: itemBarang,
+    //   task_services: itemJasa,
+    //   },
+    //   alertAppear: "both",
+    //   onSuccess: (res) => {
+    //     getAllItems(taskId);
+    //     submitRef.current.close();
+    //   },
+    // });
 
     // try {
     //   enableLoading();
@@ -525,10 +552,10 @@ function Summary({ loadings, fetch_api_sg, status }) {
         ref={submitRef}
         // visible={showModal.submit}
         // onClose={() => handleVisibleModal("submit")}
-        onYes={() => handleSubmit()}
+        onYes={handleSubmit}
         textYes={<FormattedMessage id="TITLE.YES" />}
         title={<FormattedMessage id="TITLE.SUBMIT_TERM_ITEMS" />}
-        loading={loadings.submit}
+        loading={loadings[KEYS_TERMIN.p_t_summary]}
         btnNoProps={{
           className: "bg-secondary text-black",
         }}
@@ -661,7 +688,7 @@ function Summary({ loadings, fetch_api_sg, status }) {
             <TablePaginationCustom
               headerRows={theadItems}
               rows={dataJasa}
-              loading={loadings.fetch}
+              loading={loadings[KEYS_TERMIN.f_termin]}
               maxHeight={300}
               headerProps={{ sortable: false }}
               withSearch={false}
@@ -892,7 +919,7 @@ function Summary({ loadings, fetch_api_sg, status }) {
             <TablePaginationCustom
               headerRows={theadItems}
               rows={dataBarang}
-              loading={loadings.fetch}
+              loading={loadings[KEYS_TERMIN.f_termin]}
               withSearch={false}
               withPagination={true}
               renderRows={({ item, index }) => {
@@ -1105,5 +1132,5 @@ const mapDispatch = {
   fetch_api_sg,
 };
 
-export default connect(mapState, mapDispatch)(Summary);
-// export default Summary;
+// export default connect(mapState, mapDispatch)(Summary);
+export default Summary;

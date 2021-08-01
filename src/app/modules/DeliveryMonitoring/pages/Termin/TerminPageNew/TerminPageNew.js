@@ -36,14 +36,14 @@ export class TerminPageNew extends PureComponent {
     this.handleApiCenter({ key: KEYS_TERMIN.f_termin });
   };
 
-  handleApiCenter = ({ key, params, onSuccess, onFail }) => {
+  handleApiCenter = ({ key, onSuccess, ...other }) => {
+    // other termasuk : params, onFail, alertAppear
     const { fetch_api_sg, save_data_task } = this.props;
     const { task_id } = this.props.match.params;
     switch (key) {
       case KEYS_TERMIN.f_termin:
         fetch_api_sg({
           key,
-          params,
           type: "get",
           url: `/delivery/task/${task_id}/item-service`,
           onSuccess: (res) => {
@@ -58,10 +58,17 @@ export class TerminPageNew extends PureComponent {
             }));
             if (typeof onSuccess === "function") onSuccess(res);
           },
-          onFail,
+          ...other,
         });
         break;
-
+      case KEYS_TERMIN.p_t_summary:
+        fetch_api_sg({
+          key,
+          type: "post",
+          url: `/delivery/task/${task_id}`,
+          onSuccess,
+          ...other,
+        });
       default:
         break;
     }
