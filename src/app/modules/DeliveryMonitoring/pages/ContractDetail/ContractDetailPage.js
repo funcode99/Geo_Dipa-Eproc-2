@@ -34,6 +34,12 @@ import BAST from "./components/BAST";
 import DetailPage from "./components/Detail/DetailPage";
 import { compose } from "redux";
 import KickOffDetail from "./components/Detail/KickOffDetail";
+import Steppers from "../../../../components/steppersCustom/Steppers";
+import {
+  DUMMY_STEPPER,
+  DUMMY_STEPPER_CONTRACT,
+  STATE_STEPPER,
+} from "../Termin/TerminPageNew/STATIC_DATA";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -223,6 +229,17 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
             to: "/",
           },
         ]}
+      />
+
+      <Steppers
+        steps={
+          loading
+            ? DUMMY_STEPPER_CONTRACT
+            : dataContractById?.steppers.map((el) => ({
+                label: el.label,
+                status: STATE_STEPPER[el.state],
+              }))
+        }
       />
 
       <Paper className={classes.root}>

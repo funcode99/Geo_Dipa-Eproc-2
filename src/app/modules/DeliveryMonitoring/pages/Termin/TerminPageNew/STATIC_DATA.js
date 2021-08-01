@@ -88,3 +88,21 @@ export const DUMMY_STEPPER = [
     status: "NO STARTED",
   },
 ];
+export const DUMMY_STEPPER_CONTRACT = [
+  {
+    label: "Kick Off",
+    status: "NO STARTED",
+  },
+  {
+    label: "Upload Guarantee",
+    status: "NO STARTED",
+  },
+  {
+    label: "Initialize Contract Periods",
+    status: "NO STARTED",
+  },
+  {
+    label: "Initialize Term",
+    status: "NO STARTED",
+  },
+];
