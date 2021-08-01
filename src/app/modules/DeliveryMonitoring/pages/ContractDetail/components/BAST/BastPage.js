@@ -228,7 +228,7 @@ const BastPage = ({
   React.useEffect(() => {
     const isApproved = taskNews?.approve_status?.code === "approved";
 
-    if (taskNews.approve_status) {
+    if (taskNews?.approve_status) {
       if (isApproved) setStepActive(3);
       else if (taskNews?.file_upload) {
         if (isReject) setStepActive(1);
@@ -363,34 +363,38 @@ const BastPage = ({
       <Card>
         <CardBody>
           {/* <FieldBuilder readOnly formData={formData3} /> */}
-          <FormBuilder
-            // ref={formikRef}
-            onSubmit={_handleSubmit}
-            // formData={formData3}
-            loading={loadings_sg.submit}
-            initial={initialValues}
-            validation={isClient ? validationClient : validationVendor}
-            fieldProps={{
-              readOnly: false,
-              // disabledFields: disabledInput,
-              disabledFields: disabledInput.filter((el) =>
-                isClient
-                  ? !allowedClient.includes(el)
-                  : !allowedVendor.includes(el)
-              ),
-            }}
-          >
-            {({ fieldProps }) => (
-              <Row>
-                <Col>
-                  <FieldBuilder formData={formData1} {...fieldProps} />
-                </Col>
-                <Col>
-                  <FieldBuilder formData={formData2} {...fieldProps} />
-                </Col>
-              </Row>
-            )}
-          </FormBuilder>
+          {loadings.fetch ? (
+            <div />
+          ) : (
+            <FormBuilder
+              // ref={formikRef}
+              onSubmit={_handleSubmit}
+              // formData={formData3}
+              loading={loadings_sg.submit}
+              initial={initialValues}
+              validation={isClient ? validationClient : validationVendor}
+              fieldProps={{
+                readOnly: false,
+                // disabledFields: disabledInput,
+                disabledFields: disabledInput.filter((el) =>
+                  isClient
+                    ? !allowedClient.includes(el)
+                    : !allowedVendor.includes(el)
+                ),
+              }}
+            >
+              {({ fieldProps }) => (
+                <Row>
+                  <Col>
+                    <FieldBuilder formData={formData1} {...fieldProps} />
+                  </Col>
+                  <Col>
+                    <FieldBuilder formData={formData2} {...fieldProps} />
+                  </Col>
+                </Row>
+              )}
+            </FormBuilder>
+          )}
         </CardBody>
       </Card>
 

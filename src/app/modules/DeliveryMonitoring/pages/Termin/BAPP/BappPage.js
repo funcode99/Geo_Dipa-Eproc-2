@@ -197,6 +197,7 @@ const BappPage = ({
   const fetchData = React.useCallback(
     (toast = { visible: false, message: "" }) => {
       // handleLoading("get", true);
+      // saveTask({});
       fetchApi({
         key: keys.fetch,
         type: "get",
@@ -467,23 +468,26 @@ const BappPage = ({
               />
             )}
           </div> */}
-
-          <FormBuilder
-            onSubmit={_handleSubmit}
-            formData={formData}
-            initial={initialValues}
-            validation={isClient ? validationClient : validationVendor}
-            fieldProps={{
-              readOnly: false,
-              disabledFields: disabledInput.filter((item) =>
-                isClient
-                  ? !allowedClient.includes(item)
-                  : !allowedVendor.includes(item)
-              ),
-            }}
-            loading={loadings.submit}
-            disabledButton={isDisabled}
-          />
+          {!loadings.fetch ? (
+            <FormBuilder
+              onSubmit={_handleSubmit}
+              formData={formData}
+              initial={initialValues}
+              validation={isClient ? validationClient : validationVendor}
+              fieldProps={{
+                readOnly: false,
+                disabledFields: disabledInput.filter((item) =>
+                  isClient
+                    ? !allowedClient.includes(item)
+                    : !allowedVendor.includes(item)
+                ),
+              }}
+              loading={loadings.submit}
+              disabledButton={isDisabled}
+            />
+          ) : (
+            <div />
+          )}
         </CardBody>
       </Card>
 
