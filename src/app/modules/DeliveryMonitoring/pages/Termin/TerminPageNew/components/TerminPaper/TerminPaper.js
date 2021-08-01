@@ -1,26 +1,19 @@
+import { Container, Paper } from "@material-ui/core";
+import { DescriptionOutlined } from "@material-ui/icons";
 import React from "react";
-import { FormattedMessage } from "react-intl";
+import { MODAL } from "../../../../../../../../service/modalSession/ModalService";
+import Steppers from "../../../../../../../components/steppersCustom/Steppers";
+import SubBreadcrumbs from "../../../../../../../components/SubBreadcrumbs";
+import StyledSubheader from "../../../../../../../components/subheader";
+import Tabs from "../../../../../../../components/tabs";
+import BeritaAcara from "../../../BeritaAcara";
+import DeliveryOrder from "../../../DeliveryOrder.js/DeliveryOrder";
+import Documents from "../../../Documents";
+import SAGRPage from "../../../ServiceAccGR/SAGRPage";
+import Summary from "../../../Summary";
+import { DUMMY_STEPPER, KEYS_TERMIN, TERMIN_TAB_LIST } from "../../STATIC_DATA";
 import { TerminPageContext } from "../../TerminPageNew";
 import { useStyles } from "./styles";
-import {
-  DescriptionOutlined,
-  AssignmentOutlined,
-  BookmarkBorderOutlined,
-  LocalShipping,
-} from "@material-ui/icons";
-import { DUMMY_STEPPER, KEYS_TERMIN, TERMIN_TAB_LIST } from "../../STATIC_DATA";
-import { MODAL } from "../../../../../../../../service/modalSession/ModalService";
-import { Container, Paper } from "@material-ui/core";
-import StyledSubheader from "../../../../../../../components/subheader";
-import SubBreadcrumbs from "../../../../../../../components/SubBreadcrumbs";
-import Steppers from "../../../../../../../components/steppersCustom/Steppers";
-import Tabs from "../../../../../../../components/tabs";
-import Summary from "../../../Summary";
-import Documents from "../../../Documents";
-import DeliveryOrder from "../../../DeliveryOrder.js/DeliveryOrder";
-import SummaryTermin from "../SummaryTermin/SummaryTermin";
-import SAGRPage from "../../../ServiceAccGR/SAGRPage";
-import BeritaAcara from "../../../BeritaAcara";
 // import SummaryTermin from "../SummaryTermin";
 
 const TerminPaper = () => {
@@ -90,11 +83,9 @@ const TerminPaper = () => {
           },
         ]}
       />
-      {/* {DUMMY_STEPPER.length > 0 && ( */}
       <Steppers
         steps={loadings[KEYS_TERMIN.f_termin] ? DUMMY_STEPPER : stepperProg}
       />
-      {/* )} */}
       <Paper className={classes.paper}>
         <Container>
           <Tabs
@@ -114,12 +105,6 @@ const TerminPaper = () => {
           {!isItemExists && tabActive === 2 && <SAGRPage />}
           {isItemExists && tabActive === 3 && <SAGRPage />}
         </Container>
-
-        {/* <Container style={{ marginTop: 20, paddingBottom: 20 }}>
-
-
-        </Container> */}
-        {/* )} */}
       </Paper>
     </Container>
   );

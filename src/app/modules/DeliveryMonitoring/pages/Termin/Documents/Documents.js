@@ -117,15 +117,6 @@ const Documents = ({
         if (res.status === true) setContent(res?.data);
       },
     });
-
-    // deliveryMonitoring
-    //   .getTaskById(taskId)
-    //   .then((res) => {
-    //     console.log(`res`, res);
-    //     handleLoading("get", false);
-    //     if (res.data.status === true) setContent(res?.data?.data);
-    //   })
-    //   .catch((err) => console.log("err", err));
   }, [taskId]);
 
   // submit ke api
@@ -137,13 +128,6 @@ const Documents = ({
           deliveryMonitoring
             .deleteDocId(open?.tempParams?.delete_id)
             .then(handleSuccess)
-            // .then((res) => {
-            //   //   console.log(`res`, res);
-            //   if (res?.data?.status === true) {
-            //     fetchData();
-            //     setToast("Berhasil hapus data");
-            //   }
-            // })
             .catch(handleError)
             .finally(() => {
               handleLoading(type, false);
@@ -197,14 +181,6 @@ const Documents = ({
               handleVisible(type);
             },
           });
-          // deliveryMonitoring
-          //   .postUploadDoc(open?.tempParams?.upload_id, params)
-          //   .then(handleSuccess)
-          //   .catch(handleError)
-          //   .finally(() => {
-          //     handleLoading(type, false);
-          //     handleVisible(type);
-          //   });
           break;
         case "resend":
           fetch_api_sg({
@@ -221,14 +197,6 @@ const Documents = ({
             },
           });
           // RESEND MASIH PAKE API UPLOAD
-          // deliveryMonitoring
-          //   .postUploadDoc(open?.tempParams?.resend_id, params)
-          //   .then(handleSuccess)
-          //   .catch(handleError)
-          //   .finally(() => {
-          //     handleLoading(type, false);
-          //     handleVisible(type);
-          //   });
           break;
         case "accept":
           // console.log(`accept`, params, type, open?.tempParams?.accept_id);
@@ -245,14 +213,6 @@ const Documents = ({
               handleVisible(type);
             },
           });
-          // deliveryMonitoring
-          //   .acceptDocId(open?.tempParams?.accept_id, )
-          //   .then(handleSuccess)
-          //   .catch(handleError)
-          //   .finally(() => {
-          //     handleLoading(type, false);
-          //     handleVisible(type);
-          //   });
           break;
         case "reject":
           // console.log(`reject`, type, open?.tempParams?.reject_id, params);
@@ -271,14 +231,6 @@ const Documents = ({
               handleVisible(type);
             },
           });
-          // deliveryMonitoring
-          //   .rejectDocId(open?.tempParams?.reject_id)
-          //   .then(handleSuccess)
-          //   .catch(handleError)
-          //   .finally(() => {
-          //     handleLoading(type, false);
-          //     handleVisible(type);
-          //   });
           break;
         case "submit":
           // console.log(`submit`, type, open?.tempParams?.submit_id);
@@ -314,8 +266,6 @@ const Documents = ({
         handleApi,
       }}
     >
-      {/* {loadings.list && <CircularProgress />} */}
-
       <Toast />
       <ModalDeleteDoc
         visible={open.delete}
@@ -343,17 +293,6 @@ const Documents = ({
         additionalParams={open.tempParams}
         loading={loadings.resend}
       />
-      {/* <ModalEditDraft
-        visible={open.edit}
-        onClose={() => handleVisible("edit")}
-        onSubmit={(params) => handleApi("edit", params)}
-      /> */}
-      {/* <ModalEditDraft
-        visible={open.resend}
-        onClose={() => handleVisible("resend")}
-        additionalParams={open.tempParams}
-        onSubmit={(params) => handleApi("resend", params)}
-      /> */}
       {BASE_MODAL_CONF.map(({ type, ...other }, id) => (
         <ModalConfirmation
           key={id}
@@ -366,7 +305,6 @@ const Documents = ({
           {...other}
         />
       ))}
-
       <Card className="mt-5">
         <CardBody>
           <HeaderTableDoc />

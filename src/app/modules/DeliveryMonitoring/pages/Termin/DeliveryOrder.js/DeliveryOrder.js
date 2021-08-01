@@ -27,6 +27,7 @@ import {
 } from "../../../../../../redux/globalReducer";
 import { tblHeadDlvItem } from "./components/fieldData";
 import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
+import { MODAL } from "../../../../../../service/modalSession/ModalService";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required(<FormattedMessage id="TITLE.DESC_IS_REQUIRE" />),
@@ -171,7 +172,11 @@ const DeliveryOrder = ({
 
       // untuk update approval status
       if (open.detail) {
-        console.log(`masuk sini`);
+        console.log(`masuk sini`, values);
+        if (values.status === 4) {
+          MODAL.showSnackbar("Mohon isikan delivery order status.", "error");
+          return;
+        }
         fetchApi({
           key: keys.detail,
           type: "post",
