@@ -176,6 +176,7 @@ export default function TablePaginationCustom({
             className={clsx(classes.table)}
           >
             <Table
+              stickyHeader
               // className={"table-bordered"}
               style={{
                 width: width ? width : undefined,

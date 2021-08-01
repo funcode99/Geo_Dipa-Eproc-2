@@ -40,7 +40,13 @@ const RowCollapse = ({ row, childData }) => {
           colSpan={Object.keys(row).length}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
+            <Box
+              margin={1}
+              style={{
+                height: 300,
+                overflowY: "scroll",
+              }}
+            >
               <Typography variant="h6" gutterBottom component="div">
                 <FormattedMessage id="TITLE.HISTORY" />
               </Typography>

@@ -40,12 +40,18 @@ const initData = [
 
 const TableHistory = ({ data = initData, tableHeader = initTHead }) => {
   return (
-    <Table size="small">
+    <Table
+      // style={{
+      //   height: 300,
+      // }}
+      stickyHeader
+      size="small"
+    >
       <TableHead>
         <TableRow>
           {initTHead.map((item, index) => {
             return (
-              <TableCell key={index} align={item?.align ?? "left"}>
+              <TableCell colo key={index} align={item?.align ?? "left"}>
                 {item?.label}
               </TableCell>
             );

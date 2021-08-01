@@ -554,7 +554,7 @@ const DeliveryOrder = ({
             maxHeight={300}
             loading={loadings.fetch}
             withSearch={false}
-            withPagination={false}
+            withPagination={true}
             renderRows={({ item, index }) => {
               return (
                 <RowCollapse key={index} row={item} childData={item?.history} />
