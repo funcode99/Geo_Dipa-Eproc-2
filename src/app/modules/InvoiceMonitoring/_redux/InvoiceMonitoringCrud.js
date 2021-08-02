@@ -319,7 +319,8 @@ export async function getProgressTypes() {
 }
 export async function getRoutingSlip(id) {
   return axios.get(`/invoice/get_routing_slip/${id}`);
-}export async function getListMismatch(contract_id, term) {
+}
+export async function getListMismatch(contract_id, term) {
   return axios.get(`invoice/get_mismatch_list/${contract_id}/${term}`);
 }
 export async function getListMailTo() {
@@ -339,4 +340,10 @@ export async function submitParkBYR(data) {
 }
 export async function approveParkBYR(data) {
   return axios.post(`invoice/park_byr_approve`, data);
+}
+export async function getAllMismatch(params) {
+  return axios.get(`invoice/mismatch_all${params ? "?" + params : ""}`);
+}
+export async function getAllBkb(params) {
+  return axios.get(`invoice/get_all_bkb${params ? "?" + params : ""}`);
 }

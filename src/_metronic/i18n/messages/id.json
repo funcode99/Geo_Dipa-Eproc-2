@@ -579,5 +579,6 @@
   "TITLE.DETAIL_ITEMS": "Detail items",
   "TITLE.NO_ITEMS_DELIVERY_ORDER": "Tidak ada item yang dipilih untuk delivery order ini.",
   "MENU.INVOICE_MONITORING.CONTRACT_TROUBLES": "Troubled Contract",
-  "TITLE.NO_BKB": "Nomor BKB"
+  "TITLE.NO_BKB": "Nomor BKB",
+  "TITLE.REPORT_BY": "Laporkan Oleh"
 }
