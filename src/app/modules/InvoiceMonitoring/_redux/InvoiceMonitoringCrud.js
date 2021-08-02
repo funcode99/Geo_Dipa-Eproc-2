@@ -257,28 +257,43 @@ export async function createBkb(data) {
 export async function getBkb(id) {
   return axios.get(`/invoice/get_bkb/${id}`);
 }
-export async function tax_manager_approve_bkb(id, tax_man_approved_id, term_id, desc) {
-  return axios.post(`/invoice/tax_manager_approve_bkb`, {
+export async function tax_manager_approve_bkb(
     id,
     tax_man_approved_id,
     term_id,
     desc
+) {
+  return axios.post(`/invoice/tax_manager_approve_bkb`, {
+    id,
+    tax_man_approved_id,
+    term_id,
+    desc,
   });
 }
-export async function finance_manager_approve_bkb(id, finance_man_approved_id, term_id, desc) {
-  return axios.post(`/invoice/finance_manager_approve_bkb`, {
+export async function finance_manager_approve_bkb(
     id,
     finance_man_approved_id,
     term_id,
     desc
+) {
+  return axios.post(`/invoice/finance_manager_approve_bkb`, {
+    id,
+    finance_man_approved_id,
+    term_id,
+    desc,
   });
 }
-export async function finance_director_approve_bkb(id, finance_director_approved_id, term_id, desc) {
-  return axios.post(`/invoice/finance_director_approve_bkb`, {
+export async function finance_director_approve_bkb(
     id,
     finance_director_approved_id,
     term_id,
     desc
+) {
+  return axios.post(`/invoice/finance_director_approve_bkb`, {
+    id,
+    finance_director_approved_id,
+    term_id,
+    desc,
   });
 }
 export async function updateSoftCopyByUser(id, file) {
@@ -346,4 +361,7 @@ export async function getAllMismatch(params) {
 }
 export async function getAllBkb(params) {
   return axios.get(`invoice/get_all_bkb${params ? "?" + params : ""}`);
+}
+export async function getAllInvoice(params) {
+  return axios.get(`invoice/get_invoice_list${params ? "?" + params : ""}`);
 }

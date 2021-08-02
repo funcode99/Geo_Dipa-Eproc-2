@@ -580,5 +580,9 @@
   "TITLE.NO_ITEMS_DELIVERY_ORDER": "Tidak ada item yang dipilih untuk delivery order ini.",
   "MENU.INVOICE_MONITORING.CONTRACT_TROUBLES": "Troubled Contract",
   "TITLE.NO_BKB": "Nomor BKB",
-  "TITLE.REPORT_BY": "Laporkan Oleh"
+  "TITLE.REPORT_BY": "Laporkan Oleh",
+  "TITLE.INVOICE_NUMBER": "Nomor Invoice",
+  "TITLE.DATE_OF_INVOICE": "Date Of Invoice",
+  "TITLE.PAYMENT_DEADLINE": "Payment Deadline",
+  "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position"
 }
