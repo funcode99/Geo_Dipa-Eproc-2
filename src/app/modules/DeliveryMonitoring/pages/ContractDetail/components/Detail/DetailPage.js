@@ -274,15 +274,15 @@ const DetailPage = ({
           <Button
             variant="link"
             onClick={() => {
-              if (item?.approve_status?.name === "APPROVED")
-                history.push(
-                  `/${authStatus}/delivery-monitoring/contract/task/${item.id}`
-                );
-              else
-                MODAL.showSnackbar(
-                  "Mohon Approve termin ini terlebih dahulu",
-                  "warning"
-                );
+              // if (item?.approve_status?.name === "APPROVED")
+              history.push(
+                `/${authStatus}/delivery-monitoring/contract/task/${item.id}`
+              );
+              // else
+              //   MODAL.showSnackbar(
+              //     "Mohon Approve termin ini terlebih dahulu",
+              //     "warning"
+              //   );
             }}
           >
             {/* <NavLink

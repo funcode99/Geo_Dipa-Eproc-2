@@ -45,11 +45,15 @@ const TerminPaper = () => {
     : TERMIN_TAB_LIST.filter((item) => item.id !== "delivery-order");
   const getTask = React.useCallback(() => {
     const task = dataContractById?.tasks?.find((item) => item.id === task_id);
-    return task?.name ?? "";
+    // return task?.name ?? "";
+    return task;
   }, [dataContractById, task_id]);
   function handleChangeTab(e, newTabActive) {
     const lastTabIndex = tabUsed.length - 1;
-    if (newTabActive === lastTabIndex) {
+    let thisTask = getTask(task_id);
+    if (newTabActive > 0 && thisTask?.approve_status?.name !== "APPROVED") {
+      MODAL.showSnackbar("Mohon Approve termin ini terlebih dahulu", "warning");
+    } else if (newTabActive === lastTabIndex) {
       if (!task_sa && !task_gr) {
         MODAL.showSnackbar("Mohon pastikan BAPP sudah di approve.", "warning");
       } else {
@@ -62,7 +66,7 @@ const TerminPaper = () => {
   return (
     <Container>
       <StyledSubheader
-        text={getTask(task_id) || `Termin 1`}
+        text={getTask(task_id)?.name || `Termin 1`}
         IconComponent={<DescriptionOutlined style={{ color: "white" }} />}
       />
 
@@ -78,7 +82,7 @@ const TerminPaper = () => {
               1}`,
           },
           {
-            label: getTask(task_id) || `Termin`,
+            label: getTask(task_id)?.name || `Termin`,
             to: "",
           },
         ]}

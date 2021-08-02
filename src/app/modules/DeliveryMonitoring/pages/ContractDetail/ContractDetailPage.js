@@ -235,7 +235,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
         steps={
           loading
             ? DUMMY_STEPPER_CONTRACT
-            : dataContractById?.steppers.map((el) => ({
+            : dataContractById?.steppers?.map((el) => ({
                 label: el.label,
                 status: STATE_STEPPER[el.state],
               }))
