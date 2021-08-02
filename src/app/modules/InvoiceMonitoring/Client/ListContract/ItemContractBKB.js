@@ -1031,10 +1031,28 @@ function ItemContractBKB(props) {
             </div>
             <div className="row">
               <div
-                className="col-sm border d-flex align-items-end"
+                className="col-sm border"
                 style={{ height: 110 }}
               >
-                <span className="mx-auto">{bkbData?.archived_name}</span>
+                <div
+                  className="text-center"
+                  style={{
+                    height: styleCustom.minHeightAppv,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                  }}
+                >
+                  {bkbData &&
+                    <QRCodeG
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.verif_staff_role_id}&type=ARCHIVED_BKB`}
+                    />
+                  }
+                  <div className="d-flex align-items-end">
+                    <span className="mx-auto">
+                      {bkbData?.archived_name}
+                    </span>
+                  </div>
+                </div>
               </div>
               <div
                 className="col-sm border"
@@ -1187,9 +1205,10 @@ function ItemContractBKB(props) {
                     <span className="col-sm-8">: {bkbData?.vendor_sap_no}</span>
                   </div>
                 </div>
-                {(bkbData?.doc_park_ap_state === 'PENDING' ||
+                {(((bkbData?.doc_park_ap_state === 'PENDING' ||
                   bkbData?.doc_park_ap_state === 'APPROVED') &&
-                  bkbData?.doc_park_ap_no &&
+                  bkbData?.doc_park_ap_no) ||
+                  !bkbData ) &&
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
                       <span className="col-sm-4">
@@ -1201,6 +1220,7 @@ function ItemContractBKB(props) {
                 }
                 {(!bkbData?.doc_park_ap_no ||
                   bkbData?.doc_park_ap_state === 'REJECTED') &&
+                  bkbData &&
                   <div className="row border-bottom">
                     <div className="col-sm-12">
                       <div className="form-group row mb-0">
@@ -1249,9 +1269,11 @@ function ItemContractBKB(props) {
                     </div>
                   </div>
                 }
-                {bkbData?.doc_park_byr_no &&
+                {((bkbData?.doc_park_byr_no &&
                   (bkbData?.doc_park_byr_state === 'PENDING' ||
-                    bkbData?.doc_park_byr_state === 'APPROVED') &&
+                    bkbData?.doc_park_byr_state === 'APPROVED')) ||
+                  bkbData?.doc_park_ap_state === null ||
+                  !bkbData) &&
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
                       <span className="col-sm-4">
@@ -1263,6 +1285,7 @@ function ItemContractBKB(props) {
                 }
                 {!bkbData?.doc_park_byr_no ||
                   bkbData?.doc_park_byr_state === 'REJECTED' &&
+                  bkbData &&
                   <div className="row border-bottom">
                     <div className="col-sm-12">
                       <div className="form-group row mb-0">
