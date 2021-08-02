@@ -350,11 +350,23 @@ export async function submitParkAP(data) {
 export async function approveParkAP(data) {
   return axios.post(`invoice/park_ap_approve`, data);
 }
+export async function rejectParkAP(data) {
+  return axios.post(`invoice/park_ap_reject`, data);
+}
+export async function updateParkAP(data) {
+  return axios.post(`invoice/park_ap_update`, data);
+}
 export async function submitParkBYR(data) {
   return axios.post(`invoice/park_byr_submit`, data);
 }
 export async function approveParkBYR(data) {
   return axios.post(`invoice/park_byr_approve`, data);
+}
+export async function rejectParkBYR(data) {
+  return axios.post(`invoice/park_byr_reject`, data);
+}
+export async function updateParkBYR(data) {
+  return axios.post(`invoice/park_byr_update`, data);
 }
 export async function getAllMismatch(params) {
   return axios.get(`invoice/mismatch_all${params ? "?" + params : ""}`);
