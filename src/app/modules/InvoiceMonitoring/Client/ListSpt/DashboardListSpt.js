@@ -108,12 +108,12 @@ function DashboardListSpt(props) {
       title: intl.formatMessage({ id: "TITLE.DATE" }),
       name: "date",
       order: {
-        active: false,
+        active: true,
         status: false,
       },
       filter: {
-        active: false,
-        type: "text",
+        active: true,
+        type: "date",
       },
     },
   ];

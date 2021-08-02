@@ -48,14 +48,9 @@ export const DataAsideMenuListClient = [
         subMenu: null,
       },
       {
-        rootPath: "/client/invoice_monitoring-1/error-v",
+        rootPath: "/client/invoice_monitoring/invoice_document",
         title: "MENU.INVOICE_MONITORING.INVOICE_DOCUMENT",
-        subMenu: [
-          {
-            rootPath: "/client/invoice_monitoring-1/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
       {
         rootPath: "/client/invoice_monitoring/bkb",

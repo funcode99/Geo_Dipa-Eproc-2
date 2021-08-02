@@ -9,11 +9,7 @@ import {
   injectIntl,
 } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
-import {
-  getContractMainFinance,
-  getContractUnitFinance,
-  getContractUser,
-} from "../../_redux/InvoiceMonitoringCrud";
+import { getAllBkb } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -94,52 +90,25 @@ function DashboardListBkb(props) {
     setErr(false);
     setParamsTable(params);
     setLoading(false);
-    // if (is_finance && is_main) {
-    //   getContractMainFinance(params)
-    //     .then((result) => {
-    //       setLoading(false);
-    //       setData({
-    //         ...data,
-    //         count: result.data.count || 0,
-    //         data: result.data.data,
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       setErr(true);
-    //       setLoading(false);
-    //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    //     });
-    // } else if (is_finance) {
-    //   getContractUnitFinance(user_id, params)
-    //     .then((result) => {
-    //       setLoading(false);
-    //       setData({
-    //         ...data,
-    //         count: result.data.count || 0,
-    //         data: result.data.data,
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       setErr(true);
-    //       setLoading(false);
-    //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    //     });
-    // } else {
-    //   getContractUser(user_id, params)
-    //     .then((result) => {
-    //       setLoading(false);
-    //       setData({
-    //         ...data,
-    //         count: result.data.count || 0,
-    //         data: result.data.data,
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       setErr(true);
-    //       setLoading(false);
-    //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    //     });
-    // }
+    getAllBkb(params)
+      .then((result) => {
+        setLoading(false);
+        setData({
+          ...data,
+          count: result.data.count || 0,
+          data: result.data.data,
+        });
+      })
+      .catch((err) => {
+        setErr(true);
+        setLoading(false);
+        setToast(
+          intl.formatMessage({
+            id: "REQ.REQUEST_FAILED",
+          }),
+          5000
+        );
+      });
   };
 
   return (
@@ -158,13 +127,22 @@ function DashboardListBkb(props) {
             {data.data.map((item, index) => {
               return (
                 <TableRow key={index.toString()}>
-                  <TableCell>{item.purch_order_no}</TableCell>
-                  <TableCell>{item.contract_name}</TableCell>
                   <TableCell>
-                    {window
-                      .moment(new Date(item.po_date))
-                      .format("DD MMM YYYY")}
+                    <Link
+                      to={
+                        "/client/invoice_monitoring/contract/" +
+                        item.contract_id +
+                        "/" +
+                        item.term_id
+                      }
+                    >
+                      {item.bkb_number}
+                    </Link>
                   </TableCell>
+                  <TableCell>
+                    {item.contract?.user_group?.party?.full_name}
+                  </TableCell>
+                  <TableCell>{item.vendor?.party?.full_name}</TableCell>
                 </TableRow>
               );
             })}
