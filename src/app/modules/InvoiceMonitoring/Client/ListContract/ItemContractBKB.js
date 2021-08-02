@@ -19,7 +19,11 @@ import {
   approveParkAP,
   submitParkBYR,
   approveParkBYR,
-  getTerminProgress
+  getTerminProgress,
+  rejectParkAP,
+  updateParkAP,
+  rejectParkBYR,
+  updateParkBYR
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -73,10 +77,16 @@ function ItemContractBKB(props) {
   const [monitoringFinanceDirec] = useState(
     monitoring_role.findIndex((element) => element === "Direktur Keuangan") >= 0
   );
-  const [monitoringVerificationStaff] = useState(
-    monitoring_role.findIndex((element) => element === "Verification Staff") >= 0
+  const [approveBkbStaff] = useState(
+    monitoring_role.findIndex((element) => element === "Accounting & Budgeting Staff") >= 0
   );
   const [modalApproved, setModalApproved] = useState({
+    statusDialog: false,
+    data: {},
+    loading: false,
+    statusReq: false,
+  });
+  const [modalRejected, setModalRejected] = useState({
     statusDialog: false,
     data: {},
     loading: false,
@@ -101,6 +111,8 @@ function ItemContractBKB(props) {
       .then((response) => {
         if (response["data"]["data"]) {
           setBkbData(response["data"]["data"]);
+          setParkApInput(response["data"]["data"]["doc_park_ap_no"]);
+          setParkByrInput(response["data"]["data"]["doc_park_byr_no"]);
         }
       })
       .catch((error) => {
@@ -219,6 +231,32 @@ function ItemContractBKB(props) {
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
+    } else if (modalApproved.data === "updateDataParkAp") {
+      const data = {
+        id: bkbData.id,
+        desc: bkbData.desc,
+        doc_park_ap_no: parkApInput,
+        doc_park_ap_update_id: data_login.user_id
+      }
+      updateParkAP(data)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
     } else if (modalApproved.data === "monitoringApproveParkAP") {
       const data = {
         id: bkbData.id,
@@ -276,6 +314,32 @@ function ItemContractBKB(props) {
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
+    } else if (modalApproved.data === "updateDataParkByr") {
+      const data = {
+        id: bkbData.id,
+        desc: bkbData.desc,
+        doc_park_byr_no: parkByrInput,
+        doc_park_byr_update_id: data_login.user_id
+      }
+      updateParkBYR(data)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
     } else if (modalApproved.data === "monitoringApproveParkBYR") {
       const data = {
         id: bkbData.id,
@@ -310,13 +374,159 @@ function ItemContractBKB(props) {
     }
   };
 
-  const handleSubmitParkAP = () => {
-
+  const handleRejected = () => {
+    setModalRejected({ ...modalRejected, loading: true });
+    var note = document.getElementById("commentRejected").value;
+    if (modalRejected.data === "rejectParkAP") {
+      const data = {
+        id: bkbData.id,
+        doc_park_ap_rejected_id: data_login.user_id,
+        desc: bkbData.desc,
+        rejected_remark: note,
+        doc_park_ap_no: bkbData.doc_park_ap_no,
+        bkb_number: bkbData.bkb_number,
+        doc_park_ap_submit_id: bkbData.doc_park_ap_updated_id ? bkbData.doc_park_ap_updated_id : bkbData.doc_park_ap_submit_id,
+        doc_park_ap_submit_at: bkbData.doc_park_ap_updated_at ? bkbData.doc_park_ap_updated_at : bkbData.doc_park_ap_submit_at
+      }
+      rejectParkAP(data)
+        .then((result) => {
+          setModalRejected({
+            ...modalRejected,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalRejected({
+              ...modalRejected,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else if (modalRejected.data === "rejectParkBYR") {
+      const data = {
+        id: bkbData.id,
+        doc_park_byr_rejected_id: data_login.user_id,
+        desc: bkbData.desc,
+        rejected_remark: note,
+        doc_park_byr_no: bkbData.doc_park_byr_no,
+        bkb_number: bkbData.bkb_number,
+        doc_park_byr_submit_id: bkbData.doc_park_byr_updated_id ? bkbData.doc_park_byr_updated_id : bkbData.doc_park_byr_submit_id,
+        doc_park_byr_submit_at: bkbData.doc_park_byr_updated_at ? bkbData.doc_park_byr_updated_at : bkbData.doc_park_byr_submit_at
+      }
+      rejectParkBYR(data)
+        .then((result) => {
+          setModalRejected({
+            ...modalRejected,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalRejected({
+              ...modalRejected,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
   };
 
   return (
     <React.Fragment>
       <Toast />
+      <Dialog
+        open={modalRejected.statusDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleRejected();
+          }}
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
+            <span className="text-danger">
+              {" " + (modalRejected.data.document_name || "")}
+            </span>
+          </DialogTitle>
+          <DialogContent>
+            <p>
+              <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY" />
+            </p>
+            <textarea
+              rows="2"
+              cols=""
+              className="form-control"
+              id="commentRejected"
+              placeholder={intl.formatMessage({
+                id:
+                  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY",
+              })}
+              required
+              disabled={modalRejected.loading}
+            ></textarea>
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() =>
+                setModalRejected({
+                  ...modalRejected,
+                  statusDialog: false,
+                })
+              }
+              disabled={modalRejected.loading}
+            >
+              <span>
+                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+              </span>
+            </button>
+            <button
+              className="btn btn-danger"
+              type="submit"
+              disabled={modalRejected.loading}
+            >
+              {!modalRejected.loading && (
+                <span>
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" />
+                </span>
+              )}
+              {modalRejected.loading &&
+                (modalRejected.statusReq && modalRejected.loading ? (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                    </span>
+                    <span className="ml-2 fas fa-check"></span>
+                  </div>
+                ) : (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.WAITING" />
+                    </span>
+                    <span className="ml-2 mr-4 spinner spinner-white"></span>
+                  </div>
+                ))}
+            </button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <Dialog
         open={modalSubmit.statusDialog}
         TransitionComponent={Transition}
@@ -838,12 +1048,36 @@ function ItemContractBKB(props) {
                     paddingBottom: 10,
                   }}
                 >
-                  {monitoringVerificationStaff &&
+                  {approveBkbStaff &&
                     bkbData?.doc_park_ap_approved_id == null &&
-                    bkbData?.doc_park_ap_no && (
+                    bkbData?.doc_park_ap_no &&
+                    bkbData?.doc_park_ap_state === 'PENDING' && (
                       <button
                         type="button"
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-danger btn-sm mx-2"
+                        style={{ fontSize: 10, marginTop: 20 }}
+                        onClick={() => {
+                          setModalRejected({
+                            ...modalRejected,
+                            statusDialog: true,
+                            data: "rejectParkAP",
+                          });
+                        }}
+                      >
+                        <i
+                          className="fas fa-times-circle"
+                          style={{ fontSize: 8 }}
+                        ></i>
+                        <FormattedMessage id="TITLE.REJECT" />
+                      </button>
+                    )}
+                  {approveBkbStaff &&
+                    bkbData?.doc_park_ap_approved_id == null &&
+                    bkbData?.doc_park_ap_no &&
+                    bkbData?.doc_park_ap_state === 'PENDING' && (
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-sm mx-2"
                         style={{ fontSize: 10, marginTop: 20 }}
                         onClick={() => {
                           setModalApproved({
@@ -862,7 +1096,7 @@ function ItemContractBKB(props) {
                     )}
                   {bkbData?.doc_park_ap_approved_id && (
                     <QRCodeG
-                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.verif_staff_role_id}&type=APPROVED_PARK_AP`}
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.accounting_budgeting_role_id}&type=APPROVED_PARK_AP`}
                     />
                   )}
                   <div className="d-flex align-items-end">
@@ -884,9 +1118,33 @@ function ItemContractBKB(props) {
                     paddingBottom: 10,
                   }}
                 >
-                  {monitoringVerificationStaff &&
+                  {approveBkbStaff &&
                     bkbData?.doc_park_byr_approved_id == null &&
-                    bkbData?.doc_park_byr_no && (
+                    bkbData?.doc_park_byr_no &&
+                    bkbData?.doc_park_byr_state === 'PENDING' && (
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm mx-2"
+                        style={{ fontSize: 10, marginTop: 20 }}
+                        onClick={() => {
+                          setModalRejected({
+                            ...modalRejected,
+                            statusDialog: true,
+                            data: "rejectParkBYR",
+                          });
+                        }}
+                      >
+                        <i
+                          className="fas fa-times-circle"
+                          style={{ fontSize: 8 }}
+                        ></i>
+                        <FormattedMessage id="TITLE.REJECT" />
+                      </button>
+                    )}
+                  {approveBkbStaff &&
+                    bkbData?.doc_park_byr_approved_id == null &&
+                    bkbData?.doc_park_byr_no &&
+                    bkbData?.doc_park_byr_state === 'PENDING' && (
                       <button
                         type="button"
                         className="btn btn-primary btn-sm"
@@ -908,7 +1166,7 @@ function ItemContractBKB(props) {
                     )}
                   {bkbData?.doc_park_byr_approved_id && (
                     <QRCodeG
-                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.verif_staff_role_id}&type=APPROVED_PARK_BYR`}
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.accounting_budgeting_role_id}&type=APPROVED_PARK_BYR`}
                     />
                   )}
                   <div className="d-flex align-items-end">
@@ -929,7 +1187,9 @@ function ItemContractBKB(props) {
                     <span className="col-sm-8">: {bkbData?.vendor_sap_no}</span>
                   </div>
                 </div>
-                {bkbData?.doc_park_ap_no &&
+                {(bkbData?.doc_park_ap_state === 'PENDING' ||
+                  bkbData?.doc_park_ap_state === 'APPROVED') &&
+                  bkbData?.doc_park_ap_no &&
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
                       <span className="col-sm-4">
@@ -939,7 +1199,8 @@ function ItemContractBKB(props) {
                     </div>
                   </div>
                 }
-                {!bkbData?.doc_park_ap_no &&
+                {(!bkbData?.doc_park_ap_no ||
+                  bkbData?.doc_park_ap_state === 'REJECTED') &&
                   <div className="row border-bottom">
                     <div className="col-sm-12">
                       <div className="form-group row mb-0">
@@ -971,7 +1232,7 @@ function ItemContractBKB(props) {
                                   setModalApproved({
                                     ...modalApproved,
                                     statusDialog: true,
-                                    data: "submitDataParkAp",
+                                    data: bkbData?.doc_park_ap_no ? "updateDataParkAp" : "submitDataParkAp",
                                   });
                                 }}
                                 disabled={
@@ -979,7 +1240,7 @@ function ItemContractBKB(props) {
                                   !parkApInput
                                 }
                               >
-                                Simpan
+                                {bkbData?.doc_park_ap_no ? "Update" : "Simpan"}
                               </button>
                             </div>
                           </div>
@@ -989,6 +1250,8 @@ function ItemContractBKB(props) {
                   </div>
                 }
                 {bkbData?.doc_park_byr_no &&
+                  (bkbData?.doc_park_byr_state === 'PENDING' ||
+                    bkbData?.doc_park_byr_state === 'APPROVED') &&
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
                       <span className="col-sm-4">
@@ -998,7 +1261,8 @@ function ItemContractBKB(props) {
                     </div>
                   </div>
                 }
-                {!bkbData?.doc_park_byr_no &&
+                {!bkbData?.doc_park_byr_no ||
+                  bkbData?.doc_park_byr_state === 'REJECTED' &&
                   <div className="row border-bottom">
                     <div className="col-sm-12">
                       <div className="form-group row mb-0">
@@ -1036,11 +1300,11 @@ function ItemContractBKB(props) {
                                   setModalApproved({
                                     ...modalApproved,
                                     statusDialog: true,
-                                    data: "submitDataParkByr",
+                                    data: bkbData?.doc_park_byr_no ? "updateDataParkByr" : "submitDataParkByr",
                                   });
                                 }}
                               >
-                                Simpan
+                                {bkbData?.doc_park_byr_no ? "Update" : "Simpan"}
                               </button>
                             </div>
                           </div>
@@ -1135,7 +1399,7 @@ function ItemContractBKB(props) {
                                   bkbData?.finance_director_approved_id === null &&
                                   bkbData?.finance_man_approved_id === null &&
                                   bkbData?.tax_man_approved_id === null &&
-                                  row?.ident_name === "DIREKTUR_KEUANGAN" && 
+                                  row?.ident_name === "DIREKTUR_KEUANGAN" &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button
                                       type="button"
@@ -1160,7 +1424,7 @@ function ItemContractBKB(props) {
                                   bkbData?.finance_director_approved_id === null &&
                                   bkbData?.finance_man_approved_id === null &&
                                   bkbData?.tax_man_approved_id === null &&
-                                  row?.ident_name === "FINANCE_MANAGER" && 
+                                  row?.ident_name === "FINANCE_MANAGER" &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button
                                       type="button"
@@ -1185,7 +1449,7 @@ function ItemContractBKB(props) {
                                   bkbData?.finance_director_approved_id === null &&
                                   bkbData?.finance_man_approved_id === null &&
                                   bkbData?.tax_man_approved_id === null &&
-                                  row?.ident_name === "TREASURY_ASSISTANT_MANAGER" && 
+                                  row?.ident_name === "TREASURY_ASSISTANT_MANAGER" &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button
                                       type="button"

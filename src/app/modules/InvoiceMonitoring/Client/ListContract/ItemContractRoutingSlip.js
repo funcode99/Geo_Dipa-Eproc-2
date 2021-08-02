@@ -25,6 +25,7 @@ import {
   getRoutingSlip
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
+import { rupiah } from "../../../../libs/currency";
 
 // const Transition = React.forwardRef(function Transition(props, ref) {
 //     return <Slide direction="up" ref={ref} {...props} />;
@@ -289,21 +290,21 @@ function ItemContractRoutingSlip(props) {
                       {slipData?.park_ap_date_out ? window
                         .moment(new Date(slipData?.park_ap_date_out))
                         .format("DD MMM YYYY")
-                      : '-'
+                        : '-'
                       }
                     </td>
                     <td className="text-center">
                       {slipData?.park_ap_date_out ? window
                         .moment(new Date(slipData?.park_ap_date_out))
                         .format("HH:mm")
-                      : '-'
+                        : '-'
                       }
                     </td>
                     <td></td>
                     <td>Approve Park AP Dokumen</td>
                   </tr>}
                   {slipData?.park_byr_date_in && <tr>
-                    <td>8</td>
+                    <td>7</td>
                     <td>{slipData?.park_byr_creator?.party?.full_name}</td>
                     <td className="text-center">
                       {window
@@ -319,21 +320,21 @@ function ItemContractRoutingSlip(props) {
                       {slipData?.park_byr_date_out ? window
                         .moment(new Date(slipData?.park_byr_date_out))
                         .format("DD MMM YYYY")
-                      : '-'
+                        : '-'
                       }
                     </td>
                     <td className="text-center">
                       {slipData?.park_byr_date_out ? window
                         .moment(new Date(slipData?.park_byr_date_out))
                         .format("HH:mm")
-                      : '-'
+                        : '-'
                       }
                     </td>
                     <td></td>
                     <td>Approve Park BYR Dokumen</td>
                   </tr>}
                   {slipData?.bkb_document_date_in && <tr>
-                    <td>7</td>
+                    <td>8</td>
                     <td>{slipData?.bkb_creator?.party?.full_name}</td>
                     <td className="text-center">
                       {window
@@ -349,14 +350,14 @@ function ItemContractRoutingSlip(props) {
                       {slipData?.bkb_document_date_out ? window
                         .moment(new Date(slipData?.bkb_document_date_out))
                         .format("DD MMM YYYY")
-                      : '-'
+                        : '-'
                       }
                     </td>
                     <td className="text-center">
                       {slipData?.bkb_document_date_out ? window
                         .moment(new Date(slipData?.bkb_document_date_out))
                         .format("HH:mm")
-                      : '-'
+                        : '-'
                       }
                     </td>
                     <td></td>
@@ -427,15 +428,7 @@ function ItemContractRoutingSlip(props) {
                     <span>1. Tagihan</span>
                   </div>
                   <div className="col-sm-6">
-                    <span>171.666.000</span>
-                  </div>
-                </div>
-                <div className="row mt-3">
-                  <div className="col-sm-6 border-right">
-                    <span className="pl-3">PPN (10%)</span>
-                  </div>
-                  <div className="col-sm-6">
-                    <span>(15.606.000)</span>
+                    <span>{rupiah(slipData?.bkb?.sub_total).slice(3)}</span>
                   </div>
                 </div>
                 <div className="row mt-3">
@@ -446,42 +439,31 @@ function ItemContractRoutingSlip(props) {
                     {/* <span>171.666.000</span> */}
                   </div>
                 </div>
-                <div className="row mt-3">
-                  <div className="col-sm-6 border-right">
-                    <span className="pl-3">PPh 23 (2%)</span>
-                  </div>
-                  <div className="col-sm-6">
-                    <span>(3.121.200)</span>
-                  </div>
-                </div>
-                <div className="row mt-3">
-                  <div className="col-sm-6 border-right">
-                    <span className="pl-3">PPh 22 (1.5%)</span>
-                  </div>
-                  <div className="col-sm-6">
-                    <span>-</span>
-                  </div>
-                </div>
+                {slipData?.tax?.tax_selected.map((item, index) => {
+                  const data = JSON.parse(item?.value)
+                  return (
+                    <div className="row mt-3" key={index}>
+                      <div className="col-sm-6 border-right">
+                        <span className="pl-3">{data.description} - {data.value}%</span>
+                      </div>
+                      <div className="col-sm-6">
+                        <span>({rupiah(data.tax_value).slice(3)})</span>
+                      </div>
+                    </div>
+                  )
+                })}
                 <div className="row mt-3">
                   <div className="col-sm-6 border-right">
                     <span className="pl-3">Denda</span>
                   </div>
-                  <div className="col-sm-6">{/* <span>-</span> */}</div>
-                </div>
-                <div className="row mt-3">
-                  <div className="col-sm-6 border-right">
-                    <span className="pl-5">Saldo</span>
-                  </div>
-                  <div className="col-sm-6">
-                    <span>-</span>
-                  </div>
+                  <div className="col-sm-6">({rupiah(slipData?.invoice?.penalty).slice(3)})</div>
                 </div>
                 <div className="row mt-3">
                   <div className="col-sm-6 border-right">
                     <span>3. Jumlah Dibayar</span>
                   </div>
                   <div className="col-sm-6">
-                    <span>152.938.800</span>
+                    <span>{rupiah(slipData?.bkb?.total_amount).slice(3)}</span>
                   </div>
                 </div>
               </div>
