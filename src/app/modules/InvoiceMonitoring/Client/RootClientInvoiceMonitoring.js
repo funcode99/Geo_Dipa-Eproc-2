@@ -9,6 +9,7 @@ import ListTermContract from "./ListContract/ListTermContract";
 import DashboardListMismatch from "./ListMismatch/DashboardListMismatch";
 import DashboardListBkb from "./ListBkb/DashboardListBkb";
 import Dashboard from "./Dashboard/Dashboard";
+import DashboardListInvoice from "./ListInvoice/DashboardListInvoice";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -55,6 +56,10 @@ function RootClientInvoiceMonitoring(props) {
       <Route
         path="/client/invoice_monitoring/dashboard"
         component={Dashboard}
+      />
+      <Route
+        path="/client/invoice_monitoring/invoice_document"
+        component={DashboardListInvoice}
       />
     </Switch>
   );

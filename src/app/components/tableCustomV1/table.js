@@ -223,7 +223,7 @@ const Tables = (props) => {
                         className="dropdown-menu"
                         style={{ zIndex: 90 }}
                       >
-                        <li style={{ width: 360, padding: 5 }}>
+                        <li style={{ width: 340, padding: 5 }}>
                           <div className="clearfix">
                             <div className="float-left">
                               <input
@@ -242,6 +242,7 @@ const Tables = (props) => {
                                 })}
                               />
                             </div>
+                            <div>
                             <button
                               type="button"
                               className="ml-2 float-left btn btn-sm btn-primary"
@@ -268,6 +269,7 @@ const Tables = (props) => {
                                 <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
                               </span>
                             </button>
+                          </div>
                           </div>
                         </li>
                       </ul>

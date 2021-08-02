@@ -580,5 +580,10 @@
   "TITLE.DETAIL_ITEMS": "Detail items",
   "TITLE.NO_ITEMS_DELIVERY_ORDER": "No items have been selected for this delivery order.",
   "MENU.INVOICE_MONITORING.CONTRACT_TROUBLES": "Troubled Contract",
-  "TITLE.NO_BKB": "BKB Number"
+  "TITLE.NO_BKB": "BKB Number",
+  "TITLE.REPORT_BY": "Report By",
+  "TITLE.INVOICE_NUMBER": "Invoice Number",
+  "TITLE.DATE_OF_INVOICE": "Date Of Invoice",
+  "TITLE.PAYMENT_DEADLINE": "Payment Deadline",
+  "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position"
 }
