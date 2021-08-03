@@ -15,6 +15,7 @@ const FormBuilder = (
     loading = false,
     disabledButton = false,
     withSubmit = true,
+    btnChildren,
   },
   ref
 ) => {
@@ -44,6 +45,7 @@ const FormBuilder = (
             )}
             {withSubmit && (
               <div className="d-flex justify-content-end w-100">
+                {btnChildren}
                 <Button
                   variant="contained"
                   color="secondary"
