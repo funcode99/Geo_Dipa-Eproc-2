@@ -1072,29 +1072,6 @@ function ItemContractBKB(props) {
                     bkbData?.doc_park_ap_state === 'PENDING' && (
                       <button
                         type="button"
-                        className="btn btn-danger btn-sm mx-2"
-                        style={{ fontSize: 10, marginTop: 20 }}
-                        onClick={() => {
-                          setModalRejected({
-                            ...modalRejected,
-                            statusDialog: true,
-                            data: "rejectParkAP",
-                          });
-                        }}
-                      >
-                        <i
-                          className="fas fa-times-circle"
-                          style={{ fontSize: 8 }}
-                        ></i>
-                        <FormattedMessage id="TITLE.REJECT" />
-                      </button>
-                    )}
-                  {approveBkbStaff &&
-                    bkbData?.doc_park_ap_approved_id == null &&
-                    bkbData?.doc_park_ap_no &&
-                    bkbData?.doc_park_ap_state === 'PENDING' && (
-                      <button
-                        type="button"
                         className="btn btn-primary btn-sm mx-2"
                         style={{ fontSize: 10, marginTop: 20 }}
                         onClick={() => {
@@ -1110,6 +1087,29 @@ function ItemContractBKB(props) {
                           style={{ fontSize: 8 }}
                         ></i>
                         <FormattedMessage id="TITLE.APPROVE" />
+                      </button>
+                    )}
+                  {approveBkbStaff &&
+                    bkbData?.doc_park_ap_approved_id == null &&
+                    bkbData?.doc_park_ap_no &&
+                    bkbData?.doc_park_ap_state === 'PENDING' && (
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm mx-2"
+                        style={{ fontSize: 10, marginTop: 20 }}
+                        onClick={() => {
+                          setModalRejected({
+                            ...modalRejected,
+                            statusDialog: true,
+                            data: "rejectParkAP",
+                          });
+                        }}
+                      >
+                        <i
+                          className="fas fa-times-circle"
+                          style={{ fontSize: 8 }}
+                        ></i>
+                        <FormattedMessage id="TITLE.REJECT" />
                       </button>
                     )}
                   {bkbData?.doc_park_ap_approved_id && (
@@ -1208,7 +1208,8 @@ function ItemContractBKB(props) {
                 {(((bkbData?.doc_park_ap_state === 'PENDING' ||
                   bkbData?.doc_park_ap_state === 'APPROVED') &&
                   bkbData?.doc_park_ap_no) ||
-                  !bkbData ) &&
+                  !approveBkbStaff ||
+                  !bkbData) &&
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
                       <span className="col-sm-4">
@@ -1221,6 +1222,7 @@ function ItemContractBKB(props) {
                 {(!bkbData?.doc_park_ap_no ||
                   bkbData?.doc_park_ap_state === 'REJECTED') &&
                   bkbData &&
+                  approveBkbStaff &&
                   <div className="row border-bottom">
                     <div className="col-sm-12">
                       <div className="form-group row mb-0">
@@ -1273,6 +1275,9 @@ function ItemContractBKB(props) {
                   (bkbData?.doc_park_byr_state === 'PENDING' ||
                     bkbData?.doc_park_byr_state === 'APPROVED')) ||
                   bkbData?.doc_park_ap_state === null ||
+                  bkbData?.doc_park_ap_state === 'PENDING' ||
+                  bkbData?.doc_park_ap_state === 'REJECTED' ||
+                  !approveBkbStaff ||
                   !bkbData) &&
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
@@ -1283,9 +1288,11 @@ function ItemContractBKB(props) {
                     </div>
                   </div>
                 }
-                {!bkbData?.doc_park_byr_no ||
+                {((!bkbData?.doc_park_byr_no &&
+                  bkbData?.doc_park_ap_state === 'APPROVED') ||
                   bkbData?.doc_park_byr_state === 'REJECTED' &&
-                  bkbData &&
+                  bkbData) &&
+                  approveBkbStaff &&
                   <div className="row border-bottom">
                     <div className="col-sm-12">
                       <div className="form-group row mb-0">
