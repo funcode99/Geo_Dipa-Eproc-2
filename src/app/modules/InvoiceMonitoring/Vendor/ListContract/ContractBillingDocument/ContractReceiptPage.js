@@ -33,6 +33,9 @@ import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
+import {
+  getInvoicePeriods
+} from "../../../../Master/service/MasterCrud";
 
 function ContractReceiptPage(props) {
   const [loading, setLoading] = useState(false);
@@ -48,6 +51,7 @@ function ContractReceiptPage(props) {
   const [historyReceiptData, setHistoryReceiptData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
+  const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
 
   const [Toast, setToast] = useToast();
 
@@ -185,8 +189,8 @@ function ContractReceiptPage(props) {
             "receipt_date",
             dataFormReceiptVendor.receipt_date
               ? window
-                  .moment(new Date(dataFormReceiptVendor.receipt_date))
-                  .format("YYYY-MM-DD")
+                .moment(new Date(dataFormReceiptVendor.receipt_date))
+                .format("YYYY-MM-DD")
               : ""
           );
           formik.setFieldValue(
@@ -228,8 +232,8 @@ function ContractReceiptPage(props) {
               "receipt_date",
               response["data"]["data"]["receipt_date"]
                 ? window
-                    .moment(new Date(response["data"]["data"]["receipt_date"]))
-                    .format("YYYY-MM-DD")
+                  .moment(new Date(response["data"]["data"]["receipt_date"]))
+                  .format("YYYY-MM-DD")
                 : ""
             );
             formik.setFieldValue(
@@ -348,8 +352,24 @@ function ContractReceiptPage(props) {
     setModalHistory(true);
   };
 
+  const getInvoicePeriodsData = useCallback(() => {
+    getInvoicePeriods()
+      .then((response) => {
+        const day_now = moment(new Date()).format('D')
+        if (parseInt(response["data"]["data"][0]["accepted_thru_day"]) >= parseInt(response["data"]["data"][0]["accepted_from_day"])) {
+          setInvoicePeriodsStatus(day_now >= parseInt(response["data"]["data"][0]["accepted_from_day"]) && day_now <= parseInt(response["data"]["data"][0]["accepted_thru_day"]))
+        } else {
+          setInvoicePeriodsStatus(day_now >= parseInt(response["data"]["data"][0]["accepted_from_day"]) || day_now <= parseInt(response["data"]["data"][0]["accepted_thru_day"]))
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [intl, setToast]);
+
   useEffect(getContractData, []);
   useEffect(getReceiptData, []);
+  useEffect(getInvoicePeriodsData, []);
 
   return (
     <React.Fragment>
@@ -392,9 +412,8 @@ function ContractReceiptPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${
-                          pageNumber === 1 ? "" : "text-secondary"
-                        }`}
+                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -412,9 +431,8 @@ function ContractReceiptPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${
-                          pageNumber === numPages ? "" : "text-secondary"
-                        }`}
+                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -513,11 +531,11 @@ function ContractReceiptPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )
+                      "YYYY-MM-DD HH:mm:ss"
+                    )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )}
+                      "YYYY-MM-DD HH:mm:ss"
+                    )}
                 </span>
               </div>
             </div>
@@ -565,7 +583,12 @@ function ContractReceiptPage(props) {
                       type="text"
                       className="form-control"
                       id="numberReceipt"
-                      disabled={loading || receiptStatus}
+                      disabled={
+                        (loading ||
+                          receiptStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        !invoicePeriodsStatus
+                      }
                       {...formik.getFieldProps("receipt_no")}
                       onChange={(e) => {
                         dataFormReceiptVendor.receipt_no = e.target.value;
@@ -593,7 +616,12 @@ function ContractReceiptPage(props) {
                       type="date"
                       className="form-control"
                       id="dateReceipt"
-                      disabled={loading || receiptStatus}
+                      disabled={
+                        (loading ||
+                          receiptStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        !invoicePeriodsStatus
+                      }
                       {...formik.getFieldProps("receipt_date")}
                       onChange={(e) => {
                         dataFormReceiptVendor.receipt_date = window
@@ -626,7 +654,12 @@ function ContractReceiptPage(props) {
                       cols=""
                       className="form-control"
                       id="note"
-                      disabled={loading || receiptStatus}
+                      disabled={
+                        (loading ||
+                          receiptStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        !invoicePeriodsStatus
+                      }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
                         dataFormReceiptVendor.description = e.target.value;
@@ -648,9 +681,8 @@ function ContractReceiptPage(props) {
                   </label>
                   <label
                     htmlFor="upload"
-                    className={`input-group mb-3 col-sm-8 ${
-                      !receiptStatus ? "pointer" : ""
-                    }`}
+                    className={`input-group mb-3 col-sm-8 ${(receiptStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? "" : "pointer"
+                      }`}
                   >
                     {!receiptStatus && (
                       <div className="input-group-prepend">
@@ -660,9 +692,8 @@ function ContractReceiptPage(props) {
                       </div>
                     )}
                     <span
-                      className={`form-control text-truncate ${
-                        receiptStatus ? classes.textDisabled : ""
-                      }`}
+                      className={`form-control text-truncate ${(receiptStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? classes.textDisabled : ""
+                        }`}
                     >
                       {uploadFilename}
                     </span>
@@ -696,7 +727,12 @@ function ContractReceiptPage(props) {
                     type="file"
                     className="d-none"
                     id="upload"
-                    disabled={loading || receiptStatus}
+                    disabled={
+                      (loading ||
+                        receiptStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                      !invoicePeriodsStatus
+                    }
                     onChange={(e) => handleUpload(e)}
                   />
                 </div>
@@ -783,8 +819,9 @@ function ContractReceiptPage(props) {
               disabled={
                 loading ||
                 (formik.touched && !formik.isValid) ||
-                receiptStatus ||
-                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                (receiptStatus ||
+                  progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                !invoicePeriodsStatus
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />
@@ -826,11 +863,10 @@ function ContractReceiptPage(props) {
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`${
-                          item.state === "REJECTED"
-                            ? "text-danger"
-                            : "text-success"
-                        } pointer font-weight-bold`}
+                        className={`${item.state === "REJECTED"
+                          ? "text-danger"
+                          : "text-success"
+                          } pointer font-weight-bold`}
                         onClick={() => handleHistory(index)}
                       >
                         {item.state === "REJECTED" ? (
