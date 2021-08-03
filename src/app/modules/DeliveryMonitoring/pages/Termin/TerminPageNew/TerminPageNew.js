@@ -18,6 +18,7 @@ export class TerminPageNew extends PureComponent {
     this.state = {
       termin: {
         stepper: [],
+        summary: {},
       },
       summary: {},
       deliverable: {},
@@ -54,7 +55,11 @@ export class TerminPageNew extends PureComponent {
             }));
             this.setState((prev) => ({
               ...prev,
-              termin: { ...prev.termin, stepper: mappedStepper },
+              termin: {
+                ...prev.termin,
+                stepper: mappedStepper,
+                summary: res.data,
+              },
             }));
             if (typeof onSuccess === "function") onSuccess(res);
           },
@@ -85,7 +90,8 @@ export class TerminPageNew extends PureComponent {
           keys: KEYS_TERMIN,
           history,
           match,
-          task_id,
+          // task_id,
+          task_id: "136dee5a-8670-41e0-a855-c9f346949f06",
           func: {
             onRefresh: this.handleRefresh,
             handleApi: this.handleApiCenter,
