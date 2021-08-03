@@ -223,7 +223,7 @@ const Tables = (props) => {
                         className="dropdown-menu"
                         style={{ zIndex: 90 }}
                       >
-                        <li style={{ width: 340, padding: 5 }}>
+                        <li style={{ width: 360, padding: 5 }}>
                           <div className="clearfix">
                             <div className="float-left">
                               <input
@@ -242,10 +242,10 @@ const Tables = (props) => {
                                 })}
                               />
                             </div>
-                            <div>
+                            <div className="d-flex">
                             <button
                               type="button"
-                              className="ml-2 float-left btn btn-sm btn-primary"
+                                className="mx-2 float-left btn btn-sm btn-primary"
                               onClick={() => {
                                 updateValueFilter(
                                   item.name.replace(/\s/g, ""),
@@ -257,7 +257,7 @@ const Tables = (props) => {
                             </button>
                             <button
                               type="button"
-                              className="float-right btn btn-sm btn-light"
+                                className="mx-2 float-right btn btn-sm btn-light"
                               onClick={() => {
                                 resetValueFilter(
                                   "filter-" + item.name.replace(/\s/g, "")

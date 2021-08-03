@@ -8,8 +8,28 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import { Select, MenuItem } from "@material-ui/core";
 import ApexCharts from "apexcharts";
+import { Dropdown, Form, Row, Col } from "react-bootstrap";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slide,
+} from "@material-ui/core";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function Dashboard(props) {
+  const [range, setRange] = useState("Harian");
+  const [err, setErr] = useState(false);
+  const [dialogSync, setDialogSync] = useState(false);
+  const [loadingSync, setLoadingSync] = useState(false);
+  const [errLoadingSync, setErrLoadingSync] = useState(false);
+  const [statusSync, setStatusSync] = useState(false);
+  const [errSync, setErrSync] = useState({ status: false, message: "" });
+
   useEffect(() => {
     var options = {
       chart: {
@@ -32,23 +52,169 @@ function Dashboard(props) {
       chart.render();
     }
   }, []);
+
+  const handleAsyncSpt = (e) => {
+    e.preventDefault();
+  };
   return (
     <React.Fragment>
+      <Dialog
+        open={dialogSync}
+        keepMounted
+        maxWidth={"sm"}
+        fullWidth={true}
+        TransitionComponent={Transition}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="TITLE.RANGE_BY_DATE" />
+        </DialogTitle>
+        <Form id="asyncData" onSubmit={handleAsyncSpt}>
+          <DialogContent>
+            <Row>
+              <Col>
+                <Form.Group as={Row}>
+                  <Form.Label column md="4">
+                    <FormattedMessage id="TITLE.START_DATE" />
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      type="date"
+                      name="startDate"
+                      disabled={loadingSync}
+                      max={new Date().toISOString().split("T")[0]}
+                    />
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row}>
+                  <Form.Label column md="4">
+                    <FormattedMessage id="TITLE.END_DATE" />
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      type="date"
+                      name="endDate"
+                      disabled={loadingSync}
+                      max={new Date().toISOString().split("T")[0]}
+                    />
+                  </Col>
+                </Form.Group>
+                {errLoadingSync && !loadingSync && (
+                  <div>
+                    <p
+                      className="text-danger font-italic"
+                      style={{ fontSize: 11 }}
+                    >
+                      Error: <FormattedMessage id="TITLE.ERROR_REQUEST" />
+                    </p>
+                  </div>
+                )}
+                {errSync.status && (
+                  <Form.Group as={Row}>
+                    <Form.Label column md="12" className="text-danger">
+                      <FormattedMessage id="TITLE.INFORMATION_OR_NOTE" />
+                    </Form.Label>
+                    <Col sm="12">
+                      <Form.Control
+                        as="textarea"
+                        disabled={true}
+                        rows={8}
+                        value={errSync.message}
+                        onChange={(e) => {}}
+                      />
+                    </Col>
+                  </Form.Group>
+                )}
+              </Col>
+            </Row>
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-sm btn-primary"
+              type="submit"
+              disabled={loadingSync}
+            >
+              {!statusSync && !loadingSync && (
+                <>
+                  <i className="fas fa-sync-alt p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.START_SYNC" />
+                </>
+              )}
+              {statusSync && loadingSync && (
+                <>
+                  <i className="fas fa-sync-alt fa-spin p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.WAITING" />
+                </>
+              )}
+              {!statusSync && loadingSync && (
+                <>
+                  <i className="fas fa-check p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.DONE_DATA_SYNC" />
+                </>
+              )}
+            </button>
+            <button
+              className="btn btn-sm btn-danger"
+              type="button"
+              disabled={loadingSync}
+              onClick={() => {
+                let errSyncs = Object.assign({}, errSync);
+                errSyncs.status = false;
+                setErrSync({
+                  ...errSyncs,
+                });
+                setDialogSync(false);
+                document.getElementById("asyncData").reset();
+              }}
+            >
+              <FormattedMessage id="TITLE.CANCEL" />
+            </button>
+          </DialogActions>
+        </Form>
+      </Dialog>
       <Card>
         <CardBody>
           <div className="d-flex justify-content-between">
             <h6>Overview</h6>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              //   value={age}
-              //   onChange={handleChange}
-              defaultValue={10}
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                {range}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    setRange("Harian");
+                  }}
+                >
+                  Harian
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setRange("Bulanan");
+                  }}
+                >
+                  Bulanan
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setRange("Tahunan");
+                  }}
+                >
+                  Tahunan
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setDialogSync(true);
+                  }}
             >
-              <MenuItem value={10}>Harian</MenuItem>
-              <MenuItem value={20}>Bulanan</MenuItem>
-              <MenuItem value={30}>Tahunan</MenuItem>
-            </Select>
+                  By Date
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
           <div className="row my-4">
             <div className="col-md-3 p-1">

@@ -4,10 +4,7 @@ import React, {
   // useCallback
 } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
-import {
-  // FormattedMessage,
-  injectIntl,
-} from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import { getAllInvoice } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
@@ -40,6 +37,18 @@ function DashboardListInvoice(props) {
   const [err, setErr] = useState(false);
 
   const headerTable = [
+    {
+      title: intl.formatMessage({ id: "TITLE.TABLE_HEADER.NO" }),
+      name: "no",
+      order: {
+        active: false,
+        status: true,
+      },
+      filter: {
+        active: false,
+        type: "text",
+      },
+    },
     {
       title: intl.formatMessage({ id: "TITLE.INVOICE_NUMBER" }),
       name: "invoice_number",
@@ -229,7 +238,6 @@ function DashboardListInvoice(props) {
     });
     setErr(false);
     setParamsTable(params);
-    setLoading(false);
     getAllInvoice(params)
       .then((result) => {
         setLoading(false);
@@ -268,6 +276,13 @@ function DashboardListInvoice(props) {
               return (
                 <TableRow key={index.toString()}>
                   <TableCell>
+                    {index +
+                      1 +
+                      Number(
+                        new URLSearchParams(paramsTable).get("numberColum")
+                      )}
+                  </TableCell>
+                  <TableCell>
                     {/* <Link
                       to={
                         "/client/invoice_monitoring/contract/" +
@@ -281,7 +296,7 @@ function DashboardListInvoice(props) {
                     {item.invoice_no}
                   </TableCell>
                   <TableCell>{item.purch_order_no}</TableCell>
-                  <TableCell>Nomor Kontrak</TableCell>
+                  <TableCell>{item.contract_no}</TableCell>
                   <TableCell>Judul Pengadaan</TableCell>
                   <TableCell>Termin</TableCell>
                   <TableCell>Termin Amount</TableCell>
@@ -289,9 +304,9 @@ function DashboardListInvoice(props) {
                   <TableCell>Payment Deadline</TableCell>
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>Vendor Name</TableCell>
-                  <TableCell>No SPT</TableCell>
+                  <TableCell>{item.spt_no}</TableCell>
                   <TableCell>Routing SLip Position</TableCell>
-                  <TableCell>Ststus</TableCell>
+                  <TableCell>{item.paid_satus?.toUpperCase()}</TableCell>
                 </TableRow>
               );
             })}
