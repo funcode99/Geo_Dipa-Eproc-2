@@ -30,6 +30,7 @@ import {
   fetch_api_sg,
   getLoading,
 } from "../../../../../../../redux/globalReducer";
+import { TerminPageContext } from "../../../Termin/TerminPageNew/TerminPageNew";
 
 const tableHeader = [
   {
@@ -51,7 +52,9 @@ const tableHeader = [
 ];
 
 const validationClient = object().shape({
-  hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
+  // hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
+  nomor_bast: validation.require("Nomor BAPP"),
+  tanggal_bast: validation.require("Tanggal BAPP"),
 });
 
 const validationVendor = object().shape({
@@ -79,6 +82,7 @@ const BastPage = ({
   loadings_sg,
   saveContract,
 }) => {
+  const { func, task_id } = React.useContext(TerminPageContext);
   const formikRef = React.useRef();
   const [Toast, setToast] = useToast();
   const isClient = status === "client";
@@ -172,30 +176,32 @@ const BastPage = ({
     // console.log(`data`, data);
     let params = {};
     let url = "";
-    switch (status) {
-      case "vendor":
-        url = `delivery/task-news/${contract?.id}/bast`;
-        params = {
-          // url: `delivery/task-news/${contract?.id}/bast`,
-          no: data.nomor_bast,
-          date: data.tanggal_bast,
-        };
-        break;
-      case "client":
-        url = `delivery/task-news/${contract?.news?.id}/review`;
-        params = {
-          // url: `delivery/task-news/${contract?.news?.id}/review`,
-          review_text: data.hasil_pekerjaan,
-        };
-        break;
-      default:
-        break;
-    }
+    // switch (status) {
+    //   case "vendor":
+    //     url = `delivery/task-news/${contract?.id}/bast`;
+    url = `delivery/task-news/${task_id}/bast`;
+    params = {
+      // url: `delivery/task-news/${contract?.id}/bast`,
+      no: data.nomor_bast,
+      date: data.tanggal_bast,
+    };
+    //     break;
+    //   case "client":
+    //     url = `delivery/task-news/${contract?.news?.id}/review`;
+    //     params = {
+    //       // url: `delivery/task-news/${contract?.news?.id}/review`,
+    //       review_text: data.hasil_pekerjaan,
+    //     };
+    //     break;
+    //   default:
+    //     break;
+    // }
 
     fetchApi({
       key: keys.submit,
       type: "post",
       params,
+      alertAppear: "both",
       url,
       onSuccess: (res) => {
         // handleLoading("get", false);
@@ -241,8 +247,8 @@ const BastPage = ({
   }, [taskNews]);
 
   let disabledInput = Object.keys(initialValues);
-  let allowedClient = ["hasil_pekerjaan"];
-  let allowedVendor = ["nomor_bast", "tanggal_bast"];
+  let allowedClient = ["hasil_pekerjaan", "nomor_bast", "tanggal_bast"];
+  let allowedVendor = [];
 
   const handleAction = (type, params) => {
     switch (type) {
@@ -382,6 +388,52 @@ const BastPage = ({
                     : !allowedVendor.includes(el)
                 ),
               }}
+              withSubmit={isClient}
+              btnChildren={
+                <Dropdown
+                  className="dropdown-inline mr-2"
+                  drop="down"
+                  alignRight
+                >
+                  <Dropdown.Toggle
+                    id="dropdown-toggle-top2"
+                    variant="transparent"
+                    className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                  >
+                    <FormattedMessage id="TITLE.PREVIEW" />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                    <ul className="navi navi-hover">
+                      <li className="navi-item">
+                        <Dropdown.Item
+                          // href="#"
+                          className="navi-link"
+                          onClick={() => handleAction("preview", taskNews)}
+                        >
+                          <span className="navi-icon">
+                            <i className="flaticon2-graph-1"></i>
+                          </span>
+                          <span className="navi-text">Document</span>
+                        </Dropdown.Item>
+                      </li>
+                      <li className="navi-item">
+                        <Dropdown.Item
+                          // href="#"
+                          className="navi-link"
+                          onClick={() =>
+                            handleAction("preview_signed", taskNews)
+                          }
+                        >
+                          <span className="navi-icon">
+                            <i className="flaticon2-writing"></i>
+                          </span>
+                          <span className="navi-text">Signed Document</span>
+                        </Dropdown.Item>
+                      </li>
+                    </ul>
+                  </Dropdown.Menu>
+                </Dropdown>
+              }
             >
               {({ fieldProps }) => (
                 <Row>

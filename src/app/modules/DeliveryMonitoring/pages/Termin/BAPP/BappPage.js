@@ -31,6 +31,7 @@ import {
   fetch_api_sg,
   getLoading,
 } from "../../../../../../redux/globalReducer";
+import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -70,6 +71,7 @@ const BappPage = ({
   saveTask,
   loadings,
 }) => {
+  const { func, task_id } = React.useContext(TerminPageContext);
   const [Toast, setToast] = useToast();
   // const [taskNews, setTaskNews] = React.useState({});
   const isReject = taskNews?.approve_status?.code === "rejected";
@@ -251,31 +253,33 @@ const BappPage = ({
 
     let params = {};
     let url = ``;
-    switch (status) {
-      case "vendor":
-        url = `delivery/task-news/${taskId}`;
-        params = {
-          url: `delivery/task-news/${taskId}`,
-          no: data.nomor_bapp,
-          date: data.tanggal_bapp,
-        };
-        break;
-      case "client":
-        url = `delivery/task-news/${taskNews?.id}/review`;
-        params = {
-          url: `delivery/task-news/${taskNews?.id}/review`,
-          review_text: data.hasil_pekerjaan,
-        };
-        break;
-      default:
-        break;
-    }
+    // switch (status) {
+    //   case "vendor":
+    url = `delivery/task-news/${taskId}`;
+    params = {
+      // url: `delivery/task-news/${taskId}`,
+      no: data.nomor_bapp,
+      date: data.tanggal_bapp,
+      review_text: data.hasil_pekerjaan,
+    };
+    //     break;
+    //   case "client":
+    //     url = `delivery/task-news/${taskNews?.id}/review`;
+    //     params = {
+    //       // url: `delivery/task-news/${taskNews?.id}/review`,
+    //       review_text: data.hasil_pekerjaan,
+    //     };
+    //     break;
+    //   default:
+    //     break;
+    // }
 
     fetchApi({
       key: keys.submit,
       type: "post",
       params,
       url,
+      alertAppear: "both",
       onSuccess: (res) => {
         // handleLoading("get", false);
         console.log(`res`, res);
@@ -316,8 +320,8 @@ const BappPage = ({
   // console.log(`taskNews`, taskNews, loadings);
 
   let disabledInput = Object.keys(initialValues);
-  let allowedClient = ["hasil_pekerjaan"];
-  let allowedVendor = ["nomor_bapp", "tanggal_bapp"];
+  let allowedClient = ["hasil_pekerjaan", "nomor_bapp", "tanggal_bapp"];
+  let allowedVendor = [];
 
   // const handleVisible = (key, tempParams = {}) => {
   //   setOpen((prev) => ({
@@ -484,6 +488,52 @@ const BappPage = ({
               }}
               loading={loadings.submit}
               disabledButton={isDisabled}
+              withSubmit={isClient}
+              btnChildren={
+                <Dropdown
+                  className="dropdown-inline mr-2"
+                  drop="down"
+                  alignRight
+                >
+                  <Dropdown.Toggle
+                    id="dropdown-toggle-top2"
+                    variant="transparent"
+                    className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                  >
+                    <FormattedMessage id="TITLE.PREVIEW" />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                    <ul className="navi navi-hover">
+                      <li className="navi-item">
+                        <Dropdown.Item
+                          // href="#"
+                          className="navi-link"
+                          onClick={() => handleAction("preview", taskNews)}
+                        >
+                          <span className="navi-icon">
+                            <i className="flaticon2-graph-1"></i>
+                          </span>
+                          <span className="navi-text">Document</span>
+                        </Dropdown.Item>
+                      </li>
+                      <li className="navi-item">
+                        <Dropdown.Item
+                          // href="#"
+                          className="navi-link"
+                          onClick={() =>
+                            handleAction("preview_signed", taskNews)
+                          }
+                        >
+                          <span className="navi-icon">
+                            <i className="flaticon2-writing"></i>
+                          </span>
+                          <span className="navi-text">Signed Document</span>
+                        </Dropdown.Item>
+                      </li>
+                    </ul>
+                  </Dropdown.Menu>
+                </Dropdown>
+              }
             />
           ) : (
             <div />

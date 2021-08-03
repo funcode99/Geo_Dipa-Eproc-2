@@ -1,11 +1,11 @@
 import { Divider } from "@material-ui/core";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 import ExpansionBox from "../../../../../../../../components/boxes/ExpansionBox";
 import FormBuilder from "../../../../../../../../components/builder/FormBuilder";
+import { rupiah } from "../../../../../../../../libs/currency";
 import { formData2 } from "../formDataOItem";
 import BtnApproveReject from "./BtnApproveReject";
-import { FormattedMessage } from "react-intl";
-import { rupiah } from "../../../../../../../../libs/currency";
 
 // const componentStatus = [
 //   { label: "REJECTED", class: "danger" },
@@ -39,7 +39,17 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
     const updateFormData = handleReadOnly(formDataUsed, "qty_approved", !state);
     setFormDataUsed(updateFormData);
 
-    if (state) formRef.current.setFieldValue("qty_approved", data.qty_approved);
+    const notEmpty =
+      formRef?.current?.values?.qty_approved &&
+      formRef?.current?.values?.qty_approved > 0
+        ? formRef?.current?.values?.qty_approved
+        : false;
+
+    if (state)
+      formRef.current.setFieldValue(
+        "qty_approved",
+        notEmpty || (data?.qty_approved ?? data?.qty)
+      );
     if (!state) formRef.current.setFieldValue("qty_approved", "0");
 
     formRef.current.setFieldValue(

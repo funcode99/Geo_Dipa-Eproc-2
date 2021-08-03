@@ -50,7 +50,8 @@ const TerminPaper = () => {
   }, [dataContractById, task_id]);
   function handleChangeTab(e, newTabActive) {
     const lastTabIndex = tabUsed.length - 1;
-    let thisTask = getTask(task_id);
+    // let thisTask = getTask(task_id);
+    let thisTask = states?.termin?.summary;
     if (newTabActive > 0 && thisTask?.approve_status?.name !== "APPROVED") {
       MODAL.showSnackbar("Mohon Approve termin ini terlebih dahulu", "warning");
     } else if (newTabActive === lastTabIndex) {
@@ -66,7 +67,8 @@ const TerminPaper = () => {
   return (
     <Container>
       <StyledSubheader
-        text={getTask(task_id)?.name || `Termin 1`}
+        // text={getTask(task_id)?.name || `Termin 1`}
+        text={states?.termin?.summary?.name || `Termin 1`}
         IconComponent={<DescriptionOutlined style={{ color: "white" }} />}
       />
 
@@ -82,7 +84,7 @@ const TerminPaper = () => {
               1}`,
           },
           {
-            label: getTask(task_id)?.name || `Termin`,
+            label: states?.termin?.summary?.name || `Termin`,
             to: "",
           },
         ]}
