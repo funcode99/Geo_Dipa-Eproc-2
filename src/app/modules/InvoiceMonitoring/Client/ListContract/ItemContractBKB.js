@@ -1142,29 +1142,6 @@ function ItemContractBKB(props) {
                     bkbData?.doc_park_byr_state === 'PENDING' && (
                       <button
                         type="button"
-                        className="btn btn-danger btn-sm mx-2"
-                        style={{ fontSize: 10, marginTop: 20 }}
-                        onClick={() => {
-                          setModalRejected({
-                            ...modalRejected,
-                            statusDialog: true,
-                            data: "rejectParkBYR",
-                          });
-                        }}
-                      >
-                        <i
-                          className="fas fa-times-circle"
-                          style={{ fontSize: 8 }}
-                        ></i>
-                        <FormattedMessage id="TITLE.REJECT" />
-                      </button>
-                    )}
-                  {approveBkbStaff &&
-                    bkbData?.doc_park_byr_approved_id == null &&
-                    bkbData?.doc_park_byr_no &&
-                    bkbData?.doc_park_byr_state === 'PENDING' && (
-                      <button
-                        type="button"
                         className="btn btn-primary btn-sm"
                         style={{ fontSize: 10, marginTop: 20 }}
                         onClick={() => {
@@ -1180,6 +1157,29 @@ function ItemContractBKB(props) {
                           style={{ fontSize: 8 }}
                         ></i>
                         <FormattedMessage id="TITLE.APPROVE" />
+                      </button>
+                    )}
+                  {approveBkbStaff &&
+                    bkbData?.doc_park_byr_approved_id == null &&
+                    bkbData?.doc_park_byr_no &&
+                    bkbData?.doc_park_byr_state === 'PENDING' && (
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm mx-2"
+                        style={{ fontSize: 10, marginTop: 20 }}
+                        onClick={() => {
+                          setModalRejected({
+                            ...modalRejected,
+                            statusDialog: true,
+                            data: "rejectParkBYR",
+                          });
+                        }}
+                      >
+                        <i
+                          className="fas fa-times-circle"
+                          style={{ fontSize: 8 }}
+                        ></i>
+                        <FormattedMessage id="TITLE.REJECT" />
                       </button>
                     )}
                   {bkbData?.doc_park_byr_approved_id && (
