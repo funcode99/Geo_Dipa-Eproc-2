@@ -43,9 +43,9 @@ const FormBuilder = (
             ) : (
               <FieldBuilder formData={formData} {...fieldProps} />
             )}
-            {withSubmit && (
-              <div className="d-flex justify-content-end w-100">
-                {btnChildren}
+            <div className="d-flex justify-content-end w-100">
+              {btnChildren}
+              {withSubmit && (
                 <Button
                   variant="contained"
                   color="secondary"
@@ -60,8 +60,8 @@ const FormBuilder = (
                     <Send />
                   )}
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </React.Fragment>
         );
       }}
