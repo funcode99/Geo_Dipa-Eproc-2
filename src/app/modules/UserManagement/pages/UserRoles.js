@@ -320,6 +320,30 @@ function UserRoles(props) {
                 />
               </div>
             </div>
+            <div className="form-group row mb-3">
+              <label htmlFor="static_1" className="col-sm-3 col-form-label">
+                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.PURCH_GROUP" />
+              </label>
+              <div className="col-sm-9">
+                <StyledSelect
+                  isDisabled={true}
+                  value={dataUser.purch_group_data}
+                  isMulti
+                />
+              </div>
+            </div>
+            <div className="form-group row mb-3">
+              <label htmlFor="static_1" className="col-sm-3 col-form-label">
+                <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.EPROC_ROLE" />
+              </label>
+              <div className="col-sm-9">
+                <StyledSelect
+                  isDisabled={true}
+                  value={dataUser.eproc_roles_data}
+                  isMulti
+                />
+              </div>
+            </div>
             <div className="form-group row">
               <label htmlFor="static_1" className="col-sm-3 col-form-label">
                 <FormattedMessage id="TITLE.USER_MANAGEMENT.USER_ROLES.ROLE" />
