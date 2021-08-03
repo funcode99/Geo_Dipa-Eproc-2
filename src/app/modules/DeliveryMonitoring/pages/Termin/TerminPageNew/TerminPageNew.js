@@ -90,8 +90,8 @@ export class TerminPageNew extends PureComponent {
           keys: KEYS_TERMIN,
           history,
           match,
-          // task_id,
-          task_id: "136dee5a-8670-41e0-a855-c9f346949f06",
+          task_id,
+          // task_id: "136dee5a-8670-41e0-a855-c9f346949f06",
           func: {
             onRefresh: this.handleRefresh,
             handleApi: this.handleApiCenter,
