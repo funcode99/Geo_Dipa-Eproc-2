@@ -196,6 +196,7 @@ function ContractInvoicePage(props) {
         updateInvoice(invoiceId, data)
           .then((response) => {
             getInvoice(contract_id, termin).then((responses) => {
+              props.set_data_invoice_vendor({});
               setInvoiceData(responses["data"]["data"]);
               formik.setFieldValue(
                 "from_time",
@@ -218,6 +219,7 @@ function ContractInvoicePage(props) {
       } else {
         saveInvoice(data)
           .then((response) => {
+            props.set_data_invoice_vendor({});
             setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
             setLoading(false);
             setInvoiceData(response["data"]["data"]);

@@ -225,6 +225,7 @@ function ContractSprPage(props) {
         updateSpp(sppId, data)
           .then((response) => {
             getSpp(contract_id, termin).then((responses) => {
+              props.set_data_spr_vendor({});
               setSppData(responses["data"]["data"]);
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setUploadFilenameBank(responses["data"]["data"]["new_bank_file"]);
@@ -240,6 +241,7 @@ function ContractSprPage(props) {
       } else {
         saveSpp(data)
           .then((response) => {
+            props.set_data_spr_vendor({});
             setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
             setLoading(false);
             setSppData(response["data"]["data"]);

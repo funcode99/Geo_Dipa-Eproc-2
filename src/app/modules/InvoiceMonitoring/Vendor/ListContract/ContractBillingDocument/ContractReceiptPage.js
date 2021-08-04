@@ -268,6 +268,7 @@ function ContractReceiptPage(props) {
         updateReceipt(receiptId, data)
           .then((response) => {
             getReceipt(contract_id, termin).then((responses) => {
+              props.set_data_receipt_vendor({});
               setReceiptData(responses["data"]["data"]);
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -282,6 +283,7 @@ function ContractReceiptPage(props) {
       } else {
         saveReceipt(data)
           .then((response) => {
+            props.set_data_receipt_vendor({});
             setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
             setLoading(false);
             setReceiptData(response["data"]["data"]);

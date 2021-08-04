@@ -194,6 +194,7 @@ function ContractTaxPage(props) {
           .then((response) => {
             getTax(contract_id, termin).then((responses) => {
               setTaxData(responses["data"]["data"]);
+              props.set_data_tax_vendor({});
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
               setLoading(false);
@@ -207,6 +208,7 @@ function ContractTaxPage(props) {
       } else {
         saveTax(data)
           .then((response) => {
+            props.set_data_tax_vendor({});
             setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
             setLoading(false);
             setTaxData(response["data"]["data"]);
@@ -364,10 +366,7 @@ function ContractTaxPage(props) {
             "invoice_date",
             new Date(response.data.data.from_time)
           );
-          formik.setFieldValue(
-            "invoice_date_yesterday",
-            new Date(d)
-          );
+          formik.setFieldValue("invoice_date_yesterday", new Date(d));
           formik.setFieldValue("invoice_bool", true);
         }
       })
