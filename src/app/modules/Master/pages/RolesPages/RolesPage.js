@@ -74,34 +74,14 @@ const RolesPage = (props) => {
   };
 
   const handleModal = async (index) => {
-    if (props.data.type === "BKB") {
-      formik.setValues({
-        min_value: rolesData[index].bkb_min_value,
-        max_value: rolesData[index].bkb_max_value,
-        role_name: rolesData[index].name,
-        id: rolesData[index].id,
-        type: props.data.type,
-        user_id: user_id
-      });
-    } else if (props.data.type === "Verification") {
-      formik.setValues({
-        min_value: rolesData[index].verification_min_value,
-        max_value: rolesData[index].verification_max_value,
-        role_name: rolesData[index].name,
-        id: rolesData[index].id,
-        type: props.data.type,
-        user_id: user_id
-      });
-    } else {
-      formik.setValues({
-        min_value: rolesData[index].approval_min_value,
-        max_value: rolesData[index].approval_max_value,
-        role_name: rolesData[index].name,
-        id: rolesData[index].id,
-        type: props.data.type,
-        user_id: user_id
-      });
-    }
+    formik.setValues({
+      min_value: rolesData[index].min_value,
+      max_value: rolesData[index].max_value,
+      role_name: rolesData[index].name,
+      id: rolesData[index].id,
+      type: props.data.type,
+      user_id: user_id
+    });
     setModals(true);
   };
 
@@ -272,13 +252,13 @@ const RolesPage = (props) => {
                     {item.name}
                   </td>
                   <td>
-                    {item.bkb_min_value ? rupiah(item.bkb_min_value) : item.verification_min_value ? rupiah(item.verification_min_value) : item.approval_min_value ? rupiah(item.approval_min_value) : '-'}
+                    {item.min_value ? rupiah(item.min_value) : '-'}
                   </td>
                   <td>
-                    {item.bkb_max_value ? rupiah(item.bkb_max_value) : item.verification_max_value ? rupiah(item.verification_max_value) : item.approval_max_value ? rupiah(item.approval_max_value) : '-'}
+                    {item.max_value ? rupiah(item.max_value) : '-'}
                   </td>
                   <td className="text-center">
-                    {props.data.type !== "Accept" && props.data.type !== "Accounting" && props.data.type !== "Delivery" && <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>}
+                    {props.data.type !== "Accept" && props.data.type !== "Delivery" && <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>}
                   </td>
                 </tr>
               )

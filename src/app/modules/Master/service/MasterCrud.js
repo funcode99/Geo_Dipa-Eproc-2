@@ -220,3 +220,12 @@ export function getInvoicePeriods() {
 export function updateInvoicePeriods(data) {
   return axios.post(`data/update_invoice_periods/${data.id}`, data);
 }
+
+// master data invoice authorty
+
+export function getInvoiceAuthority(params) {
+  return axios.get(`data/get_authority_value${params ? "?" + params : ""}`);
+}
+export function updateInvoiceAuthority(data) {
+  return axios.post(`data/update_authority_value/${data.id}`, data);
+}

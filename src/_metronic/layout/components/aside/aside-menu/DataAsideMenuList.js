@@ -116,6 +116,11 @@ export const DataAsideMenuListClient = [
         subMenu: null,
       },
       {
+        rootPath: "/client/master/invoice_authority",
+        title: "MENU.MASTER_DATA.INVOICE_AUTHORITY",
+        subMenu: null,
+      },
+      {
         rootPath: "/client/master/invoice_periode",
         title: "MENU.MASTER_DATA.INVOICE_PERIODS",
         subMenu: null,

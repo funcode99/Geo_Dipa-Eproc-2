@@ -11,6 +11,7 @@ import Email from "./pages/Email";
 import ItemEmail from "./pages/Email/ItemEmail";
 import PurchGroup from "./pages/PurchGroup";
 import Tax from "./pages/Tax";
+import InvoiceAuthority from "./pages/InvoiceAuthority";
 import ItemTax from "./pages/Tax/ItemTax";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
@@ -25,6 +26,7 @@ function RootMasterData() {
       <Route path="/client/master/document_types" component={DocTypes} />
       <Route path="/client/master/periode" component={Periode} />
       <Route path="/client/master/roles" component={Roles} />
+      <Route path="/client/master/invoice_authority" component={InvoiceAuthority} />
       <Route path="/client/master/invoice_periode" component={InvoicePeriode} />
       <Route
         path="/client/master/service_level_agreement"
