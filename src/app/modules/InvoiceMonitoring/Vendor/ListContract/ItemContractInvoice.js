@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector } from "react-redux";
 import { injectIntl, FormattedMessage } from "react-intl";
-import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import { Card, CardBody, CardHeader, CardHeaderToolbar } from "../../../../../_metronic/_partials/controls";
 import Navs from "../../../../components/navs";
 import ContractInvoicePage from "./ContractBillingDocument/ContractInvoicePage";
 import ContractSprPage from "./ContractBillingDocument/ContractSprPage";
@@ -36,6 +36,10 @@ import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
+import moment from "moment";
+import {
+  getInvoicePeriods
+} from "../../../Master/service/MasterCrud";
 
 const styles = (theme) => ({
   root: {
@@ -136,6 +140,7 @@ function ItemContractInvoice(props) {
   );
   const [loading, setLoading] = useState(false);
   const [dataDocSoftCopy, setDataDocSoftCopy] = useState([]);
+  const [invoicePeriodsData, setInvoicePeriodsData] = useState([]);
   const [Toast, setToast] = useToast();
   const { contract, termin } = useParams();
   const user_id = useSelector((state) => state.auth.user.data.user_id);
@@ -243,7 +248,7 @@ function ItemContractInvoice(props) {
     } else if (status === "monitoring") {
       window.open(
         DEV_NODE +
-          `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
+        `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
         "_blank"
       );
     } else if (status === "delivery") {
@@ -278,7 +283,18 @@ function ItemContractInvoice(props) {
     //   });
   };
 
+  const getInvoicePeriodsData = useCallback(() => {
+    getInvoicePeriods()
+      .then((response) => {
+        setInvoicePeriodsData(response["data"]["data"][0])
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [intl, setToast]);
+
   useEffect(callApiContractSoftCopy, []);
+  useEffect(getInvoicePeriodsData, []);
 
   return (
     <React.Fragment>
@@ -410,55 +426,55 @@ function ItemContractInvoice(props) {
               loading={loading}
               // err={err}
               hecto={8}
-          >
-                    {dataDocSoftCopy.map((item, index) => {
-                      return (
-                        item.seq === 5 && (
+            >
+              {dataDocSoftCopy.map((item, index) => {
+                return (
+                  item.seq === 5 && (
                     <TableRow key={index.toString()}>
                       <TableCell>{1}</TableCell>
                       <TableCell>{item.document_name}</TableCell>
-                            {item.doc_no ? (
-                              item.doc_file ? (
+                      {item.doc_no ? (
+                        item.doc_file ? (
                           <TableCell>
-                                  <a
-                                    href="#"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      getFileContract(
-                                        item.doc_file,
-                                        item.doc_status,
-                                        item.ident_name
-                                      );
-                                    }}
-                                  >
-                                    {item.doc_no}
-                                  </a>
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                getFileContract(
+                                  item.doc_file,
+                                  item.doc_status,
+                                  item.ident_name
+                                );
+                              }}
+                            >
+                              {item.doc_no}
+                            </a>
                           </TableCell>
-                              ) : (
+                        ) : (
                           <TableCell>
                             {item.doc_no} (file tidak tersedia)
                           </TableCell>
-                              )
-                            ) : (
+                        )
+                      ) : (
                         <TableCell></TableCell>
-                            )}
+                      )}
                       <TableCell>
-                              {item.softcopy_approved_at
-                                ? window
-                                    .moment(new Date(item.softcopy_approved_at))
-                                    .format("DD MMM YYYY")
-                                : ""}
+                        {item.softcopy_approved_at
+                          ? window
+                            .moment(new Date(item.softcopy_approved_at))
+                            .format("DD MMM YYYY")
+                          : ""}
                       </TableCell>
                       <TableCell>
                         {(item.softcopy_state === "PENDING" ||
                           item.softcopy_state === null) &&
-                        item.doc_file
+                          item.doc_file
                           ? "WAITING TO APPROVE"
                           : item.softcopy_state === "REJECTED"
-                          ? "REJECTED"
-                          : item.softcopy_state === "APPROVED"
-                          ? "APPROVED"
-                          : "WAITING"}
+                            ? "REJECTED"
+                            : item.softcopy_state === "APPROVED"
+                              ? "APPROVED"
+                              : "WAITING"}
                       </TableCell>
                       <TableCell>
                         {item.softcopy_state === "APPROVED"
@@ -466,25 +482,30 @@ function ItemContractInvoice(props) {
                           : null}
                       </TableCell>
                       <TableCell>
-                              {item.softcopy_state === "REJECTED" &&
-                                item.doc_no &&
-                                item.seq === 5 && (
-                                  <ButtonAction
-                                    data={Object.assign({}, item)}
-                                    handleAction={handleAction}
-                                    ops={data_ops}
-                                  />
-                                )}
+                        {item.softcopy_state === "REJECTED" &&
+                          item.doc_no &&
+                          item.seq === 5 && (
+                            <ButtonAction
+                              data={Object.assign({}, item)}
+                              handleAction={handleAction}
+                              ops={data_ops}
+                            />
+                          )}
                       </TableCell>
                     </TableRow>
-                        )
-                      );
-                    })}
+                  )
+                );
+              })}
             </TableOnly>
           </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <Card>
+        <CardHeader>
+          <CardHeaderToolbar>
+            <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE" values={{ start_day: invoicePeriodsData?.accepted_from_day, end_day: invoicePeriodsData?.accepted_thru_day }} />
+          </CardHeaderToolbar>
+        </CardHeader>
         <CardBody>
           <Navs
             navLists={navLists}

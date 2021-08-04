@@ -35,6 +35,9 @@ import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
+import {
+  getInvoicePeriods
+} from "../../../../Master/service/MasterCrud";
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
@@ -50,6 +53,7 @@ function ContractTaxPage(props) {
   const [historyTaxData, setHistoryTaxData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
+  const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
 
   const [Toast, setToast] = useToast();
 
@@ -282,8 +286,8 @@ function ContractTaxPage(props) {
             "tax_date",
             dataFormTaxVendor.tax_date
               ? window
-                  .moment(new Date(dataFormTaxVendor.tax_date))
-                  .format("YYYY-MM-DD")
+                .moment(new Date(dataFormTaxVendor.tax_date))
+                .format("YYYY-MM-DD")
               : ""
           );
           formik.setFieldValue(
@@ -325,8 +329,8 @@ function ContractTaxPage(props) {
               "tax_date",
               response["data"]["data"]["tax_date"]
                 ? window
-                    .moment(new Date(response["data"]["data"]["tax_date"]))
-                    .format("YYYY-MM-DD")
+                  .moment(new Date(response["data"]["data"]["tax_date"]))
+                  .format("YYYY-MM-DD")
                 : ""
             );
             formik.setFieldValue("npwp", response["data"]["data"]["npwp"]);
@@ -371,6 +375,21 @@ function ContractTaxPage(props) {
       });
   }, [contract_id, termin, formik, intl, setToast]);
 
+  const getInvoicePeriodsData = useCallback(() => {
+    getInvoicePeriods()
+      .then((response) => {
+        const day_now = moment(new Date()).format('D')
+        if (parseInt(response["data"]["data"][0]["accepted_thru_day"]) >= parseInt(response["data"]["data"][0]["accepted_from_day"])) {
+          setInvoicePeriodsStatus(day_now >= parseInt(response["data"]["data"][0]["accepted_from_day"]) && day_now <= parseInt(response["data"]["data"][0]["accepted_thru_day"]))
+        } else {
+          setInvoicePeriodsStatus(day_now >= parseInt(response["data"]["data"][0]["accepted_from_day"]) || day_now <= parseInt(response["data"]["data"][0]["accepted_thru_day"]))
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [intl, setToast]);
+
   const handleUpload = (e) => {
     if (e.currentTarget.files.length) {
       setUploadFilename(e.currentTarget.files[0].name);
@@ -402,6 +421,7 @@ function ContractTaxPage(props) {
   useEffect(getContractData, []);
   useEffect(getTaxData, []);
   useEffect(getInvoiceData, []);
+  useEffect(getInvoicePeriodsData, []);
 
   return (
     <React.Fragment>
@@ -444,9 +464,8 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${
-                          pageNumber === 1 ? "" : "text-secondary"
-                        }`}
+                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -464,9 +483,8 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${
-                          pageNumber === numPages ? "" : "text-secondary"
-                        }`}
+                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -565,11 +583,11 @@ function ContractTaxPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )
+                      "YYYY-MM-DD HH:mm:ss"
+                    )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )}
+                      "YYYY-MM-DD HH:mm:ss"
+                    )}
                 </span>
               </div>
             </div>
@@ -617,7 +635,12 @@ function ContractTaxPage(props) {
                       type="text"
                       className="form-control"
                       id="numberTax"
-                      disabled={loading || taxStatus}
+                      disabled={
+                        (loading ||
+                          taxStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        !invoicePeriodsStatus
+                      }
                       {...formik.getFieldProps("tax_no")}
                       onChange={(e) => {
                         dataFormTaxVendor.tax_no = e.target.value;
@@ -642,7 +665,12 @@ function ContractTaxPage(props) {
                       type="date"
                       className="form-control"
                       id="dateTax"
-                      disabled={loading || taxStatus}
+                      disabled={
+                        (loading ||
+                          taxStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        !invoicePeriodsStatus
+                      }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("tax_date")}
                       onChange={(e) => {
@@ -673,12 +701,12 @@ function ContractTaxPage(props) {
                   <div className="col-sm-8">
                     <NumberFormat
                       id={
-                        loading || taxStatus
+                        (loading || taxStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
                       value={formik.values.npwp}
-                      displayType={loading || taxStatus ? "text" : "input"}
+                      displayType={(loading || taxStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? "text" : "input"}
                       className="form-control"
                       format="##.###.###.#-###.###"
                       mask="_"
@@ -708,7 +736,12 @@ function ContractTaxPage(props) {
                       cols=""
                       className="form-control"
                       id="note"
-                      disabled={loading || taxStatus}
+                      disabled={
+                        (loading ||
+                          taxStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        !invoicePeriodsStatus
+                      }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
                         dataFormTaxVendor.description = e.target.value;
@@ -730,9 +763,8 @@ function ContractTaxPage(props) {
                   </label>
                   <label
                     htmlFor="upload"
-                    className={`input-group mb-3 col-sm-8 ${
-                      !taxStatus ? "pointer" : ""
-                    }`}
+                    className={`input-group mb-3 col-sm-8 ${(taxStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? "" : "pointer"
+                      }`}
                   >
                     {!taxStatus && (
                       <div className="input-group-prepend">
@@ -742,9 +774,8 @@ function ContractTaxPage(props) {
                       </div>
                     )}
                     <span
-                      className={`form-control text-truncate ${
-                        taxStatus ? classes.textDisabled : ""
-                      }`}
+                      className={`form-control text-truncate ${(taxStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? classes.textDisabled : ""
+                        }`}
                     >
                       {uploadFilename}
                     </span>
@@ -775,7 +806,11 @@ function ContractTaxPage(props) {
                     type="file"
                     className="d-none"
                     id="upload"
-                    disabled={loading || taxStatus}
+                    disabled={
+                      (loading ||
+                        taxStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus
+                    }
                     onChange={(e) => handleUpload(e)}
                   />
                 </div>
@@ -858,9 +893,10 @@ function ContractTaxPage(props) {
               className="btn btn-primary mx-1"
               disabled={
                 (formik.touched && !formik.isValid) ||
-                loading ||
-                taxStatus ||
-                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                (loading ||
+                  taxStatus ||
+                  progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                !invoicePeriodsStatus
               }
             >
               <FormattedMessage id="TITLE.UPLOAD" />
@@ -900,11 +936,10 @@ function ContractTaxPage(props) {
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`${
-                          item.state === "REJECTED"
+                        className={`${item.state === "REJECTED"
                             ? "text-danger"
                             : "text-success"
-                        } pointer font-weight-bold`}
+                          } pointer font-weight-bold`}
                         onClick={() => handleHistory(index)}
                       >
                         {item.state === "REJECTED" ? (
