@@ -22,4 +22,22 @@ const BASE_MODAL_CONF = [
   },
 ];
 
+export const PROGRESS_CONF = [
+  {
+    subTitle: "Harian",
+    scheme: "danger",
+    percentage: "20",
+  },
+  {
+    subTitle: "Mingguan",
+    scheme: "warning",
+    percentage: "30",
+  },
+  {
+    subTitle: "Bulanan",
+    scheme: "success",
+    percentage: "50",
+  },
+];
+
 export default BASE_MODAL_CONF;
