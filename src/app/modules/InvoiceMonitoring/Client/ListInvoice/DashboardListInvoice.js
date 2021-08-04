@@ -297,13 +297,13 @@ function DashboardListInvoice(props) {
                   </TableCell>
                   <TableCell>{item.purch_order_no}</TableCell>
                   <TableCell>{item.contract_no}</TableCell>
-                  <TableCell>Judul Pengadaan</TableCell>
-                  <TableCell>Termin</TableCell>
-                  <TableCell>Termin Amount</TableCell>
-                  <TableCell>Tanggal Invoice</TableCell>
-                  <TableCell>Payment Deadline</TableCell>
-                  <TableCell>{item.created_by_name}</TableCell>
-                  <TableCell>Vendor Name</TableCell>
+                  <TableCell>{item.contract_title}</TableCell>
+                  <TableCell>{item.term_name}</TableCell>
+                  <TableCell>{item.term_amount}</TableCell>
+                  <TableCell>{item.invoice_date}</TableCell>
+                  <TableCell>{item.payment_deadline}</TableCell>
+                  <TableCell>{item.user_created}</TableCell>
+                  <TableCell>{item.vendor_name}</TableCell>
                   <TableCell>{item.spt_no}</TableCell>
                   <TableCell>Routing SLip Position</TableCell>
                   <TableCell>{item.paid_satus?.toUpperCase()}</TableCell>
