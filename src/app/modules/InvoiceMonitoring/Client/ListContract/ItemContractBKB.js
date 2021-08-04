@@ -39,7 +39,7 @@ import {
   Slide,
   IconButton,
 } from "@material-ui/core";
-import { getRolesBKB } from "../../../Master/service/MasterCrud";
+import { getRolesBKB, getRolesAccounting } from "../../../Master/service/MasterCrud";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -61,6 +61,7 @@ function ItemContractBKB(props) {
   const [mainRolesBKBData, setMainRolesBKBData] = useState(null);
   const [parkApInput, setParkApInput] = useState('');
   const [parkByrInput, setParkByrInput] = useState('');
+  const [parkApstaff, setParkApStaff] = useState('');
 
   const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
   const monitoring_role = data_login.monitoring_role
@@ -78,8 +79,10 @@ function ItemContractBKB(props) {
     monitoring_role.findIndex((element) => element === "Direktur Keuangan") >= 0
   );
   const [approveBkbStaff] = useState(
-    monitoring_role.findIndex((element) => element === "Accounting & Budgeting Staff") >= 0
+    monitoring_role.findIndex((element) => element === "General Ledger Staff") >= 0
   );
+  const [approveParkAPStaff, setApproveParkAPStaff] = useState(false);
+  
   const [modalApproved, setModalApproved] = useState({
     statusDialog: false,
     data: {},
@@ -113,6 +116,18 @@ function ItemContractBKB(props) {
           setBkbData(response["data"]["data"]);
           setParkApInput(response["data"]["data"]["doc_park_ap_no"]);
           setParkByrInput(response["data"]["data"]["doc_park_byr_no"]);
+          getRolesAccounting(main_authority)
+            .then(responseRoles => {
+              let sub_total = response.data.data.sub_total
+              responseRoles.data.data.map((row, key) => {
+                if(sub_total >= row.min_value && sub_total <= row.max_value){
+                  setApproveParkAPStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
+                }
+              })
+            })
+            .catch(() => {
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+            })
         }
       })
       .catch((error) => {
@@ -386,7 +401,8 @@ function ItemContractBKB(props) {
         doc_park_ap_no: bkbData.doc_park_ap_no,
         bkb_number: bkbData.bkb_number,
         doc_park_ap_submit_id: bkbData.doc_park_ap_updated_id ? bkbData.doc_park_ap_updated_id : bkbData.doc_park_ap_submit_id,
-        doc_park_ap_submit_at: bkbData.doc_park_ap_updated_at ? bkbData.doc_park_ap_updated_at : bkbData.doc_park_ap_submit_at
+        doc_park_ap_submit_at: bkbData.doc_park_ap_updated_at ? bkbData.doc_park_ap_updated_at : bkbData.doc_park_ap_submit_at,
+        term_id: termin
       }
       rejectParkAP(data)
         .then((result) => {
@@ -416,7 +432,8 @@ function ItemContractBKB(props) {
         doc_park_byr_no: bkbData.doc_park_byr_no,
         bkb_number: bkbData.bkb_number,
         doc_park_byr_submit_id: bkbData.doc_park_byr_updated_id ? bkbData.doc_park_byr_updated_id : bkbData.doc_park_byr_submit_id,
-        doc_park_byr_submit_at: bkbData.doc_park_byr_updated_at ? bkbData.doc_park_byr_updated_at : bkbData.doc_park_byr_submit_at
+        doc_park_byr_submit_at: bkbData.doc_park_byr_updated_at ? bkbData.doc_park_byr_updated_at : bkbData.doc_park_byr_submit_at,
+        term_id: termin
       }
       rejectParkBYR(data)
         .then((result) => {
@@ -1066,7 +1083,7 @@ function ItemContractBKB(props) {
                     paddingBottom: 10,
                   }}
                 >
-                  {approveBkbStaff &&
+                  {approveParkAPStaff &&
                     bkbData?.doc_park_ap_approved_id == null &&
                     bkbData?.doc_park_ap_no &&
                     bkbData?.doc_park_ap_state === 'PENDING' && (
@@ -1089,7 +1106,7 @@ function ItemContractBKB(props) {
                         <FormattedMessage id="TITLE.APPROVE" />
                       </button>
                     )}
-                  {approveBkbStaff &&
+                  {approveParkAPStaff &&
                     bkbData?.doc_park_ap_approved_id == null &&
                     bkbData?.doc_park_ap_no &&
                     bkbData?.doc_park_ap_state === 'PENDING' && (

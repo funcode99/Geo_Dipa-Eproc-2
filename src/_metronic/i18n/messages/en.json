@@ -19,6 +19,7 @@
   "MENU.USER_MANAGEMENT": "User Management",
   "MENU.USER_PROFILE": "User Profile",
   "MENU.MASTER_DATA": "Master Data",
+  "MENU.MASTER_DATA.INVOICE_AUTHORITY": "Invoice Authority",
   "MENU.MASTER_DATA.DOCUMENT_TYPES": "Document Types",
   "MENU.MASTER_DATA.INVOICE_PERIODS": "Invoice Periods",
   "MENU.MASTER_DATA.ROLES": "Roles",
@@ -588,5 +589,6 @@
   "TITLE.INVOICE_NUMBER": "Invoice Number",
   "TITLE.DATE_OF_INVOICE": "Date Of Invoice",
   "TITLE.PAYMENT_DEADLINE": "Payment Deadline",
-  "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position"
+  "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position",
+  "TITLE.AUTHORITY": "Authority"
 }
