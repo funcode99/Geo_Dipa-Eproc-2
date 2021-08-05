@@ -22,6 +22,7 @@ export const KEYS_TERMIN = {
 
   // post
   p_t_summary: "post-termin-summary",
+  p_t_upload_do: "post-termin-upload-do",
   // approve
 
   // reject

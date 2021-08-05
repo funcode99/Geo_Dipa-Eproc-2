@@ -74,6 +74,20 @@ export class TerminPageNew extends PureComponent {
           onSuccess,
           ...other,
         });
+        break;
+
+      case KEYS_TERMIN.p_t_upload_do:
+        fetch_api_sg({
+          key,
+          url: `/delivery/task-delivery/${other.url_id}/upload`,
+          alertAppear: "both",
+          onSuccess,
+          params: { file: other.params.data },
+          type: "postForm",
+          ...other,
+        });
+
+        break;
       default:
         break;
     }
@@ -117,6 +131,10 @@ const mapState = (state) => {
     map_state: {
       loadings: {
         [KEYS_TERMIN.f_termin]: getLoading(state, KEYS_TERMIN.f_termin),
+        [KEYS_TERMIN.p_t_upload_do]: getLoading(
+          state,
+          KEYS_TERMIN.p_t_upload_do
+        ),
       },
       authStatus: state.auth.user.data.status,
       dataContractById,
