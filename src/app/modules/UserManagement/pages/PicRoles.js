@@ -475,8 +475,8 @@ function PicRoles(props) {
             dataHeader={headerTableSecond}
             loading={loadingSecond}
             hecto={7}
-            ref={picTableRef}
           >
+            <div ref={picTableRef}></div>
             {dataSecond.map((item, index) => {
               return (
                 <TableRow key={index.toString()}>

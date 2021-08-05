@@ -359,6 +359,7 @@
   "TITLE.REFERENCE": "Referensi",
   "TITLE.PAYMENT_METHOD": "Cara Pembayaran (Pilih metode dibawah ini)",
   "TITLE.TRANSFER": "Transfer",
+  "TITLE.TRANSFER_LETTER": "Surat Perintah Transfer",
   "TITLE.TRANSFER.INSTRUCTION": "Instruksi Pemindahan Bukuan/Transfer Bank Nomor Surat",
   "TITLE.CEK_OR_GIRO": "Cek/Giro",
   "TITLE.CEK_NUMBER": "No Cek",
