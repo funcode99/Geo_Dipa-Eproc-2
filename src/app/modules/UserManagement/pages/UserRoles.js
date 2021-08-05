@@ -133,11 +133,11 @@ function UserRoles(props) {
       }),
       name: "plant",
       order: {
-        active: true,
+        active: false,
         status: false,
       },
       filter: {
-        active: true,
+        active: false,
         type: "text",
       },
     },
