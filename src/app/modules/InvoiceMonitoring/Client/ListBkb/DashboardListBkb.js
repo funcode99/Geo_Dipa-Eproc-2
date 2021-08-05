@@ -56,11 +56,11 @@ function DashboardListBkb(props) {
       title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.GROUP" }),
       name: "group",
       order: {
-        active: false,
+        active: true,
         status: false,
       },
       filter: {
-        active: false,
+        active: true,
         type: "text",
       },
     },
