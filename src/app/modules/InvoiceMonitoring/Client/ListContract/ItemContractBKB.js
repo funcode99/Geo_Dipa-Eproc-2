@@ -82,7 +82,15 @@ function ItemContractBKB(props) {
     monitoring_role.findIndex((element) => element === "General Ledger Staff") >= 0
   );
   const [approveParkAPStaff, setApproveParkAPStaff] = useState(false);
-  
+
+  const [submitParkByrStaff] = useState(
+    monitoring_role.findIndex((element) => element === "Treasury Staff") >= 0
+  );
+
+  const [approveParkByrStaff] = useState(
+    monitoring_role.findIndex((element) => element === "Treasury Staff") >= 0
+  );
+
   const [modalApproved, setModalApproved] = useState({
     statusDialog: false,
     data: {},
@@ -120,7 +128,7 @@ function ItemContractBKB(props) {
             .then(responseRoles => {
               let sub_total = response.data.data.sub_total
               responseRoles.data.data.map((row, key) => {
-                if(sub_total >= row.min_value && sub_total <= row.max_value){
+                if (sub_total >= row.min_value && sub_total <= row.max_value) {
                   setApproveParkAPStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
                 }
               })
@@ -875,23 +883,10 @@ function ItemContractBKB(props) {
             <div className="row mt-3">
               <div className="col-sm-2 d-flex justify-content-between">
                 <span className="font-weight-bold">
-                  <FormattedMessage id="TITLE.TRANSFER" />
+                  <FormattedMessage id="TITLE.TRANSFER_LETTER" />
                 </span>
-                <div className="form-check">
-                  <input
-                    className="form-check-input pointer"
-                    type="checkbox"
-                    id="transfer"
-                    name="pay"
-                  />
-                </div>
               </div>
-              <div className="col-sm-5 px-0">
-                <label className="font-weight-bold pointer" htmlFor="transfer">
-                  <FormattedMessage id="TITLE.TRANSFER.INSTRUCTION" />
-                </label>
-              </div>
-              <div className="col-sm-5 form-group">
+              <div className="col-sm-10 form-group">
                 <div className="row">
                   <div className="col">
                     <input
@@ -907,24 +902,10 @@ function ItemContractBKB(props) {
                 <span className="font-weight-bold">
                   <FormattedMessage id="TITLE.CEK_OR_GIRO" />
                 </span>
-                <div className="form-check">
-                  <input
-                    className="form-check-input pointer"
-                    type="checkbox"
-                    id="giro"
-                    name="pay"
-                  />
-                </div>
               </div>
               <div className="col-sm-10 form-group">
                 <div className="row">
-                  <label
-                    className="font-weight-bold pointer col-sm-1 px-0"
-                    htmlFor="giro"
-                  >
-                    <FormattedMessage id="TITLE.NO" />
-                  </label>
-                  <div className="col-sm-11">
+                  <div className="col-sm-12">
                     <input
                       type="text"
                       className="form-control form-control-sm"
@@ -1049,7 +1030,7 @@ function ItemContractBKB(props) {
             <div className="row">
               <div
                 className="col-sm border"
-                style={{ height: 110 }}
+                style={{ height: 125 }}
               >
                 <div
                   className="text-center"
@@ -1069,11 +1050,24 @@ function ItemContractBKB(props) {
                       {bkbData?.archived_name}
                     </span>
                   </div>
+                  <div className="d-flex align-items-end">
+                    <span className="mx-auto">
+                      {bkbData?.archived_at
+                        ? window
+                          .moment(
+                            new Date(
+                              bkbData?.archived_at
+                            )
+                          )
+                          .format("DD/MM/YYYY")
+                        : ""}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div
                 className="col-sm border"
-                style={{ height: 110 }}
+                style={{ height: 125 }}
               >
                 <div
                   className="text-center"
@@ -1139,11 +1133,24 @@ function ItemContractBKB(props) {
                       {bkbData?.park_ap_approve_name}
                     </span>
                   </div>
+                  <div className="d-flex align-items-end">
+                    <span className="mx-auto">
+                      {bkbData?.doc_park_ap_approved_at
+                        ? window
+                          .moment(
+                            new Date(
+                              bkbData?.doc_park_ap_approved_at
+                            )
+                          )
+                          .format("DD/MM/YYYY")
+                        : ""}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div
                 className="col-sm border text-center"
-                style={{ height: 110 }}
+                style={{ height: 125 }}
               >
                 <div
                   className="text-center"
@@ -1153,7 +1160,7 @@ function ItemContractBKB(props) {
                     paddingBottom: 10,
                   }}
                 >
-                  {approveBkbStaff &&
+                  {approveParkByrStaff &&
                     bkbData?.doc_park_byr_approved_id == null &&
                     bkbData?.doc_park_byr_no &&
                     bkbData?.doc_park_byr_state === 'PENDING' && (
@@ -1176,7 +1183,7 @@ function ItemContractBKB(props) {
                         <FormattedMessage id="TITLE.APPROVE" />
                       </button>
                     )}
-                  {approveBkbStaff &&
+                  {approveParkByrStaff &&
                     bkbData?.doc_park_byr_approved_id == null &&
                     bkbData?.doc_park_byr_no &&
                     bkbData?.doc_park_byr_state === 'PENDING' && (
@@ -1207,6 +1214,19 @@ function ItemContractBKB(props) {
                   <div className="d-flex align-items-end">
                     <span className="mx-auto">
                       {bkbData?.park_byr_approve_name}
+                    </span>
+                  </div>
+                  <div className="d-flex align-items-end">
+                    <span className="mx-auto">
+                      {bkbData?.doc_park_byr_approved_at
+                        ? window
+                          .moment(
+                            new Date(
+                              bkbData?.doc_park_byr_approved_at
+                            )
+                          )
+                          .format("DD/MM/YYYY")
+                        : ""}
                     </span>
                   </div>
                 </div>
@@ -1294,7 +1314,7 @@ function ItemContractBKB(props) {
                   bkbData?.doc_park_ap_state === null ||
                   bkbData?.doc_park_ap_state === 'PENDING' ||
                   bkbData?.doc_park_ap_state === 'REJECTED' ||
-                  !approveBkbStaff ||
+                  !submitParkByrStaff ||
                   !bkbData) &&
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
@@ -1309,7 +1329,7 @@ function ItemContractBKB(props) {
                   bkbData?.doc_park_ap_state === 'APPROVED') ||
                   bkbData?.doc_park_byr_state === 'REJECTED' &&
                   bkbData) &&
-                  approveBkbStaff &&
+                  submitParkByrStaff &&
                   <div className="row border-bottom">
                     <div className="col-sm-12">
                       <div className="form-group row mb-0">
@@ -1382,7 +1402,7 @@ function ItemContractBKB(props) {
             <div className="row mt-3">
               <div className="col-sm-7">
                 <div className="row">
-                  <div className="col-sm-4 border">
+                  {/* <div className="col-sm-4 border">
                     <div className="row border">
                       <div className="col-sm text-center">
                         <span>
@@ -1404,9 +1424,9 @@ function ItemContractBKB(props) {
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="col-sm-8 border">
+                  <div className="col-sm-12 border">
                     <div className="row border">
                       <div className="col-sm text-center">
                         <span>
@@ -1416,10 +1436,10 @@ function ItemContractBKB(props) {
                     </div>
                     <div className="row">
                       {mainRolesBKBData?.map((row, key) => {
-                        if (parseFloat(bkbData?.sub_total) >= row?.bkb_min_value && parseFloat(bkbData?.sub_total) <= row?.bkb_max_value) {
+                        if (parseFloat(bkbData?.sub_total) >= row?.min_value && parseFloat(bkbData?.sub_total) <= row?.max_value) {
                           return (
-                            <div className="col-sm border text-center px-0">
-                              <span key={key} style={{ fontSize: 10 }}>{row?.name}</span>
+                            <div className="col-sm border text-center px-0" key={key}>
+                              <span style={{ fontSize: 10 }}>{row?.name}</span>
                             </div>
                           )
                         }
@@ -1428,11 +1448,12 @@ function ItemContractBKB(props) {
                     </div>
                     <div className="row">
                       {mainRolesBKBData?.map((row, key) => {
-                        if (parseFloat(bkbData?.sub_total) >= row?.bkb_min_value && parseFloat(bkbData?.sub_total) <= row?.bkb_max_value) {
+                        if (parseFloat(bkbData?.sub_total) >= row?.min_value && parseFloat(bkbData?.sub_total) <= row?.max_value) {
                           return (
                             <div
                               className="col-sm border-right"
                               style={{ height: styleCustom.heightAppvDiv }}
+                              key={key}
                             >
                               <div
                                 className="text-center"

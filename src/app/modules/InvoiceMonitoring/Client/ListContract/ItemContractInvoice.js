@@ -213,11 +213,15 @@ function ItemContractInvoice(props) {
   const user_id = useSelector((state) => state.auth.user.data.user_id);
   const dataUser = useSelector((state) => state.auth.user.data);
   let verificationStafStatus = false;
+  let ApproveStafStatus = false;
   let monitoring_role = dataUser.monitoring_role
     ? dataUser.monitoring_role
     : [];
   verificationStafStatus =
     monitoring_role.findIndex((element) => element === "Verification Staff") >=
+    0;
+  ApproveStafStatus =
+    monitoring_role.findIndex((element) => element === "Tax Administration Staff") >=
     0;
   const [uploadFilename, setUploadFilename] = useState(
     intl.formatMessage({
@@ -331,6 +335,7 @@ function ItemContractInvoice(props) {
     const data = JSON.parse(JSON.stringify(dataProgress));
     data[index].status = "COMPLETE"
     data[index + 1].status = "ON PROGRESS"
+    data[index + 2].status = "ON PROGRESS"
     createTerminProgress({ term_id: termin, created_by_id: user_id, data: data })
       .then((result) => {
         setProgressTermin(result.data.data)
@@ -1462,6 +1467,7 @@ function ItemContractInvoice(props) {
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
                 verificationStafStatus={!verificationStafStatus}
+                ApproveStafStatus={!ApproveStafStatus}
               />
             </div>
           )}

@@ -182,13 +182,13 @@ const ItemContract = (props) => {
         getTerminProgress(termin)
           .then((result) => {
             // const progress = result.data.data ? result.data.data?.progress_type?.seq : "2"
-            const progress = "2"
+            const progress = 2
             // const name = result.data.data ? result.data.data?.progress_type?.ident_name : ""
             if (result?.data?.data?.data) {
               setDataProgress(result.data.data.data)
             } else {
               const data = resultTypes.data.data.map(function (row) {
-                return { label: row?.name, status: row.seq < progress ? "COMPLETE" : row.seq === progress ? "ON PROGRESS" : "NO STARTED", ident_name: row.ident_name }
+                return { label: row?.name, status: Number(row.seq) < progress ? "COMPLETE" : Number(row.seq) === progress ? "ON PROGRESS" : "NO STARTED", ident_name: row.ident_name }
               })
               setDataProgress(data)
             }

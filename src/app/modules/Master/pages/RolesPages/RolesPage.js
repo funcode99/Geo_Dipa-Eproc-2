@@ -17,7 +17,7 @@ import {
   Flex,
   Input
 } from '../style';
-import { getRolesBKB, getRolesVerification, getRolesApproval, getRolesAcceptance, getRolesAccounting, getRolesDelivery, updateRoles } from '../../service/MasterCrud';
+import { getRolesBKB, getRolesVerification, getRolesApproval, getRolesAcceptance, getRolesAccounting, getRolesParkBYR, getRolesDelivery, updateRoles } from '../../service/MasterCrud';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { StyledModal } from '../../../../components/modals';
@@ -55,6 +55,10 @@ const RolesPage = (props) => {
         .catch(() => { setLoadData(false); setErrorData(true) })
     } else if (props.data.type === "Accounting") {
       getRolesAccounting(props.data.authority)
+        .then(response => { setRolesData(response.data.data); setLoadData(false) })
+        .catch(() => { setLoadData(false); setErrorData(true) })
+    } else if (props.data.type === "Park_BYR") {
+      getRolesParkBYR(props.data.authority)
         .then(response => { setRolesData(response.data.data); setLoadData(false) })
         .catch(() => { setLoadData(false); setErrorData(true) })
     } else if (props.data.type === "Delivery") {

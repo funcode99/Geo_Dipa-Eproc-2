@@ -359,6 +359,7 @@
   "TITLE.REFERENCE": "Reference",
   "TITLE.PAYMENT_METHOD": "Payment Method (Choose the method below)",
   "TITLE.TRANSFER": "Transfer",
+  "TITLE.TRANSFER_LETTER": "Transfer Letter",
   "TITLE.TRANSFER.INSTRUCTION": "Book Entry/Bank Transfer Instruction Letter Number",
   "TITLE.CEK_OR_GIRO": "Cek/Giro",
   "TITLE.CEK_NUMBER": "No Cek",
