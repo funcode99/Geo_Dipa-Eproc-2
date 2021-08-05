@@ -261,7 +261,7 @@ function PicRoles(props) {
       setContractVendor(data);
     });
     setDataSecond(data.data[index].pic_data);
-    // picTableRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    picTableRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleDelivery = (e) => {
@@ -475,6 +475,7 @@ function PicRoles(props) {
             dataHeader={headerTableSecond}
             loading={loadingSecond}
             hecto={7}
+            ref={picTableRef}
           >
             {dataSecond.map((item, index) => {
               return (
