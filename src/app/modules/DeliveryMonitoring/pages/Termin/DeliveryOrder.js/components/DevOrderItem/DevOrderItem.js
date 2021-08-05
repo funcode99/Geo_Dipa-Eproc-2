@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardHeader } from "@material-ui/core";
+import { Card, CardContent, CardHeader, Divider } from "@material-ui/core";
 import { formatDate } from "../../../../../../../libs/date";
 import FormBuilder from "../../../../../../../components/builder/FormBuilder";
 import { formData } from "./formDataOItem";
@@ -34,7 +34,7 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
     visible &&
     Object.keys(data).length && (
       <Card style={{ marginTop: 21 }}>
-        <CardHeader
+        {/* <CardHeader
           classes={{ action: "align-self-center" }}
           title={data?.name}
           subheader={
@@ -47,7 +47,47 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
               />
             )
           }
-        />
+        /> */}
+        <div className="kt-widget31 my-5">
+          <div className="kt-widget31__item">
+            <div className="kt-widget31__content">
+              <div className="kt-widget31__info">
+                <p className="kt-widget31__username mb-0 ">{data?.name}</p>
+                <p className="kt-widget31__text">
+                  {data?.date !== null
+                    ? formatDate(new Date(data?.date))
+                    : null}
+                </p>
+              </div>
+            </div>
+            <div style={{ width: "50%" }} className="kt-widget31__content">
+              <div className="kt-widget31__progress">
+                <p className="kt-widget31__stats">
+                  <span>Progress</span>
+                  <span>63%</span>
+                </p>
+                <div className="progress progress-sm">
+                  <div
+                    className="progress-bar bg-brand"
+                    role="progressbar"
+                    style={{ width: "75%" }}
+                    aria-valuenow="75"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+              <button
+                href="#"
+                className="btn-label-brand btn btn-sm btn-bold mr-5"
+              >
+                Upload Delivery Order
+              </button>
+            </div>
+          </div>
+        </div>
+        <Divider />
+
         <CardContent>
           <FormBuilder
             withSubmit={false}
