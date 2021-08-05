@@ -11,6 +11,7 @@ import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
+import { rupiah } from "../../../../libs/currency";
 
 function DashboardListInvoice(props) {
   const user_id = useSelector(
@@ -270,7 +271,7 @@ function DashboardListInvoice(props) {
             loading={loading}
             err={err}
             countData={data.count}
-            hecto={20}
+            hecto={25}
           >
             {data.data.map((item, index) => {
               return (
@@ -299,13 +300,25 @@ function DashboardListInvoice(props) {
                   <TableCell>{item.contract_no}</TableCell>
                   <TableCell>{item.contract_title}</TableCell>
                   <TableCell>{item.term_name}</TableCell>
-                  <TableCell>{item.term_amount}</TableCell>
-                  <TableCell>{item.invoice_date}</TableCell>
-                  <TableCell>{item.payment_deadline}</TableCell>
+                  <TableCell>{rupiah(item.term_amount || 0)}</TableCell>
+                  <TableCell>
+                    {item.invoice_date
+                      ? window
+                          .moment(new Date(item.invoice_date))
+                          .format("DD MMM YYYY")
+                      : ""}
+                  </TableCell>
+                  <TableCell>
+                    {item.payment_deadline
+                      ? window
+                          .moment(new Date(item.payment_deadline))
+                          .format("DD MMM YYYY")
+                      : ""}
+                  </TableCell>
                   <TableCell>{item.user_created}</TableCell>
                   <TableCell>{item.vendor_name}</TableCell>
                   <TableCell>{item.spt_no}</TableCell>
-                  <TableCell>Routing SLip Position</TableCell>
+                  <TableCell>{item.routing_slip}</TableCell>
                   <TableCell>{item.paid_satus?.toUpperCase()}</TableCell>
                 </TableRow>
               );

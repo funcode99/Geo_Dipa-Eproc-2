@@ -18,6 +18,7 @@ import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
+import { rupiah } from "../../../../libs/currency";
 
 function DashboardListContract(props) {
   const user_id = useSelector(
@@ -99,27 +100,53 @@ function DashboardListContract(props) {
       },
     },
     {
-      title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.PO_DATE" }),
-      name: "po_date",
+      title: intl.formatMessage({
+        id: "TITLE.TOTAL_AMOUNT",
+      }),
+      name: "amount",
       order: {
-        active: false,
+        active: true,
         status: false,
       },
       filter: {
-        active: false,
+        active: true,
         type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.PO_DATE" }),
+      name: "po_date",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "date",
       },
     },
     {
       title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.CONTRACT_DATE" }),
       name: "contract_date",
       order: {
-        active: false,
+        active: true,
         status: false,
       },
       filter: {
-        active: false,
-        type: "text",
+        active: true,
+        type: "date",
+      },
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.CONTRACT_END_DATE" }),
+      name: "end_date",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "date",
       },
     },
     {
@@ -230,12 +257,12 @@ function DashboardListContract(props) {
             loading={loading}
             err={err}
             countData={data.count}
-            hecto={14}
+            hecto={20}
           >
             {data.data.map((item, index) => {
               return (
                 <TableRow key={index.toString()}>
-                  <TableCell>{index+1}.</TableCell>
+                  <TableCell>{index + 1}.</TableCell>
                   <TableCell>
                     <Link
                       to={
@@ -248,6 +275,7 @@ function DashboardListContract(props) {
                   </TableCell>
                   <TableCell>{item.purch_order_no}</TableCell>
                   <TableCell>{item.contract_name}</TableCell>
+                  <TableCell>{rupiah(item.contract_value || 0)}</TableCell>
                   <TableCell>
                     {window
                       .moment(new Date(item.po_date))
@@ -256,6 +284,11 @@ function DashboardListContract(props) {
                   <TableCell>
                     {window
                       .moment(new Date(new Date(item.contract_date)))
+                      .format("DD MMM YYYY")}
+                  </TableCell>
+                  <TableCell>
+                    {window
+                      .moment(new Date(new Date(item.contract_end_date)))
                       .format("DD MMM YYYY")}
                   </TableCell>
                   <TableCell>{item.purch_group_name}</TableCell>
