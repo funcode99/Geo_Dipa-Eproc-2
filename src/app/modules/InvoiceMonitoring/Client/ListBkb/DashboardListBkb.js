@@ -42,7 +42,7 @@ function DashboardListBkb(props) {
   const headerTable = [
     {
       title: intl.formatMessage({ id: "TITLE.NO_BKB" }),
-      name: "po_no",
+      name: "bkb_no",
       order: {
         active: true,
         status: true,
