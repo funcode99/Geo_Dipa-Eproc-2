@@ -147,11 +147,11 @@ function UserRoles(props) {
       }),
       name: "role",
       order: {
-        active: true,
+        active: false,
         status: false,
       },
       filter: {
-        active: true,
+        active: false,
         type: "text",
       },
     },

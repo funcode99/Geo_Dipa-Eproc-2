@@ -261,7 +261,7 @@ function PicRoles(props) {
       setContractVendor(data);
     });
     setDataSecond(data.data[index].pic_data);
-    picTableRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    // picTableRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleDelivery = (e) => {
