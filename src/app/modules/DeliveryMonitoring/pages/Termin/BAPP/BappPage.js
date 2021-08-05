@@ -71,7 +71,9 @@ const BappPage = ({
   saveTask,
   loadings,
 }) => {
-  const { func, task_id } = React.useContext(TerminPageContext);
+  const { func, task_id, task_sa, task_gr } = React.useContext(
+    TerminPageContext
+  );
   const [Toast, setToast] = useToast();
   // const [taskNews, setTaskNews] = React.useState({});
   const isReject = taskNews?.approve_status?.code === "rejected";
@@ -207,7 +209,7 @@ const BappPage = ({
         onSuccess: (res) => {
           // handleLoading("get", false);
           console.log(`res`, res);
-          saveTask(res?.data);
+          saveTask({ task_gr, task_sa, ...res.data });
           generateTableContent(res?.data?.news?.news_histories);
 
           updateExclude();
