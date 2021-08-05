@@ -589,5 +589,7 @@
   "TITLE.DATE_OF_INVOICE": "Date Of Invoice",
   "TITLE.PAYMENT_DEADLINE": "Payment Deadline",
   "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position",
-  "TITLE.AUTHORITY": "Otoritas"
+  "TITLE.AUTHORITY": "Otoritas",
+  "TITLE.TOTAL_AMOUNT": "Total Amount",
+  "TITLE.CONTRACT_END_DATE": "Contract End Date"
 }

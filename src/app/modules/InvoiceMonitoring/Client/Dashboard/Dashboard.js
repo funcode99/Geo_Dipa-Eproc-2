@@ -139,8 +139,8 @@ function Dashboard(props) {
             >
               {!statusSync && !loadingSync && (
                 <>
-                  <i className="fas fa-sync-alt p-0 mr-2"></i>
-                  <FormattedMessage id="TITLE.START_SYNC" />
+                  <i class="fas fa-check p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.SAVE" />
                 </>
               )}
               {statusSync && loadingSync && (
@@ -205,6 +205,41 @@ function Dashboard(props) {
                   }}
                 >
                   Tahunan
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setRange("Pusat");
+                  }}
+                >
+                  Pusat
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setRange("Dieng");
+                  }}
+                >
+                  Dieng
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setRange("Patuha");
+                  }}
+                >
+                  Patuha
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setRange("PMU");
+                  }}
+                >
+                  PMU
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setRange("EMU");
+                  }}
+                >
+                  EMU
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
