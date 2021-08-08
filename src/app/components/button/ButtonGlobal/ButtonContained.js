@@ -7,6 +7,7 @@ const ButtonContained = ({
   desc,
   disabled,
   baseColor,
+  className,
   ...other
 }) => {
   return (
@@ -14,7 +15,7 @@ const ButtonContained = ({
       <button
         onClick={onClick}
         disabled={disabled}
-        className={`btn-label-${baseColor} btn btn-sm btn-bold mr-5`}
+        className={`btn-label-${baseColor} btn btn-sm btn-bold ${className}`}
       >
         {children}
       </button>

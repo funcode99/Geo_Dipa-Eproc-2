@@ -7,6 +7,7 @@ import { formatDate } from "../../../../../../../libs/date";
 import { KEYS_TERMIN } from "../../../TerminPageNew/STATIC_DATA";
 import { TerminPageContext } from "../../../TerminPageNew/TerminPageNew";
 import CardOrderItem from "./comp/CardOrderItem";
+import ModalPreviewDODoc from "./comp/ModalPreviewDODoc";
 import ModalUploadDO from "./comp/ModalUploadDO";
 import { formData } from "./formDataOItem";
 
@@ -30,6 +31,7 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
   const { handleAction } = other;
   const [visible, setVisible] = React.useState(false);
   const uploadRef = React.useRef();
+  const previewRef = React.useRef();
   // const [itemForm, setItemForm] = React.useState({});
 
   React.useEffect(() => {
@@ -44,9 +46,18 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
     }),
     [data]
   );
-  const openModal = () => {
+  const openModal = (type) => {
     console.log(`data`, data);
-    uploadRef.current.open();
+    switch (type) {
+      case "review":
+        previewRef.current.open();
+        break;
+      case "upload":
+        uploadRef.current.open();
+        break;
+      default:
+        break;
+    }
   };
 
   const handleSubmit = (params) => {
@@ -74,7 +85,7 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
       children2: "Unavailable",
       desc: "Unggah Delivery Order yang sudah ditandatangani.",
       desc2: "Pastikan semua item sudah disetujui",
-      type: "review",
+      type: "upload",
     },
   };
 
@@ -85,6 +96,11 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
       <ModalUploadDO
         innerRef={uploadRef}
         handleSubmit={handleSubmit}
+        loading={loadings[KEYS_TERMIN.p_t_upload_do]}
+      />
+      <ModalPreviewDODoc
+        innerRef={previewRef}
+        // handleSubmit={handleSubmit}
         loading={loadings[KEYS_TERMIN.p_t_upload_do]}
       />
       {visible && Object.keys(data).length && (
@@ -118,7 +134,11 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
                     ></div>
                   </div>
                 </div>
-                <ButtonContained onClick={openModal} desc={usedBtn.desc}>
+                <ButtonContained
+                  className={"mr-5"}
+                  onClick={() => openModal(usedBtn.type)}
+                  {...usedBtn}
+                >
                   {usedBtn.children}
                 </ButtonContained>
               </div>

@@ -4,6 +4,7 @@ import _ from "lodash";
 const urlHelper = {
   addBaseURL: (link) => {
     // if (link === undefined) return undefined;
+    if (link.includes(DEV_NODE)) return link;
     return DEV_NODE + "/" + link;
   },
 };

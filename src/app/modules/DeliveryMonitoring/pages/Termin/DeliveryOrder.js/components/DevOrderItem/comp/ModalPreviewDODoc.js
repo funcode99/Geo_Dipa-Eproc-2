@@ -1,15 +1,13 @@
-import Button from "@material-ui/core/Button";
 import React from "react";
-import { Document, Page } from "react-pdf";
-import UploadInput from "../../../../../../../../components/input/UploadInput";
+import PDFPreview from "../../../../../../../../components/builder/PDFPreview";
+import ButtonContained from "../../../../../../../../components/button/ButtonGlobal";
 import DialogGlobal from "../../../../../../../../components/modals/DialogGlobal";
 import { openLinkTab } from "../../../../../../../../service/helper/urlHelper";
 
 const ModalPreviewDODoc = ({ innerRef, loading, file, handleSubmit }) => {
   const [dataForm, setDataForm] = React.useState({});
-  const _onChange = (file) => {
-    // console.log(`file`, file);
-    setDataForm(file);
+  const _openFile = (file) => {
+    openLinkTab("http://192.168.0.168:5000/task-document/BAPPBAST.pdf");
   };
   const _handleSubmit = () => {
     handleSubmit(dataForm);
@@ -19,14 +17,31 @@ const ModalPreviewDODoc = ({ innerRef, loading, file, handleSubmit }) => {
       title={`Preview Signed Delivery Order`}
       ref={innerRef}
       onYes={_handleSubmit}
-      textYes={"Kirim"}
+      textYes={"Setujui"}
+      onNo={_handleSubmit}
+      textNo={"Tolak"}
       loading={loading}
-      isCancel={false}
+      // isCancel={false}
       btnYesProps={{
         disabled: Object.keys(dataForm).length === 0,
       }}
     >
-      <UploadInput value={dataForm} onChange={_onChange} />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <PDFPreview />
+        <ButtonContained
+          onClick={_openFile}
+          className={"my-5"}
+          baseColor={"warning"}
+        >
+          Lihat Dokumen
+        </ButtonContained>
+      </div>
     </DialogGlobal>
   );
 };
