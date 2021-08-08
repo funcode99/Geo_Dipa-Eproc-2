@@ -296,6 +296,12 @@ export async function finance_director_approve_bkb(
     desc,
   });
 }
+export async function approveBkb(data) {
+  return axios.post(`/invoice/approve_bkb`, data);
+}
+export async function rejectBkb(data) {
+  return axios.post(`/invoice/reject_bkb`, data);
+  }
 export async function updateSoftCopyByUser(id, file) {
   return axios.post(`/invoice/softcopy_update/${id}`, file);
 }
