@@ -1,18 +1,32 @@
+import { Card, CardContent, Divider } from "@material-ui/core";
 import React from "react";
-import { Card, CardContent, CardHeader, Divider } from "@material-ui/core";
-import { formatDate } from "../../../../../../../libs/date";
 import FormBuilder from "../../../../../../../components/builder/FormBuilder";
-import { formData } from "./formDataOItem";
-import CardOrderItem from "./comp/CardOrderItem";
-import { Row } from "react-bootstrap";
-import ButtonSubmit from "../../../../../../../components/buttonAction/ButtonSubmit";
-import { DeliveryOrderContext } from "../../DeliveryOrder";
-import ModalUploadDO from "./comp/ModalUploadDO";
-import { TerminPageContext } from "../../../TerminPageNew/TerminPageNew";
+import ButtonContained from "../../../../../../../components/button/ButtonGlobal";
+import CustomToolTip from "../../../../../../../components/tooltip/CustomToolTip/CustomToolTip";
+import { formatDate } from "../../../../../../../libs/date";
 import { KEYS_TERMIN } from "../../../TerminPageNew/STATIC_DATA";
+import { TerminPageContext } from "../../../TerminPageNew/TerminPageNew";
+import CardOrderItem from "./comp/CardOrderItem";
+import ModalUploadDO from "./comp/ModalUploadDO";
+import { formData } from "./formDataOItem";
+
+const UploadButton = ({ title, onClick, desc, disabled, ...other }) => {
+  return (
+    <CustomToolTip title={desc} placement={"bottom"}>
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className="btn-label-brand btn btn-sm btn-bold mr-5"
+      >
+        {title}
+      </button>
+    </CustomToolTip>
+  );
+};
 
 const DevOrderItem = ({ data, isVendor, ...other }) => {
-  const { func, loadings } = React.useContext(TerminPageContext);
+  const { func, loadings, authStatus } = React.useContext(TerminPageContext);
+
   const { handleAction } = other;
   const [visible, setVisible] = React.useState(false);
   const uploadRef = React.useRef();
@@ -46,6 +60,25 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
       },
     });
   };
+
+  const btnData = {
+    client: {
+      children: "Review Document",
+      children2: "Unavailable",
+      desc: "Tinjau kembali Delivery Order yang sudah ditandatangani.",
+      desc2: "Vendor belum mengunggah Delivery order yang sudah ditandatangani",
+      type: "review",
+    },
+    vendor: {
+      children: "Upload Delivery Order",
+      children2: "Unavailable",
+      desc: "Unggah Delivery Order yang sudah ditandatangani.",
+      desc2: "Pastikan semua item sudah disetujui",
+      type: "review",
+    },
+  };
+
+  const usedBtn = btnData[authStatus];
 
   return (
     <React.Fragment>
@@ -85,12 +118,9 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
                     ></div>
                   </div>
                 </div>
-                <button
-                  onClick={openModal}
-                  className="btn-label-brand btn btn-sm btn-bold mr-5"
-                >
-                  Upload Delivery Order
-                </button>
+                <ButtonContained onClick={openModal} desc={usedBtn.desc}>
+                  {usedBtn.children}
+                </ButtonContained>
               </div>
             </div>
           </div>
