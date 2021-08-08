@@ -357,7 +357,7 @@
   "TITLE.BANK_NAME": "Bank Name",
   "TITLE.ACCOUNT_NUMBER": "Account Number",
   "TITLE.REFERENCE": "Reference",
-  "TITLE.PAYMENT_METHOD": "Payment Method (Choose the method below)",
+  "TITLE.PAYMENT_METHOD": "Payment Method",
   "TITLE.TRANSFER": "Transfer",
   "TITLE.TRANSFER_LETTER": "Transfer Letter",
   "TITLE.TRANSFER.INSTRUCTION": "Book Entry/Bank Transfer Instruction Letter Number",
@@ -593,5 +593,6 @@
   "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position",
   "TITLE.AUTHORITY": "Authority",
   "TITLE.TOTAL_AMOUNT": "Total Amount",
-  "TITLE.CONTRACT_END_DATE": "Contract End Date"
+  "TITLE.CONTRACT_END_DATE": "Contract End Date",
+  "TITLE.CHOOSE_BKB_GIRO_SIGNED": "Choose Giro Signed Position Person."
 }

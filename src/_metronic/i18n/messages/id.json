@@ -357,7 +357,7 @@
   "TITLE.BANK_NAME": "Nama Bank",
   "TITLE.ACCOUNT_NUMBER": "Nomor Rekening",
   "TITLE.REFERENCE": "Referensi",
-  "TITLE.PAYMENT_METHOD": "Cara Pembayaran (Pilih metode dibawah ini)",
+  "TITLE.PAYMENT_METHOD": "Cara Pembayaran",
   "TITLE.TRANSFER": "Transfer",
   "TITLE.TRANSFER_LETTER": "Surat Perintah Transfer",
   "TITLE.TRANSFER.INSTRUCTION": "Instruksi Pemindahan Bukuan/Transfer Bank Nomor Surat",
@@ -592,5 +592,6 @@
   "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position",
   "TITLE.AUTHORITY": "Otoritas",
   "TITLE.TOTAL_AMOUNT": "Total Amount",
-  "TITLE.CONTRACT_END_DATE": "Contract End Date"
+  "TITLE.CONTRACT_END_DATE": "Contract End Date",
+  "TITLE.CHOOSE_BKB_GIRO_SIGNED": "Pilih yang akan menandatangani Cek Giro."
 }
