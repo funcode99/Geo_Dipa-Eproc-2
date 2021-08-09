@@ -11,7 +11,7 @@ const ButtonContained = ({
   ...other
 }) => {
   return (
-    <CustomToolTip title={desc} placement={"bottom"}>
+    <CustomToolTip title={desc || ""} placement={"bottom"}>
       <button
         onClick={onClick}
         disabled={disabled}
