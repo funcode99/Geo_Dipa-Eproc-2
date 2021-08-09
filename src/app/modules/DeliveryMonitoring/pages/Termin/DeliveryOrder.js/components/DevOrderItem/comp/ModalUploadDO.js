@@ -23,7 +23,7 @@ const ModalUploadDO = ({ innerRef, loading, file, handleSubmit }) => {
       ref={innerRef}
       onYes={_handleSubmit}
       textYes={"Kirim"}
-      loading={loading}
+      // loading={loading}
       isCancel={false}
       btnYesProps={{
         disabled: Object.keys(dataForm).length === 0,

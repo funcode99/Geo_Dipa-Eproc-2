@@ -22,7 +22,7 @@ export const MODAL = {
       document.getElementById("modal-react")
     );
   },
-  showSnackbar(message, severity, time) {
+  showSnackbar(message, severity = "error", time) {
     /**
      * @param {string} message
      * @param {string} severity => oneOf : error(default)/success/warning/info

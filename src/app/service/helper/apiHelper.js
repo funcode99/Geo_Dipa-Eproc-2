@@ -36,6 +36,8 @@ const apiHelper = {
       [_.isEmpty(value) ? undefined : key]: valueSet ? valueSet : value,
     };
   },
+  approveId: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
+  rejectId: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
 };
 
 export default apiHelper;

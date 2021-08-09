@@ -18,12 +18,22 @@ const ModalPreviewDODoc = ({ innerRef, loading, file, handleSubmit }) => {
   const [checked, setChecked] = React.useState(false);
   const [remarks, setRemarks] = React.useState(false);
 
-  const _openFile = (file) => {
-    openLinkTab("http://192.168.0.168:5000/task-document/BAPPBAST.pdf");
+  const _openFile = () => {
+    // openLinkTab("http://192.168.0.168:5000/task-document/BAPPBAST.pdf");
+    if (file) openLinkTab(file);
   };
   const _handleSubmit = () => {
     console.log(`data`, remarks, action);
-    if (typeof handleSubmit === "function") handleSubmit({ remarks, action });
+    if (typeof handleSubmit === "function")
+      handleSubmit({
+        remarks,
+        action,
+        clean: () => {
+          setAction(null);
+          setRemarks(false);
+          setChecked(false);
+        },
+      });
   };
   const _changeAction = (type) => {
     setAction(type);
@@ -57,7 +67,7 @@ const ModalPreviewDODoc = ({ innerRef, loading, file, handleSubmit }) => {
           alignItems: "center",
         }}
       >
-        <PDFPreview />
+        <PDFPreview file={file} />
         <ButtonContained
           onClick={_openFile}
           className={"my-5"}

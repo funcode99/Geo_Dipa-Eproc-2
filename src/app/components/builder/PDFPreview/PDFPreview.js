@@ -6,8 +6,9 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Skeleton from "@material-ui/lab/Skeleton";
 import "./styles.scss";
+import urlHelper from "../../../service/helper/urlHelper";
 
-const PDFPreview = () => {
+const PDFPreview = ({ file }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const classes = useStyles();
@@ -25,18 +26,16 @@ const PDFPreview = () => {
   return (
     <Paper className={classes.root}>
       <Document
-        loading={() => <Skeleton variant="rect" height={400} width={300} />}
-        file={"http://192.168.0.168:5000/task-document/BAPPBAST.pdf"}
-        // file={
-        //   "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-        // }
+        loading={() => <Skeleton variant="rect" height={320} width={240} />}
+        // file={"http://192.168.0.168:5000/task-document/BAPPBAST.pdf"}
+        file={urlHelper.addBaseURL(file)}
         onLoadSuccess={onDocumentLoadSuccess}
       >
         <Page
           className={"page-doc"}
           pageNumber={pageNumber}
-          height={400}
-          width={300}
+          height={320}
+          width={240}
         />
       </Document>
       <Card className={classes.boxBtn}>

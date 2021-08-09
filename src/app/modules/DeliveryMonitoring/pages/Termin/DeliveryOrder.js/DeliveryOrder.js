@@ -579,6 +579,7 @@ const DeliveryOrder = ({
           setItem={setItemForm}
           handleAction={handleAction}
           isVendor={isVendor}
+          onRefresh={getTask}
           // handleSubmit={() => handleAction("confirm", null)}
         />
       }
