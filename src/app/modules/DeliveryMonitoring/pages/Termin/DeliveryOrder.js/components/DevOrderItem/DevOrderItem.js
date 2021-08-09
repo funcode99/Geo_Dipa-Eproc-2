@@ -2,6 +2,7 @@ import { Card, CardContent, Divider } from "@material-ui/core";
 import React from "react";
 import FormBuilder from "../../../../../../../components/builder/FormBuilder";
 import ButtonContained from "../../../../../../../components/button/ButtonGlobal";
+import ButtonSubmit from "../../../../../../../components/buttonAction/ButtonSubmit";
 import CustomToolTip from "../../../../../../../components/tooltip/CustomToolTip/CustomToolTip";
 import { formatDate } from "../../../../../../../libs/date";
 import { KEYS_TERMIN } from "../../../TerminPageNew/STATIC_DATA";
@@ -141,6 +142,12 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
                 >
                   {usedBtn.children}
                 </ButtonContained>
+                {!isVendor && (
+                  <ButtonSubmit
+                    classBtn={"mr-5"}
+                    handleSubmit={() => handleAction("confirm", data)}
+                  />
+                )}
               </div>
             </div>
           </div>
