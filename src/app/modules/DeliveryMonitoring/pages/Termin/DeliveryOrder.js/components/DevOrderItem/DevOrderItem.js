@@ -5,6 +5,7 @@ import ButtonContained from "../../../../../../../components/button/ButtonGlobal
 import ButtonSubmit from "../../../../../../../components/buttonAction/ButtonSubmit";
 import CustomToolTip from "../../../../../../../components/tooltip/CustomToolTip/CustomToolTip";
 import { formatDate } from "../../../../../../../libs/date";
+import apiHelper from "../../../../../../../service/helper/apiHelper";
 import { KEYS_TERMIN } from "../../../TerminPageNew/STATIC_DATA";
 import { TerminPageContext } from "../../../TerminPageNew/TerminPageNew";
 import CardOrderItem from "./comp/CardOrderItem";
@@ -26,7 +27,7 @@ const UploadButton = ({ title, onClick, desc, disabled, ...other }) => {
   );
 };
 
-const DevOrderItem = ({ data, isVendor, ...other }) => {
+const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
   const { func, loadings, authStatus } = React.useContext(TerminPageContext);
 
   const { handleAction } = other;
@@ -69,6 +70,32 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
       url_id: data.id,
       onSuccess: (res) => {
         uploadRef.current.close();
+        onRefresh();
+      },
+    });
+  };
+  const handleSubmitPreview = ({ remarks, action, clean }) => {
+    let params = {};
+    switch (action) {
+      case "approve":
+        params.file_approve_status_id = apiHelper.approveId;
+        break;
+      case "reject":
+        params.file_approve_status_id = apiHelper.rejectId;
+        params.file_reject_text = remarks;
+        break;
+      default:
+        break;
+    }
+    console.log(`params`, params);
+    func.handleApi({
+      key: KEYS_TERMIN.p_t_approve_do_doc,
+      params,
+      url_id: data.id,
+      onSuccess: (res) => {
+        previewRef.current.close();
+        onRefresh();
+        clean();
       },
     });
   };
@@ -101,8 +128,9 @@ const DevOrderItem = ({ data, isVendor, ...other }) => {
       />
       <ModalPreviewDODoc
         innerRef={previewRef}
-        // handleSubmit={handleSubmit}
+        handleSubmit={handleSubmitPreview}
         loading={loadings[KEYS_TERMIN.p_t_upload_do]}
+        file={data.file}
       />
       {visible && Object.keys(data).length && (
         <Card style={{ marginTop: 21 }}>

@@ -86,6 +86,17 @@ export class TerminPageNew extends PureComponent {
           type: "postForm",
           ...other,
         });
+        break;
+
+      case KEYS_TERMIN.p_t_approve_do_doc:
+        fetch_api_sg({
+          key,
+          url: `delivery/task-delivery/${other.url_id}/status-file`,
+          alertAppear: "both",
+          onSuccess,
+          type: "post",
+          ...other,
+        });
 
         break;
       default:
