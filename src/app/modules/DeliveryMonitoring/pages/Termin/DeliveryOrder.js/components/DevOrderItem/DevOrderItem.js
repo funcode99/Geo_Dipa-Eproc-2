@@ -36,6 +36,13 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
   const previewRef = React.useRef();
   // const [itemForm, setItemForm] = React.useState({});
 
+  // const usedBtn = btnData[authStatus];
+  const fileReady = Boolean(data?.file);
+  const isRejected =
+    data?.file_approve_status_id === "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f";
+  const isApproved =
+    data?.file_approve_status_id === "5d28463c-a435-4ec3-b0dc-e8dcb85aa800";
+
   React.useEffect(() => {
     if (Object.keys(data).length) setVisible(true);
     else setVisible(false);
@@ -99,25 +106,54 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       },
     });
   };
-
-  const btnData = {
-    client: {
-      children: "Review Document",
-      children2: "Unavailable",
-      desc: "Tinjau kembali Delivery Order yang sudah ditandatangani.",
-      desc2: "Vendor belum mengunggah Delivery order yang sudah ditandatangani",
-      type: "review",
-    },
-    vendor: {
-      children: "Upload Delivery Order",
-      children2: "Unavailable",
-      desc: "Unggah Delivery Order yang sudah ditandatangani.",
-      desc2: "Pastikan semua item sudah disetujui",
-      type: "upload",
-    },
+  const getPropsDeliv = () => {
+    let params = {};
+    if (!isVendor) {
+      if (fileReady) {
+        params = {
+          children: "Review Document",
+          desc: "Tinjau kembali Delivery Order yang sudah ditandatangani.",
+          type: "review",
+        };
+      } else {
+        params = {
+          children: "Unavailable",
+          desc: "File belum tersedia",
+          disabled: true,
+        };
+      }
+    } else {
+      if (fileReady) {
+        if (isRejected) {
+          params = {
+            children: "Re-Upload Delivery Order",
+            desc: "Alasan penolakan : " + data.file_reject_text,
+            type: "upload",
+          };
+        } else if (isApproved) {
+          params = {
+            children: "Done",
+            type: "review",
+          };
+        } else {
+          params = {
+            children: "Waiting Review",
+            type: "review",
+            desc: "Menunggu persetujuan dokumen",
+          };
+        }
+      } else {
+        params = {
+          children: "Upload Delivery Order",
+          desc: "Unggah Delivery Order yang sudah ditandatangani.",
+          type: "upload",
+        };
+      }
+    }
+    return { ...params, onClick: () => openModal(params.type) };
   };
 
-  const usedBtn = btnData[authStatus];
+  // console.log(`data`, data);
 
   return (
     <React.Fragment>
@@ -131,6 +167,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
         handleSubmit={handleSubmitPreview}
         loading={loadings[KEYS_TERMIN.p_t_upload_do]}
         file={data.file}
+        isClient={authStatus === "client"}
       />
       {visible && Object.keys(data).length && (
         <Card style={{ marginTop: 21 }}>
@@ -163,13 +200,27 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
                     ></div>
                   </div>
                 </div>
-                <ButtonContained
+
+                {/* <ButtonContained
                   className={"mr-5"}
-                  onClick={() => openModal(usedBtn.type)}
+                  onClick={() =>
+                    openModal(fileReady ? usedBtn.type : usedBtn.type2)
+                  }
                   {...usedBtn}
                 >
-                  {usedBtn.children}
-                </ButtonContained>
+                  {!isVendor
+                    ? fileReady
+                      ? usedBtn.children
+                      : "Unavailable"
+                    : !fileReady
+                    ? usedBtn.children
+                    : isRejected
+                    ? usedBtn.children4
+                    : isApproved
+                    ? usedBtn.children3
+                    : usedBtn.children2}
+                </ButtonContained> */}
+                <ButtonContained className={"mr-5"} {...getPropsDeliv()} />
                 {!isVendor && (
                   <ButtonSubmit
                     classBtn={"mr-5"}

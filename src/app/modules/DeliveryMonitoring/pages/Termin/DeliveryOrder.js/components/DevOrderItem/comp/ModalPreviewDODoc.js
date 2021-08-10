@@ -12,7 +12,13 @@ import DialogGlobal from "../../../../../../../../components/modals/DialogGlobal
 import { openLinkTab } from "../../../../../../../../service/helper/urlHelper";
 import { Form } from "react-bootstrap";
 
-const ModalPreviewDODoc = ({ innerRef, loading, file, handleSubmit }) => {
+const ModalPreviewDODoc = ({
+  innerRef,
+  loading,
+  file,
+  isClient,
+  handleSubmit,
+}) => {
   const [dataForm, setDataForm] = React.useState({});
   const [action, setAction] = React.useState(null);
   const [checked, setChecked] = React.useState(false);
@@ -76,51 +82,53 @@ const ModalPreviewDODoc = ({ innerRef, loading, file, handleSubmit }) => {
           Lihat Dokumen
         </ButtonContained>
       </div>
-      <div>
-        <ButtonGroup aria-label="Pick Action">
-          <Button
-            onClick={() => _changeAction("approve")}
-            variant={isApprove ? "contained" : undefined}
-            className={isApprove ? "bg-success text-light" : ""}
-          >
-            Approve
-          </Button>
-          <Button
-            onClick={() => _changeAction("reject")}
-            variant={isReject ? "contained" : undefined}
-            className={isReject ? "bg-danger text-light" : ""}
-          >
-            Reject
-          </Button>
-        </ButtonGroup>
-        {isReject && (
-          <Form.Group
-            style={{ width: "100%" }}
-            className="my-3 "
-            controlId="formBasicEmail"
-          >
-            <Form.Label>Keterangan pendukung</Form.Label>
-            <Form.Control
-              type="input"
-              onChange={handleRemarksChange}
-              placeholder="Masukkan Keterangan"
-            />
-          </Form.Group>
-        )}
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checked}
-              onChange={handleCheck}
-              name="checkedB"
-              color="primary"
-            />
-          }
-          label={
-            "Saya telah meninjau ulang dokumen Delivery Order dengan seksama."
-          }
-        />
-      </div>
+      {isClient && (
+        <div>
+          <ButtonGroup aria-label="Pick Action">
+            <Button
+              onClick={() => _changeAction("approve")}
+              variant={isApprove ? "contained" : undefined}
+              className={isApprove ? "bg-success text-light" : ""}
+            >
+              Approve
+            </Button>
+            <Button
+              onClick={() => _changeAction("reject")}
+              variant={isReject ? "contained" : undefined}
+              className={isReject ? "bg-danger text-light" : ""}
+            >
+              Reject
+            </Button>
+          </ButtonGroup>
+          {isReject && (
+            <Form.Group
+              style={{ width: "100%" }}
+              className="my-3 "
+              controlId="formBasicEmail"
+            >
+              <Form.Label>Keterangan pendukung</Form.Label>
+              <Form.Control
+                type="input"
+                onChange={handleRemarksChange}
+                placeholder="Masukkan Keterangan"
+              />
+            </Form.Group>
+          )}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={checked}
+                onChange={handleCheck}
+                name="checkedB"
+                color="primary"
+              />
+            }
+            label={
+              "Saya telah meninjau ulang dokumen Delivery Order dengan seksama."
+            }
+          />
+        </div>
+      )}
     </DialogGlobal>
   );
 };

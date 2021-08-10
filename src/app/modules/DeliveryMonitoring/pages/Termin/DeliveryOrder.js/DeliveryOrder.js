@@ -153,6 +153,12 @@ const DeliveryOrder = ({
         saveDataTask(res?.data);
         generateTableContent(res?.data.task_deliveries);
         setInitAvailItems(items);
+        if (dataOrderItem !== {}) {
+          let findItem = res?.data?.task_deliveries.filter(
+            (el) => el.id === dataOrderItem.id
+          )[0];
+          setDataOrderItem(findItem);
+        }
       },
     });
   };
@@ -490,6 +496,14 @@ const DeliveryOrder = ({
     getOptions();
   }, [items]);
 
+  const handleRefresh = () => {
+    getTask();
+    func.onRefresh();
+    // let tempData = { ...dataOrderItem };
+    // setDataOrderItem({});
+    // setTimeout(() => setDataOrderItem(tempData), 350);
+  };
+
   return (
     <React.Fragment>
       <ModalSubmitItem
@@ -572,17 +586,17 @@ const DeliveryOrder = ({
             /> */}
         </CardContent>
       </Card>
-      {
+      {dataOrderItem && (
         <DevOrderItem
           data={dataOrderItem}
           options={options}
           setItem={setItemForm}
           handleAction={handleAction}
           isVendor={isVendor}
-          onRefresh={getTask}
+          onRefresh={handleRefresh}
           // handleSubmit={() => handleAction("confirm", null)}
         />
-      }
+      )}
     </React.Fragment>
   );
 };
