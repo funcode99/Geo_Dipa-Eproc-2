@@ -60,7 +60,7 @@ function DashboardListBkb(props) {
         status: false,
       },
       filter: {
-        active: true,
+        active: false,
         type: "text",
       },
     },
