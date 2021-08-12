@@ -296,6 +296,12 @@ export async function finance_director_approve_bkb(
     desc,
   });
 }
+export async function approveBkb(data) {
+  return axios.post(`/invoice/approve_bkb`, data);
+}
+export async function rejectBkb(data) {
+  return axios.post(`/invoice/reject_bkb`, data);
+  }
 export async function updateSoftCopyByUser(id, file) {
   return axios.post(`/invoice/softcopy_update/${id}`, file);
 }
@@ -376,4 +382,20 @@ export async function getAllBkb(params) {
 }
 export async function getAllInvoice(params) {
   return axios.get(`invoice/get_invoice_list${params ? "?" + params : ""}`);
+}
+export async function getAllPlant() {
+  return axios.get(`invoice/get_dashboard_plant`);
+}
+export async function getAllPeriod() {
+  return axios.get(`invoice/get_dashboard_period`);
+}
+export async function getAllDataInvoiceDashboard(
+  period,
+  plant,
+  date_start,
+  date_finish
+) {
+  return axios.get(
+    `invoice/get_dashboard/${plant}/${period}/${date_start}/${date_finish}`
+  );
 }

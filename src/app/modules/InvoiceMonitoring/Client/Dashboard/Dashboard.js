@@ -16,19 +16,44 @@ import {
   DialogTitle,
   Slide,
 } from "@material-ui/core";
+import {
+  getAllPlant,
+  getAllPeriod,
+  getAllDataInvoiceDashboard,
+} from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
+import { rupiah } from "../../../../libs/currency";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function Dashboard(props) {
-  const [range, setRange] = useState("Harian");
+  const { intl } = props;
+  const [range, setRange] = useState({
+    ident_name: "day",
+    name: "Harian",
+  });
+  const [unit, setUnit] = useState({
+    plant_id: null,
+    name: "Semua",
+  });
+  const [plant, setPlant] = useState([
+    {
+      plant_id: "",
+      name: "Semua",
+    },
+  ]);
+  const [period, setPeriod] = useState([]);
   const [err, setErr] = useState(false);
   const [dialogSync, setDialogSync] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
   const [errLoadingSync, setErrLoadingSync] = useState(false);
   const [statusSync, setStatusSync] = useState(false);
   const [errSync, setErrSync] = useState({ status: false, message: "" });
+  const [date, setDate] = useState({ date_start: null, date_finish: null });
+  const [Toast, setToast] = useToast();
+  const [dataOverview, setDataOverview] = useState({});
 
   useEffect(() => {
     var options = {
@@ -53,11 +78,86 @@ function Dashboard(props) {
     }
   }, []);
 
+  const callApiPlant = () => {
+    getAllPlant()
+      .then((result) => {
+        var data = Object.assign([], plant);
+        var data_ = data.concat(result.data.data);
+        setPlant(data_);
+      })
+      .catch((err) => {
+        setToast(
+          intl.formatMessage({
+            id: "REQ.REQUEST_FAILED",
+          }),
+          5000
+        );
+      });
+  };
+
+  const callApiPeriod = () => {
+    getAllPeriod()
+      .then((result) => {
+        var data = result.data.data;
+        setPeriod(data);
+      })
+      .catch((err) => {
+        setToast(
+          intl.formatMessage({
+            id: "REQ.REQUEST_FAILED",
+          }),
+          5000
+        );
+      });
+  };
+
+  const callApidataInvoice = () => {
+    console.log("unit", unit);
+    getAllDataInvoiceDashboard(
+      range.ident_name,
+      unit.plant_id,
+      date.date_start,
+      date.date_finish
+    )
+      .then((result) => {
+        var data = result.data.data;
+        if (data.length > 0) setDataOverview(data[0]);
+      })
+      .catch((err) => {
+        setToast(
+          intl.formatMessage({
+            id: "REQ.REQUEST_FAILED",
+          }),
+          5000
+        );
+      });
+  };
+
+  useEffect(callApiPlant, []);
+  useEffect(callApiPeriod, []);
+  useEffect(callApidataInvoice, [range, unit, date]);
+
   const handleAsyncSpt = (e) => {
     e.preventDefault();
+    const data = new FormData(e.target);
+    setDate({
+      ...date,
+      date_start: data.get("date_start"),
+      date_finish: data.get("date_finish"),
+    });
+    setRange({
+      ...range,
+      ident_name: null,
+      name:
+        window.moment(new Date(data.get("date_start"))).format("DD MMM YYYY") +
+        "-" +
+        window.moment(new Date(data.get("date_finish"))).format("DD MMM YYYY"),
+    });
+    setDialogSync(false);
   };
   return (
     <React.Fragment>
+      <Toast />
       <Dialog
         open={dialogSync}
         keepMounted
@@ -82,7 +182,7 @@ function Dashboard(props) {
                     <Form.Control
                       required
                       type="date"
-                      name="startDate"
+                      name="date_start"
                       disabled={loadingSync}
                       max={new Date().toISOString().split("T")[0]}
                     />
@@ -96,7 +196,7 @@ function Dashboard(props) {
                     <Form.Control
                       required
                       type="date"
-                      name="endDate"
+                      name="date_finish"
                       disabled={loadingSync}
                       max={new Date().toISOString().split("T")[0]}
                     />
@@ -139,7 +239,7 @@ function Dashboard(props) {
             >
               {!statusSync && !loadingSync && (
                 <>
-                  <i class="fas fa-check p-0 mr-2"></i>
+                  <i className="fas fa-check p-0 mr-2"></i>
                   <FormattedMessage id="TITLE.SAVE" />
                 </>
               )}
@@ -179,77 +279,64 @@ function Dashboard(props) {
         <CardBody>
           <div className="d-flex justify-content-between">
             <h6>Overview</h6>
-            <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                {range}
-              </Dropdown.Toggle>
+            <div className="d-flex">
+              <Dropdown className="mx-2">
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  {unit.name}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {plant.map((item, index) => {
+                    return (
+                      <Dropdown.Item
+                        key={index.toString()}
+                        onClick={() => {
+                          setUnit({
+                            ...unit,
+                            name: item.name,
+                            plant_id: item.plant_id,
+                          });
+                        }}
+                      >
+                        {item.name}
+                      </Dropdown.Item>
+                    );
+                  })}
+                </Dropdown.Menu>
+              </Dropdown>
+              <Dropdown className="mx-2">
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  {range.name}
+                </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRange("Harian");
-                  }}
-                >
-                  Harian
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRange("Bulanan");
-                  }}
-                >
-                  Bulanan
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRange("Tahunan");
-                  }}
-                >
-                  Tahunan
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRange("Pusat");
-                  }}
-                >
-                  Pusat
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRange("Dieng");
-                  }}
-                >
-                  Dieng
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRange("Patuha");
-                  }}
-                >
-                  Patuha
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRange("PMU");
-                  }}
-                >
-                  PMU
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRange("EMU");
-                  }}
-                >
-                  EMU
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setDialogSync(true);
-                  }}
-            >
-                  By Date
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                <Dropdown.Menu>
+                  {period.map((item, index) => {
+                    return (
+                      <Dropdown.Item
+                        key={index.toString()}
+                        onClick={() => {
+                          if (item.ident_name === "by_date") {
+                            setDialogSync(true);
+                          } else {
+                            setRange({
+                              ...range,
+                              ident_name: item.ident_name,
+                              name: item.period_name,
+                            });
+                            setDate({
+                              ...date,
+                              date_start: null,
+                              date_finish: null,
+                            });
+                          }
+                        }}
+                      >
+                        {item.period_name}
+                      </Dropdown.Item>
+                    );
+                  })}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           </div>
           <div className="row my-4">
             <div className="col-md-3 p-1">
@@ -267,8 +354,9 @@ function Dashboard(props) {
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h6 className="m-0 text-primary">Rp</h6>
-                        <h3 className="m-0 text-primary">290.000.000</h3>
+                        <h3 className="m-auto text-primary">
+                          {rupiah(dataOverview?.total_invoice || 0)}
+                        </h3>
                       </div>
                       <div className="text-center font-size-xs">
                         <span className="font-weight-bold text-secondary">
@@ -286,17 +374,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-primary rounded-circle">
+                        <span className="symbol-label bg-success rounded-circle">
                           <h1 className="h-50 align-self-center">
-                            <i className="fas fa-file-invoice-dollar fa-sm text-white"></i>
+                            <i className="fas fa-calculator fa-sm text-white"></i>
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h6 className="m-0 text-primary">Rp</h6>
-                        <h3 className="m-0 text-primary">290.000.000</h3>
+                        <h3 className="m-auto text-success">
+                          {dataOverview?.invoice_hari_ini || 0}
+                        </h3>
                       </div>
                       <div className="text-center font-size-xs">
                         <span className="font-weight-bold text-secondary">
@@ -314,17 +403,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-primary rounded-circle">
+                        <span className="symbol-label bg-success rounded-circle">
                           <h1 className="h-50 align-self-center">
-                            <i className="fas fa-file-invoice-dollar fa-sm text-white"></i>
+                            <i className="fas fa-calculator fa-sm text-white"></i>
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h6 className="m-0 text-primary">Rp</h6>
-                        <h3 className="m-0 text-primary">290.000.000</h3>
+                        <h3 className="m-auto text-success">
+                          {dataOverview?.invoice_active || 0}
+                        </h3>
                       </div>
                       <div className="text-center font-size-xs">
                         <span className="font-weight-bold text-secondary">
@@ -342,17 +432,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-primary rounded-circle">
+                        <span className="symbol-label bg-warning rounded-circle">
                           <h1 className="h-50 align-self-center">
-                            <i className="fas fa-file-invoice-dollar fa-sm text-white"></i>
+                            <i className="fas fa-receipt fa-sm text-white"></i>
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h6 className="m-0 text-primary">Rp</h6>
-                        <h3 className="m-0 text-primary">290.000.000</h3>
+                        <h3 className="m-auto text-warning">
+                          {rupiah(dataOverview?.total_invoice_dibayar || 0)}
+                        </h3>
                       </div>
                       <div className="text-center font-size-xs">
                         <span className="font-weight-bold text-secondary">
@@ -370,17 +461,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-primary rounded-circle">
+                        <span className="symbol-label bg-success rounded-circle">
                           <h1 className="h-50 align-self-center">
-                            <i className="fas fa-file-invoice-dollar fa-sm text-white"></i>
+                            <i className="fas fa-calculator fa-sm text-white"></i>
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h6 className="m-0 text-primary">Rp</h6>
-                        <h3 className="m-0 text-primary">290.000.000</h3>
+                        <h3 className="m-auto text-success">
+                          {dataOverview?.out_sla_25 || 0}
+                        </h3>
                       </div>
                       <div className="text-center font-size-xs">
                         <span className="font-weight-bold text-secondary">
@@ -398,17 +490,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-primary rounded-circle">
+                        <span className="symbol-label bg-success rounded-circle">
                           <h1 className="h-50 align-self-center">
-                            <i className="fas fa-file-invoice-dollar fa-sm text-white"></i>
+                            <i className="fas fa-calculator fa-sm text-white"></i>
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h6 className="m-0 text-primary">Rp</h6>
-                        <h3 className="m-0 text-primary">290.000.000</h3>
+                        <h3 className="m-auto text-success">
+                          {dataOverview?.out_sla_30 || 0}
+                        </h3>
                       </div>
                       <div className="text-center font-size-xs">
                         <span className="font-weight-bold text-secondary">
@@ -426,17 +519,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-primary rounded-circle">
+                        <span className="symbol-label bg-danger rounded-circle">
                           <h1 className="h-50 align-self-center">
-                            <i className="fas fa-file-invoice-dollar fa-sm text-white"></i>
+                            <i className="fas fa-cash-register fa-sm text-white"></i>
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h6 className="m-0 text-primary">Rp</h6>
-                        <h3 className="m-0 text-primary">290.000.000</h3>
+                        <h3 className="m-auto text-danger">
+                          {rupiah(dataOverview?.average || 0)}
+                        </h3>
                       </div>
                       <div className="text-center font-size-xs">
                         <span className="font-weight-bold text-secondary">
@@ -475,11 +569,19 @@ function Dashboard(props) {
                               />
                               <th
                                 className="p-0"
-                                style={{ minWidth: "200px" }}
+                                style={{ minWidth: "150px" }}
                               />
                               <th
                                 className="p-0"
-                                style={{ minWidth: "225px" }}
+                                style={{ minWidth: "150px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "150px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "200px" }}
                               />
                               <th
                                 className="p-0"
@@ -509,6 +611,12 @@ function Dashboard(props) {
                               </td>
                               <td className="pl-0">
                                 <span className="">PST-GA Manager</span>
+                              </td>
+                              <td className="pl-0">
+                                <span className="">Termin 1</span>
+                              </td>
+                              <td className="pl-0">
+                                <span className="">Rp. 1.000.000</span>
                               </td>
                               <td className="text-left">
                                 <span

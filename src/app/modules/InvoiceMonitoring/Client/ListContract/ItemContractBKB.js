@@ -12,9 +12,7 @@ import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { QRCodeG } from "../../../../components/qrCodeGenerate/QRCodeGenerate";
 import {
   getBkb,
-  tax_manager_approve_bkb,
-  finance_manager_approve_bkb,
-  finance_director_approve_bkb,
+  approveBkb,
   submitParkAP,
   approveParkAP,
   submitParkBYR,
@@ -23,7 +21,8 @@ import {
   rejectParkAP,
   updateParkAP,
   rejectParkBYR,
-  updateParkBYR
+  updateParkBYR,
+  rejectBkb
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -38,6 +37,8 @@ import {
   DialogTitle,
   Slide,
   IconButton,
+  FormControlLabel,
+  Checkbox
 } from "@material-ui/core";
 import { getRolesBKB, getRolesAccounting } from "../../../Master/service/MasterCrud";
 
@@ -62,21 +63,20 @@ function ItemContractBKB(props) {
   const [parkApInput, setParkApInput] = useState('');
   const [parkByrInput, setParkByrInput] = useState('');
   const [parkApstaff, setParkApStaff] = useState('');
+  const [countGiroSigned, setCountGiroSigned] = useState(0);
 
   const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
   const monitoring_role = data_login.monitoring_role
     ? data_login.monitoring_role
     : [];
   const [monitoringTax] = useState(
-    monitoring_role.findIndex(
-      (element) => element === "Treasury Assistant Manager"
-    ) >= 0
+    monitoring_role.find((element) => element === "Treasury Assistant Manager")
   );
   const [monitoringFinance] = useState(
-    monitoring_role.findIndex((element) => element === "Finance Manager") >= 0
+    monitoring_role.find((element) => element === "Finance Manager")
   );
   const [monitoringFinanceDirec] = useState(
-    monitoring_role.findIndex((element) => element === "Direktur Keuangan") >= 0
+    monitoring_role.find((element) => element === "Direktur Keuangan")
   );
   const [approveBkbStaff] = useState(
     monitoring_role.findIndex((element) => element === "General Ledger Staff") >= 0
@@ -96,14 +96,9 @@ function ItemContractBKB(props) {
     data: {},
     loading: false,
     statusReq: false,
+    role_id: ""
   });
   const [modalRejected, setModalRejected] = useState({
-    statusDialog: false,
-    data: {},
-    loading: false,
-    statusReq: false,
-  });
-  const [modalSubmit, setModalSubmit] = useState({
     statusDialog: false,
     data: {},
     loading: false,
@@ -128,7 +123,7 @@ function ItemContractBKB(props) {
             .then(responseRoles => {
               let sub_total = response.data.data.sub_total
               responseRoles.data.data.map((row, key) => {
-                if (sub_total >= row.min_value && sub_total <= row.max_value) {
+                if (parseFloat(sub_total) >= row.min_value && parseFloat(sub_total) <= row.max_value) {
                   setApproveParkAPStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
                 }
               })
@@ -169,48 +164,15 @@ function ItemContractBKB(props) {
 
   const handleApproved = () => {
     setModalApproved({ ...modalApproved, loading: true });
-    if (modalApproved.data === "monitoringTax") {
-      tax_manager_approve_bkb(bkbData.id, data_login.user_id, termin, bkbData.desc)
-        .then((result) => {
-          setModalApproved({
-            ...modalApproved,
-            statusReq: true,
-            loading: true,
-          });
-          setTimeout(() => {
-            getBkbData();
-            setModalApproved({
-              ...modalApproved,
-              statusDialog: false,
-              loading: false,
-            });
-          }, 2500);
-        })
-        .catch((err) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-        });
-    } else if (modalApproved.data === "monitoringFinance") {
-      finance_manager_approve_bkb(bkbData.id, data_login.user_id, termin, bkbData.desc)
-        .then((result) => {
-          setModalApproved({
-            ...modalApproved,
-            statusReq: true,
-            loading: true,
-          });
-          setTimeout(() => {
-            getBkbData();
-            setModalApproved({
-              ...modalApproved,
-              statusDialog: false,
-              loading: false,
-            });
-          }, 2500);
-        })
-        .catch((err) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-        });
-    } else if (modalApproved.data === "monitoringFinanceDirec") {
-      finance_director_approve_bkb(bkbData.id, data_login.user_id, termin, bkbData.desc)
+    if (modalApproved.data === "approveBKB") {
+      const data = {
+        id: bkbData.id,
+        approved_bkb_id: data_login.user_id,
+        term_id: termin,
+        desc: bkbData.desc,
+        approved_bkb_role_id: modalApproved.role_id
+      }
+      approveBkb(data)
         .then((result) => {
           setModalApproved({
             ...modalApproved,
@@ -232,6 +194,7 @@ function ItemContractBKB(props) {
     } else if (modalApproved.data === "submitDataParkAp") {
       const data = {
         id: bkbData.id,
+        desc: bkbData.desc,
         doc_park_ap_no: parkApInput,
         doc_park_ap_submit_id: data_login.user_id
       }
@@ -462,6 +425,41 @@ function ItemContractBKB(props) {
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
+    } else if (modalRejected.data === "rejectBKB") {
+      var note = document.getElementById("commentRejected").value;
+      const data = {
+        id: bkbData.id,
+        desc: bkbData.desc,
+        user_id: data_login.user_id,
+        rejected_remark: note
+      }
+      rejectBkb(data)
+        .then((result) => {
+          setModalRejected({
+            ...modalRejected,
+            statusReq: true,
+            loading: true,
+          });
+          setTimeout(() => {
+            getBkbData();
+            setModalRejected({
+              ...modalRejected,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    }
+  };
+
+  const handleCheckbox = (e) => {
+    if (e.target.checked) {
+      setCountGiroSigned(countGiroSigned + 1)
+    } else {
+      setCountGiroSigned(countGiroSigned - 1)
     }
   };
 
@@ -553,108 +551,83 @@ function ItemContractBKB(props) {
         </form>
       </Dialog>
       <Dialog
-        open={modalSubmit.statusDialog}
-        TransitionComponent={Transition}
-        keepMounted
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-        maxWidth="xs"
-        fullWidth={true}
-      >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <DialogTitle id="alert-dialog-slide-title">
-            <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
-            <span className="text-danger">
-              {" " + (modalSubmit.data.document_name || "")}
-            </span>
-          </DialogTitle>
-          <DialogContent>
-            <p>
-              <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY" />
-            </p>
-            <textarea
-              rows="2"
-              cols=""
-              className="form-control"
-              id="commentRejected"
-              placeholder={intl.formatMessage({
-                id:
-                  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_BODY",
-              })}
-              required
-              disabled={modalSubmit.loading}
-            ></textarea>
-          </DialogContent>
-          <DialogActions>
-            <button
-              className="btn btn-secondary"
-              type="button"
-              onClick={() =>
-                setModalSubmit({
-                  ...modalSubmit,
-                  statusDialog: false,
-                })
-              }
-              disabled={modalSubmit.loading}
-            >
-              <span>
-                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
-              </span>
-            </button>
-            <button
-              className="btn btn-danger"
-              type="submit"
-              disabled={modalSubmit.loading}
-            >
-              {!modalSubmit.loading && (
-                <span>
-                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.REJECTED.REJECT_SUBMIT" />
-                </span>
-              )}
-              {modalSubmit.loading &&
-                (modalSubmit.statusReq && modalSubmit.loading ? (
-                  <div>
-                    <span>
-                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
-                    </span>
-                    <span className="ml-2 fas fa-check"></span>
-                  </div>
-                ) : (
-                  <div>
-                    <span>
-                      <FormattedMessage id="TITLE.WAITING" />
-                    </span>
-                    <span className="ml-2 mr-4 spinner spinner-white"></span>
-                  </div>
-                ))}
-            </button>
-          </DialogActions>
-        </form>
-      </Dialog>
-      <Dialog
         open={modalApproved.statusDialog}
         TransitionComponent={Transition}
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
-        maxWidth="xs"
+        maxWidth={modalApproved.data === "monitoringApproveParkBYR" ? "sm" : "xs"}
         fullWidth={true}
       >
         <DialogTitle>
           <FormattedMessage id="TITLE.CONFIRMATION" />
         </DialogTitle>
         <DialogContent>
+          <FormattedMessage id="TITLE.CHOOSE_BKB_GIRO_SIGNED" />
+          <div className="row my-3">
+            <FormControlLabel
+              className="col-sm-3 mx-0 mb-1"
+              control={
+                <Checkbox
+                  // checked={rolesData?.includes(item.id)}
+                  // value={item.id}
+                  color="secondary"
+                  onChange={handleCheckbox}
+                  className="py-1"
+                />
+              }
+              label="Direktur Utama"
+            />
+            <FormControlLabel
+              className="col-sm-3 mx-0 mb-1"
+              control={
+                <Checkbox
+                  // checked={rolesData?.includes(item.id)}
+                  // value={item.id}
+                  color="secondary"
+                  onChange={handleCheckbox}
+                  className="py-1"
+                />
+              }
+              label="Direktur Keuangan"
+            />
+            <FormControlLabel
+              className="col-sm-3 mx-0 mb-1"
+              control={
+                <Checkbox
+                  // checked={rolesData?.includes(item.id)}
+                  // value={item.id}
+                  color="secondary"
+                  onChange={handleCheckbox}
+                  className="py-1"
+                />
+              }
+              label="Direktur"
+            />
+            <FormControlLabel
+              className="col-sm-3 mx-0 mb-1"
+              control={
+                <Checkbox
+                  // checked={rolesData?.includes(item.id)}
+                  // value={item.id}
+                  color="secondary"
+                  onChange={handleCheckbox}
+                  className="py-1"
+                />
+              }
+              label="Finance Manager"
+            />
+          </div>
           <FormattedMessage id="TITLE.NOTIF_ACTION_CHANGES" />
         </DialogContent>
         <DialogActions>
           <button
             className="btn btn-primary"
             type="button"
-            disabled={modalApproved.loading}
+            disabled={
+              modalApproved.loading ||
+              (modalApproved.data === "monitoringApproveParkBYR" && countGiroSigned < 2)
+            }
             onClick={() => {
               handleApproved();
             }}
@@ -1463,11 +1436,11 @@ function ItemContractBKB(props) {
                                   paddingBottom: 5,
                                 }}
                               >
-                                {monitoringFinanceDirec &&
-                                  bkbData?.finance_director_approved_id === null &&
-                                  bkbData?.finance_man_approved_id === null &&
-                                  bkbData?.tax_man_approved_id === null &&
-                                  row?.ident_name === "DIREKTUR_KEUANGAN" &&
+                                {((monitoringFinanceDirec === row.name) ||
+                                  (monitoringFinance === row.name) ||
+                                  (monitoringTax === row.name)
+                                ) &&
+                                  bkbData?.approved_bkb_id === null &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button
                                       type="button"
@@ -1477,7 +1450,8 @@ function ItemContractBKB(props) {
                                         setModalApproved({
                                           ...modalApproved,
                                           statusDialog: true,
-                                          data: "monitoringFinanceDirec",
+                                          data: "approveBKB",
+                                          role_id: row.id
                                         });
                                       }}
                                     >
@@ -1488,74 +1462,35 @@ function ItemContractBKB(props) {
                                       <FormattedMessage id="TITLE.APPROVE" />
                                     </button>
                                   )}
-                                {monitoringFinance &&
-                                  bkbData?.finance_director_approved_id === null &&
-                                  bkbData?.finance_man_approved_id === null &&
-                                  bkbData?.tax_man_approved_id === null &&
-                                  row?.ident_name === "FINANCE_MANAGER" &&
+                                {((monitoringFinanceDirec === row.name) ||
+                                  (monitoringFinance === row.name) ||
+                                  (monitoringTax === row.name)
+                                ) &&
+                                  bkbData?.approved_bkb_id === null &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button
                                       type="button"
-                                      className="btn btn-primary btn-sm"
+                                      className="btn btn-danger btn-sm mx-2"
                                       style={{ fontSize: 10, marginTop: 20 }}
                                       onClick={() => {
-                                        setModalApproved({
-                                          ...modalApproved,
+                                        setModalRejected({
+                                          ...modalRejected,
                                           statusDialog: true,
-                                          data: "monitoringFinance",
+                                          data: "rejectBKB",
                                         });
                                       }}
                                     >
                                       <i
-                                        className="fas fa-check-circle"
+                                        className="fas fa-times-circle"
                                         style={{ fontSize: 8 }}
                                       ></i>
-                                      <FormattedMessage id="TITLE.APPROVE" />
+                                      <FormattedMessage id="TITLE.REJECT" />
                                     </button>
                                   )}
-                                {monitoringTax &&
-                                  bkbData?.finance_director_approved_id === null &&
-                                  bkbData?.finance_man_approved_id === null &&
-                                  bkbData?.tax_man_approved_id === null &&
-                                  row?.ident_name === "TREASURY_ASSISTANT_MANAGER" &&
-                                  bkbData?.doc_park_byr_approved_id && (
-                                    <button
-                                      type="button"
-                                      className="btn btn-primary btn-sm"
-                                      style={{ fontSize: 10, marginTop: 20 }}
-                                      onClick={() => {
-                                        setModalApproved({
-                                          ...modalApproved,
-                                          statusDialog: true,
-                                          data: "monitoringTax",
-                                        });
-                                      }}
-                                    >
-                                      <i
-                                        className="fas fa-check-circle"
-                                        style={{ fontSize: 8 }}
-                                      ></i>
-                                      <FormattedMessage id="TITLE.APPROVE" />
-                                    </button>
-                                  )}
-                                {bkbData?.finance_director_approved_id &&
-                                  row?.ident_name === "DIREKTUR_KEUANGAN" && (
+                                {bkbData?.approved_bkb_id &&
+                                  bkbData?.approved_bkb_role_id === row.id && (
                                     <QRCodeG
-                                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_director_role_id}&type=APPROVED_BKB`}
-                                      size="90"
-                                    />
-                                  )}
-                                {bkbData?.finance_man_approved_id &&
-                                  row?.ident_name === "FINANCE_MANAGER" && (
-                                    <QRCodeG
-                                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.finance_man_role_id}&type=APPROVED_BKB`}
-                                      size="90"
-                                    />
-                                  )}
-                                {bkbData?.tax_man_approved_id &&
-                                  row?.ident_name === "TREASURY_ASSISTANT_MANAGER" && (
-                                    <QRCodeG
-                                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.tax_man_role_id}&type=APPROVED_BKB`}
+                                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.approved_bkb_role_id}&type=APPROVED_BKB`}
                                       size="90"
                                     />
                                   )}
@@ -1566,45 +1501,21 @@ function ItemContractBKB(props) {
                                 <div>
                                   <span style={{ fontSize: 10 }}>
                                     <FormattedMessage id="TITLE.NAME" />:
-                                    {bkbData?.finance_director_approved_id &&
-                                      row?.ident_name === "DIREKTUR_KEUANGAN" && (
-                                        <span>{bkbData?.finance_director_name}</span>
-                                      )}
-                                    {bkbData?.finance_man_approved_id &&
-                                      row?.ident_name === "FINANCE_MANAGER" && (
-                                        <span>{bkbData?.finance_man_name}</span>
-                                      )}
-                                    {bkbData?.tax_man_approved_id &&
-                                      row?.ident_name === "TREASURY_ASSISTANT_MANAGER" && (
-                                        <span>{bkbData?.tax_man_name}</span>
+                                    {bkbData?.approved_bkb_id &&
+                                      bkbData?.approved_bkb_role_id === row.id && (
+                                        <span>{bkbData?.approve_bkb_name}</span>
                                       )}
                                   </span>
                                   <br />
                                   <span style={{ fontSize: 10 }}>
                                     <FormattedMessage id="TITLE.DATE" />:
-                                    {bkbData?.finance_director_approved_at &&
-                                      row?.ident_name === "DIREKTUR_KEUANGAN"
+                                    {bkbData?.approved_bkb_at &&
+                                      bkbData?.approved_bkb_role_id === row.id
                                       ? window
                                         .moment(
                                           new Date(
-                                            bkbData?.finance_director_approved_at
+                                            bkbData?.approved_bkb_at
                                           )
-                                        )
-                                        .format("DD/MM/YYYY")
-                                      : ""}
-                                    {bkbData?.finance_man_approved_at &&
-                                      row?.ident_name === "FINANCE_MANAGER"
-                                      ? window
-                                        .moment(
-                                          new Date(bkbData?.finance_man_approved_at)
-                                        )
-                                        .format("DD/MM/YYYY")
-                                      : ""}
-                                    {bkbData?.tax_man_approved_at &&
-                                      row?.ident_name === "TREASURY_ASSISTANT_MANAGER"
-                                      ? window
-                                        .moment(
-                                          new Date(bkbData?.tax_man_approved_at)
                                         )
                                         .format("DD/MM/YYYY")
                                       : ""}
@@ -1616,7 +1527,6 @@ function ItemContractBKB(props) {
                         }
                       }
                       )}
-
                     </div>
                   </div>
                 </div>
