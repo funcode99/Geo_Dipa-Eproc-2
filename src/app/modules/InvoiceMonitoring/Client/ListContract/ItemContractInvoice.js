@@ -479,7 +479,9 @@ function ItemContractInvoice(props) {
           });
           getTerminProgress(termin)
             .then((result) => {
+              if (result.data.data.data) {
               setDataProgress(result.data.data?.data);
+              }
             })
           setTimeout(() => {
             callApiContractSoftCopy();
@@ -510,7 +512,9 @@ function ItemContractInvoice(props) {
           });
           getTerminProgress(termin)
             .then((result) => {
+              if (result.data.data.data) {
               setDataProgress(result.data.data?.data);
+              }
             })
           setTimeout(() => {
             callApiContractSoftCopy();
@@ -556,7 +560,9 @@ function ItemContractInvoice(props) {
           });
           getTerminProgress(termin)
             .then((result) => {
+              if (result.data.data.data) {
               setDataProgress(result.data.data?.data);
+              }
             })
           setTimeout(() => {
             setModalApproved({
@@ -587,7 +593,9 @@ function ItemContractInvoice(props) {
           });
           getTerminProgress(termin)
             .then((result) => {
+              if (result.data.data.data) {
               setDataProgress(result.data.data?.data);
+              }
             })
           setTimeout(() => {
             setModalApproved({
