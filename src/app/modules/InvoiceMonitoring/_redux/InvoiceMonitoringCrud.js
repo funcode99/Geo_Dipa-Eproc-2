@@ -301,7 +301,10 @@ export async function approveBkb(data) {
 }
 export async function rejectBkb(data) {
   return axios.post(`/invoice/reject_bkb`, data);
-  }
+}
+export async function approveGiro(data) {
+  return axios.post(`/invoice/approve_giro`, data);
+}
 export async function updateSoftCopyByUser(id, file) {
   return axios.post(`/invoice/softcopy_update/${id}`, file);
 }

@@ -60,6 +60,11 @@ const TabLists = [
         id: 'delivery',
         label: 'Delivery',
         icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
+    },
+    {
+        id: 'signed_giro',
+        label: 'Signed Giro',
+        icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
     }
 ];
 
@@ -112,6 +117,7 @@ const Roles = (props) => {
                     {tabActiveMain === 4 && <RolesPage data={{ type: "Accounting", authority: "Pusat" }} />}
                     {tabActiveMain === 5 && <RolesPage data={{ type: "Park_BYR", authority: "Pusat" }} />}
                     {tabActiveMain === 6 && <RolesPage data={{ type: "Delivery", authority: "Pusat" }} />}
+                    {tabActiveMain === 7 && <RolesPage data={{ type: "Signed_Giro", authority: "Pusat" }} />}
                 </Container>
             </Paper>
             <Paper className={classes.paper}>
@@ -136,6 +142,7 @@ const Roles = (props) => {
                     {tabActiveUnit === 4 && <RolesPage data={{ type: "Accounting", authority: "Unit" }} />}
                     {tabActiveUnit === 5 && <RolesPage data={{ type: "Park_BYR", authority: "Unit" }} />}
                     {tabActiveUnit === 6 && <RolesPage data={{ type: "Delivery", authority: "Unit" }} />}
+                    {tabActiveUnit === 7 && <RolesPage data={{ type: "Signed_Giro", authority: "Unit" }} />}
                 </Container>
             </Paper>
         </Container>
