@@ -479,7 +479,7 @@ function ItemContractInvoice(props) {
           });
           getTerminProgress(termin)
             .then((result) => {
-              if (result.data.data.data) {
+              if (result.data.data) {
               setDataProgress(result.data.data?.data);
               }
             })
@@ -512,7 +512,7 @@ function ItemContractInvoice(props) {
           });
           getTerminProgress(termin)
             .then((result) => {
-              if (result.data.data.data) {
+              if (result.data.data) {
               setDataProgress(result.data.data?.data);
               }
             })
@@ -560,7 +560,7 @@ function ItemContractInvoice(props) {
           });
           getTerminProgress(termin)
             .then((result) => {
-              if (result.data.data.data) {
+              if (result.data.data) {
               setDataProgress(result.data.data?.data);
               }
             })
@@ -593,7 +593,7 @@ function ItemContractInvoice(props) {
           });
           getTerminProgress(termin)
             .then((result) => {
-              if (result.data.data.data) {
+              if (result.data.data) {
               setDataProgress(result.data.data?.data);
               }
             })
