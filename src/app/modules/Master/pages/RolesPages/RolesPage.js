@@ -17,7 +17,11 @@ import {
   Flex,
   Input
 } from '../style';
-import { getRolesBKB, getRolesVerification, getRolesApproval, getRolesAcceptance, getRolesAccounting, getRolesParkBYR, getRolesDelivery, updateRoles } from '../../service/MasterCrud';
+import {
+  getRolesBKB, getRolesVerification, getRolesApproval, getRolesAcceptance,
+  getRolesAccounting, getRolesParkBYR, getRolesDelivery, getRolesSignedGiro,
+  updateRoles
+} from '../../service/MasterCrud';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { StyledModal } from '../../../../components/modals';
@@ -63,6 +67,10 @@ const RolesPage = (props) => {
         .catch(() => { setLoadData(false); setErrorData(true) })
     } else if (props.data.type === "Delivery") {
       getRolesDelivery(props.data.authority)
+        .then(response => { setRolesData(response.data.data); setLoadData(false) })
+        .catch(() => { setLoadData(false); setErrorData(true) })
+    } else if (props.data.type === "Signed_Giro") {
+      getRolesSignedGiro(props.data.authority)
         .then(response => { setRolesData(response.data.data); setLoadData(false) })
         .catch(() => { setLoadData(false); setErrorData(true) })
     }
@@ -262,7 +270,7 @@ const RolesPage = (props) => {
                     {item.max_value ? rupiah(item.max_value) : '-'}
                   </td>
                   <td className="text-center">
-                    {props.data.type !== "Accept" && props.data.type !== "Delivery" && <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>}
+                    {props.data.type !== "Signed_Giro" && props.data.type !== "Accept" && props.data.type !== "Delivery" && <button className="btn" onClick={() => handleModal(index)}><i className="fas fa-edit text-primary pointer"></i></button>}
                   </td>
                 </tr>
               )
