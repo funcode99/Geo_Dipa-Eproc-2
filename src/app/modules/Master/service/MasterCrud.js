@@ -129,6 +129,10 @@ export function getRolesDelivery(plant) {
   return axios.get(`data/get_role_delivery?plant=${plant}`);
 }
 
+export function getRolesSignedGiro(plant) {
+  return axios.get(`data/get_role_signed_giro?plant=${plant}`);
+}
+
 export function updateRoles(data) {
   return axios.post(`data/update_role/${data.id}`, data);
 }
