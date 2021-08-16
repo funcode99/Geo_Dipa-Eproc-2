@@ -46,7 +46,8 @@ import {
   sendAddRejectedDocSoftCopy,
   sendNotifSoftCopySupportDeliverables,
   createTerminProgress,
-  getTerminProgress
+  getTerminProgress,
+  sendNotifSoftCopyRequest
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
@@ -106,6 +107,14 @@ const data_ops = [
     label: "TITLE.REJECT_DOCUMENT",
     icon: "fas fa-times-circle text-warning",
     type: "rejected",
+  },
+];
+
+const data_ops_send_email = [
+  {
+    label: "Send EMail",
+    icon: "fas fa-times-circle text-warning",
+    type: "send_email",
   },
 ];
 
@@ -303,6 +312,10 @@ function ItemContractInvoice(props) {
     },
   ];
 
+  const handleActionEmail = (data) => {
+    handleSendNotifRequest(data)
+  };
+
   const handleAction = (type, data) => {
     if (type === "rejected") {
       setModalReject({ ...modalReject, statusDialog: true, data: data });
@@ -325,6 +338,14 @@ function ItemContractInvoice(props) {
       setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
     console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
+  };
+
+  const handleActionDeliverableEmail = (data) => {
+    const new_data = {
+      document_name: data.document.name,
+      ident_name: "DELIVERABLES"
+    }
+    handleSendNotifRequest(new_data)
   };
 
   // console.log(dataProgress)
@@ -358,6 +379,25 @@ function ItemContractInvoice(props) {
         } else {
           setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_FAILED" }), 5000);
         }
+      })
+      .catch((error) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  const handleSendNotifRequest = (row) => {
+    sendNotifSoftCopyRequest(
+      {
+        type: row.ident_name === "CONTRACT" || row.ident_name === "PO" ? "kewenangan"
+          : row.ident_name === "NPWP" ? "vendor" : "pengguna",
+        document_name: row.document_name,
+        contract_id: contract
+      }
+    )
+      .then((result) => {
+        setLoading(false);
+        setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 5000);
       })
       .catch((error) => {
         setLoading(false);
@@ -480,7 +520,7 @@ function ItemContractInvoice(props) {
           getTerminProgress(termin)
             .then((result) => {
               if (result.data.data) {
-              setDataProgress(result.data.data?.data);
+                setDataProgress(result.data.data?.data);
               }
             })
           setTimeout(() => {
@@ -513,7 +553,7 @@ function ItemContractInvoice(props) {
           getTerminProgress(termin)
             .then((result) => {
               if (result.data.data) {
-              setDataProgress(result.data.data?.data);
+                setDataProgress(result.data.data?.data);
               }
             })
           setTimeout(() => {
@@ -561,7 +601,7 @@ function ItemContractInvoice(props) {
           getTerminProgress(termin)
             .then((result) => {
               if (result.data.data) {
-              setDataProgress(result.data.data?.data);
+                setDataProgress(result.data.data?.data);
               }
             })
           setTimeout(() => {
@@ -594,7 +634,7 @@ function ItemContractInvoice(props) {
           getTerminProgress(termin)
             .then((result) => {
               if (result.data.data) {
-              setDataProgress(result.data.data?.data);
+                setDataProgress(result.data.data?.data);
               }
             })
           setTimeout(() => {
@@ -1240,6 +1280,16 @@ function ItemContractInvoice(props) {
                             ops={data_ops}
                           />
                         )}
+                      {dataUser?.is_finance &&
+                        (!item.doc_no ||
+                          !item.doc_file) &&
+                        !loading && (
+                          <ButtonAction
+                            data={item}
+                            handleAction={() => handleActionEmail(item)}
+                            ops={data_ops_send_email}
+                          />
+                        )}
                       {!dataUser?.is_finance &&
                         item.softcopy_state === "REJECTED" &&
                         item.doc_no &&
@@ -1335,14 +1385,14 @@ function ItemContractInvoice(props) {
                                     <BtnLihat url={els?.url} />,
                                     els?.remarks,
                                     els?.url &&
-                                    (els.document_monitoring === null ||
-                                      (els.document_monitoring
-                                        ?.softcopy_state !== "REJECTED" &&
-                                        els.document_monitoring
-                                          ?.softcopy_state !==
-                                        "APPROVED")) &&
-                                    els.document_status?.name ===
-                                    "APPROVED" && !loading && (
+                                      (els.document_monitoring === null ||
+                                        (els.document_monitoring
+                                          ?.softcopy_state !== "REJECTED" &&
+                                          els.document_monitoring
+                                            ?.softcopy_state !==
+                                          "APPROVED")) &&
+                                      els.document_status?.name ===
+                                      "APPROVED" && !loading ? (
                                       <ButtonAction
                                         data={els}
                                         handleAction={
@@ -1350,7 +1400,13 @@ function ItemContractInvoice(props) {
                                         }
                                         ops={data_opsDeliverable}
                                       />
-                                    ),
+                                    ) : (<ButtonAction
+                                      data={els}
+                                      handleAction={
+                                        () => handleActionDeliverableEmail(els)
+                                      }
+                                      ops={data_ops_send_email}
+                                    />),
                                   ]}
                                 />
                               ))
