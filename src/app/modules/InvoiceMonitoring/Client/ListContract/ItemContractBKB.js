@@ -22,7 +22,8 @@ import {
   updateParkAP,
   rejectParkBYR,
   updateParkBYR,
-  rejectBkb
+  rejectBkb,
+  approveGiro
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -40,7 +41,7 @@ import {
   FormControlLabel,
   Checkbox
 } from "@material-ui/core";
-import { getRolesBKB, getRolesAccounting } from "../../../Master/service/MasterCrud";
+import { getRolesBKB, getRolesAccounting, getRolesSignedGiro } from "../../../Master/service/MasterCrud";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -60,10 +61,12 @@ function ItemContractBKB(props) {
 
   const [bkbData, setBkbData] = useState(null);
   const [mainRolesBKBData, setMainRolesBKBData] = useState(null);
+  const [mainRolesSignedGiroData, setMainRolesSignedGiroData] = useState(null);
   const [parkApInput, setParkApInput] = useState('');
   const [parkByrInput, setParkByrInput] = useState('');
   const [parkApstaff, setParkApStaff] = useState('');
   const [countGiroSigned, setCountGiroSigned] = useState(0);
+  const [giroSignedData, setGiroSignedData] = useState([]);
 
   const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
   const monitoring_role = data_login.monitoring_role
@@ -89,6 +92,22 @@ function ItemContractBKB(props) {
 
   const [approveParkByrStaff] = useState(
     monitoring_role.findIndex((element) => element === "Treasury Staff") >= 0
+  );
+
+  const [signedGiroDirut] = useState(
+    monitoring_role.find((element) => element === "Direktur Utama")
+  );
+
+  const [signedGiroDir] = useState(
+    monitoring_role.find((element) => element === "Direktur")
+  );
+
+  const [signedGiroDirkeu] = useState(
+    monitoring_role.find((element) => element === "Direktur Keuangan")
+  );
+
+  const [signedGiroFinMan] = useState(
+    monitoring_role.find((element) => element === "Finance Manager")
   );
 
   const [modalApproved, setModalApproved] = useState({
@@ -148,8 +167,19 @@ function ItemContractBKB(props) {
       });
   }, [termin, intl, setToast]);
 
+  const getRolesSignedGiroData = useCallback(() => {
+    getRolesSignedGiro(main_authority)
+      .then((response) => {
+        setMainRolesSignedGiroData(response["data"]["data"]);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(getBkbData, []);
   useEffect(getRolesBKBData, []);
+  useEffect(getRolesSignedGiroData, []);
 
   const print = () => {
     var printContents = window.$("#printBkb").html();
@@ -331,9 +361,46 @@ function ItemContractBKB(props) {
         id: bkbData.id,
         doc_park_byr_approved_id: data_login.user_id,
         desc: bkbData.desc,
-        term_id: termin
+        term_id: termin,
+        giro_signed_data: giroSignedData
       }
       approveParkBYR(data)
+        .then((result) => {
+          setModalApproved({
+            ...modalApproved,
+            statusReq: true,
+            loading: true,
+          });
+          getTerminProgress(termin)
+            .then((result) => {
+              setProgressTermin(result.data.data?.progress_type);
+              setDataProgress(result.data.data?.data);
+            })
+          setTimeout(() => {
+            getBkbData();
+            setModalApproved({
+              ...modalApproved,
+              statusDialog: false,
+              loading: false,
+            });
+          }, 2500);
+        })
+        .catch((err) => {
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    } else if (modalApproved.data === "approveSignedGiro") {
+      const giro_signed_data = Object.assign([], bkbData?.giro_signed_data);
+      const index = giro_signed_data.findIndex((element) => element.id === modalApproved.role_id)
+      giro_signed_data[index].role_id = modalApproved.role_id
+      giro_signed_data[index].approved_id = data_login.user_id
+      const data = {
+        id: bkbData.id,
+        index: index,
+        giro_signed_data: giro_signed_data,
+        user_id: data_login.user_id,
+        desc: bkbData.desc
+      }
+      approveGiro(data)
         .then((result) => {
           setModalApproved({
             ...modalApproved,
@@ -455,10 +522,16 @@ function ItemContractBKB(props) {
     }
   };
 
-  const handleCheckbox = (e) => {
+  const handleCheckbox = (e, row) => {
     if (e.target.checked) {
+      setGiroSignedData([...giroSignedData, { id: e.target.value, name: row.name }]);
       setCountGiroSigned(countGiroSigned + 1)
     } else {
+      setGiroSignedData(
+        giroSignedData.filter(function (row) {
+          return row.id !== e.target.value;
+        })
+      );
       setCountGiroSigned(countGiroSigned - 1)
     }
   };
@@ -563,61 +636,31 @@ function ItemContractBKB(props) {
           <FormattedMessage id="TITLE.CONFIRMATION" />
         </DialogTitle>
         <DialogContent>
-          <FormattedMessage id="TITLE.CHOOSE_BKB_GIRO_SIGNED" />
-          <div className="row my-3">
-            <FormControlLabel
-              className="col-sm-3 mx-0 mb-1"
-              control={
-                <Checkbox
-                  // checked={rolesData?.includes(item.id)}
-                  // value={item.id}
-                  color="secondary"
-                  onChange={handleCheckbox}
-                  className="py-1"
-                />
-              }
-              label="Direktur Utama"
-            />
-            <FormControlLabel
-              className="col-sm-3 mx-0 mb-1"
-              control={
-                <Checkbox
-                  // checked={rolesData?.includes(item.id)}
-                  // value={item.id}
-                  color="secondary"
-                  onChange={handleCheckbox}
-                  className="py-1"
-                />
-              }
-              label="Direktur Keuangan"
-            />
-            <FormControlLabel
-              className="col-sm-3 mx-0 mb-1"
-              control={
-                <Checkbox
-                  // checked={rolesData?.includes(item.id)}
-                  // value={item.id}
-                  color="secondary"
-                  onChange={handleCheckbox}
-                  className="py-1"
-                />
-              }
-              label="Direktur"
-            />
-            <FormControlLabel
-              className="col-sm-3 mx-0 mb-1"
-              control={
-                <Checkbox
-                  // checked={rolesData?.includes(item.id)}
-                  // value={item.id}
-                  color="secondary"
-                  onChange={handleCheckbox}
-                  className="py-1"
-                />
-              }
-              label="Finance Manager"
-            />
-          </div>
+          {modalApproved.data === "monitoringApproveParkBYR" && <FormattedMessage id="TITLE.CHOOSE_BKB_GIRO_SIGNED" />}
+          {modalApproved.data === "monitoringApproveParkBYR" &&
+            <div className="row">
+              {/* mainRolesSignedGiroData */}
+              <div className="my-3">
+                {mainRolesSignedGiroData?.map((row, key) => {
+                  return (
+                    <FormControlLabel
+                      className="col-sm-3 mx-0 mb-1"
+                      key={key}
+                      control={
+                        <Checkbox
+                          value={row.id}
+                          color="secondary"
+                          onChange={e => handleCheckbox(e, row)}
+                          className="py-1"
+                        />
+                      }
+                      label={row.name}
+                    />
+                  )
+                })}
+              </div>
+            </div>
+          }
           <FormattedMessage id="TITLE.NOTIF_ACTION_CHANGES" />
         </DialogContent>
         <DialogActions>
@@ -1538,157 +1581,79 @@ function ItemContractBKB(props) {
                   </span>
                 </div>
                 <div className="row border-top">
-                  <div className="col-sm border text-center px-0">
-                    <span style={{ fontSize: 10 }}>Dirut</span>
-                  </div>
-                  <div className="col-sm border text-center px-0">
-                    <span style={{ fontSize: 10 }}>Dirkeu</span>
-                  </div>
-                  <div className="col-sm border text-center px-0">
-                    <span style={{ fontSize: 10 }}>Dir</span>
-                  </div>
-                  <div className="col-sm border text-center px-0">
-                    <span style={{ fontSize: 10 }}>Fin Mgr</span>
-                  </div>
+                  {bkbData?.giro_signed_data?.map((row, key) => {
+                    return (
+                      <div className="col-sm border text-center px-0" key={key}>
+                        <span style={{ fontSize: 10 }}>{row.name}</span>
+                      </div>
+                    )
+                  })}
                 </div>
                 <div className="row">
-                  <div
-                    className="col-sm border-right"
-                    style={{ height: styleCustom.heightAppvDiv }}
-                  >
-                    <div
-                      className="text-center"
-                      style={{
-                        height: styleCustom.minHeightAppv,
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                      }}
-                    >
-                      {/* <QRCodeG
-                        value="http://192.168.0.168:3000/qrcode"
-                        size="60"
-                      /> */}
-                    </div>
-                    <div className="d-flex align-items-end">
-                      <div>
-                        <span style={{ fontSize: 8 }}>
-                          <FormattedMessage id="TITLE.NAME" />: Test1234
-                        </span>
-                        <br />
-                        <span style={{ fontSize: 8 }}>
-                          <FormattedMessage id="TITLE.DATE" />: 24/04/2021
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-sm border-right"
-                    style={{ height: styleCustom.heightAppvDiv }}
-                  >
-                    <div
-                      className="text-center"
-                      style={{
-                        height: styleCustom.minHeightAppv,
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                      }}
-                    >
-                      {/* <button
-                            type="button"
-                            className="btn btn-primary btn-sm"
-                            style={{ fontSize: 10, marginTop: 20 }}
-                          >
-                            <i
-                              className="fas fa-check-circle"
-                              style={{ fontSize: 10 }}
-                            ></i>
-                            Setuju
-                          </button> */}
-                    </div>
-                    <div className="d-flex align-items-end">
-                      <div>
-                        <span style={{ fontSize: 8 }}>
-                          <FormattedMessage id="TITLE.NAME" />: -
-                        </span>
-                        <br />
-                        <span style={{ fontSize: 8 }}>
-                          <FormattedMessage id="TITLE.DATE" />:
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-sm border-right"
-                    style={{ height: styleCustom.heightAppvDiv }}
-                  >
-                    <div
-                      className="text-center"
-                      style={{
-                        height: styleCustom.minHeightAppv,
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                      }}
-                    >
-                      {/* <button
-                        type="button"
-                        className="btn btn-primary btn-sm"
-                        style={{ fontSize: 10, marginTop: 20 }}
+                  {bkbData?.giro_signed_data?.map((row, key) => {
+                    return (
+                      <div
+                        className="col-sm border-right"
+                        style={{ height: styleCustom.heightAppvDiv }}
+                        key={key}
                       >
-                        <i
-                          className="fas fa-check-circle"
-                          style={{ fontSize: 8 }}
-                        ></i>
-                        <FormattedMessage id="TITLE.APPROVE" />
-                      </button> */}
-                    </div>
-                    <div className="d-flex align-items-end">
-                      <div>
-                        <span style={{ fontSize: 8 }}>
-                          <FormattedMessage id="TITLE.NAME" />: -
-                        </span>
-                        <br />
-                        <span style={{ fontSize: 8 }}>
-                          <FormattedMessage id="TITLE.DATE" />:
-                        </span>
+                        <div
+                          className="text-center"
+                          style={{
+                            height: styleCustom.minHeightAppv,
+                            paddingTop: 5,
+                            paddingBottom: 5,
+                          }}
+                        >
+                          {monitoring_role?.includes(row.name) &&
+                            !row.approved_id && (
+                              <button
+                                type="button"
+                                className="btn btn-primary btn-sm mx-2"
+                                style={{ fontSize: 10, marginTop: 20 }}
+                                onClick={() => {
+                                  setModalApproved({
+                                    ...modalApproved,
+                                    statusDialog: true,
+                                    data: "approveSignedGiro",
+                                    role_id: row.id
+                                  });
+                                }}
+                              >
+                                <i
+                                  className="fas fa-check-circle"
+                                  style={{ fontSize: 8 }}
+                                ></i>
+                                <FormattedMessage id="TITLE.APPROVE" />
+                              </button>
+                            )}
+                          {row.approved_id &&
+                            <QRCodeG
+                              value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${row.id}&type=SIGNED_GIRO`}
+                              size="60"
+                            />
+                          }
+                        </div>
+                        <div className="d-flex align-items-end">
+                          <div>
+                            <span style={{ fontSize: 8 }}>
+                              <FormattedMessage id="TITLE.NAME" />:
+                              {row.approved_name}
+                            </span>
+                            <br />
+                            <span style={{ fontSize: 8 }}>
+                              <FormattedMessage id="TITLE.DATE" />:
+                              {row.approved_at
+                                ? window
+                                  .moment(new Date(row.approved_at))
+                                  .format("DD MMMM YYYY")
+                                : "-"}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-sm"
-                    style={{ height: styleCustom.heightAppvDiv }}
-                  >
-                    <div
-                      className="text-center"
-                      style={{
-                        height: styleCustom.minHeightAppv,
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                      }}
-                    >
-                      {/* <button
-                            type="button"
-                            className="btn btn-primary btn-sm"
-                            style={{ fontSize: 10, marginTop: 20 }}
-                          >
-                            <i
-                              className="fas fa-check-circle"
-                              style={{ fontSize: 10 }}
-                            ></i>
-                            Setuju
-                          </button> */}
-                    </div>
-                    <div className="d-flex align-items-end">
-                      <div>
-                        <span style={{ fontSize: 8 }}>
-                          <FormattedMessage id="TITLE.NAME" />: -
-                        </span>
-                        <br />
-                        <span style={{ fontSize: 8 }}>
-                          <FormattedMessage id="TITLE.DATE" />:
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
