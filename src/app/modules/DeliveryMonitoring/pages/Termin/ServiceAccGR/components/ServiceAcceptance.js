@@ -30,6 +30,7 @@ const ServiceAcceptance = ({ task_sa }) => {
       ) : (
         <DetailSA />
       )}
+
       {/* <FormBuilder
         // ref={formikRef}
         // onSubmit={_handleSubmit}
@@ -60,70 +61,67 @@ const ServiceAcceptance = ({ task_sa }) => {
       </FormBuilder> */}
 
       {/* <Card className="my-5">
-        <CardBody>
-          {task_sa ? (
-            <TablePaginationCustom
-              headerRows={tableHeader1}
-              // width={1210}
-              withPagination={false}
-              withSearch={false}
-              rows={task_sa?.sa_items.map((el, id) => ({
-                no: id + 1,
-                service: el?.short_text,
-                qty: el?.actual_qty,
-                uom: el?.base_uom,
-                unit_price: rupiah(el?.price_unit),
-                net_value: rupiah(el?.net_value),
-              }))}
-              footerComponent={<FooterSA data={task_sa?.sa_items} />}
-            />
-          ) : (
-            <TablePaginationCustom
-              headerRows={tableHeader1}
-              // width={1210}
-              withPagination={false}
-              withSearch={false}
-              rows={[1].map((el, id) => ({
-                no: id + 1,
-                service: "Mobilisasi & Demobilisasi",
-                qty: 1,
-                uom: "AU",
-                unit_price: "Rp 20.000.000,00",
-                net_value: "Rp 20.000.000,00",
-              }))}
-              footerComponent={
-                <React.Fragment>
-                  <RowAdditional
-                    label={"Subtotal"}
-                    value={"Rp 20.000.000,00"}
-                  />
-                  <RowAdditional label={"PPN 10%"} value={`10%`} />
-                  <RowAdditional label={"Total"} value={"Rp 21.000.000,00"} />
-                </React.Fragment>
-              }
-            />
-          )}
-        </CardBody>
-      </Card>
+        <CardBody> */}
+      {task_sa ? (
+        <TablePaginationCustom
+          headerRows={tableHeader1}
+          // width={1210}
+          withPagination={false}
+          withSearch={false}
+          rows={task_sa?.sa_items.map((el, id) => ({
+            no: id + 1,
+            service: el?.short_text,
+            qty: el?.actual_qty,
+            uom: el?.base_uom,
+            unit_price: rupiah(el?.price_unit),
+            net_value: rupiah(el?.net_value),
+          }))}
+          footerComponent={<FooterSA data={task_sa?.sa_items} />}
+        />
+      ) : (
+        <TablePaginationCustom
+          headerRows={tableHeader1}
+          // width={1210}
+          withPagination={false}
+          withSearch={false}
+          rows={[1].map((el, id) => ({
+            no: id + 1,
+            service: "Mobilisasi & Demobilisasi",
+            qty: 1,
+            uom: "AU",
+            unit_price: "Rp 20.000.000,00",
+            net_value: "Rp 20.000.000,00",
+          }))}
+          footerComponent={
+            <React.Fragment>
+              <RowAdditional label={"Subtotal"} value={"Rp 20.000.000,00"} />
+              <RowAdditional label={"PPN 10%"} value={`10%`} />
+              <RowAdditional label={"Total"} value={"Rp 21.000.000,00"} />
+            </React.Fragment>
+          }
+        />
+      )}
+      {/* </CardBody>
+      </Card> */}
 
-      <Card>
-        <CardBody>
-          <TablePaginationCustom
-            headerRows={tableHeader2}
-            // width={1210}
-            withPagination={false}
-            withSearch={false}
-            rows={[1].map((el, id) => ({
-              no: id + 1,
-              name: "Dian PS",
-              position: "IT Asman",
-              activity: "Create GR",
-              start_date: "30 Jan 2021",
-              end_date: "29 Feb 2021",
-              comment: "Test comment",
-            }))}
-          />
-        </CardBody>
+      {/* <Card>
+        <CardBody> */}
+      <TablePaginationCustom
+        headerRows={tableHeader2}
+        // width={1210}
+        withPagination={false}
+        withSearch={false}
+        rows={[1].map((el, id) => ({
+          no: id + 1,
+          name: "Dian PS",
+          position: "IT Asman",
+          activity: "Create GR",
+          start_date: "30 Jan 2021",
+          end_date: "29 Feb 2021",
+          comment: "Test comment",
+        }))}
+      />
+      {/* </CardBody>
       </Card> */}
     </React.Fragment>
   );
