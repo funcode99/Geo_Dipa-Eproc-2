@@ -55,11 +55,11 @@ const TerminPaper = () => {
     if (newTabActive > 0 && thisTask?.approve_status?.name !== "APPROVED") {
       MODAL.showSnackbar("Mohon Approve termin ini terlebih dahulu", "warning");
     } else if (newTabActive === lastTabIndex) {
-      if (!task_sa && !task_gr) {
-        MODAL.showSnackbar("Mohon pastikan BAPP sudah di approve.", "warning");
-      } else {
-        setTabActive(newTabActive);
-      }
+      // if (!task_sa && !task_gr) {
+      //   MODAL.showSnackbar("Mohon pastikan BAPP sudah di approve.", "warning");
+      // } else {
+      setTabActive(newTabActive);
+      // }
     } else {
       setTabActive(newTabActive);
     }

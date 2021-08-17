@@ -59,7 +59,7 @@ const ServiceAcceptance = ({ task_sa }) => {
         )}
       </FormBuilder> */}
 
-      <Card className="my-5">
+      {/* <Card className="my-5">
         <CardBody>
           {task_sa ? (
             <TablePaginationCustom
@@ -124,7 +124,7 @@ const ServiceAcceptance = ({ task_sa }) => {
             }))}
           />
         </CardBody>
-      </Card>
+      </Card> */}
     </React.Fragment>
   );
 };
