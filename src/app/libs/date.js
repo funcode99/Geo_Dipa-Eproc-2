@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { isEmpty } from "lodash";
 
 const formatDate = (date) => {
   return format(date, "d MMM yyy");
@@ -14,10 +15,12 @@ const formatInitialDate = () => {
 };
 
 const formatUpdateDate = (date) => {
+  if (isEmpty(date)) return "-";
   return format(new Date(date), "yyy-MM-dd");
 };
 
 const formatSADate = (date) => {
+  if (isEmpty(date)) return "-";
   return format(new Date(date), "dd.MM.yyyy");
 };
 

@@ -49,65 +49,65 @@ const GoodReceipt = ({ task_gr }) => {
         )}
       </FormBuilder> */}
 
-      <Card className="my-5">
-        <CardBody>
-          {task_gr ? (
-            <TablePaginationCustom
-              headerRows={tblHeadGRItems}
-              // width={1210}
-              withPagination={false}
-              withSearch={false}
-              rows={task_gr?.gr_items.map((el, id) => ({
-                line: el?.line_id,
-                mat_no: el?.mat_doc,
-                desc: "",
-                order_qty: el?.po_pr_qnt,
-                rcvd_qty: el?.entry_qnt,
-                uom: el?.entry_uom,
-                sloc: el?.stge_loc,
-                stor_bin: "",
-              }))}
-            />
-          ) : (
-            <TablePaginationCustom
-              headerRows={tblHeadGRItems}
-              // width={1210}
-              withPagination={false}
-              withSearch={false}
-              rows={[1].map((el, id) => ({
-                line: `000${id}`,
-                mat_no: "",
-                desc: "Voucher Pakaian Kantor Pusat",
-                order_qty: "3.330",
-                rcvd_qty: "3.330",
-                uom: "LBR",
-                sloc: "",
-                stor_bin: "",
-              }))}
-            />
-          )}
-        </CardBody>
-      </Card>
+      {/* <Card className="my-5">
+        <CardBody> */}
+      {task_gr ? (
+        <TablePaginationCustom
+          headerRows={tblHeadGRItems}
+          // width={1210}
+          withPagination={false}
+          withSearch={false}
+          rows={task_gr?.gr_items.map((el, id) => ({
+            line: el?.line_id,
+            mat_no: el?.mat_doc,
+            desc: "",
+            order_qty: el?.po_pr_qnt,
+            rcvd_qty: el?.entry_qnt,
+            uom: el?.entry_uom,
+            sloc: el?.stge_loc,
+            stor_bin: "",
+          }))}
+        />
+      ) : (
+        <TablePaginationCustom
+          headerRows={tblHeadGRItems}
+          // width={1210}
+          withPagination={false}
+          withSearch={false}
+          rows={[1].map((el, id) => ({
+            line: `000${id}`,
+            mat_no: "",
+            desc: "Voucher Pakaian Kantor Pusat",
+            order_qty: "3.330",
+            rcvd_qty: "3.330",
+            uom: "LBR",
+            sloc: "",
+            stor_bin: "",
+          }))}
+        />
+      )}
+      {/* </CardBody>
+      </Card> */}
 
-      <Card>
-        <CardBody>
-          <TablePaginationCustom
-            headerRows={tableHeader2}
-            // width={1210}
-            withPagination={false}
-            withSearch={false}
-            rows={[1].map((el, id) => ({
-              no: id + 1,
-              name: "Dian PS",
-              position: "IT Asman",
-              activity: "Create GR",
-              start_date: "30 Jan 2021",
-              end_date: "29 Feb 2021",
-              comment: "Test comment",
-            }))}
-          />
-        </CardBody>
-      </Card>
+      {/* <Card>
+        <CardBody> */}
+      <TablePaginationCustom
+        headerRows={tableHeader2}
+        // width={1210}
+        withPagination={false}
+        withSearch={false}
+        rows={[1].map((el, id) => ({
+          no: id + 1,
+          name: "Dian PS",
+          position: "IT Asman",
+          activity: "Create GR",
+          start_date: "30 Jan 2021",
+          end_date: "29 Feb 2021",
+          comment: "Test comment",
+        }))}
+      />
+      {/* </CardBody>
+      </Card> */}
     </React.Fragment>
   );
 };

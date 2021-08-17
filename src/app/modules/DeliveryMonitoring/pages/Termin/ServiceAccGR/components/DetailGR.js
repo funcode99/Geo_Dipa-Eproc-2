@@ -211,15 +211,15 @@ const DetailGR = ({ data, type }) => {
 
   const tab2 = useMemo(
     () => [
-      { label: "Number", value: data ? data?.mat_doc : "DUMMY" },
+      { label: "Number", value: data ? data?.mat_doc : "dummy" },
       { label: "Page", value: "1 of 1" },
       {
         label: "Posting Date",
-        value: data ? formatSADate(data?.pstng_date) : "DUMMY",
+        value: data ? formatSADate(data?.pstng_date) : "dummy",
       },
       {
         label: "Document Date",
-        value: data ? formatSADate(data?.doc_date) : "DUMMY",
+        value: data ? formatSADate(data?.doc_date) : "dummy",
       },
     ],
     [data, document]
@@ -235,13 +235,13 @@ const DetailGR = ({ data, type }) => {
   );
   const tab4 = useMemo(
     () => [
-      { label: "PO Number", value: data?.po_number || "DUMMY" },
-      { label: "Movement Type", value: "DUMMY" },
-      { label: "Purchasing Group", value: "DUMMY" },
-      { label: "Telephone", value: "DUMMY" },
+      { label: "PO Number", value: data?.po_number || "dummy" },
+      { label: "Movement Type", value: "dummy" },
+      { label: "Purchasing Group", value: "dummy" },
+      { label: "Telephone", value: "dummy" },
       {
         label: "Delivery Note",
-        value: data?.ext_number || "DUMMY",
+        value: data?.ext_number || "dummy",
       },
     ],
     [data, client]
@@ -313,10 +313,10 @@ const DetailGR = ({ data, type }) => {
           </table>
           <p className={classes.pp}>
             <span className={classes.label}>
-              Ref. Quality Assurance Acceptance Certificate :
+              Ref. Quality Assurance Acceptance Certificate :{`    `}
             </span>
             <span className={classes.txtValue}>
-              {data?.ref_doc_no || "DUMMY"}
+              {data?.ref_doc_no || "dummy"}
             </span>
           </p>
         </Paper>
