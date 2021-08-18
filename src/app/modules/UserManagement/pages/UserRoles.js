@@ -218,7 +218,7 @@ function UserRoles(props) {
     };
     assignBuyers(data)
       .then((response) => {
-        getBuyers().then((result) => {
+        getBuyers(paramsTable).then((result) => {
           setLoading(false);
           setData({
             ...data,
