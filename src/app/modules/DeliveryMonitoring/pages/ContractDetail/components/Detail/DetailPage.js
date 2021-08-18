@@ -290,18 +290,14 @@ const DetailPage = ({
         if (item?.approve_status?.name !== "APPROVED") {
           optionsAction.reverse();
           optionsAction.push({
-            label: "TITLE.APPROVE",
-            icon: "fas fa-check-circle text-success",
-            // disabled:
-            //   item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
-            //     ? true
-            //     : false,
-            type: "approve",
-          });
-          optionsAction.push({
             label: "TITLE.REJECT",
             icon: "fas fa-times-circle text-warning",
             type: "reject",
+          });
+          optionsAction.push({
+            label: "TITLE.APPROVE",
+            icon: "fas fa-check-circle text-success",
+            type: "approve",
           });
           optionsAction.reverse();
         }
