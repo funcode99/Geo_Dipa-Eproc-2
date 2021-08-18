@@ -38,7 +38,7 @@ const ModalApproveTermin = React.forwardRef(
     return (
       <DialogGlobal
         ref={innerRef}
-        title={"Persetujuan Termin (UNDER DEVELOPMENT)"}
+        title={"Persetujuan Termin"}
         textYes={
           <FormattedMessage id={isReject ? "TITLE.REJECT" : "TITLE.APPROVE"} />
         }

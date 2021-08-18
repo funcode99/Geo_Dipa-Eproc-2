@@ -147,13 +147,14 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
           children: "Upload Delivery Order",
           desc: "Unggah Delivery Order yang sudah ditandatangani.",
           type: "upload",
+          disabled: Boolean(data?.percentage < 100),
         };
       }
     }
     return { ...params, onClick: () => openModal(params.type) };
   };
 
-  // console.log(`data`, data);
+  console.log(`data devorderitem`, data);
 
   return (
     <React.Fragment>
@@ -187,14 +188,14 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
                 <div className="kt-widget31__progress">
                   <p className="kt-widget31__stats">
                     <span>Progress</span>
-                    <span>63%</span>
+                    <span>{`${data?.percentage}%`}</span>
                   </p>
                   <div className="progress progress-sm">
                     <div
                       className="progress-bar bg-brand"
                       role="progressbar"
-                      style={{ width: "75%" }}
-                      aria-valuenow="75"
+                      style={{ width: `${data?.percentage}%` }}
+                      aria-valuenow={`${data?.percentage}%`}
                       aria-valuemin="0"
                       aria-valuemax="100"
                     ></div>

@@ -268,96 +268,137 @@ const DetailPage = ({
     (data) => {
       setNewContent([]);
       let arrData = [];
-      arrData = data.map((item, index) => ({
-        number: (index += 1),
-        scope_of_work: (
-          <Button
-            variant="link"
-            onClick={() => {
-              // if (item?.approve_status?.name === "APPROVED")
-              history.push(
-                `/${authStatus}/delivery-monitoring/contract/task/${item.id}`
-              );
-              // else
-              //   MODAL.showSnackbar(
-              //     "Mohon Approve termin ini terlebih dahulu",
-              //     "warning"
-              //   );
-            }}
-          >
-            {/* <NavLink
-            to={`/${authStatus}/delivery-monitoring/contract/task/${item.id}`}
-          > */}
-            {item.name}
-            {/* </NavLink> */}
-          </Button>
-        ),
-        start_date:
-          item.start_date !== null
-            ? formatDate(new Date(item.start_date))
-            : null,
-        due_date:
-          item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
-        bobot: `${item.weight}%`,
-        price: rupiah(item.nett_amount),
-        project_progress: item.progress,
-        document_progress: "",
-        // approve_status: item?.approve_status?.name,
-        // status: item?.approve_status?.name,
-        status: (
-          <StatusRemarks
-            status={item?.approve_status?.name}
-            remarks={item?.reject_text}
-          />
-        ),
-        // status: item?.task_status?.name, //DEPRECATED
-        action: (
-          <ButtonAction
-            data={item}
-            handleAction={handleAction}
-            ops={[
-              {
-                label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
-                icon: "fas fa-search",
-                to: {
-                  url: `/${authStatus}/delivery-monitoring/contract/task/${item.id}`,
-                  style: {
-                    color: "black",
-                  },
-                },
-              },
-              {
-                label: "TITLE.APPROVE",
-                icon: "fas fa-check-circle text-success",
-                // disabled:
-                //   item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
-                //     ? true
-                //     : false,
-                type: "approve",
-              },
-              {
-                label: "TITLE.REJECT",
-                icon: "fas fa-times-circle text-warning",
-                type: "reject",
-              },
-              {
-                label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
-                icon: "fas fa-edit text-primary",
-                disabled:
-                  item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
-                    ? true
-                    : false,
-                type: "update",
-              },
-              {
-                label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
-                icon: "fas fa-trash text-danger",
-                type: "delete",
-              },
-            ]}
-          />
-        ),
-      }));
+      arrData = data.map((item, index) => {
+        let optionsAction = [
+          {
+            label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
+            icon: "fas fa-edit text-primary",
+            disabled:
+              item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+                ? true
+                : false,
+            type: "update",
+          },
+          {
+            label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
+            icon: "fas fa-trash text-danger",
+            type: "delete",
+          },
+        ];
+        console.log(`item`, item);
+
+        if (item?.approve_status?.name !== "APPROVED") {
+          optionsAction.reverse();
+          optionsAction.push({
+            label: "TITLE.APPROVE",
+            icon: "fas fa-check-circle text-success",
+            // disabled:
+            //   item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+            //     ? true
+            //     : false,
+            type: "approve",
+          });
+          optionsAction.push({
+            label: "TITLE.REJECT",
+            icon: "fas fa-times-circle text-warning",
+            type: "reject",
+          });
+          optionsAction.reverse();
+        }
+
+        return {
+          number: (index += 1),
+          scope_of_work: (
+            <Button
+              variant="link"
+              onClick={() => {
+                // if (item?.approve_status?.name === "APPROVED")
+                history.push(
+                  `/${authStatus}/delivery-monitoring/contract/task/${item.id}`
+                );
+                // else
+                //   MODAL.showSnackbar(
+                //     "Mohon Approve termin ini terlebih dahulu",
+                //     "warning"
+                //   );
+              }}
+            >
+              {/* <NavLink
+              to={`/${authStatus}/delivery-monitoring/contract/task/${item.id}`}
+            > */}
+              {item.name}
+              {/* </NavLink> */}
+            </Button>
+          ),
+          start_date:
+            item.start_date !== null
+              ? formatDate(new Date(item.start_date))
+              : null,
+          due_date:
+            item.due_date !== null ? formatDate(new Date(item.due_date)) : null,
+          bobot: `${item.weight}%`,
+          price: rupiah(item.nett_amount),
+          project_progress: item.progress,
+          document_progress: "",
+          // approve_status: item?.approve_status?.name,
+          // status: item?.approve_status?.name,
+          status: (
+            <StatusRemarks
+              status={item?.approve_status?.name}
+              remarks={item?.reject_text}
+            />
+          ),
+          // status: item?.task_status?.name, //DEPRECATED
+          action: (
+            <ButtonAction
+              data={item}
+              handleAction={handleAction}
+              ops={optionsAction}
+              // ops={[
+              //   // {
+              //   //   label: "CONTRACT_DETAIL.TABLE_ACTION.DETAIL",
+              //   //   icon: "fas fa-search",
+              //   //   to: {
+              //   //     url: `/${authStatus}/delivery-monitoring/contract/task/${item.id}`,
+              //   //     style: {
+              //   //       color: "black",
+              //   //     },
+              //   //   },
+              //   // },
+              //   {
+              //     label: "TITLE.APPROVE",
+              //     icon: "fas fa-check-circle text-success",
+              //     // disabled:
+              //     //   item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+              //     //     ? true
+              //     //     : false,
+              //     type: "approve",
+              //   },
+              //   {
+              //     label: "TITLE.REJECT",
+              //     icon: "fas fa-times-circle text-warning",
+              //     type: "reject",
+              //   },
+              //   {
+              //     label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
+              //     icon: "fas fa-edit text-primary",
+              //     disabled:
+              //       item.task_status_id ===
+              //       "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+              //         ? true
+              //         : false,
+              //     type: "update",
+              //   },
+              //   {
+              //     label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
+              //     icon: "fas fa-trash text-danger",
+              //     type: "delete",
+              //   },
+              // ]}
+            />
+          ),
+        };
+      });
       setNewContent(arrData);
     },
     [handleAction]
