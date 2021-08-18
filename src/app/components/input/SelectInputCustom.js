@@ -51,7 +51,7 @@ const formatGroupLabel = (data) => (
   </div>
 );
 
-const SelectInputCustom = ({ listOptions, name, ...other }) => {
+const SelectInputCustom = ({ listOptions, disabled, name, ...other }) => {
   // console.log(`listOptions`, listOptions);
   return (
     <Select
@@ -61,6 +61,7 @@ const SelectInputCustom = ({ listOptions, name, ...other }) => {
       options={listOptions?.[name]}
       formatGroupLabel={formatGroupLabel}
       menuPosition={"fixed"}
+      isDisabled={disabled}
       {...other}
     />
   );

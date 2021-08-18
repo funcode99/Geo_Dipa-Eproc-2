@@ -131,6 +131,7 @@ const KickOffDetail = ({
           initial={initValues}
           fieldProps={{
             listOptions: docOptions,
+            readOnly: !isClient,
           }}
           withSubmit={isClient}
         />

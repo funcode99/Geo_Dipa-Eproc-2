@@ -285,7 +285,7 @@ const DetailPage = ({
             type: "delete",
           },
         ];
-        console.log(`item`, item);
+        // console.log(`item`, item);
 
         if (item?.approve_status?.name !== "APPROVED") {
           optionsAction.reverse();

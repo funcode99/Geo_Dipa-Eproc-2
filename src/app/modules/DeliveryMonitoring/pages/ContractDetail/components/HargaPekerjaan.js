@@ -144,14 +144,14 @@ const HargaPekerjaan = () => {
             </React.Fragment>
           }
         />
-        <Row>
+        <Row className={"mt-3"}>
           <Col md={6}>
             <TitleField title={"Metode Pembayaran"} />
           </Col>
         </Row>
         <Navs
           navLists={navLists}
-          handleSelect={(selectedKey) => setNavActive(selectedKey)}
+          // handleSelect={(selectedKey) => setNavActive(selectedKey)}
           activeKey={navActive}
           style={{ marginBottom: 21 }}
         />

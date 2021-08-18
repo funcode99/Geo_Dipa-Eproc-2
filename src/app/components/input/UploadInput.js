@@ -32,7 +32,7 @@ const UploadInput = ({
           {value?.path ?? <FormattedMessage id="TITLE.CHOOSE_FILE" />}
         </span>
         {isPreview && (
-          <div className="input-group-append">
+          <div className="input-group-append" style={{ zIndex: 1 }}>
             <button
               className={`input-group-text text-center btn btn-sm btn-outline-secondary ${
                 value.path_preview ? "" : "disabled"
@@ -43,7 +43,7 @@ const UploadInput = ({
                 window.open(`${DEV_NODE}/${value.path_preview}`, "_blank")
               }
             >
-              <i className="fas fa-download"></i>
+              <i className="fas fa-eye"></i>
             </button>
           </div>
         )}

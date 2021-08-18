@@ -222,7 +222,7 @@ const ModalTerm = ({
             : null}
         </p>
 
-        {update.update ? (
+        {/* {update.update ? (
           <React.Fragment>
             <InputLabel id="task-status">Status</InputLabel>
             <Select
@@ -249,7 +249,7 @@ const ModalTerm = ({
                 : null}
             </p>
           </React.Fragment>
-        ) : null}
+        ) : null} */}
       </form>
     </DialogGlobal>
   );

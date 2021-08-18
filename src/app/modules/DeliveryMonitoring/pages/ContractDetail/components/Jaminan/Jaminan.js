@@ -198,7 +198,7 @@ export class Jaminan extends PureComponent {
   };
 
   render() {
-    const { loadings } = this.props;
+    const { loadings, status } = this.props;
     const { open } = this.state;
     return (
       <JaminanContext.Provider
@@ -214,22 +214,24 @@ export class Jaminan extends PureComponent {
         <Card>
           <CardBody>
             <TableGuarantee />
-            <div className="d-flex justify-content-end mt-3">
-              <Button
-                variant="contained"
-                color="secondary"
-                size="medium"
-                onClick={this.handleSubmit}
-                disabled={loadings.upload}
-              >
-                <span className="mr-1">Submit</span>
-                {loadings.upload ? (
-                  <CircularProgress size="0.875rem" color="inherit" />
-                ) : (
-                  <Send />
-                )}
-              </Button>
-            </div>
+            {status === "vendor" && (
+              <div className="d-flex justify-content-end mt-3">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="medium"
+                  onClick={this.handleSubmit}
+                  disabled={loadings.upload}
+                >
+                  <span className="mr-1">Submit</span>
+                  {loadings.upload ? (
+                    <CircularProgress size="0.875rem" color="inherit" />
+                  ) : (
+                    <Send />
+                  )}
+                </Button>
+              </div>
+            )}
           </CardBody>
         </Card>
         {BASE_MODAL_CONF.map(({ type, ...other }, id) => (
