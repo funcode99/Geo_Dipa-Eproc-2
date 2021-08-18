@@ -97,6 +97,16 @@ export class TerminPageNew extends PureComponent {
           type: "post",
           ...other,
         });
+        break;
+
+      case KEYS_TERMIN.f_sa_gr:
+        fetch_api_sg({
+          key,
+          url: `/delivery/task/${task_id}/sa-gr`,
+          onSuccess,
+          type: "get",
+          ...other,
+        });
 
         break;
       default:
@@ -116,7 +126,9 @@ export class TerminPageNew extends PureComponent {
           history,
           match,
           task_id,
+
           // task_id: "136dee5a-8670-41e0-a855-c9f346949f06",
+          // task_id: "28a08954-17a4-43d4-a710-7d8f17b3de9e",
           func: {
             onRefresh: this.handleRefresh,
             handleApi: this.handleApiCenter,
@@ -142,6 +154,7 @@ const mapState = (state) => {
     map_state: {
       loadings: {
         [KEYS_TERMIN.f_termin]: getLoading(state, KEYS_TERMIN.f_termin),
+        [KEYS_TERMIN.f_sa_gr]: getLoading(state, KEYS_TERMIN.f_sa_gr),
         [KEYS_TERMIN.p_t_upload_do]: getLoading(
           state,
           KEYS_TERMIN.p_t_upload_do

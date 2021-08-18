@@ -14,12 +14,17 @@ import RowAdditional from "./RowAdditional";
 import { connect } from "react-redux";
 import DetailGR from "./DetailGR";
 
-const GoodReceipt = ({ task_gr }) => {
-  console.log(`task_gr`, task_gr);
+const GoodReceipt = ({ data, loading }) => {
+  const task_gr = data?.task_gr;
+  // console.log(`task_gr`, task_gr);
 
   return (
     <React.Fragment>
-      {task_gr ? <DetailGR data={task_gr?.gr_header} /> : <DetailGR />}
+      {task_gr ? (
+        <DetailGR data={task_gr?.gr_header} fullData={data} />
+      ) : (
+        <DetailGR />
+      )}
       {/* <FormBuilder
         // ref={formikRef}
         // onSubmit={_handleSubmit}
@@ -112,10 +117,12 @@ const GoodReceipt = ({ task_gr }) => {
   );
 };
 
-const mapState = (state) => ({
-  task_gr: state.deliveryMonitoring.dataTask?.task_gr,
-});
+// const mapState = (state) => ({
+//   task_gr: state.deliveryMonitoring.dataTask?.task_gr,
+// });
 
-const mapDispatch = {};
+// const mapDispatch = {};
 
-export default connect(mapState, mapDispatch)(GoodReceipt);
+// export default connect(mapState, mapDispatch)(GoodReceipt);
+
+export default GoodReceipt;

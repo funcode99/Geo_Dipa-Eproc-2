@@ -218,9 +218,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DetailSA = ({ data, type }) => {
+const DetailSA = ({ data, fullData, type }) => {
   const { client, document, vendor, contract } = detailSA;
   const classes = useStyles();
+  console.log(`fullData`, fullData);
   let dataSA = {};
   if (type === "SA") dataSA = data;
 
@@ -239,7 +240,7 @@ const DetailSA = ({ data, type }) => {
       { label: "Page", value: "1 of 1" },
       {
         label: "Posting Date",
-        value: formatSADate(dataSA?.doc_date) || "dummy",
+        value: formatSADate(dataSA?.post_date) || "dummy",
       },
       {
         label: "Document Date",
@@ -250,13 +251,17 @@ const DetailSA = ({ data, type }) => {
   );
   const tab3 = useMemo(
     () => [
-      { value: vendor?.name },
-      { value: vendor?.address1 },
-      { value: vendor?.address2 },
-      { value: vendor?.address3 },
-      { value: " Your vendor number with us:" + vendor?.vendor_number },
+      { value: fullData?.contract?.vendor?.party?.full_name },
+      { value: fullData?.contract?.contract_party?.party_2_legal_domicile },
+      // { value: vendor?.address2 },
+      // { value: vendor?.address3 },
+      {
+        value:
+          " Your vendor number with us:" +
+          fullData?.contract?.vendor?.data?.sap_code,
+      },
     ],
-    [vendor]
+    [vendor, fullData]
   );
   const tab4 = useMemo(
     () => [
@@ -281,7 +286,7 @@ const DetailSA = ({ data, type }) => {
               <span className={classes.txtValue}>{value}</span>
             </p>
           ))}
-          DUMMY
+          {/* DUMMY */}
         </Paper>
       </Grid>
       <Grid item xs={6}>
@@ -302,12 +307,13 @@ const DetailSA = ({ data, type }) => {
       </Grid>
       <Grid item xs={6}>
         <Paper className={classes.paper}>
+          <p className={classes.pp}></p>
           {tab3.map(({ value }, id1) => (
             <p className={classes.pp} key={id1}>
               <span className={classes.txtValue}>{value}</span>
             </p>
           ))}
-          DUMMY
+          {/* DUMMY */}
         </Paper>
       </Grid>
       <Grid item xs={6}>
@@ -318,19 +324,21 @@ const DetailSA = ({ data, type }) => {
               <col width="10px" />
               <col />
             </colgroup>
-            {tab4.map(({ label, value }, id4) => (
-              <tr key={id4}>
-                <td className={"td2"}>
-                  <span className={classes.label}>{label}</span>
-                </td>
-                <td className={"td2"}>
-                  <span className={classes.label}>:</span>
-                </td>
-                <td className={"td2"}>
-                  <span className={classes.txtValue}>{value}</span>
-                </td>
-              </tr>
-            ))}
+            <tbody>
+              {tab4.map(({ label, value }, id4) => (
+                <tr key={id4}>
+                  <td className={"td2"}>
+                    <span className={classes.label}>{label}</span>
+                  </td>
+                  <td className={"td2"}>
+                    <span className={classes.label}>:</span>
+                  </td>
+                  <td className={"td2"}>
+                    <span className={classes.txtValue}>{value}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
           <p className={classes.pp}>
             <span className={classes.label}>

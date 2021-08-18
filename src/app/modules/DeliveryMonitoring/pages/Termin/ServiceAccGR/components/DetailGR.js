@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DetailGR = ({ data, type }) => {
+const DetailGR = ({ data, type, fullData }) => {
   const { client, document, vendor, contract } = detailGR;
   const classes = useStyles();
   let dataSA = {};
@@ -226,16 +226,18 @@ const DetailGR = ({ data, type }) => {
   );
   const tab3 = useMemo(
     () => [
-      { value: vendor?.name },
-      { value: vendor?.address1 },
-      { value: vendor?.address2 },
-      { value: vendor?.address3 },
+      { value: fullData?.contract?.vendor?.party?.full_name },
+      { value: fullData?.contract?.contract_party?.party_2_legal_domicile },
+      // { value: vendor?.name },
+      // { value: vendor?.address1 },
+      // { value: vendor?.address2 },
+      // { value: vendor?.address3 },
     ],
     [vendor]
   );
   const tab4 = useMemo(
     () => [
-      { label: "PO Number", value: data?.po_number || "dummy" },
+      { label: "PO Number", value: fullData?.task_gr?.po_number || "dummy" },
       { label: "Movement Type", value: "dummy" },
       { label: "Purchasing Group", value: "dummy" },
       { label: "Telephone", value: "dummy" },
@@ -244,7 +246,7 @@ const DetailGR = ({ data, type }) => {
         value: data?.ext_number || "dummy",
       },
     ],
-    [data, client]
+    [data, client, fullData]
   );
 
   return (
@@ -257,7 +259,7 @@ const DetailGR = ({ data, type }) => {
               <span className={classes.txtValue}>{value}</span>
             </p>
           ))}
-          DUMMY
+          {/* DUMMY */}
         </Paper>
       </Grid>
       {/* tab2 */}
@@ -285,7 +287,7 @@ const DetailGR = ({ data, type }) => {
               <span className={classes.txtValue}>{value}</span>
             </p>
           ))}
-          DUMMY
+          {/* DUMMY */}
         </Paper>
       </Grid>
       {/* tab4 */}
@@ -297,19 +299,21 @@ const DetailGR = ({ data, type }) => {
               <col width="10px" />
               <col />
             </colgroup>
-            {tab4.map(({ label, value }, id4) => (
-              <tr key={id4}>
-                <td className={"td2"}>
-                  <span className={classes.label}>{label}</span>
-                </td>
-                <td className={"td2"}>
-                  <span className={classes.label}>:</span>
-                </td>
-                <td className={"td2"}>
-                  <span className={classes.txtValue}>{value}</span>
-                </td>
-              </tr>
-            ))}
+            <tbody>
+              {tab4.map(({ label, value }, id4) => (
+                <tr key={id4}>
+                  <td className={"td2"}>
+                    <span className={classes.label}>{label}</span>
+                  </td>
+                  <td className={"td2"}>
+                    <span className={classes.label}>:</span>
+                  </td>
+                  <td className={"td2"}>
+                    <span className={classes.txtValue}>{value}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
           <p className={classes.pp}>
             <span className={classes.label}>

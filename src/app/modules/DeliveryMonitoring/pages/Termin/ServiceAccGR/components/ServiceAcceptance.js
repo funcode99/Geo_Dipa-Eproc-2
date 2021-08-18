@@ -20,55 +20,25 @@ import { rupiah } from "../../../../../../libs/currency";
 import FooterSA from "./FooterSA";
 import RowAdditional from "./RowAdditional";
 
-const ServiceAcceptance = ({ task_sa }) => {
+const ServiceAcceptance = ({ data, loading }) => {
+  const task_sa = data?.task_sa;
   // const { sa_header, sa_items } = task_sa;
 
   return (
     <React.Fragment>
       {task_sa ? (
-        <DetailSA data={task_sa?.sa_header} type="SA" />
+        <DetailSA data={task_sa?.sa_header} fullData={data} type="SA" />
       ) : (
         <DetailSA />
       )}
 
-      {/* <FormBuilder
-        // ref={formikRef}
-        // onSubmit={_handleSubmit}
-        // formData={formData3}
-        // loading={loadings.post}
-        // initial={initialValues}
-        // validation={isClient ? validationClient : validationVendor}
-        fieldProps={{
-          readOnly: false,
-          // disabledFields: disabledInput,
-          // disabledFields: disabledInput.filter((el) =>
-          //   isClient
-          //     ? !allowedClient.includes(el)
-          //     : !allowedVendor.includes(el)
-          // ),
-        }}
-      >
-        {({ fieldProps }) => (
-          <Row>
-            <Col>
-              <FieldBuilder formData={formData1} {...fieldProps} />
-            </Col>
-            <Col>
-              <FieldBuilder formData={formData2} {...fieldProps} />
-            </Col>
-          </Row>
-        )}
-      </FormBuilder> */}
-
-      {/* <Card className="my-5">
-        <CardBody> */}
       {task_sa ? (
         <TablePaginationCustom
           headerRows={tableHeader1}
           // width={1210}
           withPagination={false}
           withSearch={false}
-          rows={task_sa?.sa_items.map((el, id) => ({
+          rows={task_sa?.sa_items?.map((el, id) => ({
             no: id + 1,
             service: el?.short_text,
             qty: el?.actual_qty,
@@ -101,11 +71,6 @@ const ServiceAcceptance = ({ task_sa }) => {
           }
         />
       )}
-      {/* </CardBody>
-      </Card> */}
-
-      {/* <Card>
-        <CardBody> */}
       <TablePaginationCustom
         headerRows={tableHeader2}
         // width={1210}
@@ -121,16 +86,16 @@ const ServiceAcceptance = ({ task_sa }) => {
           comment: "Test comment",
         }))}
       />
-      {/* </CardBody>
-      </Card> */}
     </React.Fragment>
   );
 };
 
-const mapState = (state) => ({
-  task_sa: state.deliveryMonitoring.dataTask?.task_sa,
-});
+// const mapState = (state) => ({
+//   task_sa: state.deliveryMonitoring.dataTask?.task_sa,
+// });
 
-const mapDispatch = {};
+// const mapDispatch = {};
 
-export default connect(mapState, mapDispatch)(ServiceAcceptance);
+// export default connect(mapState, mapDispatch)(ServiceAcceptance);
+
+export default ServiceAcceptance;

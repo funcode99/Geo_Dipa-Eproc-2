@@ -17,7 +17,7 @@ export const KEYS_TERMIN = {
   f_bast: "fetch-bast",
   f_sv_acc: "fetch-sv_acc",
   f_gr: "fetch-gr",
-
+  f_sa_gr: "fetch-sa-gr",
   // upload
 
   // post
