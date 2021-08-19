@@ -688,6 +688,7 @@ function ContractInvoicePage(props) {
                       defaultValue={
                         invoiceData ? invoiceData["invoice_no"] : null
                       }
+                      {...formik.getFieldProps("invoice_no")}
                       onChange={(e) => {
                         dataFormInvoice.invoice_no = e.target.value;
                         props.set_data_invoice_vendor(dataFormInvoice);
@@ -762,6 +763,7 @@ function ContractInvoicePage(props) {
                       defaultValue={
                         invoiceData ? invoiceData["description"] : null
                       }
+                      {...formik.getFieldProps("description")}
                       onChange={(e) => {
                         dataFormInvoice.description = e.target.value;
                         props.set_data_invoice_vendor(dataFormInvoice);
