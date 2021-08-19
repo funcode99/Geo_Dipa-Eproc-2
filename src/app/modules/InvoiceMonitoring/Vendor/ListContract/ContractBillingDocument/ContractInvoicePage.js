@@ -92,6 +92,7 @@ function ContractInvoicePage(props) {
     invoice_term_id: termin,
     tax_bool: false,
     tax_date: new Date(Date.now()),
+    tax_date_yesterday: new Date(Date.now() - 86400000),
   };
 
   const headerTable = [
@@ -161,7 +162,7 @@ function ContractInvoicePage(props) {
         is: true,
         then: Yup.date()
           .min(
-            Yup.ref("tax_date"),
+            Yup.ref("tax_date_yesterday"),
             intl.formatMessage({
               id:
                 "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
@@ -408,6 +409,9 @@ function ContractInvoicePage(props) {
             "tax_date",
             new Date(response.data.data.tax_date)
           );
+          var d = new Date(response.data.data.tax_date);
+          d.setDate(d.getDate() - 1);
+          formik.setFieldValue("tax_date_yesterday", new Date(d));
           formik.setFieldValue("tax_bool", true);
         }
       })
