@@ -157,6 +157,15 @@ function ContractHardCopyDoc(props) {
     shallowEqual
   );
 
+  const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
+  const monitoring_role =
+    data_login.monitoring_role ? data_login.monitoring_role
+      : [];
+
+  const [approveHardCopyRole] = useState(
+    monitoring_role.findIndex((element) => element === "Verification Staff") >= 0
+  );
+
   const [modalReject, setModalReject] = useState({
     statusDialog: false,
     data: {},
@@ -823,6 +832,7 @@ function ContractHardCopyDoc(props) {
                             (item.hardcopy_state === null || item.hardcopy_state === "REJECTED") &&
                             (item.softcopy_state !== null) &&
                             statusHardCopy &&
+                            approveHardCopyRole &&
                             (
                               <ButtonAction
                                 data={item}
@@ -940,7 +950,8 @@ function ContractHardCopyDoc(props) {
                                               els.document_monitoring
                                                 ?.hardcopy_state ===
                                               "REJECTED") &&
-                                            statusHardCopy && (
+                                            statusHardCopy &&
+                                            approveHardCopyRole && (
                                               <ButtonAction
                                                 data={els}
                                                 handleAction={
@@ -986,6 +997,7 @@ function ContractHardCopyDoc(props) {
                                       el?.url &&
                                       (el.document_monitoring?.hardcopy_state === null || el.document_monitoring?.hardcopy_state === "REJECTED") &&
                                       statusHardCopy &&
+                                      approveHardCopyRole &&
                                       (
                                         <ButtonAction
                                           data={el}
@@ -1093,7 +1105,8 @@ function ContractHardCopyDoc(props) {
                             (item.hardcopy_state === null ||
                               item.hardcopy_state === "REJECTED") &&
                             item.softcopy_state !== null &&
-                            statusHardCopy && (
+                            statusHardCopy &&
+                            approveHardCopyRole && (
                               <ButtonAction
                                 data={item}
                                 handleAction={handleAction}
