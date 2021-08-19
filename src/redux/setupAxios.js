@@ -2,6 +2,7 @@ import { MODAL } from "../service/modalSession/ModalService";
 import { DEV_NODE } from "./BaseHost";
 export default function setupAxios(axios, store) {
   axios.defaults.baseURL = DEV_NODE;
+  axios.defaults.headers.post["Content-Type"] = "application/json";
   axios.interceptors.request.use(
     (config) => {
       const {

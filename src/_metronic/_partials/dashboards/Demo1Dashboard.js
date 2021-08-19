@@ -19,7 +19,7 @@ export function Demo1Dashboard() {
         <div className="col-lg-6 col-xxl-4">
           <MixedWidget1 className="card-stretch gutter-b" />
         </div>
-        <div className="col-lg-6 col-xxl-4">
+        <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "95vh" }}>
           <ListsWidget9 className="card-stretch gutter-b" />
         </div>
 
