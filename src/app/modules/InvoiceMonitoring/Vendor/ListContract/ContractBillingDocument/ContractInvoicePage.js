@@ -741,7 +741,7 @@ function ContractInvoicePage(props) {
                       }}
                     />
                   </div>
-                  {formik.touched.dateInvoice && formik.errors.from_time ? (
+                  {formik.touched.from_time && formik.errors.from_time ? (
                     <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.from_time}
                     </span>
