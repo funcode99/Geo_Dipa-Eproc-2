@@ -30,7 +30,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function ListsWidget9({ className, intl }) {
+export function ListsWidget9({ className }) {
   const [loading, setLoading] = useState(false);
   const [period, setPeriod] = useState([]);
   const [indentPeriod, setIndentPeriod] = useState(null);
@@ -57,12 +57,7 @@ export function ListsWidget9({ className, intl }) {
         console.log("getActivityPeriod:", result);
       })
       .catch((err) => {
-        setToast(
-          intl.formatMessage({
-            id: "REQ.REQUEST_FAILED",
-          }),
-          5000
-        );
+        setToast(<FormattedMessage id="REQ.REQUEST_FAILED" />, 5000);
       });
   };
 
@@ -74,12 +69,7 @@ export function ListsWidget9({ className, intl }) {
         console.log("callActivities:", result);
       })
       .catch((err) => {
-        setToast(
-          intl.formatMessage({
-            id: "REQ.REQUEST_FAILED",
-          }),
-          5000
-        );
+        setToast(<FormattedMessage id="REQ.REQUEST_FAILED" />, 5000);
       });
   };
 
@@ -98,12 +88,7 @@ export function ListsWidget9({ className, intl }) {
         console.log("callActivitiy:", result);
       })
       .catch((err) => {
-        setToast(
-          intl.formatMessage({
-            id: "REQ.REQUEST_FAILED",
-          }),
-          5000
-        );
+        setToast(<FormattedMessage id="REQ.REQUEST_FAILED" />, 5000);
       });
   };
 
