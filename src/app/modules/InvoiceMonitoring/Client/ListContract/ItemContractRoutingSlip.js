@@ -439,7 +439,7 @@ function ItemContractRoutingSlip(props) {
                     {/* <span>171.666.000</span> */}
                   </div>
                 </div>
-                {slipData?.tax?.tax_selected.map((item, index) => {
+                {slipData?.tax?.tax_selected?.map((item, index) => {
                   const data = JSON.parse(item?.value)
                   return (
                     <div className="row mt-3" key={index}>
