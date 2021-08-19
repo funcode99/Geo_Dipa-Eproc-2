@@ -42,6 +42,7 @@ import {
   Checkbox
 } from "@material-ui/core";
 import { getRolesBKB, getRolesAccounting, getRolesSignedGiro } from "../../../Master/service/MasterCrud";
+import { useParams } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -54,7 +55,7 @@ function ItemContractBKB(props) {
   });
 
   const { intl, setProgressTermin, setDataProgress } = props;
-  const termin = props.match.params.termin;
+  const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
   const main_authority = "Pusat"
   const unit_authority = "Unit"
@@ -200,7 +201,8 @@ function ItemContractBKB(props) {
         approved_bkb_id: data_login.user_id,
         term_id: termin,
         desc: bkbData.desc,
-        approved_bkb_role_id: modalApproved.role_id
+        approved_bkb_role_id: modalApproved.role_id,
+        contract_id: contract
       }
       approveBkb(data)
         .then((result) => {
@@ -226,7 +228,9 @@ function ItemContractBKB(props) {
         id: bkbData.id,
         desc: bkbData.desc,
         doc_park_ap_no: parkApInput,
-        doc_park_ap_submit_id: data_login.user_id
+        doc_park_ap_submit_id: data_login.user_id,
+        term_id: termin,
+        contract_id: contract
       }
       submitParkAP(data)
         .then((result) => {
@@ -252,7 +256,9 @@ function ItemContractBKB(props) {
         id: bkbData.id,
         desc: bkbData.desc,
         doc_park_ap_no: parkApInput,
-        doc_park_ap_update_id: data_login.user_id
+        doc_park_ap_update_id: data_login.user_id,
+        term_id: termin,
+        contract_id: contract
       }
       updateParkAP(data)
         .then((result) => {
@@ -278,7 +284,8 @@ function ItemContractBKB(props) {
         id: bkbData.id,
         doc_park_ap_approved_id: data_login.user_id,
         desc: bkbData.desc,
-        term_id: termin
+        term_id: termin,
+        contract_id: contract
       }
       approveParkAP(data)
         .then((result) => {
@@ -309,7 +316,9 @@ function ItemContractBKB(props) {
         id: bkbData.id,
         doc_park_byr_no: parkByrInput,
         doc_park_byr_submit_id: data_login.user_id,
-        desc: bkbData.desc
+        desc: bkbData.desc,
+        term_id: termin,
+        contract_id: contract
       }
       submitParkBYR(data)
         .then((result) => {
@@ -335,7 +344,9 @@ function ItemContractBKB(props) {
         id: bkbData.id,
         desc: bkbData.desc,
         doc_park_byr_no: parkByrInput,
-        doc_park_byr_update_id: data_login.user_id
+        doc_park_byr_update_id: data_login.user_id,
+        term_id: termin,
+        contract_id: contract
       }
       updateParkBYR(data)
         .then((result) => {
@@ -362,6 +373,7 @@ function ItemContractBKB(props) {
         doc_park_byr_approved_id: data_login.user_id,
         desc: bkbData.desc,
         term_id: termin,
+        contract_id: contract,
         giro_signed_data: giroSignedData
       }
       approveParkBYR(data)
@@ -398,7 +410,9 @@ function ItemContractBKB(props) {
         index: index,
         giro_signed_data: giro_signed_data,
         user_id: data_login.user_id,
-        desc: bkbData.desc
+        desc: bkbData.desc,
+        term_id: termin,
+        contract_id: contract
       }
       approveGiro(data)
         .then((result) => {
@@ -440,7 +454,8 @@ function ItemContractBKB(props) {
         bkb_number: bkbData.bkb_number,
         doc_park_ap_submit_id: bkbData.doc_park_ap_updated_id ? bkbData.doc_park_ap_updated_id : bkbData.doc_park_ap_submit_id,
         doc_park_ap_submit_at: bkbData.doc_park_ap_updated_at ? bkbData.doc_park_ap_updated_at : bkbData.doc_park_ap_submit_at,
-        term_id: termin
+        term_id: termin,
+        contract_id: contract
       }
       rejectParkAP(data)
         .then((result) => {
@@ -471,7 +486,8 @@ function ItemContractBKB(props) {
         bkb_number: bkbData.bkb_number,
         doc_park_byr_submit_id: bkbData.doc_park_byr_updated_id ? bkbData.doc_park_byr_updated_id : bkbData.doc_park_byr_submit_id,
         doc_park_byr_submit_at: bkbData.doc_park_byr_updated_at ? bkbData.doc_park_byr_updated_at : bkbData.doc_park_byr_submit_at,
-        term_id: termin
+        term_id: termin,
+        contract_id: contract
       }
       rejectParkBYR(data)
         .then((result) => {
@@ -498,7 +514,9 @@ function ItemContractBKB(props) {
         id: bkbData.id,
         desc: bkbData.desc,
         user_id: data_login.user_id,
-        rejected_remark: note
+        rejected_remark: note,
+        term_id: termin,
+        contract_id: contract
       }
       rejectBkb(data)
         .then((result) => {
