@@ -312,11 +312,11 @@ export function ListsWidget9({ className }) {
                         <span className="text-muted">
                           Nomor Kontrak{" "}
                           <span className="text-danger">
-                            {item.contract_no}
+                            {item.contract_no + " (" + item.vendor_name + ")"}
                           </span>
-                          .{" "}
+                          -{" "}
                         </span>
-                        {`${item.activity_name}. ${item.vendor_name}`}
+                        {`${item.activity_name}(${item.name_user})`}
                         <span className="text-muted">
                           (
                           {window
