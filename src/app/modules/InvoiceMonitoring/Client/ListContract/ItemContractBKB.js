@@ -23,7 +23,8 @@ import {
   rejectParkBYR,
   updateParkBYR,
   rejectBkb,
-  approveGiro
+  approveGiro,
+  getContractAuthority
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -41,7 +42,7 @@ import {
   FormControlLabel,
   Checkbox
 } from "@material-ui/core";
-import { getRolesBKB, getRolesAccounting, getRolesSignedGiro } from "../../../Master/service/MasterCrud";
+import { getRolesBKB, getRolesAccounting, getRolesSignedGiro, getRolesParkBYR } from "../../../Master/service/MasterCrud";
 import { useParams } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -61,8 +62,8 @@ function ItemContractBKB(props) {
   const unit_authority = "Unit"
 
   const [bkbData, setBkbData] = useState(null);
-  const [mainRolesBKBData, setMainRolesBKBData] = useState(null);
-  const [mainRolesSignedGiroData, setMainRolesSignedGiroData] = useState(null);
+  const [rolesBKBData, setRolesBKBData] = useState(null);
+  const [rolesSignedGiroData, setRolesSignedGiroData] = useState(null);
   const [parkApInput, setParkApInput] = useState('');
   const [parkByrInput, setParkByrInput] = useState('');
   const [parkApstaff, setParkApStaff] = useState('');
@@ -73,44 +74,10 @@ function ItemContractBKB(props) {
   const monitoring_role = data_login.monitoring_role
     ? data_login.monitoring_role
     : [];
-  const [monitoringTax] = useState(
-    monitoring_role.find((element) => element === "Treasury Assistant Manager")
-  );
-  const [monitoringFinance] = useState(
-    monitoring_role.find((element) => element === "Finance Manager")
-  );
-  const [monitoringFinanceDirec] = useState(
-    monitoring_role.find((element) => element === "Direktur Keuangan")
-  );
-  const [approveBkbStaff] = useState(
-    monitoring_role.findIndex((element) => element === "General Ledger Staff") >= 0
-  );
+  const [submitParkAPStaff, setSubmitParkAPStaff] = useState(false);
   const [approveParkAPStaff, setApproveParkAPStaff] = useState(false);
-
-  const [submitParkByrStaff] = useState(
-    monitoring_role.findIndex((element) => element === "Treasury Staff") >= 0
-  );
-
-  const [approveParkByrStaff] = useState(
-    monitoring_role.findIndex((element) => element === "Treasury Staff") >= 0
-  );
-
-  const [signedGiroDirut] = useState(
-    monitoring_role.find((element) => element === "Direktur Utama")
-  );
-
-  const [signedGiroDir] = useState(
-    monitoring_role.find((element) => element === "Direktur")
-  );
-
-  const [signedGiroDirkeu] = useState(
-    monitoring_role.find((element) => element === "Direktur Keuangan")
-  );
-
-  const [signedGiroFinMan] = useState(
-    monitoring_role.find((element) => element === "Finance Manager")
-  );
-
+  const [submitParkByrStaff, setSubmitParkByrStaff] = useState(false);
+  const [approveParkByrStaff, setApproveParkByrStaff] = useState(false);
   const [modalApproved, setModalApproved] = useState({
     statusDialog: false,
     data: {},
@@ -139,18 +106,54 @@ function ItemContractBKB(props) {
           setBkbData(response["data"]["data"]);
           setParkApInput(response["data"]["data"]["doc_park_ap_no"]);
           setParkByrInput(response["data"]["data"]["doc_park_byr_no"]);
-          getRolesAccounting(main_authority)
-            .then(responseRoles => {
-              let sub_total = response.data.data.sub_total
-              responseRoles.data.data.map((row, key) => {
-                if (parseFloat(sub_total) >= row.min_value && parseFloat(sub_total) <= row.max_value) {
-                  setApproveParkAPStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
-                }
-              })
+          getContractAuthority(termin)
+            .then((responseAuthority) => {
+              if (responseAuthority["data"]["data"]) {
+                getRolesBKB(responseAuthority["data"]["data"]["authority"])
+                  .then((responseRoles) => {
+                    setRolesBKBData(responseRoles["data"]["data"]);
+                  })
+                  .catch((error) => {
+                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                  });
+                getRolesAccounting(responseAuthority["data"]["data"]["authority"])
+                  .then(responseRoles => {
+                    let sub_total = response.data.data.sub_total
+                    responseRoles.data.data.map((row, key) => {
+                      if (parseFloat(sub_total) >= row.min_value && parseFloat(sub_total) <= row.max_value) {
+                        setApproveParkAPStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
+                        setSubmitParkAPStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
+                      }
+                    })
+                  })
+                  .catch(() => {
+                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                  })
+                getRolesParkBYR(responseAuthority["data"]["data"]["authority"])
+                  .then(responseRoles => {
+                    let sub_total = response.data.data.sub_total
+                    responseRoles.data.data.map((row, key) => {
+                      if (parseFloat(sub_total) >= row.min_value && parseFloat(sub_total) <= row.max_value) {
+                        setApproveParkByrStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
+                        setSubmitParkByrStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
+                      }
+                    })
+                  })
+                  .catch(() => {
+                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                  })
+                getRolesSignedGiro(responseAuthority["data"]["data"]["authority"])
+                  .then((response) => {
+                    setRolesSignedGiroData(response["data"]["data"]);
+                  })
+                  .catch((error) => {
+                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                  });
+              }
             })
-            .catch(() => {
-              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-            })
+            .catch((error) => {
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+            });
         }
       })
       .catch((error) => {
@@ -158,29 +161,13 @@ function ItemContractBKB(props) {
       });
   }, [termin, intl, setToast]);
 
-  const getRolesBKBData = useCallback(() => {
-    getRolesBKB(main_authority)
-      .then((response) => {
-        setMainRolesBKBData(response["data"]["data"]);
-      })
-      .catch((error) => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      });
-  }, [termin, intl, setToast]);
 
-  const getRolesSignedGiroData = useCallback(() => {
-    getRolesSignedGiro(main_authority)
-      .then((response) => {
-        setMainRolesSignedGiroData(response["data"]["data"]);
-      })
-      .catch((error) => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-      });
+  const getContractAuthorityData = useCallback(() => {
+
   }, [termin, intl, setToast]);
 
   useEffect(getBkbData, []);
-  useEffect(getRolesBKBData, []);
-  useEffect(getRolesSignedGiroData, []);
+  useEffect(getContractAuthorityData, []);
 
   const print = () => {
     var printContents = window.$("#printBkb").html();
@@ -226,7 +213,7 @@ function ItemContractBKB(props) {
     } else if (modalApproved.data === "submitDataParkAp") {
       const data = {
         id: bkbData.id,
-        desc: bkbData.desc,
+        desc: bkbData.desc ? bkbData.desc : "",
         doc_park_ap_no: parkApInput,
         doc_park_ap_submit_id: data_login.user_id,
         term_id: termin,
@@ -657,9 +644,9 @@ function ItemContractBKB(props) {
           {modalApproved.data === "monitoringApproveParkBYR" && <FormattedMessage id="TITLE.CHOOSE_BKB_GIRO_SIGNED" />}
           {modalApproved.data === "monitoringApproveParkBYR" &&
             <div className="row">
-              {/* mainRolesSignedGiroData */}
+              {/* rolesSignedGiroData */}
               <div className="my-3">
-                {mainRolesSignedGiroData?.map((row, key) => {
+                {rolesSignedGiroData?.map((row, key) => {
                   return (
                     <FormControlLabel
                       className="col-sm-3 mx-0 mb-1"
@@ -1279,7 +1266,7 @@ function ItemContractBKB(props) {
                 {(((bkbData?.doc_park_ap_state === 'PENDING' ||
                   bkbData?.doc_park_ap_state === 'APPROVED') &&
                   bkbData?.doc_park_ap_no) ||
-                  !approveBkbStaff ||
+                  !submitParkAPStaff ||
                   !bkbData) &&
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
@@ -1293,7 +1280,7 @@ function ItemContractBKB(props) {
                 {(!bkbData?.doc_park_ap_no ||
                   bkbData?.doc_park_ap_state === 'REJECTED') &&
                   bkbData &&
-                  approveBkbStaff &&
+                  submitParkAPStaff &&
                   <div className="row border-bottom">
                     <div className="col-sm-12">
                       <div className="form-group row mb-0">
@@ -1469,7 +1456,7 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                     <div className="row">
-                      {mainRolesBKBData?.map((row, key) => {
+                      {rolesBKBData?.map((row, key) => {
                         if (parseFloat(bkbData?.sub_total) >= row?.min_value && parseFloat(bkbData?.sub_total) <= row?.max_value) {
                           return (
                             <div className="col-sm border text-center px-0" key={key}>
@@ -1481,7 +1468,7 @@ function ItemContractBKB(props) {
                       )}
                     </div>
                     <div className="row">
-                      {mainRolesBKBData?.map((row, key) => {
+                      {rolesBKBData?.map((row, key) => {
                         if (parseFloat(bkbData?.sub_total) >= row?.min_value && parseFloat(bkbData?.sub_total) <= row?.max_value) {
                           return (
                             <div
@@ -1497,10 +1484,7 @@ function ItemContractBKB(props) {
                                   paddingBottom: 5,
                                 }}
                               >
-                                {((monitoringFinanceDirec === row.name) ||
-                                  (monitoringFinance === row.name) ||
-                                  (monitoringTax === row.name)
-                                ) &&
+                                {(monitoring_role.findIndex((element) => element === row.name) >= 0) &&
                                   bkbData?.approved_bkb_id === null &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button
@@ -1523,10 +1507,7 @@ function ItemContractBKB(props) {
                                       <FormattedMessage id="TITLE.APPROVE" />
                                     </button>
                                   )}
-                                {((monitoringFinanceDirec === row.name) ||
-                                  (monitoringFinance === row.name) ||
-                                  (monitoringTax === row.name)
-                                ) &&
+                                {(monitoring_role.findIndex((element) => element === row.name) >= 0) &&
                                   bkbData?.approved_bkb_id === null &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button

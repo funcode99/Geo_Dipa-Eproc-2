@@ -773,7 +773,7 @@ function ContractTaxPage(props) {
                       taxData?.state === "REJECTED" ||
                       taxData?.state === "APPROVED" ||
                       taxData === null ||
-                      props.ApproveStafStatus
+                      !props.setTaxStaffStatus
                     }
                     options={listTax.map((el) => ({
                       label: el.type_tax + " - " + el.group_tax,
@@ -802,7 +802,7 @@ function ContractTaxPage(props) {
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
               taxData === null ||
-              props.ApproveStafStatus ||
+              !props.setTaxStaffStatus ||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
@@ -817,7 +817,7 @@ function ContractTaxPage(props) {
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
               taxData === null ||
-              props.ApproveStafStatus ||
+              !props.setTaxStaffStatus ||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"

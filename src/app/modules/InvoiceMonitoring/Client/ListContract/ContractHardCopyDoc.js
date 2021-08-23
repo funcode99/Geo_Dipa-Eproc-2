@@ -23,7 +23,8 @@ import {
   checkBkbExist,
   getInvoice,
   getContractSummary,
-  getTerminProgress
+  getTerminProgress,
+  getContractAuthority
 } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
@@ -52,6 +53,9 @@ import useToast from "../../../../components/toast";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import {
+  getRolesAcceptance
+} from '../../../Master/service/MasterCrud';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -162,9 +166,7 @@ function ContractHardCopyDoc(props) {
     data_login.monitoring_role ? data_login.monitoring_role
       : [];
 
-  const [approveHardCopyRole] = useState(
-    monitoring_role.findIndex((element) => element === "Verification Staff") >= 0
-  );
+  const [approveHardCopyRole, setApproveHardCopyRole] = useState(false);
 
   const [modalReject, setModalReject] = useState({
     statusDialog: false,
@@ -459,7 +461,8 @@ function ContractHardCopyDoc(props) {
     setModalApproved({ ...modalApproved, loading: true });
     var data = {
       hardcopy_approved_by_id: user_id,
-      term_id: termin
+      term_id: termin,
+      contract_id: contract_id
     };
     const document_monitoring_id = modalApproved.data.document_monitoring
       ? modalApproved.data.document_monitoring.id
@@ -576,11 +579,31 @@ function ContractHardCopyDoc(props) {
       });
   }, [contract_id, setInvoiceData, intl, setToast]);
 
+  const getContractAuthorityData = useCallback(() => {
+    getContractAuthority(termin)
+      .then((response) => {
+        if (response["data"]["data"]) {
+          getRolesAcceptance(response["data"]["data"]["authority"])
+            .then(responseRoles => {
+              responseRoles["data"]["data"].map((item, index) => {
+                if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+                  setApproveHardCopyRole(true)
+                }
+              })
+            })
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(callApi, []);
   useEffect(callApiContractSoftCopy, []);
   useEffect(callApiBillingHardCopy, []);
   useEffect(checkBkb, []);
   useEffect(getInvoiceData, []);
+  useEffect(getContractAuthorityData, []);
 
   const print = () => {
     var printContents = window.$("#printPerlengkapan").html();
