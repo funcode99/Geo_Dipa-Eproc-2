@@ -715,7 +715,7 @@ function ContractInvoicePage(props) {
                         invoiceData?.state === "REJECTED" ||
                         invoiceData?.state === "APPROVED" ||
                         invoiceData === null ||
-                        props.verificationStafStatus ||
+                        !props.billingStaffStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY"
                         ? "NumberFormat-text"
                         : "NumberFormat-input"
@@ -726,7 +726,7 @@ function ContractInvoicePage(props) {
                         invoiceData?.state === "REJECTED" ||
                         invoiceData?.state === "APPROVED" ||
                         invoiceData === null ||
-                        props.verificationStafStatus ||
+                        !props.billingStaffStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY"
                         ? "text"
                         : "input"
@@ -758,7 +758,7 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
-              props.verificationStafStatus ||
+              !props.billingStaffStatus ||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
@@ -773,7 +773,7 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
-              props.verificationStafStatus ||
+              !props.billingStaffStatus ||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"

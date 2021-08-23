@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
@@ -47,12 +47,16 @@ import {
   sendNotifSoftCopySupportDeliverables,
   createTerminProgress,
   getTerminProgress,
-  sendNotifSoftCopyRequest
+  sendNotifSoftCopyRequest,
+  getContractAuthority
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
+import {
+  getRolesAcceptance, getRolesAcceptanceTax
+} from '../../../Master/service/MasterCrud';
 
 const styles = (theme) => ({
   root: {
@@ -199,6 +203,8 @@ function ItemContractInvoice(props) {
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
+  const [billingStaffStatus, setBillingStaffStatus] = useState(false);
+  const [taxStaffStatus, setTaxStaffStatus] = useState(false);
   const [loadingDeliverables, setLoadingDeliverables] = useState(false);
   const [modalReject, setModalReject] = useState({
     statusDialog: false,
@@ -221,17 +227,9 @@ function ItemContractInvoice(props) {
   });
   const user_id = useSelector((state) => state.auth.user.data.user_id);
   const dataUser = useSelector((state) => state.auth.user.data);
-  let verificationStafStatus = false;
-  let ApproveStafStatus = false;
-  let monitoring_role = dataUser.monitoring_role
-    ? dataUser.monitoring_role
+  let monitoring_role =
+    dataUser.monitoring_role ? dataUser.monitoring_role
     : [];
-  verificationStafStatus =
-    monitoring_role.findIndex((element) => element === "Verification Staff") >=
-    0;
-  ApproveStafStatus =
-    monitoring_role.findIndex((element) => element === "Tax Administration Staff") >=
-    0;
   const [uploadFilename, setUploadFilename] = useState(
     intl.formatMessage({
       id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
@@ -471,8 +469,37 @@ function ItemContractInvoice(props) {
     }
   };
 
+  const getContractAuthorityData = useCallback(() => {
+    getContractAuthority(termin)
+      .then((response) => {
+        if (response["data"]["data"]) {
+          getRolesAcceptance(response["data"]["data"]["authority"])
+            .then(responseRoles => {
+              responseRoles["data"]["data"].map((item, index) => {
+                if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+                  setBillingStaffStatus(true)
+                }
+              })
+            })
+          getRolesAcceptanceTax(response["data"]["data"]["authority"])
+            .then(responseRoles => {
+              console.log(responseRoles)
+              responseRoles["data"]["data"].map((item, index) => {
+                if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+                  setTaxStaffStatus(true)
+                }
+              })
+            })
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(callApi, []);
   useEffect(callApiContractSoftCopy, []);
+  useEffect(getContractAuthorityData, []);
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
