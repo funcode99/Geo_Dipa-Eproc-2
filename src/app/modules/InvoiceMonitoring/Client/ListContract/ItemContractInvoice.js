@@ -1521,7 +1521,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
-                verificationStafStatus={!verificationStafStatus}
+                billingStaffStatus={billingStaffStatus}
               />
             </div>
           )}
@@ -1533,7 +1533,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
-                verificationStafStatus={!verificationStafStatus}
+                billingStaffStatus={billingStaffStatus}
               />
             </div>
           )}
@@ -1545,7 +1545,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
-                verificationStafStatus={!verificationStafStatus}
+                billingStaffStatus={billingStaffStatus}
               />
             </div>
           )}
@@ -1557,8 +1557,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
-                verificationStafStatus={!verificationStafStatus}
-                ApproveStafStatus={!ApproveStafStatus}
+                setTaxStaffStatus={taxStaffStatus}
               />
             </div>
           )}
