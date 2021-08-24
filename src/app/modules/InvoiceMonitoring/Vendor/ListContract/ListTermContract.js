@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // useState
+import React, { useState, useEffect, useLayoutEffect } from "react"; // useState
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
@@ -37,11 +37,6 @@ const data_ops = [
 const ListTermContract = (props) => {
   const suhbeader = useSubheader();
   const { intl } = props;
-  suhbeader.setTitle(
-    intl.formatMessage({
-      id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT",
-    })
-  );
   const { contract } = useParams();
   const classes = useStyles();
   const history = useHistory();
@@ -86,6 +81,28 @@ const ListTermContract = (props) => {
     },
   ];
 
+  useLayoutEffect(() => {
+    suhbeader.setTitle(
+      intl.formatMessage({
+        id: "TITLE.USER_PROFILE.PERSONAL_INFORMATION.INPUT.CONTRACT",
+      })
+    );
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/invoice_monitoring/contract`,
+        title: intl.formatMessage({
+          id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+        }),
+      },
+      {
+        pathname: `/client/invoice_monitoring/contract/${contract}`,
+        title: intl.formatMessage({
+          id: "TITLE.CONTRACT_ITEM",
+        }),
+      },
+    ]);
+  }, []);
+
   const getData = () => {
     setLoading(true);
     getTermContract(contract)
@@ -107,23 +124,6 @@ const ListTermContract = (props) => {
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
-      />
-
-      <SubBreadcrumbs
-        items={[
-          {
-            label: intl.formatMessage({
-              id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
-            }),
-            to: `/vendor/invoice_monitoring/contract`,
-          },
-          {
-            label: intl.formatMessage({
-              id: "TITLE.CONTRACT_ITEM",
-            }),
-            to: "/",
-          },
-        ]}
       />
       {loading && <LinearProgress color="secondary" className="rounded" />}
       <Paper className={`py-5 px-5 ${classes.paper}`}>

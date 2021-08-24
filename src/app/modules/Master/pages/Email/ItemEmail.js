@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  connect,
-  // shallowEqual,
-  // useSelector
-} from "react-redux";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+} from "react";
+import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import { FormattedMessage, injectIntl } from "react-intl";
@@ -18,19 +19,12 @@ import {
   updateEmail,
 } from "../../service/MasterCrud";
 import useToast from "../../../../components/toast";
-import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
+import { Form, Row, Col, InputGroup } from "react-bootstrap";
 import StyledSelect from "../../../../components/select-multiple";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import Select from "react-select";
-import {
-  // useHistory,
-  useParams,
-} from "react-router-dom";
-// import ReactHtmlParser, {
-//   processNodes,
-//   convertNodeToElement,
-//   htmlparser2,
-// } from "react-html-parser";
+import { useParams } from "react-router-dom";
+import { useSubheader } from "../../../../../_metronic/layout";
 import TextEditor from "../../../../components/textEditor/TextEditor";
 import copy from "clipboard-copy";
 
@@ -53,6 +47,20 @@ const ItemEmail = (props) => {
   const [onSubmit, setOnSubmit] = useState(false);
   const [statusSubmit, setStatusSubmit] = useState(false);
   const [errOnSubmit, setErrOnSubmit] = useState(false);
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/master/email`,
+        title: "Master Tax",
+      },
+      {
+        pathname: `/client/master/email/${id}`,
+        title: data.name || "-",
+      },
+    ]);
+  }, [data]);
 
   const sendUpdate = useCallback(
     (e) => {
@@ -149,19 +157,6 @@ const ItemEmail = (props) => {
           </h2>
         </div>
       </div>
-
-      <SubBreadcrumbs
-        items={[
-          {
-            label: "List Email",
-            to: `/client/master/email`,
-          },
-          {
-            label: "Email",
-            to: "/",
-          },
-        ]}
-      />
       <Card>
         <CardBody>
           <Toast />

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"; // useState
+import React, { useEffect, useLayoutEffect } from "react"; // useState
 import { connect, useSelector, shallowEqual } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { useParams } from "react-router-dom";
@@ -158,11 +158,31 @@ const ItemContract = (props) => {
   const [onSubmit, setOnSubmit] = React.useState(false);
   const [statusSubmit, setStatusSubmit] = React.useState(false);
 
+  useLayoutEffect(() => {
   suhbeader.setTitle(
     intl.formatMessage({
       id: "TITLE.CONTRACT_TERM",
     })
   );
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/invoice_monitoring/contract`,
+        title: intl.formatMessage({
+          id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+        }),
+      },
+      {
+        pathname: `/client/invoice_monitoring/contract/${contract}`,
+        title: intl.formatMessage({
+          id: "TITLE.CONTRACT_ITEM",
+        }),
+      },
+      {
+        pathname: `/client/invoice_monitoring/contract/${contract}/${termin}`,
+        title: data.termin_name || "",
+      },
+    ]);
+  }, [data]);
 
   function handleChangeTab(event, newTabActive) {
     setTabActive(newTabActive);
@@ -182,15 +202,24 @@ const ItemContract = (props) => {
         getTerminProgress(termin)
           .then((result) => {
             // const progress = result.data.data ? result.data.data?.progress_type?.seq : "2"
-            const progress = 2
+            const progress = 2;
             // const name = result.data.data ? result.data.data?.progress_type?.ident_name : ""
             if (result?.data?.data?.data) {
-              setDataProgress(result.data.data.data)
+              setDataProgress(result.data.data.data);
             } else {
-              const data = resultTypes.data.data.map(function (row) {
-                return { label: row?.name, status: Number(row.seq) < progress ? "COMPLETE" : Number(row.seq) === progress ? "ON PROGRESS" : "NO STARTED", ident_name: row.ident_name }
-              })
-              setDataProgress(data)
+              const data = resultTypes.data.data.map(function(row) {
+                return {
+                  label: row?.name,
+                  status:
+                    Number(row.seq) < progress
+                      ? "COMPLETE"
+                      : Number(row.seq) === progress
+                      ? "ON PROGRESS"
+                      : "NO STARTED",
+                  ident_name: row.ident_name,
+                };
+              });
+              setDataProgress(data);
             }
 
             setTerminProgress(result.data.data?.progress_type);
@@ -404,27 +433,6 @@ const ItemContract = (props) => {
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
-      />
-
-      <SubBreadcrumbs
-        items={[
-          {
-            label: intl.formatMessage({
-              id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
-            }),
-            to: `/client/invoice_monitoring/contract`,
-          },
-          {
-            label: intl.formatMessage({
-              id: "TITLE.CONTRACT_ITEM",
-            }),
-            to: `/client/invoice_monitoring/contract/${useParams().contract}`,
-          },
-          {
-            label: data.termin_name,
-            to: "/",
-          },
-        ]}
       />
 
       <Steppers steps={dataProgress} />

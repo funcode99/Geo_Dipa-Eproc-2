@@ -9,15 +9,16 @@ import {
   AdvanceTablesWidget2,
   AdvanceTablesWidget4,
   ListsWidget3,
-  ListsWidget4,
   ListsWidget8,
 } from "../widgets";
+import ListsWidget4 from "../widgets/lists/ListsWidget4";
+
 export function Demo1Dashboard() {
   return (
     <>
       <div className="row">
-        <div className="col-lg-6 col-xxl-4">
-          <MixedWidget1 className="card-stretch gutter-b" />
+        <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "95vh" }}>
+          <ListsWidget4 className="card-stretch gutter-b" />
         </div>
         <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "95vh" }}>
           <ListsWidget9 className="card-stretch gutter-b" />
@@ -42,7 +43,7 @@ export function Demo1Dashboard() {
           <ListsWidget3 className="card-stretch gutter-b" />
         </div>
         <div className="col-lg-6 col-xxl-4 order-1 order-xxl-2">
-          <ListsWidget4 className="card-stretch gutter-b" />
+          <MixedWidget1 className="card-stretch gutter-b" />
         </div>
         <div className="col-lg-12 col-xxl-4 order-1 order-xxl-2">
           <ListsWidget8 className="card-stretch gutter-b" />

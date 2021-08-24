@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { connect } from "react-redux";
 import {
   Dialog,
@@ -20,6 +20,7 @@ import {
 } from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import { Form, Row, Col } from "react-bootstrap";
+import { useSubheader } from "../../../../_metronic/layout";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -45,6 +46,16 @@ const AsyncData = (props) => {
   const [statusSync, setStatusSync] = useState(false);
   const [errSync, setErrSync] = useState({ status: false, message: "" });
   const [stateSync, stateErrSync] = useState("");
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/master/async`,
+        title: intl.formatMessage({ id: "TITLE.SYNCHRONIZE_DATA" }),
+      },
+    ]);
+  }, []);
 
   const handleAsync = (e) => {
     e.preventDefault();

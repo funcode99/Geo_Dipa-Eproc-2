@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
@@ -12,6 +12,7 @@ import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
 import { useHistory, Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
+import { useSubheader } from "../../../../../_metronic/layout";
 
 function DashboardListContract(props) {
   const { intl } = props;
@@ -129,6 +130,18 @@ function DashboardListContract(props) {
       },
     },
   ];
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/invoice_monitoring/contract`,
+        title: intl.formatMessage({
+          id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+        }),
+      },
+    ]);
+  }, []);
 
   const requestApi = (params) => {
     setLoading(true);

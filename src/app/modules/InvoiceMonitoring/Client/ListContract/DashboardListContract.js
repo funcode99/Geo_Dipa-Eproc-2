@@ -1,13 +1,6 @@
-import React, {
-  useState,
-  // useEffect,
-  // useCallback
-} from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
-import {
-  // FormattedMessage,
-  injectIntl,
-} from "react-intl";
+import { injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import {
   getContractMainFinance,
@@ -19,6 +12,7 @@ import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
 import { rupiah } from "../../../../libs/currency";
+import { useSubheader } from "../../../../../_metronic/layout";
 
 function DashboardListContract(props) {
   const user_id = useSelector(
@@ -188,6 +182,18 @@ function DashboardListContract(props) {
       },
     },
   ];
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/invoice_monitoring/contract`,
+        title: intl.formatMessage({
+          id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+        }),
+      },
+    ]);
+  }, []);
 
   const requestApi = (params) => {
     setLoading(true);

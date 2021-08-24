@@ -9,21 +9,19 @@ import {
   CardHeaderToolbar,
 } from "../../../../../_metronic/_partials/controls";
 import // Table,
-  // Form,
-  // Col,
-  // Row,
-  // Pagination
-  "react-bootstrap";
+// Form,
+// Col,
+// Row,
+// Pagination
+"react-bootstrap";
 import // Dialog,
-  // DialogActions,
-  // DialogContent,
-  // DialogTitle,
-  // Slide
-  "@material-ui/core";
+// DialogActions,
+// DialogContent,
+// DialogTitle,
+// Slide
+"@material-ui/core";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
-import {
-  getRoutingSlip
-} from "../../_redux/InvoiceMonitoringCrud";
+import { getRoutingSlip } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
 
@@ -32,7 +30,6 @@ import { rupiah } from "../../../../libs/currency";
 // });
 
 function ItemContractRoutingSlip(props) {
-
   const { intl } = props;
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
@@ -63,7 +60,7 @@ function ItemContractRoutingSlip(props) {
         setLoading(false);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
-  }
+  };
 
   useEffect(callApiRoutingSlip, []);
 
@@ -161,212 +158,260 @@ function ItemContractRoutingSlip(props) {
                     <td className="text-center"></td>
                     <td>SA / GR Terbit</td>
                   </tr>
-                  {slipData?.support_deliverables_document_softcopy_date_out && <tr>
-                    <td>2</td>
-                    <td>{slipData?.support_deliverbables_creator?.party?.full_name}</td>
-                    <td className="text-center">-</td>
-                    <td className="text-center">-</td>
-                    <td className="text-center">
-                      {slipData?.support_deliverables_document_softcopy_date_out ?
-                        window
-                          .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
-                          .format("DD MMM YYYY")
-                        : '-'
-                      }
-                    </td>
-                    <td className="text-center">
-                      {slipData?.support_deliverables_document_softcopy_date_out ?
-                        window
-                          .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
-                          .format("HH:mm")
-                        : '-'
-                      }
-                    </td>
-                    <td></td>
-                    <td>Softcopy Dokumen Pendukung</td>
-                  </tr>}
-                  {slipData?.support_deliverables_document_softcopy_date_out && <tr>
-                    <td>3</td>
-                    <td>{slipData?.support_deliverbables_creator?.party?.full_name}</td>
-                    <td className="text-center">-</td>
-                    <td className="text-center">-</td>
-                    <td className="text-center">
-                      {slipData?.support_deliverables_document_softcopy_date_out ?
-                        window
-                          .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
-                          .format("DD MMM YYYY")
-                        : '-'
-                      }
-                    </td>
-                    <td className="text-center">
-                      {slipData?.support_deliverables_document_softcopy_date_out ?
-                        window
-                          .moment(new Date(slipData?.support_deliverables_document_softcopy_date_out))
-                          .format("HH:mm")
-                        : '-'
-                      }
-                    </td>
-                    <td></td>
-                    <td>Softcopy Dokumen Deliverables</td>
-                  </tr>}
-                  {slipData?.billing_document_softcopy_date_in && <tr>
-                    <td>4</td>
-                    <td>{slipData?.billing_creator?.party?.full_name}</td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.billing_document_softcopy_date_in))
-                        .format("DD MMM YYYY")}
-                    </td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.billing_document_softcopy_date_in))
-                        .format("HH:mm")}
-                    </td>
-                    <td className="text-center">
-                      {slipData?.billing_document_softcopy_date_out ?
-                        window
-                          .moment(new Date(slipData?.billing_document_softcopy_date_out))
-                          .format("DD MMM YYYY")
-                        : '-'
-                      }
-                    </td>
-                    <td className="text-center">
-                      {slipData?.billing_document_softcopy_date_out ?
-                        window
-                          .moment(new Date(slipData?.billing_document_softcopy_date_out))
-                          .format("HH:mm")
-                        : '-'
-                      }
-                    </td>
-                    <td></td>
-                    <td>Softcopy Dokumen Tagihan</td>
-                  </tr>}
-                  {slipData?.hardcopy_date_in && <tr>
-                    <td>5</td>
-                    <td>{slipData?.hardcopy_creator?.party?.full_name}</td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.hardcopy_date_in))
-                        .format("DD MMM YYYY")}
-                    </td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.hardcopy_date_in))
-                        .format("HH:mm")}
-                    </td>
-                    <td className="text-center">
-                      {slipData?.hardcopy_date_out ?
-                        window
-                          .moment(new Date(slipData?.hardcopy_date_out))
-                          .format("DD MMM YYYY")
-                        : '-'
-                      }
-                    </td>
-                    <td className="text-center">
-                      {slipData?.hardcopy_date_out ?
-                        window
-                          .moment(new Date(slipData?.hardcopy_date_out))
-                          .format("HH:mm")
-                        : '-'
-                      }
-                    </td>
-                    <td></td>
-                    <td>Hardcopy Dokumen</td>
-                  </tr>}
-                  {slipData?.park_ap_date_in && <tr>
-                    <td>6</td>
-                    <td>{slipData?.park_ap_creator?.party?.full_name}</td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.park_ap_date_in))
-                        .format("DD MMM YYYY")}
-                    </td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.park_ap_date_in))
-                        .format("HH:mm")}
-                    </td>
-                    <td className="text-center">
-                      {slipData?.park_ap_date_out ? window
-                        .moment(new Date(slipData?.park_ap_date_out))
-                        .format("DD MMM YYYY")
-                        : '-'
-                      }
-                    </td>
-                    <td className="text-center">
-                      {slipData?.park_ap_date_out ? window
-                        .moment(new Date(slipData?.park_ap_date_out))
-                        .format("HH:mm")
-                        : '-'
-                      }
-                    </td>
-                    <td></td>
-                    <td>Approve Park AP Dokumen</td>
-                  </tr>}
-                  {slipData?.park_byr_date_in && <tr>
-                    <td>7</td>
-                    <td>{slipData?.park_byr_creator?.party?.full_name}</td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.park_byr_date_in))
-                        .format("DD MMM YYYY")}
-                    </td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.park_byr_date_in))
-                        .format("HH:mm")}
-                    </td>
-                    <td className="text-center">
-                      {slipData?.park_byr_date_out ? window
-                        .moment(new Date(slipData?.park_byr_date_out))
-                        .format("DD MMM YYYY")
-                        : '-'
-                      }
-                    </td>
-                    <td className="text-center">
-                      {slipData?.park_byr_date_out ? window
-                        .moment(new Date(slipData?.park_byr_date_out))
-                        .format("HH:mm")
-                        : '-'
-                      }
-                    </td>
-                    <td></td>
-                    <td>Approve Park BYR Dokumen</td>
-                  </tr>}
-                  {slipData?.bkb_document_date_in && <tr>
-                    <td>8</td>
-                    <td>{slipData?.bkb_creator?.party?.full_name}</td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.bkb_document_date_in))
-                        .format("DD MMM YYYY")}
-                    </td>
-                    <td className="text-center">
-                      {window
-                        .moment(new Date(slipData?.bkb_document_date_in))
-                        .format("HH:mm")}
-                    </td>
-                    <td className="text-center">
-                      {slipData?.bkb_document_date_out ? window
-                        .moment(new Date(slipData?.bkb_document_date_out))
-                        .format("DD MMM YYYY")
-                        : '-'
-                      }
-                    </td>
-                    <td className="text-center">
-                      {slipData?.bkb_document_date_out ? window
-                        .moment(new Date(slipData?.bkb_document_date_out))
-                        .format("HH:mm")
-                        : '-'
-                      }
-                    </td>
-                    <td></td>
-                    <td>BKB Dokumen</td>
-                  </tr>}
+                  {slipData?.support_deliverables_document_softcopy_date_out && (
+                    <tr>
+                      <td>2</td>
+                      <td>
+                        {
+                          slipData?.support_deliverbables_creator?.party
+                            ?.full_name
+                        }
+                      </td>
+                      <td className="text-center">-</td>
+                      <td className="text-center">-</td>
+                      <td className="text-center">
+                        {slipData?.support_deliverables_document_softcopy_date_out
+                          ? window
+                              .moment(
+                                new Date(
+                                  slipData?.support_deliverables_document_softcopy_date_out
+                                )
+                              )
+                              .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.support_deliverables_document_softcopy_date_out
+                          ? window
+                              .moment(
+                                new Date(
+                                  slipData?.support_deliverables_document_softcopy_date_out
+                                )
+                              )
+                              .format("HH:mm")
+                          : "-"}
+                      </td>
+                      <td></td>
+                      <td>Softcopy Dokumen Pendukung</td>
+                    </tr>
+                  )}
+                  {slipData?.support_deliverables_document_softcopy_date_out && (
+                    <tr>
+                      <td>3</td>
+                      <td>
+                        {
+                          slipData?.support_deliverbables_creator?.party
+                            ?.full_name
+                        }
+                      </td>
+                      <td className="text-center">-</td>
+                      <td className="text-center">-</td>
+                      <td className="text-center">
+                        {slipData?.support_deliverables_document_softcopy_date_out
+                          ? window
+                              .moment(
+                                new Date(
+                                  slipData?.support_deliverables_document_softcopy_date_out
+                                )
+                              )
+                              .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.support_deliverables_document_softcopy_date_out
+                          ? window
+                              .moment(
+                                new Date(
+                                  slipData?.support_deliverables_document_softcopy_date_out
+                                )
+                              )
+                              .format("HH:mm")
+                          : "-"}
+                      </td>
+                      <td></td>
+                      <td>Softcopy Dokumen Deliverables</td>
+                    </tr>
+                  )}
+                  {slipData?.billing_document_softcopy_date_in && (
+                    <tr>
+                      <td>4</td>
+                      <td>{slipData?.billing_creator?.party?.full_name}</td>
+                      <td className="text-center">
+                        {window
+                          .moment(
+                            new Date(
+                              slipData?.billing_document_softcopy_date_in
+                            )
+                          )
+                          .format("DD MMM YYYY")}
+                      </td>
+                      <td className="text-center">
+                        {window
+                          .moment(
+                            new Date(
+                              slipData?.billing_document_softcopy_date_in
+                            )
+                          )
+                          .format("HH:mm")}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.billing_document_softcopy_date_out
+                          ? window
+                              .moment(
+                                new Date(
+                                  slipData?.billing_document_softcopy_date_out
+                                )
+                              )
+                              .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.billing_document_softcopy_date_out
+                          ? window
+                              .moment(
+                                new Date(
+                                  slipData?.billing_document_softcopy_date_out
+                                )
+                              )
+                              .format("HH:mm")
+                          : "-"}
+                      </td>
+                      <td></td>
+                      <td>Softcopy Dokumen Tagihan</td>
+                    </tr>
+                  )}
+                  {slipData?.hardcopy_date_in && (
+                    <tr>
+                      <td>5</td>
+                      <td>{slipData?.hardcopy_creator?.party?.full_name}</td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.hardcopy_date_in))
+                          .format("DD MMM YYYY")}
+                      </td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.hardcopy_date_in))
+                          .format("HH:mm")}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.hardcopy_date_out
+                          ? window
+                              .moment(new Date(slipData?.hardcopy_date_out))
+                              .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.hardcopy_date_out
+                          ? window
+                              .moment(new Date(slipData?.hardcopy_date_out))
+                              .format("HH:mm")
+                          : "-"}
+                      </td>
+                      <td></td>
+                      <td>Hardcopy Dokumen</td>
+                    </tr>
+                  )}
+                  {slipData?.park_ap_date_in && (
+                    <tr>
+                      <td>6</td>
+                      <td>{slipData?.park_ap_creator?.party?.full_name}</td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.park_ap_date_in))
+                          .format("DD MMM YYYY")}
+                      </td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.park_ap_date_in))
+                          .format("HH:mm")}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.park_ap_date_out
+                          ? window
+                              .moment(new Date(slipData?.park_ap_date_out))
+                              .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.park_ap_date_out
+                          ? window
+                              .moment(new Date(slipData?.park_ap_date_out))
+                              .format("HH:mm")
+                          : "-"}
+                      </td>
+                      <td></td>
+                      <td>Approve Park AP Dokumen</td>
+                    </tr>
+                  )}
+                  {slipData?.park_byr_date_in && (
+                    <tr>
+                      <td>7</td>
+                      <td>{slipData?.park_byr_creator?.party?.full_name}</td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.park_byr_date_in))
+                          .format("DD MMM YYYY")}
+                      </td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.park_byr_date_in))
+                          .format("HH:mm")}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.park_byr_date_out
+                          ? window
+                              .moment(new Date(slipData?.park_byr_date_out))
+                              .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.park_byr_date_out
+                          ? window
+                              .moment(new Date(slipData?.park_byr_date_out))
+                              .format("HH:mm")
+                          : "-"}
+                      </td>
+                      <td></td>
+                      <td>Approve Park BYR Dokumen</td>
+                    </tr>
+                  )}
+                  {slipData?.bkb_document_date_in && (
+                    <tr>
+                      <td>8</td>
+                      <td>{slipData?.bkb_creator?.party?.full_name}</td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.bkb_document_date_in))
+                          .format("DD MMM YYYY")}
+                      </td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.bkb_document_date_in))
+                          .format("HH:mm")}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.bkb_document_date_out
+                          ? window
+                              .moment(new Date(slipData?.bkb_document_date_out))
+                              .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.bkb_document_date_out
+                          ? window
+                              .moment(new Date(slipData?.bkb_document_date_out))
+                              .format("HH:mm")
+                          : "-"}
+                      </td>
+                      <td></td>
+                      <td>BKB Dokumen</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
-            <div className="row border">
+            {/* <div className="row border">
               <div
                 className="col-sm border-right text-center"
                 style={{ backgroundColor: "whitesmoke" }}
@@ -436,7 +481,7 @@ function ItemContractRoutingSlip(props) {
                     <span>2. Potongan</span>
                   </div>
                   <div className="col-sm-6">
-                    {/* <span>171.666.000</span> */}
+                    <span>171.666.000</span>
                   </div>
                 </div>
                 {slipData?.tax?.tax_selected?.map((item, index) => {
@@ -470,17 +515,17 @@ function ItemContractRoutingSlip(props) {
               <div className="col-sm border-right text-left">
                 <div className="row">
                   <div className="col-sm-6 border-right">
-                    {/* <span>Kode Anggaran</span> */}
+                    <span>Kode Anggaran</span>
                   </div>
-                  <div className="col-sm-6">{/* <span>Jumlah</span> */}</div>
+                  <div className="col-sm-6"><span>Jumlah</span></div>
                 </div>
               </div>
               <div className="col-sm text-left">
                 <div className="row">
                   <div className="col-sm-6 border-right">
-                    {/* <span>Kode Akun</span> */}
+                    <span>Kode Akun</span>
                   </div>
-                  <div className="col-sm-6">{/* <span>Jumlah</span> */}</div>
+                  <div className="col-sm-6"><span>Jumlah</span></div>
                 </div>
               </div>
             </div>
@@ -578,7 +623,7 @@ function ItemContractRoutingSlip(props) {
               >
                 <span></span>
               </div>
-            </div>
+            </div> */}
           </div>
         </CardBody>
       </Card>

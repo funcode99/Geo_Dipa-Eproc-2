@@ -1,15 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { connect, shallowEqual, useSelector } from "react-redux";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Slide,
-  makeStyles,
-  TableRow,
-  TableCell,
-} from "@material-ui/core";
+import React, { useState, useLayoutEffect } from "react";
+import { connect } from "react-redux";
+import { makeStyles, TableRow, TableCell } from "@material-ui/core";
 import { Card, CardBody } from "../../../../_metronic/_partials/controls";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
@@ -17,10 +8,9 @@ import SVG from "react-inlinesvg";
 import { SubWrap } from "./style";
 import { getListEmail } from "../service/MasterCrud";
 import useToast from "../../../components/toast";
-import ButtonAction from "../../../components/buttonAction/ButtonAction";
-import { Form, Row, Col, InputGroup, FormControl } from "react-bootstrap";
-import { useHistory, useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Tables from "../../../components/tableCustomV1/table";
+import { useSubheader } from "../../../../_metronic/layout";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -94,6 +84,16 @@ const Email = (props) => {
       },
     },
   ];
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/master/email`,
+        title: "Master Email",
+      },
+    ]);
+  }, []);
 
   const requestApi = (params) => {
     setLoading(true);

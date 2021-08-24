@@ -20,3 +20,7 @@ export function getActivity(
     `/invoice/get_activity/${user_id}/${activity}/${period}/${date_start}/${date_finish}`
   );
 }
+
+export function getTodoByUser(user_id) {
+  return axios.get(`/invoice/get_todo/${user_id}`);
+}
