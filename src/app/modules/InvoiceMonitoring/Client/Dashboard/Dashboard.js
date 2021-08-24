@@ -1,8 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  // useCallback
-} from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
@@ -23,6 +19,7 @@ import {
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
+import { useSubheader } from "../../../../../_metronic/layout";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -54,6 +51,16 @@ function Dashboard(props) {
   const [date, setDate] = useState({ date_start: null, date_finish: null });
   const [Toast, setToast] = useToast();
   const [dataOverview, setDataOverview] = useState({});
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/invoice_monitoring/dashboard`,
+        title: intl.formatMessage({ id: "MENU.DASHBOARD" }),
+      },
+    ]);
+  }, []);
 
   useEffect(() => {
     var options = {

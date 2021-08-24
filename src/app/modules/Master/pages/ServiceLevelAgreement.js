@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import {
   Dialog,
@@ -19,6 +19,7 @@ import { getSla, updateSla } from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import ButtonAction from "../../../components/buttonAction/ButtonAction";
 import Tables from "../../../components/tableCustomV1/table";
+import { useSubheader } from "../../../../_metronic/layout";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -110,6 +111,18 @@ const ServiceLevelAgreement = (props) => {
       },
     },
   ];
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/master/service_level_agreement`,
+        title:
+          "Master " +
+          intl.formatMessage({ id: "TITLE.SERVICE_LEVEL_AGREEMENT" }),
+      },
+    ]);
+  }, []);
 
   const requestApi = (params) => {
     setLoading(true);

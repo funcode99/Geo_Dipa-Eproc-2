@@ -517,7 +517,7 @@ function ItemContractSummary(props) {
           </button>
         </CardFooter>
       </Card>
-      <Card className="mt-5">
+      {/* <Card className="mt-5">
         <CardBody>
           <div className="my-5 text-center">
             <h6>
@@ -545,7 +545,7 @@ function ItemContractSummary(props) {
             })}
           </TableOnly>
         </CardBody>
-      </Card>
+      </Card> */}
     </React.Fragment>
   );
 }

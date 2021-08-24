@@ -317,23 +317,25 @@ function ItemContractRoutingSlip(props) {
                         .format("HH:mm")}
                     </td>
                     <td className="text-center">
-                      {slipData?.park_byr_date_out ? window
+                        {slipData?.park_byr_date_out
+                          ? window
                         .moment(new Date(slipData?.park_byr_date_out))
                         .format("DD MMM YYYY")
-                        : '-'
-                      }
+                          : "-"}
                     </td>
                     <td className="text-center">
-                      {slipData?.park_byr_date_out ? window
+                        {slipData?.park_byr_date_out
+                          ? window
                         .moment(new Date(slipData?.park_byr_date_out))
                         .format("HH:mm")
-                        : '-'
-                      }
+                          : "-"}
                     </td>
                     <td></td>
                     <td>Approve Park BYR Dokumen</td>
-                  </tr>}
-                  {slipData?.bkb_document_date_in && <tr>
+                    </tr>
+                  )}
+                  {slipData?.bkb_document_date_in && (
+                    <tr>
                     <td>8</td>
                     <td>{slipData?.bkb_creator?.party?.full_name}</td>
                     <td className="text-center">
@@ -347,26 +349,27 @@ function ItemContractRoutingSlip(props) {
                         .format("HH:mm")}
                     </td>
                     <td className="text-center">
-                      {slipData?.bkb_document_date_out ? window
+                        {slipData?.bkb_document_date_out
+                          ? window
                         .moment(new Date(slipData?.bkb_document_date_out))
                         .format("DD MMM YYYY")
-                        : '-'
-                      }
+                          : "-"}
                     </td>
                     <td className="text-center">
-                      {slipData?.bkb_document_date_out ? window
+                        {slipData?.bkb_document_date_out
+                          ? window
                         .moment(new Date(slipData?.bkb_document_date_out))
                         .format("HH:mm")
-                        : '-'
-                      }
+                          : "-"}
                     </td>
                     <td></td>
                     <td>BKB Dokumen</td>
-                  </tr>}
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
-            <div className="row border">
+            {/* <div className="row border">
               <div
                 className="col-sm border-right text-center"
                 style={{ backgroundColor: "whitesmoke" }}
@@ -436,7 +439,7 @@ function ItemContractRoutingSlip(props) {
                     <span>2. Potongan</span>
                   </div>
                   <div className="col-sm-6">
-                    {/* <span>171.666.000</span> */}
+                    <span>171.666.000</span>
                   </div>
                 </div>
                 {slipData?.tax?.tax_selected?.map((item, index) => {
@@ -470,17 +473,17 @@ function ItemContractRoutingSlip(props) {
               <div className="col-sm border-right text-left">
                 <div className="row">
                   <div className="col-sm-6 border-right">
-                    {/* <span>Kode Anggaran</span> */}
+                    <span>Kode Anggaran</span>
                   </div>
-                  <div className="col-sm-6">{/* <span>Jumlah</span> */}</div>
+                  <div className="col-sm-6"><span>Jumlah</span></div>
                 </div>
               </div>
               <div className="col-sm text-left">
                 <div className="row">
                   <div className="col-sm-6 border-right">
-                    {/* <span>Kode Akun</span> */}
+                    <span>Kode Akun</span>
                   </div>
-                  <div className="col-sm-6">{/* <span>Jumlah</span> */}</div>
+                  <div className="col-sm-6"><span>Jumlah</span></div>
                 </div>
               </div>
             </div>
@@ -578,7 +581,7 @@ function ItemContractRoutingSlip(props) {
               >
                 <span></span>
               </div>
-            </div>
+            </div> */}
           </div>
         </CardBody>
       </Card>
