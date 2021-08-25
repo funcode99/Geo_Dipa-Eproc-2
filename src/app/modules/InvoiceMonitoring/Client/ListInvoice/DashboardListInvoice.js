@@ -155,7 +155,7 @@ function DashboardListInvoice(props) {
       },
       filter: {
         active: true,
-        type: "text",
+        type: "date",
       },
     },
     {
