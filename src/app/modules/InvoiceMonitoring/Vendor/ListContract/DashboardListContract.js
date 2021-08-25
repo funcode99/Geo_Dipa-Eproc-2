@@ -34,7 +34,7 @@ function DashboardListContract(props) {
       name: "contract_no",
       order: {
         active: true,
-        status: true,
+        status: false,
       },
       filter: {
         active: true,
@@ -83,12 +83,13 @@ function DashboardListContract(props) {
       title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.CONTRACT_DATE" }),
       name: "contract_date",
       order: {
-        active: false,
-        status: false,
+        active: true,
+        status: true,
+        type: true,
       },
       filter: {
         active: false,
-        type: "text",
+        type: "date",
       },
     },
     {
