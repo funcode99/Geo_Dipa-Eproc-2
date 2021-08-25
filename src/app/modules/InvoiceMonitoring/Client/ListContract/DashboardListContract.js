@@ -60,7 +60,7 @@ function DashboardListContract(props) {
       name: "contract_no",
       order: {
         active: true,
-        status: true,
+        status: false,
       },
       filter: {
         active: true,
@@ -124,7 +124,8 @@ function DashboardListContract(props) {
       name: "contract_date",
       order: {
         active: true,
-        status: false,
+        status: true,
+        type: true,
       },
       filter: {
         active: true,
