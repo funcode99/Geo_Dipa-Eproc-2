@@ -54,6 +54,7 @@ import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
+import { SOCKET } from "../../../../../redux/BaseHost";
 import {
   getRolesAcceptance, getRolesAcceptanceTax
 } from '../../../Master/service/MasterCrud';
@@ -229,7 +230,7 @@ function ItemContractInvoice(props) {
   const dataUser = useSelector((state) => state.auth.user.data);
   let monitoring_role =
     dataUser.monitoring_role ? dataUser.monitoring_role
-    : [];
+      : [];
   const [uploadFilename, setUploadFilename] = useState(
     intl.formatMessage({
       id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
@@ -359,6 +360,7 @@ function ItemContractInvoice(props) {
       .then((result) => {
         setProgressTermin(result.data.data)
         setDataProgress(data)
+        SOCKET.emit('get_all_notification', user_id);
         setLoading(false);
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 5000);
       })
@@ -559,6 +561,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', user_id);
         })
         .catch((err) => {
           setModalApproved({
@@ -592,6 +595,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', user_id);
         })
         .catch((err) => {
           setModalApproved({
@@ -639,6 +643,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', user_id);
         })
         .catch((err) => {
           setModalApproved({
@@ -672,6 +677,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', user_id);
         })
         .catch((err) => {
           setModalApproved({
@@ -728,6 +734,7 @@ function ItemContractInvoice(props) {
                 });
                 document.getElementById("commentRejected").value = "";
               }, 2500);
+              SOCKET.emit('get_all_notification', user_id);
             })
             .catch((err) => {
               setModalReject({
@@ -767,6 +774,7 @@ function ItemContractInvoice(props) {
                 });
                 document.getElementById("commentRejected").value = "";
               }, 2500);
+              SOCKET.emit('get_all_notification', user_id);
             })
             .catch((err) => {
               setModalReject({
@@ -831,6 +839,7 @@ function ItemContractInvoice(props) {
                     });
                     document.getElementById("commentRejected").value = "";
                   }, 2500);
+                  SOCKET.emit('get_all_notification', user_id);
                 })
                 .catch((err) => {
                   setModalReject({
@@ -883,6 +892,7 @@ function ItemContractInvoice(props) {
                     });
                     document.getElementById("commentRejected").value = "";
                   }, 2500);
+                  SOCKET.emit('get_all_notification', user_id);
                 })
                 .catch((err) => {
                   setModalReject({
