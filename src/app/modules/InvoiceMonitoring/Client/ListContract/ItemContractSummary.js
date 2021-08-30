@@ -19,6 +19,12 @@ import {
 import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
 import { TableRow, TableCell } from "@material-ui/core";
+import {
+  getRolesTerminAuthorization
+} from '../../../Master/service/MasterCrud';
+import {
+  MAIN_ROLES_AUTHORITY
+} from "../../../../../redux/BaseHost";
 
 function ItemContractSummary(props) {
   const { intl, getData } = props;
@@ -105,8 +111,13 @@ function ItemContractSummary(props) {
     },
   ];
 
+  const dataUser = useSelector((state) => state.auth.user.data);
+  let monitoring_role =
+    dataUser.monitoring_role ? dataUser.monitoring_role
+      : [];
   const [picContractData, setPicContractData] = useState([]);
   const [picVendorData, setPicVendorData] = useState([]);
+  const [terminAuthorizationStaff, setTerminAuthorizationStaff] = useState(false);
   const [contractData, setContractData] = useState({});
   const [loading, setLoading] = useState(false);
   const [contractAuthority, setContractAuthority] = useState(0);
@@ -287,8 +298,23 @@ function ItemContractSummary(props) {
     }
   };
 
+  const getRolesTerminAuthorizationData = useCallback(() => {
+    getRolesTerminAuthorization(MAIN_ROLES_AUTHORITY)
+      .then((response) => {
+        response["data"]["data"].map((item, index) => {
+          if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+            setTerminAuthorizationStaff(true)
+          }
+        })
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(getContractData, []);
   useEffect(getContractAuthorityData, []);
+  useEffect(getRolesTerminAuthorizationData, []);
 
   return (
     <React.Fragment>
@@ -458,6 +484,7 @@ function ItemContractSummary(props) {
                     className="custom-select custom-select-sm"
                     value={contractAuthority}
                     onChange={handleSelect}
+                    disabled={!terminAuthorizationStaff}
                   >
                     <option value="0" hidden>
                       SELECT
@@ -505,7 +532,10 @@ function ItemContractSummary(props) {
             type="button"
             className="btn btn-primary mx-1"
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={
+              loading ||
+              !terminAuthorizationStaff
+            }
           >
             Simpan
             {loading && (
@@ -517,7 +547,7 @@ function ItemContractSummary(props) {
           </button>
         </CardFooter>
       </Card>
-      {/* <Card className="mt-5">
+      <Card className="mt-5">
         <CardBody>
           <div className="my-5 text-center">
             <h6>
@@ -545,7 +575,7 @@ function ItemContractSummary(props) {
             })}
           </TableOnly>
         </CardBody>
-      </Card> */}
+      </Card>
     </React.Fragment>
   );
 }

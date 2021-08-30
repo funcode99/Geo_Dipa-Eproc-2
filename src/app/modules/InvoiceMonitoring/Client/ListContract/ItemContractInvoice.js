@@ -116,7 +116,7 @@ const data_ops = [
 
 const data_ops_send_email = [
   {
-    label: "Send EMail",
+    label: "TITLE.SEND_EMAIL",
     icon: "fas fa-times-circle text-warning",
     type: "send_email",
   },
@@ -530,7 +530,8 @@ function ItemContractInvoice(props) {
       document_id: modalApproved.data.document_id,
       document_no: modalApproved.data.doc_no,
       created_by_id: user_id,
-      filename: modalApproved.data.doc_file
+      filename: modalApproved.data.doc_file,
+      ident_name: modalApproved.data.ident_name
     };
     var data_2 = {
       softcopy_approved_by_id: user_id,
@@ -693,6 +694,7 @@ function ItemContractInvoice(props) {
       document_no: modalReject.data.doc_no,
       created_by_id: user_id,
       filename: modalReject.data.doc_file,
+      ident_name: modalReject.data.ident_name
     };
     var data_2 = {
       document_monitoring_id: "",
