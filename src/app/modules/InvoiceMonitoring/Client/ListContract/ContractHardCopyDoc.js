@@ -56,6 +56,7 @@ import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import {
   getRolesAcceptance
 } from '../../../Master/service/MasterCrud';
+import { SOCKET } from "../../../../../redux/BaseHost";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -491,6 +492,7 @@ function ContractHardCopyDoc(props) {
             loading: false,
           });
         }, 2500);
+        SOCKET.emit('get_all_notification', user_id);
       })
       .catch((err) => {
         setModalApproved({
@@ -551,6 +553,7 @@ function ContractHardCopyDoc(props) {
               });
               document.getElementById("commentRejected").value = "";
             }, 2500);
+            SOCKET.emit('get_all_notification', user_id);
           })
           .catch((err) => {
             setModalReject({

@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-imports */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import objectPath from "object-path";
 import { useHtmlClassService } from "../../../_core/MetronicLayout";
 import { toAbsoluteUrl } from "../../../../_helpers";
@@ -12,10 +12,16 @@ import {
   FormattedMessage,
   // injectIntl
 } from "react-intl";
+import { SOCKET } from "../../../../../redux/BaseHost";
 
 export function UserProfileDropdown() {
   const { user } = useSelector((state) => state.auth);
   const uiService = useHtmlClassService();
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+  const [count, setCount] = useState(0);
   const layoutProps = useMemo(() => {
     return {
       light:
@@ -23,6 +29,14 @@ export function UserProfileDropdown() {
         "light",
     };
   }, [uiService]);
+
+  useEffect(() => {
+    SOCKET.emit("notification");
+    SOCKET.emit("get_all_notification", user_id);
+    SOCKET.on("get_notification", (data) => {
+      setCount(data.length)
+    })
+  }, [SOCKET]);
 
   return (
     <Dropdown drop="down" alignRight>
@@ -61,7 +75,7 @@ export function UserProfileDropdown() {
                   {user.data.full_name}
                 </div>
                 <span className="label label-light-success label-lg font-weight-bold label-inline">
-                  3 messages
+                  {count} messages
                 </span>
               </div>
               <div className="separator separator-solid"></div>
@@ -87,7 +101,7 @@ export function UserProfileDropdown() {
                 {user.data.full_name}
               </div>
               <span className="label label-success label-lg font-weight-bold label-inline">
-                3 messages
+                {count} messages
               </span>
             </div>
           )}

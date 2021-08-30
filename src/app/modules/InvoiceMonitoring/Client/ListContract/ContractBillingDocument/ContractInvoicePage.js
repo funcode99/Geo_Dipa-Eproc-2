@@ -40,6 +40,7 @@ import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
+import { SOCKET } from "../../../../../../redux/BaseHost";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -138,6 +139,7 @@ function ContractInvoicePage(props) {
               setModalReject(false);
               setIsSubmit(true);
               getHistoryInvoiceData(invoiceData.id);
+              SOCKET.emit('get_all_notification', user_id);
             })
             .catch((error) => {
               setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -233,6 +235,7 @@ function ContractInvoicePage(props) {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
           })
+        SOCKET.emit('get_all_notification', user_id);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -415,8 +418,7 @@ function ContractInvoicePage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${
-                          pageNumber === 1 ? "" : "text-secondary"
+                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
                           }`}
                       ></i>
                     </span>
@@ -435,8 +437,7 @@ function ContractInvoicePage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${
-                          pageNumber === numPages ? "" : "text-secondary"
+                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
                           }`}
                       ></i>
                     </span>
@@ -811,8 +812,7 @@ function ContractInvoicePage(props) {
                   </TableCell>
                   <TableCell>
                     <span
-                      className={`${
-                        item.state === "REJECTED"
+                      className={`${item.state === "REJECTED"
                           ? "text-danger"
                           : "text-success"
                         } pointer font-weight-bold`}

@@ -44,6 +44,7 @@ import {
 } from "@material-ui/core";
 import { getRolesBKB, getRolesAccounting, getRolesSignedGiro, getRolesParkBYR } from "../../../Master/service/MasterCrud";
 import { useParams } from "react-router-dom";
+import { SOCKET } from "../../../../../redux/BaseHost";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -206,6 +207,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -234,6 +236,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -262,6 +265,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -294,6 +298,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -322,6 +327,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -350,6 +356,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -383,6 +390,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -421,6 +429,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -459,6 +468,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -491,6 +501,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -520,6 +531,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
