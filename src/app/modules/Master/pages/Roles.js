@@ -47,6 +47,11 @@ const TabLists = [
         icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
     },
     {
+        id: 'accept_tax',
+        label: 'Acceptance Tax',
+        icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
+    },
+    {
         id: 'accounting',
         label: 'Park AP',
         icon: <i className="fas fa-file-contract mb-0 mr-2" style={{ color: 'inherit' }}></i>,
@@ -64,6 +69,11 @@ const TabLists = [
     {
         id: 'signed_giro',
         label: 'Signed Giro',
+        icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
+    },
+    {
+        id: 'termin_authorization',
+        label: 'Termin Authorization',
         icon: <i className="fas fa-file-alt mb-0 mr-2" style={{ color: 'inherit' }}></i>,
     }
 ];
@@ -114,10 +124,12 @@ const Roles = (props) => {
                     {tabActiveMain === 1 && <RolesPage data={{ type: "Verification", authority: "Pusat" }} />}
                     {tabActiveMain === 2 && <RolesPage data={{ type: "Approval", authority: "Pusat" }} />}
                     {tabActiveMain === 3 && <RolesPage data={{ type: "Accept", authority: "Pusat" }} />}
-                    {tabActiveMain === 4 && <RolesPage data={{ type: "Accounting", authority: "Pusat" }} />}
-                    {tabActiveMain === 5 && <RolesPage data={{ type: "Park_BYR", authority: "Pusat" }} />}
-                    {tabActiveMain === 6 && <RolesPage data={{ type: "Delivery", authority: "Pusat" }} />}
-                    {tabActiveMain === 7 && <RolesPage data={{ type: "Signed_Giro", authority: "Pusat" }} />}
+                    {tabActiveMain === 4 && <RolesPage data={{ type: "Accept_Tax", authority: "Pusat" }} />}
+                    {tabActiveMain === 5 && <RolesPage data={{ type: "Accounting", authority: "Pusat" }} />}
+                    {tabActiveMain === 6 && <RolesPage data={{ type: "Park_BYR", authority: "Pusat" }} />}
+                    {tabActiveMain === 7 && <RolesPage data={{ type: "Delivery", authority: "Pusat" }} />}
+                    {tabActiveMain === 8 && <RolesPage data={{ type: "Signed_Giro", authority: "Pusat" }} />}
+                    {tabActiveMain === 9 && <RolesPage data={{ type: "Termin_Authorization", authority: "Pusat" }} />}
                 </Container>
             </Paper>
             <Paper className={classes.paper}>
@@ -139,10 +151,12 @@ const Roles = (props) => {
                     {tabActiveUnit === 1 && <RolesPage data={{ type: "Verification", authority: "Unit" }} />}
                     {tabActiveUnit === 2 && <RolesPage data={{ type: "Approval", authority: "Unit" }} />}
                     {tabActiveUnit === 3 && <RolesPage data={{ type: "Accept", authority: "Unit" }} />}
-                    {tabActiveUnit === 4 && <RolesPage data={{ type: "Accounting", authority: "Unit" }} />}
-                    {tabActiveUnit === 5 && <RolesPage data={{ type: "Park_BYR", authority: "Unit" }} />}
-                    {tabActiveUnit === 6 && <RolesPage data={{ type: "Delivery", authority: "Unit" }} />}
-                    {tabActiveUnit === 7 && <RolesPage data={{ type: "Signed_Giro", authority: "Unit" }} />}
+                    {tabActiveUnit === 4 && <RolesPage data={{ type: "Accept_Tax", authority: "Unit" }} />}
+                    {tabActiveUnit === 5 && <RolesPage data={{ type: "Accounting", authority: "Unit" }} />}
+                    {tabActiveUnit === 6 && <RolesPage data={{ type: "Park_BYR", authority: "Unit" }} />}
+                    {tabActiveUnit === 7 && <RolesPage data={{ type: "Delivery", authority: "Unit" }} />}
+                    {tabActiveUnit === 8 && <RolesPage data={{ type: "Signed_Giro", authority: "Unit" }} />}
+                    {tabActiveUnit === 9 && <RolesPage data={{ type: "Termin_Authorization", authority: "Unit" }} />}
                 </Container>
             </Paper>
         </Container>
