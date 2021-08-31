@@ -9,6 +9,7 @@ import Tabs from "../../../../../../../components/tabs";
 import BeritaAcara from "../../../BeritaAcara";
 import DeliveryOrder from "../../../DeliveryOrder.js/DeliveryOrder";
 import Documents from "../../../Documents";
+import FormSAGR from "../../../FormSAGR";
 import SAGRPage from "../../../ServiceAccGR/SAGRPage";
 import Summary from "../../../Summary";
 import { DUMMY_STEPPER, KEYS_TERMIN, TERMIN_TAB_LIST } from "../../STATIC_DATA";
@@ -108,8 +109,10 @@ const TerminPaper = () => {
           {isItemExists && tabActive === 1 && <DeliveryOrder />}
           {!isItemExists && tabActive === 1 && <BeritaAcara />}
           {isItemExists && tabActive === 2 && <BeritaAcara />}
-          {!isItemExists && tabActive === 2 && <SAGRPage />}
-          {isItemExists && tabActive === 3 && <SAGRPage />}
+          {!isItemExists && tabActive === 2 && <FormSAGR />}
+          {isItemExists && tabActive === 3 && <FormSAGR />}
+          {!isItemExists && tabActive === 3 && <SAGRPage />}
+          {isItemExists && tabActive === 4 && <SAGRPage />}
         </Container>
       </Paper>
     </Container>
