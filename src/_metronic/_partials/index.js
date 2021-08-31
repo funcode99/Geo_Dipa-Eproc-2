@@ -1,2 +1,3 @@
-export {Dashboard} from "./dashboards/Dashboard";
-export {Builder} from "./builder/Builder";
+export { Dashboard } from "./dashboards/Dashboard";
+export { DashboardVendor } from "./dashboards/DashboardVendor";
+export { Builder } from "./builder/Builder";

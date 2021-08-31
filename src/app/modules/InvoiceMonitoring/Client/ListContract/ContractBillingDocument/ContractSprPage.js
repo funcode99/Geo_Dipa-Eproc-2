@@ -43,6 +43,7 @@ import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
+import { SOCKET } from "../../../../../../redux/BaseHost";
 
 const styles = (theme) => ({
   root: {
@@ -188,6 +189,7 @@ function ContractSprPage(props) {
               setModalReject(false);
               setIsSubmit(true);
               getHistorySppData(sppData.id);
+              SOCKET.emit('get_all_notification', user_id);
             })
             .catch((error) => {
               setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -269,6 +271,7 @@ function ContractSprPage(props) {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
           })
+        SOCKET.emit('get_all_notification', user_id);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -463,8 +466,7 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${
-                          pageNumber === 1 ? "" : "text-secondary"
+                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
                           }`}
                       ></i>
                     </span>
@@ -483,8 +485,7 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${
-                          pageNumber === numPages ? "" : "text-secondary"
+                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
                           }`}
                       ></i>
                     </span>
@@ -533,8 +534,7 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${
-                          pageNumberBank === 1 ? "" : "text-secondary"
+                        className={`fas fa-chevron-left ${pageNumberBank === 1 ? "" : "text-secondary"
                           }`}
                       ></i>
                     </span>
@@ -553,10 +553,9 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${
-                          pageNumberBank === numPagesBank
-                            ? ""
-                            : "text-secondary"
+                        className={`fas fa-chevron-right ${pageNumberBank === numPagesBank
+                          ? ""
+                          : "text-secondary"
                           }`}
                       ></i>
                     </span>
@@ -1042,7 +1041,7 @@ function ContractSprPage(props) {
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
               sppData === null ||
-              props.verificationStafStatus ||
+              !props.billingStaffStatus ||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
@@ -1057,7 +1056,7 @@ function ContractSprPage(props) {
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
               sppData === null ||
-              props.verificationStafStatus ||
+              !props.billingStaffStatus ||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
@@ -1093,10 +1092,9 @@ function ContractSprPage(props) {
                   </TableCell>
                   <TableCell>
                     <span
-                      className={`${
-                        item.state === "REJECTED"
-                          ? "text-danger"
-                          : "text-success"
+                      className={`${item.state === "REJECTED"
+                        ? "text-danger"
+                        : "text-success"
                         } pointer font-weight-bold`}
                       onClick={() => handleHistory(index)}
                     >

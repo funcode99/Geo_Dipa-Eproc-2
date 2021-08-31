@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import {
   Dialog,
@@ -28,8 +28,8 @@ import {
 import useToast from "../../../../components/toast";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import { useParams } from "react-router-dom";
-import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import Tables from "../../../../components/tableCustomV1/table";
+import { useSubheader } from "../../../../../_metronic/layout";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -148,6 +148,20 @@ const ItemTax = (props) => {
       },
     },
   ];
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/master/tax`,
+        title: "Master Tax",
+      },
+      {
+        pathname: `/client/master/tax/${id}`,
+        title: data?.group_tax || "",
+      },
+    ]);
+  }, [data]);
 
   const handleAction = (type, data) => {
     setDialogState({
@@ -281,19 +295,6 @@ const ItemTax = (props) => {
           </h2>
         </div>
       </div>
-
-      <SubBreadcrumbs
-        items={[
-          {
-            label: "Master Tax",
-            to: `/client/master/tax`,
-          },
-          {
-            label: data?.group_tax,
-            to: "/",
-          },
-        ]}
-      />
       <Dialog
         open={dialogState.status}
         keepMounted
@@ -307,129 +308,129 @@ const ItemTax = (props) => {
           <FormattedMessage id="TITLE.TAX" />
         </DialogTitle>
         <form onSubmit={sendUpdate}>
-        <DialogContent>
-          <div className="form-group row">
-            <label htmlFor="static_1" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.TYPE_TAX" />
-            </label>
-            <div className="col-sm-7">
-              <input
-                type="text"
-                className="form-control"
-                id="static_1"
-                disabled
-                value={data?.type_tax || ""}
-              />
+          <DialogContent>
+            <div className="form-group row">
+              <label htmlFor="static_1" className="col-sm-5 col-form-label">
+                <FormattedMessage id="TITLE.TYPE_TAX" />
+              </label>
+              <div className="col-sm-7">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="static_1"
+                  disabled
+                  value={data?.type_tax || ""}
+                />
+              </div>
             </div>
-          </div>
-          <div className="form-group row">
-            <label htmlFor="static_2" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.GROUP_TAX" />
-            </label>
-            <div className="col-sm-7">
-              <input
-                type="text"
-                className="form-control"
-                id="static_2"
-                disabled
-                value={data?.group_tax || ""}
-              />
+            <div className="form-group row">
+              <label htmlFor="static_2" className="col-sm-5 col-form-label">
+                <FormattedMessage id="TITLE.GROUP_TAX" />
+              </label>
+              <div className="col-sm-7">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="static_2"
+                  disabled
+                  value={data?.group_tax || ""}
+                />
+              </div>
             </div>
-          </div>
-          <div className="form-group row">
-            <label htmlFor="static_3" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.TAX_NAME" />
-            </label>
-            <div className="col-sm-7">
-              <input
-                type="text"
-                className="form-control"
-                id="static_3"
-                value={dialogState.data?.description || ""}
-                onChange={(e) => {
-                  let dataEdit_ = Object.assign({}, dialogState);
-                  dataEdit_.data.description = e.target.value;
-                  setDialogState({ ...dataEdit_ });
-                }}
+            <div className="form-group row">
+              <label htmlFor="static_3" className="col-sm-5 col-form-label">
+                <FormattedMessage id="TITLE.TAX_NAME" />
+              </label>
+              <div className="col-sm-7">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="static_3"
+                  value={dialogState.data?.description || ""}
+                  onChange={(e) => {
+                    let dataEdit_ = Object.assign({}, dialogState);
+                    dataEdit_.data.description = e.target.value;
+                    setDialogState({ ...dataEdit_ });
+                  }}
                   required
-              />
+                />
+              </div>
             </div>
-          </div>
-          <div className="form-group row">
-            <label htmlFor="static_4" className="col-sm-5 col-form-label">
-              <FormattedMessage id="TITLE.TAX_VALUE" />
-            </label>
-            <div className="col-sm-7">
-              <input
-                type="number"
-                className="form-control"
-                id="static_4"
-                value={dialogState.data?.value || ""}
-                onChange={(e) => {
-                  let dataEdit_ = Object.assign({}, dialogState);
-                  dataEdit_.data.value = e.target.value;
-                  setDialogState({ ...dataEdit_ });
-                }}
+            <div className="form-group row">
+              <label htmlFor="static_4" className="col-sm-5 col-form-label">
+                <FormattedMessage id="TITLE.TAX_VALUE" />
+              </label>
+              <div className="col-sm-7">
+                <input
+                  type="number"
+                  className="form-control"
+                  id="static_4"
+                  value={dialogState.data?.value || ""}
+                  onChange={(e) => {
+                    let dataEdit_ = Object.assign({}, dialogState);
+                    dataEdit_.data.value = e.target.value;
+                    setDialogState({ ...dataEdit_ });
+                  }}
                   required
-              />
+                />
+              </div>
             </div>
-          </div>
-          {dialogState.duplicateData && !onSubmit && (
-            <div>
-              <p className="text-danger font-italic" style={{ fontSize: 11 }}>
-                Error: Duplicate Tax Name
-              </p>
-            </div>
-          )}
-          {errOnSubmit && !onSubmit && (
-            <div>
-              <p className="text-danger font-italic" style={{ fontSize: 11 }}>
-                Error: <FormattedMessage id="REQ.UPDATE_FAILED" />
-              </p>
-            </div>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <button
-            id="kt_login_signin_submit"
-            type="submit"
-            disabled={onSubmit}
-            className={`btn btn-primary font-weight-bold btn-sm`}
-          >
-            {!onSubmit && (
-              <span>
-                <FormattedMessage id="TITLE.SAVE" />
-              </span>
+            {dialogState.duplicateData && !onSubmit && (
+              <div>
+                <p className="text-danger font-italic" style={{ fontSize: 11 }}>
+                  Error: Duplicate Tax Name
+                </p>
+              </div>
             )}
-            {onSubmit &&
-              (statusSubmit && onSubmit ? (
-                <div>
-                  <span>
-                    <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
-                  </span>
-                  <span className="ml-2 fas fa-check"></span>
-                </div>
-              ) : (
-                <div>
-                  <span>
-                    <FormattedMessage id="TITLE.WAITING" />
-                  </span>
-                  <span className="ml-2 mr-4 spinner spinner-white"></span>
-                </div>
-              ))}
-          </button>
-          <button
-            onClick={() => {
-              let dataEdit_ = Object.assign({}, dialogState);
-              dataEdit_.status = false;
-              setDialogState({ ...dataEdit_ });
-            }}
-            disabled={onSubmit}
-            className="btn btn-sm btn-danger"
-          >
-            <FormattedMessage id="TITLE.CANCEL" />
-          </button>
-        </DialogActions>
+            {errOnSubmit && !onSubmit && (
+              <div>
+                <p className="text-danger font-italic" style={{ fontSize: 11 }}>
+                  Error: <FormattedMessage id="REQ.UPDATE_FAILED" />
+                </p>
+              </div>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <button
+              id="kt_login_signin_submit"
+              type="submit"
+              disabled={onSubmit}
+              className={`btn btn-primary font-weight-bold btn-sm`}
+            >
+              {!onSubmit && (
+                <span>
+                  <FormattedMessage id="TITLE.SAVE" />
+                </span>
+              )}
+              {onSubmit &&
+                (statusSubmit && onSubmit ? (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.UPDATE_DATA_SUCCESS" />
+                    </span>
+                    <span className="ml-2 fas fa-check"></span>
+                  </div>
+                ) : (
+                  <div>
+                    <span>
+                      <FormattedMessage id="TITLE.WAITING" />
+                    </span>
+                    <span className="ml-2 mr-4 spinner spinner-white"></span>
+                  </div>
+                ))}
+            </button>
+            <button
+              onClick={() => {
+                let dataEdit_ = Object.assign({}, dialogState);
+                dataEdit_.status = false;
+                setDialogState({ ...dataEdit_ });
+              }}
+              disabled={onSubmit}
+              className="btn btn-sm btn-danger"
+            >
+              <FormattedMessage id="TITLE.CANCEL" />
+            </button>
+          </DialogActions>
         </form>
       </Dialog>
       <Card className={classes.paper}>

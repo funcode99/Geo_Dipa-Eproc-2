@@ -40,6 +40,7 @@ import moment from "moment";
 import Select from "react-select";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
+import { SOCKET } from "../../../../../../redux/BaseHost";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -163,6 +164,7 @@ function ContractTaxPage(props) {
               setModalReject(false);
               setIsSubmit(true);
               getHistoryTaxData(taxData.id);
+              SOCKET.emit('get_all_notification', user_id);
             })
             .catch((error) => {
               setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -209,11 +211,11 @@ function ContractTaxPage(props) {
     getTax(contract_id, termin)
       .then((response) => {
         if (response.data.data !== null) {
-        setOptionSelected(response.data.data.tax_selected);
-        setTaxData(response.data.data);
-        if (response.data.data) {
-          getHistoryTaxData(response["data"]["data"]["id"]);
-        }
+          setOptionSelected(response.data.data.tax_selected);
+          setTaxData(response.data.data);
+          if (response.data.data) {
+            getHistoryTaxData(response["data"]["data"]["id"]);
+          }
         }
       })
       .catch((error) => {
@@ -278,9 +280,10 @@ function ContractTaxPage(props) {
         getHistoryTaxData(taxData.id);
         softcopy_save(data_1);
         getTerminProgress(termin).then((result) => {
-            setProgressTermin(result.data.data?.progress_type);
-            setDataProgress(result.data.data?.data);
+          setProgressTermin(result.data.data?.progress_type);
+          setDataProgress(result.data.data?.data);
         });
+        SOCKET.emit('get_all_notification', user_id);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -463,9 +466,8 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${
-                          pageNumber === 1 ? "" : "text-secondary"
-                        }`}
+                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -483,9 +485,8 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${
-                          pageNumber === numPages ? "" : "text-secondary"
-                        }`}
+                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
+                          }`}
                       ></i>
                     </span>
                   </button>
@@ -584,11 +585,11 @@ function ContractTaxPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )
+                      "YYYY-MM-DD HH:mm:ss"
+                    )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )}
+                      "YYYY-MM-DD HH:mm:ss"
+                    )}
                 </span>
               </div>
             </div>
@@ -773,7 +774,7 @@ function ContractTaxPage(props) {
                       taxData?.state === "REJECTED" ||
                       taxData?.state === "APPROVED" ||
                       taxData === null ||
-                      props.ApproveStafStatus
+                      !props.setTaxStaffStatus
                     }
                     options={listTax.map((el) => ({
                       label: el.type_tax + " - " + el.group_tax,
@@ -802,7 +803,7 @@ function ContractTaxPage(props) {
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
               taxData === null ||
-              props.ApproveStafStatus ||
+              !props.setTaxStaffStatus ||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
@@ -817,7 +818,7 @@ function ContractTaxPage(props) {
               taxData?.state === "REJECTED" ||
               taxData?.state === "APPROVED" ||
               taxData === null ||
-              props.ApproveStafStatus ||
+              !props.setTaxStaffStatus ||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
@@ -853,11 +854,10 @@ function ContractTaxPage(props) {
                   </TableCell>
                   <TableCell>
                     <span
-                      className={`${
-                        item.state === "REJECTED"
+                      className={`${item.state === "REJECTED"
                           ? "text-danger"
                           : "text-success"
-                      } pointer font-weight-bold`}
+                        } pointer font-weight-bold`}
                       onClick={() => handleHistory(index)}
                     >
                       {item.state === "REJECTED" ? (

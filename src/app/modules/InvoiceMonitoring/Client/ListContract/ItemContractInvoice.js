@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
@@ -47,12 +47,17 @@ import {
   sendNotifSoftCopySupportDeliverables,
   createTerminProgress,
   getTerminProgress,
-  sendNotifSoftCopyRequest
+  sendNotifSoftCopyRequest,
+  getContractAuthority
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
+import { SOCKET } from "../../../../../redux/BaseHost";
+import {
+  getRolesAcceptance, getRolesAcceptanceTax
+} from '../../../Master/service/MasterCrud';
 
 const styles = (theme) => ({
   root: {
@@ -112,7 +117,7 @@ const data_ops = [
 
 const data_ops_send_email = [
   {
-    label: "Send EMail",
+    label: "TITLE.SEND_EMAIL",
     icon: "fas fa-times-circle text-warning",
     type: "send_email",
   },
@@ -199,6 +204,8 @@ function ItemContractInvoice(props) {
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
+  const [billingStaffStatus, setBillingStaffStatus] = useState(false);
+  const [taxStaffStatus, setTaxStaffStatus] = useState(false);
   const [loadingDeliverables, setLoadingDeliverables] = useState(false);
   const [modalReject, setModalReject] = useState({
     statusDialog: false,
@@ -221,17 +228,9 @@ function ItemContractInvoice(props) {
   });
   const user_id = useSelector((state) => state.auth.user.data.user_id);
   const dataUser = useSelector((state) => state.auth.user.data);
-  let verificationStafStatus = false;
-  let ApproveStafStatus = false;
-  let monitoring_role = dataUser.monitoring_role
-    ? dataUser.monitoring_role
-    : [];
-  verificationStafStatus =
-    monitoring_role.findIndex((element) => element === "Verification Staff") >=
-    0;
-  ApproveStafStatus =
-    monitoring_role.findIndex((element) => element === "Tax Administration Staff") >=
-    0;
+  let monitoring_role =
+    dataUser.monitoring_role ? dataUser.monitoring_role
+      : [];
   const [uploadFilename, setUploadFilename] = useState(
     intl.formatMessage({
       id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
@@ -361,6 +360,7 @@ function ItemContractInvoice(props) {
       .then((result) => {
         setProgressTermin(result.data.data)
         setDataProgress(data)
+        SOCKET.emit('get_all_notification', user_id);
         setLoading(false);
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 5000);
       })
@@ -471,8 +471,37 @@ function ItemContractInvoice(props) {
     }
   };
 
+  const getContractAuthorityData = useCallback(() => {
+    getContractAuthority(termin)
+      .then((response) => {
+        if (response["data"]["data"]) {
+          getRolesAcceptance(response["data"]["data"]["authority"])
+            .then(responseRoles => {
+              responseRoles["data"]["data"].map((item, index) => {
+                if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+                  setBillingStaffStatus(true)
+                }
+              })
+            })
+          getRolesAcceptanceTax(response["data"]["data"]["authority"])
+            .then(responseRoles => {
+              console.log(responseRoles)
+              responseRoles["data"]["data"].map((item, index) => {
+                if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+                  setTaxStaffStatus(true)
+                }
+              })
+            })
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(callApi, []);
   useEffect(callApiContractSoftCopy, []);
+  useEffect(getContractAuthorityData, []);
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
@@ -503,7 +532,8 @@ function ItemContractInvoice(props) {
       document_id: modalApproved.data.document_id,
       document_no: modalApproved.data.doc_no,
       created_by_id: user_id,
-      filename: modalApproved.data.doc_file
+      filename: modalApproved.data.doc_file,
+      ident_name: modalApproved.data.ident_name
     };
     var data_2 = {
       softcopy_approved_by_id: user_id,
@@ -531,6 +561,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', user_id);
         })
         .catch((err) => {
           setModalApproved({
@@ -564,6 +595,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', user_id);
         })
         .catch((err) => {
           setModalApproved({
@@ -611,6 +643,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', user_id);
         })
         .catch((err) => {
           setModalApproved({
@@ -644,6 +677,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
+          SOCKET.emit('get_all_notification', user_id);
         })
         .catch((err) => {
           setModalApproved({
@@ -666,6 +700,7 @@ function ItemContractInvoice(props) {
       document_no: modalReject.data.doc_no,
       created_by_id: user_id,
       filename: modalReject.data.doc_file,
+      ident_name: modalReject.data.ident_name
     };
     var data_2 = {
       document_monitoring_id: "",
@@ -699,6 +734,7 @@ function ItemContractInvoice(props) {
                 });
                 document.getElementById("commentRejected").value = "";
               }, 2500);
+              SOCKET.emit('get_all_notification', user_id);
             })
             .catch((err) => {
               setModalReject({
@@ -738,6 +774,7 @@ function ItemContractInvoice(props) {
                 });
                 document.getElementById("commentRejected").value = "";
               }, 2500);
+              SOCKET.emit('get_all_notification', user_id);
             })
             .catch((err) => {
               setModalReject({
@@ -802,6 +839,7 @@ function ItemContractInvoice(props) {
                     });
                     document.getElementById("commentRejected").value = "";
                   }, 2500);
+                  SOCKET.emit('get_all_notification', user_id);
                 })
                 .catch((err) => {
                   setModalReject({
@@ -854,6 +892,7 @@ function ItemContractInvoice(props) {
                     });
                     document.getElementById("commentRejected").value = "";
                   }, 2500);
+                  SOCKET.emit('get_all_notification', user_id);
                 })
                 .catch((err) => {
                   setModalReject({
@@ -1494,7 +1533,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
-                verificationStafStatus={!verificationStafStatus}
+                billingStaffStatus={billingStaffStatus}
               />
             </div>
           )}
@@ -1506,7 +1545,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
-                verificationStafStatus={!verificationStafStatus}
+                billingStaffStatus={billingStaffStatus}
               />
             </div>
           )}
@@ -1518,7 +1557,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
-                verificationStafStatus={!verificationStafStatus}
+                billingStaffStatus={billingStaffStatus}
               />
             </div>
           )}
@@ -1530,8 +1569,7 @@ function ItemContractInvoice(props) {
                 classes={classes}
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
-                verificationStafStatus={!verificationStafStatus}
-                ApproveStafStatus={!ApproveStafStatus}
+                setTaxStaffStatus={taxStaffStatus}
               />
             </div>
           )}

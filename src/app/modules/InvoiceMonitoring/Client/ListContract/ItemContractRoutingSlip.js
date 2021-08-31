@@ -125,9 +125,10 @@ function ItemContractRoutingSlip(props) {
                   </div>
                   <div className="col-sm-10">
                     <span>
-                      {window
+                      {slipData?.invoice_date ? window
                         .moment(new Date(slipData?.invoice_date))
-                        .format("DD MMM YYYY")}
+                        .format("DD MMM YYYY")
+                        : ""}
                     </span>
                   </div>
                 </div>
@@ -151,21 +152,49 @@ function ItemContractRoutingSlip(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  {slipData?.sa_gr_date_out && <tr>
                     <td>1</td>
-                    <td>Merry</td>
+                    <td>{slipData?.sa_gr_creator?.party?.full_name}</td>
                     <td className="text-center">-</td>
                     <td className="text-center">-</td>
-                    <td className="text-center">-</td>
-                    <td className="text-center">-</td>
+                    <td className="text-center">
+                      {slipData?.sa_gr_date_out ?
+                        window
+                          .moment(new Date(slipData?.sa_gr_date_out))
+                          .format("DD MMM YYYY")
+                        : '-'
+                      }
+                    </td>
+                    <td className="text-center">
+                      {slipData?.sa_gr_date_out ?
+                        window
+                          .moment(new Date(slipData?.sa_gr_date_out))
+                          .format("HH:mm")
+                        : '-'
+                      }
+                    </td>
                     <td className="text-center"></td>
                     <td>SA / GR Terbit</td>
-                  </tr>
-                  {slipData?.support_deliverables_document_softcopy_date_out && <tr>
+                  </tr>}
+                  {(slipData?.support_deliverables_document_softcopy_date_out || slipData?.support_deliverables_document_softcopy_date_in) && <tr>
                     <td>2</td>
                     <td>{slipData?.support_deliverbables_creator?.party?.full_name}</td>
-                    <td className="text-center">-</td>
-                    <td className="text-center">-</td>
+                    <td className="text-center">
+                      {slipData?.support_deliverables_document_softcopy_date_in ?
+                        window
+                          .moment(new Date(slipData?.support_deliverables_document_softcopy_date_in))
+                          .format("DD MMM YYYY")
+                        : '-'
+                      }
+                    </td>
+                    <td className="text-center">
+                      {slipData?.support_deliverables_document_softcopy_date_in ?
+                        window
+                          .moment(new Date(slipData?.support_deliverables_document_softcopy_date_in))
+                          .format("HH:mm")
+                        : '-'
+                      }
+                    </td>
                     <td className="text-center">
                       {slipData?.support_deliverables_document_softcopy_date_out ?
                         window
@@ -185,11 +214,25 @@ function ItemContractRoutingSlip(props) {
                     <td></td>
                     <td>Softcopy Dokumen Pendukung</td>
                   </tr>}
-                  {slipData?.support_deliverables_document_softcopy_date_out && <tr>
+                  {(slipData?.support_deliverables_document_softcopy_date_out || slipData?.support_deliverables_document_softcopy_date_in) && <tr>
                     <td>3</td>
                     <td>{slipData?.support_deliverbables_creator?.party?.full_name}</td>
-                    <td className="text-center">-</td>
-                    <td className="text-center">-</td>
+                    <td className="text-center">
+                      {slipData?.support_deliverables_document_softcopy_date_in ?
+                        window
+                          .moment(new Date(slipData?.support_deliverables_document_softcopy_date_in))
+                          .format("DD MMM YYYY")
+                        : '-'
+                      }
+                    </td>
+                    <td className="text-center">
+                      {slipData?.support_deliverables_document_softcopy_date_in ?
+                        window
+                          .moment(new Date(slipData?.support_deliverables_document_softcopy_date_in))
+                          .format("HH:mm")
+                        : '-'
+                      }
+                    </td>
                     <td className="text-center">
                       {slipData?.support_deliverables_document_softcopy_date_out ?
                         window
@@ -363,10 +406,40 @@ function ItemContractRoutingSlip(props) {
                     <td></td>
                     <td>BKB Dokumen</td>
                   </tr>}
+                  {slipData?.spt_date_in && <tr>
+                    <td>8</td>
+                    <td>{slipData?.spt_creator?.party?.full_name}</td>
+                    <td className="text-center">
+                      {window
+                        .moment(new Date(slipData?.spt_date_in))
+                        .format("DD MMM YYYY")}
+                    </td>
+                    <td className="text-center">
+                      {window
+                        .moment(new Date(slipData?.spt_date_in))
+                        .format("HH:mm")}
+                    </td>
+                    <td className="text-center">
+                      {slipData?.spt_date_out ? window
+                        .moment(new Date(slipData?.spt_date_out))
+                        .format("DD MMM YYYY")
+                        : '-'
+                      }
+                    </td>
+                    <td className="text-center">
+                      {slipData?.spt_date_out ? window
+                        .moment(new Date(slipData?.spt_date_out))
+                        .format("HH:mm")
+                        : '-'
+                      }
+                    </td>
+                    <td></td>
+                    <td>SPT Dokumen</td>
+                  </tr>}
                 </tbody>
               </table>
             </div>
-            <div className="row border">
+            {/* <div className="row border">
               <div
                 className="col-sm border-right text-center"
                 style={{ backgroundColor: "whitesmoke" }}
@@ -436,7 +509,7 @@ function ItemContractRoutingSlip(props) {
                     <span>2. Potongan</span>
                   </div>
                   <div className="col-sm-6">
-                    {/* <span>171.666.000</span> */}
+                    <span>171.666.000</span>
                   </div>
                 </div>
                 {slipData?.tax?.tax_selected?.map((item, index) => {
@@ -470,17 +543,17 @@ function ItemContractRoutingSlip(props) {
               <div className="col-sm border-right text-left">
                 <div className="row">
                   <div className="col-sm-6 border-right">
-                    {/* <span>Kode Anggaran</span> */}
+                    <span>Kode Anggaran</span>
                   </div>
-                  <div className="col-sm-6">{/* <span>Jumlah</span> */}</div>
+                  <div className="col-sm-6"><span>Jumlah</span></div>
                 </div>
               </div>
               <div className="col-sm text-left">
                 <div className="row">
                   <div className="col-sm-6 border-right">
-                    {/* <span>Kode Akun</span> */}
+                    <span>Kode Akun</span>
                   </div>
-                  <div className="col-sm-6">{/* <span>Jumlah</span> */}</div>
+                  <div className="col-sm-6"><span>Jumlah</span></div>
                 </div>
               </div>
             </div>
@@ -578,7 +651,7 @@ function ItemContractRoutingSlip(props) {
               >
                 <span></span>
               </div>
-            </div>
+            </div> */}
           </div>
         </CardBody>
       </Card>

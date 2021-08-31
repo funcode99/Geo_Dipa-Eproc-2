@@ -39,6 +39,7 @@ import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import {
   getInvoicePeriods
 } from "../../../../Master/service/MasterCrud";
+import { SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractInvoicePage(props) {
   const [loading, setLoading] = useState(false);
@@ -209,6 +210,7 @@ function ContractInvoicePage(props) {
               );
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+              SOCKET.emit('get_all_notification', user_id);
               setLoading(false);
             });
           })
@@ -233,6 +235,7 @@ function ContractInvoicePage(props) {
                 : ""
             );
             setUploadFilename(response["data"]["data"]["file_name"]);
+            SOCKET.emit('get_all_notification', user_id);
           })
           .catch((error) => {
             setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);

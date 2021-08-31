@@ -117,6 +117,10 @@ export function getRolesAcceptance(plant) {
   return axios.get(`data/get_role_acceptance?plant=${plant}`);
 }
 
+export function getRolesAcceptanceTax(plant) {
+  return axios.get(`data/get_role_acceptance_tax?plant=${plant}`);
+}
+
 export function getRolesAccounting(plant) {
   return axios.get(`data/get_role_accounting?plant=${plant}`);
 }
@@ -131,6 +135,10 @@ export function getRolesDelivery(plant) {
 
 export function getRolesSignedGiro(plant) {
   return axios.get(`data/get_role_signed_giro?plant=${plant}`);
+}
+
+export function getRolesTerminAuthorization(plant) {
+  return axios.get(`data/get_role_termin_authorization?plant=${plant}`);
 }
 
 export function updateRoles(data) {

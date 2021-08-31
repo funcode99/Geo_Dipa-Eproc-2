@@ -38,6 +38,7 @@ import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import {
   getInvoicePeriods
 } from "../../../../Master/service/MasterCrud";
+import { SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
@@ -189,6 +190,7 @@ function ContractTaxPage(props) {
       for (var key in values) {
         data.append(key, values[key]);
       }
+      console.log(data)
       if (taxUpdate) {
         updateTax(taxId, data)
           .then((response) => {
@@ -197,6 +199,7 @@ function ContractTaxPage(props) {
               props.set_data_tax_vendor({});
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+              SOCKET.emit('get_all_notification', user_id);
               setLoading(false);
             });
           })
@@ -213,6 +216,7 @@ function ContractTaxPage(props) {
             setLoading(false);
             setTaxData(response["data"]["data"]);
             setUploadFilename(response["data"]["data"]["file_name"]);
+            SOCKET.emit('get_all_notification', user_id);
           })
           .catch((error) => {
             setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -422,6 +426,8 @@ function ContractTaxPage(props) {
   useEffect(getTaxData, []);
   useEffect(getInvoiceData, []);
   useEffect(getInvoicePeriodsData, []);
+
+  console.log(formik.touched)
 
   return (
     <React.Fragment>

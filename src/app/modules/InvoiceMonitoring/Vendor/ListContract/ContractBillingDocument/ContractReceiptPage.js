@@ -36,6 +36,7 @@ import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import {
   getInvoicePeriods
 } from "../../../../Master/service/MasterCrud";
+import { SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractReceiptPage(props) {
   const [loading, setLoading] = useState(false);
@@ -272,6 +273,7 @@ function ContractReceiptPage(props) {
               setReceiptData(responses["data"]["data"]);
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+              SOCKET.emit('get_all_notification', user_id);
               setLoading(false);
             });
           })
@@ -288,6 +290,7 @@ function ContractReceiptPage(props) {
             setLoading(false);
             setReceiptData(response["data"]["data"]);
             setUploadFilename(response["data"]["data"]["file_name"]);
+            SOCKET.emit('get_all_notification', user_id);
           })
           .catch((error) => {
             setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);

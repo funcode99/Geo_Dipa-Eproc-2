@@ -12,6 +12,7 @@ import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 // import { MyPage } from "./pages/MyPage";
 // Page Guide Metronic
 import { DashboardPage } from "./pages/DashboardPage";
+import { DashboardPageVendor } from "./pages/DashboardPageVendor";
 import { useSelector, shallowEqual } from "react-redux";
 import RootClientDelivery from "./modules/DeliveryMonitoring/Client/RootClientDelivery";
 import RootVendorDelivery from "./modules/DeliveryMonitoring/Vendor/RootVendorDelivery";
@@ -83,7 +84,10 @@ export default function BasePage() {
         {<Redirect exact from="/client" to="/client/dashboard" />}
         {<Redirect exact from="/vendor" to="/vendor/dashboard" />}
         <ContentRoute path="/client/dashboard" component={DashboardPage} />
-        <ContentRoute path="/vendor/dashboard" component={DashboardPage} />
+        <ContentRoute
+          path="/vendor/dashboard"
+          component={DashboardPageVendor}
+        />
 
         {/* Page Guide Metronic */}
         {/* <ContentRoute path="/builder" component={BuilderPage} />
@@ -93,7 +97,10 @@ export default function BasePage() {
         <Route path="/e-commerce" component={ECommercePage} /> */}
         {/* Page Guide Metronic */}
 
-        <Route path="/client/user-management" component={UserManagementClient} />
+        <Route
+          path="/client/user-management"
+          component={UserManagementClient}
+        />
 
         <Route path="/client/user-profile" component={UserProfilePageClient} />
         <Route path="/vendor/user-profile" component={UserProfilePageVendor} />

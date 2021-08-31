@@ -19,6 +19,12 @@ import {
 import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
 import { TableRow, TableCell } from "@material-ui/core";
+import {
+  getRolesTerminAuthorization
+} from '../../../Master/service/MasterCrud';
+import {
+  MAIN_ROLES_AUTHORITY
+} from "../../../../../redux/BaseHost";
 
 function ItemContractSummary(props) {
   const { intl, getData } = props;
@@ -105,12 +111,18 @@ function ItemContractSummary(props) {
     },
   ];
 
+  const dataUser = useSelector((state) => state.auth.user.data);
+  let monitoring_role =
+    dataUser.monitoring_role ? dataUser.monitoring_role
+      : [];
   const [picContractData, setPicContractData] = useState([]);
   const [picVendorData, setPicVendorData] = useState([]);
+  const [terminAuthorizationStaff, setTerminAuthorizationStaff] = useState(false);
   const [contractData, setContractData] = useState({});
   const [loading, setLoading] = useState(false);
   const [contractAuthority, setContractAuthority] = useState(0);
   const [contractAuthorityExist, setContractAuthorityExist] = useState(false);
+  const [count, setCount] = useState(0);
 
   const [Toast, setToast] = useToast();
   const user_id = useSelector(
@@ -132,7 +144,7 @@ function ItemContractSummary(props) {
           setPicContractData(response.data.data);
         })
         .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     },
     [contract_id, intl, setToast]
@@ -145,7 +157,7 @@ function ItemContractSummary(props) {
           setPicVendorData(response.data.data);
         })
         .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     },
     [intl, setToast]
@@ -172,40 +184,32 @@ function ItemContractSummary(props) {
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${
-          response["data"]["data"]["data"]["address"]["postal_address"]
-            ? response["data"]["data"]["data"]["address"]["postal_address"]
-            : null
-        } ${
-          response["data"]["data"]["data"]["address"]["sub_district"]
+        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
+          ? response["data"]["data"]["data"]["address"]["postal_address"]
+          : null
+          } ${response["data"]["data"]["data"]["address"]["sub_district"]
             ? response["data"]["data"]["data"]["address"]["sub_district"][
-                "name"
-              ]
+            "name"
+            ]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["district"]
+          } ${response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["province"]
+          } ${response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-        } ${
-          response["data"]["data"]["data"]["address"]["postal_code"]
+          } ${response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
-        }`;
-        response["data"]["data"]["full_data_party_2"] = `${
-          response["data"]["data"]["full_name"]
-        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
-          response["data"]["data"]["data"]["phone_number"]["number"]
-        } ${
-          response["data"]["data"]["data"]["phone_number"]["ext"]
+          }`;
+        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
+          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
+          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
-                response["data"]["data"]["data"]["phone_number"]["ext"]
-              )
+              response["data"]["data"]["data"]["phone_number"]["ext"]
+            )
             : ""
-        }`;
+          }`;
         response["data"]["data"][
           "full_data_party_1"
         ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
@@ -219,7 +223,7 @@ function ItemContractSummary(props) {
         getData(response.data.data);
       })
       .catch((error) => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   }, [
     contract_id,
@@ -231,7 +235,7 @@ function ItemContractSummary(props) {
   ]);
 
   const getContractAuthorityData = useCallback(() => {
-    getContractAuthority(contract_id)
+    getContractAuthority(termin)
       .then((response) => {
         if (response["data"]["data"]) {
           setContractAuthority(response["data"]["data"]["authority"]);
@@ -239,9 +243,9 @@ function ItemContractSummary(props) {
         }
       })
       .catch((error) => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
-  }, [contract_id, intl, setToast]);
+  }, [termin, intl, setToast]);
 
   const setTimePIcker = (from_time, thru_time) => {
     window.$("#kt_daterangepicker_1").daterangepicker({
@@ -273,29 +277,44 @@ function ItemContractSummary(props) {
     if (contractAuthorityExist) {
       updateContractAuthority(data)
         .then((response) => {
-          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 5000);
           setLoading(false);
         })
         .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
           setLoading(false);
         });
     } else {
       createContractAuthority(data)
         .then((response) => {
-          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 5000);
           setLoading(false);
           setContractAuthorityExist(true);
         })
         .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
           setLoading(false);
         });
     }
   };
 
+  const getRolesTerminAuthorizationData = useCallback(() => {
+    getRolesTerminAuthorization(MAIN_ROLES_AUTHORITY)
+      .then((response) => {
+        response["data"]["data"].map((item, index) => {
+          if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+            setTerminAuthorizationStaff(true)
+          }
+        })
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(getContractData, []);
   useEffect(getContractAuthorityData, []);
+  useEffect(getRolesTerminAuthorizationData, []);
 
   return (
     <React.Fragment>
@@ -465,6 +484,7 @@ function ItemContractSummary(props) {
                     className="custom-select custom-select-sm"
                     value={contractAuthority}
                     onChange={handleSelect}
+                    disabled={!terminAuthorizationStaff}
                   >
                     <option value="0" hidden>
                       SELECT
@@ -512,7 +532,10 @@ function ItemContractSummary(props) {
             type="button"
             className="btn btn-primary mx-1"
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={
+              loading ||
+              !terminAuthorizationStaff
+            }
           >
             Simpan
             {loading && (

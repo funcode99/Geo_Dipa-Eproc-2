@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useLayoutEffect, useCallback } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import {
   Dialog,
@@ -20,6 +20,7 @@ import useToast from "../../../components/toast";
 import ButtonAction from "../../../components/buttonAction/ButtonAction";
 import { useHistory, useParams, Link } from "react-router-dom";
 import Tables from "../../../components/tableCustomV1/table";
+import { useSubheader } from "../../../../_metronic/layout";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -187,6 +188,20 @@ const PurchGroup = (props) => {
       },
     },
   ];
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/invoice_monitoring/contract`,
+        title:
+          "Master " +
+          intl.formatMessage({
+            id: "TITLE.PURCHASE_GROUPS",
+          }),
+      },
+    ]);
+  }, []);
 
   const handleAction = (type, data) => {
     setDialogState({
