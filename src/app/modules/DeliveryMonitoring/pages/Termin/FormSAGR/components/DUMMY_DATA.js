@@ -72,28 +72,28 @@ export const sa_field = [
 
 export const gr_field = [
   {
-    name: "header",
+    name: "header_tx",
     label: "Header Text",
     labelSize: 2,
     formInputSize: 10,
   },
   [
     {
-      name: "gr-receipt",
+      name: "gr_receipt",
       label: "GR Receipt",
     },
     {
-      name: "ref-doc-no",
+      name: "ref_doc_no",
       label: "Ref Doc No",
     },
   ],
   [
     {
-      name: "bill-of-lading",
+      name: "bill_of_lading",
       label: "Bill of Lading",
     },
     {
-      name: "unload-pt",
+      name: "unload_pt",
       label: "Unload PT",
     },
   ],
