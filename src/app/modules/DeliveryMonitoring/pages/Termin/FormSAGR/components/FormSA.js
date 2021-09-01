@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import { sa_field } from "./DUMMY_DATA";
+import TableSA from "./TableSA";
+
+export const FormSAContext = React.createContext({});
 
 const FormSA = () => {
+  const [arrService, setArrService] = useState({});
   const disabled = [""];
+  console.log(`arrService`, arrService);
   return (
-    <div>
+    <FormSAContext.Provider
+      value={{
+        setArrService,
+      }}
+    >
+      <TableSA />
       <FormBuilder
         loading={false}
         onSubmit={() => {}}
@@ -15,7 +25,7 @@ const FormSA = () => {
           //   disabledFields: disabled,
         }}
       />
-    </div>
+    </FormSAContext.Provider>
   );
 };
 

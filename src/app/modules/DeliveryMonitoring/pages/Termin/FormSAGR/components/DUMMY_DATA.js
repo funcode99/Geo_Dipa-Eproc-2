@@ -71,16 +71,21 @@ export const sa_field = [
 ];
 
 export const gr_field = [
-  {
-    name: "header_tx",
-    label: "Header Text",
-    labelSize: 2,
-    formInputSize: 10,
-  },
   [
     {
-      name: "gr_receipt",
-      label: "GR Receipt",
+      name: "header_tx",
+      label: "Header Text",
+    },
+    {
+      name: "post_date",
+      label: "Posting Date",
+      typeInput: "SelectDateInput",
+    },
+  ],
+  [
+    {
+      name: "bill_of_lading",
+      label: "Bill of Lading",
     },
     {
       name: "ref_doc_no",
@@ -89,8 +94,8 @@ export const gr_field = [
   ],
   [
     {
-      name: "bill_of_lading",
-      label: "Bill of Lading",
+      name: "gr_receipt",
+      label: "GR Receipt",
     },
     {
       name: "unload_pt",
@@ -107,4 +112,62 @@ export const gr_field = [
   //       label: "Post Date",
   //     },
   //   ],
+];
+
+export const headerTableSA = [
+  {
+    id: "name_service",
+    label: "Name Service",
+  },
+  {
+    id: "gl_account",
+    label: "GL Account",
+  },
+  {
+    id: "bus_area",
+    label: "Bus Area",
+  },
+  {
+    id: "cost_center",
+    label: "Cost Center",
+  },
+  {
+    id: "dist_type",
+    label: "Distribution Type",
+  },
+  {
+    id: "wbs",
+    label: "WBS",
+  },
+  {
+    id: "value",
+    label: "Value",
+  },
+];
+
+export const rowTableSA_field = [
+  {
+    name: "gl_account",
+    label: "Header Text",
+  },
+  {
+    name: "bus_area",
+    label: "Header Text",
+  },
+  {
+    name: "cost_center",
+    label: "Header Text",
+  },
+  {
+    name: "dist_type",
+    label: "Header Text",
+  },
+  {
+    name: "wbs",
+    label: "Header Text",
+  },
+  {
+    name: "value",
+    label: "Header Text",
+  },
 ];
