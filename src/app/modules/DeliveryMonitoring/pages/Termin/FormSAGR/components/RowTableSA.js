@@ -9,12 +9,12 @@ import { FormSAContext } from "./FormSA";
 
 const validationSchema = object().shape({
   // name_service: validation.require("Header Text"),
-  gl_account: validation.require("Header Text"),
-  bus_area: validation.require("GR Receipt"),
-  cost_center: validation.require("Ref Doc No"),
-  dist_type: validation.require("Bill of Lading"),
-  wbs: validation.require("Unload PT"),
-  value: validation.require("Unload PT"),
+  gl_account: validation.require("GL Account"),
+  bus_area: validation.require("Bus Area"),
+  cost_center: validation.require("Cost Center"),
+  dist_type: validation.require("Distribution Type"),
+  wbs: validation.require("WBS"),
+  value: validation.require("Value"),
 });
 
 const RowTableSA = ({ item, index }) => {
@@ -43,9 +43,9 @@ const RowTableSA = ({ item, index }) => {
       validationSchema={validationSchema}
     >
       <TableRow hover>
-        <TableCell>{item.name_service}</TableCell>
+        <TableCell width={250}>{item.name_service}</TableCell>
         {rowTableSA_field.map((item, id) => (
-          <TableCell key={id}>
+          <TableCell width={220} key={id}>
             <RowInput
               onBlur={_handleBlur}
               {...item}

@@ -166,13 +166,13 @@ export const rowTableSA_field = [
     name: "wbs",
     label: "Header Text",
     typeInput: "SelectInputCustom",
-    contProps: {
-      style: { width: 210 },
-    },
+    // contProps: {
+    //   style: { width: 210 },
+    // },
   },
   {
     name: "gl_account",
-    label: "Header Text",
+    label: "GL Account",
   },
   {
     name: "bus_area",

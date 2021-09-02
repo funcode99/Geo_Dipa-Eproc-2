@@ -28,7 +28,7 @@ const FormGR = ({ fetch_api_sg, loadings_sg, keys }) => {
     };
     console.log(`data`, params);
     // fetch_api_sg({
-    //   key: keys.upload_sa,
+    //   key: keys.upload_gr,
     //   type: "post",
     //   alertAppear: "both",
     //   url: `delivery/task-gr/${task_id}`,
@@ -36,12 +36,12 @@ const FormGR = ({ fetch_api_sg, loadings_sg, keys }) => {
     // });
   };
 
-  //   console.log(`loading`, loadings_sg[keys.upload_sa]);
+  //   console.log(`loading`, loadings_sg[keys.upload_gr]);
 
   return (
     <div>
       <FormBuilder
-        loading={loadings_sg[keys.upload_sa]}
+        loading={loadings_sg[keys.upload_gr]}
         onSubmit={_handleSubmit}
         formData={gr_field}
         validation={validationSchema}

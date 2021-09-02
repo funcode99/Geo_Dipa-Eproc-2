@@ -2,8 +2,9 @@ import React, { useMemo } from "react";
 import { headerTableSA, option_dist_type, sa_field } from "./DUMMY_DATA";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import RowTableSA from "./RowTableSA";
+import { FormSAContext } from "./FormSA";
 
-const TableSA = () => {
+const TableSA = ({}) => {
   const dataRow = useMemo(
     () => [
       {
@@ -36,12 +37,18 @@ const TableSA = () => {
     ],
     []
   );
+  const { itemJasa } = React.useContext(FormSAContext);
 
   return (
     <TablePaginationCustom
       headerRows={headerTableSA}
-      rows={dataRow}
-      width={1800}
+      rows={itemJasa?.map((el) => ({
+        // ...el,
+        name_service: el.service.short_text,
+        service_id: el.service.id,
+        qty: el.qty,
+      }))}
+      width={2000}
       loading={false}
       withPagination={false}
       withSearch={false}

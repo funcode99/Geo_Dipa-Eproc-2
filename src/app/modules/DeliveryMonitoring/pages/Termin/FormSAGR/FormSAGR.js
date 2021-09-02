@@ -35,7 +35,7 @@ const FormSAGR = (props) => {
 
 const keys = {
   upload_sa: "upload-sa-form",
-  upload_ga: "upload-ga-form",
+  upload_gr: "upload-ga-form",
   fetch_wbs: "fetch-wbs-list",
 };
 
