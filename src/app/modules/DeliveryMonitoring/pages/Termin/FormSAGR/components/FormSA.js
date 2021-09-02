@@ -9,6 +9,9 @@ const FormSA = () => {
   const [arrService, setArrService] = useState({});
   const disabled = [""];
   console.log(`arrService`, arrService);
+  const _handleSubmit = (data) => {
+    console.log(`data`, data);
+  };
   return (
     <FormSAContext.Provider
       value={{
@@ -18,12 +21,14 @@ const FormSA = () => {
       <TableSA />
       <FormBuilder
         loading={false}
-        onSubmit={() => {}}
+        onSubmit={_handleSubmit}
         formData={sa_field}
-        fieldProps={{
-          readOnly: true,
-          //   disabledFields: disabled,
-        }}
+        fieldProps={
+          {
+            // readOnly: true,
+            //   disabledFields: disabled,
+          }
+        }
       />
     </FormSAContext.Provider>
   );

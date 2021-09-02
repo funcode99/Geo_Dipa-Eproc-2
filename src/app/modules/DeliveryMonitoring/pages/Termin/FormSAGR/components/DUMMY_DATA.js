@@ -3,69 +3,78 @@ import { FormattedMessage } from "react-intl";
 export const sa_field = [
   [
     {
-      name: "wbs",
-      label: "WBS",
+      name: "ext_number",
+      label: "Extension Number",
     },
     {
-      name: "buss-area",
-      label: "Bussiness Area",
+      name: "po_number",
+      label: "PO Number",
     },
   ],
   [
     {
-      name: "cost-center",
-      label: "Cost Center",
+      name: "po_item",
+      label: "PO Item",
     },
     {
-      name: "short-text",
+      name: "short_text",
       label: "Short Text",
     },
   ],
-  {
-    name: "location",
-    label: "Location",
-    labelSize: 2,
-    formInputSize: 10,
-    typeInput: "TextAreaInput",
-  },
   [
     {
-      name: "begin-date",
-      label: "Start Date",
-    },
-    {
-      name: "end-date",
-      label: "Finish Date",
+      name: "location",
+      label: "Location",
     },
   ],
-  //   [
-  //     {
-  //       name: "doc-date",
-  //       label: "Document Date",
-  //     },
-  //     {
-  //       name: "post-date",
-  //       label: "Post Date",
-  //     },
-  //   ],
   [
     {
-      name: "person-internal",
+      name: "begdate",
+      label: "Begin Date",
+    },
+    {
+      name: "enddate",
+      label: "End Date",
+    },
+  ],
+  [
+    {
+      name: "person_int",
       label: "Person Internal",
     },
     {
-      name: "person-ext",
+      name: "person_ext",
       label: "Person External",
     },
   ],
   [
     {
-      name: "ref-doc-no",
+      name: "doc_date",
+      label: "Document Date",
+    },
+    {
+      name: "post_date",
+      label: "Post Date",
+    },
+  ],
+  [
+    {
+      name: "ref_doc_no",
       label: "Ref Doc No",
     },
     {
-      name: "doc-text",
-      label: "Document Text",
+      name: "doc_text",
+      label: "Doc Text",
+    },
+  ],
+  [
+    {
+      name: "score_qual",
+      label: "Score Qual",
+    },
+    {
+      name: "score_time",
+      label: "Score Time",
     },
   ],
 ];
