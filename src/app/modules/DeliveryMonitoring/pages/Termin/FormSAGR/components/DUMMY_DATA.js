@@ -8,27 +8,27 @@ export const sa_field = [
       name: "ext_number",
       label: "Extension Number",
     },
-    {
-      name: "po_number",
-      label: "PO Number",
-    },
-  ],
-  [
+    // {
+    //   name: "po_number",
+    //   label: "PO Number",
+    // },
     {
       name: "po_item",
       label: "PO Item",
     },
+  ],
+  [
     {
       name: "short_text",
       label: "Short Text",
     },
-  ],
-  [
     {
       name: "location",
       label: "Location",
     },
   ],
+  // [
+  // ],
   [
     {
       name: "begdate",
@@ -50,10 +50,10 @@ export const sa_field = [
     },
   ],
   [
-    {
-      name: "doc_date",
-      label: "Document Date",
-    },
+    // {
+    //   name: "doc_date",
+    //   label: "Document Date",
+    // },
     {
       name: "post_date",
       label: "Post Date",
@@ -69,16 +69,16 @@ export const sa_field = [
       label: "Doc Text",
     },
   ],
-  [
-    {
-      name: "score_qual",
-      label: "Score Qual",
-    },
-    {
-      name: "score_time",
-      label: "Score Time",
-    },
-  ],
+  // [
+  //   {
+  //     name: "score_qual",
+  //     label: "Score Qual",
+  //   },
+  //   {
+  //     name: "score_time",
+  //     label: "Score Time",
+  //   },
+  // ],
 ];
 
 export const gr_field = [
@@ -131,6 +131,14 @@ export const headerTableSA = [
     label: "Name Service",
   },
   {
+    id: "dist_type",
+    label: "Distribution Type",
+  },
+  {
+    id: "wbs",
+    label: "WBS",
+  },
+  {
     id: "gl_account",
     label: "GL Account",
   },
@@ -143,20 +151,25 @@ export const headerTableSA = [
     label: "Cost Center",
   },
   {
-    id: "dist_type",
-    label: "Distribution Type",
-  },
-  {
-    id: "wbs",
-    label: "WBS",
-  },
-  {
     id: "value",
     label: "Value",
   },
 ];
 
 export const rowTableSA_field = [
+  {
+    name: "dist_type",
+    label: "Header Text",
+    typeInput: "SelectInputCustom",
+  },
+  {
+    name: "wbs",
+    label: "Header Text",
+    typeInput: "SelectInputCustom",
+    contProps: {
+      style: { width: 210 },
+    },
+  },
   {
     name: "gl_account",
     label: "Header Text",
@@ -170,14 +183,6 @@ export const rowTableSA_field = [
     label: "Header Text",
   },
   {
-    name: "dist_type",
-    label: "Header Text",
-  },
-  {
-    name: "wbs",
-    label: "Header Text",
-  },
-  {
     name: "value",
     label: "Header Text",
   },
@@ -185,18 +190,24 @@ export const rowTableSA_field = [
 
 export const validationSchema_sa = object().shape({
   ext_number: validation.require("Extension Number"),
-  po_number: validation.require("PO Number"),
-  po_item: validation.require("PO Item"),
   short_text: validation.require("Short Text"),
   location: validation.require("Location"),
   begdate: validation.require("Begin Date"),
   enddate: validation.require("End Date"),
   person_int: validation.require("Person Internal"),
   person_ext: validation.require("Person External"),
-  doc_date: validation.require("Document Date"),
   post_date: validation.require("Post Date"),
   ref_doc_no: validation.require("Ref Doc No"),
   doc_text: validation.require("Doc Text"),
-  score_qual: validation.require("Score Qual"),
-  score_time: validation.require("Score Time"),
+  po_item: validation.require("PO Item"),
+  // po_number: validation.require("PO Number"),
+  // doc_date: validation.require("Document Date"),
+  // score_qual: validation.require("Score Qual"),
+  // score_time: validation.require("Score Time"),
 });
+
+export const option_dist_type = [
+  { value: "kosong", label: "Full Payment" },
+  { value: "1", label: "Gradual Payment (quantity)" },
+  { value: "2", label: "Gradual Payment (percentage)" },
+];

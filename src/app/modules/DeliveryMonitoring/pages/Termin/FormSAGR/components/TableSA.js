@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { headerTableSA, sa_field } from "./DUMMY_DATA";
+import { headerTableSA, option_dist_type, sa_field } from "./DUMMY_DATA";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import RowTableSA from "./RowTableSA";
 
@@ -46,6 +46,11 @@ const TableSA = () => {
       withPagination={false}
       withSearch={false}
       renderRows={RowTableSA}
+      fieldProps={{
+        listOptions: {
+          dist_type: option_dist_type,
+        },
+      }}
     />
   );
 };

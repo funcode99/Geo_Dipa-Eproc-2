@@ -36,6 +36,7 @@ const FormSAGR = (props) => {
 const keys = {
   upload_sa: "upload-sa-form",
   upload_ga: "upload-ga-form",
+  fetch_wbs: "fetch-wbs-list",
 };
 
 const mapState = (state) => {
@@ -45,6 +46,7 @@ const mapState = (state) => {
     loadings_sg: {
       [keys.upload_sa]: getLoading(state, keys.upload_sa),
       [keys.upload_gr]: getLoading(state, keys.upload_gr),
+      [keys.fetch_wbs]: getLoading(state, keys.fetch_wbs),
     },
   };
 };
