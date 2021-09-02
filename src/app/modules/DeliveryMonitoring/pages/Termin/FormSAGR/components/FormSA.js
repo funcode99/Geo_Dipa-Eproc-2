@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
-import { sa_field } from "./DUMMY_DATA";
+import { sa_field, validationSchema_sa } from "./DUMMY_DATA";
 import TableSA from "./TableSA";
 
 export const FormSAContext = React.createContext({});
@@ -23,6 +23,7 @@ const FormSA = () => {
         loading={false}
         onSubmit={_handleSubmit}
         formData={sa_field}
+        validation={validationSchema_sa}
         fieldProps={
           {
             // readOnly: true,

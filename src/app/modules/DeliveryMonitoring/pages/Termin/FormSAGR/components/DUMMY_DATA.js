@@ -1,4 +1,6 @@
 import { FormattedMessage } from "react-intl";
+import { object } from "yup";
+import validation from "../../../../../../service/helper/validationHelper";
 
 export const sa_field = [
   [
@@ -180,3 +182,21 @@ export const rowTableSA_field = [
     label: "Header Text",
   },
 ];
+
+export const validationSchema_sa = object().shape({
+  ext_number: validation.require("Extension Number"),
+  po_number: validation.require("PO Number"),
+  po_item: validation.require("PO Item"),
+  short_text: validation.require("Short Text"),
+  location: validation.require("Location"),
+  begdate: validation.require("Begin Date"),
+  enddate: validation.require("End Date"),
+  person_int: validation.require("Person Internal"),
+  person_ext: validation.require("Person External"),
+  doc_date: validation.require("Document Date"),
+  post_date: validation.require("Post Date"),
+  ref_doc_no: validation.require("Ref Doc No"),
+  doc_text: validation.require("Doc Text"),
+  score_qual: validation.require("Score Qual"),
+  score_time: validation.require("Score Time"),
+});
