@@ -19,66 +19,62 @@ import {
 import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
 import { TableRow, TableCell } from "@material-ui/core";
-import {
-  getRolesTerminAuthorization
-} from '../../../Master/service/MasterCrud';
-import {
-  MAIN_ROLES_AUTHORITY
-} from "../../../../../redux/BaseHost";
+import { getRolesTerminAuthorization } from "../../../Master/service/MasterCrud";
+import { MAIN_ROLES_AUTHORITY } from "../../../../../redux/BaseHost";
 
 function ItemContractSummary(props) {
   const { intl, getData } = props;
-  const [data] = useState([
-    {
-      name: "BAPP",
-      status: "Approved",
-      approvedBy: "Dian",
-      date: "30 Jan 2021",
-      nameDoc: "BAPP.pdf",
-    },
-    {
-      name: "User Manual",
-      status: "Approved",
-      approvedBy: "Dian",
-      date: "30 Jan 2021",
-      nameDoc: "BAPP.pdf",
-    },
-    {
-      name: "Timesheet",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-    {
-      name: "Invoice",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-    {
-      name: "Faktur Pajak",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-    {
-      name: "Surat Permohonan Pajak",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-    {
-      name: "Kuitansi",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-  ]);
+  // const [data] = useState([
+  //   {
+  //     name: "BAPP",
+  //     status: "Approved",
+  //     approvedBy: "Dian",
+  //     date: "30 Jan 2021",
+  //     nameDoc: "BAPP.pdf",
+  //   },
+  //   {
+  //     name: "User Manual",
+  //     status: "Approved",
+  //     approvedBy: "Dian",
+  //     date: "30 Jan 2021",
+  //     nameDoc: "BAPP.pdf",
+  //   },
+  //   {
+  //     name: "Timesheet",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  //   {
+  //     name: "Invoice",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  //   {
+  //     name: "Faktur Pajak",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  //   {
+  //     name: "Surat Permohonan Pajak",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  //   {
+  //     name: "Kuitansi",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  // ]);
 
   const headerTable = [
     {
@@ -112,12 +108,14 @@ function ItemContractSummary(props) {
   ];
 
   const dataUser = useSelector((state) => state.auth.user.data);
-  let monitoring_role =
-    dataUser.monitoring_role ? dataUser.monitoring_role
-      : [];
+  let monitoring_role = dataUser.monitoring_role
+    ? dataUser.monitoring_role
+    : [];
   const [picContractData, setPicContractData] = useState([]);
   const [picVendorData, setPicVendorData] = useState([]);
-  const [terminAuthorizationStaff, setTerminAuthorizationStaff] = useState(false);
+  const [terminAuthorizationStaff, setTerminAuthorizationStaff] = useState(
+    false
+  );
   const [contractData, setContractData] = useState({});
   const [loading, setLoading] = useState(false);
   const [contractAuthority, setContractAuthority] = useState(0);
@@ -184,32 +182,40 @@ function ItemContractSummary(props) {
           ". ",
           response["data"]["data"]["data"]["full_name"]
         );
-        response["data"]["data"]["full_address_party_2"] = `${response["data"]["data"]["data"]["address"]["postal_address"]
-          ? response["data"]["data"]["data"]["address"]["postal_address"]
-          : null
-          } ${response["data"]["data"]["data"]["address"]["sub_district"]
-            ? response["data"]["data"]["data"]["address"]["sub_district"][
-            "name"
-            ]
+        response["data"]["data"]["full_address_party_2"] = `${
+          response["data"]["data"]["data"]["address"]["postal_address"]
+            ? response["data"]["data"]["data"]["address"]["postal_address"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["district"]
+        } ${
+          response["data"]["data"]["data"]["address"]["sub_district"]
+            ? response["data"]["data"]["data"]["address"]["sub_district"][
+                "name"
+              ]
+            : null
+        } ${
+          response["data"]["data"]["data"]["address"]["district"]
             ? response["data"]["data"]["data"]["address"]["district"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["province"]
+        } ${
+          response["data"]["data"]["data"]["address"]["province"]
             ? response["data"]["data"]["data"]["address"]["province"]["name"]
             : null
-          } ${response["data"]["data"]["data"]["address"]["postal_code"]
+        } ${
+          response["data"]["data"]["data"]["address"]["postal_code"]
             ? response["data"]["data"]["data"]["address"]["postal_code"]
             : null
-          }`;
-        response["data"]["data"]["full_data_party_2"] = `${response["data"]["data"]["full_name"]
-          } \n\n${response["data"]["data"]["full_address_party_2"]} \n${response["data"]["data"]["data"]["phone_number"]["number"]
-          } ${response["data"]["data"]["data"]["phone_number"]["ext"]
+        }`;
+        response["data"]["data"]["full_data_party_2"] = `${
+          response["data"]["data"]["full_name"]
+        } \n\n${response["data"]["data"]["full_address_party_2"]} \n${
+          response["data"]["data"]["data"]["phone_number"]["number"]
+        } ${
+          response["data"]["data"]["data"]["phone_number"]["ext"]
             ? "\next: ".concat(
-              response["data"]["data"]["data"]["phone_number"]["ext"]
-            )
+                response["data"]["data"]["data"]["phone_number"]["ext"]
+              )
             : ""
-          }`;
+        }`;
         response["data"]["data"][
           "full_data_party_1"
         ] = `PT. GEO DIPA ENERGI \n\n${response["data"]["data"]["name"]} \n${response["data"]["data"]["address"]}`;
@@ -302,10 +308,12 @@ function ItemContractSummary(props) {
     getRolesTerminAuthorization(MAIN_ROLES_AUTHORITY)
       .then((response) => {
         response["data"]["data"].map((item, index) => {
-          if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
-            setTerminAuthorizationStaff(true)
+          if (
+            monitoring_role.findIndex((element) => element === item.name) >= 0
+          ) {
+            setTerminAuthorizationStaff(true);
           }
-        })
+        });
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -532,10 +540,7 @@ function ItemContractSummary(props) {
             type="button"
             className="btn btn-primary mx-1"
             onClick={handleSubmit}
-            disabled={
-              loading ||
-              !terminAuthorizationStaff
-            }
+            disabled={loading || !terminAuthorizationStaff}
           >
             Simpan
             {loading && (
@@ -547,7 +552,7 @@ function ItemContractSummary(props) {
           </button>
         </CardFooter>
       </Card>
-      <Card className="mt-5">
+      {/* <Card className="mt-5">
         <CardBody>
           <div className="my-5 text-center">
             <h6>
@@ -575,7 +580,7 @@ function ItemContractSummary(props) {
             })}
           </TableOnly>
         </CardBody>
-      </Card>
+      </Card> */}
     </React.Fragment>
   );
 }
