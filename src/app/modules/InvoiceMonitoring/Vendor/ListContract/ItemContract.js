@@ -75,19 +75,19 @@ const ItemContract = (props) => {
     );
     suhbeader.setBreadcrumbs([
       {
-        pathname: `/client/invoice_monitoring/contract`,
+        pathname: `/vendor/invoice_monitoring/contract`,
         title: intl.formatMessage({
           id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         }),
       },
       {
-        pathname: `/client/invoice_monitoring/contract/${contract}`,
+        pathname: `/vendor/invoice_monitoring/contract/${contract}`,
         title: intl.formatMessage({
           id: "TITLE.CONTRACT_ITEM",
         }),
       },
       {
-        pathname: `/client/invoice_monitoring/contract/${contract}/${termin}`,
+        pathname: `/vendor/invoice_monitoring/contract/${contract}/${termin}`,
         title: data.termin_name || "",
       },
     ]);

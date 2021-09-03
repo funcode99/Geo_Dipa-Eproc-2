@@ -24,7 +24,7 @@ import {
   getInvoice,
   getContractSummary,
   getTerminProgress,
-  getContractAuthority
+  getContractAuthority,
 } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
@@ -53,9 +53,7 @@ import useToast from "../../../../components/toast";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
-import {
-  getRolesAcceptance
-} from '../../../Master/service/MasterCrud';
+import { getRolesAcceptance } from "../../../Master/service/MasterCrud";
 import { SOCKET } from "../../../../../redux/BaseHost";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -136,7 +134,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ContractHardCopyDoc(props) {
-  const { intl, progressTermin, setProgressTermin, setDataProgress, dataProgress } = props;
+  const {
+    intl,
+    progressTermin,
+    setProgressTermin,
+    setDataProgress,
+    dataProgress,
+  } = props;
   const classes = useStyles();
   const [Toast, setToast] = useToast();
   const [dataReject, setDataReject] = useState({});
@@ -149,13 +153,18 @@ function ContractHardCopyDoc(props) {
   const [billingHardCopy, setBillingHardCopy] = useState(true);
   const [deliverableHardCopy, setDeliverableHardCopy] = useState(true);
   const [contractHardCopy, setContractHardCopy] = useState(true);
+  const [dialogConfirm, setDialogConfirm] = useState(false);
 
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const dataUser = useSelector((state) => state.auth.user.data);
 
-  const indexHardCopy = dataProgress?.findIndex(row => row.ident_name == "HARDCOPY")
-  const statusHardCopy = dataProgress[indexHardCopy]?.status === "ON PROGRESS"
+  const indexHardCopy = dataProgress?.findIndex(
+    (row) => row.ident_name == "HARDCOPY"
+  );
+  const statusHardCopy = dataProgress[indexHardCopy]?.status === "ON PROGRESS";
+  const statusHardCopyNoStarted =
+    dataProgress[indexHardCopy]?.status === "NO STARTED";
 
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
@@ -163,9 +172,9 @@ function ContractHardCopyDoc(props) {
   );
 
   const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
-  const monitoring_role =
-    data_login.monitoring_role ? data_login.monitoring_role
-      : [];
+  const monitoring_role = data_login.monitoring_role
+    ? data_login.monitoring_role
+    : [];
 
   const [approveHardCopyRole, setApproveHardCopyRole] = useState(false);
 
@@ -410,11 +419,13 @@ function ContractHardCopyDoc(props) {
       .then((response) => {
         setLoading(false);
         if (invoiceBkbExist) {
+          setDialogConfirm(false);
           setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
         } else {
           createBkb(data)
             .then((response) => {
               setInvoiceBkbExist(true);
+              setDialogConfirm(false);
               setToast(
                 intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
                 10000
@@ -450,7 +461,7 @@ function ContractHardCopyDoc(props) {
     } else if (status === "monitoring") {
       window.open(
         DEV_NODE +
-        `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
+          `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
         "_blank"
       );
     } else if (status === "delivery") {
@@ -463,7 +474,7 @@ function ContractHardCopyDoc(props) {
     var data = {
       hardcopy_approved_by_id: user_id,
       term_id: termin,
-      contract_id: contract_id
+      contract_id: contract_id,
     };
     const document_monitoring_id = modalApproved.data.document_monitoring
       ? modalApproved.data.document_monitoring.id
@@ -482,17 +493,16 @@ function ContractHardCopyDoc(props) {
             callApiContractSoftCopy();
             callApiBillingHardCopy();
           }
-          getTerminProgress(termin)
-            .then((result) => {
-              setDataProgress(result.data.data?.data);
-            })
+          getTerminProgress(termin).then((result) => {
+            setDataProgress(result.data.data?.data);
+          });
           setModalApproved({
             ...modalApproved,
             statusDialog: false,
             loading: false,
           });
         }, 2500);
-        SOCKET.emit('get_all_notification', user_id);
+        SOCKET.emit("get_all_notification", user_id);
       })
       .catch((err) => {
         setModalApproved({
@@ -553,7 +563,7 @@ function ContractHardCopyDoc(props) {
               });
               document.getElementById("commentRejected").value = "";
             }, 2500);
-            SOCKET.emit('get_all_notification', user_id);
+            SOCKET.emit("get_all_notification", user_id);
           })
           .catch((err) => {
             setModalReject({
@@ -586,14 +596,19 @@ function ContractHardCopyDoc(props) {
     getContractAuthority(termin)
       .then((response) => {
         if (response["data"]["data"]) {
-          getRolesAcceptance(response["data"]["data"]["authority"])
-            .then(responseRoles => {
+          getRolesAcceptance(response["data"]["data"]["authority"]).then(
+            (responseRoles) => {
               responseRoles["data"]["data"].map((item, index) => {
-                if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
-                  setApproveHardCopyRole(true)
+                if (
+                  monitoring_role.findIndex(
+                    (element) => element === item.name
+                  ) >= 0
+                ) {
+                  setApproveHardCopyRole(true);
                 }
-              })
-            })
+              });
+            }
+          );
         }
       })
       .catch((error) => {
@@ -629,6 +644,43 @@ function ContractHardCopyDoc(props) {
     <React.Fragment>
       <Toast />
       {loading && <LinearProgress color="secondary" className="rounded" />}
+      <Dialog
+        open={dialogConfirm}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+        style={{ zIndex: "1301" }}
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          <FormattedMessage id="TITLE.CONFIRMATION" />{" "}
+        </DialogTitle>
+        <DialogContent>
+          Apakah Anda yakin ingin melakukan{" "}
+          <span className="font-weight-bold">Send Notif</span> ?
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              setDialogConfirm(false);
+            }}
+            disabled={loading}
+          >
+            Kembali
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="btn btn-sm btn-primary mr-2"
+            disabled={loading}
+          >
+            Ya
+          </button>
+        </DialogActions>
+      </Dialog>
       <Dialog
         open={modalApproved.statusDialog}
         TransitionComponent={Transition}
@@ -829,8 +881,8 @@ function ContractHardCopyDoc(props) {
                         <TableCell>
                           {item.hardcopy_approved_at
                             ? window
-                              .moment(new Date(item.hardcopy_approved_at))
-                              .format("DD MMM YYYY")
+                                .moment(new Date(item.hardcopy_approved_at))
+                                .format("DD MMM YYYY")
                             : ""}
                         </TableCell>
                         <TableCell>
@@ -839,12 +891,16 @@ function ContractHardCopyDoc(props) {
                               item.softcopy_state === null
                                 ? "WAITING SOFTCOPY APPROVED"
                                 : item.hardcopy_state === null
-                                  ? "WAITING TO APPROVE"
-                                  : item.hardcopy_state === "REJECTED"
-                                    ? "REJECTED"
-                                    : "APPROVED"
+                                ? "WAITING TO APPROVE"
+                                : item.hardcopy_state === "REJECTED"
+                                ? "REJECTED"
+                                : "APPROVED"
                             }
-                            remarks={item.hardcopy_state === "REJECTED" ? item?.hardcopy_rejected_remark : ''}
+                            remarks={
+                              item.hardcopy_state === "REJECTED"
+                                ? item?.hardcopy_rejected_remark
+                                : ""
+                            }
                           />
                         </TableCell>
                         <TableCell>
@@ -853,13 +909,12 @@ function ContractHardCopyDoc(props) {
                             : null}
                         </TableCell>
                         <TableCell>
-                          {
-                            dataUser?.is_finance &&
-                            (item.hardcopy_state === null || item.hardcopy_state === "REJECTED") &&
-                            (item.softcopy_state !== null) &&
+                          {dataUser?.is_finance &&
+                            (item.hardcopy_state === null ||
+                              item.hardcopy_state === "REJECTED") &&
+                            item.softcopy_state !== null &&
                             statusHardCopy &&
-                            approveHardCopyRole &&
-                            (
+                            approveHardCopyRole && (
                               <ButtonAction
                                 data={item}
                                 handleAction={handleAction}
@@ -920,124 +975,138 @@ function ContractHardCopyDoc(props) {
                           // Periode Dokumen
                           return isPeriodic
                             ? item?.periodes?.map((el, id) => (
-                              <RowAccordion
-                                key={id}
-                                classBtn={"pl-8"}
-                                dataAll={el}
-                                data={[
-                                  "accordIcon",
-                                  el?.name,
-                                  "-",
-                                  "-",
-                                  "-",
-                                  "-",
-                                  "-",
-                                  "-",
-                                ]}
-                              >
-                                {/* Dokumen */}
-                                {(item2) =>
-                                  item2?.documents?.map((els, idx) => {
-                                    if (
-                                      els?.document_monitoring
-                                        ?.softcopy_state === "APPROVED"
-                                    ) {
-                                      return (
-                                        <RowAccordion
-                                          key={idx}
-                                          classBtn={"pl-13"}
-                                          data={[
-                                            "accordIcon",
-                                            els?.document_custom_name ??
-                                            els?.document?.name,
-                                            formatDate(
-                                              new Date(els?.due_date)
-                                            ),
-                                            <StatusRemarks
-                                              status={
-                                                els?.document_monitoring.hardcopy_state !== null
-                                                  ? els?.document_monitoring.hardcopy_state
-                                                  : "WAITING TO APPROVED"
-                                              }
-                                              remarks={els?.document_monitoring?.hardcopy_history[0]?.rejected_re}
-                                            />,
-                                            els?.percentage &&
-                                            els?.percentage + "%",
-                                            <BtnLihat url={els?.url} />,
-                                            els.document_monitoring
-                                              ?.hardcopy_state === "APPROVED"
-                                              ? "-"
-                                              : els?.document_monitoring
-                                                .hardcopy_history[0]
-                                                ?.rejected_re,
-                                            els?.url &&
-                                            (els.document_monitoring
-                                              ?.hardcopy_state === null ||
-                                              els.document_monitoring
-                                                ?.hardcopy_state ===
-                                              "REJECTED") &&
-                                            statusHardCopy &&
-                                            approveHardCopyRole && (
-                                              <ButtonAction
-                                                data={els}
-                                                handleAction={
-                                                  handleActionDeliverable
+                                <RowAccordion
+                                  key={id}
+                                  classBtn={"pl-8"}
+                                  dataAll={el}
+                                  data={[
+                                    "accordIcon",
+                                    el?.name,
+                                    "-",
+                                    "-",
+                                    "-",
+                                    "-",
+                                    "-",
+                                    "-",
+                                  ]}
+                                >
+                                  {/* Dokumen */}
+                                  {(item2) =>
+                                    item2?.documents?.map((els, idx) => {
+                                      if (
+                                        els?.document_monitoring
+                                          ?.softcopy_state === "APPROVED"
+                                      ) {
+                                        return (
+                                          <RowAccordion
+                                            key={idx}
+                                            classBtn={"pl-13"}
+                                            data={[
+                                              "accordIcon",
+                                              els?.document_custom_name ??
+                                                els?.document?.name,
+                                              formatDate(
+                                                new Date(els?.due_date)
+                                              ),
+                                              <StatusRemarks
+                                                status={
+                                                  els?.document_monitoring
+                                                    .hardcopy_state !== null
+                                                    ? els?.document_monitoring
+                                                        .hardcopy_state
+                                                    : "WAITING TO APPROVED"
                                                 }
-                                                ops={data_opsDeliverable}
-                                              />
-                                            ),
-                                          ]}
-                                        />
-                                      );
-                                    }
-                                  })
-                                }
-                              </RowAccordion>
-                            ))
+                                                remarks={
+                                                  els?.document_monitoring
+                                                    ?.hardcopy_history[0]
+                                                    ?.rejected_re
+                                                }
+                                              />,
+                                              els?.percentage &&
+                                                els?.percentage + "%",
+                                              <BtnLihat url={els?.url} />,
+                                              els.document_monitoring
+                                                ?.hardcopy_state === "APPROVED"
+                                                ? "-"
+                                                : els?.document_monitoring
+                                                    .hardcopy_history[0]
+                                                    ?.rejected_re,
+                                              els?.url &&
+                                                (els.document_monitoring
+                                                  ?.hardcopy_state === null ||
+                                                  els.document_monitoring
+                                                    ?.hardcopy_state ===
+                                                    "REJECTED") &&
+                                                statusHardCopy &&
+                                                approveHardCopyRole && (
+                                                  <ButtonAction
+                                                    data={els}
+                                                    handleAction={
+                                                      handleActionDeliverable
+                                                    }
+                                                    ops={data_opsDeliverable}
+                                                  />
+                                                ),
+                                            ]}
+                                          />
+                                        );
+                                      }
+                                    })
+                                  }
+                                </RowAccordion>
+                              ))
                             : item?.documents?.map((el, id) => {
-                              if (
-                                el?.document_monitoring?.softcopy_state ===
-                                "APPROVED"
-                              ) {
-                                return (
-                                  <RowAccordion
-                                    //  Dokumen
-                                    key={id}
-                                    classBtn={"pl-13"}
-                                    data={[
-                                      "accordIcon",
-                                      el?.document_custom_name ??
-                                      el?.document?.name,
-                                      formatDate(new Date(el?.due_date)),
-                                      <StatusRemarks
-                                        status={
-                                          el?.document_monitoring.hardcopy_state !== null
-                                            ? el?.document_monitoring.hardcopy_state
-                                            : "WAITING TO APPROVED"
-                                        }
-                                        remarks={el?.document_monitoring?.hardcopy_history[0]?.rejected_re}
-                                      />,
-                                      el?.percentage && el?.percentage + "%",
-                                      <BtnLihat url={el?.url} />,
-                                      el?.remarks,
-                                      el?.url &&
-                                      (el.document_monitoring?.hardcopy_state === null || el.document_monitoring?.hardcopy_state === "REJECTED") &&
-                                      statusHardCopy &&
-                                      approveHardCopyRole &&
-                                      (
-                                        <ButtonAction
-                                          data={el}
-                                          handleAction={
-                                            handleActionDeliverable
+                                if (
+                                  el?.document_monitoring?.softcopy_state ===
+                                  "APPROVED"
+                                ) {
+                                  return (
+                                    <RowAccordion
+                                      //  Dokumen
+                                      key={id}
+                                      classBtn={"pl-13"}
+                                      data={[
+                                        "accordIcon",
+                                        el?.document_custom_name ??
+                                          el?.document?.name,
+                                        formatDate(new Date(el?.due_date)),
+                                        <StatusRemarks
+                                          status={
+                                            el?.document_monitoring
+                                              .hardcopy_state !== null
+                                              ? el?.document_monitoring
+                                                  .hardcopy_state
+                                              : "WAITING TO APPROVED"
                                           }
-                                          ops={data_opsDeliverable}
-                                        />
-                                      ),
-                                    ]}
-                                  />
-                                );
-                              }
-                            });
+                                          remarks={
+                                            el?.document_monitoring
+                                              ?.hardcopy_history[0]?.rejected_re
+                                          }
+                                        />,
+                                        el?.percentage && el?.percentage + "%",
+                                        <BtnLihat url={el?.url} />,
+                                        el?.remarks,
+                                        el?.url &&
+                                          (el.document_monitoring
+                                            ?.hardcopy_state === null ||
+                                            el.document_monitoring
+                                              ?.hardcopy_state ===
+                                              "REJECTED") &&
+                                          statusHardCopy &&
+                                          approveHardCopyRole && (
+                                            <ButtonAction
+                                              data={el}
+                                              handleAction={
+                                                handleActionDeliverable
+                                              }
+                                              ops={data_opsDeliverable}
+                                            />
+                                          ),
+                                      ]}
+                                    />
+                                  );
+                                }
+                              });
                         }}
                       </RowAccordion>
                     );
@@ -1083,10 +1152,10 @@ function ContractHardCopyDoc(props) {
                                   item.doc_status == "INVOICE"
                                     ? getFileInvoice + item.doc_file
                                     : item.doc_status == "SPP"
-                                      ? getFileSpp + item.doc_file
-                                      : item.doc_status == "RECEIPT"
-                                        ? getFileReceipt + item.doc_file
-                                        : getFileTax + item.doc_file
+                                    ? getFileSpp + item.doc_file
+                                    : item.doc_status == "RECEIPT"
+                                    ? getFileReceipt + item.doc_file
+                                    : getFileTax + item.doc_file
                                 }
                               >
                                 {item.doc_no}
@@ -1103,8 +1172,8 @@ function ContractHardCopyDoc(props) {
                         <TableCell>
                           {item.hardcopy_approved_at
                             ? window
-                              .moment(new Date(item.hardcopy_approved_at))
-                              .format("DD MMM YYYY")
+                                .moment(new Date(item.hardcopy_approved_at))
+                                .format("DD MMM YYYY")
                             : ""}
                         </TableCell>
                         <TableCell>
@@ -1113,12 +1182,16 @@ function ContractHardCopyDoc(props) {
                               item.softcopy_state === null
                                 ? "WAITING SOFTCOPY APPROVED"
                                 : item.hardcopy_state === null
-                                  ? "WAITING TO APPROVE"
-                                  : item.hardcopy_state === "REJECTED"
-                                    ? "REJECTED"
-                                    : "APPROVED"
+                                ? "WAITING TO APPROVE"
+                                : item.hardcopy_state === "REJECTED"
+                                ? "REJECTED"
+                                : "APPROVED"
                             }
-                            remarks={item.hardcopy_state === "REJECTED" ? item?.hardcopy_rejected_remark : ''}
+                            remarks={
+                              item.hardcopy_state === "REJECTED"
+                                ? item?.hardcopy_rejected_remark
+                                : ""
+                            }
                           />
                         </TableCell>
                         <TableCell>
@@ -1153,8 +1226,10 @@ function ContractHardCopyDoc(props) {
           <button
             type="button"
             className="btn btn-sm btn-primary mx-1"
-            onClick={handleSubmit}
-            disabled={loading}
+            onClick={() => {
+              setDialogConfirm(true);
+            }}
+            disabled={loading || statusHardCopyNoStarted}
           >
             Send Notif
           </button>
@@ -1228,7 +1303,7 @@ function ContractHardCopyDoc(props) {
                     type="text"
                     className="form-control"
                     value={rupiah(contractData?.termin_value)}
-                    onChange={(e) => { }}
+                    onChange={(e) => {}}
                     readOnly
                   />
                 </div>
@@ -1286,14 +1361,14 @@ function ContractHardCopyDoc(props) {
                         item.hardcopy_state === "APPROVED"
                           ? "checkboxs-true"
                           : item.hardcopy_state === "REJECTED"
-                            ? "checkboxs-false"
-                            : "checkboxs"
+                          ? "checkboxs-false"
+                          : "checkboxs"
                       }
                     >
                       <input
                         type="checkbox"
                         checked={true}
-                        onChange={(e) => { }}
+                        onChange={(e) => {}}
                       />
                       <span></span>
                     </label>
@@ -1303,8 +1378,8 @@ function ContractHardCopyDoc(props) {
                     <span>
                       {item.hardcopy_approved_at
                         ? window
-                          .moment(new Date(item.hardcopy_approved_at))
-                          .format("DD MMM YYYY")
+                            .moment(new Date(item.hardcopy_approved_at))
+                            .format("DD MMM YYYY")
                         : null}
                     </span>
                   </div>
@@ -1322,155 +1397,155 @@ function ContractHardCopyDoc(props) {
               const isPeriodic = item.is_periodic;
               return isPeriodic
                 ? item?.periodes?.map((els, idx) => {
-                  return (
-                    <div key={idx.toString()}>
-                      <div className="row mt-3">
-                        <div className="col-sm-4">
-                          <label className="checkboxs-minus">
-                            <input
-                              type="checkbox"
-                              checked={true}
-                              onChange={(e) => { }}
-                            />
+                    return (
+                      <div key={idx.toString()}>
+                        <div className="row mt-3">
+                          <div className="col-sm-4">
+                            <label className="checkboxs-minus">
+                              <input
+                                type="checkbox"
+                                checked={true}
+                                onChange={(e) => {}}
+                              />
+                              <span></span>
+                            </label>
+                            <span className="ml-2">
+                              {item.name + " - " + els.name}
+                            </span>
+                          </div>
+                          <div className="col-sm-3 border-bottom">
                             <span></span>
-                          </label>
-                          <span className="ml-2">
-                            {item.name + " - " + els.name}
-                          </span>
+                          </div>
+                          <div className="col-sm-5 border-bottom">
+                            <span></span>
+                          </div>
                         </div>
-                        <div className="col-sm-3 border-bottom">
-                          <span></span>
-                        </div>
-                        <div className="col-sm-5 border-bottom">
-                          <span></span>
-                        </div>
-                      </div>
-                      {els.documents.map((el, id) => {
-                        if (
-                          el?.document_monitoring?.softcopy_state ===
-                          "APPROVED"
-                        ) {
-                          return (
-                            <div className="row mt-2" key={id.toString()}>
-                              <div className="col-sm-4">
-                                <label
-                                  className={
-                                    el?.document_monitoring
-                                      ?.hardcopy_state === "APPROVED"
-                                      ? "checkboxs-true"
-                                      : el?.document_monitoring
-                                        ?.hardcopy_state === "REJECTED"
+                        {els.documents.map((el, id) => {
+                          if (
+                            el?.document_monitoring?.softcopy_state ===
+                            "APPROVED"
+                          ) {
+                            return (
+                              <div className="row mt-2" key={id.toString()}>
+                                <div className="col-sm-4">
+                                  <label
+                                    className={
+                                      el?.document_monitoring
+                                        ?.hardcopy_state === "APPROVED"
+                                        ? "checkboxs-true"
+                                        : el?.document_monitoring
+                                            ?.hardcopy_state === "REJECTED"
                                         ? "checkboxs-false"
                                         : "checkboxs"
-                                  }
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={true}
-                                    onChange={(e) => { }}
-                                  />
-                                  <span></span>
-                                </label>
-                                <span>
-                                  {el.document.name +
-                                    " - " +
-                                    window
-                                      .moment(new Date(el.due_date))
-                                      .format("DD MMM YYYY")}
-                                </span>
-                              </div>
-                              <div className="col-sm-3 border-bottom">
-                                <span>
-                                  {el?.document_monitoring
-                                    ?.hardcopy_approved_at
-                                    ? window
-                                      .moment(
-                                        new Date(
-                                          el?.document_monitoring?.hardcopy_approved_at
-                                        )
-                                      )
-                                      .format("DD MMM YYYY")
-                                    : null}
-                                </span>
-                              </div>
-                              <div className="col-sm-5 border-bottom">
-                                <span>
-                                  {el?.document_monitoring?.hardcopy_state ===
+                                    }
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={true}
+                                      onChange={(e) => {}}
+                                    />
+                                    <span></span>
+                                  </label>
+                                  <span>
+                                    {el.document.name +
+                                      " - " +
+                                      window
+                                        .moment(new Date(el.due_date))
+                                        .format("DD MMM YYYY")}
+                                  </span>
+                                </div>
+                                <div className="col-sm-3 border-bottom">
+                                  <span>
+                                    {el?.document_monitoring
+                                      ?.hardcopy_approved_at
+                                      ? window
+                                          .moment(
+                                            new Date(
+                                              el?.document_monitoring?.hardcopy_approved_at
+                                            )
+                                          )
+                                          .format("DD MMM YYYY")
+                                      : null}
+                                  </span>
+                                </div>
+                                <div className="col-sm-5 border-bottom">
+                                  <span>
+                                    {el?.document_monitoring?.hardcopy_state ===
                                     "REJECTED"
-                                    ? el?.document_monitoring
-                                      ?.hardcopy_history.length > 0 &&
-                                    el?.document_monitoring
-                                      ?.hardcopy_history[
-                                      el?.document_monitoring
-                                        ?.hardcopy_history.length - 1
-                                    ].rejected_re
-                                    : null}
-                                </span>
+                                      ? el?.document_monitoring
+                                          ?.hardcopy_history.length > 0 &&
+                                        el?.document_monitoring
+                                          ?.hardcopy_history[
+                                          el?.document_monitoring
+                                            ?.hardcopy_history.length - 1
+                                        ].rejected_re
+                                      : null}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          );
-                        }
-                      })}
-                    </div>
-                  );
-                })
-                : item?.documents?.map((el, id) => {
-                  if (
-                    el?.document_monitoring?.softcopy_state === "APPROVED"
-                  ) {
-                    return (
-                      <div className="row mt-3" key={id.toString()}>
-                        <div className="col-sm-4">
-                          <label
-                            className={
-                              el.document_monitoring.hardcopy_state ===
-                                "APPROVED"
-                                ? "checkboxs-true"
-                                : el.document_monitoring.hardcopy_state ===
-                                  "REJECTED"
-                                  ? "checkboxs-false"
-                                  : "checkboxs"
-                            }
-                          >
-                            <input
-                              type="checkbox"
-                              checked={true}
-                              onChange={(e) => { }}
-                            />
-                            <span></span>
-                          </label>
-                          <span className="ml-2">{el.document.name}</span>
-                        </div>
-                        <div className="col-sm-3 border-bottom">
-                          <span>
-                            {el?.document_monitoring?.hardcopy_approved_at
-                              ? window
-                                .moment(
-                                  new Date(
-                                    el?.document_monitoring?.hardcopy_approved_at
-                                  )
-                                )
-                                .format("DD MMM YYYY")
-                              : null}
-                          </span>
-                        </div>
-                        <div className="col-sm-5 border-bottom">
-                          <span>
-                            {el?.document_monitoring?.hardcopy_state ===
-                              "REJECTED"
-                              ? el?.document_monitoring?.hardcopy_history
-                                .length > 0 &&
-                              el?.document_monitoring?.hardcopy_history[
-                                el?.document_monitoring?.hardcopy_history
-                                  .length - 1
-                              ].rejected_re
-                              : null}
-                          </span>
-                        </div>
+                            );
+                          }
+                        })}
                       </div>
                     );
-                  }
-                });
+                  })
+                : item?.documents?.map((el, id) => {
+                    if (
+                      el?.document_monitoring?.softcopy_state === "APPROVED"
+                    ) {
+                      return (
+                        <div className="row mt-3" key={id.toString()}>
+                          <div className="col-sm-4">
+                            <label
+                              className={
+                                el.document_monitoring.hardcopy_state ===
+                                "APPROVED"
+                                  ? "checkboxs-true"
+                                  : el.document_monitoring.hardcopy_state ===
+                                    "REJECTED"
+                                  ? "checkboxs-false"
+                                  : "checkboxs"
+                              }
+                            >
+                              <input
+                                type="checkbox"
+                                checked={true}
+                                onChange={(e) => {}}
+                              />
+                              <span></span>
+                            </label>
+                            <span className="ml-2">{el.document.name}</span>
+                          </div>
+                          <div className="col-sm-3 border-bottom">
+                            <span>
+                              {el?.document_monitoring?.hardcopy_approved_at
+                                ? window
+                                    .moment(
+                                      new Date(
+                                        el?.document_monitoring?.hardcopy_approved_at
+                                      )
+                                    )
+                                    .format("DD MMM YYYY")
+                                : null}
+                            </span>
+                          </div>
+                          <div className="col-sm-5 border-bottom">
+                            <span>
+                              {el?.document_monitoring?.hardcopy_state ===
+                              "REJECTED"
+                                ? el?.document_monitoring?.hardcopy_history
+                                    .length > 0 &&
+                                  el?.document_monitoring?.hardcopy_history[
+                                    el?.document_monitoring?.hardcopy_history
+                                      .length - 1
+                                  ].rejected_re
+                                : null}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    }
+                  });
             })}
             {dataBillingHardCopy.map((item, index) => {
               return (
@@ -1481,14 +1556,14 @@ function ContractHardCopyDoc(props) {
                         item.hardcopy_state === "APPROVED"
                           ? "checkboxs-true"
                           : item.hardcopy_state === "REJECTED"
-                            ? "checkboxs-false"
-                            : "checkboxs"
+                          ? "checkboxs-false"
+                          : "checkboxs"
                       }
                     >
                       <input
                         type="checkbox"
                         checked={true}
-                        onChange={(e) => { }}
+                        onChange={(e) => {}}
                       />
                       <span></span>
                     </label>
@@ -1498,8 +1573,8 @@ function ContractHardCopyDoc(props) {
                     <span>
                       {item.hardcopy_approved_at
                         ? window
-                          .moment(new Date(item.hardcopy_approved_at))
-                          .format("DD MMM YYYY")
+                            .moment(new Date(item.hardcopy_approved_at))
+                            .format("DD MMM YYYY")
                         : null}
                     </span>
                   </div>
