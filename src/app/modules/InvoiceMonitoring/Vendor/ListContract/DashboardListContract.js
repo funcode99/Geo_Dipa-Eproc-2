@@ -136,7 +136,7 @@ function DashboardListContract(props) {
   useLayoutEffect(() => {
     suhbeader.setBreadcrumbs([
       {
-        pathname: `/client/invoice_monitoring/contract`,
+        pathname: `/vendor/invoice_monitoring/contract`,
         title: intl.formatMessage({
           id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         }),

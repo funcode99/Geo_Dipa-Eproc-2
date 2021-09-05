@@ -38,57 +38,57 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function ItemContractSummary(props) {
   const { intl, getData } = props;
-  const [data] = useState([
-    {
-      name: "BAPP",
-      status: "Approved",
-      approvedBy: "Dian",
-      date: "30 Jan 2021",
-      nameDoc: "BAPP.pdf",
-    },
-    {
-      name: "User Manual",
-      status: "Approved",
-      approvedBy: "Dian",
-      date: "30 Jan 2021",
-      nameDoc: "BAPP.pdf",
-    },
-    {
-      name: "Timesheet",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-    {
-      name: "Invoice",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-    {
-      name: "Faktur Pajak",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-    {
-      name: "Surat Permohonan Pajak",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-    {
-      name: "Kuitansi",
-      status: "Waiting",
-      approvedBy: null,
-      date: null,
-      nameDoc: null,
-    },
-  ]);
+  // const [data] = useState([
+  //   {
+  //     name: "BAPP",
+  //     status: "Approved",
+  //     approvedBy: "Dian",
+  //     date: "30 Jan 2021",
+  //     nameDoc: "BAPP.pdf",
+  //   },
+  //   {
+  //     name: "User Manual",
+  //     status: "Approved",
+  //     approvedBy: "Dian",
+  //     date: "30 Jan 2021",
+  //     nameDoc: "BAPP.pdf",
+  //   },
+  //   {
+  //     name: "Timesheet",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  //   {
+  //     name: "Invoice",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  //   {
+  //     name: "Faktur Pajak",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  //   {
+  //     name: "Surat Permohonan Pajak",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  //   {
+  //     name: "Kuitansi",
+  //     status: "Waiting",
+  //     approvedBy: null,
+  //     date: null,
+  //     nameDoc: null,
+  //   },
+  // ]);
 
   const headerTable = [
     {
@@ -987,7 +987,7 @@ function ItemContractSummary(props) {
           </button>
         </CardFooter>
       </Card>
-      <Card className="mt-5">
+      {/* <Card className="mt-5">
         <CardBody>
           <div className="my-5 text-center">
             <h6>
@@ -1015,7 +1015,7 @@ function ItemContractSummary(props) {
             })}
           </TableOnly>
         </CardBody>
-      </Card>
+      </Card> */}
     </React.Fragment>
   );
 }
