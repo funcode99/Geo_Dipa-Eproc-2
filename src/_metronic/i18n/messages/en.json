@@ -595,5 +595,8 @@
   "TITLE.TOTAL_AMOUNT": "Total Amount",
   "TITLE.CONTRACT_END_DATE": "Contract End Date",
   "TITLE.CHOOSE_BKB_GIRO_SIGNED": "Choose Giro Signed Position Person.",
-  "TITLE.SEND_EMAIL": "Send Email"
+  "TITLE.SEND_EMAIL": "Send Email",
+  "SPAN.DAYS": "Days ",
+  "SPAN.HOURS": "Hours ",
+  "SPAN.MINUTES": "Minutes "
 }
