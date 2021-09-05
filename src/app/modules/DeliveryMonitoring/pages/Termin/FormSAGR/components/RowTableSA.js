@@ -25,6 +25,7 @@ const RowTableSA = ({ item, index }) => {
   //   console.log(`data`, data);
   // };
   const _handleBlur = () => {
+    console.log("formikRef.current", formikRef.current);
     setArrService((prev) => ({
       ...prev,
       [`service_${index}`]: formikRef.current.values,
@@ -32,6 +33,8 @@ const RowTableSA = ({ item, index }) => {
   };
   useEffect(() => {
     setArrService((prev) => ({ ...prev, [`service_${index}`]: item }));
+    _handleBlur();
+    formikRef.current.validateForm();
   }, []);
 
   return (
