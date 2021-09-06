@@ -32,10 +32,11 @@ const FormBuilder = (
       innerRef={formikRef}
       initialValues={initial}
       onSubmit={_handleSubmit}
+      validateOnChange={false}
       validationSchema={validation}
     >
       {(formikProps) => {
-        const { handleSubmit } = formikProps;
+        const { handleSubmit, isValid } = formikProps;
         return (
           <React.Fragment>
             {typeof children === "function" ? (
@@ -51,7 +52,7 @@ const FormBuilder = (
                   color="secondary"
                   size="medium"
                   onClick={handleSubmit}
-                  disabled={loading || disabledButton}
+                  disabled={loading || disabledButton || !isValid}
                 >
                   <span className="mr-1">Submit</span>
                   {loading ? (

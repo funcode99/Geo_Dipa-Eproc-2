@@ -67,7 +67,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg }) => {
     });
   };
   useEffect(() => handleRefresh(), []);
-  // console.log(`itemJasa`, itemJasa);
+  // console.log(`itemJasa`, arrService);
   return (
     <FormSAContext.Provider
       value={{
@@ -82,6 +82,9 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg }) => {
         onSubmit={_handleSubmit}
         formData={sa_field}
         validation={validationSchema_sa}
+        disabledButton={Object.values(arrService).some(
+          ({ isValid }, id) => isValid === false
+        )}
       />
     </FormSAContext.Provider>
   );

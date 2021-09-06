@@ -28,12 +28,23 @@ const RenderInput = ({
   listOptions,
   labelSize = 4,
   formInputSize = 8,
+  onFocus,
+  onBlur,
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom";
   const Component = inputs[typeInput || "BasicInput"];
-  const { values, errors, setFieldValue, setFieldTouched } = formik;
+  const { values, errors, setFieldValue, setTouched, touched } = formik;
   const selectProps = isSelect ? { listOptions } : {};
+
+  const _handleFocus = (e) => {
+    setTouched({ [name]: true });
+    if (typeof onFocus === "function") onFocus(e);
+  };
+  const _handleBlur = (e) => {
+    setTouched({});
+    if (typeof onBlur === "function") onBlur(e);
+  };
 
   // const _onChange = (val) => {
   //   setFieldValue(name, val, true)
@@ -54,7 +65,8 @@ const RenderInput = ({
                 name={name}
                 // onChange={handleChange(name)}
                 onChange={(val) => setFieldValue(name, val, true)}
-                onFocus={() => setFieldTouched(name)}
+                onFocus={_handleFocus}
+                onBlur={_handleBlur}
                 disabled={readOnly || disabledFields.includes(name)}
                 //   onChange={trigger ? this._triggerChange : handleChange(name)}
                 //   onFocus={() => setFieldTouched(name)}
@@ -65,7 +77,9 @@ const RenderInput = ({
                 {...otherProps}
               />
               {/* <ErrorMessage name={name} /> */}
-              <span className={"text-danger mt-2"}>{errors[name]}</span>
+              {!!!touched[name] && (
+                <span className={"text-danger mt-2"}>{errors[name]}</span>
+              )}
             </div>
           </div>
         </div>

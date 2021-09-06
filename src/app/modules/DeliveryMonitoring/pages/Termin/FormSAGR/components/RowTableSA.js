@@ -28,13 +28,19 @@ const RowTableSA = ({ item, index }) => {
     console.log("formikRef.current", formikRef.current);
     setArrService((prev) => ({
       ...prev,
-      [`service_${index}`]: formikRef.current.values,
+      [`service_${index}`]: {
+        ...formikRef.current.values,
+        isValid: formikRef.current.isValid,
+      },
     }));
   };
   useEffect(() => {
-    setArrService((prev) => ({ ...prev, [`service_${index}`]: item }));
-    _handleBlur();
-    formikRef.current.validateForm();
+    setArrService((prev) => ({
+      ...prev,
+      [`service_${index}`]: { item, isValid: false },
+    }));
+    // _handleBlur();
+    // formikRef.current.validateForm();
   }, []);
 
   return (
@@ -43,6 +49,8 @@ const RowTableSA = ({ item, index }) => {
       innerRef={formikRef}
       initialValues={item}
       // onSubmit={_handleSubmit}
+      // validateOnMount
+      validateOnChange={false}
       validationSchema={validationSchema}
     >
       <TableRow hover>
