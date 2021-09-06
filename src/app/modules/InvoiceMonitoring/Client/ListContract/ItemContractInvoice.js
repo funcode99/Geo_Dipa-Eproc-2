@@ -490,6 +490,8 @@ function ItemContractInvoice(props) {
       );
     } else if (status === "delivery") {
       window.open(DEV_NODE + "/" + name, "_blank");
+    } else if (status === "link") {
+      window.open(name.includes("http") ? name : `http://${name}`, "_blank");
     }
   };
 

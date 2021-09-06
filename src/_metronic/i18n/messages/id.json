@@ -594,5 +594,8 @@
   "TITLE.TOTAL_AMOUNT": "Total Amount",
   "TITLE.CONTRACT_END_DATE": "Contract End Date",
   "TITLE.CHOOSE_BKB_GIRO_SIGNED": "Pilih yang akan menandatangani Cek Giro.",
-  "TITLE.SEND_EMAIL": "Kirim Email"
+  "TITLE.SEND_EMAIL": "Kirim Email",
+  "SPAN.DAYS": "Hari ",
+  "SPAN.HOURS": "Jam ",
+  "SPAN.MINUTES": "Menit "
 }
