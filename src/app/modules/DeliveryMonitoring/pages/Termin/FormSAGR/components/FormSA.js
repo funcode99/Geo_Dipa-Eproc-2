@@ -69,15 +69,15 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
     });
   };
   useEffect(() => handleRefresh(), []);
-  console.log(`itemJasa`, dataSA);
+  // console.log(`itemJasa`, dataSA);
 
   const initial = React.useMemo(
     () => ({
       // ext_number: dataSA?.ext_number,
       // short_text: validation.require("Short Text"),
       // location: validation.require("Location"),
-      // begdate: validation.require("Begin Date"),
-      // enddate: validation.require("End Date"),
+      begdate: dataSA?.beg_date,
+      enddate: dataSA?.end_date,
       // person_int: validation.require("Person Internal"),
       // person_ext: validation.require("Person External"),
       // post_date: validation.require("Post Date"),
@@ -111,6 +111,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           fieldProps={{
             readOnly: saExist,
           }}
+          withSubmit={!saExist}
           disabledButton={Object.values(arrService).some(
             ({ isValid }, id) => isValid === false
           )}

@@ -21,16 +21,21 @@ const TableSA = ({}) => {
   );
   const { itemJasa, readOnly, dataSA } = React.useContext(FormSAContext);
   const dataUsed = readOnly ? dataSA.services : itemJasa;
-  console.log(`dataUsed`, dataUsed);
+  // console.log(`dataUsed`, dataUsed);
 
   return (
     <TablePaginationCustom
       headerRows={headerTableSA}
       rows={dataUsed?.map((el) => ({
-        name_service: el?.service?.short_text || "kosong",
-        service_id: el?.service?.id || "kosong",
+        name_service: el?.service?.short_text || "",
+        service_id: el?.service?.id || "",
         qty: el?.qty,
         ...el,
+        wbs: { label: el?.wbs_elem },
+        dist_type: option_dist_type.filter(
+          (els) => els.value === el?.distribution_type
+        )[0],
+        cost_center: el?.costcenter,
       }))}
       width={2000}
       loading={false}
