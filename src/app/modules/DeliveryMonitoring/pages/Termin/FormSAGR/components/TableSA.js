@@ -16,37 +16,21 @@ const TableSA = ({}) => {
         wbs: "Jasa 1 wbs",
         value: "Jasa 1 value",
       },
-      {
-        name_service: "Jasa 2",
-        gl_account: "Jasa 2 gl_account",
-        bus_area: "Jasa 2 bus_area",
-        cost_center: "Jasa 2 cost_center",
-        dist_type: "Jasa 2 dist_type",
-        wbs: "Jasa 2 wbs",
-        value: "Jasa 2 value",
-      },
-      {
-        name_service: "Jasa 3",
-        gl_account: "Jasa 3 gl_account",
-        bus_area: "Jasa 3 bus_area",
-        cost_center: "Jasa 3 cost_center",
-        dist_type: "Jasa 3 dist_type",
-        wbs: "Jasa 3 wbs",
-        value: "Jasa 3 value",
-      },
     ],
     []
   );
-  const { itemJasa } = React.useContext(FormSAContext);
+  const { itemJasa, readOnly, dataSA } = React.useContext(FormSAContext);
+  const dataUsed = readOnly ? dataSA.services : itemJasa;
+  console.log(`dataUsed`, dataUsed);
 
   return (
     <TablePaginationCustom
       headerRows={headerTableSA}
-      rows={itemJasa?.map((el) => ({
-        // ...el,
-        name_service: el.service.short_text,
-        service_id: el.service.id,
-        qty: el.qty,
+      rows={dataUsed?.map((el) => ({
+        name_service: el?.service?.short_text || "kosong",
+        service_id: el?.service?.id || "kosong",
+        qty: el?.qty,
+        ...el,
       }))}
       width={2000}
       loading={false}

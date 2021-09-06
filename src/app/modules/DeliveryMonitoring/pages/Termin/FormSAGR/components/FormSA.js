@@ -7,11 +7,12 @@ import TableSA from "./TableSA";
 
 export const FormSAContext = React.createContext({});
 
-const FormSA = ({ fetch_api_sg, keys, loadings_sg }) => {
+const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
   const [arrService, setArrService] = useState({});
   const [listWBS, setlistWBS] = useState([]);
   const [itemJasa, setItemJasa] = useState([]);
-  const [initial, setInitial] = useState({});
+  const saExist = Boolean(dataSAGR.sa);
+  const dataSA = dataSAGR.sa;
 
   const { func, task_id } = React.useContext(TerminPageContext);
   const handleRefresh = () => {
@@ -62,31 +63,61 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg }) => {
       params,
       onSuccess: (res) => {
         console.log("post sa", res);
+        onRefresh();
         // setlistWBS(res.data);
       },
     });
   };
   useEffect(() => handleRefresh(), []);
-  // console.log(`itemJasa`, arrService);
+  console.log(`itemJasa`, dataSA);
+
+  const initial = React.useMemo(
+    () => ({
+      // ext_number: dataSA?.ext_number,
+      // short_text: validation.require("Short Text"),
+      // location: validation.require("Location"),
+      // begdate: validation.require("Begin Date"),
+      // enddate: validation.require("End Date"),
+      // person_int: validation.require("Person Internal"),
+      // person_ext: validation.require("Person External"),
+      // post_date: validation.require("Post Date"),
+      // ref_doc_no: validation.require("Ref Doc No"),
+      // doc_text: validation.require("Doc Text"),
+      // po_item: validation.require("PO Item"),
+      ...dataSA,
+    }),
+    [dataSA]
+  );
+
   return (
-    <FormSAContext.Provider
-      value={{
-        setArrService,
-        listWBS,
-        itemJasa,
-      }}
-    >
-      {itemJasa.length > 0 && <TableSA />}
-      <FormBuilder
-        loading={loadings_sg[keys.upload_sa]}
-        onSubmit={_handleSubmit}
-        formData={sa_field}
-        validation={validationSchema_sa}
-        disabledButton={Object.values(arrService).some(
-          ({ isValid }, id) => isValid === false
-        )}
-      />
-    </FormSAContext.Provider>
+    !loadings_sg[keys.fetch_sagr] && (
+      <FormSAContext.Provider
+        value={{
+          setArrService,
+          listWBS,
+          itemJasa,
+          readOnly: saExist,
+          dataSA: dataSA,
+        }}
+      >
+        {itemJasa.length > 0 && <TableSA />}
+        {/* {saExist && !loadings_sg[keys.fetch_sagr] && ( */}
+        <FormBuilder
+          loading={loadings_sg[keys.upload_sa]}
+          onSubmit={_handleSubmit}
+          formData={sa_field}
+          validation={validationSchema_sa}
+          initial={initial}
+          fieldProps={{
+            readOnly: saExist,
+          }}
+          disabledButton={Object.values(arrService).some(
+            ({ isValid }, id) => isValid === false
+          )}
+        />
+        {/* )} */}
+      </FormSAContext.Provider>
+    )
   );
 };
 

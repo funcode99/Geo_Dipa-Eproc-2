@@ -185,6 +185,10 @@ export const rowTableSA_field = [
   {
     name: "value",
     label: "Header Text",
+    type: "number",
+    size: "sm",
+    min: "0.1",
+    step: "0.1",
   },
 ];
 

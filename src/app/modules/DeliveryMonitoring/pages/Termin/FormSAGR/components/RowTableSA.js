@@ -19,7 +19,7 @@ const validationSchema = object().shape({
 
 const RowTableSA = ({ item, index }) => {
   const formikRef = React.useRef();
-  const { setArrService, listWBS } = useContext(FormSAContext);
+  const { setArrService, listWBS, readOnly } = useContext(FormSAContext);
 
   // const _handleSubmit = (data) => {
   //   console.log(`data`, data);
@@ -60,6 +60,7 @@ const RowTableSA = ({ item, index }) => {
             <RowInput
               onBlur={_handleBlur}
               {...item}
+              readOnly={readOnly}
               listOptions={{
                 dist_type: option_dist_type,
                 wbs: listWBS.map(({ id, work_breakdown_ap }) => ({
