@@ -307,11 +307,10 @@ const BappPage = ({
   // buat ganti state step
   React.useEffect(() => {
     const isApproved = taskNews?.approve_status?.code === "approved";
-
+    // setStepActive(1);
     if (taskNews?.approve_status) {
-      // if (isApproved) setStepActive(3);
-      // else
-      if (taskNews?.file_upload) {
+      if (isApproved) setStepActive(3);
+      else if (taskNews?.file_upload) {
         if (isReject) setStepActive(1);
         else setStepActive(2);
       } else if (taskNews?.file) {
@@ -428,7 +427,7 @@ const BappPage = ({
     }
   };
 
-  console.log(`res2`, taskNews);
+  // console.log(`res2`, taskNews);
 
   return (
     <React.Fragment>
@@ -577,13 +576,15 @@ const BappPage = ({
                 case 1:
                   return (
                     <div className="mt-2">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleAction("uploadSign")}
-                      >
-                        <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
-                      </Button>
+                      {!isClient && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleAction("uploadSign")}
+                        >
+                          <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
+                        </Button>
+                      )}
                       {/* <Button
                         variant="outlined"
                         color="secondary"
