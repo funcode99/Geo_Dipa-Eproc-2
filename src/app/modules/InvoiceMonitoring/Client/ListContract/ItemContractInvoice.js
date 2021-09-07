@@ -36,7 +36,6 @@ import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/com
 import { formatDate } from "../../../../libs/date";
 import {
   getDeliverableInInvoive,
-  getFileEproc,
   getListDocSoftCopy,
   rejectDocId,
   softcopy_save,
@@ -58,6 +57,7 @@ import { SOCKET } from "../../../../../redux/BaseHost";
 import {
   getRolesAcceptance,
   getRolesAcceptanceTax,
+  getRolesAudit
 } from "../../../Master/service/MasterCrud";
 
 const styles = (theme) => ({
@@ -215,6 +215,7 @@ function ItemContractInvoice(props) {
   const [taxStaffStatus, setTaxStaffStatus] = useState(false);
   const [loadingDeliverables, setLoadingDeliverables] = useState(false);
   const [dialogConfirm, setDialogConfirm] = useState(false);
+  const [auditStaff, setAuditStaff] = useState(false);
   const [dataDialogConfirm, setDataDialogConfirm] = useState({
     status: 0,
     title: "",
@@ -533,10 +534,6 @@ function ItemContractInvoice(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   }, [termin, intl, setToast]);
-
-  useEffect(callApi, []);
-  useEffect(callApiContractSoftCopy, []);
-  useEffect(getContractAuthorityData, []);
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
@@ -992,6 +989,27 @@ function ItemContractInvoice(props) {
       });
   };
 
+  const getRolesAuditData = useCallback(() => {
+    getRolesAudit()
+      .then(
+        (responseRoles) => {
+          responseRoles["data"]["data"].map((item, index) => {
+            if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+              setAuditStaff(true);
+            }
+          });
+        }
+      )
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [intl, setToast]);
+
+  useEffect(callApi, []);
+  useEffect(callApiContractSoftCopy, []);
+  useEffect(getContractAuthorityData, []);
+  useEffect(getRolesAuditData, []);
+
   return (
     <React.Fragment>
       <Toast />
@@ -1382,7 +1400,7 @@ function ItemContractInvoice(props) {
                         : null}
                     </TableCell>
                     <TableCell>
-                      {dataUser?.is_finance &&
+                      {billingStaffStatus &&
                         (item.softcopy_state === null ||
                           item.softcopy_state === "PENDING") &&
                         item.doc_no &&
@@ -1394,7 +1412,7 @@ function ItemContractInvoice(props) {
                             ops={data_ops}
                           />
                         )}
-                      {dataUser?.is_finance &&
+                      {billingStaffStatus &&
                         (!item.doc_no || !item.doc_file) &&
                         !loading && (
                           <ButtonAction
@@ -1403,7 +1421,7 @@ function ItemContractInvoice(props) {
                             ops={data_ops_send_email}
                           />
                         )}
-                      {!dataUser?.is_finance &&
+                      {!auditStaff &&
                         item.softcopy_state === "REJECTED" &&
                         item.doc_no &&
                         item.seq === 1 && (
@@ -1505,13 +1523,15 @@ function ItemContractInvoice(props) {
                                             ?.softcopy_state !== "APPROVED")) &&
                                       els.document_status?.name ===
                                         "APPROVED" &&
-                                      !loading ? (
+                                      !loading &&
+                                      billingStaffStatus ? (
                                         <ButtonAction
                                           data={els}
                                           handleAction={handleActionDeliverable}
                                           ops={data_opsDeliverable}
                                         />
-                                      ) : (
+                                    ) : els.document_status?.name !== "APPROVED" &&
+                                      billingStaffStatus ? (
                                         <ButtonAction
                                           data={els}
                                           handleAction={() =>
@@ -1519,7 +1539,7 @@ function ItemContractInvoice(props) {
                                           }
                                           ops={data_ops_send_email}
                                         />
-                                      ),
+                                    ) : null,
                                     ]}
                                   />
                                 ))
@@ -1555,13 +1575,23 @@ function ItemContractInvoice(props) {
                                       "REJECTED" &&
                                       el.document_monitoring?.softcopy_state !==
                                         "APPROVED")) &&
-                                  el.document_status?.name === "APPROVED" && (
+                                el.document_status?.name === "APPROVED" &&
+                                billingStaffStatus ? (
                                     <ButtonAction
                                       data={el}
                                       handleAction={handleActionDeliverable}
                                       ops={data_opsDeliverable}
                                     />
-                                  ),
+                              ) : el.document_status?.name !== "APPROVED" &&
+                                billingStaffStatus ? (
+                                <ButtonAction
+                                  data={el}
+                                  handleAction={() =>
+                                    handleActionDeliverableEmail(el)
+                                  }
+                                  ops={data_ops_send_email}
+                                />
+                              ) : null,
                               ]}
                             />
                           ));

@@ -62,6 +62,7 @@ export default function Tabs({
   tabActive,
   handleChange,
   handleChangeTwo,
+  auditStaff,
   ...other
 }) {
   const classes = useStyles();
@@ -95,7 +96,7 @@ export default function Tabs({
           />
         ))}
       </MuiTabs>
-      <div>
+      {!auditStaff && <div>
         <MuiTabs
           value={99}
           onChange={handleChangeTwo}
@@ -117,7 +118,7 @@ export default function Tabs({
             }}
           />
         </MuiTabs>
-      </div>
+      </div>}
     </div>
   );
 }
