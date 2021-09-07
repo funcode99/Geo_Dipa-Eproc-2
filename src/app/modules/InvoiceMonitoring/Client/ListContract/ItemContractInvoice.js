@@ -1588,7 +1588,7 @@ function ItemContractInvoice(props) {
               }}
               // onClick={handleAcceptSoftcopy}
               className="btn btn-sm btn-primary mr-2"
-              disabled={loading || progressTermin}
+              disabled={loading || progressTermin || !billingStaffStatus}
             >
               Accept Softcopy
             </button>
@@ -1604,7 +1604,7 @@ function ItemContractInvoice(props) {
               }}
               // onClick={handleSendNotif}
               className="btn btn-sm btn-primary"
-              disabled={loading}
+              disabled={loading || !billingStaffStatus}
             >
               Send Notif
             </button>

@@ -141,6 +141,14 @@ export function getRolesTerminAuthorization(plant) {
   return axios.get(`data/get_role_termin_authorization?plant=${plant}`);
 }
 
+export function getRolesAudit() {
+  return axios.get(`data/get_role_audit?plant=Pusat`);
+}
+
+export function getRolesAdmin() {
+  return axios.get(`data/get_role_admin?plant=Pusat`);
+}
+
 export function updateRoles(data) {
   return axios.post(`data/update_role/${data.id}`, data);
 }
