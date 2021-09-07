@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
 import SVG from "react-inlinesvg";
@@ -14,21 +14,53 @@ import {
   DataAsideMenuListClient,
   DataAsideMenuListVendor,
 } from "./DataAsideMenuList";
+import { getRolesAdmin } from "../../../../../app/modules/Master/service/MasterCrud";
 
 export function AsideMenuList({ layoutProps }) {
   const location = useLocation();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)
       ? ` ${!hasSubmenu &&
-          "menu-item-active"} menu-item-open menu-item-not-hightlighted`
+      "menu-item-active"} menu-item-open menu-item-not-hightlighted`
       : "";
   };
   let status = useSelector(
     (state) => state.auth.user.data.status,
     shallowEqual
   );
-  let asideMenu =
-    status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor;
+  const dataUser = useSelector((state) => state.auth.user.data);
+  let monitoring_role = dataUser.monitoring_role
+    ? dataUser.monitoring_role
+    : [];
+  const [asideMenu, setAsideMenu] = useState([]);
+  // let asideMenu =
+  //   status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor;
+
+  // asideMenu = asideMenu.filter(function (obj) {
+  //   return obj.title !== "MENU.USER_MANAGEMENT";
+  // });
+
+  const getRolesAdminData = useCallback(() => {
+    getRolesAdmin().then(
+      (responseRoles) => {
+        setAsideMenu(status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor)
+        let found = false
+        responseRoles["data"]["data"].map((item, index) => {
+          if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+            found = true
+          }
+        });
+        if (!found) {
+          let asideMenuTemp = DataAsideMenuListClient.filter(function (obj) {
+            return obj.title !== "MENU.USER_MANAGEMENT" && obj.title !== "MENU.MASTER_DATA";
+          });
+          setAsideMenu(status === "client" ? asideMenuTemp : DataAsideMenuListVendor)
+        }
+      }
+    );
+  }, []);
+
+  useEffect(getRolesAdminData, []);
 
   return (
     <>
@@ -51,11 +83,10 @@ export function AsideMenuList({ layoutProps }) {
           return (
             <li
               key={index.toString()}
-              className={`${
-                item.subMenu && item.subMenu.length > 0
-                  ? "menu-item menu-item-submenu"
-                  : "menu-item"
-              } ${getMenuItemActive(item.rootPath, true)}`}
+              className={`${item.subMenu && item.subMenu.length > 0
+                ? "menu-item menu-item-submenu"
+                : "menu-item"
+                } ${getMenuItemActive(item.rootPath, true)}`}
               aria-haspopup="true"
               data-menu-toggle="hover"
             >
@@ -95,11 +126,10 @@ export function AsideMenuList({ layoutProps }) {
                       return (
                         <li
                           key={index_1.toString()}
-                          className={`${
-                            submenu.subMenu && submenu.subMenu.length > 0
-                              ? "menu-item menu-item-submenu"
-                              : "menu-item"
-                          }  ${getMenuItemActive(submenu.rootPath)}`}
+                          className={`${submenu.subMenu && submenu.subMenu.length > 0
+                            ? "menu-item menu-item-submenu"
+                            : "menu-item"
+                            }  ${getMenuItemActive(submenu.rootPath)}`}
                           aria-haspopup="true"
                         >
                           <NavLink

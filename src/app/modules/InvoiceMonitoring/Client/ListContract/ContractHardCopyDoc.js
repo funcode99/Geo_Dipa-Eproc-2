@@ -1229,7 +1229,7 @@ function ContractHardCopyDoc(props) {
             onClick={() => {
               setDialogConfirm(true);
             }}
-            disabled={loading || statusHardCopyNoStarted}
+            disabled={loading || statusHardCopyNoStarted || !approveHardCopyRole}
           >
             Send Notif
           </button>
