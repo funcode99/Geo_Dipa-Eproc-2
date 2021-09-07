@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react"; // useState
+import React, { useEffect, useLayoutEffect, useCallback } from "react"; // useState
 import { connect, useSelector, shallowEqual } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { useParams } from "react-router-dom";
@@ -35,6 +35,7 @@ import {
   saveMismatch,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
+import { getRolesAudit } from "../../../Master/service/MasterCrud";
 
 const styles = (theme) => ({
   root: {
@@ -151,10 +152,15 @@ const ItemContract = (props) => {
   const [data, setData] = React.useState({});
   const [terminProgress, setTerminProgress] = React.useState(null);
   const [dataProgress, setDataProgress] = React.useState([]);
+  const [auditStaff, setAuditStaff] = React.useState(false);
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
     shallowEqual
   );
+  const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
+  const monitoring_role = data_login.monitoring_role
+    ? data_login.monitoring_role
+    : [];
   const [onSubmit, setOnSubmit] = React.useState(false);
   const [statusSubmit, setStatusSubmit] = React.useState(false);
 
@@ -207,7 +213,7 @@ const ItemContract = (props) => {
             if (result?.data?.data?.data) {
               setDataProgress(result.data.data.data);
             } else {
-              const data = resultTypes.data.data.map(function(row) {
+              const data = resultTypes.data.data.map(function (row) {
                 return {
                   label: row?.name,
                   status:
@@ -317,8 +323,27 @@ const ItemContract = (props) => {
       });
   };
 
+  const getRolesAuditData = useCallback(() => {
+    getRolesAudit()
+      .then(
+        (responseRoles) => {
+          responseRoles["data"]["data"].map((item, index) => {
+            if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+              if (monitoring_role.length === 1) {
+                setAuditStaff(true);
+              }
+            }
+          });
+        }
+      )
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [intl, setToast]);
+
   useEffect(getMisMatch, []);
   useEffect(getTerminProgressData, []);
+  useEffect(getRolesAuditData, []);
 
   return (
     <Container className="px-0">
@@ -443,6 +468,7 @@ const ItemContract = (props) => {
             handleChange={handleChangeTab}
             tabLists={TabLists}
             handleChangeTwo={handleChangeTabTwo}
+            auditStaff={auditStaff}
           />
         </Container>
         <hr className="p-0 m-0" />
