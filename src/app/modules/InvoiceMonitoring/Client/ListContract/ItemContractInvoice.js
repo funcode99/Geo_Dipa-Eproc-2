@@ -52,7 +52,7 @@ import {
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
-import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
+import { DEV_NODE, DEV_RUBY, API_EPROC } from "../../../../../redux/BaseHost";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import { SOCKET } from "../../../../../redux/BaseHost";
 import {
@@ -469,17 +469,18 @@ function ItemContractInvoice(props) {
 
   const getFileContract = (name, status, ident_name) => {
     if (status === "eproc") {
-      getFileEproc({ filename: name })
-        .then((result) => {
-          var a = document.createElement("a");
-          a.href = result.data.data.items.respons;
-          a.download = name;
-          a.click();
-          a.remove();
-        })
-        .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-        });
+      // getFileEproc({ filename: name })
+      //   .then((result) => {
+      //     var a = document.createElement("a");
+      //     a.href = result.data.data.items.respons;
+      //     a.download = name;
+      //     a.click();
+      //     a.remove();
+      //   })
+      //   .catch((error) => {
+      //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      //   });
+      window.open(API_EPROC + "/" + name, "_blank");
     } else if (status === "ruby") {
       window.open(DEV_RUBY + name, "_blank");
     } else if (status === "monitoring") {
