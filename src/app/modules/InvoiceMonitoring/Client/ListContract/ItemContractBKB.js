@@ -24,7 +24,7 @@ import {
   updateParkBYR,
   rejectBkb,
   approveGiro,
-  getContractAuthority
+  getContractAuthority,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -40,9 +40,14 @@ import {
   Slide,
   IconButton,
   FormControlLabel,
-  Checkbox
+  Checkbox,
 } from "@material-ui/core";
-import { getRolesBKB, getRolesAccounting, getRolesSignedGiro, getRolesParkBYR } from "../../../Master/service/MasterCrud";
+import {
+  getRolesBKB,
+  getRolesAccounting,
+  getRolesSignedGiro,
+  getRolesParkBYR,
+} from "../../../Master/service/MasterCrud";
 import { useParams } from "react-router-dom";
 import { SOCKET } from "../../../../../redux/BaseHost";
 
@@ -59,15 +64,15 @@ function ItemContractBKB(props) {
   const { intl, setProgressTermin, setDataProgress } = props;
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
-  const main_authority = "Pusat"
-  const unit_authority = "Unit"
+  const main_authority = "Pusat";
+  const unit_authority = "Unit";
 
   const [bkbData, setBkbData] = useState(null);
   const [rolesBKBData, setRolesBKBData] = useState(null);
   const [rolesSignedGiroData, setRolesSignedGiroData] = useState(null);
-  const [parkApInput, setParkApInput] = useState('');
-  const [parkByrInput, setParkByrInput] = useState('');
-  const [parkApstaff, setParkApStaff] = useState('');
+  const [parkApInput, setParkApInput] = useState("");
+  const [parkByrInput, setParkByrInput] = useState("");
+  const [parkApstaff, setParkApStaff] = useState("");
   const [countGiroSigned, setCountGiroSigned] = useState(0);
   const [giroSignedData, setGiroSignedData] = useState([]);
 
@@ -84,7 +89,7 @@ function ItemContractBKB(props) {
     data: {},
     loading: false,
     statusReq: false,
-    role_id: ""
+    role_id: "",
   });
   const [modalRejected, setModalRejected] = useState({
     statusDialog: false,
@@ -94,10 +99,10 @@ function ItemContractBKB(props) {
   });
 
   const handleChangeParkAp = (e) => {
-    setParkApInput(e.target.value)
+    setParkApInput(e.target.value);
   };
   const handleChangeParkByr = (e) => {
-    setParkByrInput(e.target.value)
+    setParkByrInput(e.target.value);
   };
 
   const getBkbData = useCallback(() => {
@@ -115,40 +120,78 @@ function ItemContractBKB(props) {
                     setRolesBKBData(responseRoles["data"]["data"]);
                   })
                   .catch((error) => {
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                    setToast(
+                      intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+                      10000
+                    );
                   });
-                getRolesAccounting(responseAuthority["data"]["data"]["authority"])
-                  .then(responseRoles => {
-                    let sub_total = response.data.data.sub_total
+                getRolesAccounting(
+                  responseAuthority["data"]["data"]["authority"]
+                )
+                  .then((responseRoles) => {
+                    let sub_total = response.data.data.sub_total;
                     responseRoles.data.data.map((row, key) => {
-                      if (parseFloat(sub_total) >= row.min_value && parseFloat(sub_total) <= row.max_value) {
-                        setApproveParkAPStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
-                        setSubmitParkAPStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
+                      if (
+                        parseFloat(sub_total) >= row.min_value &&
+                        parseFloat(sub_total) <= row.max_value
+                      ) {
+                        setApproveParkAPStaff(
+                          monitoring_role.findIndex(
+                            (element) => element === row.name
+                          ) >= 0
+                        );
+                        setSubmitParkAPStaff(
+                          monitoring_role.findIndex(
+                            (element) => element === row.name
+                          ) >= 0
+                        );
                       }
-                    })
+                    });
                   })
                   .catch(() => {
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-                  })
+                    setToast(
+                      intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+                      10000
+                    );
+                  });
                 getRolesParkBYR(responseAuthority["data"]["data"]["authority"])
-                  .then(responseRoles => {
-                    let sub_total = response.data.data.sub_total
+                  .then((responseRoles) => {
+                    let sub_total = response.data.data.sub_total;
                     responseRoles.data.data.map((row, key) => {
-                      if (parseFloat(sub_total) >= row.min_value && parseFloat(sub_total) <= row.max_value) {
-                        setApproveParkByrStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
-                        setSubmitParkByrStaff(monitoring_role.findIndex((element) => element === row.name) >= 0)
+                      if (
+                        parseFloat(sub_total) >= row.min_value &&
+                        parseFloat(sub_total) <= row.max_value
+                      ) {
+                        setApproveParkByrStaff(
+                          monitoring_role.findIndex(
+                            (element) => element === row.name
+                          ) >= 0
+                        );
+                        setSubmitParkByrStaff(
+                          monitoring_role.findIndex(
+                            (element) => element === row.name
+                          ) >= 0
+                        );
                       }
-                    })
+                    });
                   })
                   .catch(() => {
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-                  })
-                getRolesSignedGiro(responseAuthority["data"]["data"]["authority"])
+                    setToast(
+                      intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+                      10000
+                    );
+                  });
+                getRolesSignedGiro(
+                  responseAuthority["data"]["data"]["authority"]
+                )
                   .then((response) => {
                     setRolesSignedGiroData(response["data"]["data"]);
                   })
                   .catch((error) => {
-                    setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+                    setToast(
+                      intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+                      10000
+                    );
                   });
               }
             })
@@ -162,10 +205,11 @@ function ItemContractBKB(props) {
       });
   }, [termin, intl, setToast]);
 
-
-  const getContractAuthorityData = useCallback(() => {
-
-  }, [termin, intl, setToast]);
+  const getContractAuthorityData = useCallback(() => {}, [
+    termin,
+    intl,
+    setToast,
+  ]);
 
   useEffect(getBkbData, []);
   useEffect(getContractAuthorityData, []);
@@ -190,8 +234,8 @@ function ItemContractBKB(props) {
         term_id: termin,
         desc: bkbData.desc,
         approved_bkb_role_id: modalApproved.role_id,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       approveBkb(data)
         .then((result) => {
           setModalApproved({
@@ -207,7 +251,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -219,8 +263,8 @@ function ItemContractBKB(props) {
         doc_park_ap_no: parkApInput,
         doc_park_ap_submit_id: data_login.user_id,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       submitParkAP(data)
         .then((result) => {
           setModalApproved({
@@ -236,7 +280,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -248,8 +292,8 @@ function ItemContractBKB(props) {
         doc_park_ap_no: parkApInput,
         doc_park_ap_update_id: data_login.user_id,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       updateParkAP(data)
         .then((result) => {
           setModalApproved({
@@ -265,7 +309,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -276,8 +320,8 @@ function ItemContractBKB(props) {
         doc_park_ap_approved_id: data_login.user_id,
         desc: bkbData.desc,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       approveParkAP(data)
         .then((result) => {
           setModalApproved({
@@ -285,11 +329,10 @@ function ItemContractBKB(props) {
             statusReq: true,
             loading: true,
           });
-          getTerminProgress(termin)
-            .then((result) => {
-              setProgressTermin(result.data.data?.progress_type);
-              setDataProgress(result.data.data?.data);
-            })
+          getTerminProgress(termin).then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+            setDataProgress(result.data.data?.data);
+          });
           setTimeout(() => {
             getBkbData();
             setModalApproved({
@@ -298,7 +341,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -310,8 +353,8 @@ function ItemContractBKB(props) {
         doc_park_byr_submit_id: data_login.user_id,
         desc: bkbData.desc,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       submitParkBYR(data)
         .then((result) => {
           setModalApproved({
@@ -327,7 +370,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -339,8 +382,8 @@ function ItemContractBKB(props) {
         doc_park_byr_no: parkByrInput,
         doc_park_byr_update_id: data_login.user_id,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       updateParkBYR(data)
         .then((result) => {
           setModalApproved({
@@ -356,7 +399,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -368,8 +411,8 @@ function ItemContractBKB(props) {
         desc: bkbData.desc,
         term_id: termin,
         contract_id: contract,
-        giro_signed_data: giroSignedData
-      }
+        giro_signed_data: giroSignedData,
+      };
       approveParkBYR(data)
         .then((result) => {
           setModalApproved({
@@ -377,11 +420,10 @@ function ItemContractBKB(props) {
             statusReq: true,
             loading: true,
           });
-          getTerminProgress(termin)
-            .then((result) => {
-              setProgressTermin(result.data.data?.progress_type);
-              setDataProgress(result.data.data?.data);
-            })
+          getTerminProgress(termin).then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+            setDataProgress(result.data.data?.data);
+          });
           setTimeout(() => {
             getBkbData();
             setModalApproved({
@@ -390,16 +432,18 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
     } else if (modalApproved.data === "approveSignedGiro") {
       const giro_signed_data = Object.assign([], bkbData?.giro_signed_data);
-      const index = giro_signed_data.findIndex((element) => element.id === modalApproved.role_id)
-      giro_signed_data[index].role_id = modalApproved.role_id
-      giro_signed_data[index].approved_id = data_login.user_id
+      const index = giro_signed_data.findIndex(
+        (element) => element.id === modalApproved.role_id
+      );
+      giro_signed_data[index].role_id = modalApproved.role_id;
+      giro_signed_data[index].approved_id = data_login.user_id;
       const data = {
         id: bkbData.id,
         index: index,
@@ -407,8 +451,8 @@ function ItemContractBKB(props) {
         user_id: data_login.user_id,
         desc: bkbData.desc,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       approveGiro(data)
         .then((result) => {
           setModalApproved({
@@ -416,11 +460,10 @@ function ItemContractBKB(props) {
             statusReq: true,
             loading: true,
           });
-          getTerminProgress(termin)
-            .then((result) => {
-              setProgressTermin(result.data.data?.progress_type);
-              setDataProgress(result.data.data?.data);
-            })
+          getTerminProgress(termin).then((result) => {
+            setProgressTermin(result.data.data?.progress_type);
+            setDataProgress(result.data.data?.data);
+          });
           setTimeout(() => {
             getBkbData();
             setModalApproved({
@@ -429,7 +472,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -448,11 +491,15 @@ function ItemContractBKB(props) {
         rejected_remark: note,
         doc_park_ap_no: bkbData.doc_park_ap_no,
         bkb_number: bkbData.bkb_number,
-        doc_park_ap_submit_id: bkbData.doc_park_ap_updated_id ? bkbData.doc_park_ap_updated_id : bkbData.doc_park_ap_submit_id,
-        doc_park_ap_submit_at: bkbData.doc_park_ap_updated_at ? bkbData.doc_park_ap_updated_at : bkbData.doc_park_ap_submit_at,
+        doc_park_ap_submit_id: bkbData.doc_park_ap_updated_id
+          ? bkbData.doc_park_ap_updated_id
+          : bkbData.doc_park_ap_submit_id,
+        doc_park_ap_submit_at: bkbData.doc_park_ap_updated_at
+          ? bkbData.doc_park_ap_updated_at
+          : bkbData.doc_park_ap_submit_at,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       rejectParkAP(data)
         .then((result) => {
           setModalRejected({
@@ -468,7 +515,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -481,11 +528,15 @@ function ItemContractBKB(props) {
         rejected_remark: note,
         doc_park_byr_no: bkbData.doc_park_byr_no,
         bkb_number: bkbData.bkb_number,
-        doc_park_byr_submit_id: bkbData.doc_park_byr_updated_id ? bkbData.doc_park_byr_updated_id : bkbData.doc_park_byr_submit_id,
-        doc_park_byr_submit_at: bkbData.doc_park_byr_updated_at ? bkbData.doc_park_byr_updated_at : bkbData.doc_park_byr_submit_at,
+        doc_park_byr_submit_id: bkbData.doc_park_byr_updated_id
+          ? bkbData.doc_park_byr_updated_id
+          : bkbData.doc_park_byr_submit_id,
+        doc_park_byr_submit_at: bkbData.doc_park_byr_updated_at
+          ? bkbData.doc_park_byr_updated_at
+          : bkbData.doc_park_byr_submit_at,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       rejectParkBYR(data)
         .then((result) => {
           setModalRejected({
@@ -501,7 +552,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -514,8 +565,8 @@ function ItemContractBKB(props) {
         user_id: data_login.user_id,
         rejected_remark: note,
         term_id: termin,
-        contract_id: contract
-      }
+        contract_id: contract,
+      };
       rejectBkb(data)
         .then((result) => {
           setModalRejected({
@@ -531,7 +582,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit('get_all_notification', data_login.user_id);
+          SOCKET.emit("get_all_notification", data_login.user_id);
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -541,15 +592,18 @@ function ItemContractBKB(props) {
 
   const handleCheckbox = (e, row) => {
     if (e.target.checked) {
-      setGiroSignedData([...giroSignedData, { id: e.target.value, name: row.name }]);
-      setCountGiroSigned(countGiroSigned + 1)
+      setGiroSignedData([
+        ...giroSignedData,
+        { id: e.target.value, name: row.name },
+      ]);
+      setCountGiroSigned(countGiroSigned + 1);
     } else {
       setGiroSignedData(
-        giroSignedData.filter(function (row) {
+        giroSignedData.filter(function(row) {
           return row.id !== e.target.value;
         })
       );
-      setCountGiroSigned(countGiroSigned - 1)
+      setCountGiroSigned(countGiroSigned - 1);
     }
   };
 
@@ -646,15 +700,19 @@ function ItemContractBKB(props) {
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
-        maxWidth={modalApproved.data === "monitoringApproveParkBYR" ? "sm" : "xs"}
+        maxWidth={
+          modalApproved.data === "monitoringApproveParkBYR" ? "sm" : "xs"
+        }
         fullWidth={true}
       >
         <DialogTitle>
           <FormattedMessage id="TITLE.CONFIRMATION" />
         </DialogTitle>
         <DialogContent>
-          {modalApproved.data === "monitoringApproveParkBYR" && <FormattedMessage id="TITLE.CHOOSE_BKB_GIRO_SIGNED" />}
-          {modalApproved.data === "monitoringApproveParkBYR" &&
+          {modalApproved.data === "monitoringApproveParkBYR" && (
+            <FormattedMessage id="TITLE.CHOOSE_BKB_GIRO_SIGNED" />
+          )}
+          {modalApproved.data === "monitoringApproveParkBYR" && (
             <div className="row">
               {/* rolesSignedGiroData */}
               <div className="my-3">
@@ -667,17 +725,17 @@ function ItemContractBKB(props) {
                         <Checkbox
                           value={row.id}
                           color="secondary"
-                          onChange={e => handleCheckbox(e, row)}
+                          onChange={(e) => handleCheckbox(e, row)}
                           className="py-1"
                         />
                       }
                       label={row.name}
                     />
-                  )
+                  );
                 })}
               </div>
             </div>
-          }
+          )}
           <FormattedMessage id="TITLE.NOTIF_ACTION_CHANGES" />
         </DialogContent>
         <DialogActions>
@@ -686,7 +744,8 @@ function ItemContractBKB(props) {
             type="button"
             disabled={
               modalApproved.loading ||
-              (modalApproved.data === "monitoringApproveParkBYR" && countGiroSigned < 2)
+              (modalApproved.data === "monitoringApproveParkBYR" &&
+                countGiroSigned < 2)
             }
             onClick={() => {
               handleApproved();
@@ -770,8 +829,8 @@ function ItemContractBKB(props) {
                     <span>
                       {bkbData
                         ? window
-                          .moment(new Date(bkbData?.from_time))
-                          .format("DD MMMM YYYY")
+                            .moment(new Date(bkbData?.from_time))
+                            .format("DD MMMM YYYY")
                         : "-"}
                     </span>
                   </div>
@@ -995,7 +1054,7 @@ function ItemContractBKB(props) {
                     <td></td>
                   </tr>
                   {bkbData?.tax_selected?.map((row, key) => {
-                    const data = JSON.parse(row.value)
+                    const data = JSON.parse(row.value);
                     return (
                       <tr key={key}>
                         <td colSpan="3" className="text-right">
@@ -1004,13 +1063,11 @@ function ItemContractBKB(props) {
                         <td>
                           <div className="d-flex justify-content-between">
                             <span>{bkbData?.symbol}</span>
-                            <span>
-                              {rupiah(data.tax_value).slice(3)}
-                            </span>
+                            <span>{rupiah(data.tax_value).slice(3)}</span>
                           </div>
                         </td>
                       </tr>
-                    )
+                    );
                   })}
                   <tr>
                     <td colSpan="3" className="text-right">
@@ -1019,9 +1076,9 @@ function ItemContractBKB(props) {
                     <td>
                       <div className="d-flex justify-content-between">
                         <span>{bkbData?.symbol}</span>
-                        <span>{bkbData
-                          ? rupiah(bkbData?.penalty).slice(3)
-                          : "0"}</span>
+                        <span>
+                          {bkbData ? rupiah(bkbData?.penalty).slice(3) : "0"}
+                        </span>
                       </div>
                     </td>
                   </tr>
@@ -1061,10 +1118,7 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row">
-              <div
-                className="col-sm border"
-                style={{ height: 125 }}
-              >
+              <div className="col-sm border" style={{ height: 125 }}>
                 <div
                   className="text-center"
                   style={{
@@ -1073,35 +1127,26 @@ function ItemContractBKB(props) {
                     paddingBottom: 10,
                   }}
                 >
-                  {bkbData &&
+                  {bkbData && (
                     <QRCodeG
                       value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.verif_staff_role_id}&type=ARCHIVED_BKB`}
                     />
-                  }
+                  )}
                   <div className="d-flex align-items-end">
-                    <span className="mx-auto">
-                      {bkbData?.archived_name}
-                    </span>
+                    <span className="mx-auto">{bkbData?.archived_name}</span>
                   </div>
                   <div className="d-flex align-items-end">
                     <span className="mx-auto">
                       {bkbData?.archived_at
                         ? window
-                          .moment(
-                            new Date(
-                              bkbData?.archived_at
-                            )
-                          )
-                          .format("DD/MM/YYYY")
+                            .moment(new Date(bkbData?.archived_at))
+                            .format("DD/MM/YYYY")
                         : ""}
                     </span>
                   </div>
                 </div>
               </div>
-              <div
-                className="col-sm border"
-                style={{ height: 125 }}
-              >
+              <div className="col-sm border" style={{ height: 125 }}>
                 <div
                   className="text-center"
                   style={{
@@ -1113,7 +1158,7 @@ function ItemContractBKB(props) {
                   {approveParkAPStaff &&
                     bkbData?.doc_park_ap_approved_id == null &&
                     bkbData?.doc_park_ap_no &&
-                    bkbData?.doc_park_ap_state === 'PENDING' && (
+                    bkbData?.doc_park_ap_state === "PENDING" && (
                       <button
                         type="button"
                         className="btn btn-primary btn-sm mx-2"
@@ -1136,7 +1181,7 @@ function ItemContractBKB(props) {
                   {approveParkAPStaff &&
                     bkbData?.doc_park_ap_approved_id == null &&
                     bkbData?.doc_park_ap_no &&
-                    bkbData?.doc_park_ap_state === 'PENDING' && (
+                    bkbData?.doc_park_ap_state === "PENDING" && (
                       <button
                         type="button"
                         className="btn btn-danger btn-sm mx-2"
@@ -1170,12 +1215,8 @@ function ItemContractBKB(props) {
                     <span className="mx-auto">
                       {bkbData?.doc_park_ap_approved_at
                         ? window
-                          .moment(
-                            new Date(
-                              bkbData?.doc_park_ap_approved_at
-                            )
-                          )
-                          .format("DD/MM/YYYY")
+                            .moment(new Date(bkbData?.doc_park_ap_approved_at))
+                            .format("DD/MM/YYYY")
                         : ""}
                     </span>
                   </div>
@@ -1196,7 +1237,7 @@ function ItemContractBKB(props) {
                   {approveParkByrStaff &&
                     bkbData?.doc_park_byr_approved_id == null &&
                     bkbData?.doc_park_byr_no &&
-                    bkbData?.doc_park_byr_state === 'PENDING' && (
+                    bkbData?.doc_park_byr_state === "PENDING" && (
                       <button
                         type="button"
                         className="btn btn-primary btn-sm"
@@ -1219,7 +1260,7 @@ function ItemContractBKB(props) {
                   {approveParkByrStaff &&
                     bkbData?.doc_park_byr_approved_id == null &&
                     bkbData?.doc_park_byr_no &&
-                    bkbData?.doc_park_byr_state === 'PENDING' && (
+                    bkbData?.doc_park_byr_state === "PENDING" && (
                       <button
                         type="button"
                         className="btn btn-danger btn-sm mx-2"
@@ -1253,12 +1294,8 @@ function ItemContractBKB(props) {
                     <span className="mx-auto">
                       {bkbData?.doc_park_byr_approved_at
                         ? window
-                          .moment(
-                            new Date(
-                              bkbData?.doc_park_byr_approved_at
-                            )
-                          )
-                          .format("DD/MM/YYYY")
+                            .moment(new Date(bkbData?.doc_park_byr_approved_at))
+                            .format("DD/MM/YYYY")
                         : ""}
                     </span>
                   </div>
@@ -1275,144 +1312,152 @@ function ItemContractBKB(props) {
                     <span className="col-sm-8">: {bkbData?.vendor_sap_no}</span>
                   </div>
                 </div>
-                {(((bkbData?.doc_park_ap_state === 'PENDING' ||
-                  bkbData?.doc_park_ap_state === 'APPROVED') &&
+                {(((bkbData?.doc_park_ap_state === "PENDING" ||
+                  bkbData?.doc_park_ap_state === "APPROVED") &&
                   bkbData?.doc_park_ap_no) ||
                   !submitParkAPStaff ||
-                  !bkbData) &&
+                  !bkbData) && (
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
                       <span className="col-sm-4">
                         <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
                       </span>
-                      <span className="col-sm-8">: {bkbData?.doc_park_ap_no}</span>
+                      <span className="col-sm-8">
+                        : {bkbData?.doc_park_ap_no}
+                      </span>
                     </div>
                   </div>
-                }
+                )}
                 {(!bkbData?.doc_park_ap_no ||
-                  bkbData?.doc_park_ap_state === 'REJECTED') &&
+                  bkbData?.doc_park_ap_state === "REJECTED") &&
                   bkbData &&
-                  submitParkAPStaff &&
-                  <div className="row border-bottom">
-                    <div className="col-sm-12">
-                      <div className="form-group row mb-0">
-                        <label
-                          htmlFor="parkApInput"
-                          className="col-sm-4 col-form-label col-form-label-sm"
-                        >
-                          <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
-                        </label>
-                        <div className="col-sm-8 pr-0">
-                          <div className="input-group input-group-sm">
-                            <input
-                              type="text"
-                              className="form-control"
-                              aria-label="Small"
-                              aria-describedby="inputGroup-sizing-sm"
-                              required
-                              id="parkApInput"
-                              disabled={modalApproved.loading}
-                              onChange={handleChangeParkAp}
-                              value={parkApInput}
-                            />
-                            <div className="input-group-prepend">
-                              <button
-                                type="button"
-                                className="input-group-text btn btn-sm btn-primary"
-                                id="inputGroup-sizing-sm"
-                                onClick={() => {
-                                  setModalApproved({
-                                    ...modalApproved,
-                                    statusDialog: true,
-                                    data: bkbData?.doc_park_ap_no ? "updateDataParkAp" : "submitDataParkAp",
-                                  });
-                                }}
-                                disabled={
-                                  modalApproved.loading ||
-                                  !parkApInput
-                                }
-                              >
-                                {bkbData?.doc_park_ap_no ? "Update" : "Simpan"}
-                              </button>
+                  submitParkAPStaff && (
+                    <div className="row border-bottom">
+                      <div className="col-sm-12">
+                        <div className="form-group row mb-0">
+                          <label
+                            htmlFor="parkApInput"
+                            className="col-sm-4 col-form-label col-form-label-sm"
+                          >
+                            <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
+                          </label>
+                          <div className="col-sm-8 pr-0">
+                            <div className="input-group input-group-sm">
+                              <input
+                                type="text"
+                                className="form-control"
+                                aria-label="Small"
+                                aria-describedby="inputGroup-sizing-sm"
+                                required
+                                id="parkApInput"
+                                disabled={modalApproved.loading}
+                                onChange={handleChangeParkAp}
+                                value={parkApInput}
+                              />
+                              <div className="input-group-prepend">
+                                <button
+                                  type="button"
+                                  className="input-group-text btn btn-sm btn-primary"
+                                  id="inputGroup-sizing-sm"
+                                  onClick={() => {
+                                    setModalApproved({
+                                      ...modalApproved,
+                                      statusDialog: true,
+                                      data: bkbData?.doc_park_ap_no
+                                        ? "updateDataParkAp"
+                                        : "submitDataParkAp",
+                                    });
+                                  }}
+                                  disabled={
+                                    modalApproved.loading || !parkApInput
+                                  }
+                                >
+                                  {bkbData?.doc_park_ap_no
+                                    ? "Update"
+                                    : "Simpan"}
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                }
+                  )}
                 {((bkbData?.doc_park_byr_no &&
-                  (bkbData?.doc_park_byr_state === 'PENDING' ||
-                    bkbData?.doc_park_byr_state === 'APPROVED')) ||
+                  (bkbData?.doc_park_byr_state === "PENDING" ||
+                    bkbData?.doc_park_byr_state === "APPROVED")) ||
                   bkbData?.doc_park_ap_state === null ||
-                  bkbData?.doc_park_ap_state === 'PENDING' ||
-                  bkbData?.doc_park_ap_state === 'REJECTED' ||
+                  bkbData?.doc_park_ap_state === "PENDING" ||
+                  bkbData?.doc_park_ap_state === "REJECTED" ||
                   !submitParkByrStaff ||
-                  !bkbData) &&
+                  !bkbData) && (
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
                       <span className="col-sm-4">
                         <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
                       </span>
-                      <span className="col-sm-8">: {bkbData?.doc_park_byr_no}</span>
+                      <span className="col-sm-8">
+                        : {bkbData?.doc_park_byr_no}
+                      </span>
                     </div>
                   </div>
-                }
+                )}
                 {((!bkbData?.doc_park_byr_no &&
-                  bkbData?.doc_park_ap_state === 'APPROVED') ||
-                  bkbData?.doc_park_byr_state === 'REJECTED' &&
-                  bkbData) &&
-                  submitParkByrStaff &&
-                  <div className="row border-bottom">
-                    <div className="col-sm-12">
-                      <div className="form-group row mb-0">
-                        <label
-                          htmlFor="colFormLabelSm-1"
-                          className="col-sm-4 col-form-label col-form-label-sm"
-                        >
-                          <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
-                        </label>
-                        <div className="col-sm-8 pr-0">
-                          <div className="input-group input-group-sm">
-                            <input
-                              type="text"
-                              className="form-control"
-                              aria-label="Small"
-                              aria-describedby="inputGroup-sizing-sm"
-                              id="colFormLabelSm-1"
-                              disabled={
-                                !bkbData?.doc_park_ap_approved_id
-                              }
-                              onChange={handleChangeParkByr}
-                              value={parkByrInput}
-                            />
-                            <div className="input-group-prepend">
-                              <button
-                                type="button"
-                                className="input-group-text btn btn-sm btn-primary"
-                                id="inputGroup-sizing-sm"
-                                disabled={
-                                  modalApproved.loading ||
-                                  !bkbData?.doc_park_ap_approved_id ||
-                                  !parkByrInput
-                                }
-                                onClick={() => {
-                                  setModalApproved({
-                                    ...modalApproved,
-                                    statusDialog: true,
-                                    data: bkbData?.doc_park_byr_no ? "updateDataParkByr" : "submitDataParkByr",
-                                  });
-                                }}
-                              >
-                                {bkbData?.doc_park_byr_no ? "Update" : "Simpan"}
-                              </button>
+                  bkbData?.doc_park_ap_state === "APPROVED") ||
+                  (bkbData?.doc_park_byr_state === "REJECTED" && bkbData)) &&
+                  submitParkByrStaff && (
+                    <div className="row border-bottom">
+                      <div className="col-sm-12">
+                        <div className="form-group row mb-0">
+                          <label
+                            htmlFor="colFormLabelSm-1"
+                            className="col-sm-4 col-form-label col-form-label-sm"
+                          >
+                            <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
+                          </label>
+                          <div className="col-sm-8 pr-0">
+                            <div className="input-group input-group-sm">
+                              <input
+                                type="text"
+                                className="form-control"
+                                aria-label="Small"
+                                aria-describedby="inputGroup-sizing-sm"
+                                id="colFormLabelSm-1"
+                                disabled={!bkbData?.doc_park_ap_approved_id}
+                                onChange={handleChangeParkByr}
+                                value={parkByrInput}
+                              />
+                              <div className="input-group-prepend">
+                                <button
+                                  type="button"
+                                  className="input-group-text btn btn-sm btn-primary"
+                                  id="inputGroup-sizing-sm"
+                                  disabled={
+                                    modalApproved.loading ||
+                                    !bkbData?.doc_park_ap_approved_id ||
+                                    !parkByrInput
+                                  }
+                                  onClick={() => {
+                                    setModalApproved({
+                                      ...modalApproved,
+                                      statusDialog: true,
+                                      data: bkbData?.doc_park_byr_no
+                                        ? "updateDataParkByr"
+                                        : "submitDataParkByr",
+                                    });
+                                  }}
+                                >
+                                  {bkbData?.doc_park_byr_no
+                                    ? "Update"
+                                    : "Simpan"}
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                }
+                  )}
               </div>
               <div className="col-sm-5 border">
                 <div className="row border-bottom">
@@ -1423,12 +1468,14 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
                 <div className="row p-3">
-                  {bkbData?.desc?.split(';').map((row, key) => {
+                  {bkbData?.desc?.split(";").map((row, key) => {
                     return (
-                      <span key={key}>{row}<br /></span>
-                    )
-                  })
-                  }
+                      <span key={key}>
+                        {row}
+                        <br />
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -1469,19 +1516,27 @@ function ItemContractBKB(props) {
                     </div>
                     <div className="row">
                       {rolesBKBData?.map((row, key) => {
-                        if (parseFloat(bkbData?.sub_total) >= row?.min_value && parseFloat(bkbData?.sub_total) <= row?.max_value) {
+                        if (
+                          parseFloat(bkbData?.sub_total) >= row?.min_value &&
+                          parseFloat(bkbData?.sub_total) <= row?.max_value
+                        ) {
                           return (
-                            <div className="col-sm border text-center px-0" key={key}>
+                            <div
+                              className="col-sm border text-center px-0"
+                              key={key}
+                            >
                               <span style={{ fontSize: 10 }}>{row?.name}</span>
                             </div>
-                          )
+                          );
                         }
-                      }
-                      )}
+                      })}
                     </div>
                     <div className="row">
                       {rolesBKBData?.map((row, key) => {
-                        if (parseFloat(bkbData?.sub_total) >= row?.min_value && parseFloat(bkbData?.sub_total) <= row?.max_value) {
+                        if (
+                          parseFloat(bkbData?.sub_total) >= row?.min_value &&
+                          parseFloat(bkbData?.sub_total) <= row?.max_value
+                        ) {
                           return (
                             <div
                               className="col-sm border-right"
@@ -1496,7 +1551,9 @@ function ItemContractBKB(props) {
                                   paddingBottom: 5,
                                 }}
                               >
-                                {(monitoring_role.findIndex((element) => element === row.name) >= 0) &&
+                                {monitoring_role.findIndex(
+                                  (element) => element === row.name
+                                ) >= 0 &&
                                   bkbData?.approved_bkb_id === null &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button
@@ -1508,7 +1565,7 @@ function ItemContractBKB(props) {
                                           ...modalApproved,
                                           statusDialog: true,
                                           data: "approveBKB",
-                                          role_id: row.id
+                                          role_id: row.id,
                                         });
                                       }}
                                     >
@@ -1519,7 +1576,9 @@ function ItemContractBKB(props) {
                                       <FormattedMessage id="TITLE.APPROVE" />
                                     </button>
                                   )}
-                                {(monitoring_role.findIndex((element) => element === row.name) >= 0) &&
+                                {monitoring_role.findIndex(
+                                  (element) => element === row.name
+                                ) >= 0 &&
                                   bkbData?.approved_bkb_id === null &&
                                   bkbData?.doc_park_byr_approved_id && (
                                     <button
@@ -1545,18 +1604,17 @@ function ItemContractBKB(props) {
                                   bkbData?.approved_bkb_role_id === row.id && (
                                     <QRCodeG
                                       value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.approved_bkb_role_id}&type=APPROVED_BKB`}
-                                      size="90"
+                                      // size="90"
                                     />
                                   )}
                               </div>
-                              <div
-                                className="text-center"
-                              >
+                              <div className="text-center">
                                 <div>
                                   <span style={{ fontSize: 10 }}>
                                     <FormattedMessage id="TITLE.NAME" />:
                                     {bkbData?.approved_bkb_id &&
-                                      bkbData?.approved_bkb_role_id === row.id && (
+                                      bkbData?.approved_bkb_role_id ===
+                                        row.id && (
                                         <span>{bkbData?.approve_bkb_name}</span>
                                       )}
                                   </span>
@@ -1564,23 +1622,20 @@ function ItemContractBKB(props) {
                                   <span style={{ fontSize: 10 }}>
                                     <FormattedMessage id="TITLE.DATE" />:
                                     {bkbData?.approved_bkb_at &&
-                                      bkbData?.approved_bkb_role_id === row.id
+                                    bkbData?.approved_bkb_role_id === row.id
                                       ? window
-                                        .moment(
-                                          new Date(
-                                            bkbData?.approved_bkb_at
+                                          .moment(
+                                            new Date(bkbData?.approved_bkb_at)
                                           )
-                                        )
-                                        .format("DD/MM/YYYY")
+                                          .format("DD/MM/YYYY")
                                       : ""}
                                   </span>
                                 </div>
                               </div>
                             </div>
-                          )
+                          );
                         }
-                      }
-                      )}
+                      })}
                     </div>
                   </div>
                 </div>
@@ -1597,7 +1652,7 @@ function ItemContractBKB(props) {
                       <div className="col-sm border text-center px-0" key={key}>
                         <span style={{ fontSize: 10 }}>{row.name}</span>
                       </div>
-                    )
+                    );
                   })}
                 </div>
                 <div className="row">
@@ -1627,7 +1682,7 @@ function ItemContractBKB(props) {
                                     ...modalApproved,
                                     statusDialog: true,
                                     data: "approveSignedGiro",
-                                    role_id: row.id
+                                    role_id: row.id,
                                   });
                                 }}
                               >
@@ -1638,12 +1693,12 @@ function ItemContractBKB(props) {
                                 <FormattedMessage id="TITLE.APPROVE" />
                               </button>
                             )}
-                          {row.approved_id &&
+                          {row.approved_id && (
                             <QRCodeG
                               value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${row.id}&type=SIGNED_GIRO`}
-                              size="60"
+                              // size="60"
                             />
-                          }
+                          )}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
@@ -1656,14 +1711,14 @@ function ItemContractBKB(props) {
                               <FormattedMessage id="TITLE.DATE" />:
                               {row.approved_at
                                 ? window
-                                  .moment(new Date(row.approved_at))
-                                  .format("DD MMMM YYYY")
+                                    .moment(new Date(row.approved_at))
+                                    .format("DD MMMM YYYY")
                                 : "-"}
                             </span>
                           </div>
                         </div>
                       </div>
-                    )
+                    );
                   })}
                 </div>
               </div>

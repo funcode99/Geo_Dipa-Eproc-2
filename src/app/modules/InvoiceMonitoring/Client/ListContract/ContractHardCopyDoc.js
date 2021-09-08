@@ -51,7 +51,7 @@ import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/com
 import { formatDate } from "../../../../libs/date";
 import useToast from "../../../../components/toast";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
-import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
+import { DEV_NODE, DEV_RUBY, API_EPROC } from "../../../../../redux/BaseHost";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { getRolesAcceptance } from "../../../Master/service/MasterCrud";
 import { SOCKET } from "../../../../../redux/BaseHost";
@@ -415,7 +415,11 @@ function ContractHardCopyDoc(props) {
       created_by_id: user_id,
       updated_by_id: user_id,
     };
-    sendNotifHardCopy({ contract_id: contract_id, term_id: termin, user_id: user_id })
+    sendNotifHardCopy({
+      contract_id: contract_id,
+      term_id: termin,
+      user_id: user_id,
+    })
       .then((response) => {
         setLoading(false);
         if (invoiceBkbExist) {
@@ -443,19 +447,19 @@ function ContractHardCopyDoc(props) {
   };
 
   const getFileContract = (name, status, ident_name) => {
-    console.log(name, status);
     if (status === "eproc") {
-      getFileEproc({ filename: name })
-        .then((result) => {
-          var a = document.createElement("a");
-          a.href = result.data.data.items.respons;
-          a.download = name;
-          a.click();
-          a.remove();
-        })
-        .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-        });
+      // getFileEproc({ filename: name })
+      //   .then((result) => {
+      //     var a = document.createElement("a");
+      //     a.href = result.data.data.items.respons;
+      //     a.download = name;
+      //     a.click();
+      //     a.remove();
+      //   })
+      //   .catch((error) => {
+      //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      //   });
+      window.open(API_EPROC + "/" + name, "_blank");
     } else if (status === "ruby") {
       window.open(DEV_RUBY + name, "_blank");
     } else if (status === "monitoring") {
@@ -466,6 +470,8 @@ function ContractHardCopyDoc(props) {
       );
     } else if (status === "delivery") {
       window.open(DEV_NODE + "/" + name, "_blank");
+    } else if (status === "link") {
+      window.open(name.includes("http") ? name : `http://${name}`, "_blank");
     }
   };
 
@@ -1229,7 +1235,9 @@ function ContractHardCopyDoc(props) {
             onClick={() => {
               setDialogConfirm(true);
             }}
-            disabled={loading || statusHardCopyNoStarted || !approveHardCopyRole}
+            disabled={
+              loading || statusHardCopyNoStarted || !approveHardCopyRole
+            }
           >
             Send Notif
           </button>
