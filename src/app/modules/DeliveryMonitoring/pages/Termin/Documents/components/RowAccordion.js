@@ -20,6 +20,8 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
     setVisible,
   ]);
   const isChildExist = typeof children === "function";
+  const sticky = [0, 1];
+  const rightSticky = 7;
   return (
     <React.Fragment>
       <TableRow hover onClick={handleVisible}>
@@ -40,6 +42,23 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
               <TableCell
                 key={id}
                 className={`align-middle ${id === 1 && classBtn}`}
+                style={
+                  sticky.includes(id)
+                    ? {
+                        position: "sticky",
+                        left: 0,
+                        zIndex: 10,
+                        backgroundColor: "white",
+                      }
+                    : id == rightSticky
+                    ? {
+                        position: "sticky",
+                        right: 0,
+                        zIndex: 10,
+                        backgroundColor: "white",
+                      }
+                    : {}
+                }
               >
                 {element}
               </TableCell>

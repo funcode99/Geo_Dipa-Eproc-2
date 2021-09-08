@@ -65,7 +65,16 @@ function HeaderTable(props) {
             sortDirection={orderBy === row.id ? order : false}
             align={row.align}
             // style={[row?.id == 0 && { position: "sticky", left: 0 }]}
-            style={row?.sticky === true ? { zIndex: 10 } : {}}
+            style={
+              row?.sticky === true
+                ? { zIndex: 12 }
+                : row?.rightSticky
+                ? {
+                    right: 0,
+                    zIndex: 12,
+                  }
+                : {}
+            }
           >
             {row?.sortable === false || headerProps?.sortable === false ? (
               row.label
