@@ -5,6 +5,7 @@ import {
   AssignmentOutlined,
   BookmarkBorderOutlined,
   LocalShipping,
+  MenuBook,
 } from "@material-ui/icons";
 
 export const KEYS_TERMIN = {
@@ -44,7 +45,7 @@ export const TERMIN_TAB_LIST = [
   {
     id: "summary",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.SUMMARY" />,
-    icon: <DescriptionOutlined className="mb-0 mr-2" />,
+    icon: <MenuBook className="mb-0 mr-2" />,
   },
   {
     id: "delivery-order",
@@ -54,6 +55,12 @@ export const TERMIN_TAB_LIST = [
   {
     id: "berita-acara",
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.OFFICIAL_REPORT" />,
+    icon: <DescriptionOutlined className="mb-0 mr-2" />,
+  },
+  {
+    id: "form-sa-gr",
+    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.SUMMARY" />,
+    label: "Form SA / GR",
     icon: <AssignmentOutlined className="mb-0 mr-2" />,
   },
   {

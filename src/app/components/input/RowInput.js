@@ -14,7 +14,7 @@ const inputs = {
   UploadInput,
 };
 
-const RenderInput = ({
+const RowInput = ({
   typeInput,
   name,
   Child,
@@ -28,15 +28,15 @@ const RenderInput = ({
   listOptions,
   labelSize = 4,
   formInputSize = 8,
+  noLabel = false,
   onFocus,
   onBlur,
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom";
   const Component = inputs[typeInput || "BasicInput"];
-  const { values, errors, setFieldValue, setTouched, touched } = formik;
+  const { values, errors, setFieldValue, touched, setTouched } = formik;
   const selectProps = isSelect ? { listOptions } : {};
-
   const _handleFocus = (e) => {
     setTouched({ [name]: true });
     if (typeof onFocus === "function") onFocus(e);
@@ -50,38 +50,32 @@ const RenderInput = ({
   //   setFieldValue(name, val, true)
   //   onChangeCustom()
   // }
+  // console.log(`formik`, formik);
   return (
     <div>
       {name && (
         <div>
-          <div className="form-group row">
-            <label className={`col-sm-${labelSize} col-form-label`}>
-              {label}
-            </label>
-            <div className={`col-sm-${formInputSize}`}>
-              <Component
-                // labelClass="mb-1"
-                value={values[name] || ""}
-                name={name}
-                // onChange={handleChange(name)}
-                onChange={(val) => setFieldValue(name, val, true)}
-                onFocus={_handleFocus}
-                onBlur={_handleBlur}
-                disabled={readOnly || disabledFields.includes(name)}
-                //   onChange={trigger ? this._triggerChange : handleChange(name)}
-                //   onFocus={() => setFieldTouched(name)}
-                //   className={classNames("pl-4", className)}
-                // options={listOptions[name]}
-                // listOptions={listOptions}
-                {...selectProps}
-                {...otherProps}
-              />
-              {/* <ErrorMessage name={name} /> */}
-              {!!!touched[name] && (
-                <span className={"text-danger mt-2"}>{errors[name]}</span>
-              )}
-            </div>
-          </div>
+          <Component
+            // labelClass="mb-1"
+            value={values[name] || ""}
+            name={name}
+            // onChange={handleChange(name)}
+            onChange={(val) => setFieldValue(name, val, true)}
+            onFocus={_handleFocus}
+            onBlur={_handleBlur}
+            disabled={readOnly || disabledFields.includes(name)}
+            //   onChange={trigger ? this._triggerChange : handleChange(name)}
+            //   onFocus={() => setFieldTouched(name)}
+            //   className={classNames("pl-4", className)}
+            // options={listOptions[name]}
+            // listOptions={listOptions}
+            {...selectProps}
+            {...otherProps}
+          />
+          {/* <ErrorMessage name={name} /> */}
+          {!!!touched[name] && (
+            <span className={"text-danger mt-2"}>{errors[name]}</span>
+          )}
         </div>
       )}
       {Child ? (
@@ -95,4 +89,4 @@ const RenderInput = ({
   );
 };
 
-export default connect(RenderInput);
+export default connect(RowInput);

@@ -484,13 +484,15 @@ const BastPage = ({
                 case 1:
                   return (
                     <div className="mt-2">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleAction("uploadSign")}
-                      >
-                        <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
-                      </Button>
+                      {!isClient && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleAction("uploadSign")}
+                        >
+                          <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
+                        </Button>
+                      )}
                       {/* <Button
                         variant="outlined"
                         color="secondary"
@@ -585,7 +587,7 @@ const BastPage = ({
 
       <Card className="mt-5">
         <CardBody>
-          <Row className="mb-5">
+          {/* <Row className="mb-5">
             <Col md={12}>
               <ButtonGroup size="medium" color="secondary" variant="contained">
                 <Button
@@ -602,7 +604,7 @@ const BastPage = ({
                 </Button>
               </ButtonGroup>
             </Col>
-          </Row>
+          </Row> */}
           <Row>
             <Col md={12}>
               <TitleField title={"History"} />
