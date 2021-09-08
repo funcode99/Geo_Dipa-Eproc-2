@@ -468,6 +468,7 @@ function ItemContractInvoice(props) {
   };
 
   const getFileContract = (name, status, ident_name) => {
+    console.log("name, status, ident_name", name, status, ident_name);
     if (status === "eproc") {
       // getFileEproc({ filename: name })
       //   .then((result) => {
