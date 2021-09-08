@@ -54,7 +54,17 @@ const RowTableSA = ({ item, index }) => {
       validationSchema={validationSchema}
     >
       <TableRow hover>
-        <TableCell width={250}>{item.name_service}</TableCell>
+        <TableCell
+          width={250}
+          style={{
+            position: "sticky",
+            left: 0,
+            zIndex: 10,
+            backgroundColor: "white",
+          }}
+        >
+          {item.name_service}
+        </TableCell>
         {rowTableSA_field.map((item, id) => (
           <TableCell width={220} key={id}>
             <RowInput

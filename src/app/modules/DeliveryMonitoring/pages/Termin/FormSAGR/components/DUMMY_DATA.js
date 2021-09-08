@@ -129,6 +129,7 @@ export const headerTableSA = [
   {
     id: "name_service",
     label: "Name Service",
+    sticky: true,
   },
   {
     id: "dist_type",

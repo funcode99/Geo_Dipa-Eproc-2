@@ -59,11 +59,13 @@ function HeaderTable(props) {
           <TableCell
             key={row.id}
             align={"left"}
-            className={"bg-primary text-white"}
+            className={`bg-primary text-white`}
             // align={row.numeric ? "right" : "left"}
             // padding={"default"}
             sortDirection={orderBy === row.id ? order : false}
             align={row.align}
+            // style={[row?.id == 0 && { position: "sticky", left: 0 }]}
+            style={row?.sticky === true ? { zIndex: 10 } : {}}
           >
             {row?.sortable === false || headerProps?.sortable === false ? (
               row.label

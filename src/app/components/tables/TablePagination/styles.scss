@@ -16,4 +16,9 @@
     background-color: #dedede;
     border-radius: 4px;
   }
+  .sticky-cell {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+  }
 }
