@@ -122,7 +122,7 @@ function Dashboard(props) {
     console.log("unit", unit);
     getAllDataInvoiceDashboard(
       range.ident_name,
-      unit.plant_id,
+      unit.plant_id || null,
       date.date_start,
       date.date_finish
     )
@@ -154,7 +154,7 @@ function Dashboard(props) {
     });
     setRange({
       ...range,
-      ident_name: null,
+      ident_name: "by_date",
       name:
         window.moment(new Date(data.get("date_start"))).format("DD MMM YYYY") +
         "-" +
