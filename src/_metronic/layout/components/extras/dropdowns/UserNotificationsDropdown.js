@@ -27,14 +27,14 @@ export function UserNotificationsDropdown(props) {
     };
   }, [uiService]);
 
-  console.log("props ->", props);
-
   return (
     <>
       {layoutProps.offcanvas && (
         <div className="topbar-item">
           <div
-            className="btn btn-icon btn-clean btn-lg mr-1 pulse pulse-primary"
+            className={`btn btn-icon btn-clean btn-lg mr-1 ${
+              props?.countMessage !== 0 ? "pulse pulse-primary" : ""
+            }`}
             id="kt_quick_notifications_toggle"
           >
             <span className="svg-icon svg-icon-xl svg-icon-primary">
@@ -59,7 +59,9 @@ export function UserNotificationsDropdown(props) {
               }
             >
               <div
-                className="btn btn-icon btn-clean btn-lg mr-1 pulse pulse-primary"
+                className={`btn btn-icon btn-clean btn-lg mr-1 ${
+                  props?.countMessage !== 0 ? "pulse pulse-primary" : ""
+                }`}
                 id="kt_quick_notifications_toggle"
               >
                 <span className="svg-icon svg-icon-xl svg-icon-primary">
