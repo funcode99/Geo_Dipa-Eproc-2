@@ -7,7 +7,7 @@ import objectPath from "object-path";
 import { useHtmlClassService } from "../../_core/MetronicLayout";
 import { UserProfileDropdown } from "./dropdowns/UserProfileDropdown";
 
-export function QuickUserToggler() {
+export function QuickUserToggler(props) {
   const { user } = useSelector((state) => state.auth, shallowEqual);
   const uiService = useHtmlClassService();
   const layoutProps = useMemo(() => {
@@ -47,7 +47,9 @@ export function QuickUserToggler() {
         </OverlayTrigger>
       )}
 
-      {!layoutProps.offcanvas && <UserProfileDropdown />}
+      {!layoutProps.offcanvas && (
+        <UserProfileDropdown countMessage={props.countMessage} />
+      )}
     </>
   );
 }

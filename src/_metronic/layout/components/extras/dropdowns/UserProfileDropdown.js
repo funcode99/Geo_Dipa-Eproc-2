@@ -12,15 +12,10 @@ import {
   FormattedMessage,
   // injectIntl
 } from "react-intl";
-import { SOCKET } from "../../../../../redux/BaseHost";
 
-export function UserProfileDropdown() {
+export function UserProfileDropdown(props) {
   const { user } = useSelector((state) => state.auth);
   const uiService = useHtmlClassService();
-  const user_id = useSelector(
-    (state) => state.auth.user.data.user_id,
-    shallowEqual
-  );
   const [count, setCount] = useState(0);
   const layoutProps = useMemo(() => {
     return {
@@ -29,14 +24,6 @@ export function UserProfileDropdown() {
         "light",
     };
   }, [uiService]);
-
-  useEffect(() => {
-    SOCKET.emit("notification");
-    SOCKET.emit("get_all_notification", user_id);
-    SOCKET.on("get_notification", (data) => {
-      setCount(data.length)
-    })
-  }, [SOCKET]);
 
   return (
     <Dropdown drop="down" alignRight>
@@ -75,7 +62,7 @@ export function UserProfileDropdown() {
                   {user.data.full_name}
                 </div>
                 <span className="label label-light-success label-lg font-weight-bold label-inline">
-                  {count} messages
+                  {props?.countMessage || 0} messages
                 </span>
               </div>
               <div className="separator separator-solid"></div>
@@ -101,7 +88,7 @@ export function UserProfileDropdown() {
                 {user.data.full_name}
               </div>
               <span className="label label-success label-lg font-weight-bold label-inline">
-                {count} messages
+                {props?.countMessage || 0} messages
               </span>
             </div>
           )}
