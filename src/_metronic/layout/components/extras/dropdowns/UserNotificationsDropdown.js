@@ -9,15 +9,24 @@ import { useHtmlClassService } from "../../../_core/MetronicLayout";
 import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
 import { Link } from "react-router-dom";
+import Badge from "@material-ui/core/Badge";
+import { makeStyles } from "@material-ui/core/styles";
 
 const perfectScrollbarOptions = {
   wheelSpeed: 2,
   wheelPropagation: false,
 };
 
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(2),
+    marginRight: theme.spacing(3),
+  },
+}));
+
 export function UserNotificationsDropdown(props) {
   const bgImage = toAbsoluteUrl("/media/misc/bg-1.jpg");
-
+  const classes = useStyles();
   const uiService = useHtmlClassService();
   const layoutProps = useMemo(() => {
     return {
@@ -37,7 +46,7 @@ export function UserNotificationsDropdown(props) {
             }`}
             id="kt_quick_notifications_toggle"
           >
-            <span className="svg-icon svg-icon-xl svg-icon-primary">
+            <span className="svg-icon svg-icon-xl svg-icon-primary ">
               <SVG src={toAbsoluteUrl("/media/svg/icons/Code/Compiling.svg")} />
             </span>
             <span className="pulse-ring"></span>
@@ -59,15 +68,25 @@ export function UserNotificationsDropdown(props) {
               }
             >
               <div
-                className={`btn btn-icon btn-clean btn-lg mr-1 ${
-                  props?.countMessage !== 0 ? "pulse pulse-primary" : ""
-                }`}
+                className={`btn btn-icon btn-clean btn-lg mr-1`}
                 id="kt_quick_notifications_toggle"
               >
-                <span className="svg-icon svg-icon-xl svg-icon-primary">
-                  <SVG
-                    src={toAbsoluteUrl("/media/svg/icons/Code/Compiling.svg")}
-                  />
+                <span
+                  className={`svg-icon svg-icon-xl svg-icon-primary ${
+                    props?.countMessage !== 0 ? "bell" : ""
+                  }`}
+                >
+                  <Badge
+                    className={classes.margin}
+                    badgeContent={props?.countMessage || 0}
+                    color="primary"
+                  >
+                    <SVG
+                      src={toAbsoluteUrl(
+                        "/media/svg/icons/All/bell-regular.svg"
+                      )}
+                    />
+                  </Badge>
                 </span>
                 <span className="pulse-ring"></span>
                 <span className="pulse-ring" />
