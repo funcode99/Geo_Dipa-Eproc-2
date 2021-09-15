@@ -508,7 +508,7 @@ function ContractHardCopyDoc(props) {
             loading: false,
           });
         }, 2500);
-        SOCKET.emit("get_all_notification", user_id);
+        SOCKET.emit("send_notif");
       })
       .catch((err) => {
         setModalApproved({
@@ -569,7 +569,7 @@ function ContractHardCopyDoc(props) {
               });
               document.getElementById("commentRejected").value = "";
             }, 2500);
-            SOCKET.emit("get_all_notification", user_id);
+            SOCKET.emit("send_notif");
           })
           .catch((err) => {
             setModalReject({

@@ -251,7 +251,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -280,7 +280,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -309,7 +309,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -341,7 +341,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -370,7 +370,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -399,7 +399,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -432,7 +432,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -472,7 +472,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -515,7 +515,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -552,7 +552,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -582,7 +582,7 @@ function ItemContractBKB(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", data_login.user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);

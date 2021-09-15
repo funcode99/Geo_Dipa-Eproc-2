@@ -136,7 +136,7 @@ function ContractReceiptPage(props) {
               setModalReject(false);
               setIsSubmit(true);
               getHistoryReceiptData(receiptData.id);
-              SOCKET.emit('get_all_notification', user_id);
+              SOCKET.emit("send_notif");
             })
             .catch((error) => {
               setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
@@ -219,7 +219,7 @@ function ContractReceiptPage(props) {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
           })
-        SOCKET.emit('get_all_notification', user_id);
+        SOCKET.emit("send_notif");
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
