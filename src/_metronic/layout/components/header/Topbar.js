@@ -46,7 +46,7 @@ export function Topbar() {
   const user = useSelector((state) => state.auth.user.data, shallowEqual);
 
   useEffect(() => {
-    SOCKET.emit("notification");
+    SOCKET.emit("notification", user.user_id);
     SOCKET.emit("get_all_notification", user.user_id);
     SOCKET.on("get_notification", (data) => {
       setCount(data.length);
