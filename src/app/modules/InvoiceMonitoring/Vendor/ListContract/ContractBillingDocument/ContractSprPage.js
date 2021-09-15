@@ -231,7 +231,7 @@ function ContractSprPage(props) {
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setUploadFilenameBank(responses["data"]["data"]["new_bank_file"]);
               setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-              SOCKET.emit('get_all_notification', user_id);
+              SOCKET.emit("send_notif");
               setLoading(false);
             });
           })
@@ -249,7 +249,7 @@ function ContractSprPage(props) {
             setSppData(response["data"]["data"]);
             setUploadFilename(response["data"]["data"]["file_name"]);
             setUploadFilenameBank(response["data"]["data"]["new_bank_file"]);
-            SOCKET.emit('get_all_notification', user_id);
+            SOCKET.emit("send_notif");
           })
           .catch((error) => {
             setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);

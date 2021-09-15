@@ -379,7 +379,7 @@ function ItemContractInvoice(props) {
       .then((result) => {
         setProgressTermin(result.data.data);
         setDataProgress(data);
-        SOCKET.emit("get_all_notification", user_id);
+        SOCKET.emit("send_notif");
         setLoading(false);
         setDialogConfirm(false);
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 5000);
@@ -413,8 +413,8 @@ function ItemContractInvoice(props) {
         row.ident_name === "CONTRACT" || row.ident_name === "PO"
           ? "kewenangan"
           : row.ident_name === "NPWP"
-          ? "vendor"
-          : "pengguna",
+            ? "vendor"
+            : "pengguna",
       document_name: row.document_name,
       contract_id: contract,
     })
@@ -469,7 +469,6 @@ function ItemContractInvoice(props) {
   };
 
   const getFileContract = (name, status, ident_name) => {
-    console.log("name, status, ident_name", name, status, ident_name);
     if (status === "eproc") {
       // getFileEproc({ filename: name })
       //   .then((result) => {
@@ -488,7 +487,7 @@ function ItemContractInvoice(props) {
     } else if (status === "monitoring") {
       window.open(
         DEV_NODE +
-          `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
+        `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
         "_blank"
       );
     } else if (status === "delivery") {
@@ -593,7 +592,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setModalApproved({
@@ -626,7 +625,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setModalApproved({
@@ -673,7 +672,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setModalApproved({
@@ -706,7 +705,7 @@ function ItemContractInvoice(props) {
               loading: false,
             });
           }, 2500);
-          SOCKET.emit("get_all_notification", user_id);
+          SOCKET.emit("send_notif");
         })
         .catch((err) => {
           setModalApproved({
@@ -763,7 +762,7 @@ function ItemContractInvoice(props) {
                 });
                 document.getElementById("commentRejected").value = "";
               }, 2500);
-              SOCKET.emit("get_all_notification", user_id);
+              SOCKET.emit("send_notif");
             })
             .catch((err) => {
               setModalReject({
@@ -803,7 +802,7 @@ function ItemContractInvoice(props) {
                 });
                 document.getElementById("commentRejected").value = "";
               }, 2500);
-              SOCKET.emit("get_all_notification", user_id);
+              SOCKET.emit("send_notif");
             })
             .catch((err) => {
               setModalReject({
@@ -868,7 +867,7 @@ function ItemContractInvoice(props) {
                     });
                     document.getElementById("commentRejected").value = "";
                   }, 2500);
-                  SOCKET.emit("get_all_notification", user_id);
+                  SOCKET.emit("send_notif");
                 })
                 .catch((err) => {
                   setModalReject({
@@ -921,7 +920,7 @@ function ItemContractInvoice(props) {
                     });
                     document.getElementById("commentRejected").value = "";
                   }, 2500);
-                  SOCKET.emit("get_all_notification", user_id);
+                  SOCKET.emit("send_notif");
                 })
                 .catch((err) => {
                   setModalReject({
@@ -1380,20 +1379,20 @@ function ItemContractInvoice(props) {
                     <TableCell>
                       {item.softcopy_approved_at
                         ? window
-                            .moment(new Date(item.softcopy_approved_at))
-                            .format("DD MMM YYYY")
+                          .moment(new Date(item.softcopy_approved_at))
+                          .format("DD MMM YYYY")
                         : ""}
                     </TableCell>
                     <TableCell>
                       {(item.softcopy_state === "PENDING" ||
                         item.softcopy_state === null) &&
-                      item.doc_file
+                        item.doc_file
                         ? "WAITING TO APPROVE"
                         : item.softcopy_state === "REJECTED"
-                        ? "REJECTED"
-                        : item.softcopy_state === "APPROVED"
-                        ? "APPROVED"
-                        : "WAITING"}
+                          ? "REJECTED"
+                          : item.softcopy_state === "APPROVED"
+                            ? "APPROVED"
+                            : "WAITING"}
                     </TableCell>
                     <TableCell>
                       {item.softcopy_state === "APPROVED"
@@ -1475,114 +1474,114 @@ function ItemContractInvoice(props) {
                       // Periode Dokumen
                       return isPeriodic
                         ? item?.periodes?.map((el, id) => (
-                            <RowAccordion
-                              key={id}
-                              classBtn={"pl-8"}
-                              dataAll={el}
-                              data={[
-                                "accordIcon",
-                                el?.name,
-                                "-",
-                                "-",
-                                "-",
-                                "-",
-                                "-",
-                                "-",
-                              ]}
-                            >
-                              {/* Dokumen */}
-                              {(item2) =>
-                                item2?.documents?.map((els, idx) => (
-                                  <RowAccordion
-                                    key={idx}
-                                    classBtn={"pl-13"}
-                                    data={[
-                                      "accordIcon",
-                                      els?.document_custom_name ??
-                                        els?.document?.name,
-                                      formatDate(new Date(els?.due_date)),
-                                      <StatusRemarks
-                                        status={
-                                          els?.document_status?.name ===
-                                            "APPROVED" &&
+                          <RowAccordion
+                            key={id}
+                            classBtn={"pl-8"}
+                            dataAll={el}
+                            data={[
+                              "accordIcon",
+                              el?.name,
+                              "-",
+                              "-",
+                              "-",
+                              "-",
+                              "-",
+                              "-",
+                            ]}
+                          >
+                            {/* Dokumen */}
+                            {(item2) =>
+                              item2?.documents?.map((els, idx) => (
+                                <RowAccordion
+                                  key={idx}
+                                  classBtn={"pl-13"}
+                                  data={[
+                                    "accordIcon",
+                                    els?.document_custom_name ??
+                                    els?.document?.name,
+                                    formatDate(new Date(els?.due_date)),
+                                    <StatusRemarks
+                                      status={
+                                        els?.document_status?.name ===
+                                          "APPROVED" &&
                                           (els?.document_monitoring === null ||
                                             els?.document_monitoring
                                               ?.softcopy_state === "PENDING")
-                                            ? "WAITING TO APPROVE"
-                                            : els?.document_status?.name
-                                        }
-                                        remarks={els?.remarks_status}
-                                      />,
-                                      els?.percentage && els?.percentage + "%",
-                                      <BtnLihat url={els?.url} />,
-                                      els?.remarks,
-                                      els?.url &&
+                                          ? "WAITING TO APPROVE"
+                                          : els?.document_status?.name
+                                      }
+                                      remarks={els?.remarks_status}
+                                    />,
+                                    els?.percentage && els?.percentage + "%",
+                                    <BtnLihat url={els?.url} />,
+                                    els?.remarks,
+                                    els?.url &&
                                       (els.document_monitoring === null ||
                                         (els.document_monitoring
                                           ?.softcopy_state !== "REJECTED" &&
                                           els.document_monitoring
                                             ?.softcopy_state !== "APPROVED")) &&
                                       els.document_status?.name ===
-                                        "APPROVED" &&
+                                      "APPROVED" &&
                                       !loading &&
                                       billingStaffStatus ? (
-                                        <ButtonAction
-                                          data={els}
-                                          handleAction={handleActionDeliverable}
-                                          ops={data_opsDeliverable}
-                                        />
+                                      <ButtonAction
+                                        data={els}
+                                        handleAction={handleActionDeliverable}
+                                        ops={data_opsDeliverable}
+                                      />
                                     ) : els.document_status?.name !== "APPROVED" &&
                                       billingStaffStatus ? (
-                                        <ButtonAction
-                                          data={els}
-                                          handleAction={() =>
-                                            handleActionDeliverableEmail(els)
-                                          }
-                                          ops={data_ops_send_email}
-                                        />
+                                      <ButtonAction
+                                        data={els}
+                                        handleAction={() =>
+                                          handleActionDeliverableEmail(els)
+                                        }
+                                        ops={data_ops_send_email}
+                                      />
                                     ) : null,
-                                    ]}
-                                  />
-                                ))
-                              }
-                            </RowAccordion>
-                          ))
+                                  ]}
+                                />
+                              ))
+                            }
+                          </RowAccordion>
+                        ))
                         : item?.documents?.map((el, id) => (
-                            <RowAccordion
-                              //  Dokumen
-                              key={id}
-                              classBtn={"pl-13"}
-                              data={[
-                                "accordIcon",
-                                el?.document_custom_name ?? el?.document?.name,
-                                formatDate(new Date(el?.due_date)),
-                                <StatusRemarks
-                                  status={
-                                    el?.document_status?.name === "APPROVED" &&
+                          <RowAccordion
+                            //  Dokumen
+                            key={id}
+                            classBtn={"pl-13"}
+                            data={[
+                              "accordIcon",
+                              el?.document_custom_name ?? el?.document?.name,
+                              formatDate(new Date(el?.due_date)),
+                              <StatusRemarks
+                                status={
+                                  el?.document_status?.name === "APPROVED" &&
                                     (el?.document_monitoring === null ||
                                       el?.document_monitoring
                                         ?.softcopy_state === "PENDING")
-                                      ? "WAITING TO APPROVE"
-                                      : el?.document_status?.name
-                                  }
-                                  remarks={el?.remarks_status}
-                                />,
-                                el?.percentage && el?.percentage + "%",
-                                <BtnLihat url={el?.url} />,
-                                el?.remarks,
-                                el?.url &&
-                                  (el.document_monitoring === null ||
-                                    (el.document_monitoring?.softcopy_state !==
-                                      "REJECTED" &&
-                                      el.document_monitoring?.softcopy_state !==
-                                        "APPROVED")) &&
+                                    ? "WAITING TO APPROVE"
+                                    : el?.document_status?.name
+                                }
+                                remarks={el?.remarks_status}
+                              />,
+                              el?.percentage && el?.percentage + "%",
+                              <BtnLihat url={el?.url} />,
+                              el?.remarks,
+                              el?.url &&
+                                (el.document_monitoring === null ||
+                                  (el.document_monitoring?.softcopy_state !==
+                                    "REJECTED" &&
+                                    el.document_monitoring?.softcopy_state !==
+                                    "APPROVED")) &&
                                 el.document_status?.name === "APPROVED" &&
                                 billingStaffStatus ? (
-                                    <ButtonAction
-                                      data={el}
-                                      handleAction={handleActionDeliverable}
-                                      ops={data_opsDeliverable}
-                                    />
+                                <ButtonAction
+                                  data={el}
+                                  handleAction={handleActionDeliverable}
+                                  ops={data_opsDeliverable}
+                                />
                               ) : el.document_status?.name !== "APPROVED" &&
                                 billingStaffStatus ? (
                                 <ButtonAction
@@ -1593,9 +1592,9 @@ function ItemContractInvoice(props) {
                                   ops={data_ops_send_email}
                                 />
                               ) : null,
-                              ]}
-                            />
-                          ));
+                            ]}
+                          />
+                        ));
                     }}
                   </RowAccordion>
                 );

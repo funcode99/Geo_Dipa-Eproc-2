@@ -199,7 +199,7 @@ function ContractTaxPage(props) {
               props.set_data_tax_vendor({});
               setUploadFilename(responses["data"]["data"]["file_name"]);
               setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-              SOCKET.emit('get_all_notification', user_id);
+              SOCKET.emit("send_notif");
               setLoading(false);
             });
           })
@@ -216,7 +216,7 @@ function ContractTaxPage(props) {
             setLoading(false);
             setTaxData(response["data"]["data"]);
             setUploadFilename(response["data"]["data"]["file_name"]);
-            SOCKET.emit('get_all_notification', user_id);
+            SOCKET.emit("send_notif");
           })
           .catch((error) => {
             setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
