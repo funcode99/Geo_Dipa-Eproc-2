@@ -18,8 +18,8 @@ import { login } from "../_redux/authCrud";
 */
 
 const initialValues = {
-  username: "asdasd@gmail.com",
-  password: "Test1234",
+  username: "",
+  password: "",
 };
 
 function Login(props) {
@@ -27,23 +27,34 @@ function Login(props) {
   const [loading, setLoading] = useState(false);
   const LoginSchema = Yup.object().shape({
     username: Yup.string()
-      .min(3, intl.formatMessage({
-        id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
-      }, {length: 3}))
-      .max(50, intl.formatMessage({
-        id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
-      }, {length: 50}))
+      .min(
+        3,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
+          },
+          { length: 3 }
+        )
+      )
+      .max(
+        50,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
+          },
+          { length: 50 }
+        )
+      )
       .required(
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
       ),
-    password: Yup.string()
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      ),
+    password: Yup.string().required(
+      intl.formatMessage({
+        id: "AUTH.VALIDATION.REQUIRED_FIELD",
+      })
+    ),
   });
 
   const enableLoading = () => {
@@ -92,21 +103,14 @@ function Login(props) {
   });
 
   return (
-    
     <div className="login-form login-signin" id="kt_login_signin_form">
       {/* begin::Head */}
       <div className="text-center mb-10 mb-lg-20">
-
-      <img src="/media/logos/logo-eprocurement.png" alt="Logo"/> 
-      
+        <img src="/media/logos/logo-eprocurement.png" alt="Logo" />
       </div>
       <div className="text-center mb-10 mb-lg-20">
-     
         <h3 className="font-size-h2">
-          <span>
-            {/* <FormattedMessage id="AUTH.LOGIN.TITLE" /> */}
-          </span>
-
+          <span>{/* <FormattedMessage id="AUTH.LOGIN.TITLE" /> */}</span>
         </h3>
         <p className="text-muted font-weight-bold">
           {/* Enter your username and password */}
@@ -167,24 +171,30 @@ function Login(props) {
           </Link>
         </div>
         <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
-
           <button
             id="kt_login_signin_submit"
             type="submit"
             disabled={formik.isSubmitting}
             className={`btn btn-primary font-weight-bold form-control h-auto py-3 px-6`}
           >
-            <span><FormattedMessage id="AUTH.LOGIN.BUTTON" /></span>
+            <span>
+              <FormattedMessage id="AUTH.LOGIN.BUTTON" />
+            </span>
             {loading && <span className="ml-3 spinner spinner-white"></span>}
           </button>
         </div>
 
         <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
           <div className="mx-auto mb-2 col-md-12 text-primary">
-           <p className="text-center mb-0">
-              <i className="fa fa-headphones text-primary font-16" aria-hidden="true"></i>
+            <p className="text-center mb-0">
+              <i
+                className="fa fa-headphones text-primary font-16"
+                aria-hidden="true"
+              ></i>
               <span>&nbsp;</span>
-              <span className="font-16"><b>Support</b></span>
+              <span className="font-16">
+                <b>Support</b>
+              </span>
             </p>
           </div>
           <div className="mx-auto mb-2 col-md-12">
@@ -194,7 +204,9 @@ function Login(props) {
           <div className="mx-auto mb-2 col-md-12 text-primary">
             <p className="text-center mb-0">Gedung Aldevco Octagon 2th Floor</p>
             <p className="text-center mb-0">Jalan Warung Jati Barat No. 75</p>
-            <p className="text-center mb-0">Jakarta Selatan 12740 - Indonesia</p>
+            <p className="text-center mb-0">
+              Jakarta Selatan 12740 - Indonesia
+            </p>
             <p className="text-center mb-0">E.procurement@geodipa.co.id</p>
             <p className="text-center mb-0">T. +62 21 7982925</p>
             <p className="text-center mb-0">F. +62 21 7982930</p>
@@ -203,7 +215,6 @@ function Login(props) {
       </form>
       {/*end::Form*/}
     </div>
-
   );
 }
 
