@@ -254,12 +254,16 @@ const Tables = (props) => {
                             ? document.getElementById(`sub-filter-${anchorEl}`)
                             : null
                         }
-                        keepMounted
+                        keepMounted={false}
                         open={
                           `sub-filter-${index}` === `sub-filter-${anchorEl}`
                         }
                         onClose={handleClose}
-                        id="sub-filter"
+                        PaperProps={{
+                          style: {
+                            transform: "translateX(0px) translateY(40px)",
+                          },
+                        }}
                       >
                         <div className="px-2">
                             <div className="float-left">
