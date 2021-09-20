@@ -67,7 +67,6 @@ const Tables = (props) => {
           )[0].order.type
         : null,
   });
-  const [nameStateFilter, setNameStateFilter] = React.useState("");
   const [filterTable, setFilterTable] = React.useState({});
   const [filterSort, setFilterSort] = React.useState({ filter: {}, sort: {} });
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -136,40 +135,12 @@ const Tables = (props) => {
     requestFilterSort();
   };
 
-  const openFilterTable = (name, index) => {
-    let idFilter = "filter-" + index;
-    let idInputFilter = "filter-" + name;
-    let status = document.getElementById(idFilter).getAttribute("status");
-    if (nameStateFilter === "") {
-      setNameStateFilter(idFilter);
-      document.getElementById(idFilter).setAttribute("status", "open");
-      document.getElementById(idFilter).classList.add("open");
-    } else if (nameStateFilter === idFilter) {
-      if (status === "closed") {
-        document.getElementById(idFilter).setAttribute("status", "open");
-        document.getElementById(idFilter).classList.add("open");
-      } else {
-        document.getElementById(idFilter).setAttribute("status", "closed");
-        document.getElementById(idFilter).classList.remove("open");
-        document.getElementById(idInputFilter).value =
-          filterTable[idInputFilter] || "";
-      }
-    } else {
-      document.getElementById(nameStateFilter).setAttribute("status", "closed");
-      document.getElementById(nameStateFilter).classList.remove("open");
-      setNameStateFilter(idFilter);
-      document.getElementById(idFilter).setAttribute("status", "open");
-      document.getElementById(idFilter).classList.add("open");
-    }
-  };
-
   const updateValueFilter = (property, index) => {
     let filterTables = filterTable;
     filterTables["filter-" + property] = document.getElementById(
       "filter-" + property
     ).value;
     setFilterTable({ ...filterTables });
-    openFilterTable(property, index);
     requestFilterSort();
   };
 
