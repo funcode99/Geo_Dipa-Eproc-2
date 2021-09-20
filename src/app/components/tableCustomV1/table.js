@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { useParams } from "react-router-dom";
 import {
   TableContainer,
   Table,
@@ -12,6 +11,7 @@ import {
   TablePagination,
   TableSortLabel,
   Paper,
+  Menu,
 } from "@material-ui/core";
 import "./styles.scss";
 
@@ -70,6 +70,7 @@ const Tables = (props) => {
   const [nameStateFilter, setNameStateFilter] = React.useState("");
   const [filterTable, setFilterTable] = React.useState({});
   const [filterSort, setFilterSort] = React.useState({ filter: {}, sort: {} });
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const requestFilterSort = React.useCallback(
     (updateFilterTable, updateSortTable) => {
@@ -191,6 +192,13 @@ const Tables = (props) => {
     setPaginations({ ...paginations, count: countData || 0 });
   }, [countData]);
 
+  const handleClick = (id) => {
+    setAnchorEl(id);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <React.Fragment>
       <div>
@@ -214,8 +222,9 @@ const Tables = (props) => {
                         className="btn btn-sm dropdown-toggle"
                         data-toggle="dropdown"
                         aria-expanded="false"
+                        id={"sub-filter-" + index}
                         onClick={() => {
-                          openFilterTable(item.name.replace(/\s/g, ""), index);
+                          handleClick(index);
                         }}
                       >
                         <span>{item.title}:</span>
@@ -239,13 +248,20 @@ const Tables = (props) => {
                           </span>
                         )}
                       </div>
-                      <ul
-                        role="menu"
-                        className="dropdown-menu"
-                        style={{ zIndex: 90 }}
+                      <Menu
+                        anchorEl={
+                          document.getElementById(`sub-filter-${anchorEl}`)
+                            ? document.getElementById(`sub-filter-${anchorEl}`)
+                            : null
+                        }
+                        keepMounted
+                        open={
+                          `sub-filter-${index}` === `sub-filter-${anchorEl}`
+                        }
+                        onClose={handleClose}
+                        id="sub-filter"
                       >
-                        <li style={{ width: 380, padding: 5 }}>
-                          <div className="clearfix">
+                        <div className="px-2">
                             <div className="float-left">
                               <input
                                 type={item.filter.type}
@@ -267,23 +283,25 @@ const Tables = (props) => {
                             <div className="d-flex">
                             <button
                               type="button"
-                                className="mx-2 float-left btn btn-sm btn-primary"
+                                className="mx-1 float-left btn btn-sm btn-primary"
                               onClick={() => {
                                 updateValueFilter(
                                   item.name.replace(/\s/g, ""),
                                   index
                                 );
+                                handleClose();
                               }}
                             >
                               <FormattedMessage id="TITLE.UPDATE" />
                             </button>
                             <button
                               type="button"
-                                className="mx-2 float-right btn btn-sm btn-light d-flex"
+                                className="mx-1 float-right btn btn-sm btn-light d-flex"
                               onClick={() => {
                                 resetValueFilter(
                                   "filter-" + item.name.replace(/\s/g, "")
                                 );
+                                handleClose();
                               }}
                             >
                               <i className="fas fa-redo fa-right"></i>
@@ -293,8 +311,7 @@ const Tables = (props) => {
                             </button>
                           </div>
                           </div>
-                        </li>
-                      </ul>
+                      </Menu>
                     </div>
                   );
                 })}
@@ -317,7 +334,10 @@ const Tables = (props) => {
                 <TableRow>
                   {dataHeader.map((item, index) => {
                     return (
-                      <TableCell className="bg-primary" key={index.toString()}>
+                      <TableCell
+                        className={`bg-primary ${item?.td ? item?.td : ""}`}
+                        key={index.toString()}
+                      >
                         {item.order.active ? (
                           <TableSortLabel
                             active={
