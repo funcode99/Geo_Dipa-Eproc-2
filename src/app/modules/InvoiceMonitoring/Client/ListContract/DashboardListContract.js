@@ -13,9 +13,7 @@ import { Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
 import { rupiah } from "../../../../libs/currency";
 import { useSubheader } from "../../../../../_metronic/layout";
-import {
-  getRolesAudit,
-} from "../../../Master/service/MasterCrud";
+import { getRolesAudit } from "../../../Master/service/MasterCrud";
 
 function DashboardListContract(props) {
   const user_id = useSelector(
@@ -112,7 +110,7 @@ function DashboardListContract(props) {
       },
       filter: {
         active: true,
-        type: "text",
+        type: "currency",
       },
     },
     {
@@ -213,62 +211,62 @@ function DashboardListContract(props) {
     });
     setErr(false);
     setParamsTable(params);
-    var audit = false
-    getRolesAudit().then(
-      (responseRoles) => {
-        responseRoles["data"]["data"].map((item, index) => {
-          if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
-            audit = true
-          }
-        });
-        if ((is_finance && is_main || audit)) {
-          getContractMainFinance(params)
-            .then((result) => {
-              setLoading(false);
-              setData({
-                ...data,
-                count: result.data.count || 0,
-                data: result.data.data,
-              });
-            })
-            .catch((err) => {
-              setErr(true);
-              setLoading(false);
-              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-            });
-        } else if (is_finance) {
-          getContractUnitFinance(user_id, params)
-            .then((result) => {
-              setLoading(false);
-              setData({
-                ...data,
-                count: result.data.count || 0,
-                data: result.data.data,
-              });
-            })
-            .catch((err) => {
-              setErr(true);
-              setLoading(false);
-              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-            });
-        } else {
-          getContractUser(user_id, params)
-            .then((result) => {
-              setLoading(false);
-              setData({
-                ...data,
-                count: result.data.count || 0,
-                data: result.data.data,
-              });
-            })
-            .catch((err) => {
-              setErr(true);
-              setLoading(false);
-              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-            });
+    var audit = false;
+    getRolesAudit().then((responseRoles) => {
+      responseRoles["data"]["data"].map((item, index) => {
+        if (
+          monitoring_role.findIndex((element) => element === item.name) >= 0
+        ) {
+          audit = true;
         }
+      });
+      if ((is_finance && is_main) || audit) {
+        getContractMainFinance(params)
+          .then((result) => {
+            setLoading(false);
+            setData({
+              ...data,
+              count: result.data.count || 0,
+              data: result.data.data,
+            });
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      } else if (is_finance) {
+        getContractUnitFinance(user_id, params)
+          .then((result) => {
+            setLoading(false);
+            setData({
+              ...data,
+              count: result.data.count || 0,
+              data: result.data.data,
+            });
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      } else {
+        getContractUser(user_id, params)
+          .then((result) => {
+            setLoading(false);
+            setData({
+              ...data,
+              count: result.data.count || 0,
+              data: result.data.data,
+            });
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
       }
-    );
+    });
   };
 
   return (
