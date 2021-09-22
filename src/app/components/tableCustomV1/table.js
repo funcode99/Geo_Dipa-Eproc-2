@@ -13,7 +13,20 @@ import {
   Paper,
   Menu,
 } from "@material-ui/core";
+import NumberFormat from "react-number-format";
 import "./styles.scss";
+
+const format = (countryCode, currency, number) => {
+  const options = {
+    currency,
+    style: "currency",
+    currencyDisplay: "symbol",
+  };
+
+  return new Intl.NumberFormat(countryCode, options).format(number);
+};
+
+export const rupiah = (number) => format("id-ID", "IDR", number);
 
 const Tables = (props) => {
   const {
@@ -35,34 +48,35 @@ const Tables = (props) => {
   const [sortData, setSortData] = React.useState({
     name:
       dataHeader.filter(
-        (value) => value.order.status == true && value.order.active == true
+        (value) => value.order.status === true && value.order.active === true
       ).length > 0
         ? dataHeader
             .filter(
               (value) =>
-                value.order.status == true && value.order.active == true
+                value.order.status === true && value.order.active === true
             )[0]
             .name.replace(/\s/g, "")
         : "",
     order:
       dataHeader.filter(
-        (value) => value.order.status == true && value.order.active == true
+        (value) => value.order.status === true && value.order.active === true
       ).length > 0
         ? dataHeader.filter(
-            (value) => value.order.status == true && value.order.active == true
+            (value) =>
+              value.order.status === true && value.order.active === true
           )[0].order.status
         : true,
     type:
       dataHeader.filter(
         (value) =>
-          value.order.status == true &&
-          value.order.active == true &&
+          value.order.status === true &&
+          value.order.active === true &&
           value.order.type !== null
       ).length > 0
         ? dataHeader.filter(
             (value) =>
-              value.order.status == true &&
-              value.order.active == true &&
+              value.order.status === true &&
+              value.order.active === true &&
               value.order.type !== null
           )[0].order.type
         : null,
@@ -135,11 +149,16 @@ const Tables = (props) => {
     requestFilterSort();
   };
 
-  const updateValueFilter = (property, index) => {
+  const updateValueFilter = (property, type) => {
     let filterTables = filterTable;
     filterTables["filter-" + property] = document.getElementById(
       "filter-" + property
     ).value;
+    if (type === "currency") {
+      filterTables["filter-" + property] = filterTables["filter-" + property]
+        .replace(/[Rp .]/g, "")
+        .replace(/[,]/g, ".");
+    }
     setFilterTable({ ...filterTables });
     requestFilterSort();
   };
@@ -174,7 +193,7 @@ const Tables = (props) => {
     <React.Fragment>
       <div>
         <form id="filter-form-all" className="panel-filter-table mb-1">
-          <span className="mr-2 mt-2 float-left">
+          <span className="mr-2 mt-1 float-left">
             <FormattedMessage id="TITLE.FILTER.TABLE" />
           </span>
           <div className="d-block">
@@ -204,11 +223,20 @@ const Tables = (props) => {
                             className="filter-label"
                             id={"filter-span-" + index}
                           >
-                            {
+                            {item.filter.type === "currency" &&
                               filterTable[
                                 "filter-" + item.name.replace(/\s/g, "")
                               ]
-                            }
+                              ? rupiah(
+                                  Number(
+                                    filterTable[
+                                      "filter-" + item.name.replace(/\s/g, "")
+                                    ]
+                                  )
+                                )
+                              : filterTable[
+                                  "filter-" + item.name.replace(/\s/g, "")
+                                ]}
                           </span>
                         </strong>
                         {filterTable[
@@ -237,32 +265,52 @@ const Tables = (props) => {
                         }}
                       >
                         <div className="px-2">
-                            <div className="float-left">
-                              <input
-                                type={item.filter.type}
-                                className="form-control form-control-sm"
-                                min="0"
-                                name={"filter-" + item.name.replace(/\s/g, "")}
-                                id={"filter-" + item.name.replace(/\s/g, "")}
-                                defaultValue={
+                          <div className="float-left">
+                            {item.filter.type === "currency" ? (
+                              <NumberFormat
+                                value={
                                   filterTable[
                                     "filter-" + item.name.replace(/\s/g, "")
                                   ] || ""
                                 }
-                                placeholder={intl.formatMessage({
-                                  id: "TITLE.ALL",
-                                })}
-                                style={{ width: 200 }}
+                                displayType="input"
+                                className="form-control form-control-sm"
+                                name={"filter-" + item.name.replace(/\s/g, "")}
+                                id={"filter-" + item.name.replace(/\s/g, "")}
+                                thousandSeparator={"."}
+                                decimalSeparator={","}
+                                allowEmptyFormatting={true}
+                                allowLeadingZeros={true}
+                                prefix={"Rp "}
+                                onValueChange={(e) => {}}
                               />
-                            </div>
-                            <div className="d-flex">
+                            ) : (
+                            <input
+                              type={item.filter.type}
+                              className="form-control form-control-sm"
+                              min="0"
+                              name={"filter-" + item.name.replace(/\s/g, "")}
+                              id={"filter-" + item.name.replace(/\s/g, "")}
+                              defaultValue={
+                                filterTable[
+                                  "filter-" + item.name.replace(/\s/g, "")
+                                ] || ""
+                              }
+                              placeholder={intl.formatMessage({
+                                id: "TITLE.ALL",
+                              })}
+                              style={{ width: 200 }}
+                            />
+                            )}
+                          </div>
+                          <div className="d-flex">
                             <button
                               type="button"
-                                className="mx-1 float-left btn btn-sm btn-primary"
+                              className="mx-1 float-left btn btn-sm btn-primary"
                               onClick={() => {
                                 updateValueFilter(
                                   item.name.replace(/\s/g, ""),
-                                  index
+                                  item.filter.type
                                 );
                                 handleClose();
                               }}
@@ -271,7 +319,7 @@ const Tables = (props) => {
                             </button>
                             <button
                               type="button"
-                                className="mx-1 float-right btn btn-sm btn-light d-flex"
+                              className="mx-1 float-right btn btn-sm btn-light d-flex"
                               onClick={() => {
                                 resetValueFilter(
                                   "filter-" + item.name.replace(/\s/g, "")
@@ -279,13 +327,13 @@ const Tables = (props) => {
                                 handleClose();
                               }}
                             >
-                              <i className="fas fa-redo fa-right"></i>
+                              <i className="fas fa-redo fa-right py-1 mx-1"></i>
                               <span>
                                 <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
                               </span>
                             </button>
                           </div>
-                          </div>
+                        </div>
                       </Menu>
                     </div>
                   );
@@ -316,7 +364,7 @@ const Tables = (props) => {
                         {item.order.active ? (
                           <TableSortLabel
                             active={
-                              sortData.name == item.name.replace(/\s/g, "")
+                              sortData.name === item.name.replace(/\s/g, "")
                             }
                             direction={
                               sortData.type !== null
