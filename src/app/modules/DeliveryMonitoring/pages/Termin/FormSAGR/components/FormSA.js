@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
+import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 import { KEYS_TERMIN } from "../../TerminPageNew/STATIC_DATA";
 import { TerminPageContext } from "../../TerminPageNew/TerminPageNew";
 import { option_dist_type, sa_field, validationSchema_sa } from "./DUMMY_DATA";
+import ModalAddWBS from "./ModalAddWBS";
 import TableSA from "./TableSA";
 
 export const FormSAContext = React.createContext({});
@@ -11,6 +13,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
   const [arrService, setArrService] = useState({});
   const [listWBS, setlistWBS] = useState([]);
   const [itemJasa, setItemJasa] = useState([]);
+  const wbsRef = useRef();
   const saExist = Boolean(dataSAGR.sa);
   const dataSA = dataSAGR.sa;
 
@@ -69,7 +72,6 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
     });
   };
   useEffect(() => handleRefresh(), []);
-  // console.log(`itemJasa`, dataSA);
 
   const initial = React.useMemo(
     () => ({
@@ -100,6 +102,14 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           dataSA: dataSA,
         }}
       >
+        <ButtonContained
+          onClick={() => wbsRef.current.open()}
+          className={"my-5"}
+          baseColor={"warning"}
+        >
+          Lihat Dokumen
+        </ButtonContained>
+        <ModalAddWBS innerRef={wbsRef} />
         {itemJasa.length > 0 && <TableSA />}
         {/* {saExist && !loadings_sg[keys.fetch_sagr] && ( */}
         <FormBuilder
