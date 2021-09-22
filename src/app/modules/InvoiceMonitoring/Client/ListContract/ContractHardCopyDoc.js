@@ -915,8 +915,7 @@ function ContractHardCopyDoc(props) {
                             : null}
                         </TableCell>
                         <TableCell>
-                          {dataUser?.is_finance &&
-                            (item.hardcopy_state === null ||
+                          {(item.hardcopy_state === null ||
                               item.hardcopy_state === "REJECTED") &&
                             item.softcopy_state !== null &&
                             statusHardCopy &&
@@ -1206,8 +1205,7 @@ function ContractHardCopyDoc(props) {
                             : null}
                         </TableCell>
                         <TableCell>
-                          {dataUser?.is_finance &&
-                            (item.hardcopy_state === null ||
+                          {(item.hardcopy_state === null ||
                               item.hardcopy_state === "REJECTED") &&
                             item.softcopy_state !== null &&
                             statusHardCopy &&

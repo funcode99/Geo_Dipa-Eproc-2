@@ -72,9 +72,10 @@ function ItemContractBKB(props) {
   const [rolesSignedGiroData, setRolesSignedGiroData] = useState(null);
   const [parkApInput, setParkApInput] = useState("");
   const [parkByrInput, setParkByrInput] = useState("");
-  const [parkApstaff, setParkApStaff] = useState("");
   const [countGiroSigned, setCountGiroSigned] = useState(0);
   const [giroSignedData, setGiroSignedData] = useState([]);
+  const [terminAuthority, setTerminAuthority] = useState("");
+  let arrays = [];
 
   const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
   const monitoring_role = data_login.monitoring_role
@@ -115,6 +116,7 @@ function ItemContractBKB(props) {
           getContractAuthority(termin)
             .then((responseAuthority) => {
               if (responseAuthority["data"]["data"]) {
+                setTerminAuthority(responseAuthority["data"]["data"]["authority"])
                 getRolesBKB(responseAuthority["data"]["data"]["authority"])
                   .then((responseRoles) => {
                     setRolesBKBData(responseRoles["data"]["data"]);
@@ -205,7 +207,7 @@ function ItemContractBKB(props) {
       });
   }, [termin, intl, setToast]);
 
-  const getContractAuthorityData = useCallback(() => {}, [
+  const getContractAuthorityData = useCallback(() => { }, [
     termin,
     intl,
     setToast,
@@ -412,6 +414,8 @@ function ItemContractBKB(props) {
         term_id: termin,
         contract_id: contract,
         giro_signed_data: giroSignedData,
+        sub_total: bkbData?.sub_total,
+        authority: terminAuthority
       };
       approveParkBYR(data)
         .then((result) => {
@@ -594,12 +598,12 @@ function ItemContractBKB(props) {
     if (e.target.checked) {
       setGiroSignedData([
         ...giroSignedData,
-        { id: e.target.value, name: row.name },
+        { id: e.target.value, name: row.name, ident_name: row.ident_name },
       ]);
       setCountGiroSigned(countGiroSigned + 1);
     } else {
       setGiroSignedData(
-        giroSignedData.filter(function(row) {
+        giroSignedData.filter(function (row) {
           return row.id !== e.target.value;
         })
       );
