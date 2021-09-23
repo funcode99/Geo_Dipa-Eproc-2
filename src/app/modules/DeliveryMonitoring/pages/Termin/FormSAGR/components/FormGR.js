@@ -24,7 +24,7 @@ const FormGR = ({ fetch_api_sg, loadings_sg, keys }) => {
       header_txt: data.header_tx,
       ref_doc_no: data.ref_doc_no,
       bill_of_lading: data.bill_of_lading,
-      post_date: data.post_date,
+      posting_date: data.post_date,
     };
     console.log(`data`, params);
     fetch_api_sg({

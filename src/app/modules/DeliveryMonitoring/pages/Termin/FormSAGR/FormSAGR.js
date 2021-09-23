@@ -35,9 +35,8 @@ const FormSAGR = (props) => {
   React.useEffect(() => funcRefresh(), []);
   const parentProps = {
     dataSAGR,
-    funcRefresh,
+    onRefresh: funcRefresh,
   };
-
   return (
     <Card>
       <CardBody>

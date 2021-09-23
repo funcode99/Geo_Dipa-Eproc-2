@@ -110,7 +110,8 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           Lihat Dokumen
         </ButtonContained>
         <ModalAddWBS innerRef={wbsRef} />
-        {itemJasa.length > 0 && <TableSA />}
+        <TableSA />
+        {/* {itemJasa.length > 0 && <TableSA />} */}
         {/* {saExist && !loadings_sg[keys.fetch_sagr] && ( */}
         <FormBuilder
           loading={loadings_sg[keys.upload_sa]}

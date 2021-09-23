@@ -26,17 +26,18 @@ const TableSA = ({}) => {
   return (
     <TablePaginationCustom
       headerRows={headerTableSA}
-      rows={dataUsed?.map((el) => ({
-        name_service: el?.service?.short_text || "",
-        service_id: el?.service?.id || "",
-        qty: el?.qty,
-        ...el,
-        wbs: { label: el?.wbs_elem },
-        dist_type: option_dist_type.filter(
-          (els) => els.value === el?.distribution_type
-        )[0],
-        cost_center: el?.costcenter,
-      }))}
+      // rows={dataUsed?.map((el) => ({
+      //   name_service: el?.service?.short_text || "",
+      //   service_id: el?.service?.id || "",
+      //   qty: el?.qty,
+      //   ...el,
+      //   wbs: { label: el?.wbs_elem },
+      //   dist_type: option_dist_type.filter(
+      //     (els) => els.value === el?.distribution_type
+      //   )[0],
+      //   cost_center: el?.costcenter,
+      // }))}
+      rows={dataRow}
       width={2000}
       loading={false}
       withPagination={false}
