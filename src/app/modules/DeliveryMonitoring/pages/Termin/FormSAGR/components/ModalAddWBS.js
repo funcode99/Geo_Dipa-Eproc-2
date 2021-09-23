@@ -6,6 +6,7 @@ import validation from "../../../../../../service/helper/validationHelper";
 import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 
 const ModalAddWBS = ({ innerRef }) => {
+  const formRef = React.useRef();
   const [dataForm, setDataForm] = useState([
     [
       {
@@ -26,38 +27,72 @@ const ModalAddWBS = ({ innerRef }) => {
   );
 
   const addField = () => {
-    setDataForm((e) => [
-      ...e,
-      [
-        {
-          name: "wbs1",
-          label: "WBS 1",
-        },
-        {
-          name: "value1",
-          label: "Value 1",
-        },
-      ],
-    ]);
+    setDataForm((e) =>
+      e.reduce((acc, item, index) => {
+        let newIndex = index + 2;
+        let newData = [
+          {
+            name: "wbs" + newIndex,
+            label: "WBS " + newIndex,
+          },
+          {
+            name: "value" + newIndex,
+            label: "Value " + newIndex,
+          },
+        ];
+
+        return index === e.length - 1
+          ? [...acc, item, newData]
+          : [...acc, item];
+      }, [])
+    );
   };
 
-  const _handleSubmit = () => {};
+  const subField = () => {
+    setDataForm((e) => {
+      var arr = [...e];
+      var poped = [];
+      if (arr.length > 1) poped = arr.pop();
+      console.log(`poped`, poped, arr);
+      return arr;
+    });
+  };
+
+  const _handleSubmit = (data) => {
+    console.log(`data`, data);
+  };
+
+  // console.log(`ref`, formRef.current.handleSubmit());
 
   return (
     <DialogGlobal
       title={`Add WBS`}
       ref={innerRef}
-      onYes={_handleSubmit}
+      onYes={() => formRef.current.handleSubmit()}
       textYes={"Kirim"}
+      isCancel={false}
     >
       <FormBuilder
+        ref={formRef}
         onSubmit={_handleSubmit}
         formData={dataForm}
         validation={validateScheme}
         withSubmit={false}
-        // initial={initial}
       />
-      <ButtonContained onClick={addField}>Add</ButtonContained>
+
+      <div className="d-flex justify-content-end">
+        <ButtonContained
+          className="mr-2"
+          baseColor="danger"
+          disabled={dataForm.length === 1}
+          onClick={subField}
+        >
+          Minus a row
+        </ButtonContained>
+        <ButtonContained baseColor="success" onClick={addField}>
+          Add a row
+        </ButtonContained>
+      </div>
     </DialogGlobal>
   );
 };
