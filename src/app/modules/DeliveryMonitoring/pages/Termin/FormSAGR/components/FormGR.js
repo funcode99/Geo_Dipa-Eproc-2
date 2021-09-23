@@ -27,13 +27,13 @@ const FormGR = ({ fetch_api_sg, loadings_sg, keys }) => {
       post_date: data.post_date,
     };
     console.log(`data`, params);
-    // fetch_api_sg({
-    //   key: keys.upload_gr,
-    //   type: "post",
-    //   alertAppear: "both",
-    //   url: `delivery/task-gr/${task_id}`,
-    //   params,
-    // });
+    fetch_api_sg({
+      key: keys.upload_gr,
+      type: "post",
+      alertAppear: "both",
+      url: `delivery/task-gr/${task_id}`,
+      params,
+    });
   };
 
   //   console.log(`loading`, loadings_sg[keys.upload_gr]);
