@@ -43,7 +43,9 @@ const UploadInput = ({
                 window.open(`${DEV_NODE}/${value.path_preview}`, "_blank")
               }
             >
-              <i className="fas fa-eye"></i>
+              <i
+                className={`fas fa-${value.path_preview ? "eye" : "eye-slash"}`}
+              ></i>
             </button>
           </div>
         )}
