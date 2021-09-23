@@ -119,11 +119,9 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           formData={sa_field}
           validation={validationSchema_sa}
           initial={initial}
-          fieldProps={
-            {
-              // readOnly: saExist || itemJasa.length === 0,
-            }
-          }
+          fieldProps={{
+            readOnly: saExist || itemJasa.length === 0,
+          }}
           withSubmit={!saExist}
           disabledButton={Object.values(arrService).some(
             ({ isValid }, id) => isValid === false

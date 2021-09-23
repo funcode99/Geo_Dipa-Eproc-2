@@ -70,7 +70,7 @@ const RowTableSA = ({ item, index }) => {
             <RowInput
               onBlur={_handleBlur}
               {...item}
-              // readOnly={readOnly}
+              readOnly={readOnly}
               listOptions={{
                 dist_type: option_dist_type,
                 wbs: listWBS.map(({ id, work_breakdown_ap }) => ({

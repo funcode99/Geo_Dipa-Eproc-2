@@ -19,7 +19,7 @@ const validationSchema = object().shape({
 const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
   const { task_id } = React.useContext(TerminPageContext);
   const grExist = Boolean(dataSAGR.gr);
-  const dataGR = dataSAGR.gr;
+  const dataGR = dataSAGR?.gr;
   const _handleSubmit = (data) => {
     const params = {
       gr_receipt: data.gr_receipt,
@@ -46,8 +46,8 @@ const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
 
   const initial = React.useMemo(
     () => ({
-      header_tx: dataGR.header_txt,
-      post_date: formatUpdateDate(dataGR.posting_date),
+      header_tx: dataGR?.header_txt,
+      post_date: formatUpdateDate(dataGR?.posting_date),
       ...dataGR,
     }),
     [dataGR]
