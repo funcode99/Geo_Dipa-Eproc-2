@@ -102,16 +102,16 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           dataSA: dataSA,
         }}
       >
-        <ButtonContained
+        {/* <ButtonContained
           onClick={() => wbsRef.current.open()}
           className={"my-5"}
           baseColor={"warning"}
         >
           Lihat Dokumen
-        </ButtonContained>
+        </ButtonContained> */}
         <ModalAddWBS innerRef={wbsRef} />
-        <TableSA />
-        {/* {itemJasa.length > 0 && <TableSA />} */}
+        {/* <TableSA /> */}
+        {itemJasa.length > 0 && <TableSA />}
         {/* {saExist && !loadings_sg[keys.fetch_sagr] && ( */}
         <FormBuilder
           loading={loadings_sg[keys.upload_sa]}
@@ -119,9 +119,11 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           formData={sa_field}
           validation={validationSchema_sa}
           initial={initial}
-          fieldProps={{
-            readOnly: saExist,
-          }}
+          fieldProps={
+            {
+              // readOnly: saExist || itemJasa.length === 0,
+            }
+          }
           withSubmit={!saExist}
           disabledButton={Object.values(arrService).some(
             ({ isValid }, id) => isValid === false

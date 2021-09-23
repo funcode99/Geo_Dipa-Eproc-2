@@ -5,6 +5,7 @@ import { gr_field, headerTableSA } from "./DUMMY_DATA";
 import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
 import { TerminPageContext } from "../../TerminPageNew/TerminPageNew";
+import { formatUpdateDate } from "../../../../../../libs/date";
 
 const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
@@ -15,8 +16,10 @@ const validationSchema = object().shape({
   unload_pt: validation.require("Unload PT"),
 });
 
-const FormGR = ({ fetch_api_sg, loadings_sg, keys }) => {
+const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
   const { task_id } = React.useContext(TerminPageContext);
+  const grExist = Boolean(dataSAGR.gr);
+  const dataGR = dataSAGR.gr;
   const _handleSubmit = (data) => {
     const params = {
       gr_receipt: data.gr_receipt,
@@ -33,10 +36,22 @@ const FormGR = ({ fetch_api_sg, loadings_sg, keys }) => {
       alertAppear: "both",
       url: `delivery/task-gr/${task_id}`,
       params,
+      onSuccess: (res) => {
+        onRefresh();
+      },
     });
   };
 
-  //   console.log(`loading`, loadings_sg[keys.upload_gr]);
+  // console.log(`loading`, dataGR);
+
+  const initial = React.useMemo(
+    () => ({
+      header_tx: dataGR.header_txt,
+      post_date: formatUpdateDate(dataGR.posting_date),
+      ...dataGR,
+    }),
+    [dataGR]
+  );
 
   return (
     <div>
@@ -45,6 +60,10 @@ const FormGR = ({ fetch_api_sg, loadings_sg, keys }) => {
         onSubmit={_handleSubmit}
         formData={gr_field}
         validation={validationSchema}
+        initial={initial}
+        fieldProps={{
+          readOnly: grExist,
+        }}
       />
     </div>
   );
