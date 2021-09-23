@@ -297,7 +297,7 @@ const DeliveryOrder = ({
     const option = ["update", "detail"];
     if (option.includes(type)) {
       // console.log(`type`, type);
-      console.log(`datea`, data);
+      // console.log(`datea`, data);
       const displayedStatus = ["approved", "rejected"];
 
       formik.setValues({
