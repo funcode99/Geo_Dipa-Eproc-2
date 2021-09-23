@@ -439,6 +439,7 @@ function ContractHardCopyDoc(props) {
               setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
             });
         }
+        SOCKET.emit("send_notif");
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
