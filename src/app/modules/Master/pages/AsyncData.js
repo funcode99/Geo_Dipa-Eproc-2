@@ -73,21 +73,23 @@ const AsyncData = (props) => {
       asyncService(numberPo)
         .then(async (result) => {
           setStatusSync(false);
+          let errSyncs = Object.assign({}, errSync);
+          errSyncs.message = "Data berhasil di Sinkronisasi";
+          errSyncs.status = true;
+          setErrSync({
+            ...errSyncs,
+          });
           setTimeout(() => {
             setLoadingSync(false);
           }, 2000);
         })
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
-          if (err.response?.data.message === "Number Purch Order Invalid.") {
-            errSyncs.status = true;
-            errSyncs.message = err.response?.data.message;
-            setErrSync({
-              ...errSyncs,
-            });
-          } else {
-            setErrLoadingSync(true);
-          }
+          errSyncs.status = true;
+          errSyncs.message = err.response?.data.message;
+          setErrSync({
+            ...errSyncs,
+          });
           setStatusSync(false);
           setLoadingSync(false);
         });
@@ -95,21 +97,23 @@ const AsyncData = (props) => {
       asyncSchedule(numberPo)
         .then(async (result) => {
           setStatusSync(false);
+          let errSyncs = Object.assign({}, errSync);
+          errSyncs.message = "Data berhasil di Sinkronisasi";
+          errSyncs.status = true;
+          setErrSync({
+            ...errSyncs,
+          });
           setTimeout(() => {
             setLoadingSync(false);
           }, 2000);
         })
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
-          if (err.response?.data.message === "Number Purch Order Invalid.") {
-            errSyncs.status = true;
-            errSyncs.message = err.response?.data.message;
-            setErrSync({
-              ...errSyncs,
-            });
-          } else {
-            setErrLoadingSync(true);
-          }
+          errSyncs.status = true;
+          errSyncs.message = err.response?.data.message;
+          setErrSync({
+            ...errSyncs,
+          });
           setStatusSync(false);
           setLoadingSync(false);
         });
@@ -117,21 +121,23 @@ const AsyncData = (props) => {
       asyncItem(numberPo)
         .then(async (result) => {
           setStatusSync(false);
+          let errSyncs = Object.assign({}, errSync);
+          errSyncs.message = "Data berhasil di Sinkronisasi";
+          errSyncs.status = true;
+          setErrSync({
+            ...errSyncs,
+          });
           setTimeout(() => {
             setLoadingSync(false);
           }, 2000);
         })
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
-          if (err.response?.data.message === "Number Purch Order Invalid.") {
-            errSyncs.status = true;
-            errSyncs.message = err.response?.data.message;
-            setErrSync({
-              ...errSyncs,
-            });
-          } else {
-            setErrLoadingSync(true);
-          }
+          errSyncs.status = true;
+          errSyncs.message = err.response?.data.message;
+          setErrSync({
+            ...errSyncs,
+          });
           setStatusSync(false);
           setLoadingSync(false);
         });
@@ -139,21 +145,29 @@ const AsyncData = (props) => {
       asyncHistory(numberPo)
         .then(async (result) => {
           setStatusSync(false);
+          let errSyncs = Object.assign({}, errSync);
+          if (result.data.data.listSap.length === 0) {
+            errSyncs.message = "Item History Tidak Ada";
+          } else if (result.data.data.listSap.length > 0) {
+            errSyncs.message = "Data berhasil di Sinkronisasi";
+          } else {
+            errSyncs.message = "Respons Tidak Diketahui";
+          }
+          errSyncs.status = true;
+          setErrSync({
+            ...errSyncs,
+          });
           setTimeout(() => {
             setLoadingSync(false);
           }, 2000);
         })
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
-          if (err.response?.data.message === "Tidak memiliki History") {
-            errSyncs.status = true;
-            errSyncs.message = err.response?.data.message;
-            setErrSync({
-              ...errSyncs,
-            });
-          } else {
-            setErrLoadingSync(true);
-          }
+          errSyncs.status = true;
+          errSyncs.message = err.response?.data.message;
+          setErrSync({
+            ...errSyncs,
+          });
           setStatusSync(false);
           setLoadingSync(false);
         });
@@ -416,6 +430,7 @@ const AsyncData = (props) => {
                   ...errSyncs,
                 });
                 setPoAsync(false);
+                setErrLoadingSync(false);
                 document.getElementById("asyncData").reset();
               }}
             >
