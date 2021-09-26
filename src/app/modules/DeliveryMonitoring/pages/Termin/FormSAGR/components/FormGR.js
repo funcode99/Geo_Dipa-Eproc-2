@@ -64,6 +64,22 @@ const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
         fieldProps={{
           readOnly: grExist,
         }}
+        btnChildren={
+          <React.Fragment>
+            <button
+              // onClick={openChart}
+              className={`btn btn-sm btn-label-warning btn-bold mr-3`}
+            >
+              Post GR 101 to SAP
+            </button>
+            <button
+              // onClick={openChart}
+              className={`btn btn-sm btn-label-success btn-bold mr-3`}
+            >
+              Post GR 103 to SAP
+            </button>
+          </React.Fragment>
+        }
       />
     </div>
   );
