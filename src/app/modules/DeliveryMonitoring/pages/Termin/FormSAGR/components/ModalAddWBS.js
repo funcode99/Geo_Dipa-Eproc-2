@@ -5,7 +5,7 @@ import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
 import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 
-const ModalAddWBS = ({ innerRef }) => {
+const ModalAddWBS = ({ innerRef, onSelected }) => {
   const formRef = React.useRef();
   const [dataForm, setDataForm] = useState([
     [
@@ -16,6 +16,10 @@ const ModalAddWBS = ({ innerRef }) => {
       {
         name: "value1",
         label: "Value 1",
+        type: "number",
+        size: "sm",
+        min: "0.1",
+        step: "0.1",
       },
     ],
   ]);
@@ -38,6 +42,10 @@ const ModalAddWBS = ({ innerRef }) => {
           {
             name: "value" + newIndex,
             label: "Value " + newIndex,
+            type: "number",
+            size: "sm",
+            min: "0.1",
+            step: "0.1",
           },
         ];
 
@@ -60,6 +68,7 @@ const ModalAddWBS = ({ innerRef }) => {
 
   const _handleSubmit = (data) => {
     console.log(`data`, data);
+    if (typeof onSelected == "function") onSelected(data);
   };
 
   // console.log(`ref`, formRef.current.handleSubmit());
@@ -76,7 +85,7 @@ const ModalAddWBS = ({ innerRef }) => {
         ref={formRef}
         onSubmit={_handleSubmit}
         formData={dataForm}
-        validation={validateScheme}
+        // validation={validateScheme}
         withSubmit={false}
       />
 
