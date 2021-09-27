@@ -466,8 +466,9 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -485,8 +486,9 @@ function ContractTaxPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -585,11 +587,11 @@ function ContractTaxPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                      "YYYY-MM-DD HH:mm:ss"
-                    )
+                        "YYYY-MM-DD HH:mm:ss"
+                      )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                      "YYYY-MM-DD HH:mm:ss"
-                    )}
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
                 </span>
               </div>
             </div>
@@ -854,10 +856,11 @@ function ContractTaxPage(props) {
                   </TableCell>
                   <TableCell>
                     <span
-                      className={`${item.state === "REJECTED"
+                      className={`${
+                        item.state === "REJECTED"
                           ? "text-danger"
                           : "text-success"
-                        } pointer font-weight-bold`}
+                      } pointer font-weight-bold`}
                       onClick={() => handleHistory(index)}
                     >
                       {item.state === "REJECTED" ? (

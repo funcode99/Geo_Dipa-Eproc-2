@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DEV_NODE, DEV_RUBY } from "../../../../redux/BaseHost";
+import { DEV_NODE, DEV_RUBY, API_EPROC } from "../../../../redux/BaseHost";
 export const LOGIN_URL = `${DEV_RUBY}/api/login`;
 export const REGISTER_URL = "api/auth/register";
 export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
@@ -233,6 +233,10 @@ export function getTaxItem(id, params) {
 
 export function asyncHistory(po) {
   return axios.get(`sap/history/${po}`);
+}
+
+export function asyncPo(data) {
+  return axios.post(API_EPROC + `/api/processor_get_po`, data);
 }
 
 // master data invoice periods

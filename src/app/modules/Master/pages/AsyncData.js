@@ -17,6 +17,7 @@ import {
   asyncSchedule,
   asyncItem,
   asyncHistory,
+  asyncPo,
 } from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import { Form, Row, Col } from "react-bootstrap";
@@ -40,7 +41,9 @@ const AsyncData = (props) => {
   const [poSchedule, setPoSchedule] = useState(false);
   const [poItem, setPoItem] = useState(false);
   const [poHistory, setPoHistory] = useState(false);
+  const [po, setPo] = useState(false);
   const [poAsync, setPoAsync] = useState(false);
+  const [poAsync_, setPoAsync_] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
   const [errLoadingSync, setErrLoadingSync] = useState(false);
   const [statusSync, setStatusSync] = useState(false);
@@ -86,7 +89,8 @@ const AsyncData = (props) => {
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
           errSyncs.status = true;
-          errSyncs.message = err.response?.data.message;
+          errSyncs.message =
+            err.response?.data.message || "Error: Network Error";
           setErrSync({
             ...errSyncs,
           });
@@ -110,7 +114,8 @@ const AsyncData = (props) => {
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
           errSyncs.status = true;
-          errSyncs.message = err.response?.data.message;
+          errSyncs.message =
+            err.response?.data.message || "Error: Network Error";
           setErrSync({
             ...errSyncs,
           });
@@ -134,7 +139,8 @@ const AsyncData = (props) => {
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
           errSyncs.status = true;
-          errSyncs.message = err.response?.data.message;
+          errSyncs.message =
+            err.response?.data.message || "Error: Network Error";
           setErrSync({
             ...errSyncs,
           });
@@ -164,7 +170,40 @@ const AsyncData = (props) => {
         .catch(async (err) => {
           let errSyncs = Object.assign({}, errSync);
           errSyncs.status = true;
-          errSyncs.message = err.response?.data.message;
+          errSyncs.message =
+            err.response?.data.message || "Error: Network Error";
+          setErrSync({
+            ...errSyncs,
+          });
+          setStatusSync(false);
+          setLoadingSync(false);
+        });
+    } else if (stateSync === "po") {
+      asyncPo({
+        start_date: window
+          .moment(new Date(data.get("startDate")))
+          .format("YYYY-MM-DD"),
+        end_date: window
+          .moment(new Date(data.get("endDate")))
+          .format("YYYY-MM-DD"),
+      })
+        .then(async (result) => {
+          setStatusSync(false);
+          let errSyncs = Object.assign({}, errSync);
+          errSyncs.message = "Data berhasil di Sinkronisasi";
+          errSyncs.status = true;
+          setErrSync({
+            ...errSyncs,
+          });
+          setTimeout(() => {
+            setLoadingSync(false);
+          }, 2000);
+        })
+        .catch(async (err) => {
+          let errSyncs = Object.assign({}, errSync);
+          errSyncs.status = true;
+          errSyncs.message =
+            err.response?.data.message || "Error: Network Error";
           setErrSync({
             ...errSyncs,
           });
@@ -337,6 +376,45 @@ const AsyncData = (props) => {
         </DialogActions>
       </Dialog>
       <Dialog
+        open={po}
+        keepMounted
+        maxWidth={"xs"}
+        fullWidth={true}
+        TransitionComponent={Transition}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="TITLE.FEATURES" />
+        </DialogTitle>
+        <DialogContent>
+          <div>
+            <ul>
+              <li>
+                Hanya melakukan Sinkronisasi Data berdasarkan Tanggal Mulai dan
+                Tanggal berakhir SAP.
+              </li>
+              <li>
+                Menambahkan PO dan Item PO jika PO belum terdaftar pada database
+                eproc. Jika PO dan beberapa Item PO sudah tardaftar maka untuk
+                Sinkronisasi Item PO dapat menggunakan Sinkronisasi Purchase
+                Order Item.
+              </li>
+            </ul>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={() => {
+              setPo(false);
+            }}
+          >
+            <FormattedMessage id="TITLE.UNDERSTAND" />
+          </button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
         open={poAsync}
         keepMounted
         maxWidth={"sm"}
@@ -432,6 +510,122 @@ const AsyncData = (props) => {
                 setPoAsync(false);
                 setErrLoadingSync(false);
                 document.getElementById("asyncData").reset();
+              }}
+            >
+              <FormattedMessage id="TITLE.CANCEL" />
+            </button>
+          </DialogActions>
+        </Form>
+      </Dialog>
+      <Dialog
+        open={poAsync_}
+        keepMounted
+        maxWidth={"sm"}
+        fullWidth={true}
+        TransitionComponent={Transition}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="TITLE.SYNCHRONIZE" />
+        </DialogTitle>
+        <Form id="asyncData_" onSubmit={handleAsync}>
+          <DialogContent>
+            <Row>
+              <Col>
+                <Form.Group as={Row}>
+                  <Form.Label column md="4">
+                    <FormattedMessage id="TITLE.START_DATE" />
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      type="date"
+                      name="startDate"
+                      disabled={loadingSync}
+                    />
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row}>
+                  <Form.Label column md="4">
+                    <FormattedMessage id="TITLE.END_DATE" />
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      type="date"
+                      name="endDate"
+                      disabled={loadingSync}
+                    />
+                  </Col>
+                </Form.Group>
+                {errLoadingSync && !loadingSync && (
+                  <div>
+                    <p
+                      className="text-danger font-italic"
+                      style={{ fontSize: 11 }}
+                    >
+                      Error: <FormattedMessage id="TITLE.ERROR_REQUEST" />
+                    </p>
+                  </div>
+                )}
+                {errSync.status && (
+                  <Form.Group as={Row}>
+                    <Form.Label column md="12" className="text-danger">
+                      <FormattedMessage id="TITLE.INFORMATION_OR_NOTE" />
+                    </Form.Label>
+                    <Col sm="12">
+                      <Form.Control
+                        as="textarea"
+                        disabled={true}
+                        rows={8}
+                        value={errSync.message}
+                        onChange={(e) => {}}
+                      />
+                    </Col>
+                  </Form.Group>
+                )}
+              </Col>
+            </Row>
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-sm btn-primary"
+              type="submit"
+              disabled={loadingSync}
+            >
+              {!statusSync && !loadingSync && (
+                <>
+                  <i className="fas fa-sync-alt p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.START_SYNC" />
+                </>
+              )}
+              {statusSync && loadingSync && (
+                <>
+                  <i className="fas fa-sync-alt fa-spin p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.WAITING" />
+                </>
+              )}
+              {!statusSync && loadingSync && (
+                <>
+                  <i className="fas fa-check p-0 mr-2"></i>
+                  <FormattedMessage id="TITLE.DONE_DATA_SYNC" />
+                </>
+              )}
+            </button>
+            <button
+              className="btn btn-sm btn-danger"
+              type="button"
+              disabled={loadingSync}
+              onClick={() => {
+                let errSyncs = Object.assign({}, errSync);
+                errSyncs.status = false;
+                setErrSync({
+                  ...errSyncs,
+                });
+                setPoAsync_(false);
+                setErrLoadingSync(false);
+                document.getElementById("asyncData_").reset();
               }}
             >
               <FormattedMessage id="TITLE.CANCEL" />
@@ -638,6 +832,48 @@ const AsyncData = (props) => {
                       onClick={() => {
                         stateErrSync("history");
                         setPoAsync(true);
+                      }}
+                    >
+                      <i className="fas fa-sync text-primary"></i>
+                      <FormattedMessage id="TITLE.SYNCHRONIZE_DATA" />
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="pl-0 py-4">
+                    <div className="symbol symbol-50 symbol-light mr-1">
+                      <span className="symbol-label">
+                        <h1 className="h-50 align-self-center">P</h1>
+                      </span>
+                    </div>
+                  </td>
+                  <td className="pl-0">
+                    <span className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg user-select-none">
+                      <FormattedMessage id="TITLE.PO" />
+                    </span>
+                    <div>
+                      <span className="font-weight-bolder text-muted font-size-xs">
+                        <FormattedMessage id="TITLE.SPAN_PO" />
+                      </span>
+                    </div>
+                  </td>
+                  <td className="text-left">
+                    <span
+                      className="btn btn-light btn-sm text-warning"
+                      onClick={() => {
+                        setPo(true);
+                      }}
+                    >
+                      <i className="fas fa-info-circle text-warning"></i>
+                      <FormattedMessage id="TITLE.FEATURES" />
+                    </span>
+                  </td>
+                  <td className="text-left pr-0">
+                    <span
+                      className="btn btn-light btn-sm text-primary"
+                      onClick={() => {
+                        stateErrSync("po");
+                        setPoAsync_(true);
                       }}
                     >
                       <i className="fas fa-sync text-primary"></i>
