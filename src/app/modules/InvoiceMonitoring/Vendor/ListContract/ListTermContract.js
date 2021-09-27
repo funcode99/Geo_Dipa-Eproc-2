@@ -71,11 +71,11 @@ const ListTermContract = (props) => {
         id: "CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS",
       }),
     },
-    {
-      title: intl.formatMessage({
-        id: "CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS",
-      }),
-    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: "CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS",
+    //   }),
+    // },
     {
       title: intl.formatMessage({ id: "CONTRACT_DETAIL.TABLE_HEAD.STATUS" }),
     },
@@ -293,7 +293,7 @@ const ListTermContract = (props) => {
                   <TableCell>{value?.bobot + "%"}</TableCell>
                   <TableCell>{rupiah(value?.prices || 0)}</TableCell>
                   <TableCell>{value?.progress}</TableCell>
-                  <TableCell>Doc Progress</TableCell>
+                  {/* <TableCell>Doc Progress</TableCell> */}
                   <TableCell>{value?.name}</TableCell>
                 </TableRow>
               );

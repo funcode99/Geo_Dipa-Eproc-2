@@ -201,32 +201,7 @@ export const DataAsideMenuListVendor = [
       {
         rootPath: "/vendor/invoice_monitoring-1/error-v",
         title: "MENU.INVOICE_MONITORING.INVOICE_DOCUMENT",
-        subMenu: [
-          {
-            rootPath: "/vendor/invoice_monitoring-1/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
-      },
-      {
-        rootPath: "/vendor/invoice_monitoring-2/error-v",
-        title: "MENU.INVOICE_MONITORING.BKB_FV",
-        subMenu: [
-          {
-            rootPath: "/vendor/invoice_monitoring-2/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
-      },
-      {
-        rootPath: "/vendor/invoice_monitoring-3/error-v",
-        title: "MENU.INVOICE_MONITORING.SPT",
-        subMenu: [
-          {
-            rootPath: "/vendor/invoice_monitoring-3/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
       {
         rootPath: "/vendor/invoice_monitoring-4/error-v",

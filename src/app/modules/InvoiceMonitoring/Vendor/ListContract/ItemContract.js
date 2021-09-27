@@ -11,7 +11,8 @@ import Subheader from "../../../../components/subheader";
 import { useSubheader } from "../../../../../_metronic/layout";
 import ItemContractSummary from "./ItemContractSummary";
 import ItemContractInvoice from "./ItemContractInvoice";
-import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
+import ItemContractRoutingSlip from "./ItemContractRoutingSlip";
+import ItemContractFormVerification from "./ItemContractFormVerification";
 import { getTerminProgress } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 
@@ -39,21 +40,23 @@ const TabLists = [
       <i className="fas fa-receipt mb-0 mr-2" style={{ color: "inherit" }}></i>
     ),
   },
-  // {
-  //   id: 'bkb',
-  //   label: 'BKB',
-  //   icon: <i className="fas fa-copy mb-0 mr-2" style={{ color: 'inherit' }}></i>,
-  // },
-  // {
-  //   id: 'form-verifikasi',
-  //   label: 'Form Verifikasi',
-  //   icon: <i className="fas fa-tasks mb-0 mr-2" style={{ color: 'inherit' }}></i>,
-  // },
-  // {
-  //   id: 'routing-slip',
-  //   label: 'Routing Slip',
-  //   icon: <i className="fas fa-sticky-note mb-0 mr-2" style={{ color: 'inherit' }}></i>,
-  // },
+  {
+    id: "form-verifikasi",
+    label: "Form Verifikasi",
+    icon: (
+      <i className="fas fa-tasks mb-0 mr-2" style={{ color: "inherit" }}></i>
+    ),
+  },
+  {
+    id: "routing-slip",
+    label: "Routing Slip",
+    icon: (
+      <i
+        className="fas fa-sticky-note mb-0 mr-2"
+        style={{ color: "inherit" }}
+      ></i>
+    ),
+  },
 ];
 
 const ItemContract = (props) => {
@@ -140,6 +143,20 @@ const ItemContract = (props) => {
           )}
           {tabActive === 1 && (
             <ItemContractInvoice {...props} progressTermin={terminProgress} />
+          )}
+          {tabActive === 2 && (
+            <ItemContractFormVerification
+              {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+            />
+          )}
+          {tabActive === 3 && (
+            <ItemContractRoutingSlip
+              {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+            />
           )}
         </Container>
       </Paper>

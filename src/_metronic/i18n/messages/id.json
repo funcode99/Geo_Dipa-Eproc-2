@@ -444,6 +444,8 @@
   "TITLE.PO_ITEM": "Purchase Order Item",
   "TITLE.PO_HISTORY": "Purchase Order History",
   "TITLE.SPAN_PO_ASYNC": "Berdasarkan Nomor Pesanan Pembelian SAP:",
+  "TITLE.PO": "Purchase Order",
+  "TITLE.SPAN_PO": "Berdasarkan Tanggal Mulai dan Tanggal Berakhir:",
   "TITLE.EMAIL": "Email",
   "TITLE.UPDATED_DATE": "Tanggal Diperbaharui",
   "TITLE.SCHEDULED": "Terjadwal",
