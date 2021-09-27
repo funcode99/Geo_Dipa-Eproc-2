@@ -154,6 +154,7 @@ function ContractHardCopyDoc(props) {
   const [deliverableHardCopy, setDeliverableHardCopy] = useState(true);
   const [contractHardCopy, setContractHardCopy] = useState(true);
   const [dialogConfirm, setDialogConfirm] = useState(false);
+  const [contractAuthority, setContractAuthority] = useState("");
 
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
@@ -414,6 +415,7 @@ function ContractHardCopyDoc(props) {
       sub_total: invoiceData.invoice_value,
       created_by_id: user_id,
       updated_by_id: user_id,
+      authority: contractAuthority
     };
     sendNotifHardCopy({
       contract_id: contract_id,
@@ -603,6 +605,7 @@ function ContractHardCopyDoc(props) {
     getContractAuthority(termin)
       .then((response) => {
         if (response["data"]["data"]) {
+          setContractAuthority(response["data"]["data"]["authority"])
           getRolesAcceptance(response["data"]["data"]["authority"]).then(
             (responseRoles) => {
               responseRoles["data"]["data"].map((item, index) => {
