@@ -127,7 +127,7 @@ const ParaPihak = () => {
           navLists={navLists}
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
         />
-        <FormBuilder initial={values}>
+        <FormBuilder initial={values} withSubmit={false}>
           {({}) => {
             return (
               <React.Fragment>

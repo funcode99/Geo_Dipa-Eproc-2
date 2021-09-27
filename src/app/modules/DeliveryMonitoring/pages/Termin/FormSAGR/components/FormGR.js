@@ -42,7 +42,7 @@ const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
     });
   };
 
-  // console.log(`loading`, dataGR);
+  console.log(`loading`, dataGR);
 
   const initial = React.useMemo(
     () => ({
