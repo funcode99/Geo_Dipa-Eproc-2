@@ -1,11 +1,11 @@
 import React from "react";
-import FormBuilder from "../../../../../../components/builder/FormBuilder";
-import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
-import { gr_field, headerTableSA } from "./DUMMY_DATA";
 import { object } from "yup";
+import FormBuilder from "../../../../../../components/builder/FormBuilder";
+import { formatUpdateDate } from "../../../../../../libs/date";
 import validation from "../../../../../../service/helper/validationHelper";
 import { TerminPageContext } from "../../TerminPageNew/TerminPageNew";
-import { formatUpdateDate } from "../../../../../../libs/date";
+import { gr_field } from "./DUMMY_DATA";
+import ModalApproveGR from "./ModalApproveGR";
 
 const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
@@ -17,6 +17,8 @@ const validationSchema = object().shape({
 });
 
 const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
+  const refModal = React.useRef();
+  const refModal2 = React.useRef();
   const { task_id } = React.useContext(TerminPageContext);
   const grExist = Boolean(dataSAGR.gr);
   const dataGR = dataSAGR?.gr;
@@ -42,7 +44,20 @@ const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
     });
   };
 
-  console.log(`loading`, dataGR);
+  const _fetchToSAP = (type) => {
+    console.log(`submitt`, type);
+    fetch_api_sg({
+      key: keys.post_to_sap,
+      type: "post",
+      alertAppear: "both",
+      url: `delivery/sap/${type}/${task_id}`,
+      onSuccess: (res) => {
+        onRefresh();
+        refModal.current.close();
+        refModal2.current.close();
+      },
+    });
+  };
 
   const initial = React.useMemo(
     () => ({
@@ -52,7 +67,6 @@ const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
     }),
     [dataGR]
   );
-
   return (
     <div>
       <FormBuilder
@@ -61,25 +75,41 @@ const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
         formData={gr_field}
         validation={validationSchema}
         initial={initial}
-        fieldProps={{
-          readOnly: grExist,
-        }}
+        fieldProps={
+          {
+            // readOnly: grExist,
+          }
+        }
         btnChildren={
           <React.Fragment>
-            <button
-              // onClick={openChart}
-              className={`btn btn-sm btn-label-warning btn-bold mr-3`}
-            >
-              Post GR 101 to SAP
-            </button>
-            <button
-              // onClick={openChart}
-              className={`btn btn-sm btn-label-success btn-bold mr-3`}
-            >
-              Post GR 103 to SAP
-            </button>
+            {dataSAGR?.gr_status?.gr_101 == true && (
+              <button
+                onClick={() => refModal.current.open()}
+                className={`btn btn-sm btn-label-warning btn-bold mr-3`}
+              >
+                Post GR 101
+              </button>
+            )}
+            {dataSAGR?.gr_status?.gr_103 == true && (
+              <button
+                onClick={() => refModal2.current.open()}
+                className={`btn btn-sm btn-label-success btn-bold mr-3`}
+              >
+                Post GR 103
+              </button>
+            )}
           </React.Fragment>
         }
+      />
+      <ModalApproveGR
+        innerRef={refModal}
+        gr={"GR 101"}
+        onSubmit={() => _fetchToSAP("gr-101")}
+      />
+      <ModalApproveGR
+        innerRef={refModal2}
+        gr={"GR 103"}
+        onSubmit={() => _fetchToSAP("gr-103")}
       />
     </div>
   );

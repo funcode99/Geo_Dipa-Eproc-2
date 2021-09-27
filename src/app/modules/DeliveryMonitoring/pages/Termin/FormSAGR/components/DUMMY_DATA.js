@@ -216,3 +216,17 @@ export const option_dist_type = [
   { value: "1", label: "Gradual Payment (quantity)" },
   { value: "2", label: "Gradual Payment (percentage)" },
 ];
+
+export const BASE_MODAL_CONF = [
+  {
+    type: "gr101",
+    title: "Post GR 101 to SAP ?",
+    // subTitle: "Pastikan dokumen yang dikirimkan telah sesuai !",
+  },
+  {
+    type: "gr103",
+    title: "Post GR 101 to SAP ?",
+    // subTitle: "Pastikan dokumen yang dikirimkan tidak sesuai !",
+    // isReject: true,
+  },
+];

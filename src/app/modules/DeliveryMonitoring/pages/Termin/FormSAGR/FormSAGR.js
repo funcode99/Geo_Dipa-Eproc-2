@@ -62,6 +62,7 @@ const keys = {
   upload_gr: "upload-ga-form",
   fetch_wbs: "fetch-wbs-list",
   fetch_sagr: "fetch-sa-gr",
+  post_to_sap: "post_to_sap",
 };
 
 const mapState = (state) => {
