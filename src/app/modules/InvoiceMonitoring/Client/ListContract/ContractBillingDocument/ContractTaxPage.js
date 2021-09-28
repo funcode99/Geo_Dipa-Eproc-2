@@ -80,7 +80,7 @@ function ContractTaxPage(props) {
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
   const [listTax, setListTax] = useState([]);
-  const [optionSelected, setOptionSelected] = useState([]);
+  const [optionSelected, setOptionSelected] = useState({});
 
   const [Toast, setToast] = useToast();
 
@@ -313,6 +313,8 @@ function ContractTaxPage(props) {
     </div>
   );
 
+  console.log("optionSelected", optionSelected);
+
   return (
     <React.Fragment>
       <Toast />
@@ -331,16 +333,40 @@ function ContractTaxPage(props) {
         <DialogContent>
           <div>
             <FormattedMessage id="TITLE.TAX_ATTACHMENT" />
-            {optionSelected && optionSelected.length > 0 ? (
-              <ol>
-                {optionSelected.map((item, index) => {
+            {!window.jQuery.isEmptyObject(optionSelected) ? (
+              <ul>
+                {Object.keys(optionSelected).map((element, index) => {
+                  return (
+                    <li key={index.toString()}>
+                      <span>
+                        {optionSelected[element].type_tax +
+                          " - " +
+                          optionSelected[element].group_tax}
+                      </span>
+                      <ol>
+                        {optionSelected[element].master_tax_items.map(
+                          (item, idx) => {
+                            return (
+                              <li key={idx.toString()}>
+                                <span className="text-danger">
+                                  {item.label}
+                                </span>
+                              </li>
+                            );
+                          }
+                        )}
+                      </ol>
+                    </li>
+                  );
+                })}
+                {/* {optionSelected.map((item, index) => {
                   return (
                     <li key={index.toString()}>
                       <span className="text-danger">{item.label}</span>
                     </li>
                   );
-                })}
-              </ol>
+                })} */}
+              </ul>
             ) : (
               <FormattedMessage id="TITLE.NOTHING" />
             )}
@@ -760,39 +786,73 @@ function ContractTaxPage(props) {
                   />
                 </div>
               </div>
-              <div className="form-group row">
-                <label htmlFor="priceTax" className="col-sm-4 col-form-label">
-                  <FormattedMessage id="TITLE.TAX" />
-                </label>
-                <div className="col-sm-8">
-                  <Select
-                    isMulti
-                    value={optionSelected}
-                    onChange={(e) => {
-                      setOptionSelected(e);
-                    }}
-                    isDisabled={
-                      isSubmit ||
-                      taxData?.state === "REJECTED" ||
-                      taxData?.state === "APPROVED" ||
-                      taxData === null ||
-                      !props.setTaxStaffStatus
-                    }
-                    options={listTax.map((el) => ({
-                      label: el.type_tax + " - " + el.group_tax,
-                      options: el?.master_tax_items.map((el2) => ({
-                        value: JSON.stringify(el2),
-                        // value: el2?.id,
-                        label: `${el2?.description} - ${el2?.value}% - ${rupiah(
-                          el2.tax_value
-                        )}`,
-                      })),
-                    }))}
-                    formatGroupLabel={formatGroupLabel}
-                  />
-                  {/* app/modules/DeliveryMonitoring/pages/Termin/Documents/component/ModalAddDeliverables.js */}
-                </div>
-              </div>
+              {listTax.map((item, index) => {
+                return (
+                  <div className="form-group row" key={index.toString()}>
+                    <label
+                      htmlFor="priceTax"
+                      className="col-sm-4 col-form-label"
+                    >
+                      <FormattedMessage id="TITLE.TAX" />{" "}
+                      {item.type_tax + "-" + item.group_tax}
+                    </label>
+                    <div className="col-sm-8">
+                      <Select
+                        isMulti
+                        value={
+                          optionSelected && optionSelected[item.id]
+                            ? optionSelected[item.id].master_tax_items
+                            : null
+                        }
+                        onChange={(e) => {
+                          var data = Object.assign(
+                            {},
+                            optionSelected ? optionSelected : {}
+                          );
+                          if (!data[item.id])
+                            data[item.id] = Object.assign({}, item);
+                          data[item.id].master_tax_items = [];
+                          if (e !== null) {
+                            if (e.length > 0) {
+                              data[item.id].master_tax_items = e;
+                            } else {
+                              delete data[item.id];
+                            }
+                          } else {
+                            delete data[item.id];
+                          }
+                          setOptionSelected(data);
+                        }}
+                        isDisabled={
+                          isSubmit ||
+                          taxData?.state === "REJECTED" ||
+                          taxData?.state === "APPROVED" ||
+                          taxData === null ||
+                          !props.setTaxStaffStatus
+                        }
+                        // options={listTax.map((el) => ({
+                        //   label: el.type_tax + " - " + el.group_tax,
+                        //   options: el?.master_tax_items.map((el2) => ({
+                        //     value: JSON.stringify(el2),
+                        //     // value: el2?.id,
+                        //     label: `${el2?.description} - ${
+                        //       el2?.value
+                        //     }% - ${rupiah(el2.tax_value)}`,
+                        //   })),
+                        // }))}
+                        options={item.master_tax_items.map((el2) => ({
+                          value: JSON.stringify(el2),
+                          label: `${el2?.description} - ${
+                            el2?.value
+                          }% - ${rupiah(el2.tax_value)}`,
+                        }))}
+                        formatGroupLabel={formatGroupLabel}
+                      />
+                      {/* app/modules/DeliveryMonitoring/pages/Termin/Documents/component/ModalAddDeliverables.js */}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </CardBody>
