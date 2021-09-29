@@ -198,7 +198,7 @@ const DetailGR = ({ data, type, fullData }) => {
   const classes = useStyles();
   let dataSA = {};
   if (type === "SA") dataSA = data;
-
+  console.log(`fullData`, fullData, dataSA, data);
   const tab1 = useMemo(
     () => [
       { value: client?.name },
@@ -238,7 +238,10 @@ const DetailGR = ({ data, type, fullData }) => {
   const tab4 = useMemo(
     () => [
       { label: "PO Number", value: fullData?.task_gr?.po_number || "dummy" },
-      { label: "Movement Type", value: "dummy" },
+      {
+        label: "Movement Type",
+        value: fullData?.task_gr?.gr_items?.[0]?.move_type || "dummy",
+      },
       { label: "Purchasing Group", value: "dummy" },
       { label: "Telephone", value: "dummy" },
       {
