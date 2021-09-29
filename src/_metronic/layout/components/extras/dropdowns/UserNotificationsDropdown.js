@@ -140,7 +140,7 @@ export function UserNotificationsDropdown(props) {
                               </div>
                               <div className="text-muted">
                                 {`${item.contract_no ||
-                                  "Nomor Kontrak"}-${item.task_name ||
+                                  "Nomor Kontrak"}-${item.termin_name ||
                                   "Nama Termin"}(${item.vendor_name ||
                                   "Nama Vendor"})`}
                               </div>

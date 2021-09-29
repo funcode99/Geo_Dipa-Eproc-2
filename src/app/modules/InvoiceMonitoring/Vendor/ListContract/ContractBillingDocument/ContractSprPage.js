@@ -36,9 +36,7 @@ import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
-import {
-  getInvoicePeriods
-} from "../../../../Master/service/MasterCrud";
+import { getInvoicePeriods } from "../../../../Master/service/MasterCrud";
 import { SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractSprPage(props) {
@@ -315,8 +313,8 @@ function ContractSprPage(props) {
             "spr_date",
             dataFormSprVendor.spr_date
               ? window
-                .moment(new Date(dataFormSprVendor.spr_date))
-                .format("YYYY-MM-DD")
+                  .moment(new Date(dataFormSprVendor.spr_date))
+                  .format("YYYY-MM-DD")
               : ""
           );
           formik.setFieldValue(
@@ -352,8 +350,8 @@ function ContractSprPage(props) {
               "spr_date",
               response["data"]["data"]["spr_date"]
                 ? window
-                  .moment(new Date(response["data"]["data"]["spr_date"]))
-                  .format("YYYY-MM-DD")
+                    .moment(new Date(response["data"]["data"]["spr_date"]))
+                    .format("YYYY-MM-DD")
                 : ""
             );
             formik.setFieldValue(
@@ -465,6 +463,13 @@ function ContractSprPage(props) {
   };
 
   const handleRadio = (e) => {
+    formik.resetForm();
+    getSppData();
+    setUploadFilename(
+      intl.formatMessage({
+        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+      })
+    );
     if (e.target.value === "true") {
       setBankReference(true);
       formik.setFieldValue("bank_refference", true);
@@ -521,11 +526,24 @@ function ContractSprPage(props) {
   const getInvoicePeriodsData = useCallback(() => {
     getInvoicePeriods()
       .then((response) => {
-        const day_now = moment(new Date()).format('D')
-        if (parseInt(response["data"]["data"][0]["accepted_thru_day"]) >= parseInt(response["data"]["data"][0]["accepted_from_day"])) {
-          setInvoicePeriodsStatus(day_now >= parseInt(response["data"]["data"][0]["accepted_from_day"]) && day_now <= parseInt(response["data"]["data"][0]["accepted_thru_day"]))
+        const day_now = moment(new Date()).format("D");
+        if (
+          parseInt(response["data"]["data"][0]["accepted_thru_day"]) >=
+          parseInt(response["data"]["data"][0]["accepted_from_day"])
+        ) {
+          setInvoicePeriodsStatus(
+            day_now >=
+              parseInt(response["data"]["data"][0]["accepted_from_day"]) &&
+              day_now <=
+                parseInt(response["data"]["data"][0]["accepted_thru_day"])
+          );
         } else {
-          setInvoicePeriodsStatus(day_now >= parseInt(response["data"]["data"][0]["accepted_from_day"]) || day_now <= parseInt(response["data"]["data"][0]["accepted_thru_day"]))
+          setInvoicePeriodsStatus(
+            day_now >=
+              parseInt(response["data"]["data"][0]["accepted_from_day"]) ||
+              day_now <=
+                parseInt(response["data"]["data"][0]["accepted_thru_day"])
+          );
         }
       })
       .catch((error) => {
@@ -578,8 +596,9 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -597,8 +616,9 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -646,8 +666,9 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumberBank === 1 ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-left ${
+                          pageNumberBank === 1 ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -665,10 +686,11 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumberBank === numPagesBank
-                          ? ""
-                          : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-right ${
+                          pageNumberBank === numPagesBank
+                            ? ""
+                            : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -769,11 +791,11 @@ function ContractSprPage(props) {
                       :{" "}
                       {modalHistoryData["state"] === "REJECTED"
                         ? moment(
-                          new Date(modalHistoryData["rejected_at"])
-                        ).format("YYYY-MM-DD HH:mm:ss")
+                            new Date(modalHistoryData["rejected_at"])
+                          ).format("YYYY-MM-DD HH:mm:ss")
                         : moment(
-                          new Date(modalHistoryData["approved_at"])
-                        ).format("YYYY-MM-DD HH:mm:ss")}
+                            new Date(modalHistoryData["approved_at"])
+                          ).format("YYYY-MM-DD HH:mm:ss")}
                     </span>
                   </div>
                 </div>
@@ -896,9 +918,9 @@ function ContractSprPage(props) {
                       className="form-control"
                       id="numberSpp"
                       disabled={
-                        (loading ||
-                          sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       {...formik.getFieldProps("spr_no")}
@@ -926,9 +948,9 @@ function ContractSprPage(props) {
                       className="form-control"
                       id="dateSpp"
                       disabled={
-                        (loading ||
-                          sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       {...formik.getFieldProps("spr_date")}
@@ -964,9 +986,9 @@ function ContractSprPage(props) {
                       className="form-control"
                       id="note"
                       disabled={
-                        (loading ||
-                          sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       {...formik.getFieldProps("description")}
@@ -990,7 +1012,13 @@ function ContractSprPage(props) {
                   </label>
                   <label
                     htmlFor="upload"
-                    className={`input-group mb-3 col-sm-8 ${(sppStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? "" : "pointer"}`}
+                    className={`input-group mb-3 col-sm-8 ${
+                      sppStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                      !invoicePeriodsStatus
+                        ? ""
+                        : "pointer"
+                    }`}
                   >
                     {!sppStatus && (
                       <div className="input-group-prepend">
@@ -1000,7 +1028,13 @@ function ContractSprPage(props) {
                       </div>
                     )}
                     <span
-                      className={`form-control text-truncate ${(sppStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? classes.textDisabled : ""}`}
+                      className={`form-control text-truncate ${
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        !invoicePeriodsStatus
+                          ? classes.textDisabled
+                          : ""
+                      }`}
                     >
                       {uploadFilename}
                     </span>
@@ -1027,9 +1061,9 @@ function ContractSprPage(props) {
                     className="d-none"
                     id="upload"
                     disabled={
-                      (loading ||
-                        sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                      loading ||
+                      sppStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                       !invoicePeriodsStatus
                     }
                     onBlur={formik.handleBlur}
@@ -1057,9 +1091,9 @@ function ContractSprPage(props) {
                         name="RadioOptions"
                         value={true}
                         disabled={
-                          (loading ||
-                            sppStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                          loading ||
+                          sppStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                           !invoicePeriodsStatus
                         }
                         onChange={handleRadio}
@@ -1077,9 +1111,9 @@ function ContractSprPage(props) {
                         name="RadioOptions"
                         value={false}
                         disabled={
-                          (loading ||
-                            sppStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                          loading ||
+                          sppStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                           !invoicePeriodsStatus
                         }
                         onChange={handleRadio}
@@ -1105,9 +1139,9 @@ function ContractSprPage(props) {
                       <select
                         onChange={handleChangeBank}
                         disabled={
-                          (loading ||
-                            sppStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                          loading ||
+                          sppStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                           !invoicePeriodsStatus
                         }
                         className="custom-select custom-select-sm"
@@ -1139,16 +1173,16 @@ function ContractSprPage(props) {
                         className="form-control"
                         id="accountNumberSpp"
                         disabled={
-                          (loading ||
-                            sppStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                          loading ||
+                          sppStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                           !invoicePeriodsStatus
                         }
                         {...formik.getFieldProps("bank_account_no")}
                       />
                     </div>
                     {formik.touched.bank_account_no &&
-                      formik.errors.bank_account_no ? (
+                    formik.errors.bank_account_no ? (
                       <span className="col-sm-8 offset-sm-4 text-left text-danger">
                         {formik.errors.bank_account_no}
                       </span>
@@ -1169,10 +1203,10 @@ function ContractSprPage(props) {
                       className="form-control"
                       id="accountNameSpp"
                       disabled={
-                        (loading ||
-                          bankReference ||
-                          sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        bankReference ||
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       defaultValue={sppData.bank_account_name}
@@ -1180,7 +1214,7 @@ function ContractSprPage(props) {
                     />
                   </div>
                   {formik.touched.bank_account_name &&
-                    formik.errors.bank_account_name ? (
+                  formik.errors.bank_account_name ? (
                     <span className="col-sm-8 offset-sm-4 text-left text-danger">
                       {formik.errors.bank_account_name}
                     </span>
@@ -1200,10 +1234,10 @@ function ContractSprPage(props) {
                       className="form-control"
                       id="bankNameSpp"
                       disabled={
-                        (loading ||
-                          bankReference ||
-                          sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        bankReference ||
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       {...formik.getFieldProps("bank_name")}
@@ -1229,10 +1263,10 @@ function ContractSprPage(props) {
                       className="form-control"
                       id="bankAddressSpp"
                       disabled={
-                        (loading ||
-                          bankReference ||
-                          sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        bankReference ||
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       {...formik.getFieldProps("bank_address")}
@@ -1255,8 +1289,13 @@ function ContractSprPage(props) {
                     </label>
                     <label
                       htmlFor="upload_bank"
-                      className={`input-group mb-3 col-sm-8 ${(sppStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? "" : "pointer"
-                        }`}
+                      className={`input-group mb-3 col-sm-8 ${
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        !invoicePeriodsStatus
+                          ? ""
+                          : "pointer"
+                      }`}
                     >
                       {!sppStatus && (
                         <div className="input-group-prepend">
@@ -1266,7 +1305,13 @@ function ContractSprPage(props) {
                         </div>
                       )}
                       <span
-                        className={`form-control text-truncate h-100 ${(sppStatus || progressTermin?.ident_name !== "BILLING_SOFTCOPY") || !invoicePeriodsStatus ? classes.textDisabled : ""}`}
+                        className={`form-control text-truncate h-100 ${
+                          sppStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                          !invoicePeriodsStatus
+                            ? classes.textDisabled
+                            : ""
+                        }`}
                       >
                         {uploadFilenameBank}
                       </span>
@@ -1301,9 +1346,9 @@ function ContractSprPage(props) {
                       className="d-none"
                       id="upload_bank"
                       disabled={
-                        (loading ||
-                          sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        sppStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       onChange={(e) => handleUploadBank(e)}
@@ -1393,8 +1438,8 @@ function ContractSprPage(props) {
               disabled={
                 loading ||
                 (formik.touched && !formik.isValid) ||
-                (sppStatus ||
-                  progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                sppStatus ||
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                 !invoicePeriodsStatus
               }
             >
@@ -1435,10 +1480,11 @@ function ContractSprPage(props) {
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`${item.state === "REJECTED"
-                          ? "text-danger"
-                          : "text-success"
-                          } pointer font-weight-bold`}
+                        className={`${
+                          item.state === "REJECTED"
+                            ? "text-danger"
+                            : "text-success"
+                        } pointer font-weight-bold`}
                         onClick={() => handleHistory(index)}
                       >
                         {item.state === "REJECTED" ? (
