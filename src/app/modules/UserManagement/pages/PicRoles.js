@@ -254,7 +254,10 @@ function PicRoles(props) {
   const handleClick = (e, index) => {
     e.preventDefault();
     const vendor_id = data.data[index].vendor_id;
-    getContractVendor(vendor_id, "").then((result) => {
+    getContractVendor(
+      vendor_id,
+      "filter=%7B%7D&sort=%7B%22name%22%3A%22contract_date%22%2C%22order%22%3Atrue%7D&numberColum=0&page=1&count=0&rowsPerPage=100"
+    ).then((result) => {
       const data = result.data.data.map(function(row) {
         return { value: row.contract_id, label: row.contract_no };
       });

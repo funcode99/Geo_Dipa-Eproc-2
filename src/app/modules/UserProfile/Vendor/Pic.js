@@ -168,7 +168,7 @@ function Pic(props) {
   const callApiPic = () => {
     setLoadingSecond(true);
     getVendors(
-      `filter=%7B%22filter-name%22%3A%22${user.data.vendor_full_name}%22%7D&sort=%7B%22name%22%3A%22code%22%7D&numberColum=0&page=1&count=6&rowsPerPage=100`
+      `filter=%7B%22filter-name%22%3A%22${user.data.vendor_full_name}%22%7D&sort=%7B%22name%22%3A%22code%22%7D&numberColum=0&page=1&count=6&rowsPerPage=1000`
     )
       .then((result) => {
         setLoadingSecond(false);
@@ -180,7 +180,7 @@ function Pic(props) {
       });
     getContractVendor(
       user.data.vendor_id,
-      "filter=%7B%7D&sort=%7B%22name%22%3A%22contract_date%22%2C%22order%22%3Atrue%7D&numberColum=0&page=1&count=0&rowsPerPage=100"
+      "filter=%7B%7D&sort=%7B%22name%22%3A%22contract_date%22%2C%22order%22%3Atrue%7D&numberColum=0&page=1&count=0&rowsPerPage=1000"
     ).then((result) => {
       const data = result.data.data.map(function(row) {
         return { value: row.contract_id, label: row.contract_no };
