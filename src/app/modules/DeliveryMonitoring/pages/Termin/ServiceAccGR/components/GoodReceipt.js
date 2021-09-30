@@ -64,7 +64,7 @@ const GoodReceipt = ({ data, loading }) => {
           withSearch={false}
           rows={task_gr?.gr_items.map((el, id) => ({
             line: el?.line_id,
-            mat_no: el?.material,
+            mat_no: parseInt(el?.material),
             desc: "",
             order_qty: el?.po_pr_qnt,
             rcvd_qty: el?.entry_qnt,
