@@ -103,6 +103,7 @@ export const gr_field = [
     {
       name: "ref_doc_no",
       label: "Ref Doc No",
+      type: "number",
     },
   ],
   [
