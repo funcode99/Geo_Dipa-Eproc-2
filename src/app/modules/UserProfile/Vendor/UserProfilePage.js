@@ -7,6 +7,7 @@ import ChangePassword from "./ChangePassword";
 import PersonaInformation from "./PersonaInformation";
 // import EmailSettings from "./EmailSettings";
 import { ProfileCard } from "./components/ProfileCard";
+import Pic from "./Pic";
 import {
   // FormattedMessage,
   injectIntl,
@@ -45,10 +46,9 @@ function UserProfilePage(props) {
             path="/vendor/user-profile/change-password"
             component={ChangePassword}
           />
-          {/* <Route
-            path="/vendor/user-profile/email-settings"
-            component={EmailSettings}
-          /> */}
+          {user.data.main_vendor && (
+            <Route path="/vendor/user-profile/pic" component={Pic} />
+          )}
           <Route
             path="/vendor/user-profile/personal-information"
             component={PersonaInformation}
