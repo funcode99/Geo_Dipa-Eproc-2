@@ -100,6 +100,28 @@ export function ProfileCard(props) {
                     </span>
                   </NavLink>
                 </div>
+                {user.data.main_vendor && (
+                  <div className="navi-item mb-2">
+                    <NavLink
+                      to="/vendor/user-profile/pic"
+                      className="navi-link py-4"
+                      activeClassName="active"
+                    >
+                      <span className="navi-icon mr-2">
+                        <span className="svg-icon">
+                          <SVG
+                            src={toAbsoluteUrl(
+                              "/media/svg/icons/Communication/Group.svg"
+                            )}
+                          ></SVG>{" "}
+                        </span>
+                      </span>
+                      <span className="navi-text font-size-lg">
+                        <FormattedMessage id="TITLE.USER_MANAGEMENT.PIC_ROLES.MODAL.MODAL_TITLE" />
+                      </span>
+                    </NavLink>
+                  </div>
+                )}
               </div>
               {/* end::Nav */}
             </div>
