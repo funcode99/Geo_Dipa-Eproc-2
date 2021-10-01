@@ -1057,10 +1057,15 @@ function ItemContractBKB(props) {
                     </td>
                     <td></td>
                   </tr>
-                  {bkbData?.tax_selected?.map((row, key) => {
-                    const data = JSON.parse(row.value);
+                  {Object.keys(bkbData?.tax_selected ? bkbData?.tax_selected : {}).map((row, index) => {
+                    const temp = bkbData?.tax_selected[row].master_tax_items ? bkbData?.tax_selected[row].master_tax_items : []
                     return (
-                      <tr key={key}>
+                      <React.Fragment key={index}>
+                        {
+                          temp.map((rows, indexs) => {
+                            const data = JSON.parse(rows.value);
+                            return (
+                              <tr key={indexs}>
                         <td colSpan="3" className="text-right">
                           {data.description} - {data.value}%
                         </td>
@@ -1072,6 +1077,10 @@ function ItemContractBKB(props) {
                         </td>
                       </tr>
                     );
+                          })
+                        }
+                      </React.Fragment>
+                    )
                   })}
                   <tr>
                     <td colSpan="3" className="text-right">
