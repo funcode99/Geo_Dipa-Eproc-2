@@ -4,14 +4,18 @@ import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
 import ButtonContained from "../../../../../../components/button/ButtonGlobal";
+import { FormSAContext } from "./FormSA";
 
 const ModalAddWBS = ({ innerRef, onSelected }) => {
   const formRef = React.useRef();
+  const { listWBS } = React.useContext(FormSAContext);
+
   const [dataForm, setDataForm] = useState([
     [
       {
         name: "wbs1",
         label: "WBS 1",
+        typeInput: "SelectInputCustom",
       },
       {
         name: "value1",
@@ -38,6 +42,7 @@ const ModalAddWBS = ({ innerRef, onSelected }) => {
           {
             name: "wbs" + newIndex,
             label: "WBS " + newIndex,
+            typeInput: "SelectInputCustom",
           },
           {
             name: "value" + newIndex,
@@ -70,8 +75,10 @@ const ModalAddWBS = ({ innerRef, onSelected }) => {
     console.log(`data`, data);
     if (typeof onSelected == "function") onSelected(data);
   };
-
-  // console.log(`ref`, formRef.current.handleSubmit());
+  const listWBSMapped = listWBS.map(({ id, work_breakdown_ap }) => ({
+    value: id,
+    label: work_breakdown_ap,
+  }));
 
   return (
     <DialogGlobal
@@ -80,6 +87,7 @@ const ModalAddWBS = ({ innerRef, onSelected }) => {
       onYes={() => formRef.current.handleSubmit()}
       textYes={"Kirim"}
       isCancel={false}
+      maxWidth={"md"}
     >
       <FormBuilder
         ref={formRef}
@@ -87,6 +95,23 @@ const ModalAddWBS = ({ innerRef, onSelected }) => {
         formData={dataForm}
         // validation={validateScheme}
         withSubmit={false}
+        fieldProps={{
+          listOptions: {
+            wbs1: listWBS.map(({ id, work_breakdown_ap }) => ({
+              value: id,
+              label: work_breakdown_ap,
+            })),
+            wbs2: listWBSMapped,
+            wbs3: listWBSMapped,
+            wbs4: listWBSMapped,
+            wbs5: listWBSMapped,
+            wbs6: listWBSMapped,
+            wbs7: listWBSMapped,
+            wbs8: listWBSMapped,
+            wbs9: listWBSMapped,
+            wbs10: listWBSMapped,
+          },
+        }}
       />
 
       <div className="d-flex justify-content-end">

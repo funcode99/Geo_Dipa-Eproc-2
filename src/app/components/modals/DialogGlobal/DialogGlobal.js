@@ -108,6 +108,7 @@ class DialogGlobal extends React.PureComponent {
       disableBackdropClick = true,
       isSubmit = true,
       isCancel = true,
+      maxWidth,
     } = this.props;
     return (
       <div>
@@ -115,7 +116,7 @@ class DialogGlobal extends React.PureComponent {
           onClose={this.close}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
-          maxWidth={"sm"}
+          maxWidth={maxWidth || "sm"}
           fullWidth={true}
           disableBackdropClick={disableBackdropClick}
         >

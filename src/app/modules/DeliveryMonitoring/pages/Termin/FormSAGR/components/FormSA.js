@@ -24,7 +24,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
       type: "get",
       url: `delivery/wbs`,
       onSuccess: (res) => {
-        // console.log("reswbs", res);
+        console.log("reswbs", res);
         setlistWBS(res.data);
       },
     });

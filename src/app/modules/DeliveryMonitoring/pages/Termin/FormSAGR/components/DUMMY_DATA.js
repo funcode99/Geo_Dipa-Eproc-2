@@ -14,10 +14,10 @@ export const sa_field = [
     //   name: "po_number",
     //   label: "PO Number",
     // },
-    {
-      name: "po_item",
-      label: "PO Item",
-    },
+    // {
+    //   name: "po_item",
+    //   label: "PO Item",
+    // },
   ],
   [
     {
@@ -205,7 +205,7 @@ export const validationSchema_sa = object().shape({
   post_date: validation.require("Post Date"),
   ref_doc_no: validation.require("Ref Doc No"),
   doc_text: validation.require("Doc Text"),
-  po_item: validation.require("PO Item"),
+  // po_item: validation.require("PO Item"),
   // po_number: validation.require("PO Number"),
   // doc_date: validation.require("Document Date"),
   // score_qual: validation.require("Score Qual"),
