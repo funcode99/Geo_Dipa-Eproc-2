@@ -108,7 +108,17 @@ const ListTermContract = (props) => {
     getTermContract(contract)
       .then((result) => {
         setLoading(false);
-        setData(result.data.data);
+        var data = result.data.data;
+        if (data && data.data_termin) {
+          data.data_termin = data.data_termin.sort((a, b) =>
+            new Date(a.createdAt) > new Date(b.createdAt)
+              ? 1
+              : new Date(b.createdAt) > new Date(a.createdAt)
+              ? -1
+              : 0
+          );
+        }
+        setData(data);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
