@@ -327,6 +327,8 @@ function ItemContractBKB(props) {
         desc: bkbData.desc,
         term_id: termin,
         contract_id: contract,
+        sub_total: bkbData?.sub_total,
+        authority: terminAuthority
       };
       approveParkAP(data)
         .then((result) => {
