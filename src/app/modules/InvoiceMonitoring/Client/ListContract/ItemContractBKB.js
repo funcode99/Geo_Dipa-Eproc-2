@@ -267,6 +267,7 @@ function ItemContractBKB(props) {
         term_id: termin,
         contract_id: contract,
         sub_total: bkbData?.sub_total,
+        authority: terminAuthority
       };
       submitParkAP(data)
         .then((result) => {
