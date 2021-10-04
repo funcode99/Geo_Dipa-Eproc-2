@@ -297,6 +297,8 @@ function ItemContractBKB(props) {
         doc_park_ap_update_id: data_login.user_id,
         term_id: termin,
         contract_id: contract,
+        sub_total: bkbData?.sub_total,
+        authority: terminAuthority
       };
       updateParkAP(data)
         .then((result) => {
@@ -505,6 +507,8 @@ function ItemContractBKB(props) {
           : bkbData.doc_park_ap_submit_at,
         term_id: termin,
         contract_id: contract,
+        sub_total: bkbData?.sub_total,
+        authority: terminAuthority
       };
       rejectParkAP(data)
         .then((result) => {
