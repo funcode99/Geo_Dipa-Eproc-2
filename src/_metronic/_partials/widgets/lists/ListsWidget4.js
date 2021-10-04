@@ -28,7 +28,6 @@ function ListsWidget4({ className, intl }) {
     setLoading(true);
     getTodoByUser(user_id)
       .then((result) => {
-        console.log("result", result);
         setLoading(false);
         setDataTodo(result.data.data);
       })
@@ -133,7 +132,7 @@ function ListsWidget4({ className, intl }) {
                         {item.todo_name}
                       </Link>
                       <span className="text-danger font-weight-bold font-size-sm">
-                        {`${item.contract_no}(${item.vendor_name})`}
+                        {`${item.contract_no}-${item.term_name}(${item.vendor_name})`}
                       </span>
                     </div>
                   </div>
