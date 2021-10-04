@@ -167,7 +167,7 @@ export const rowTableSA_field = [
     typeInput: "SelectInputCustom",
   },
   {
-    name: "wbs",
+    name: "wbsdata",
     label: "Header Text",
     // typeInput: "SelectInputCustom",
     ChildWithName: (props) => <InputWBS {...props} />,

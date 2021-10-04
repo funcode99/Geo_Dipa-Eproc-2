@@ -55,15 +55,17 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
         gl_account: item.gl_account,
         bus_area: item.bus_area,
         costcenter: item.cost_center,
-        wbs_elem: item.wbs.label,
-        value: item.value,
+        // wbs_elem: item.wbs.label,
+        // value: item.value,
+        wbs: item.wbsdata,
       })),
     };
-    console.log(`data`, params);
+    console.log(`data`, params, data, dataSA);
     fetch_api_sg({
       key: keys.upload_sa,
       type: "post",
       url: `delivery/task-sa/${task_id}`,
+      alertAppear: "both",
       params,
       onSuccess: (res) => {
         console.log("post sa", res);
@@ -79,15 +81,15 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
       // ext_number: dataSA?.ext_number,
       // short_text: validation.require("Short Text"),
       // location: validation.require("Location"),
-      begdate: dataSA?.beg_date,
-      enddate: dataSA?.end_date,
+      begdate: dataSA?.[0]?.beg_date,
+      enddate: dataSA?.[0]?.end_date,
       // person_int: validation.require("Person Internal"),
       // person_ext: validation.require("Person External"),
       // post_date: validation.require("Post Date"),
       // ref_doc_no: validation.require("Ref Doc No"),
       // doc_text: validation.require("Doc Text"),
       // po_item: validation.require("PO Item"),
-      ...dataSA,
+      ...dataSA?.[0],
     }),
     [dataSA]
   );

@@ -15,8 +15,8 @@ const validationSchema = object().shape({
   bus_area: validation.require("Bus Area"),
   cost_center: validation.require("Cost Center"),
   dist_type: validation.require("Distribution Type"),
-  wbs: validation.require("WBS"),
-  value: validation.require("Value"),
+  // wbs: validation.require("WBS"),
+  // value: validation.require("Value"),
 });
 
 const RowTableSA = ({ item, index }) => {
@@ -43,7 +43,18 @@ const RowTableSA = ({ item, index }) => {
   console.log(`readOnly`, readOnly);
   // console.log(`data row`, formikRef.current);
   const _handleSelected = (data) => {
-    formikRef.current.setFieldValue(data, "wbsdata", true);
+    // console.log(`data`, data);
+    const dataArr = Array(data.length)
+      .fill()
+      .map((_, i) => ({
+        name: data[`wbs${i + 1}`].label,
+        value: data[`value${i + 1}`],
+      }));
+    console.log(`datasss`, dataArr);
+    formikRef.current.setFieldValue("wbsdata", dataArr, true);
+    setTimeout(() => {
+      _handleBlur();
+    }, 500);
   };
   useEffect(() => {
     setArrService((prev) => ({
@@ -56,7 +67,11 @@ const RowTableSA = ({ item, index }) => {
 
   return (
     <React.Fragment key={index}>
-      <ModalAddWBS innerRef={wbsRef} onSelected={_handleSelected} />
+      <ModalAddWBS
+        innerRef={wbsRef}
+        onSelected={_handleSelected}
+        onBlur={_handleBlur}
+      />
       <Formik
         innerRef={formikRef}
         initialValues={item}

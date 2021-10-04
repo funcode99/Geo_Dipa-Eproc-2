@@ -6,7 +6,7 @@ import validation from "../../../../../../service/helper/validationHelper";
 import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 import { FormSAContext } from "./FormSA";
 
-const ModalAddWBS = ({ innerRef, onSelected }) => {
+const ModalAddWBS = ({ innerRef, onSelected, onBlur }) => {
   const formRef = React.useRef();
   const { listWBS } = React.useContext(FormSAContext);
 
@@ -54,9 +54,11 @@ const ModalAddWBS = ({ innerRef, onSelected }) => {
           },
         ];
 
-        return index === e.length - 1
-          ? [...acc, item, newData]
-          : [...acc, item];
+        return e.length < 10
+          ? index === e.length - 1
+            ? [...acc, item, newData]
+            : [...acc, item]
+          : e;
       }, [])
     );
   };
@@ -66,15 +68,39 @@ const ModalAddWBS = ({ innerRef, onSelected }) => {
       var arr = [...e];
       var poped = [];
       if (arr.length > 1) poped = arr.pop();
-      console.log(`poped`, poped, arr);
+      // console.log(`poped`, poped, arr);
       return arr;
     });
   };
 
   const _handleSubmit = (data) => {
-    console.log(`data`, data);
-    if (typeof onSelected == "function") onSelected(data);
+    if (typeof onSelected == "function")
+      onSelected({ ...data, length: dataForm.length });
+    _cleanSubmit();
   };
+
+  const _cleanSubmit = () => {
+    // onBlur();
+    innerRef.current.close();
+    setDataForm([
+      [
+        {
+          name: "wbs1",
+          label: "WBS 1",
+          typeInput: "SelectInputCustom",
+        },
+        {
+          name: "value1",
+          label: "Value 1",
+          type: "number",
+          size: "sm",
+          min: "0.1",
+          step: "0.1",
+        },
+      ],
+    ]);
+  };
+
   const listWBSMapped = listWBS.map(({ id, work_breakdown_ap }) => ({
     value: id,
     label: work_breakdown_ap,
@@ -123,7 +149,11 @@ const ModalAddWBS = ({ innerRef, onSelected }) => {
         >
           Minus a row
         </ButtonContained>
-        <ButtonContained baseColor="success" onClick={addField}>
+        <ButtonContained
+          disabled={dataForm.length == 10}
+          baseColor="success"
+          onClick={addField}
+        >
           Add a row
         </ButtonContained>
       </div>
