@@ -50,7 +50,7 @@ const RowTableSA = ({ item, index }) => {
         name: data[`wbs${i + 1}`].label,
         value: data[`value${i + 1}`],
       }));
-    console.log(`datasss`, dataArr);
+    // console.log(`datasss`, dataArr);
     formikRef.current.setFieldValue("wbsdata", dataArr, true);
     setTimeout(() => {
       _handleBlur();

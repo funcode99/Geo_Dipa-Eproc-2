@@ -60,7 +60,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
         wbs: item.wbsdata,
       })),
     };
-    console.log(`data`, params, data, dataSA);
+    // console.log(`data`, params, data, dataSA);
     fetch_api_sg({
       key: keys.upload_sa,
       type: "post",
