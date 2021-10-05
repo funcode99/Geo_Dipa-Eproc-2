@@ -205,6 +205,9 @@ export async function getTermContract(id) {
 export async function getDeliverableInInvoive(id) {
   return axios.get(`/delivery/task/${id}`);
 }
+export async function getSaGr(term) {
+  return axios.get(`/delivery/task/${term}/sa-gr`);
+}
 export async function getAsyncSpt(data) {
   return axios.post(`/invoice/async_list_spt`, data);
 }

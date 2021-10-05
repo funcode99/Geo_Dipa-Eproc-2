@@ -25,6 +25,7 @@ import {
   getContractSummary,
   getTerminProgress,
   getContractAuthority,
+  getSaGr,
 } from "../../_redux/InvoiceMonitoringCrud";
 // import useToast from "../../../../../components/toast";
 // import { useFormik } from "formik";
@@ -55,6 +56,10 @@ import { DEV_NODE, DEV_RUBY, API_EPROC } from "../../../../../redux/BaseHost";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { getRolesAcceptance } from "../../../Master/service/MasterCrud";
 import { SOCKET } from "../../../../../redux/BaseHost";
+import {
+  ServiceAcceptance,
+  GoodReceipt,
+} from "../../../DeliveryMonitoring/pages/Termin/ServiceAccGR/components";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -307,6 +312,11 @@ function ContractHardCopyDoc(props) {
 
   const [dataDeliverables, setDataDeliverables] = useState([]);
   const [contractData, setContractData] = useState({});
+  const [content, setContent] = React.useState({
+    task_sa: null,
+    task_gr: null,
+    contract: null,
+  });
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
@@ -415,7 +425,7 @@ function ContractHardCopyDoc(props) {
       sub_total: invoiceData.invoice_value,
       created_by_id: user_id,
       updated_by_id: user_id,
-      authority: contractAuthority
+      authority: contractAuthority,
     };
     sendNotifHardCopy({
       contract_id: contract_id,
@@ -605,7 +615,7 @@ function ContractHardCopyDoc(props) {
     getContractAuthority(termin)
       .then((response) => {
         if (response["data"]["data"]) {
-          setContractAuthority(response["data"]["data"]["authority"])
+          setContractAuthority(response["data"]["data"]["authority"]);
           getRolesAcceptance(response["data"]["data"]["authority"]).then(
             (responseRoles) => {
               responseRoles["data"]["data"].map((item, index) => {
@@ -650,8 +660,39 @@ function ContractHardCopyDoc(props) {
     window.$("#print-content").html("");
   };
 
+  const callApiSaGr = () => {
+    getSaGr(termin)
+      .then((result) => {
+        setContent((prev) => ({
+          ...prev,
+          ...result.data.data,
+        }));
+      })
+      .catch((err) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+  useEffect(callApiSaGr, []);
+
+  const printSaGr = (ident_name) => {
+    var printContents = window.$(`#${ident_name}`).html();
+    window.$("#root").css("display", "none");
+    window.$("#print-content").addClass("p-5");
+    window.$("#print-content").html(printContents);
+    window.print();
+    window.$("#root").removeAttr("style");
+    window.$("#print-content").removeClass("p-5");
+    window.$("#print-content").html("");
+  };
+
   return (
     <React.Fragment>
+      <div id="GOODS" className="d-none">
+        <GoodReceipt data={content} loading={false} />
+      </div>
+      <div id="SA" className="d-none">
+        <ServiceAcceptance data={content} loading={false} />
+      </div>
       <Toast />
       {loading && <LinearProgress color="secondary" className="rounded" />}
       <Dialog
@@ -863,7 +904,9 @@ function ContractHardCopyDoc(props) {
                       <TableRow key={index.toString()}>
                         <TableCell>{item.seq}</TableCell>
                         <TableCell>{item.document_name}</TableCell>
-                        {item.doc_no ? (
+                        {item.doc_no &&
+                        (item.ident_name !== "GOODS" ||
+                          item.ident_name !== "SA") ? (
                           item.doc_file ? (
                             <TableCell>
                               <a
@@ -885,6 +928,19 @@ function ContractHardCopyDoc(props) {
                               {item.doc_no} (file tidak tersedia)
                             </TableCell>
                           )
+                        ) : item.ident_name === "GOODS" ||
+                          item.ident_name === "SA" ? (
+                          <TableCell>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-primary"
+                              onClick={() => {
+                                printSaGr(item.ident_name);
+                              }}
+                            >
+                              <FormattedMessage id="TITLE.PRINT" />
+                            </button>
+                          </TableCell>
                         ) : (
                           <TableCell></TableCell>
                         )}
@@ -920,7 +976,7 @@ function ContractHardCopyDoc(props) {
                         </TableCell>
                         <TableCell>
                           {(item.hardcopy_state === null ||
-                              item.hardcopy_state === "REJECTED") &&
+                            item.hardcopy_state === "REJECTED") &&
                             item.softcopy_state !== null &&
                             statusHardCopy &&
                             approveHardCopyRole && (
@@ -1092,7 +1148,8 @@ function ContractHardCopyDoc(props) {
                                               ?.hardcopy_history[0]?.rejected_re
                                           }
                                         />,
-                                        el?.percentage && el?.percentage + "%",
+                                        // el?.percentage && el?.percentage + "%",
+                                        "-",
                                         <BtnLihat url={el?.url} />,
                                         el?.remarks,
                                         el?.url &&
@@ -1210,7 +1267,7 @@ function ContractHardCopyDoc(props) {
                         </TableCell>
                         <TableCell>
                           {(item.hardcopy_state === null ||
-                              item.hardcopy_state === "REJECTED") &&
+                            item.hardcopy_state === "REJECTED") &&
                             item.softcopy_state !== null &&
                             statusHardCopy &&
                             approveHardCopyRole && (
