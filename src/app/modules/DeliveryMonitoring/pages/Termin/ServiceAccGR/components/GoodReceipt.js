@@ -96,7 +96,7 @@ const GoodReceipt = ({ data, loading }) => {
 
       {/* <Card>
         <CardBody> */}
-      <TablePaginationCustom
+      {/* <TablePaginationCustom
         headerRows={tableHeader2}
         // width={1210}
         withPagination={false}
@@ -110,7 +110,7 @@ const GoodReceipt = ({ data, loading }) => {
           end_date: "29 Feb 2021",
           comment: "Test comment",
         }))}
-      />
+      /> */}
       {/* </CardBody>
       </Card> */}
     </React.Fragment>
