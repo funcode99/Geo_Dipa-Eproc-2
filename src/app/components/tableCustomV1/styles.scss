@@ -14,3 +14,7 @@
 .MuiTableCell-head {
   color: white !important;
 }
+.MuiTable-root {
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+}

@@ -135,3 +135,8 @@
 .MuiDialogActions-root {
   border-top: 1px solid #dee2e6;
 }
+
+.MuiTable-root {
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+}

@@ -165,11 +165,11 @@ const ItemContract = (props) => {
   const [statusSubmit, setStatusSubmit] = React.useState(false);
 
   useLayoutEffect(() => {
-  suhbeader.setTitle(
-    intl.formatMessage({
-      id: "TITLE.CONTRACT_TERM",
-    })
-  );
+    suhbeader.setTitle(
+      intl.formatMessage({
+        id: "TITLE.CONTRACT_TERM",
+      })
+    );
     suhbeader.setBreadcrumbs([
       {
         pathname: `/client/invoice_monitoring/contract`,
@@ -213,7 +213,7 @@ const ItemContract = (props) => {
             if (result?.data?.data?.data) {
               setDataProgress(result.data.data.data);
             } else {
-              const data = resultTypes.data.data.map(function (row) {
+              const data = resultTypes.data.data.map(function(row) {
                 return {
                   label: row?.name,
                   status:
@@ -325,17 +325,17 @@ const ItemContract = (props) => {
 
   const getRolesAuditData = useCallback(() => {
     getRolesAudit()
-      .then(
-        (responseRoles) => {
-          responseRoles["data"]["data"].map((item, index) => {
-            if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
-              if (monitoring_role.length === 1) {
-                setAuditStaff(true);
-              }
+      .then((responseRoles) => {
+        responseRoles["data"]["data"].map((item, index) => {
+          if (
+            monitoring_role.findIndex((element) => element === item.name) >= 0
+          ) {
+            if (monitoring_role.length === 1) {
+              setAuditStaff(true);
             }
-          });
-        }
-      )
+          }
+        });
+      })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
