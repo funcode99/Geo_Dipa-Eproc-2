@@ -19,6 +19,7 @@ import TablePaginationCustom from "../../../../../../components/tables/TablePagi
 import urlHelper, {
   openLinkTab,
 } from "../../../../../../service/helper/urlHelper";
+import StatusRemarks from "../../../../../../components/StatusRemarks";
 
 const theadDocuments = [
   { id: "action", label: "" },
@@ -31,17 +32,18 @@ const theadDocuments = [
   { id: "aksi", label: "Action", rightSticky: true },
 ];
 
-const StatusRemarks = ({ status, remarks }) => {
-  const isRejected = status === "REJECTED";
-  return (
-    <div className="d-flex flex-column flex-grow-1">
-      <p className="text-dark-75 font-size-lg mb-1">{status || "-"}</p>
-      <span className="text-muted font-weight-bold">
-        {isRejected ? remarks : null}
-      </span>
-    </div>
-  );
-};
+// const StatusRemarks = ({ status, remarks }) => {
+//   const isRejected = status === "REJECTED";
+
+//   return (
+//     <div className="d-flex flex-column flex-grow-1">
+//       <p className="text-dark-75 font-size-lg mb-1">{status || "-"}</p>
+//       <span className="text-muted font-weight-bold">
+//         {isRejected ? remarks : null}
+//       </span>
+//     </div>
+//   );
+// };
 
 // const BtnAksi = ({ item }) => {
 //   const { handleAction } = React.useContext(DocumentsContext);
@@ -146,6 +148,7 @@ const TableDoc = ({ loading }) => {
                               <StatusRemarks
                                 status={els?.document_status?.name}
                                 remarks={els?.remarks_status}
+                                url={els?.url}
                               />,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
@@ -154,6 +157,7 @@ const TableDoc = ({ loading }) => {
                                 item={els}
                                 handleAction={handleAction}
                                 isPeriodic={isPeriodic}
+                                withFile={true}
                               />,
                             ]}
                           />
@@ -174,6 +178,8 @@ const TableDoc = ({ loading }) => {
                         <StatusRemarks
                           status={el?.document_status?.name}
                           remarks={el?.remarks_status}
+                          url={el?.url}
+                          withFile={true}
                         />,
                         // el?.percentage && el?.percentage + "%",
                         "-",
