@@ -149,6 +149,7 @@ const TableDoc = ({ loading }) => {
                                 status={els?.document_status?.name}
                                 remarks={els?.remarks_status}
                                 url={els?.url}
+                                withFile={true}
                               />,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
@@ -157,7 +158,6 @@ const TableDoc = ({ loading }) => {
                                 item={els}
                                 handleAction={handleAction}
                                 isPeriodic={isPeriodic}
-                                withFile={true}
                               />,
                             ]}
                           />

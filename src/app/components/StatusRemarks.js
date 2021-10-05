@@ -3,9 +3,9 @@ import React from "react";
 const StatusRemarks = ({ status, remarks, url, withFile }) => {
   const isRejected = status === "REJECTED";
   const isWaiting =
-    withFile &&
-    status === "WAITING" &&
-    `${status} ${url ? "APPROVAL" : "UPLOAD"}`;
+    status === "WAITING" && withFile
+      ? `${status} ${url ? "APPROVAL" : "UPLOAD"}`
+      : status;
 
   return (
     <div className="d-flex flex-column flex-grow-1">
