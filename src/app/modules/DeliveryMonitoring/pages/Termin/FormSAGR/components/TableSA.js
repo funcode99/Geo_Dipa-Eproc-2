@@ -4,7 +4,7 @@ import TablePaginationCustom from "../../../../../../components/tables/TablePagi
 import RowTableSA from "./RowTableSA";
 import { FormSAContext } from "./FormSA";
 
-const TableSA = ({}) => {
+const TableSA = ({ itemJasa }) => {
   const dataRow = useMemo(
     () => [
       {
@@ -19,7 +19,7 @@ const TableSA = ({}) => {
     ],
     []
   );
-  const { itemJasa, readOnly, dataSA } = React.useContext(FormSAContext);
+  const { readOnly, dataSA } = React.useContext(FormSAContext);
   const dataUsed = readOnly ? dataSA.services : itemJasa;
   // console.log(`dataUsed`, dataUsed);
 
@@ -37,6 +37,7 @@ const TableSA = ({}) => {
         )[0],
         cost_center: el?.costcenter,
       }))}
+      // rows={dataRow}
       width={2000}
       loading={false}
       withPagination={false}

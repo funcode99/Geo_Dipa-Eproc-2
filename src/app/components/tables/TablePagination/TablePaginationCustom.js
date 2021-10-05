@@ -233,6 +233,17 @@ export default function TablePaginationCustom({
                               <TableCell
                                 key={id}
                                 align={headerRows?.[id]?.align ?? "left"}
+                                className={"bg-white"}
+                                style={
+                                  headerRows?.[id]?.sticky === true
+                                    ? {
+                                        position: "sticky",
+                                        left: 0,
+                                        zIndex: 10,
+                                        backgroundColor: "white",
+                                      }
+                                    : {}
+                                }
                               >
                                 {row[headerRows?.[id]?.id]}
                               </TableCell>

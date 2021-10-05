@@ -177,7 +177,8 @@ const Item = ({ handleClick, status }) => {
   const validateQty = (qtyValue, items, type) => {
     const isValidQty = parseFloat(qtyValue) ? true : false;
     const floatQtyValue = qtyValue;
-    const floatQtyAvailable = parseFloat(items.qty_available).toFixed(1);
+    // const floatQtyAvailable = parseFloat(items.qty_available).toFixed(1);
+    const floatQtyAvailable = parseFloat(items.qty_available);
     let minValue = 0.1;
     // console.log(items);
 

@@ -1,6 +1,8 @@
 import { FormattedMessage } from "react-intl";
 import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
+import InputWBS from "./InputWBS";
+import React from "react";
 
 export const sa_field = [
   [
@@ -12,10 +14,10 @@ export const sa_field = [
     //   name: "po_number",
     //   label: "PO Number",
     // },
-    {
-      name: "po_item",
-      label: "PO Item",
-    },
+    // {
+    //   name: "po_item",
+    //   label: "PO Item",
+    // },
   ],
   [
     {
@@ -101,6 +103,7 @@ export const gr_field = [
     {
       name: "ref_doc_no",
       label: "Ref Doc No",
+      type: "number",
     },
   ],
   [
@@ -129,6 +132,7 @@ export const headerTableSA = [
   {
     id: "name_service",
     label: "Name Service",
+    sticky: true,
   },
   {
     id: "dist_type",
@@ -150,10 +154,10 @@ export const headerTableSA = [
     id: "cost_center",
     label: "Cost Center",
   },
-  {
-    id: "value",
-    label: "Value",
-  },
+  // {
+  //   id: "value",
+  //   label: "Value",
+  // },
 ];
 
 export const rowTableSA_field = [
@@ -163,12 +167,10 @@ export const rowTableSA_field = [
     typeInput: "SelectInputCustom",
   },
   {
-    name: "wbs",
+    name: "wbsdata",
     label: "Header Text",
-    typeInput: "SelectInputCustom",
-    // contProps: {
-    //   style: { width: 210 },
-    // },
+    // typeInput: "SelectInputCustom",
+    ChildWithName: (props) => <InputWBS {...props} />,
   },
   {
     name: "gl_account",
@@ -182,14 +184,14 @@ export const rowTableSA_field = [
     name: "cost_center",
     label: "Header Text",
   },
-  {
-    name: "value",
-    label: "Header Text",
-    type: "number",
-    size: "sm",
-    min: "0.1",
-    step: "0.1",
-  },
+  // {
+  //   name: "value",
+  //   label: "Header Text",
+  //   type: "number",
+  //   size: "sm",
+  //   min: "0.1",
+  //   step: "0.1",
+  // },
 ];
 
 export const validationSchema_sa = object().shape({
@@ -203,7 +205,7 @@ export const validationSchema_sa = object().shape({
   post_date: validation.require("Post Date"),
   ref_doc_no: validation.require("Ref Doc No"),
   doc_text: validation.require("Doc Text"),
-  po_item: validation.require("PO Item"),
+  // po_item: validation.require("PO Item"),
   // po_number: validation.require("PO Number"),
   // doc_date: validation.require("Document Date"),
   // score_qual: validation.require("Score Qual"),
@@ -214,4 +216,18 @@ export const option_dist_type = [
   { value: "kosong", label: "Full Payment" },
   { value: "1", label: "Gradual Payment (quantity)" },
   { value: "2", label: "Gradual Payment (percentage)" },
+];
+
+export const BASE_MODAL_CONF = [
+  {
+    type: "gr101",
+    title: "Post GR 101 to SAP ?",
+    // subTitle: "Pastikan dokumen yang dikirimkan telah sesuai !",
+  },
+  {
+    type: "gr103",
+    title: "Post GR 101 to SAP ?",
+    // subTitle: "Pastikan dokumen yang dikirimkan tidak sesuai !",
+    // isReject: true,
+  },
 ];

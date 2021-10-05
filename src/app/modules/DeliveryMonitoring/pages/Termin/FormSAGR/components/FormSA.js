@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
+import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 import { KEYS_TERMIN } from "../../TerminPageNew/STATIC_DATA";
 import { TerminPageContext } from "../../TerminPageNew/TerminPageNew";
 import { option_dist_type, sa_field, validationSchema_sa } from "./DUMMY_DATA";
+import ModalAddWBS from "./ModalAddWBS";
+import TableAccordSA from "./TableAccordSA";
 import TableSA from "./TableSA";
 
 export const FormSAContext = React.createContext({});
@@ -21,13 +24,14 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
       type: "get",
       url: `delivery/wbs`,
       onSuccess: (res) => {
-        // console.log("reswbs", res);
+        console.log("reswbs", res);
         setlistWBS(res.data);
       },
     });
     func.handleApi({
       key: KEYS_TERMIN.f_termin,
       onSuccess: (res) => {
+        console.log(`resss`, res);
         const tempDataJasa = res.data.task_item_services;
         let tempSubmitJasa = [];
         tempDataJasa.forEach((item) => {
@@ -35,7 +39,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
             (service) => service.service
           );
         });
-        setItemJasa(tempSubmitJasa);
+        setItemJasa(tempDataJasa);
       },
     });
   };
@@ -51,15 +55,17 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
         gl_account: item.gl_account,
         bus_area: item.bus_area,
         costcenter: item.cost_center,
-        wbs_elem: item.wbs.label,
-        value: item.value,
+        // wbs_elem: item.wbs.label,
+        // value: item.value,
+        wbs: item.wbsdata,
       })),
     };
-    console.log(`data`, params);
+    // console.log(`data`, params, data, dataSA);
     fetch_api_sg({
       key: keys.upload_sa,
       type: "post",
       url: `delivery/task-sa/${task_id}`,
+      alertAppear: "both",
       params,
       onSuccess: (res) => {
         console.log("post sa", res);
@@ -69,22 +75,21 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
     });
   };
   useEffect(() => handleRefresh(), []);
-  // console.log(`itemJasa`, dataSA);
 
   const initial = React.useMemo(
     () => ({
       // ext_number: dataSA?.ext_number,
       // short_text: validation.require("Short Text"),
       // location: validation.require("Location"),
-      begdate: dataSA?.beg_date,
-      enddate: dataSA?.end_date,
+      begdate: dataSA?.[0]?.beg_date,
+      enddate: dataSA?.[0]?.end_date,
       // person_int: validation.require("Person Internal"),
       // person_ext: validation.require("Person External"),
       // post_date: validation.require("Post Date"),
       // ref_doc_no: validation.require("Ref Doc No"),
       // doc_text: validation.require("Doc Text"),
       // po_item: validation.require("PO Item"),
-      ...dataSA,
+      ...dataSA?.[0],
     }),
     [dataSA]
   );
@@ -96,11 +101,13 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           setArrService,
           listWBS,
           itemJasa,
-          readOnly: saExist,
+          // readOnly: saExist,
           dataSA: dataSA,
         }}
       >
-        {itemJasa.length > 0 && <TableSA />}
+        {/* <TableSA /> */}
+        {/* {itemJasa.length > 0 && <TableSA />} */}
+        {itemJasa.length > 0 && <TableAccordSA />}
         {/* {saExist && !loadings_sg[keys.fetch_sagr] && ( */}
         <FormBuilder
           loading={loadings_sg[keys.upload_sa]}
@@ -108,10 +115,12 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           formData={sa_field}
           validation={validationSchema_sa}
           initial={initial}
-          fieldProps={{
-            readOnly: saExist,
-          }}
-          withSubmit={!saExist}
+          fieldProps={
+            {
+              // readOnly: saExist || itemJasa.length === 0,
+            }
+          }
+          // withSubmit={!saExist}
           disabledButton={Object.values(arrService).some(
             ({ isValid }, id) => isValid === false
           )}

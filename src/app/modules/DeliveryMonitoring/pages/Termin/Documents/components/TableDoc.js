@@ -22,13 +22,13 @@ import urlHelper, {
 
 const theadDocuments = [
   { id: "action", label: "" },
-  { id: "doc-name", label: "Document Name" },
+  { id: "doc-name", label: "Document Name", sticky: true },
   { id: "due-date", label: "Due Date" },
   { id: "dokumen-progress", label: "Status" },
   { id: "percentage", label: "Percentage" },
   { id: "deliv-dokumen", label: "Deliverable Document" },
   { id: "remarks", label: "Remarks" },
-  { id: "aksi", label: "Action" },
+  { id: "aksi", label: "Action", rightSticky: true },
 ];
 
 const StatusRemarks = ({ status, remarks }) => {

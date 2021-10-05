@@ -297,14 +297,15 @@ const DeliveryOrder = ({
     const option = ["update", "detail"];
     if (option.includes(type)) {
       // console.log(`type`, type);
-      // console.log(`data`, data);
+      // console.log(`datea`, data);
       const displayedStatus = ["approved", "rejected"];
 
       formik.setValues({
         name: data.name,
-        date: data.date
-          ? formatUpdateDate(new Date(data.date), "yyy-MM-dd")
-          : formatUpdateDate(new Date(), "yyy-MM-dd"),
+        date: formatUpdateDate(data.date),
+        // date: data.date
+        //   ? formatUpdateDate(new Date(data.date), "yyy-MM-dd")
+        //   : formatUpdateDate(new Date(), "yyy-MM-dd"),
         remarks: data.remarks,
         status: displayedStatus.includes(data.approve_status.code)
           ? data.approve_status_id

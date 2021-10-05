@@ -31,6 +31,7 @@ import {
   getLoading,
 } from "../../../../../../../redux/globalReducer";
 import { TerminPageContext } from "../../../Termin/TerminPageNew/TerminPageNew";
+import _ from "lodash";
 
 const tableHeader = [
   {
@@ -81,8 +82,11 @@ const BastPage = ({
   fetchApi,
   loadings_sg,
   saveContract,
+  saveTask,
 }) => {
-  const { func, task_id } = React.useContext(TerminPageContext);
+  const { func, task_id, task_sa, task_gr } = React.useContext(
+    TerminPageContext
+  );
   const formikRef = React.useRef();
   const [Toast, setToast] = useToast();
   const isClient = status === "client";
@@ -104,8 +108,8 @@ const BastPage = ({
   const { news, contract_name, vendor, contract_no, purch_order_no } = contract;
   const initialValues = React.useMemo(
     () => ({
-      nomor_bast: news?.no || "",
-      tanggal_bast: news?.date,
+      nomor_bast: taskNews?.no || "",
+      tanggal_bast: taskNews?.date,
       jenis: contract_name,
       pelaksana: vendor?.party?.full_name,
       nomor_contract: contract_no,
@@ -116,20 +120,35 @@ const BastPage = ({
         value: "value",
       },
     }),
-    [news, contract_name, vendor, contract_no, purch_order_no]
+    [taskNews, contract_name, vendor, contract_no, purch_order_no]
   );
 
   const fetchData = React.useCallback(
     (toast = { visible: false, message: "" }) => {
       console.log(`aja`);
       fetchApi({
-        keys: keys.fetch,
+        key: keys.fetch,
         type: "get",
-        url: `/delivery/contract/${contract.id}`,
+        url: `/delivery/task/${task_id}/news`,
         onSuccess: (res) => {
-          saveContract(res?.data);
+          // handleLoading("get", false);
+          console.log(`res`, res);
+          saveTask({ task_gr, task_sa, ...res.data });
+          generateTableContent(res?.data?.news_bast?.news_histories);
+          // updateExclude();
+
+          // uploadRef.current.close();
+          // fetchData({ visible: false, message: "" });
         },
       });
+      // fetchApi({
+      //   keys: keys.fetch,
+      //   type: "get",
+      //   url: `/delivery/contract/${contract.id}`,
+      //   onSuccess: (res) => {
+      //     saveContract(res?.data);
+      //   },
+      // });
     },
     []
   );
@@ -225,10 +244,13 @@ const BastPage = ({
   };
 
   React.useEffect(() => {
-    if (news && Array.isArray(news?.news_histories)) {
-      generateTableContent(news.news_histories);
-    }
-  }, [news]);
+    // if (news && Array.isArray(news?.news_histories)) {
+    //   generateTableContent(news.news_histories);
+    // }
+    // if (_.isEmpty(taskNews)) {
+    fetchData();
+    // }
+  }, [taskNews]);
 
   // buat ganti state step
   React.useEffect(() => {
@@ -655,7 +677,9 @@ const BastPage = ({
 const keys = {
   upload_s: "upload-signed",
   approve_s: "approve-signed",
-  fetch: "get-data-contract-by-id",
+  // fetch: "get-data-contract-by-id",
+  fetch: "fetch_news_bast",
+
   submit: "submit_news_bast",
 };
 const mapState = (state) => {
@@ -663,7 +687,9 @@ const mapState = (state) => {
   return {
     status: auth.user.data.status,
     contract: deliveryMonitoring.dataContractById,
-    taskNews: deliveryMonitoring.dataContractById?.news,
+    // taskNews: deliveryMonitoring.dataContractById?.news,
+    taskNews: deliveryMonitoring.dataTask?.news_bast,
+
     loadings_sg: {
       upload_s: getLoading(state, keys.upload_s),
       approve_s: getLoading(state, keys.approve_s),
@@ -679,4 +705,8 @@ export default connect(mapState, {
     payload: payload,
   }),
   fetchApi: (payload) => fetch_api_sg(payload),
+  saveTask: (payload) => ({
+    type: actionTypes.SetDataTask,
+    payload: payload,
+  }),
 })(BastPage);

@@ -30,6 +30,7 @@ const ParaPihak2 = () => {
     <Card>
       <CardBody>
         <FormBuilder
+          withSubmit={false}
           // onSubmit={_handleSubmit}
           // formData={formData3}
           initial={values}

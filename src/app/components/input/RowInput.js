@@ -1,4 +1,4 @@
-import { connect, ErrorMessage } from "formik";
+import { connect } from "formik";
 import React from "react";
 import BasicInput from "./BasicInput";
 import SelectDateInput from "./SelectDateInput";
@@ -18,6 +18,7 @@ const RowInput = ({
   typeInput,
   name,
   Child,
+  ChildWithName,
   children,
   ChildrenProps,
   label,
@@ -34,7 +35,7 @@ const RowInput = ({
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom";
-  const Component = inputs[typeInput || "BasicInput"];
+  const ThisComponent = inputs[typeInput || "BasicInput"];
   const { values, errors, setFieldValue, touched, setTouched } = formik;
   const selectProps = isSelect ? { listOptions } : {};
   const _handleFocus = (e) => {
@@ -51,26 +52,33 @@ const RowInput = ({
   //   onChangeCustom()
   // }
   // console.log(`formik`, formik);
+  const passedProps = {
+    ...otherProps,
+    onChange: (val) => setFieldValue(name, val, true),
+    value: values[name] || "",
+    name,
+    onFocus: _handleFocus,
+    onBlur: _handleBlur,
+    disabled: readOnly || disabledFields.includes(name),
+    ...selectProps,
+    ...otherProps,
+  };
   return (
     <div>
-      {name && (
+      {name && ChildWithName ? (
+        <ChildWithName {...ChildrenProps} {...passedProps} />
+      ) : (
         <div>
-          <Component
-            // labelClass="mb-1"
-            value={values[name] || ""}
-            name={name}
-            // onChange={handleChange(name)}
-            onChange={(val) => setFieldValue(name, val, true)}
-            onFocus={_handleFocus}
-            onBlur={_handleBlur}
-            disabled={readOnly || disabledFields.includes(name)}
-            //   onChange={trigger ? this._triggerChange : handleChange(name)}
-            //   onFocus={() => setFieldTouched(name)}
-            //   className={classNames("pl-4", className)}
-            // options={listOptions[name]}
-            // listOptions={listOptions}
-            {...selectProps}
-            {...otherProps}
+          <ThisComponent
+            // value={values[name] || ""}
+            // name={name}
+            // onChange={(val) => setFieldValue(name, val, true)}
+            // onFocus={_handleFocus}
+            // onBlur={_handleBlur}
+            // disabled={readOnly || disabledFields.includes(name)}
+            {...passedProps}
+            // {...selectProps}
+            // {...otherProps}
           />
           {/* <ErrorMessage name={name} /> */}
           {!!!touched[name] && (
@@ -79,7 +87,7 @@ const RowInput = ({
         </div>
       )}
       {Child ? (
-        <Child {...ChildrenProps} />
+        <Child {...ChildrenProps} {...passedProps} />
       ) : typeof children === "function" ? (
         children({ data: "dataToPass" })
       ) : (
