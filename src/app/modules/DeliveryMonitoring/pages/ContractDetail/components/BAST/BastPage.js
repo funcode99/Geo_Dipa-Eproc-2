@@ -250,7 +250,7 @@ const BastPage = ({
     // if (_.isEmpty(taskNews)) {
     fetchData();
     // }
-  }, [taskNews]);
+  }, []);
 
   // buat ganti state step
   React.useEffect(() => {
@@ -438,6 +438,7 @@ const BastPage = ({
                           <span className="navi-text">Document</span>
                         </Dropdown.Item>
                       </li>
+                      {/* {taskNews?.file_upload && ( */}
                       <li className="navi-item">
                         <Dropdown.Item
                           // href="#"
@@ -452,6 +453,7 @@ const BastPage = ({
                           <span className="navi-text">Signed Document</span>
                         </Dropdown.Item>
                       </li>
+                      {/* )} */}
                     </ul>
                   </Dropdown.Menu>
                 </Dropdown>
