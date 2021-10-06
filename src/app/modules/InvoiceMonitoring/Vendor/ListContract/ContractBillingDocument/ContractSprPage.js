@@ -463,13 +463,13 @@ function ContractSprPage(props) {
   };
 
   const handleRadio = (e) => {
-    formik.resetForm();
-    getSppData();
-    setUploadFilename(
-      intl.formatMessage({
-        id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
-      })
-    );
+    formik.setTouched({}, false);
+    // getSppData();
+    // setUploadFilename(
+    //   intl.formatMessage({
+    //     id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+    //   })
+    // );
     if (e.target.value === "true") {
       setBankReference(true);
       formik.setFieldValue("bank_refference", true);
