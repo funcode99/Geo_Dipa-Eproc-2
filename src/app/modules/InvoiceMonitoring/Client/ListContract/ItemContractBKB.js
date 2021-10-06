@@ -239,6 +239,7 @@ function ItemContractBKB(props) {
         desc: bkbData.desc,
         approved_bkb_role_id: modalApproved.role_id,
         contract_id: contract,
+        giro_signed_data: bkbData.giro_signed_data,
       };
       approveBkb(data)
         .then((result) => {
