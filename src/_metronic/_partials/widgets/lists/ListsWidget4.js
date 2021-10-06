@@ -132,7 +132,7 @@ function ListsWidget4({ className, intl }) {
                         {item.todo_name}
                       </Link>
                       <span className="text-danger font-weight-bold font-size-sm">
-                        {`${item.contract_no}-${item.term_name}(${item.vendor_name})`}
+                        {`${item.contract_no}-${item.termin_name}(${item.vendor_name})`}
                       </span>
                     </div>
                   </div>
