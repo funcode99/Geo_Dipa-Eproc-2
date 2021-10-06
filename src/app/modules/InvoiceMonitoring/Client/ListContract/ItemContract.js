@@ -72,7 +72,7 @@ const TabLists = [
   },
   {
     id: "document",
-    label: "Document",
+    label: "Soft Copy Document",
     icon: (
       <i className="fas fa-receipt mb-0 mr-2" style={{ color: "inherit" }}></i>
     ),
@@ -454,7 +454,7 @@ const ItemContract = (props) => {
         </form>
       </Dialog>
       <Subheader
-        text={(data?.contract_no || "") + " - " + (data.contract_name || "")}
+        text={data.termin_name || ""}
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
