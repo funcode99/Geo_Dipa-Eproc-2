@@ -1331,7 +1331,7 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row mt-3" style={{ minHeight: 300 }}>
-              <div className="col-sm-7 border">
+              <div className="col-sm-5 border">
                 <div className="row border-bottom">
                   <div className="col-sm-12 row">
                     <span className="col-sm-4">
@@ -1487,7 +1487,7 @@ function ItemContractBKB(props) {
                     </div>
                   )}
               </div>
-              <div className="col-sm-5 border">
+              <div className="col-sm-7 border">
                 <div className="row border-bottom">
                   <div className="col-sm text-center">
                     <span>
@@ -1508,7 +1508,7 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-sm-7">
+              <div className="col-sm-5">
                 <div className="row">
                   {/* <div className="col-sm-4 border">
                     <div className="row border">
@@ -1668,7 +1668,7 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-5 border">
+              <div className="col-sm-7 border">
                 <div className="text-center">
                   <span>
                     <FormattedMessage id="TITLE.APPROVED_CEK_OR_GIRO" />
