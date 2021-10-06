@@ -474,7 +474,11 @@ const ItemContract = (props) => {
         <hr className="p-0 m-0" />
         <Container className="p-0">
           {tabActive === 0 && (
-            <ItemContractSummary {...props} getData={getSetData} />
+            <ItemContractSummary
+              {...props}
+              getData={getSetData}
+              terminName={data.termin_name || ""}
+            />
           )}
           {tabActive === 1 && (
             <ItemContractInvoice

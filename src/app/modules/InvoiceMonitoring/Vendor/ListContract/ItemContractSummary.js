@@ -781,6 +781,23 @@ function ItemContractSummary(props) {
                   />
                 </div>
               </div>
+              <div className="form-group row">
+                <label
+                  htmlFor="numberContract"
+                  className="col-sm-4 col-form-label"
+                >
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="numberContract"
+                    defaultValue={contractData["contract_no"]}
+                    disabled
+                  />
+                </div>
+              </div>
 
               <div className="form-group row">
                 <label
@@ -826,6 +843,20 @@ function ItemContractSummary(props) {
                     className="form-control"
                     id="poNumber"
                     defaultValue={contractData["purch_order_no"]}
+                    disabled
+                  />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.TERMIN" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="priceStep1"
+                    defaultValue={props.terminName}
                     disabled
                   />
                 </div>
