@@ -446,6 +446,9 @@ function ContractHardCopyDoc(props) {
                 intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
                 10000
               );
+              getTerminProgress(termin).then((result) => {
+                setDataProgress(result.data.data?.data);
+              });
             })
             .catch((error) => {
               setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
