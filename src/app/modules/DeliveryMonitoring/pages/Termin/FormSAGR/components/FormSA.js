@@ -16,8 +16,8 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
   const [itemJasa, setItemJasa] = useState([]);
   const [optGL, setOptGL] = useState([]);
   const [optCost, setOptCost] = useState([]);
-  const saExist = Boolean(dataSAGR.sa);
   const dataSA = dataSAGR.sa;
+  const saExist = Boolean(dataSA?.[0]);
 
   const { func, task_id } = React.useContext(TerminPageContext);
   const handleRefresh = () => {
@@ -133,7 +133,8 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           listWBS,
           itemJasa,
           // readOnly: saExist,
-          dataSA: dataSA,
+          saExist,
+          dataSA,
           options,
         }}
       >
