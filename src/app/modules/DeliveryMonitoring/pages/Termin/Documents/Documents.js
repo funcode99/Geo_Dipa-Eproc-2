@@ -199,12 +199,14 @@ const Documents = ({
           // RESEND MASIH PAKE API UPLOAD
           break;
         case "accept":
-          // console.log(`accept`, params, type, open?.tempParams?.accept_id);
+          // console.log(`accept`, open?.tempParams);
+          const { isPeriodic, percentage } = open?.tempParams;
+          const usedParams = isPeriodic ? { percentage } : {};
           fetch_api_sg({
             key: keys.accept,
             type: "post",
             alertAppear: "both",
-            params,
+            params: usedParams,
             url: `delivery/task-document/${open?.tempParams?.accept_id}/approve`,
             onSuccess: () => {
               fetchData();
