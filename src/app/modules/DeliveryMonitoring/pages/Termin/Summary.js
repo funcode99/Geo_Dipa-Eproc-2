@@ -749,9 +749,10 @@ function Summary({}) {
                                     }
                                     size="small"
                                     checked={service.checked}
-                                    disabled={
-                                      service.qty_available === 0 ? true : false
-                                    }
+                                    // disabled={
+                                    //   service.qty_available === 0 ? true : false
+                                    // }
+                                    disabled
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -835,6 +836,7 @@ function Summary({}) {
                                     }
                                     size="small"
                                     checked={service.checked}
+                                    disabled
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -948,7 +950,8 @@ function Summary({}) {
                           width={50}
                           variant="body"
                           checked={item.checked}
-                          disabled={item.qty_available === 0 ? true : false}
+                          // disabled={item.qty_available === 0 ? true : false}
+                          disabled
                         />
                       </TableCell>
                       <TableCell className="align-middle">
@@ -1025,6 +1028,7 @@ function Summary({}) {
                           width={50}
                           variant="body"
                           checked={item.checked}
+                          disabled
                         />
                       </TableCell>
                       <TableCell className="align-middle">
