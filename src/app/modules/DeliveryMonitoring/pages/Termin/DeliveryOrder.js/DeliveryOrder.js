@@ -28,6 +28,7 @@ import {
 import { tblHeadDlvItem } from "./components/fieldData";
 import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 import { MODAL } from "../../../../../../service/modalSession/ModalService";
+import StatusRemarks from "../../../../../components/StatusRemarks";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required(<FormattedMessage id="TITLE.DESC_IS_REQUIRE" />),
@@ -418,13 +419,20 @@ const DeliveryOrder = ({
     // console.log(`data`, data);
     data
       ? data.forEach((item, index) => {
-          // console.log(`item`, item);
+          console.log(`item`, item);
           let objData = {
             no: (index += 1),
             desc: item?.name || "",
             date: item?.date !== null ? formatDate(new Date(item?.date)) : null,
             remarks: item.remarks || "",
-            approve_status: item?.approve_status?.name,
+            // approve_status: item?.approve_status?.name,
+            approve_status: (
+              <StatusRemarks
+                status={item?.approve_status?.name}
+                remarks={item?.reject_text}
+                approvedBy={"N/A"}
+              />
+            ),
             history: item?.task_delivery_histories,
             action: (
               <BtnAction
