@@ -5,7 +5,7 @@ import IL_NoData from "../../../modules/DeliveryMonitoring/assets/ilustration/IL
 const NoDataBox = ({ text }) => {
   return (
     <Paper
-      className={"d-flex justify-content-center align-items-center mt-3"}
+      className={"d-flex justify-content-center align-items-center mt-8"}
       style={{
         height: "30vh",
         flexDirection: "column",

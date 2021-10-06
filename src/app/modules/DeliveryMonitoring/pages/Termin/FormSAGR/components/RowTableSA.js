@@ -11,8 +11,8 @@ import InputWBS from "./InputWBS";
 
 const validationSchema = object().shape({
   // name_service: validation.require("Header Text"),
-  gl_account: validation.require("GL Account"),
   bus_area: validation.require("Bus Area"),
+  gl_account: validation.require("GL Account"),
   cost_center: validation.require("Cost Center"),
   dist_type: validation.require("Distribution Type"),
   // wbs: validation.require("WBS"),
@@ -22,7 +22,9 @@ const validationSchema = object().shape({
 const RowTableSA = ({ item, index }) => {
   const formikRef = React.useRef();
   const wbsRef = React.useRef();
-  const { setArrService, listWBS, readOnly } = useContext(FormSAContext);
+  const { setArrService, listWBS, readOnly, options } = useContext(
+    FormSAContext
+  );
 
   // const _handleSubmit = (data) => {
   //   console.log(`data`, data);
@@ -109,6 +111,8 @@ const RowTableSA = ({ item, index }) => {
                     value: id,
                     label: work_breakdown_ap,
                   })),
+                  gl_account: options.optGL,
+                  cost_center: options.optCost,
                 }}
                 noLabel={true}
                 ChildrenProps={{
