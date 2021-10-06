@@ -1693,7 +1693,7 @@ function ItemContractBKB(props) {
                           }}
                         >
                           {monitoring_role?.includes(row.name) &&
-                            !row.approved_id && (
+                            !row.approved_id && bkbData?.approved_bkb_id && (
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm mx-2"
