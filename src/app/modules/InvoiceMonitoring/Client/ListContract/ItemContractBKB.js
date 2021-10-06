@@ -116,7 +116,9 @@ function ItemContractBKB(props) {
           getContractAuthority(termin)
             .then((responseAuthority) => {
               if (responseAuthority["data"]["data"]) {
-                setTerminAuthority(responseAuthority["data"]["data"]["authority"])
+                setTerminAuthority(
+                  responseAuthority["data"]["data"]["authority"]
+                );
                 getRolesBKB(responseAuthority["data"]["data"]["authority"])
                   .then((responseRoles) => {
                     setRolesBKBData(responseRoles["data"]["data"]);
@@ -207,7 +209,7 @@ function ItemContractBKB(props) {
       });
   }, [termin, intl, setToast]);
 
-  const getContractAuthorityData = useCallback(() => { }, [
+  const getContractAuthorityData = useCallback(() => {}, [
     termin,
     intl,
     setToast,
@@ -267,7 +269,7 @@ function ItemContractBKB(props) {
         term_id: termin,
         contract_id: contract,
         sub_total: bkbData?.sub_total,
-        authority: terminAuthority
+        authority: terminAuthority,
       };
       submitParkAP(data)
         .then((result) => {
@@ -298,7 +300,7 @@ function ItemContractBKB(props) {
         term_id: termin,
         contract_id: contract,
         sub_total: bkbData?.sub_total,
-        authority: terminAuthority
+        authority: terminAuthority,
       };
       updateParkAP(data)
         .then((result) => {
@@ -328,7 +330,7 @@ function ItemContractBKB(props) {
         term_id: termin,
         contract_id: contract,
         sub_total: bkbData?.sub_total,
-        authority: terminAuthority
+        authority: terminAuthority,
       };
       approveParkAP(data)
         .then((result) => {
@@ -421,7 +423,7 @@ function ItemContractBKB(props) {
         contract_id: contract,
         giro_signed_data: giroSignedData,
         sub_total: bkbData?.sub_total,
-        authority: terminAuthority
+        authority: terminAuthority,
       };
       approveParkBYR(data)
         .then((result) => {
@@ -510,7 +512,7 @@ function ItemContractBKB(props) {
         term_id: termin,
         contract_id: contract,
         sub_total: bkbData?.sub_total,
-        authority: terminAuthority
+        authority: terminAuthority,
       };
       rejectParkAP(data)
         .then((result) => {
@@ -578,6 +580,8 @@ function ItemContractBKB(props) {
         rejected_remark: note,
         term_id: termin,
         contract_id: contract,
+        sub_total: bkbData?.sub_total,
+        authority: terminAuthority,
       };
       rejectBkb(data)
         .then((result) => {
@@ -611,7 +615,7 @@ function ItemContractBKB(props) {
       setCountGiroSigned(countGiroSigned + 1);
     } else {
       setGiroSignedData(
-        giroSignedData.filter(function (row) {
+        giroSignedData.filter(function(row) {
           return row.id !== e.target.value;
         })
       );
@@ -1065,30 +1069,32 @@ function ItemContractBKB(props) {
                     </td>
                     <td></td>
                   </tr>
-                  {Object.keys(bkbData?.tax_selected ? bkbData?.tax_selected : {}).map((row, index) => {
-                    const temp = bkbData?.tax_selected[row].master_tax_items ? bkbData?.tax_selected[row].master_tax_items : []
+                  {Object.keys(
+                    bkbData?.tax_selected ? bkbData?.tax_selected : {}
+                  ).map((row, index) => {
+                    const temp = bkbData?.tax_selected[row].master_tax_items
+                      ? bkbData?.tax_selected[row].master_tax_items
+                      : [];
                     return (
                       <React.Fragment key={index}>
-                        {
-                          temp.map((rows, indexs) => {
-                            const data = JSON.parse(rows.value);
-                            return (
-                              <tr key={indexs}>
-                        <td colSpan="3" className="text-right">
-                          {data.description} - {data.value}%
-                        </td>
-                        <td>
-                          <div className="d-flex justify-content-between">
-                            <span>{bkbData?.symbol}</span>
-                            <span>{rupiah(data.tax_value).slice(3)}</span>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                          })
-                        }
+                        {temp.map((rows, indexs) => {
+                          const data = JSON.parse(rows.value);
+                          return (
+                            <tr key={indexs}>
+                              <td colSpan="3" className="text-right">
+                                {data.description} - {data.value}%
+                              </td>
+                              <td>
+                                <div className="d-flex justify-content-between">
+                                  <span>{bkbData?.symbol}</span>
+                                  <span>{rupiah(data.tax_value).slice(3)}</span>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </React.Fragment>
-                    )
+                    );
                   })}
                   <tr>
                     <td colSpan="3" className="text-right">
@@ -1693,7 +1699,8 @@ function ItemContractBKB(props) {
                           }}
                         >
                           {monitoring_role?.includes(row.name) &&
-                            !row.approved_id && bkbData?.approved_bkb_id && (
+                            !row.approved_id &&
+                            bkbData?.approved_bkb_id && (
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm mx-2"
