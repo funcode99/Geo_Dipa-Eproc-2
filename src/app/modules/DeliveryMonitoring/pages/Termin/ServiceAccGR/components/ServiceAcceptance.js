@@ -19,10 +19,18 @@ import { connect } from "react-redux";
 import { rupiah } from "../../../../../../libs/currency";
 import FooterSA from "./FooterSA";
 import RowAdditional from "./RowAdditional";
+import { Paper } from "@material-ui/core";
+import IL_NoData from "../../../../assets/ilustration/IL_NoData";
+import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 
 const ServiceAcceptance = ({ data, loading }) => {
   const task_sa = data?.task_sa;
   // const { sa_header, sa_items } = task_sa;
+  console.log(`task_sa`, task_sa);
+
+  if (task_sa == null) {
+    return <NoDataBox text={"Service Acceptance not Available"} />;
+  }
 
   return (
     <React.Fragment>

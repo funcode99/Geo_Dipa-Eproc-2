@@ -175,6 +175,7 @@ export const rowTableSA_field = [
   {
     name: "gl_account",
     label: "GL Account",
+    typeInput: "SelectInputCustom",
   },
   {
     name: "bus_area",
@@ -183,6 +184,7 @@ export const rowTableSA_field = [
   {
     name: "cost_center",
     label: "Header Text",
+    typeInput: "SelectInputCustom",
   },
   // {
   //   name: "value",

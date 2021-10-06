@@ -13,10 +13,14 @@ import {
 import RowAdditional from "./RowAdditional";
 import { connect } from "react-redux";
 import DetailGR from "./DetailGR";
+import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 
 const GoodReceipt = ({ data, loading }) => {
   const task_gr = data?.task_gr;
   // console.log(`task_gr`, task_gr);
+  if (task_gr == null) {
+    return <NoDataBox text={"Good Receipt not Available"} />;
+  }
 
   return (
     <React.Fragment>

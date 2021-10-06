@@ -302,6 +302,8 @@ const DetailPage = ({
           optionsAction.reverse();
         }
 
+        console.log(`item`, item);
+
         return {
           number: (index += 1),
           scope_of_work: (
@@ -342,6 +344,7 @@ const DetailPage = ({
             <StatusRemarks
               status={item?.approve_status?.name}
               remarks={item?.reject_text}
+              approvedBy={"N/A"}
             />
           ),
           // status: item?.task_status?.name, //DEPRECATED

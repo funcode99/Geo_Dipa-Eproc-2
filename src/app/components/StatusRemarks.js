@@ -1,7 +1,8 @@
 import React from "react";
 
-const StatusRemarks = ({ status, remarks, url, withFile }) => {
-  const isRejected = status === "REJECTED";
+const StatusRemarks = ({ status, remarks, url, withFile, approvedBy }) => {
+  const isRejected = status === "REJECTED" ? remarks : "";
+  const isApproved = status === "APPROVED" ? `by ${approvedBy}` : "";
   const isWaiting =
     status === "WAITING" && withFile
       ? `${status} ${url ? "APPROVAL" : "UPLOAD"}`
@@ -13,7 +14,7 @@ const StatusRemarks = ({ status, remarks, url, withFile }) => {
         {isWaiting || status || "-"}
       </p>
       <span className="text-muted font-weight-bold">
-        {isRejected ? remarks : null}
+        {isRejected || isApproved}
       </span>
     </div>
   );

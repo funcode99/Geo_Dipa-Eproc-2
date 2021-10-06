@@ -150,6 +150,7 @@ const TableDoc = ({ loading }) => {
                                 remarks={els?.remarks_status}
                                 url={els?.url}
                                 withFile={true}
+                                approvedBy={"N/A"}
                               />,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
@@ -180,6 +181,7 @@ const TableDoc = ({ loading }) => {
                           remarks={el?.remarks_status}
                           url={el?.url}
                           withFile={true}
+                          approvedBy={"N/A"}
                         />,
                         // el?.percentage && el?.percentage + "%",
                         "-",
