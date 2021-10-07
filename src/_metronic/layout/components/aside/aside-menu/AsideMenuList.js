@@ -15,7 +15,6 @@ import {
   DataAsideMenuListVendor,
 } from "./DataAsideMenuList";
 import { getRolesAdmin } from "../../../../../app/modules/Master/service/MasterCrud";
-import { getRolesAcceptance } from "../../../../../app/modules/Master/service/MasterCrud";
 
 export function AsideMenuList({ layoutProps }) {
   const location = useLocation();
@@ -34,62 +33,31 @@ export function AsideMenuList({ layoutProps }) {
     ? dataUser.monitoring_role
     : [];
   const [asideMenu, setAsideMenu] = useState([]);
+  // let asideMenu =
+  //   status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor;
+
+  // asideMenu = asideMenu.filter(function (obj) {
+  //   return obj.title !== "MENU.USER_MANAGEMENT";
+  // });
+
   const getRolesAdminData = useCallback(() => {
-    var monitoring_roles = DataAsideMenuListClient;
-    getRolesAdmin()
-      .then((responseRoles) => {
-        // setAsideMenu(
-        //   status === "client"
-        //     ? DataAsideMenuListClient
-        //     : DataAsideMenuListVendor
-        // );
-        let found = false;
+    getRolesAdmin().then(
+      (responseRoles) => {
+        setAsideMenu(status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor)
+        let found = false
         responseRoles["data"]["data"].map((item, index) => {
-          if (
-            monitoring_role.findIndex((element) => element === item.name) >= 0
-          ) {
-            found = true;
+          if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+            found = true
           }
         });
         if (!found) {
-          let asideMenuTemp = DataAsideMenuListClient.filter(function(obj) {
-            return (
-              obj.title !== "MENU.USER_MANAGEMENT" &&
-              obj.title !== "MENU.MASTER_DATA"
-            );
+          let asideMenuTemp = DataAsideMenuListClient.filter(function (obj) {
+            return obj.title !== "MENU.USER_MANAGEMENT" && obj.title !== "MENU.MASTER_DATA";
           });
-          monitoring_roles =
-            status === "client" ? asideMenuTemp : DataAsideMenuListVendor;
+          setAsideMenu(status === "client" ? asideMenuTemp : DataAsideMenuListVendor)
         }
-      })
-      .finally(() => {
-        getRolesAcceptance(dataUser.is_main ? "Pusat" : "Unit")
-          .then((responseRoles) => {
-            responseRoles["data"]["data"].map((item, index) => {
-              if (
-                monitoring_role.findIndex((element) => element === item.name) >=
-                0
-              ) {
-                var index = monitoring_roles.findIndex(
-                  (item) => item.rootPath === "/client/invoice_monitoring"
-                );
-                let asideMenuTemps = monitoring_roles[index].subMenu.filter(
-                  function(obj) {
-                    return (
-                      obj.title !== "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO"
-                    );
-        }
-                );
-                monitoring_roles[index].subMenu = asideMenuTemps;
       }
-            });
-          })
-          .finally(() => {
-            setAsideMenu(
-              status === "client" ? monitoring_roles : DataAsideMenuListVendor
     );
-          });
-      });
   }, []);
 
   useEffect(getRolesAdminData, []);
@@ -115,8 +83,7 @@ export function AsideMenuList({ layoutProps }) {
           return (
             <li
               key={index.toString()}
-              className={`${
-                item.subMenu && item.subMenu.length > 0
+              className={`${item.subMenu && item.subMenu.length > 0
                 ? "menu-item menu-item-submenu"
                 : "menu-item"
                 } ${getMenuItemActive(item.rootPath, true)}`}
@@ -159,8 +126,7 @@ export function AsideMenuList({ layoutProps }) {
                       return (
                         <li
                           key={index_1.toString()}
-                          className={`${
-                            submenu.subMenu && submenu.subMenu.length > 0
+                          className={`${submenu.subMenu && submenu.subMenu.length > 0
                             ? "menu-item menu-item-submenu"
                             : "menu-item"
                             }  ${getMenuItemActive(submenu.rootPath)}`}
