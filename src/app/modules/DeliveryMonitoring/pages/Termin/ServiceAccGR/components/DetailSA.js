@@ -236,15 +236,15 @@ const DetailSA = ({ data, fullData, type }) => {
   );
   const tab2 = useMemo(
     () => [
-      { label: "Number", value: dataSA?.sheet_no || "dummy" },
+      { label: "Number", value: dataSA?.sheet_no || "-" },
       { label: "Page", value: "1 of 1" },
       {
         label: "Posting Date",
-        value: formatSADate(dataSA?.post_date) || "dummy",
+        value: formatSADate(dataSA?.post_date) || "-",
       },
       {
         label: "Document Date",
-        value: formatSADate(dataSA?.doc_date) || "dummy",
+        value: formatSADate(dataSA?.doc_date) || "-",
       },
     ],
     [dataSA]
@@ -257,7 +257,7 @@ const DetailSA = ({ data, fullData, type }) => {
       // { value: vendor?.address3 },
       {
         value:
-          " Your vendor number with us:" +
+          " Your vendor number with us : " +
           fullData?.contract?.vendor?.data?.sap_code,
       },
     ],
@@ -265,13 +265,13 @@ const DetailSA = ({ data, fullData, type }) => {
   );
   const tab4 = useMemo(
     () => [
-      { label: "PO Number", value: dataSA?.po_number || "dummy" },
-      { label: "Purchasing Group", value: "dummy" },
-      { label: "Telephone", value: "dummy" },
-      { label: "Currency", value: dataSA?.currency || "dummy" },
+      { label: "PO Number", value: dataSA?.po_number || "-" },
+      { label: "Purchasing Group", value: "-" },
+      { label: "Telephone", value: "(021) 7982925" },
+      { label: "Currency", value: dataSA?.currency || "-" },
       {
         label: "External Number",
-        value: dataSA?.ext_number || "dummy",
+        value: dataSA?.ext_number || "-",
       },
     ],
     [dataSA]
@@ -286,7 +286,7 @@ const DetailSA = ({ data, fullData, type }) => {
               <span className={classes.txtValue}>{value}</span>
             </p>
           ))}
-          {/* DUMMY */}
+          {/* Dummmy */}
         </Paper>
       </Grid>
       <Grid item xs={6}>
@@ -313,7 +313,7 @@ const DetailSA = ({ data, fullData, type }) => {
               <span className={classes.txtValue}>{value}</span>
             </p>
           ))}
-          {/* DUMMY */}
+          {/* - */}
         </Paper>
       </Grid>
       <Grid item xs={6}>
@@ -345,7 +345,7 @@ const DetailSA = ({ data, fullData, type }) => {
               Ref. Quality Assurance Acceptance Certificate :{`    `}
             </span>
             <span className={classes.txtValue}>
-              {dataSA?.ref_doc_no || "dummy"}
+              {dataSA?.ref_doc_no || "-"}
             </span>
           </p>
         </Paper>
