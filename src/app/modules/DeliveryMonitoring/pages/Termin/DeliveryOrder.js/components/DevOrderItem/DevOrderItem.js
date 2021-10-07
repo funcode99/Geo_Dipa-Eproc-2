@@ -224,6 +224,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
                 <ButtonContained className={"mr-5"} {...getPropsDeliv()} />
                 {!isVendor && (
                   <ButtonSubmit
+                    disabled={data?.percentage == 100}
                     classBtn={"mr-5"}
                     handleSubmit={() => handleAction("confirm", data)}
                   />
