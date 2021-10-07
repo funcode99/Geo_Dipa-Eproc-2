@@ -344,7 +344,7 @@ const DetailPage = ({
             <StatusRemarks
               status={item?.approve_status?.name}
               remarks={item?.reject_text}
-              approvedBy={"N/A"}
+              approvedBy={item?.users?.username ?? "N/A"}
             />
           ),
           // status: item?.task_status?.name, //DEPRECATED
