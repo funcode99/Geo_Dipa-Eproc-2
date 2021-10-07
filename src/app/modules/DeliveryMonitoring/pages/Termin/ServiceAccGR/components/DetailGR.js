@@ -242,7 +242,11 @@ const DetailGR = ({ data, type, fullData }) => {
         label: "Movement Type",
         value: fullData?.task_gr?.gr_items?.[0]?.move_type || "-",
       },
-      { label: "Purchasing Group", value: "-" },
+      {
+        label: "Purchasing Group",
+        value:
+          fullData?.contract?.purch_order?.purch_group?.party?.full_name || "-",
+      },
       { label: "Telephone", value: "(021) 7982925" },
       {
         label: "Delivery Note",

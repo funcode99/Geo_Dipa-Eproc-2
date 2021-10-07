@@ -266,7 +266,11 @@ const DetailSA = ({ data, fullData, type }) => {
   const tab4 = useMemo(
     () => [
       { label: "PO Number", value: dataSA?.po_number || "-" },
-      { label: "Purchasing Group", value: "-" },
+      {
+        label: "Purchasing Group",
+        value:
+          fullData?.contract?.purch_order?.purch_group?.party?.full_name || "-",
+      },
       { label: "Telephone", value: "(021) 7982925" },
       { label: "Currency", value: dataSA?.currency || "-" },
       {
