@@ -889,6 +889,110 @@ function ContractHardCopyDoc(props) {
             >
               <div className={classes.column}>
                 <span className={classes.ExpansionPanelHeaderSpan}>
+                  <FormattedMessage id="TITLE.DOCUMENT_BILLING" />
+                </span>
+              </div>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails className={classes.details}>
+              {/* begin: Table */}
+              <div style={{ width: "100%" }}>
+                <TableOnly
+                  dataHeader={headerTable}
+                  loading={loading}
+                  // err={err}
+                  hecto={8}
+                >
+                  {dataBillingHardCopy.map((item, index) => {
+                    return (
+                      <TableRow key={index.toString()}>
+                        <TableCell>{item.seq}</TableCell>
+                        <TableCell>{item.document_name}</TableCell>
+                        {item.doc_no ? (
+                          item.doc_file ? (
+                            <TableCell>
+                              <a
+                                href={
+                                  item.doc_status == "INVOICE"
+                                    ? getFileInvoice + item.doc_file
+                                    : item.doc_status == "SPP"
+                                    ? getFileSpp + item.doc_file
+                                    : item.doc_status == "RECEIPT"
+                                    ? getFileReceipt + item.doc_file
+                                    : getFileTax + item.doc_file
+                                }
+                              >
+                                {item.doc_no}
+                              </a>
+                            </TableCell>
+                          ) : (
+                            <TableCell>
+                              {item.doc_no} (file tidak tersedia)
+                            </TableCell>
+                          )
+                        ) : (
+                          <TableCell></TableCell>
+                        )}
+                        <TableCell>
+                          {item.hardcopy_approved_at
+                            ? window
+                                .moment(new Date(item.hardcopy_approved_at))
+                                .format("DD MMM YYYY")
+                            : ""}
+                        </TableCell>
+                        <TableCell>
+                          <StatusRemarks
+                            status={
+                              item.softcopy_state === null
+                                ? "WAITING SOFTCOPY APPROVED"
+                                : item.hardcopy_state === null
+                                ? "WAITING TO APPROVE"
+                                : item.hardcopy_state === "REJECTED"
+                                ? "REJECTED"
+                                : "APPROVED"
+                            }
+                            remarks={
+                              item.hardcopy_state === "REJECTED"
+                                ? item?.hardcopy_rejected_remark
+                                : ""
+                            }
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {item.hardcopy_state === "APPROVED"
+                            ? item.hardcopy_approved_by
+                            : null}
+                        </TableCell>
+                        <TableCell>
+                          {(item.hardcopy_state === null ||
+                            item.hardcopy_state === "REJECTED") &&
+                            item.softcopy_state !== null &&
+                            statusHardCopy &&
+                            approveHardCopyRole && (
+                              <ButtonAction
+                                data={item}
+                                handleAction={handleAction}
+                                ops={data_ops}
+                              />
+                            )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableOnly>
+              </div>
+              {/* end: Table */}
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel
+            defaultExpanded={false}
+            className={classes.ExpansionPanelCard}
+          >
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              className={classes.ExpansionPanelHeader}
+            >
+              <div className={classes.column}>
+                <span className={classes.ExpansionPanelHeaderSpan}>
                   <FormattedMessage id="TITLE.DOCUMENT_CONTRACT" />
                 </span>
               </div>
@@ -1178,110 +1282,6 @@ function ContractHardCopyDoc(props) {
                               });
                         }}
                       </RowAccordion>
-                    );
-                  })}
-                </TableOnly>
-              </div>
-              {/* end: Table */}
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel
-            defaultExpanded={false}
-            className={classes.ExpansionPanelCard}
-          >
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              className={classes.ExpansionPanelHeader}
-            >
-              <div className={classes.column}>
-                <span className={classes.ExpansionPanelHeaderSpan}>
-                  <FormattedMessage id="TITLE.DOCUMENT_BILLING" />
-                </span>
-              </div>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails className={classes.details}>
-              {/* begin: Table */}
-              <div style={{ width: "100%" }}>
-                <TableOnly
-                  dataHeader={headerTable}
-                  loading={loading}
-                  // err={err}
-                  hecto={8}
-                >
-                  {dataBillingHardCopy.map((item, index) => {
-                    return (
-                      <TableRow key={index.toString()}>
-                        <TableCell>{item.seq}</TableCell>
-                        <TableCell>{item.document_name}</TableCell>
-                        {item.doc_no ? (
-                          item.doc_file ? (
-                            <TableCell>
-                              <a
-                                href={
-                                  item.doc_status == "INVOICE"
-                                    ? getFileInvoice + item.doc_file
-                                    : item.doc_status == "SPP"
-                                    ? getFileSpp + item.doc_file
-                                    : item.doc_status == "RECEIPT"
-                                    ? getFileReceipt + item.doc_file
-                                    : getFileTax + item.doc_file
-                                }
-                              >
-                                {item.doc_no}
-                              </a>
-                            </TableCell>
-                          ) : (
-                            <TableCell>
-                              {item.doc_no} (file tidak tersedia)
-                            </TableCell>
-                          )
-                        ) : (
-                          <TableCell></TableCell>
-                        )}
-                        <TableCell>
-                          {item.hardcopy_approved_at
-                            ? window
-                                .moment(new Date(item.hardcopy_approved_at))
-                                .format("DD MMM YYYY")
-                            : ""}
-                        </TableCell>
-                        <TableCell>
-                          <StatusRemarks
-                            status={
-                              item.softcopy_state === null
-                                ? "WAITING SOFTCOPY APPROVED"
-                                : item.hardcopy_state === null
-                                ? "WAITING TO APPROVE"
-                                : item.hardcopy_state === "REJECTED"
-                                ? "REJECTED"
-                                : "APPROVED"
-                            }
-                            remarks={
-                              item.hardcopy_state === "REJECTED"
-                                ? item?.hardcopy_rejected_remark
-                                : ""
-                            }
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {item.hardcopy_state === "APPROVED"
-                            ? item.hardcopy_approved_by
-                            : null}
-                        </TableCell>
-                        <TableCell>
-                          {(item.hardcopy_state === null ||
-                            item.hardcopy_state === "REJECTED") &&
-                            item.softcopy_state !== null &&
-                            statusHardCopy &&
-                            approveHardCopyRole && (
-                              <ButtonAction
-                                data={item}
-                                handleAction={handleAction}
-                                ops={data_ops}
-                              />
-                            )}
-                        </TableCell>
-                      </TableRow>
                     );
                   })}
                 </TableOnly>
