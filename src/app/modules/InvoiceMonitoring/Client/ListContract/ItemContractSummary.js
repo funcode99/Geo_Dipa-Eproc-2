@@ -360,7 +360,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="numberContract"
-                    defaultValue={contractData["contract_no"]}
+                    defaultValue={contractData["contract_name"]}
                     disabled
                   />
                 </div>
