@@ -54,7 +54,6 @@ export function ListsWidget9({ className }) {
       .then((result) => {
         callActivities();
         setPeriod(result.data.data);
-        console.log("getActivityPeriod:", result);
       })
       .catch((err) => {
         setToast(<FormattedMessage id="REQ.REQUEST_FAILED" />, 5000);
@@ -66,7 +65,6 @@ export function ListsWidget9({ className }) {
       .then((result) => {
         setActivities(result.data.data);
         callActivity();
-        console.log("callActivities:", result);
       })
       .catch((err) => {
         setToast(<FormattedMessage id="REQ.REQUEST_FAILED" />, 5000);
@@ -85,7 +83,6 @@ export function ListsWidget9({ className }) {
       .then((result) => {
         setMyActivity(result.data.data);
         setLoading(false);
-        console.log("callActivitiy:", result);
       })
       .catch((err) => {
         setToast(<FormattedMessage id="REQ.REQUEST_FAILED" />, 5000);
