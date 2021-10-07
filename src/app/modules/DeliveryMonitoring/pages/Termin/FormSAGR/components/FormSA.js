@@ -95,7 +95,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
       onSuccess: (res) => {
         // console.log("resp cost_center", res);
         setOptCost(
-          res.data.map((el) => ({ ...el, label: el.name, value: el.code }))
+          res.data.map((el) => ({ ...el, label: el.code, value: el.code }))
         );
       },
     });
