@@ -7,6 +7,10 @@ const initialInvoiceState = {
   dataReceiptVendor: {},
   dataSprVendor: {},
   dataTaxVendor: {},
+  tabInvoice: {
+    tab: 0,
+    tabInvoice: 0,
+  },
 };
 
 export const reducer = persistReducer(
@@ -38,6 +42,13 @@ export const reducer = persistReducer(
         };
       }
 
+      case actionTypes.SetDataTabInvoice: {
+        return {
+          ...state,
+          tabInvoice: action.payload,
+        };
+      }
+
       default:
         return state;
     }
@@ -59,6 +70,10 @@ export const actions = {
   }),
   set_data_tax_vendor: (payload) => ({
     type: actionTypes.SetDataTaxVendor,
+    payload,
+  }),
+  set_data_tab_invaoice: (payload) => ({
+    type: actionTypes.SetDataTabInvoice,
     payload,
   }),
 };

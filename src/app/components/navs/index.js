@@ -10,12 +10,13 @@ const initialNavLists = [
 export default function Navs({
   navLists = initialNavLists,
   handleSelect,
+  active = navLists[0].id,
   ...other
 }) {
   return (
     <Nav
       variant="pills"
-      defaultActiveKey={navLists[0].id}
+      defaultActiveKey={active}
       onSelect={handleSelect}
       {...other}
     >

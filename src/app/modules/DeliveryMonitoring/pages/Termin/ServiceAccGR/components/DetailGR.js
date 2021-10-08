@@ -198,7 +198,6 @@ const DetailGR = ({ data, type, fullData }) => {
   const classes = useStyles();
   let dataSA = {};
   if (type === "SA") dataSA = data;
-  console.log(`fullData`, fullData, dataSA, data);
   const tab1 = useMemo(
     () => [
       { value: client?.name },
