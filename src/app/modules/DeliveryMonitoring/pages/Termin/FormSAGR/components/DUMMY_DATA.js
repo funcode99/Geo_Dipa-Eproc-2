@@ -35,10 +35,12 @@ export const sa_field = [
     {
       name: "begdate",
       label: "Begin Date",
+      typeInput: "SelectDateInput",
     },
     {
       name: "enddate",
       label: "End Date",
+      typeInput: "SelectDateInput",
     },
   ],
   [
@@ -59,6 +61,7 @@ export const sa_field = [
     {
       name: "post_date",
       label: "Post Date",
+      typeInput: "SelectDateInput",
     },
   ],
   [

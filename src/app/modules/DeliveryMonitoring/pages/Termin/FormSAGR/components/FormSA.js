@@ -123,6 +123,8 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
     [dataSA]
   );
 
+  // console.log(`dataSA`, dataSA);
+
   const options = { optCost, optGL };
 
   return (
