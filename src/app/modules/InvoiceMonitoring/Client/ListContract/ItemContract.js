@@ -32,6 +32,7 @@ import {
   getListMismatch,
   getListMailTo,
   saveMismatch,
+  getContractSummary,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { getRolesAudit } from "../../../Master/service/MasterCrud";
@@ -204,10 +205,6 @@ const ItemContract = (props) => {
     setDialogLeader(true);
   }
 
-  const getSetData = (data) => {
-    setData(data);
-  };
-
   const getTerminProgressData = () => {
     getProgressTypes()
       .then((resultTypes) => {
@@ -219,7 +216,7 @@ const ItemContract = (props) => {
               setDataProgress(result.data.data.data);
             } else if (result?.data?.data?.id && !result?.data?.data?.data) {
               const progress = 2;
-              const data = resultTypes.data.data.map(function (row) {
+              const data = resultTypes.data.data.map(function(row) {
                 return {
                   label: row?.name,
                   status:
@@ -234,13 +231,11 @@ const ItemContract = (props) => {
               setDataProgress(data);
             } else {
               const progress = 1;
-              const data = resultTypes.data.data.map(function (row) {
+              const data = resultTypes.data.data.map(function(row) {
                 return {
                   label: row?.name,
                   status:
-                    Number(row.seq) === progress
-                      ? "COMPLETE"
-                      : "NO STARTED",
+                    Number(row.seq) === progress ? "COMPLETE" : "NO STARTED",
                   ident_name: row.ident_name,
                 };
               });
@@ -362,6 +357,17 @@ const ItemContract = (props) => {
   useEffect(getMisMatch, []);
   useEffect(getTerminProgressData, []);
   useEffect(getRolesAuditData, []);
+
+  const getContractData = useCallback(() => {
+    getContractSummary(contract, termin)
+      .then((response) => {
+        setData(response.data.data);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, []);
+  useEffect(getContractData, []);
 
   return (
     <Container className="px-0">
@@ -494,7 +500,6 @@ const ItemContract = (props) => {
           {tabActive === 0 && (
             <ItemContractSummary
               {...props}
-              getData={getSetData}
               terminName={data.termin_name || ""}
             />
           )}
