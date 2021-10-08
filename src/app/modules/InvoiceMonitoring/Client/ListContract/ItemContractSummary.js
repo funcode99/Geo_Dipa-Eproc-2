@@ -15,12 +15,14 @@ import {
   getContractAuthority,
   createContractAuthority,
   updateContractAuthority,
+  getTermContract,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import StyledSelect from "../../../../components/select-multiple";
 import { TableRow, TableCell } from "@material-ui/core";
 import { getRolesTerminAuthorization } from "../../../Master/service/MasterCrud";
 import { MAIN_ROLES_AUTHORITY } from "../../../../../redux/BaseHost";
+import { useParams, Link } from "react-router-dom";
 
 function ItemContractSummary(props) {
   const { intl, getData } = props;
@@ -107,6 +109,43 @@ function ItemContractSummary(props) {
     },
   ];
 
+  const headerTables = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TABLE_HEADER.NO",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.SCOPE_OF_WORK",
+      }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE",
+      }),
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.TABLE_HEAD.WEIGHT" }),
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.TAB.PRICE" }),
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.TABLE_HEAD.PROJECT_PROGRESS",
+      }),
+    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: "CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS",
+    //   }),
+    // },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.TABLE_HEAD.STATUS" }),
+    },
+  ];
+
   const dataUser = useSelector((state) => state.auth.user.data);
   let monitoring_role = dataUser.monitoring_role
     ? dataUser.monitoring_role
@@ -130,6 +169,16 @@ function ItemContractSummary(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const monitoring_type = "INVOICE";
+  const [data, setData] = useState({});
+  const is_finance = useSelector(
+    (state) => state.auth.user.data.is_finance,
+    shallowEqual
+  );
+  const is_main = useSelector(
+    (state) => state.auth.user.data.is_main,
+    shallowEqual
+  );
+  const { contract } = useParams();
 
   const getPicContractData = useCallback(
     (vendor_id) => {
@@ -323,6 +372,27 @@ function ItemContractSummary(props) {
   useEffect(getContractData, []);
   useEffect(getContractAuthorityData, []);
   useEffect(getRolesTerminAuthorizationData, []);
+
+  const getDatas = () => {
+    getTermContract(contract)
+      .then((result) => {
+        var data = result.data.data;
+        if (data && data.data_termin) {
+          data.data_termin = data.data_termin.sort((a, b) =>
+            new Date(a.createdAt) > new Date(b.createdAt)
+              ? 1
+              : new Date(b.createdAt) > new Date(a.createdAt)
+              ? -1
+              : 0
+          );
+        }
+        setData(data);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+  useEffect(getDatas, []);
 
   return (
     <React.Fragment>
@@ -583,35 +653,57 @@ function ItemContractSummary(props) {
           </button>
         </CardFooter>
       </Card>
-      {/* <Card className="mt-5">
+      <Card className="mt-5">
         <CardBody>
-          <div className="my-5 text-center">
+          {/* <div className="my-5 text-center">
             <h6>
               <FormattedMessage id="TITLE.BILLING_DOCUMENT" />
             </h6>
-          </div>
+          </div> */}
 
           <TableOnly
-            dataHeader={headerTable}
-            loading={loading}
+            dataHeader={headerTables}
+            loading={false}
             // err={err}
             hecto={10}
           >
-            {data.map((item, index) => {
-              return (
-                <TableRow key={index.toString()}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.status}</TableCell>
-                  <TableCell>{item.approvedBy}</TableCell>
-                  <TableCell>{item.date}</TableCell>
-                  <TableCell>{item.nameDoc}</TableCell>
-                </TableRow>
-              );
-            })}
+            {data &&
+              data?.data_termin &&
+              data?.data_termin.map((value, index) => {
+                return (
+                  <TableRow key={index.toString()}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      {" "}
+                      {(is_main && is_finance) ||
+                      value?.prices <= 500000000 ||
+                      is_main ||
+                      (!is_main && value?.authority == "Unit") ? (
+                        <Link
+                          to={`/client/invoice_monitoring/contract/${contract}/${value.task_id}`}
+                        >
+                          {value?.task_name}
+                        </Link>
+                      ) : (
+                        <span>{value?.task_name}</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {window
+                        .moment(new Date(value?.due_date))
+                        .format("DD MMM YYYY")}
+                    </TableCell>
+                    <TableCell>{value?.bobot + "%"}</TableCell>
+                    <TableCell>{rupiah(value?.prices || 0)}</TableCell>
+                    <TableCell>{value?.progress}</TableCell>
+                    {/* <TableCell>Doc Progress</TableCell> */}
+                    <TableCell>{value?.name}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableOnly>
         </CardBody>
-      </Card> */}
+      </Card>
     </React.Fragment>
   );
 }
