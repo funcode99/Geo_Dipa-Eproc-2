@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { connect, useSelector } from "react-redux";
+import { connect, useSelector, shallowEqual } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Card,
@@ -64,6 +64,7 @@ import {
   ServiceAcceptance,
   GoodReceipt,
 } from "../../../DeliveryMonitoring/pages/Termin/ServiceAccGR/components";
+import * as reducer from "../../_redux/InvoiceMonitoringSlice";
 
 const styles = (theme) => ({
   root: {
@@ -185,19 +186,19 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const navLists = [
   {
-    id: "SPP",
+    id: 0,
     label: "SPP",
   },
   {
-    id: "Invoice",
+    id: 1,
     label: "Invoice",
   },
   {
-    id: "Kwitansi",
+    id: 2,
     label: "Kwitansi",
   },
   {
-    id: "Faktur",
+    id: 3,
     label: "Faktur Pajak",
   },
 ];
@@ -210,7 +211,11 @@ function ItemContractInvoice(props) {
     dataProgress,
     setDataProgress,
   } = props;
-  const [navActive, setNavActive] = useState(navLists[0].id);
+  let tabInvoice = useSelector(
+    (state) => state.invoiceMonitoring.tabInvoice,
+    shallowEqual
+  );
+  const [navActive, setNavActive] = useState(tabInvoice.tabInvoice);
   const [dataDeliverables, setDataDeliverables] = useState([]);
   const classes = useStyles();
   const { contract, termin } = useParams();
@@ -1392,10 +1397,15 @@ function ItemContractInvoice(props) {
               <CardBody>
                 <Navs
                   navLists={navLists}
-                  handleSelect={(selectedKey) => setNavActive(selectedKey)}
+                  active={navActive}
+                  handleSelect={(selectedKey) => {
+                    tabInvoice.tabInvoice = Number(selectedKey);
+                    props.set_data_tab_invaoice(tabInvoice);
+                    setNavActive(selectedKey);
+                  }}
                 />
 
-                {navActive === "SPP" && (
+                {Number(navActive) === 0 && (
                   <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
                     <ContractSprPage
                       {...props}
@@ -1407,7 +1417,7 @@ function ItemContractInvoice(props) {
                   </div>
                 )}
 
-                {navActive === "Invoice" && (
+                {Number(navActive) === 1 && (
                   <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
                     <ContractInvoicePage
                       {...props}
@@ -1419,7 +1429,7 @@ function ItemContractInvoice(props) {
                   </div>
                 )}
 
-                {navActive === "Kwitansi" && (
+                {Number(navActive) === 2 && (
                   <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
                     <ContractReceiptPage
                       {...props}
@@ -1431,7 +1441,7 @@ function ItemContractInvoice(props) {
                   </div>
                 )}
 
-                {navActive === "Faktur" && (
+                {Number(navActive) === 3 && (
                   <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
                     <ContractTaxPage
                       {...props}
