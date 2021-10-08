@@ -26,7 +26,7 @@ import { useParams, Link } from "react-router-dom";
 import * as reducer from "../../_redux/InvoiceMonitoringSlice";
 
 function ItemContractSummary(props) {
-  const { intl, getData } = props;
+  const { intl } = props;
   let tabInvoice = useSelector(
     (state) => state.invoiceMonitoring.tabInvoice,
     shallowEqual
@@ -229,19 +229,11 @@ function ItemContractSummary(props) {
         );
         getPicContractData(response.data.data.vendor_id);
         getPicVendorData(response.data.data.vendor_id);
-        getData(response.data.data);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
-  }, [
-    contract_id,
-    intl,
-    setToast,
-    getPicContractData,
-    getPicVendorData,
-    getData,
-  ]);
+  }, [contract_id, intl, setToast, getPicContractData, getPicVendorData]);
 
   const getContractAuthorityData = useCallback(() => {
     getContractAuthority(termin)
