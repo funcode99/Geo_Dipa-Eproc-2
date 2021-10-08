@@ -1365,6 +1365,86 @@ function ItemContractInvoice(props) {
           </DialogActions>
         </form>
       </Dialog>
+
+      <ExpansionPanel
+        defaultExpanded={true}
+        className={classes.ExpansionPanelCard}
+      >
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          className={classes.ExpansionPanelHeader}
+        >
+          <div className={classes.column}>
+            <span className={classes.ExpansionPanelHeaderSpan}>
+              <FormattedMessage id="TITLE.DOCUMENT_BILLING" />
+            </span>
+          </div>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails className={classes.details}>
+          <div style={{ width: "100%" }}>
+            <Card>
+              {/* <CardHeader title="">
+                <CardHeaderToolbar>
+                </CardHeaderToolbar>
+              </CardHeader> */}
+              <CardBody>
+                <Navs
+                  navLists={navLists}
+                  handleSelect={(selectedKey) => setNavActive(selectedKey)}
+                />
+
+                {navActive === "SPP" && (
+                  <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
+                    <ContractSprPage
+                      {...props}
+                      classes={classes}
+                      dialogTitleFile={DialogTitleFile}
+                      transition={Transition}
+                      billingStaffStatus={billingStaffStatus}
+                    />
+                  </div>
+                )}
+
+                {navActive === "Invoice" && (
+                  <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
+                    <ContractInvoicePage
+                      {...props}
+                      classes={classes}
+                      dialogTitleFile={DialogTitleFile}
+                      transition={Transition}
+                      billingStaffStatus={billingStaffStatus}
+                    />
+                  </div>
+                )}
+
+                {navActive === "Kwitansi" && (
+                  <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
+                    <ContractReceiptPage
+                      {...props}
+                      classes={classes}
+                      dialogTitleFile={DialogTitleFile}
+                      transition={Transition}
+                      billingStaffStatus={billingStaffStatus}
+                    />
+                  </div>
+                )}
+
+                {navActive === "Faktur" && (
+                  <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
+                    <ContractTaxPage
+                      {...props}
+                      classes={classes}
+                      dialogTitleFile={DialogTitleFile}
+                      transition={Transition}
+                      setTaxStaffStatus={taxStaffStatus}
+                    />
+                  </div>
+                )}
+              </CardBody>
+            </Card>
+          </div>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
       <ExpansionPanel
         defaultExpanded={false}
         className={classes.ExpansionPanelCard}
@@ -1661,9 +1741,7 @@ function ItemContractInvoice(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
 
-      <Card>
-        <CardHeader title="">
-          <CardHeaderToolbar>
+      <div className="text-right">
             <button
               type="button"
               onClick={() => {
@@ -1691,68 +1769,12 @@ function ItemContractInvoice(props) {
                 });
               }}
               // onClick={handleSendNotif}
-              className="btn btn-sm btn-primary"
+          className="btn btn-sm btn-primary m-5"
               disabled={loading || !billingStaffStatus}
             >
               Send Notif
             </button>
-          </CardHeaderToolbar>
-        </CardHeader>
-        <CardBody>
-          <Navs
-            navLists={navLists}
-            handleSelect={(selectedKey) => setNavActive(selectedKey)}
-          />
-
-          {navActive === "SPP" && (
-            <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractSprPage
-                {...props}
-                classes={classes}
-                dialogTitleFile={DialogTitleFile}
-                transition={Transition}
-                billingStaffStatus={billingStaffStatus}
-              />
             </div>
-          )}
-
-          {navActive === "Invoice" && (
-            <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractInvoicePage
-                {...props}
-                classes={classes}
-                dialogTitleFile={DialogTitleFile}
-                transition={Transition}
-                billingStaffStatus={billingStaffStatus}
-              />
-            </div>
-          )}
-
-          {navActive === "Kwitansi" && (
-            <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractReceiptPage
-                {...props}
-                classes={classes}
-                dialogTitleFile={DialogTitleFile}
-                transition={Transition}
-                billingStaffStatus={billingStaffStatus}
-              />
-            </div>
-          )}
-
-          {navActive === "Faktur" && (
-            <div className="table-wrapper-scroll-y my-custom-scrollbar my-5 h-100">
-              <ContractTaxPage
-                {...props}
-                classes={classes}
-                dialogTitleFile={DialogTitleFile}
-                transition={Transition}
-                setTaxStaffStatus={taxStaffStatus}
-              />
-            </div>
-          )}
-        </CardBody>
-      </Card>
     </React.Fragment>
   );
 }
