@@ -221,7 +221,6 @@ const useStyles = makeStyles((theme) => ({
 const DetailSA = ({ data, fullData, type }) => {
   const { client, document, vendor, contract } = detailSA;
   const classes = useStyles();
-  console.log(`fullData`, fullData);
   let dataSA = {};
   if (type === "SA") dataSA = data;
 

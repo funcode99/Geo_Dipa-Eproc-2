@@ -12,6 +12,7 @@ import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
 import { rupiah } from "../../../../libs/currency";
+import * as reducer from "../../_redux/InvoiceMonitoringSlice";
 
 function DashboardListInvoice(props) {
   const user_id = useSelector(
@@ -36,6 +37,10 @@ function DashboardListInvoice(props) {
   });
   const [paramsTable, setParamsTable] = useState("");
   const [err, setErr] = useState(false);
+  let tabInvoice = useSelector(
+    (state) => state.invoiceMonitoring.tabInvoice,
+    shallowEqual
+  );
 
   const headerTable = [
     {
@@ -284,17 +289,16 @@ function DashboardListInvoice(props) {
                       )}
                   </TableCell>
                   <TableCell>
-                    {/* <Link
-                      to={
-                        "/client/invoice_monitoring/contract/" +
-                        item.contract_id +
-                        "/" +
-                        item.term_id
-                      }
+                    <Link
+                      to={`/client/invoice_monitoring/contract/${item.contract_id}/${item.term_id}`}
+                      onClick={() => {
+                        tabInvoice.tab = 1;
+                        tabInvoice.tabInvoice = 1;
+                        props.set_data_tab_invaoice(tabInvoice);
+                      }}
                     >
-                      {item.invoice_no}
-                    </Link> */}
-                    {item.invoice_no}
+                      {item?.invoice_no}
+                    </Link>
                   </TableCell>
                   <TableCell>{item.purch_order_no}</TableCell>
                   <TableCell>{item.contract_no}</TableCell>
@@ -330,4 +334,4 @@ function DashboardListInvoice(props) {
   );
 }
 
-export default injectIntl(connect(null, null)(DashboardListInvoice));
+export default injectIntl(connect(null, reducer.actions)(DashboardListInvoice));

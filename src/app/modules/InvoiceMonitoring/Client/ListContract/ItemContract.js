@@ -1,7 +1,6 @@
 import React, { useEffect, useLayoutEffect, useCallback } from "react"; // useState
 import { connect, useSelector, shallowEqual } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { useParams } from "react-router-dom";
 import Tabs from "../../../../components/tabsCustomV1";
 import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
@@ -36,6 +35,7 @@ import {
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { getRolesAudit } from "../../../Master/service/MasterCrud";
+import * as reducer from "../../_redux/InvoiceMonitoringSlice";
 
 const styles = (theme) => ({
   root: {
@@ -142,7 +142,11 @@ const ItemContract = (props) => {
   const suhbeader = useSubheader();
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [tabActive, setTabActive] = React.useState(0);
+  let tabInvoice = useSelector(
+    (state) => state.invoiceMonitoring.tabInvoice,
+    shallowEqual
+  );
+  const [tabActive, setTabActive] = React.useState(Number(tabInvoice.tab) || 0);
   const [dialogLeader, setDialogLeader] = React.useState(false);
   const [dataOne, setDataOne] = React.useState([]);
   const [dataOneValue, setDataOneValue] = React.useState([]);
@@ -191,6 +195,8 @@ const ItemContract = (props) => {
   }, [data]);
 
   function handleChangeTab(event, newTabActive) {
+    tabInvoice.tab = Number(newTabActive);
+    props.set_data_tab_invaoice(tabInvoice);
     setTabActive(newTabActive);
   }
 
@@ -337,17 +343,17 @@ const ItemContract = (props) => {
 
   const getRolesAuditData = useCallback(() => {
     getRolesAudit()
-      .then(
-        (responseRoles) => {
+      .then((responseRoles) => {
         responseRoles["data"]["data"].map((item, index) => {
-            if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+          if (
+            monitoring_role.findIndex((element) => element === item.name) >= 0
+          ) {
             if (monitoring_role.length === 1) {
               setAuditStaff(true);
             }
           }
         });
-        }
-      )
+      })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
@@ -543,4 +549,4 @@ const ItemContract = (props) => {
   );
 };
 
-export default injectIntl(connect(null, null)(ItemContract));
+export default injectIntl(connect(null, reducer.actions)(ItemContract));

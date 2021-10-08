@@ -17,6 +17,7 @@ import { useParams, Link } from "react-router-dom";
 import { getTermContract } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
+import * as reducer from "../../_redux/InvoiceMonitoringSlice";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,6 +41,10 @@ const ListTermContract = (props) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [Toast, setToast] = useToast();
+  let tabInvoice = useSelector(
+    (state) => state.invoiceMonitoring.tabInvoice,
+    shallowEqual
+  );
 
   useLayoutEffect(() => {
     suhbeader.setTitle(
@@ -294,6 +299,11 @@ const ListTermContract = (props) => {
                     (!is_main && value?.authority == "Unit") ? (
                       <Link
                         to={`/client/invoice_monitoring/contract/${contract}/${value.task_id}`}
+                        onClick={() => {
+                          tabInvoice.tab = 0;
+                          tabInvoice.tabInvoice = 0;
+                          props.set_data_tab_invaoice(tabInvoice);
+                        }}
                       >
                         {value?.task_name}
                       </Link>
@@ -320,4 +330,4 @@ const ListTermContract = (props) => {
   );
 };
 
-export default injectIntl(connect(null, null)(ListTermContract));
+export default injectIntl(connect(null, reducer.actions)(ListTermContract));

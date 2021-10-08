@@ -23,60 +23,14 @@ import { TableRow, TableCell } from "@material-ui/core";
 import { getRolesTerminAuthorization } from "../../../Master/service/MasterCrud";
 import { MAIN_ROLES_AUTHORITY } from "../../../../../redux/BaseHost";
 import { useParams, Link } from "react-router-dom";
+import * as reducer from "../../_redux/InvoiceMonitoringSlice";
 
 function ItemContractSummary(props) {
   const { intl, getData } = props;
-  // const [data] = useState([
-  //   {
-  //     name: "BAPP",
-  //     status: "Approved",
-  //     approvedBy: "Dian",
-  //     date: "30 Jan 2021",
-  //     nameDoc: "BAPP.pdf",
-  //   },
-  //   {
-  //     name: "User Manual",
-  //     status: "Approved",
-  //     approvedBy: "Dian",
-  //     date: "30 Jan 2021",
-  //     nameDoc: "BAPP.pdf",
-  //   },
-  //   {
-  //     name: "Timesheet",
-  //     status: "Waiting",
-  //     approvedBy: null,
-  //     date: null,
-  //     nameDoc: null,
-  //   },
-  //   {
-  //     name: "Invoice",
-  //     status: "Waiting",
-  //     approvedBy: null,
-  //     date: null,
-  //     nameDoc: null,
-  //   },
-  //   {
-  //     name: "Faktur Pajak",
-  //     status: "Waiting",
-  //     approvedBy: null,
-  //     date: null,
-  //     nameDoc: null,
-  //   },
-  //   {
-  //     name: "Surat Permohonan Pajak",
-  //     status: "Waiting",
-  //     approvedBy: null,
-  //     date: null,
-  //     nameDoc: null,
-  //   },
-  //   {
-  //     name: "Kuitansi",
-  //     status: "Waiting",
-  //     approvedBy: null,
-  //     date: null,
-  //     nameDoc: null,
-  //   },
-  // ]);
+  let tabInvoice = useSelector(
+    (state) => state.invoiceMonitoring.tabInvoice,
+    shallowEqual
+  );
 
   const headerTable = [
     {
@@ -681,6 +635,11 @@ function ItemContractSummary(props) {
                       (!is_main && value?.authority == "Unit") ? (
                         <Link
                           to={`/client/invoice_monitoring/contract/${contract}/${value.task_id}`}
+                          onClick={() => {
+                            tabInvoice.tab = 0;
+                            tabInvoice.tabInvoice = 0;
+                            props.set_data_tab_invaoice(tabInvoice);
+                          }}
                         >
                           {value?.task_name}
                         </Link>
@@ -707,4 +666,4 @@ function ItemContractSummary(props) {
     </React.Fragment>
   );
 }
-export default injectIntl(connect(null, null)(ItemContractSummary));
+export default injectIntl(connect(null, reducer.actions)(ItemContractSummary));
