@@ -83,7 +83,8 @@ export function AsideMenuList({ layoutProps }) {
           return (
             <li
               key={index.toString()}
-              className={`${item.subMenu && item.subMenu.length > 0
+              className={`${
+                item.subMenu && item.subMenu.length > 0
                 ? "menu-item menu-item-submenu"
                 : "menu-item"
                 } ${getMenuItemActive(item.rootPath, true)}`}
@@ -126,7 +127,8 @@ export function AsideMenuList({ layoutProps }) {
                       return (
                         <li
                           key={index_1.toString()}
-                          className={`${submenu.subMenu && submenu.subMenu.length > 0
+                          className={`${
+                            submenu.subMenu && submenu.subMenu.length > 0
                             ? "menu-item menu-item-submenu"
                             : "menu-item"
                             }  ${getMenuItemActive(submenu.rootPath)}`}
