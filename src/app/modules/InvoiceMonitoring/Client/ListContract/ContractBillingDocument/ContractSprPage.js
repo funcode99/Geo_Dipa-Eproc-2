@@ -257,7 +257,8 @@ function ContractSprPage(props) {
     approveSpp(sppData.id, {
       approved_by_id: user_id,
       contract_id: contract_id,
-      term_id: termin
+      term_id: termin,
+      progress_data: dataProgress,
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -268,8 +269,10 @@ function ContractSprPage(props) {
         softcopy_save(data_1);
         getTerminProgress(termin)
           .then((result) => {
+            if (result.data.data.data) {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
+            }
           })
         SOCKET.emit("send_notif");
       })

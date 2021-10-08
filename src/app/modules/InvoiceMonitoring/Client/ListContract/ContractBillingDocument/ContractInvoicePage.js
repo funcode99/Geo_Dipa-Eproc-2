@@ -70,7 +70,7 @@ function ContractInvoicePage(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const invoiceName = "INVOICE";
-  const { intl, classes, progressTermin, setProgressTermin, setDataProgress } = props;
+  const { intl, classes, progressTermin, setProgressTermin, setDataProgress, dataProgress } = props;
 
   const initialValues = {};
 
@@ -222,6 +222,7 @@ function ContractInvoicePage(props) {
       contract_id: contract_id,
       term_id: termin,
       penalty: invoiceData?.penalty,
+      progress_data: dataProgress,
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -232,8 +233,10 @@ function ContractInvoicePage(props) {
         softcopy_save(data_1);
         getTerminProgress(termin)
           .then((result) => {
+            if (result.data.data.data) {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
+            }
           })
         SOCKET.emit("send_notif");
       })

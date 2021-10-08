@@ -44,7 +44,7 @@ import {
   updateSoftCopyByUser,
   sendAddRejectedDocSoftCopy,
   sendNotifSoftCopySupportDeliverables,
-  createTerminProgress,
+  updateTerminProgressToTax,
   getTerminProgress,
   sendNotifSoftCopyRequest,
   getContractAuthority,
@@ -374,21 +374,14 @@ function ItemContractInvoice(props) {
 
   const handleAcceptSoftcopy = () => {
     setLoading(true);
-    var index = dataProgress.findIndex(
-      (row) => row.ident_name == "SUPPORT_DELIVERABLES_SOFTCOPY"
-    );
-    const data = JSON.parse(JSON.stringify(dataProgress));
-    data[index].status = "COMPLETE";
-    data[index + 1].status = "ON PROGRESS";
-    data[index + 2].status = "ON PROGRESS";
-    createTerminProgress({
+    updateTerminProgressToTax({
       term_id: termin,
       created_by_id: user_id,
-      data: data,
+      contract_id: contract,
     })
       .then((result) => {
-        setProgressTermin(result.data.data);
-        setDataProgress(data);
+        setProgressTermin(result.data.data.progress_id);
+        setDataProgress(result.data.data.data);
         SOCKET.emit("send_notif");
         setLoading(false);
         setDialogConfirm(false);
@@ -526,7 +519,6 @@ function ItemContractInvoice(props) {
           );
           getRolesAcceptanceTax(response["data"]["data"]["authority"]).then(
             (responseRoles) => {
-              console.log(responseRoles);
               responseRoles["data"]["data"].map((item, index) => {
                 if (
                   monitoring_role.findIndex(
@@ -590,7 +582,7 @@ function ItemContractInvoice(props) {
             loading: true,
           });
           getTerminProgress(termin).then((result) => {
-            if (result.data.data) {
+            if (result.data.data.data) {
               setDataProgress(result.data.data?.data);
             }
           });
@@ -623,7 +615,7 @@ function ItemContractInvoice(props) {
             loading: true,
           });
           getTerminProgress(termin).then((result) => {
-            if (result.data.data) {
+            if (result.data.data.data) {
               setDataProgress(result.data.data?.data);
             }
           });
@@ -671,7 +663,7 @@ function ItemContractInvoice(props) {
             loading: true,
           });
           getTerminProgress(termin).then((result) => {
-            if (result.data.data) {
+            if (result.data.data.data) {
               setDataProgress(result.data.data?.data);
             }
           });
@@ -704,7 +696,7 @@ function ItemContractInvoice(props) {
             loading: true,
           });
           getTerminProgress(termin).then((result) => {
-            if (result.data.data) {
+            if (result.data.data.data) {
               setDataProgress(result.data.data?.data);
             }
           });
@@ -1014,6 +1006,15 @@ function ItemContractInvoice(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   }, [intl, setToast]);
+
+  const indexBillingSoftCopy = dataProgress?.findIndex(
+    (row) => row.ident_name == "BILLING_SOFTCOPY"
+  );
+  const indexTaxSoftCopy = dataProgress?.findIndex(
+    (row) => row.ident_name == "TAX"
+  );
+  const dataBillingSoftCopy = JSON.parse(JSON.stringify(dataProgress));
+  const acceptSoftcopyStatus = dataBillingSoftCopy[indexBillingSoftCopy].status !== "COMPLETE" || dataBillingSoftCopy[indexTaxSoftCopy].status !== "NO STARTED"
 
   useEffect(callApi, []);
   useEffect(callApiContractSoftCopy, []);
@@ -1754,7 +1755,7 @@ function ItemContractInvoice(props) {
               }}
               // onClick={handleAcceptSoftcopy}
               className="btn btn-sm btn-primary mr-2"
-              disabled={loading || progressTermin || !billingStaffStatus}
+              disabled={loading || acceptSoftcopyStatus || !billingStaffStatus}
             >
               Accept Softcopy
             </button>

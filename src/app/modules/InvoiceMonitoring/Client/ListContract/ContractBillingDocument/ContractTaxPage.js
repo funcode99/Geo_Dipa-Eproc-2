@@ -96,6 +96,7 @@ function ContractTaxPage(props) {
     progressTermin,
     setProgressTermin,
     setDataProgress,
+    dataProgress,
   } = props;
 
   const initialValues = {};
@@ -271,6 +272,7 @@ function ContractTaxPage(props) {
       contract_id: contract_id,
       term_id: termin,
       tax_selected: optionSelected,
+      progress_data: dataProgress,
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -280,8 +282,10 @@ function ContractTaxPage(props) {
         getHistoryTaxData(taxData.id);
         softcopy_save(data_1);
         getTerminProgress(termin).then((result) => {
+          if (result.data.data.data) {
           setProgressTermin(result.data.data?.progress_type);
           setDataProgress(result.data.data?.data);
+          }
         });
         SOCKET.emit("send_notif");
       })
@@ -312,8 +316,6 @@ function ContractTaxPage(props) {
       <span style={groupBadgeStyles}>{data.options.length}</span>
     </div>
   );
-
-  console.log("optionSelected", optionSelected);
 
   return (
     <React.Fragment>
@@ -866,7 +868,7 @@ function ContractTaxPage(props) {
               taxData?.state === "APPROVED" ||
               taxData === null ||
               !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              progressTermin?.ident_name !== "TAX"
             }
             className="btn btn-primary mx-1"
           >
@@ -881,7 +883,7 @@ function ContractTaxPage(props) {
               taxData?.state === "APPROVED" ||
               taxData === null ||
               !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              progressTermin?.ident_name !== "TAX"
             }
             className="btn btn-danger mx-1"
           >

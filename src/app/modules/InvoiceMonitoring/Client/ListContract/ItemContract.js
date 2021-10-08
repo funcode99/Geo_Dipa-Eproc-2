@@ -208,12 +208,12 @@ const ItemContract = (props) => {
         getTerminProgress(termin)
           .then((result) => {
             // const progress = result.data.data ? result.data.data?.progress_type?.seq : "2"
-            const progress = 2;
             // const name = result.data.data ? result.data.data?.progress_type?.ident_name : ""
-            if (result?.data?.data?.data) {
+            if (result.data?.data?.id && result?.data?.data?.data) {
               setDataProgress(result.data.data.data);
-            } else {
-              const data = resultTypes.data.data.map(function(row) {
+            } else if (result?.data?.data?.id && !result?.data?.data?.data) {
+              const progress = 2;
+              const data = resultTypes.data.data.map(function (row) {
                 return {
                   label: row?.name,
                   status:
@@ -226,8 +226,20 @@ const ItemContract = (props) => {
                 };
               });
               setDataProgress(data);
+            } else {
+              const progress = 1;
+              const data = resultTypes.data.data.map(function (row) {
+                return {
+                  label: row?.name,
+                  status:
+                    Number(row.seq) === progress
+                      ? "COMPLETE"
+                      : "NO STARTED",
+                  ident_name: row.ident_name,
+                };
+              });
+              setDataProgress(data);
             }
-
             setTerminProgress(result.data.data?.progress_type);
           })
           .catch((error) => {
@@ -325,17 +337,17 @@ const ItemContract = (props) => {
 
   const getRolesAuditData = useCallback(() => {
     getRolesAudit()
-      .then((responseRoles) => {
+      .then(
+        (responseRoles) => {
         responseRoles["data"]["data"].map((item, index) => {
-          if (
-            monitoring_role.findIndex((element) => element === item.name) >= 0
-          ) {
+            if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
             if (monitoring_role.length === 1) {
               setAuditStaff(true);
             }
           }
         });
-      })
+        }
+      )
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
