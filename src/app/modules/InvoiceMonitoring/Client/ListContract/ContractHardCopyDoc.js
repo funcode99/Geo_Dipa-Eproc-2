@@ -1303,7 +1303,7 @@ function ContractHardCopyDoc(props) {
           >
             Send Notif
           </button>
-          <button
+          {/* <button
             type="button"
             className="btn btn-sm btn-primary mx-1"
             onClick={print}
@@ -1318,7 +1318,7 @@ function ContractHardCopyDoc(props) {
               <i className="fas fa-spinner fa-pulse px-1"></i>
             ) : null}
             Print Kelengkapan Dokumen
-          </button>
+          </button> */}
         </CardFooter>
       </Card>
       <div className="px-5 mx-5 d-none" id="printPerlengkapan">
