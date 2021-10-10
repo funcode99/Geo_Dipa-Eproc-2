@@ -51,7 +51,7 @@ const navLists = [
   { id: "link-bast", label: "BAST" },
 ];
 
-export default function BeritaAcara() {
+export default function BeritaAcara(props) {
   const classes = useStyles();
   const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const [navActive, setNavActive] = React.useState(navLists[0].id);
@@ -104,8 +104,8 @@ export default function BeritaAcara() {
           />
 
           <div className="mt-5">
-            {navActive === "link-bapp" && <BAPP />}
-            {navActive === "link-bast" && <BAST />}
+            {navActive === "link-bapp" && <BAPP {...props} />}
+            {navActive === "link-bast" && <BAST {...props} />}
           </div>
           {/* <React.Fragment>
             <Form className="mt-3">
