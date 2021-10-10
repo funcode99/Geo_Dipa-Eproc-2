@@ -51,3 +51,36 @@ export const formData3 = [
     label: "Quantity Approved",
   },
 ];
+export const form_gr = [
+  {
+    name: "header_tx",
+    label: "Header Text",
+  },
+
+  {
+    name: "post_date",
+    label: "Posting Date",
+    typeInput: "SelectDateInput",
+  },
+
+  {
+    name: "bill_of_lading",
+    label: "Bill of Lading",
+  },
+
+  {
+    name: "ref_doc_no",
+    label: "Ref Doc No",
+    type: "number",
+  },
+
+  {
+    name: "gr_receipt",
+    label: "GR Receipt",
+  },
+
+  {
+    name: "unload_pt",
+    label: "Unload PT",
+  },
+];
