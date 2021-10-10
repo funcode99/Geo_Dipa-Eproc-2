@@ -82,7 +82,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       },
     });
   };
-  const handleSubmitPreview = ({ remarks, action, clean }) => {
+  const handleSubmitPreview = ({ remarks, action, clean, dataEvent = {} }) => {
     let params = {};
     switch (action) {
       case "approve":
@@ -95,9 +95,10 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       default:
         break;
     }
-    console.log(`params`, params);
+    console.log(`params`, params, { ...params, ...dataEvent });
     func.handleApi({
       key: KEYS_TERMIN.p_t_approve_do_doc,
+      // params: { ...params, ...data },
       params,
       url_id: data.id,
       onSuccess: (res) => {

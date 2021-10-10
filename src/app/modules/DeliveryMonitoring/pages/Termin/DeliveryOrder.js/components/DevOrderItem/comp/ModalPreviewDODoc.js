@@ -35,18 +35,19 @@ const ModalPreviewDODoc = ({
     grFormRef.current.handleSubmit();
   };
 
-  const _onSubmit = (data) => {
-    console.log(`data`, remarks, action, data, grFormRef.current);
-    // if (typeof handleSubmit === "function")
-    //   handleSubmit({
-    //     remarks,
-    //     action,
-    //     clean: () => {
-    //       setAction(null);
-    //       setRemarks(false);
-    //       setChecked(false);
-    //     },
-    //   });
+  const _onSubmit = (dataEvent) => {
+    console.log(`dataEvent`, remarks, action, dataEvent, grFormRef.current);
+    if (typeof handleSubmit === "function")
+      handleSubmit({
+        remarks,
+        action,
+        clean: () => {
+          setAction(null);
+          setRemarks(false);
+          setChecked(false);
+        },
+        dataEvent,
+      });
   };
   const _changeAction = (type) => {
     setAction(type);
