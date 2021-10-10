@@ -109,8 +109,12 @@ const TerminPaper = () => {
           {isItemExists && tabActive === 1 && <DeliveryOrder />}
           {!isItemExists && tabActive === 1 && <BeritaAcara />}
           {isItemExists && tabActive === 2 && <BeritaAcara />}
-          {!isItemExists && tabActive === 2 && <FormSAGR />}
-          {isItemExists && tabActive === 3 && <FormSAGR />}
+          {!isItemExists && tabActive === 2 && (
+            <FormSAGR isItemExists={isItemExists} />
+          )}
+          {isItemExists && tabActive === 3 && (
+            <FormSAGR isItemExists={isItemExists} />
+          )}
           {!isItemExists && tabActive === 3 && <SAGRPage />}
           {isItemExists && tabActive === 4 && <SAGRPage />}
         </Container>

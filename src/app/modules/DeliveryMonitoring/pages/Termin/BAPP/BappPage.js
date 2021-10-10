@@ -32,6 +32,7 @@ import {
   getLoading,
 } from "../../../../../../redux/globalReducer";
 import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
+import AlertFormGR from "../DeliveryOrder.js/components/AlertFormGR";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -650,6 +651,7 @@ const BappPage = ({
                     <div className="mt-2">
                       {isClient && (
                         <React.Fragment>
+                          <AlertFormGR />
                           <Button
                             variant="contained"
                             color="secondary"

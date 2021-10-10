@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 import { KEYS_TERMIN } from "../../TerminPageNew/STATIC_DATA";
@@ -126,6 +127,10 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
   // console.log(`dataSA`, dataSA);
 
   const options = { optCost, optGL };
+
+  if (itemJasa.length == 0) {
+    return <NoDataBox text={"Form Service Acceptance not Available"} />;
+  }
 
   return (
     !loadings_sg[keys.fetch_sagr] && (
