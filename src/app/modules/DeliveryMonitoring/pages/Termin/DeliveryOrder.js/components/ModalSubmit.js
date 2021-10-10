@@ -109,6 +109,8 @@ const ModalSubmit = ({
           </TableHead>
           <TableBody>
             {tempOrderItems?.map((item, index) => {
+              console.log("otem_", item);
+              let qtyAvail = parseInt(item?.qty_delivery_available);
               return (
                 <TableRow key={index}>
                   <TableCell>
@@ -123,7 +125,7 @@ const ModalSubmit = ({
                     />
                   </TableCell>
                   <TableCell>{item?.item?.desc}</TableCell>
-                  <TableCell>{item?.qty_avail}</TableCell>
+                  <TableCell>{qtyAvail}</TableCell>
                   <TableCell>
                     <Form.Control
                       type="number"
@@ -131,7 +133,7 @@ const ModalSubmit = ({
                       min={0.1}
                       step={0.1}
                       // max={item?.qty}
-                      disabled={!item.checked ? true : false}
+                      disabled={!item.checked || qtyAvail == 0 ? true : false}
                       defaultValue={item.qty}
                       onChange={(e) => handleChange(e, item, index)}
                     />
