@@ -9,8 +9,14 @@ import { FormattedMessage } from "react-intl";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    marginTop: 21,
-    marginBottom: 21,
+    // marginTop: 21,
+    // marginBottom: 21,
+  },
+  expansionPanelCard: {
+    margin: "0 !important",
+  },
+  expansionPanelHeader: {
+    "border-bottom": "1px solid #ebedf3",
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -57,11 +63,15 @@ export default function ExpansionBox({
 
   return (
     <div className={`${classes.root} ${classCont}`}>
-      <ExpansionPanel defaultExpanded={defaultExpanded}>
+      <ExpansionPanel
+        className={classes.expansionPanelCard}
+        defaultExpanded={defaultExpanded}
+      >
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1c-content"
           id="panel1c-header"
+          className={classes.expansionPanelHeader}
         >
           <div
             className={"d-flex justify-content-between "}

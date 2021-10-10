@@ -8,6 +8,7 @@ import { formatDate } from "../../../../../../../libs/date";
 import apiHelper from "../../../../../../../service/helper/apiHelper";
 import { KEYS_TERMIN } from "../../../TerminPageNew/STATIC_DATA";
 import { TerminPageContext } from "../../../TerminPageNew/TerminPageNew";
+import AlertFormGR from "../AlertFormGR";
 import CardOrderItem from "./comp/CardOrderItem";
 import ModalPreviewDODoc from "./comp/ModalPreviewDODoc";
 import ModalUploadDO from "./comp/ModalUploadDO";
@@ -234,6 +235,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
           </div>
           <Divider />
           <CardContent>
+            <AlertFormGR />
             <FormBuilder
               withSubmit={false}
               initial={values}
