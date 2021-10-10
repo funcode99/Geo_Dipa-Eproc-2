@@ -112,7 +112,7 @@ const Documents = ({
     fetch_api_sg({
       key: keys.list,
       type: "get",
-      url: `/delivery/task/${taskId}`,
+      url: `/delivery/task/${taskId}/document`,
       onSuccess: (res) => {
         if (res.status === true) setContent(res?.data);
       },

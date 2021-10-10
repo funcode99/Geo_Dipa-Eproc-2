@@ -107,6 +107,7 @@ const TableDoc = ({ loading }) => {
       renderRows={({ item, index }) => {
         let el = item;
         let id = index;
+        console.log("otem", item);
         return (
           <RowAccordion
             key={id}
@@ -151,7 +152,7 @@ const TableDoc = ({ loading }) => {
                                 remarks={els?.remarks_status}
                                 url={els?.url}
                                 withFile={true}
-                                approvedBy={els?.users?.username ?? "N/A"}
+                                approvedBy={els?.approved_by?.username ?? "N/A"}
                               />,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
@@ -182,7 +183,7 @@ const TableDoc = ({ loading }) => {
                           remarks={el?.remarks_status}
                           url={el?.url}
                           withFile={true}
-                          approvedBy={el?.users?.username ?? "N/A"}
+                          approvedBy={el?.approved_by?.username ?? "N/A"}
                         />,
                         // el?.percentage && el?.percentage + "%",
                         "-",
