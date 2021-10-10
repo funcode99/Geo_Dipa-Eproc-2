@@ -782,6 +782,7 @@ function Summary({}) {
                                         defaultValue={parseFloat(
                                           service.qty_available
                                         ).toFixed(1)}
+                                        disabled
                                         onChange={(e) =>
                                           addSubmitJasa(
                                             e.target.value,
@@ -971,10 +972,11 @@ function Summary({}) {
                                 width: 80,
                                 flex: "none",
                               }}
+                              disabled
                               min={0.1}
                               step={0.1}
                               max={item.qty_available}
-                              disabled={!item.checked}
+                              // disabled={!item.checked}
                               defaultValue={parseFloat(
                                 item.qty_available
                               ).toFixed(1)}
@@ -1056,7 +1058,8 @@ function Summary({}) {
                                 parseFloat(item.qty) +
                                 parseFloat(item.item.qty_available)
                               ).toFixed(1)}
-                              disabled={!item.checked}
+                              disabled
+                              // disabled={!item.checked}
                               defaultValue={parseFloat(item.qty).toFixed(1)}
                               onChange={(e) =>
                                 addSubmitBarang(
