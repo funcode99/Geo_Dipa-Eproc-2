@@ -236,7 +236,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
           </div>
           <Divider />
           <CardContent>
-            <AlertFormGR />
+            {/* <AlertFormGR /> */}
             <FormBuilder
               withSubmit={false}
               initial={values}
