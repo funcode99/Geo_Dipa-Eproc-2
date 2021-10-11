@@ -1,6 +1,6 @@
 .filter-label {
   display: inline-block;
-  max-width: 120px;
+  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: top;

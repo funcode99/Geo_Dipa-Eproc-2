@@ -84,13 +84,14 @@ const Tables = (props) => {
   const [filterTable, setFilterTable] = React.useState({});
   const [filterSort, setFilterSort] = React.useState({ filter: {}, sort: {} });
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedCollection, setSelectedCollection] = React.useState({});
 
   const requestFilterSort = React.useCallback(
     (updateFilterTable, updateSortTable) => {
       let pagination = Object.assign({}, paginations);
       let filterSorts = filterSort;
       filterSorts.filter = JSON.stringify(
-        updateFilterTable ? updateFilterTable : filterTable
+        updateFilterTable ? updateFilterTable : Object.assign({}, filterTable)
       );
       let sort = {
         name: sortData.name,
@@ -149,29 +150,42 @@ const Tables = (props) => {
     requestFilterSort();
   };
 
-  const updateValueFilter = (property, type) => {
-    let filterTables = filterTable;
-    filterTables["filter-" + property] = document.getElementById(
-      "filter-" + property
-    ).value;
-    if (type === "currency") {
-      filterTables["filter-" + property] = filterTables["filter-" + property]
-        .replace(/[Rp .]/g, "")
-        .replace(/[,]/g, ".");
+  const updateValueFilter = (property, type, collection) => {
+    let filterTables = Object.assign({}, filterTable);
+    console.log("masuk-1");
+    if (type === "collection") {
+      filterTables = { ...filterTables, ...collection };
+      setFilterTable({ ...filterTables });
+      requestFilterSort(filterTables);
+    } else {
+      filterTables["filter-" + property] = document.getElementById(
+        "filter-" + property
+      ).value;
+      if (type === "currency") {
+        filterTables["filter-" + property] = filterTables["filter-" + property]
+          .replace(/[Rp .]/g, "")
+          .replace(/[,]/g, ".");
+      }
+      setFilterTable({ ...filterTables });
+      requestFilterSort(filterTables);
+    }
+  };
+
+  const resetValueFilter = (property, type) => {
+    let filterTables = Object.assign({}, filterTable);
+    console.log("masuk-2");
+    if (type === "collection") {
+      filterTables[property] = [];
+    } else {
+      filterTables[property] = "";
+      document.getElementById(property).value = "";
     }
     setFilterTable({ ...filterTables });
     requestFilterSort();
   };
 
-  const resetValueFilter = (property) => {
-    let filterTables = filterTable;
-    filterTables[property] = "";
-    document.getElementById(property).value = "";
-    setFilterTable({ ...filterTables });
-    requestFilterSort();
-  };
-
   const resetFilter = () => {
+    setSelectedCollection({});
     setFilterTable({});
     document.getElementById("filter-form-all").reset();
     requestFilterSort({});
@@ -189,6 +203,28 @@ const Tables = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleCollection = (e, item, item_) => {
+    var data = Object.assign({}, selectedCollection);
+    if (data["collection-" + item.name]) {
+      if (e.target.checked) {
+        data["collection-" + item.name].push(item_);
+      } else {
+        var idx_ = data["collection-" + item.name].findIndex(
+          (value) => value.label === item_.label
+        );
+        data["collection-" + item.name].splice(idx_, 1);
+      }
+      setSelectedCollection(data);
+      updateValueFilter(item.name.replace(/\s/g, ""), item.filter.type, data);
+    } else {
+      data["collection-" + item.name] = [item_];
+      setSelectedCollection(data);
+      updateValueFilter(item.name.replace(/\s/g, ""), item.filter.type, data);
+    }
+  };
+
+  console.log("selectedCollection", selectedCollection);
   return (
     <React.Fragment>
       <div>
@@ -224,9 +260,9 @@ const Tables = (props) => {
                             id={"filter-span-" + index}
                           >
                             {item.filter.type === "currency" &&
-                              filterTable[
-                                "filter-" + item.name.replace(/\s/g, "")
-                              ]
+                            filterTable[
+                              "filter-" + item.name.replace(/\s/g, "")
+                            ]
                               ? rupiah(
                                   Number(
                                     filterTable[
@@ -234,6 +270,17 @@ const Tables = (props) => {
                                     ]
                                   )
                                 )
+                              : item.filter.type === "collection" &&
+                                filterTable[
+                                  "collection-" + item.name.replace(/\s/g, "")
+                                ]
+                              ? filterTable[
+                                  "collection-" + item.name.replace(/\s/g, "")
+                                ]
+                                  .map(function(elem) {
+                                    return elem.label;
+                                  })
+                                  .join(",")
                               : filterTable[
                                   "filter-" + item.name.replace(/\s/g, "")
                                 ]}
@@ -241,6 +288,9 @@ const Tables = (props) => {
                         </strong>
                         {filterTable[
                           "filter-" + item.name.replace(/\s/g, "")
+                        ] ||
+                        filterTable[
+                          "collection-" + item.name.replace(/\s/g, "")
                         ] ? null : (
                           <span style={{ color: "#777777" }}>
                             <FormattedMessage id="TITLE.ALL" />
@@ -260,7 +310,9 @@ const Tables = (props) => {
                         onClose={handleClose}
                         PaperProps={{
                           style: {
-                            transform: "translateX(0px) translateY(40px)",
+                            transform: `translateX(0px) translateY(${
+                              item.filter.type === "collection" ? "23" : "40"
+                            }px)`,
                           },
                         }}
                       >
@@ -284,55 +336,105 @@ const Tables = (props) => {
                                 prefix={"Rp "}
                                 onValueChange={(e) => {}}
                               />
+                            ) : item.filter.type === "collection" ? (
+                              <div className="mb-3">
+                                <div className="mb-2">
+                                  <span>Includes: </span>
+                                </div>
+                                {item.filter &&
+                                  item.filter.data &&
+                                  item.filter.data.length > 0 &&
+                                  item.filter.data.map((item_, idx) => {
+                                    return (
+                                      <div
+                                        id={`${item.name}-${item.filter.type}-${idx}`}
+                                        key={idx.toString()}
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          className="mx-2"
+                                          style={{ width: 16, height: 16 }}
+                                          checked={
+                                            selectedCollection[
+                                              "collection-" + item.name
+                                            ]
+                                              ? selectedCollection[
+                                                  "collection-" + item.name
+                                                ].findIndex(
+                                                  (value) =>
+                                                    value.label === item_.label
+                                                ) !== -1
+                                              : false
+                                          }
+                                          onChange={(e) => {
+                                            handleCollection(e, item, item_);
+                                          }}
+                                        />
+                                        <span className="align-top">
+                                          {item_.label}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                                {item.filter &&
+                                  item.filter.data &&
+                                  item.filter.data.length === 0 && (
+                                    <div>
+                                      <h6>Insert Data</h6>
+                                    </div>
+                                  )}
+                              </div>
                             ) : (
-                            <input
-                              type={item.filter.type}
-                              className="form-control form-control-sm"
-                              min="0"
-                              name={"filter-" + item.name.replace(/\s/g, "")}
-                              id={"filter-" + item.name.replace(/\s/g, "")}
-                              defaultValue={
-                                filterTable[
-                                  "filter-" + item.name.replace(/\s/g, "")
-                                ] || ""
-                              }
-                              placeholder={intl.formatMessage({
-                                id: "TITLE.ALL",
-                              })}
-                              style={{ width: 200 }}
-                            />
+                              <input
+                                type={item.filter.type}
+                                className="form-control form-control-sm"
+                                min="0"
+                                name={"filter-" + item.name.replace(/\s/g, "")}
+                                id={"filter-" + item.name.replace(/\s/g, "")}
+                                defaultValue={
+                                  filterTable[
+                                    "filter-" + item.name.replace(/\s/g, "")
+                                  ] || ""
+                                }
+                                placeholder={intl.formatMessage({
+                                  id: "TITLE.ALL",
+                                })}
+                                style={{ width: 200 }}
+                              />
                             )}
                           </div>
-                          <div className="d-flex">
-                            <button
-                              type="button"
-                              className="mx-1 float-left btn btn-sm btn-primary"
-                              onClick={() => {
-                                updateValueFilter(
-                                  item.name.replace(/\s/g, ""),
-                                  item.filter.type
-                                );
-                                handleClose();
-                              }}
-                            >
-                              <FormattedMessage id="TITLE.UPDATE" />
-                            </button>
-                            <button
-                              type="button"
-                              className="mx-1 float-right btn btn-sm btn-light d-flex"
-                              onClick={() => {
-                                resetValueFilter(
-                                  "filter-" + item.name.replace(/\s/g, "")
-                                );
-                                handleClose();
-                              }}
-                            >
-                              <i className="fas fa-redo fa-right py-1 mx-1"></i>
-                              <span>
-                                <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
-                              </span>
-                            </button>
-                          </div>
+                          {item.filter.type !== "collection" && (
+                            <div className="d-flex">
+                              <button
+                                type="button"
+                                className="mx-1 float-left btn btn-sm btn-primary"
+                                onClick={() => {
+                                  updateValueFilter(
+                                    item.name.replace(/\s/g, ""),
+                                    item.filter.type
+                                  );
+                                  handleClose();
+                                }}
+                              >
+                                <FormattedMessage id="TITLE.UPDATE" />
+                              </button>
+                              <button
+                                type="button"
+                                className="mx-1 float-right btn btn-sm btn-light d-flex"
+                                onClick={() => {
+                                  resetValueFilter(
+                                    "filter-" + item.name.replace(/\s/g, "")
+                                  );
+                                  handleClose();
+                                }}
+                              >
+                                <i className="fas fa-redo fa-right py-1 mx-1"></i>
+                                <span>
+                                  <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
+                                </span>
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </Menu>
                     </div>

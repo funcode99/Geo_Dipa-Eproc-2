@@ -223,6 +223,7 @@ function ContractInvoicePage(props) {
       term_id: termin,
       penalty: invoiceData?.penalty,
       progress_data: dataProgress,
+      penalty_remark: invoiceData?.penalty_remark
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -628,10 +629,10 @@ function ContractInvoicePage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="upload" className="col-sm-4 col-form-label">
+                <label className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_UPLOAD" />
                 </label>
-                <label htmlFor="upload" className="input-group mb-3 col-sm-8">
+                <label className="input-group mb-3 col-sm-8">
                   <span
                     className={`form-control text-truncate ${classes.textDisabled}`}
                   >
@@ -748,6 +749,34 @@ function ContractInvoicePage(props) {
                       });
                     }}
                   />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="note" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.FINE_DESC" />
+                </label>
+                <div className="col-sm-8">
+                  <textarea
+                    rows="4"
+                    cols=""
+                    className="form-control"
+                    id="note"
+                    disabled={
+                      isSubmit ||
+                      invoiceData?.state === "REJECTED" ||
+                      invoiceData?.state === "APPROVED" ||
+                      invoiceData === null ||
+                      !props.billingStaffStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                    }
+                    onChange={(e) => {
+                      setInvoiceData({
+                        ...invoiceData,
+                        penalty_remark: e.target.value,
+                      });
+                    }}
+                    value={invoiceData?.penalty_remark}
+                  ></textarea>
                 </div>
               </div>
             </div>

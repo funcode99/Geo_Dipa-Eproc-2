@@ -41,6 +41,7 @@ import Select from "react-select";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
 import { SOCKET } from "../../../../../../redux/BaseHost";
+import { API_EPROC } from "../../../../../../redux/BaseHost";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -714,10 +715,10 @@ function ContractTaxPage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="upload" className="col-sm-4 col-form-label">
+                <label className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_UPLOAD" />
                 </label>
-                <label htmlFor="upload" className="input-group mb-3 col-sm-8">
+                <label className="input-group mb-3 col-sm-8">
                   <span
                     className={`form-control text-truncate ${classes.textDisabled}`}
                   >
@@ -734,6 +735,37 @@ function ContractTaxPage(props) {
                       onClick={() => setDialogState(true)}
                     >
                       <i className="fas fa-eye"></i>
+                    </span>
+                  </div>
+                </label>
+              </div>
+              <div className="form-group row">
+                <label className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.BUSINESS_ENTITY" />
+                </label>
+                <label className="input-group mb-3 col-sm-8">
+                  <span
+                    className={`form-control text-truncate ${classes.textDisabled}`}
+                  >
+                    {taxData && taxData?.data
+                      ? taxData?.data.doc_file.file_name
+                      : "Pilih File"}
+                  </span>
+                  <div className="input-group-append pointer">
+                    <span className={`input-group-text ${classes.textHover}`}>
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (taxData && taxData?.data)
+                            window.open(
+                              API_EPROC + "/" + taxData?.data.doc_file.url,
+                              "_blank"
+                            );
+                        }}
+                      >
+                        <i className="fas fa-download"></i>
+                      </a>
                     </span>
                   </div>
                 </label>
