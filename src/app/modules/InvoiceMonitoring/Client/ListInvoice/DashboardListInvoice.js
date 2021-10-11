@@ -216,21 +216,49 @@ function DashboardListInvoice(props) {
       },
       filter: {
         active: true,
-        type: "text",
-      },
+        type: "collection",
+        data: [
+          {
+            value: "SUMMARY",
+            label: "Summary",
     },
     {
-      title: intl.formatMessage({
-        id: "TITLE.STATUS",
-      }),
-      name: "status",
-      order: {
-        active: false,
-        status: false,
+            value: "BILLING_SOFTCOPY",
+            label: "Billing Softcopy",
       },
-      filter: {
-        active: false,
-        type: "text",
+          {
+            value: "SUPPORT_DELIVERABLES_SOFTCOPY",
+            label: "Support & Deliverables Softcopy",
+          },
+          {
+            value: "TAX",
+            label: "Tax",
+          },
+          {
+            value: "HARDCOPY",
+            label: "Hardcopy Document",
+          },
+          {
+            value: "PARK_AP",
+            label: "Park AP",
+          },
+          {
+            value: "PARK_BAYAR",
+            label: "Park Bayar",
+          },
+          {
+            value: "BKB",
+            label: "BKB",
+          },
+          {
+            value: "READY_TO_PAY",
+            label: "Ready To Pay",
+          },
+          {
+            value: "PAID",
+            label: "Paid",
+          },
+        ],
       },
     },
   ];
@@ -323,7 +351,6 @@ function DashboardListInvoice(props) {
                   <TableCell>{item.vendor_name}</TableCell>
                   <TableCell>{item.spt_no}</TableCell>
                   <TableCell>{item.routing_slip}</TableCell>
-                  <TableCell>{item.paid_satus?.toUpperCase()}</TableCell>
                 </TableRow>
               );
             })}
