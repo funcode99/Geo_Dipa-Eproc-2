@@ -399,7 +399,7 @@ function ItemContractRoutingSlip(props) {
                   {slipData?.billing_document_softcopy_date_in && (
                     <tr>
                       <td>4</td>
-                      <td>Verification Process</td>
+                      <td>Tax Process</td>
                       <td>{slipData?.billing_creator?.party?.full_name}</td>
                       <td className="text-center">
                         {window
@@ -493,7 +493,7 @@ function ItemContractRoutingSlip(props) {
                           </td>
                         );
                       })()}
-                      <td>Softcopy Dokumen Tagihan</td>
+                      <td>Tax Verification</td>
                     </tr>
                   )}
                   {slipData?.hardcopy_date_in && (
