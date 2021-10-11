@@ -85,14 +85,13 @@ const Tables = (props) => {
   const [filterSort, setFilterSort] = React.useState({ filter: {}, sort: {} });
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedCollection, setSelectedCollection] = React.useState({});
-  const [selectedCollectionFix, setSelectedCollectionFix] = React.useState({});
 
   const requestFilterSort = React.useCallback(
     (updateFilterTable, updateSortTable) => {
       let pagination = Object.assign({}, paginations);
       let filterSorts = filterSort;
       filterSorts.filter = JSON.stringify(
-        updateFilterTable ? updateFilterTable : filterTable
+        updateFilterTable ? updateFilterTable : Object.assign({}, filterTable)
       );
       let sort = {
         name: sortData.name,
@@ -152,9 +151,10 @@ const Tables = (props) => {
   };
 
   const updateValueFilter = (property, type, collection) => {
-    let filterTables = filterTable;
+    let filterTables = Object.assign({}, filterTable);
+    console.log("masuk-1");
     if (type === "collection") {
-      filterTables = Object.assign({}, filterTables, collection);
+      filterTables = { ...filterTables, ...collection };
       setFilterTable({ ...filterTables });
       requestFilterSort(filterTables);
     } else {
@@ -167,12 +167,13 @@ const Tables = (props) => {
           .replace(/[,]/g, ".");
       }
       setFilterTable({ ...filterTables });
-      requestFilterSort();
+      requestFilterSort(filterTables);
     }
   };
 
   const resetValueFilter = (property, type) => {
-    let filterTables = filterTable;
+    let filterTables = Object.assign({}, filterTable);
+    console.log("masuk-2");
     if (type === "collection") {
       filterTables[property] = [];
     } else {
@@ -184,6 +185,7 @@ const Tables = (props) => {
   };
 
   const resetFilter = () => {
+    setSelectedCollection({});
     setFilterTable({});
     document.getElementById("filter-form-all").reset();
     requestFilterSort({});
@@ -194,10 +196,7 @@ const Tables = (props) => {
     setPaginations({ ...paginations, count: countData || 0 });
   }, [countData]);
 
-  const handleClick = (id, type) => {
-    if (type === "collection") {
-      setSelectedCollection(selectedCollectionFix);
-    }
+  const handleClick = (id) => {
     setAnchorEl(id);
   };
 
@@ -206,7 +205,7 @@ const Tables = (props) => {
   };
 
   const handleCollection = (e, item, item_) => {
-    var data = Object.assign([], selectedCollection);
+    var data = Object.assign({}, selectedCollection);
     if (data["collection-" + item.name]) {
       if (e.target.checked) {
         data["collection-" + item.name].push(item_);
@@ -217,11 +216,15 @@ const Tables = (props) => {
         data["collection-" + item.name].splice(idx_, 1);
       }
       setSelectedCollection(data);
+      updateValueFilter(item.name.replace(/\s/g, ""), item.filter.type, data);
     } else {
       data["collection-" + item.name] = [item_];
       setSelectedCollection(data);
+      updateValueFilter(item.name.replace(/\s/g, ""), item.filter.type, data);
     }
   };
+
+  console.log("selectedCollection", selectedCollection);
   return (
     <React.Fragment>
       <div>
@@ -247,7 +250,7 @@ const Tables = (props) => {
                         aria-expanded="false"
                         id={"sub-filter-" + index}
                         onClick={() => {
-                          handleClick(index, item.filter.type);
+                          handleClick(index);
                         }}
                       >
                         <span>{item.title}:</span>
@@ -374,51 +377,12 @@ const Tables = (props) => {
                                     );
                                   })}
                                 {item.filter &&
-                                item.filter.data &&
-                                item.filter.data.length > 0 ? (
-                                  <div className="d-flex mt-2">
-                                    <button
-                                      type="button"
-                                      className="mx-1 float-left btn btn-sm btn-primary"
-                                      onClick={() => {
-                                        setSelectedCollectionFix(
-                                          selectedCollection
-                                        );
-                                        updateValueFilter(
-                                          item.name.replace(/\s/g, ""),
-                                          item.filter.type,
-                                          selectedCollection
-                                        );
-                                        handleClose();
-                                      }}
-                                    >
-                                      <FormattedMessage id="TITLE.UPDATE" />
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="mx-1 float-right btn btn-sm btn-light d-flex"
-                                      onClick={() => {
-                                        setSelectedCollection({});
-                                        setSelectedCollectionFix({});
-                                        resetValueFilter(
-                                          "collection-" +
-                                            item.name.replace(/\s/g, ""),
-                                          item.filter.type
-                                        );
-                                        handleClose();
-                                      }}
-                                    >
-                                      <i className="fas fa-redo fa-right py-1 mx-1"></i>
-                                      <span>
-                                        <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
-                                      </span>
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <h6>Insert Data</h6>
-                                  </div>
-                                )}
+                                  item.filter.data &&
+                                  item.filter.data.length === 0 && (
+                                    <div>
+                                      <h6>Insert Data</h6>
+                                    </div>
+                                  )}
                               </div>
                             ) : (
                               <input
