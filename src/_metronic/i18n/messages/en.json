@@ -601,5 +601,6 @@
   "TITLE.SEND_EMAIL": "Send Email",
   "SPAN.DAYS": "Days ",
   "SPAN.HOURS": "Hours ",
-  "SPAN.MINUTES": "Minutes "
+  "SPAN.MINUTES": "Minutes ",
+  "TITLE.BUSINESS_ENTITY": "Business entity"
 }
