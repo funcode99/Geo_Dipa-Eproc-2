@@ -63,7 +63,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
         wbs: item.wbsdata,
       })),
     };
-    // console.log(`data`, params, data, dataSA);
+    console.log(`data`, params, data, dataSA);
     fetch_api_sg({
       key: keys.upload_sa,
       type: "post",
@@ -85,7 +85,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
       onSuccess: (res) => {
         // console.log("resp gl_account", res);
         setOptGL(
-          res.data.map((el) => ({ ...el, label: el.name, value: el.code }))
+          res.data.map((el) => ({ ...el, label: el.code, value: el.code }))
         );
       },
     });

@@ -49,7 +49,8 @@ const ServiceAcceptance = ({ data, loading }) => {
           rows={task_sa?.sa_items?.map((el, id) => ({
             no: id + 1,
             service: el?.short_text,
-            qty: el?.actual_qty,
+            // qty: el?.actual_qty, // deprecated
+            qty: el?.quantity,
             uom: el?.base_uom,
             unit_price: rupiah(el?.price_unit),
             net_value: rupiah(el?.net_value),

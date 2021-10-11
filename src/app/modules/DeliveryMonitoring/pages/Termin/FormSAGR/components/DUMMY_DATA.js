@@ -218,7 +218,7 @@ export const validationSchema_sa = object().shape({
 });
 
 export const option_dist_type = [
-  { value: "kosong", label: "Full Payment" },
+  { value: "", label: "Full Payment" },
   { value: "1", label: "Gradual Payment (quantity)" },
   { value: "2", label: "Gradual Payment (percentage)" },
 ];
