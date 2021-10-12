@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
@@ -9,7 +10,7 @@ const GoodReceipt = ({ data, loading }) => {
   const task_gr = data?.task_gr;
   const task_gr_new = data?.task_gr_new;
   console.log(`task_gr`, task_gr, data);
-  if (task_gr == null) {
+  if (_.isEmpty(task_gr_new)) {
     return <NoDataBox text={"Good Receipt not Available"} />;
   }
 
