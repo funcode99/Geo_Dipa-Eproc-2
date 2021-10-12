@@ -95,11 +95,19 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       default:
         break;
     }
+
+    const newParams = {
+      ...params,
+      ...dataEvent,
+      header_txt: dataEvent?.header_tx,
+      posting_date: dataEvent?.post_date,
+    };
+
     console.log(`params`, params, { ...params, ...dataEvent });
     func.handleApi({
       key: KEYS_TERMIN.p_t_approve_do_doc,
-      params: { ...params, ...dataEvent },
-      // params,
+      // params: { ...params, ...dataEvent },
+      params: newParams,
       url_id: data.id,
       onSuccess: (res) => {
         previewRef.current.close();
