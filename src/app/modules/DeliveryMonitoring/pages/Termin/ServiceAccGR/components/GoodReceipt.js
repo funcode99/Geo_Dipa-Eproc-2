@@ -1,19 +1,8 @@
 import React from "react";
-// import FieldBuilder from "../../../../../../components/builder/FieldBuilder";
-import { tblHeadGRItems, tableHeader2 } from "../fieldData";
-// import { Row, Col } from "react-bootstrap";
-// import FormBuilder from "../../../../../../components/builder/FormBuilder";
-import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
-// import { TableRow } from "@material-ui/core";
-// import { TableCell } from "@material-ui/core";
-import {
-  Card,
-  CardBody,
-} from "../../../../../../../_metronic/_partials/controls";
-import RowAdditional from "./RowAdditional";
-import { connect } from "react-redux";
-import DetailGR from "./DetailGR";
 import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
+import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
+import { tblHeadGRItems } from "../fieldData";
+import DetailGR from "./DetailGR";
 import GRAccord from "./GRAccord";
 
 const GoodReceipt = ({ data, loading }) => {
