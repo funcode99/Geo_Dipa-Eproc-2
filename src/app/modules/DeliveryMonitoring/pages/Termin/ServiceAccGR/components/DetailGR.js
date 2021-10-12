@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DetailGR = ({ data, type, fullData }) => {
+const DetailGR = ({ data, type, fullData, item }) => {
   const { client, document, vendor, contract } = detailGR;
   const classes = useStyles();
   let dataSA = {};
@@ -239,7 +239,8 @@ const DetailGR = ({ data, type, fullData }) => {
       { label: "PO Number", value: fullData?.task_gr?.po_number || "-" },
       {
         label: "Movement Type",
-        value: fullData?.task_gr?.gr_items?.[0]?.move_type || "-",
+        // value: fullData?.task_gr?.gr_items?.[0]?.move_type || "-",
+        value: item?.type || "-",
       },
       {
         label: "Purchasing Group",

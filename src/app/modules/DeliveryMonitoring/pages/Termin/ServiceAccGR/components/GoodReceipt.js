@@ -18,7 +18,7 @@ const GoodReceipt = ({ data, loading }) => {
       {task_gr_new.map((els, id) => (
         <GRAccord key={id} label={`GR ${els.type}`}>
           <div>
-            <DetailGR data={els?.gr_header} fullData={data} />
+            <DetailGR data={els?.gr_header} item={els} fullData={data} />
             <TablePaginationCustom
               headerRows={tblHeadGRItems}
               // width={1210}
