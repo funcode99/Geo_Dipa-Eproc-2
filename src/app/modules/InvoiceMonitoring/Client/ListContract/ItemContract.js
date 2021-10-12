@@ -11,6 +11,7 @@ import ItemContractBKB from "./ItemContractBKB";
 import ItemContractRoutingSlip from "./ItemContractRoutingSlip";
 import ItemContractFormVerification from "./ItemContractFormVerification";
 import ContractHardCopyDoc from "./ContractHardCopyDoc";
+import ItemContractPaid from "./ItemContractPaid";
 import {
   Dialog,
   DialogActions,
@@ -108,6 +109,16 @@ const TabLists = [
     icon: (
       <i
         className="fas fa-sticky-note mb-0 mr-2"
+        style={{ color: "inherit" }}
+      ></i>
+    ),
+  },
+  {
+    id: "paid",
+    label: "Paid Document",
+    icon: (
+      <i
+        className="fas fa-file-invoice-dollar mb-0 mr-2"
         style={{ color: "inherit" }}
       ></i>
     ),
@@ -542,6 +553,16 @@ const ItemContract = (props) => {
           {tabActive === 5 && (
             <ItemContractRoutingSlip
               {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+              dataProgress={dataProgress}
+              setDataProgress={setDataProgress}
+            />
+          )}
+          {tabActive === 6 && (
+            <ItemContractPaid
+              {...props}
+              terminName={data.termin_name || ""}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
               dataProgress={dataProgress}

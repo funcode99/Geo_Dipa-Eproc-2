@@ -190,7 +190,6 @@ function ContractTaxPage(props) {
       for (var key in values) {
         data.append(key, values[key]);
       }
-      console.log(data)
       if (taxUpdate) {
         updateTax(taxId, data)
           .then((response) => {

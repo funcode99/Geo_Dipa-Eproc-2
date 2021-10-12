@@ -611,10 +611,10 @@ function ContractReceiptPage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="upload" className="col-sm-4 col-form-label">
+                <label className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.RECEIPT_DOCUMENT.RECEIPT_UPLOAD" />
                 </label>
-                <label htmlFor="upload" className="input-group mb-3 col-sm-8">
+                <label className="input-group mb-3 col-sm-8">
                   <span
                     className={`form-control text-truncate ${classes.textDisabled}`}
                   >

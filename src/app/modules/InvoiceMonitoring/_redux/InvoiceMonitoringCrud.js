@@ -411,3 +411,9 @@ export async function getAllDataInvoiceDashboard(
     `invoice/get_dashboard/${plant}/${period}/${date_start}/${date_finish}`
   );
 }
+export async function getTerminPaid(id) {
+  return axios.get(`invoice/get_invoice_paid/${id}`);
+}
+export async function createTerminPaid(data) {
+  return axios.post(`invoice/create_invoice_paid/`, data);
+}
