@@ -4,7 +4,7 @@ import RowAdditional from "./RowAdditional";
 
 const getSubTotal = (data) => {
   let subTotal = 0;
-  data.forEach((el) => (subTotal += el.net_value));
+  data?.forEach((el) => (subTotal += el.net_value));
   return subTotal;
 };
 
