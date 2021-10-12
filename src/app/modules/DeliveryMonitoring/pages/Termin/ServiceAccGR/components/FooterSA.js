@@ -1,8 +1,10 @@
+import _ from "lodash";
 import React from "react";
 import { rupiah } from "../../../../../../libs/currency";
 import RowAdditional from "./RowAdditional";
 
 const getSubTotal = (data) => {
+  if (_.isEmpty(data)) return 0;
   let subTotal = data.reduce((acc, el, id) => {
     return acc + parseInt(el?.net_value ?? 0);
   }, 0);
@@ -11,6 +13,7 @@ const getSubTotal = (data) => {
 };
 
 const getTotal = (subTotal) => {
+  if (_.isEmpty(subTotal)) return 0;
   let ppn = parseFloat(10 / 100);
   let extra = parseFloat(subTotal * ppn);
   return parseFloat(subTotal + extra);
