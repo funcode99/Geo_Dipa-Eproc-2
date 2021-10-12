@@ -98,8 +98,8 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
     console.log(`params`, params, { ...params, ...dataEvent });
     func.handleApi({
       key: KEYS_TERMIN.p_t_approve_do_doc,
-      // params: { ...params, ...data },
-      params,
+      params: { ...params, ...data },
+      // params,
       url_id: data.id,
       onSuccess: (res) => {
         previewRef.current.close();
