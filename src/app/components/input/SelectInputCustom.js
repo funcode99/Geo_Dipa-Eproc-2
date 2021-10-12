@@ -63,13 +63,14 @@ const SelectInputCustom = ({
     <div {...contProps}>
       <Select
         // isMulti
-        value={"optionSelected"}
+        // value={"optionSelected"}
         // onChange={(e) => handleSelectChange(e)}
         options={listOptions?.[name]}
         formatGroupLabel={formatGroupLabel}
         menuPosition={"fixed"}
         isDisabled={disabled}
         {...other}
+        // value={1}
       />
     </div>
   );

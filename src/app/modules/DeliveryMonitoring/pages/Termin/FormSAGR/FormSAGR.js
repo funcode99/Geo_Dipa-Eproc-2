@@ -26,7 +26,7 @@ const FormSAGR = (props) => {
       type: "get",
       url: `delivery/task-sa-gr/${task_id}`,
       onSuccess: (res) => {
-        console.log(`res`, res);
+        console.log(`res sagr`, res);
         setDataSAGR(res.data);
       },
     });

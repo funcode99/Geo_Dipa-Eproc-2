@@ -42,7 +42,7 @@ const RowTableSA = ({ item, index }) => {
   const _open = () => {
     wbsRef.current.open();
   };
-  console.log(`readOnly`, readOnly);
+  console.log(`readOnly`, readOnly, item);
   // console.log(`data row`, formikRef.current);
   const _handleSelected = (data) => {
     // console.log(`data`, data);
@@ -67,6 +67,17 @@ const RowTableSA = ({ item, index }) => {
     // formikRef.current.validateForm();
   }, []);
 
+  const initialValue = React.useMemo(
+    () => ({
+      ...item,
+      dist_type: item?.dist_type,
+      // wbsdata:
+      gl_account: { value: item?.gl_account, label: item?.gl_account },
+      cost_center: { value: item?.costcenter, label: item?.costcenter },
+    }),
+    [item]
+  );
+
   return (
     <React.Fragment key={index}>
       <ModalAddWBS
@@ -76,7 +87,7 @@ const RowTableSA = ({ item, index }) => {
       />
       <Formik
         innerRef={formikRef}
-        initialValues={item}
+        initialValues={initialValue}
         // onSubmit={_handleSubmit}
         // validateOnMount
         validateOnChange={false}
@@ -117,6 +128,7 @@ const RowTableSA = ({ item, index }) => {
                 noLabel={true}
                 ChildrenProps={{
                   onOpen: _open,
+                  defaultValue: initialValue.wbs,
                 }}
               />
               {/* )} */}
