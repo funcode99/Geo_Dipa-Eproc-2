@@ -3,8 +3,10 @@ import { rupiah } from "../../../../../../libs/currency";
 import RowAdditional from "./RowAdditional";
 
 const getSubTotal = (data) => {
-  let subTotal = 0;
-  data.forEach((el) => (subTotal += el.net_value));
+  let subTotal = data.reduce((acc, el, id) => {
+    return acc + parseInt(el?.net_value ?? 0);
+  }, 0);
+  // data.forEach((el) => (subTotal += el.net_value));
   return subTotal;
 };
 
@@ -15,6 +17,7 @@ const getTotal = (subTotal) => {
 };
 
 const FooterSA = ({ data }) => {
+  // console.log(`data task_sa`, data);
   const subTotal = getSubTotal(data);
   const total = getTotal(subTotal);
 

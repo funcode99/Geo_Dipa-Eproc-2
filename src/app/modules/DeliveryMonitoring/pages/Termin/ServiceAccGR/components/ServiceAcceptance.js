@@ -26,7 +26,7 @@ import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 const ServiceAcceptance = ({ data, loading }) => {
   const task_sa = data?.task_sa;
   // const { sa_header, sa_items } = task_sa;
-  console.log(`task_sa`, task_sa);
+  // console.log(`task_sa`, task_sa);
 
   if (task_sa == null) {
     return <NoDataBox text={"Service Acceptance not Available"} />;
@@ -52,7 +52,7 @@ const ServiceAcceptance = ({ data, loading }) => {
             // qty: el?.actual_qty, // deprecated
             qty: el?.quantity,
             uom: el?.base_uom,
-            unit_price: rupiah(el?.price_unit),
+            unit_price: rupiah(el?.gr_price),
             net_value: rupiah(el?.net_value),
           }))}
           footerComponent={<FooterSA data={task_sa?.sa_items} />}

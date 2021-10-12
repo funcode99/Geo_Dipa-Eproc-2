@@ -430,7 +430,8 @@ const DeliveryOrder = ({
               <StatusRemarks
                 status={item?.approve_status?.name}
                 remarks={item?.reject_text}
-                approvedBy={"N/A"}
+                // approvedBy={item?.approved_by?.username || "N/A"}
+                approvedBy={item?.approved_by?.party?.full_name || "N/A"}
               />
             ),
             history: item?.task_delivery_histories,
