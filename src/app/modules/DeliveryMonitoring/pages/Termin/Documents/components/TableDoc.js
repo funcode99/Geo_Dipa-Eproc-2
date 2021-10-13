@@ -107,7 +107,7 @@ const TableDoc = ({ loading }) => {
       renderRows={({ item, index }) => {
         let el = item;
         let id = index;
-        console.log("otem", item);
+        // console.log("otem", item);
         return (
           <RowAccordion
             key={id}

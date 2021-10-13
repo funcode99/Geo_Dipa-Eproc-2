@@ -41,6 +41,7 @@ const theadItems = [
   { id: "due-date", label: "Due Date" },
   { id: "qty", label: "Qty" },
   { id: "qty_avail", label: "Qty Available" },
+  { id: "qty_selected", label: "Qty Selected" },
   { id: "uom", label: "Uom" },
   { id: "net-value", label: "Net Value" },
   // { id: 'wbs', label: 'WBS' },
@@ -694,6 +695,8 @@ function Summary({}) {
               withSearch={false}
               withPagination={false}
               renderRows={({ item, index }) => {
+                console.log("otem", item);
+
                 return (
                   <React.Fragment key={item.id}>
                     <TableRow hover onClick={() => handleExpand("e", item.id)}>
@@ -762,6 +765,9 @@ function Summary({}) {
                                   {/* 31/01/2021 */}
                                 </TableCell>
                                 <TableCell>{service?.quantity}</TableCell>
+                                <TableCell>
+                                  -{/* {service?.qty_available} */}
+                                </TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
                                   {isClient ? (
@@ -847,6 +853,9 @@ function Summary({}) {
                                   {/* 31/01/2021 */}
                                 </TableCell>
                                 <TableCell>{service?.qty}</TableCell>
+                                <TableCell>
+                                  -{/* {service?.service?.qty_available} */}
+                                </TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
                                   {isClient ? (
@@ -927,6 +936,7 @@ function Summary({}) {
               withPagination={true}
               renderRows={({ item, index }) => {
                 // Check if already submit
+                // console.log("otem", item);
                 if (item.item === undefined) {
                   return (
                     <TableRow
@@ -962,6 +972,9 @@ function Summary({}) {
                         {/* 31/01/2021 */}
                       </TableCell>
                       <TableCell className="align-middle">{item.qty}</TableCell>
+                      <TableCell className="align-middle">
+                        {item.qty_available}
+                      </TableCell>
                       <TableCell className="align-middle">
                         {isClient ? (
                           <React.Fragment>
@@ -1041,6 +1054,9 @@ function Summary({}) {
                       </TableCell>
                       <TableCell className="align-middle">
                         {item.item.qty}
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        {item.item.qty_available}
                       </TableCell>
                       <TableCell className="align-middle">
                         {isClient ? (
