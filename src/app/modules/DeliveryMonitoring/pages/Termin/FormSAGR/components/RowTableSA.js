@@ -84,6 +84,8 @@ const RowTableSA = ({ item, index }) => {
         innerRef={wbsRef}
         onSelected={_handleSelected}
         onBlur={_handleBlur}
+        data={item?.wbsdata}
+        dist_value={formikRef?.current?.values?.dist_type}
       />
       <Formik
         innerRef={formikRef}
