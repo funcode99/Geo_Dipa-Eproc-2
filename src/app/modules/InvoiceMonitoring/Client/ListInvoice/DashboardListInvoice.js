@@ -1,6 +1,6 @@
 import React, {
   useState,
-  // useEffect,
+  useLayoutEffect,
   // useCallback
 } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
 import { rupiah } from "../../../../libs/currency";
 import * as reducer from "../../_redux/InvoiceMonitoringSlice";
+import { useSubheader } from "../../../../../_metronic/layout";
 
 function DashboardListInvoice(props) {
   const user_id = useSelector(
@@ -41,6 +42,18 @@ function DashboardListInvoice(props) {
     (state) => state.invoiceMonitoring.tabInvoice,
     shallowEqual
   );
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/invoice_monitoring/invoice_document`,
+        title: intl.formatMessage({
+          id: "MENU.INVOICE_MONITORING.INVOICE_DOCUMENT",
+        }),
+      },
+    ]);
+  }, []);
 
   const headerTable = [
     {

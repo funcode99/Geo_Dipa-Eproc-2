@@ -945,13 +945,11 @@ function ContractSprPage(props) {
               {!sppData?.bank_refference && (
                 <div className="form-group row">
                   <label
-                    htmlFor="upload_bank"
                     className="col-sm-4 col-form-label"
                   >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_UPLOAD" />
                   </label>
                   <label
-                    htmlFor="upload_bank"
                     className="input-group mb-3 col-sm-8 pointer"
                   >
                     <span
