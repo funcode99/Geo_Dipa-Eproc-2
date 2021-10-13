@@ -8,18 +8,18 @@ import {
   CardFooter,
 } from "../../../../../_metronic/_partials/controls";
 import {
-  getTerminPaid, createTerminPaid, getContractAuthority
+  getTerminPaid,
+  createTerminPaid,
+  getContractAuthority,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import {
-  getRolesAcceptanceTax
-} from "../../../Master/service/MasterCrud";
+import { getRolesAcceptanceTax } from "../../../Master/service/MasterCrud";
 
 function ItemContractPaid(props) {
-  const { intl } = props
+  const { intl, dataProgress } = props;
 
   const dataUser = useSelector((state) => state.auth.user.data);
   let monitoring_role = dataUser.monitoring_role
@@ -43,25 +43,26 @@ function ItemContractPaid(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
 
+  const statusPaidNoStarted = dataProgress?.filter(
+    (row) => row.ident_name === "SLIP" && row.status === "COMPLETE"
+  );
   const initialValues = {
     paid_date: "",
   };
 
   const PaymentSchema = Yup.object().shape({
-    paid_date: Yup.date()
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      ),
-  })
+    paid_date: Yup.date().required(
+      intl.formatMessage({
+        id: "AUTH.VALIDATION.REQUIRED_FIELD",
+      })
+    ),
+  });
 
   const formik = useFormik({
     initialValues,
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       // setLoading(true);
-
     },
   });
 
@@ -77,8 +78,8 @@ function ItemContractPaid(props) {
     }
     setData({
       ...data,
-      file: e.currentTarget.files[0]
-    })
+      file: e.currentTarget.files[0],
+    });
   };
 
   const handleSubmit = () => {
@@ -105,11 +106,7 @@ function ItemContractPaid(props) {
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
-  }, [
-    contract_id,
-    intl,
-    setToast,
-  ]);
+  }, [contract_id, intl, setToast]);
 
   const getContractAuthorityData = useCallback(() => {
     getContractAuthority(termin)
@@ -118,7 +115,11 @@ function ItemContractPaid(props) {
           getRolesAcceptanceTax(response["data"]["data"]["authority"]).then(
             (responseRoles) => {
               responseRoles["data"]["data"].map((item, index) => {
-                if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+                if (
+                  monitoring_role.findIndex(
+                    (element) => element === item.name
+                  ) >= 0
+                ) {
                   setTaxStaffStatus(true);
                 }
               });
@@ -133,6 +134,7 @@ function ItemContractPaid(props) {
 
   useEffect(getContractData, []);
   useEffect(getContractAuthorityData, []);
+  console.log("dataProgress", dataProgress);
 
   return (
     <React.Fragment>
@@ -161,7 +163,10 @@ function ItemContractPaid(props) {
                   </div>
                 </div>
                 <div className="form-group row">
-                  <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                  <label
+                    htmlFor="priceStep1"
+                    className="col-sm-4 col-form-label"
+                  >
                     <FormattedMessage id="TITLE.TERMIN" />
                   </label>
                   <div className="col-sm-8">
@@ -192,7 +197,10 @@ function ItemContractPaid(props) {
                   </div>
                 </div>
                 <div className="form-group row">
-                  <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                  <label
+                    htmlFor="priceStep1"
+                    className="col-sm-4 col-form-label"
+                  >
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT" />
                   </label>
                   <div className="col-sm-8">
@@ -299,9 +307,7 @@ function ItemContractPaid(props) {
                         <i className="fas fa-file-upload"></i>
                       </span>
                     </div>
-                    <span
-                      className={`form-control text-truncate`}
-                    >
+                    <span className={`form-control text-truncate`}>
                       {uploadFilename}
                     </span>
                   </label>
@@ -328,7 +334,8 @@ function ItemContractPaid(props) {
               disabled={
                 loading ||
                 (formik.touched && !formik.isValid) ||
-                !taxStaffStatus
+                !taxStaffStatus ||
+                statusPaidNoStarted.length === 0
               }
             >
               Simpan
