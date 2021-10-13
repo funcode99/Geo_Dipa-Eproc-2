@@ -16,7 +16,8 @@ import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { getRolesAcceptanceTax } from "../../../Master/service/MasterCrud";
+import { getRolesParkBYR } from "../../../Master/service/MasterCrud";
+import { DEV_NODE } from "../../../../../redux/BaseHost";
 
 function ItemContractPaid(props) {
   const { intl, dataProgress } = props;
@@ -48,6 +49,7 @@ function ItemContractPaid(props) {
   );
   const initialValues = {
     paid_date: "",
+    term_id: termin,
   };
 
   const PaymentSchema = Yup.object().shape({
@@ -62,7 +64,20 @@ function ItemContractPaid(props) {
     initialValues,
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
-      // setLoading(true);
+      setLoading(true);
+      var data_new = new FormData();
+      for (var key in values) {
+        data_new.append(key, values[key]);
+      }
+      createTerminPaid(data_new)
+        .then((response) => {
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+          setLoading(false);
+        });
     },
   });
 
@@ -76,10 +91,7 @@ function ItemContractPaid(props) {
         })
       );
     }
-    setData({
-      ...data,
-      file: e.currentTarget.files[0],
-    });
+    formik.setFieldValue("file", e.currentTarget.files[0]);
   };
 
   const handleSubmit = () => {
@@ -102,6 +114,10 @@ function ItemContractPaid(props) {
     getTerminPaid(termin)
       .then((response) => {
         setContractData(response.data.data);
+        if (response.data.data?.paid_date) {
+          formik.setFieldValue("paid_date", response.data.data.paid_date);
+          formik.setTouched({ ...formik.touched, paid_date: true });
+        }
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -112,7 +128,7 @@ function ItemContractPaid(props) {
     getContractAuthority(termin)
       .then((response) => {
         if (response["data"]["data"]) {
-          getRolesAcceptanceTax(response["data"]["data"]["authority"]).then(
+          getRolesParkBYR(response["data"]["data"]["authority"]).then(
             (responseRoles) => {
               responseRoles["data"]["data"].map((item, index) => {
                 if (
@@ -134,7 +150,12 @@ function ItemContractPaid(props) {
 
   useEffect(getContractData, []);
   useEffect(getContractAuthorityData, []);
-  console.log("dataProgress", dataProgress);
+
+  const openFile = () => {
+    if (contractData.folder) {
+      window.open(DEV_NODE + "/" + contractData.folder, "_blank");
+    }
+  };
 
   return (
     <React.Fragment>
@@ -285,6 +306,7 @@ function ItemContractPaid(props) {
                       id="dateInvoice"
                       name="paid_date"
                       {...formik.getFieldProps("paid_date")}
+                      disabled={contractData?.paid_date}
                     />
                   </div>
                   {formik.touched.paid_date && formik.errors.paid_date ? (
@@ -303,12 +325,15 @@ function ItemContractPaid(props) {
                     className={`input-group mb-3 col-sm-8`}
                   >
                     <div className="input-group-prepend">
-                      <span className="input-group-text">
+                      <span
+                        className="input-group-text cursor-pointer"
+                        onClick={openFile}
+                      >
                         <i className="fas fa-file-upload"></i>
                       </span>
                     </div>
                     <span className={`form-control text-truncate`}>
-                      {uploadFilename}
+                      {contractData?.file ? contractData.file : uploadFilename}
                     </span>
                   </label>
                   {/* {formik.touched.file && formik.errors.file ? (
@@ -335,7 +360,8 @@ function ItemContractPaid(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 !taxStaffStatus ||
-                statusPaidNoStarted.length === 0
+                statusPaidNoStarted == 0 ||
+                contractData?.file
               }
             >
               Simpan

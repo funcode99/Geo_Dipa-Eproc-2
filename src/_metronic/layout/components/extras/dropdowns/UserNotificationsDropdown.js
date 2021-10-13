@@ -11,6 +11,9 @@ import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
 import { Link } from "react-router-dom";
 import Badge from "@material-ui/core/Badge";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect, shallowEqual, useSelector } from "react-redux";
+import * as reducer from "../../../../../app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringSlice";
+import { injectIntl } from "react-intl";
 
 const perfectScrollbarOptions = {
   wheelSpeed: 2,
@@ -24,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function UserNotificationsDropdown(props) {
+function UserNotificationsDropdown(props) {
   const bgImage = toAbsoluteUrl("/media/misc/bg-1.jpg");
   const classes = useStyles();
   const uiService = useHtmlClassService();
@@ -35,6 +38,10 @@ export function UserNotificationsDropdown(props) {
         "offcanvas",
     };
   }, [uiService]);
+  let tabInvoice = useSelector(
+    (state) => state.invoiceMonitoring.tabInvoice,
+    shallowEqual
+  );
 
   return (
     <>
@@ -125,6 +132,11 @@ export function UserNotificationsDropdown(props) {
                           }
                           className="navi-item"
                           key={index.toString()}
+                          onClick={() => {
+                            tabInvoice.tab = Number(item.status_todo);
+                            tabInvoice.tabInvoice = 0;
+                            props.set_data_tab_invaoice(tabInvoice);
+                          }}
                         >
                           <div className="navi-link">
                             <div className="navi-icon mr-2">
@@ -341,3 +353,7 @@ export function UserNotificationsDropdown(props) {
     </>
   );
 }
+
+export default injectIntl(
+  connect(null, reducer.actions)(UserNotificationsDropdown)
+);
