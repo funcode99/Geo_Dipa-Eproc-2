@@ -156,6 +156,10 @@ const mapState = (state) => {
       loadings: {
         [KEYS_TERMIN.f_termin]: getLoading(state, KEYS_TERMIN.f_termin),
         [KEYS_TERMIN.f_sa_gr]: getLoading(state, KEYS_TERMIN.f_sa_gr),
+        [KEYS_TERMIN.p_t_approve_do_doc]: getLoading(
+          state,
+          KEYS_TERMIN.p_t_approve_do_doc
+        ),
         [KEYS_TERMIN.p_t_upload_do]: getLoading(
           state,
           KEYS_TERMIN.p_t_upload_do
