@@ -62,7 +62,21 @@ function ItemContractPaid(props) {
     initialValues,
     validationSchema: PaymentSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
-      // setLoading(true);
+      setLoading(true);
+      var data_new = new FormData();
+      for (var key in values) {
+        data_new.append(key, values[key]);
+      }
+      createTerminPaid(data_new)
+        .then((response) => {
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+          setLoading(false);
+        });
+
     },
   });
 
@@ -76,10 +90,9 @@ function ItemContractPaid(props) {
         })
       );
     }
-    setData({
-      ...data,
-      file: e.currentTarget.files[0],
-    });
+    formik.setFieldValue(
+      "file", e.currentTarget.files[0]
+    )
   };
 
   const handleSubmit = () => {
