@@ -9,13 +9,15 @@ import useToast from "../../../../app/components/toast";
 import Skeleton from "@material-ui/lab/Skeleton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { Link } from "react-router-dom";
+import * as reducer from "../../../../app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringSlice";
 
 const perfectScrollbarOptions = {
   wheelSpeed: 2,
   wheelPropagation: false,
 };
 
-function ListsWidget4({ className, intl }) {
+function ListsWidget4(props) {
+  const { className, intl } = props;
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
     shallowEqual
@@ -23,6 +25,10 @@ function ListsWidget4({ className, intl }) {
   const [Toast, setToast] = useToast();
   const [dataTodo, setDataTodo] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  let tabInvoice = useSelector(
+    (state) => state.invoiceMonitoring.tabInvoice,
+    shallowEqual
+  );
 
   const callApiTodo = () => {
     setLoading(true);
@@ -128,6 +134,11 @@ function ListsWidget4({ className, intl }) {
                           item.term_id
                         }
                         className="text-dark-75 text-hover-primary font-weight-bold font-size-sm mb-1"
+                        onClick={() => {
+                          tabInvoice.tab = item.menu_tab || 0;
+                          tabInvoice.tabInvoice = item.sub_menu_tab || 0;
+                          props.set_data_tab_invaoice(tabInvoice);
+                        }}
                       >
                         {item.todo_name}
                       </Link>
@@ -226,7 +237,7 @@ function ListsWidget4({ className, intl }) {
     </>
   );
 }
-export default injectIntl(connect(null, null)(ListsWidget4));
+export default injectIntl(connect(null, reducer.actions)(ListsWidget4));
 
 const ItemDropdown = ({ item }) => {
   return (

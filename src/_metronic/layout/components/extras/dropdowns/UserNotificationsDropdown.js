@@ -133,8 +133,8 @@ function UserNotificationsDropdown(props) {
                           className="navi-item"
                           key={index.toString()}
                           onClick={() => {
-                            tabInvoice.tab = Number(item.status_todo);
-                            tabInvoice.tabInvoice = 0;
+                            tabInvoice.tab = item.menu_tab || 0;
+                            tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                             props.set_data_tab_invaoice(tabInvoice);
                           }}
                         >
