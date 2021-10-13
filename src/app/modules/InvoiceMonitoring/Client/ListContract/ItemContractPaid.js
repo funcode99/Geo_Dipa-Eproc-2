@@ -8,10 +8,15 @@ import {
   CardFooter,
 } from "../../../../../_metronic/_partials/controls";
 import {
-  getTerminPaid, createTerminPaid
+  getTerminPaid, createTerminPaid, getContractAuthority
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import {
+  getRolesAcceptanceTax
+} from "../../../Master/service/MasterCrud";
 
 function ItemContractPaid(props) {
   const { intl } = props
@@ -28,6 +33,7 @@ function ItemContractPaid(props) {
     })
   );
   const [data, setData] = useState({});
+  const [taxStaffStatus, setTaxStaffStatus] = useState(false);
 
   const [Toast, setToast] = useToast();
   const user_id = useSelector(
@@ -36,6 +42,28 @@ function ItemContractPaid(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
+
+  const initialValues = {
+    paid_date: "",
+  };
+
+  const PaymentSchema = Yup.object().shape({
+    paid_date: Yup.date()
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      ),
+  })
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema: PaymentSchema,
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
+      // setLoading(true);
+
+    },
+  });
 
   const handleUpload = (e) => {
     if (e.currentTarget.files.length) {
@@ -83,203 +111,236 @@ function ItemContractPaid(props) {
     setToast,
   ]);
 
+  const getContractAuthorityData = useCallback(() => {
+    getContractAuthority(termin)
+      .then((response) => {
+        if (response["data"]["data"]) {
+          getRolesAcceptanceTax(response["data"]["data"]["authority"]).then(
+            (responseRoles) => {
+              responseRoles["data"]["data"].map((item, index) => {
+                if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
+                  setTaxStaffStatus(true);
+                }
+              });
+            }
+          );
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(getContractData, []);
+  useEffect(getContractAuthorityData, []);
 
   return (
     <React.Fragment>
       <Toast />
       <Card>
-        <CardBody>
-          <div className="row">
-            <div className="col-md-6">
-              <div className="form-group row">
-                <label
-                  htmlFor="priceContract"
-                  className="col-sm-4 col-form-label"
-                >
-                  {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" /> */}
-                  Nomor BKB
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceContract"
-                    defaultValue={contractData?.bkb_number}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
-                  <FormattedMessage id="TITLE.TERMIN" />
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceStep1"
-                    defaultValue={props.terminName}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="priceContract"
-                  className="col-sm-4 col-form-label"
-                >
-                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" />
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceContract"
-                    value={rupiah(contractData?.total_amount || 0)}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
-                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT" />
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceStep1"
-                    value={rupiah(contractData?.termin_value || 0)}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="priceContract"
-                  className="col-sm-4 col-form-label"
-                >
-                  {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" /> */}
-                  Harga Bersih Termin
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceContract"
-                    value={rupiah(contractData?.termin_net_value || 0)}
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="form-group row">
-                <label
-                  htmlFor="priceContract"
-                  className="col-sm-4 col-form-label"
-                >
-                  {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" /> */}
-                  Denda Termin
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceContract"
-                    value={rupiah(contractData?.penalty || 0)}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="priceContract"
-                  className="col-sm-4 col-form-label"
-                >
-                  {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" /> */}
-                  Pajak Termin
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="priceContract"
-                    value={rupiah(contractData?.tax_value || 0)}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="dateInvoice"
-                  className="col-sm-4 col-form-label"
-                >
-                  {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" /> */}
-                  Tanggal Bukti Bayar
-                  <span className="text-danger">*</span>
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="dateInvoice"
-                    value={data?.paid_date}
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label htmlFor="upload" className="col-sm-4 col-form-label">
-                  {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_UPLOAD" /> */}
-                  Upload Bukti Bayar
-                </label>
-                <label
-                  htmlFor="upload"
-                  className={`input-group mb-3 col-sm-8`}
-                >
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">
-                      <i className="fas fa-file-upload"></i>
-                    </span>
-                  </div>
-                  <span
-                    className={`form-control text-truncate`}
+        <form autoComplete="off" onSubmit={formik.handleSubmit}>
+          <CardBody>
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group row">
+                  <label
+                    htmlFor="priceContract"
+                    className="col-sm-4 col-form-label"
                   >
-                    {uploadFilename}
-                  </span>
-                </label>
-                {/* {formik.touched.file && formik.errors.file ? (
+                    {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" /> */}
+                    Nomor BKB
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceContract"
+                      defaultValue={contractData?.bkb_number}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.TERMIN" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceStep1"
+                      defaultValue={props.terminName}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label
+                    htmlFor="priceContract"
+                    className="col-sm-4 col-form-label"
+                  >
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceContract"
+                      value={rupiah(contractData?.total_amount || 0)}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_AMMOUNT" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceStep1"
+                      value={rupiah(contractData?.termin_value || 0)}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label
+                    htmlFor="priceContract"
+                    className="col-sm-4 col-form-label"
+                  >
+                    {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" /> */}
+                    Harga Bersih Termin
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceContract"
+                      value={rupiah(contractData?.termin_net_value || 0)}
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group row">
+                  <label
+                    htmlFor="priceContract"
+                    className="col-sm-4 col-form-label"
+                  >
+                    {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" /> */}
+                    Denda Termin
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceContract"
+                      value={rupiah(contractData?.penalty || 0)}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label
+                    htmlFor="priceContract"
+                    className="col-sm-4 col-form-label"
+                  >
+                    {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT" /> */}
+                    Pajak Termin
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="priceContract"
+                      value={rupiah(contractData?.tax_value || 0)}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label
+                    htmlFor="dateInvoice"
+                    className="col-sm-4 col-form-label"
+                  >
+                    {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_DATE" /> */}
+                    Tanggal Bukti Bayar
+                    <span className="text-danger">*</span>
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="dateInvoice"
+                      name="paid_date"
+                      {...formik.getFieldProps("paid_date")}
+                    />
+                  </div>
+                  {formik.touched.paid_date && formik.errors.paid_date ? (
+                    <span className="col-sm-8 offset-sm-4 text-left text-danger">
+                      {formik.errors.paid_date}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="upload" className="col-sm-4 col-form-label">
+                    {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.INVOICE_UPLOAD" /> */}
+                    Upload Bukti Bayar
+                  </label>
+                  <label
+                    htmlFor="upload"
+                    className={`input-group mb-3 col-sm-8`}
+                  >
+                    <div className="input-group-prepend">
+                      <span className="input-group-text">
+                        <i className="fas fa-file-upload"></i>
+                      </span>
+                    </div>
+                    <span
+                      className={`form-control text-truncate`}
+                    >
+                      {uploadFilename}
+                    </span>
+                  </label>
+                  {/* {formik.touched.file && formik.errors.file ? (
                   <span className="col-sm-8 offset-sm-4 text-left text-danger">
                     {formik.errors.file}
                   </span>
                 ) : null} */}
-                <input
-                  type="file"
-                  className="d-none"
-                  id="upload"
-                  onChange={(e) => handleUpload(e)}
-                />
+                  <input
+                    type="file"
+                    className="d-none"
+                    id="upload"
+                    onChange={(e) => handleUpload(e)}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </CardBody>
-        <CardFooter className="text-right">
-          <button
-            type="button"
-            className="btn btn-primary mx-1"
-          onClick={handleSubmit}
-          // disabled={loading || !terminAuthorizationStaff}
-          >
-            Simpan
-            {loading && (
-              <span
-                className="spinner-border spinner-border-sm ml-1"
-                aria-hidden="true"
-              ></span>
-            )}
-          </button>
-        </CardFooter>
+          </CardBody>
+          <CardFooter className="text-right">
+            <button
+              type="submit"
+              className="btn btn-primary mx-1"
+              // onClick={handleSubmit}
+              disabled={
+                loading ||
+                (formik.touched && !formik.isValid) ||
+                !taxStaffStatus
+              }
+            >
+              Simpan
+              {loading && (
+                <span
+                  className="spinner-border spinner-border-sm ml-1"
+                  aria-hidden="true"
+                ></span>
+              )}
+            </button>
+          </CardFooter>
+        </form>
       </Card>
     </React.Fragment>
   );
