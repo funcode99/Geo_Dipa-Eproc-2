@@ -21,6 +21,7 @@ const ModalPreviewDODoc = ({
   isClient,
   handleSubmit,
 }) => {
+  console.log(`otem`, loading);
   const [dataForm, setDataForm] = React.useState({});
   const [action, setAction] = React.useState(null);
   const [checked, setChecked] = React.useState(false);

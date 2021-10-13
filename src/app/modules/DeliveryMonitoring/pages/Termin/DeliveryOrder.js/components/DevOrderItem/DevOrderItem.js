@@ -176,7 +176,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       <ModalPreviewDODoc
         innerRef={previewRef}
         handleSubmit={handleSubmitPreview}
-        loading={loadings[KEYS_TERMIN.p_t_upload_do]}
+        loading={loadings[KEYS_TERMIN.p_t_approve_do_doc]}
         file={data.file}
         isClient={authStatus === "client"}
       />
