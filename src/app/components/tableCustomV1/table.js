@@ -152,7 +152,6 @@ const Tables = (props) => {
 
   const updateValueFilter = (property, type, collection) => {
     let filterTables = Object.assign({}, filterTable);
-    console.log("masuk-1");
     if (type === "collection") {
       filterTables = { ...filterTables, ...collection };
       setFilterTable({ ...filterTables });
@@ -173,7 +172,6 @@ const Tables = (props) => {
 
   const resetValueFilter = (property, type) => {
     let filterTables = Object.assign({}, filterTable);
-    console.log("masuk-2");
     if (type === "collection") {
       filterTables[property] = [];
     } else {
@@ -224,7 +222,6 @@ const Tables = (props) => {
     }
   };
 
-  console.log("selectedCollection", selectedCollection);
   return (
     <React.Fragment>
       <div>
