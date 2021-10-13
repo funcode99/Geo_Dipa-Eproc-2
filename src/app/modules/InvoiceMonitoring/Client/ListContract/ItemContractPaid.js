@@ -345,6 +345,7 @@ function ItemContractPaid(props) {
                     type="file"
                     className="d-none"
                     id="upload"
+                    disabled={contractData?.file}
                     onChange={(e) => handleUpload(e)}
                   />
                 </div>
