@@ -31,7 +31,6 @@ const GRAccord = ({ children, label, expandeds = true }) => {
 
   // Kebutuhan Print Data
   useEffect(() => {
-    console.log("expandeds", expandeds);
     if (expandeds) setExpanded(`panel${"idx"}`);
   }, []);
 
