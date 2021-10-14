@@ -1012,8 +1012,8 @@ function ContractHardCopyDoc(props) {
                         <TableCell>{item.seq}</TableCell>
                         <TableCell>{item.document_name}</TableCell>
                         {item.doc_no &&
-                          (item.ident_name !== "GOODS" ||
-                            item.ident_name !== "SA") ? (
+                        item.ident_name !== "GOODS" &&
+                        item.ident_name !== "SA" ? (
                           item.doc_file ? (
                             <TableCell>
                               <a
