@@ -8,6 +8,7 @@ import { formatDate } from "../../../../../../../libs/date";
 import apiHelper from "../../../../../../../service/helper/apiHelper";
 import { KEYS_TERMIN } from "../../../TerminPageNew/STATIC_DATA";
 import { TerminPageContext } from "../../../TerminPageNew/TerminPageNew";
+import AlertFormGR from "../AlertFormGR";
 import CardOrderItem from "./comp/CardOrderItem";
 import ModalPreviewDODoc from "./comp/ModalPreviewDODoc";
 import ModalUploadDO from "./comp/ModalUploadDO";
@@ -81,7 +82,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       },
     });
   };
-  const handleSubmitPreview = ({ remarks, action, clean }) => {
+  const handleSubmitPreview = ({ remarks, action, clean, dataEvent = {} }) => {
     let params = {};
     switch (action) {
       case "approve":
@@ -94,10 +95,19 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       default:
         break;
     }
-    console.log(`params`, params);
+
+    const newParams = {
+      ...params,
+      ...dataEvent,
+      header_txt: dataEvent?.header_tx,
+      posting_date: dataEvent?.post_date,
+    };
+
+    console.log(`params`, params, { ...params, ...dataEvent });
     func.handleApi({
       key: KEYS_TERMIN.p_t_approve_do_doc,
-      params,
+      // params: { ...params, ...dataEvent },
+      params: newParams,
       url_id: data.id,
       onSuccess: (res) => {
         previewRef.current.close();
@@ -166,7 +176,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       <ModalPreviewDODoc
         innerRef={previewRef}
         handleSubmit={handleSubmitPreview}
-        loading={loadings[KEYS_TERMIN.p_t_upload_do]}
+        loading={loadings[KEYS_TERMIN.p_t_approve_do_doc]}
         file={data.file}
         isClient={authStatus === "client"}
       />
@@ -224,6 +234,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
                 <ButtonContained className={"mr-5"} {...getPropsDeliv()} />
                 {!isVendor && (
                   <ButtonSubmit
+                    disabled={data?.percentage == 100}
                     classBtn={"mr-5"}
                     handleSubmit={() => handleAction("confirm", data)}
                   />
@@ -233,6 +244,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
           </div>
           <Divider />
           <CardContent>
+            {/* <AlertFormGR /> */}
             <FormBuilder
               withSubmit={false}
               initial={values}

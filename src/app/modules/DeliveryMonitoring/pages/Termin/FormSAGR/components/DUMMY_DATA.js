@@ -35,10 +35,12 @@ export const sa_field = [
     {
       name: "begdate",
       label: "Begin Date",
+      typeInput: "SelectDateInput",
     },
     {
       name: "enddate",
       label: "End Date",
+      typeInput: "SelectDateInput",
     },
   ],
   [
@@ -59,6 +61,7 @@ export const sa_field = [
     {
       name: "post_date",
       label: "Post Date",
+      typeInput: "SelectDateInput",
     },
   ],
   [
@@ -175,6 +178,7 @@ export const rowTableSA_field = [
   {
     name: "gl_account",
     label: "GL Account",
+    typeInput: "SelectInputCustom",
   },
   {
     name: "bus_area",
@@ -183,6 +187,7 @@ export const rowTableSA_field = [
   {
     name: "cost_center",
     label: "Header Text",
+    typeInput: "SelectInputCustom",
   },
   // {
   //   name: "value",
@@ -213,7 +218,7 @@ export const validationSchema_sa = object().shape({
 });
 
 export const option_dist_type = [
-  { value: "kosong", label: "Full Payment" },
+  { value: "", label: "Full Payment" },
   { value: "1", label: "Gradual Payment (quantity)" },
   { value: "2", label: "Gradual Payment (percentage)" },
 ];

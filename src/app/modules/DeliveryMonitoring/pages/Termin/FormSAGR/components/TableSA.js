@@ -30,12 +30,12 @@ const TableSA = ({ itemJasa }) => {
         name_service: el?.service?.short_text || "",
         service_id: el?.service?.id || "",
         qty: el?.qty,
-        ...el,
-        wbs: { label: el?.wbs_elem },
+        wbsdata: el?.wbs,
         dist_type: option_dist_type.filter(
           (els) => els.value === el?.distribution_type
         )[0],
         cost_center: el?.costcenter,
+        ...el,
       }))}
       // rows={dataRow}
       width={2000}

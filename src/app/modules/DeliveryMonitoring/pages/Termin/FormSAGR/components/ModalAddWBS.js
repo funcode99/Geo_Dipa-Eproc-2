@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 import { object } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
 import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 import { FormSAContext } from "./FormSA";
+import _ from "lodash";
 
-const ModalAddWBS = ({ innerRef, onSelected, onBlur }) => {
+const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
   const formRef = React.useRef();
   const { listWBS } = React.useContext(FormSAContext);
+  console.log(`dist_value`, dist_value);
 
   const [dataForm, setDataForm] = useState([
     [
@@ -62,7 +64,18 @@ const ModalAddWBS = ({ innerRef, onSelected, onBlur }) => {
       }, [])
     );
   };
-
+  const initial = useMemo(() => {
+    if (_.isEmpty(data)) return {};
+    return data?.reduce((acc, el, idx, arr) => {
+      const index = idx + 1;
+      if (index > 1) addField();
+      return {
+        ...acc,
+        [`wbs${index}`]: { value: el.name, label: el.name },
+        [`value${index}`]: el.value,
+      };
+    }, {});
+  }, [data]);
   const subField = () => {
     setDataForm((e) => {
       var arr = [...e];
@@ -119,6 +132,7 @@ const ModalAddWBS = ({ innerRef, onSelected, onBlur }) => {
         ref={formRef}
         onSubmit={_handleSubmit}
         formData={dataForm}
+        initial={initial}
         // validation={validateScheme}
         withSubmit={false}
         fieldProps={{
@@ -141,21 +155,25 @@ const ModalAddWBS = ({ innerRef, onSelected, onBlur }) => {
       />
 
       <div className="d-flex justify-content-end">
-        <ButtonContained
-          className="mr-2"
-          baseColor="danger"
-          disabled={dataForm.length === 1}
-          onClick={subField}
-        >
-          Minus a row
-        </ButtonContained>
-        <ButtonContained
-          disabled={dataForm.length == 10}
-          baseColor="success"
-          onClick={addField}
-        >
-          Add a row
-        </ButtonContained>
+        {dataForm.length > 1 && (
+          <ButtonContained
+            className="mr-2"
+            baseColor="danger"
+            disabled={dataForm.length === 1}
+            onClick={subField}
+          >
+            Minus a row
+          </ButtonContained>
+        )}
+        {!(dataForm.length == 10 || dist_value?.value === "") && (
+          <ButtonContained
+            disabled={dataForm.length == 10 || dist_value?.value === ""}
+            baseColor="success"
+            onClick={addField}
+          >
+            Add a row
+          </ButtonContained>
+        )}
       </div>
     </DialogGlobal>
   );

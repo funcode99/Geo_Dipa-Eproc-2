@@ -112,7 +112,7 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
   return (
     <ExpansionBox
       custTitle={`${data?.item?.desc}${
-        data?.item?.product ? " - " + data?.item?.product?.code : ""
+        data?.item?.product ? " - " + parseInt(data?.item?.product?.code) : ""
       }`}
       defaultExpanded={false}
       //   classCont={"col-12"}

@@ -41,6 +41,7 @@ const theadItems = [
   { id: "due-date", label: "Due Date" },
   { id: "qty", label: "Qty" },
   { id: "qty_avail", label: "Qty Available" },
+  { id: "qty_selected", label: "Qty Selected" },
   { id: "uom", label: "Uom" },
   { id: "net-value", label: "Net Value" },
   // { id: 'wbs', label: 'WBS' },
@@ -694,6 +695,8 @@ function Summary({}) {
               withSearch={false}
               withPagination={false}
               renderRows={({ item, index }) => {
+                console.log("otem", item);
+
                 return (
                   <React.Fragment key={item.id}>
                     <TableRow hover onClick={() => handleExpand("e", item.id)}>
@@ -749,9 +752,10 @@ function Summary({}) {
                                     }
                                     size="small"
                                     checked={service.checked}
-                                    disabled={
-                                      service.qty_available === 0 ? true : false
-                                    }
+                                    // disabled={
+                                    //   service.qty_available === 0 ? true : false
+                                    // }
+                                    disabled
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -761,6 +765,9 @@ function Summary({}) {
                                   {/* 31/01/2021 */}
                                 </TableCell>
                                 <TableCell>{service?.quantity}</TableCell>
+                                <TableCell>
+                                  -{/* {service?.qty_available} */}
+                                </TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
                                   {isClient ? (
@@ -781,6 +788,7 @@ function Summary({}) {
                                         defaultValue={parseFloat(
                                           service.qty_available
                                         ).toFixed(1)}
+                                        disabled
                                         onChange={(e) =>
                                           addSubmitJasa(
                                             e.target.value,
@@ -835,6 +843,7 @@ function Summary({}) {
                                     }
                                     size="small"
                                     checked={service.checked}
+                                    disabled
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -844,6 +853,9 @@ function Summary({}) {
                                   {/* 31/01/2021 */}
                                 </TableCell>
                                 <TableCell>{service?.qty}</TableCell>
+                                <TableCell>
+                                  -{/* {service?.service?.qty_available} */}
+                                </TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
                                   {isClient ? (
@@ -924,6 +936,7 @@ function Summary({}) {
               withPagination={true}
               renderRows={({ item, index }) => {
                 // Check if already submit
+                // console.log("otem", item);
                 if (item.item === undefined) {
                   return (
                     <TableRow
@@ -948,7 +961,8 @@ function Summary({}) {
                           width={50}
                           variant="body"
                           checked={item.checked}
-                          disabled={item.qty_available === 0 ? true : false}
+                          // disabled={item.qty_available === 0 ? true : false}
+                          disabled
                         />
                       </TableCell>
                       <TableCell className="align-middle">
@@ -959,6 +973,9 @@ function Summary({}) {
                       </TableCell>
                       <TableCell className="align-middle">{item.qty}</TableCell>
                       <TableCell className="align-middle">
+                        {item.qty_available}
+                      </TableCell>
+                      <TableCell className="align-middle">
                         {isClient ? (
                           <React.Fragment>
                             <Form.Control
@@ -968,10 +985,11 @@ function Summary({}) {
                                 width: 80,
                                 flex: "none",
                               }}
+                              disabled
                               min={0.1}
                               step={0.1}
                               max={item.qty_available}
-                              disabled={!item.checked}
+                              // disabled={!item.checked}
                               defaultValue={parseFloat(
                                 item.qty_available
                               ).toFixed(1)}
@@ -1025,6 +1043,7 @@ function Summary({}) {
                           width={50}
                           variant="body"
                           checked={item.checked}
+                          disabled
                         />
                       </TableCell>
                       <TableCell className="align-middle">
@@ -1035,6 +1054,9 @@ function Summary({}) {
                       </TableCell>
                       <TableCell className="align-middle">
                         {item.item.qty}
+                      </TableCell>
+                      <TableCell className="align-middle">
+                        {item.item.qty_available}
                       </TableCell>
                       <TableCell className="align-middle">
                         {isClient ? (
@@ -1052,7 +1074,8 @@ function Summary({}) {
                                 parseFloat(item.qty) +
                                 parseFloat(item.item.qty_available)
                               ).toFixed(1)}
-                              disabled={!item.checked}
+                              disabled
+                              // disabled={!item.checked}
                               defaultValue={parseFloat(item.qty).toFixed(1)}
                               onChange={(e) =>
                                 addSubmitBarang(
@@ -1092,8 +1115,8 @@ function Summary({}) {
               }}
             />
           )}
-
-          {isClient && (
+          {/* tidak bisa edit */}
+          {isClient && false && (
             <div className="mt-4 d-flex justify-content-end w-100">
               <Button
                 variant="contained"

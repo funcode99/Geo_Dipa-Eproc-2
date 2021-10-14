@@ -53,18 +53,26 @@ const TerminPaper = () => {
     const lastTabIndex = tabUsed.length - 1;
     // let thisTask = getTask(task_id);
     let thisTask = states?.termin?.summary;
+
     if (newTabActive > 0 && thisTask?.approve_status?.name !== "APPROVED") {
       MODAL.showSnackbar("Mohon Approve termin ini terlebih dahulu", "warning");
-    } else if (newTabActive === lastTabIndex) {
-      // if (!task_sa && !task_gr) {
-      //   MODAL.showSnackbar("Mohon pastikan BAPP sudah di approve.", "warning");
-      // } else {
-      setTabActive(newTabActive);
-      // }
+      // } else if (newTabActive === lastTabIndex) {
+      //   // if (!task_sa && !task_gr) {
+      //   //   MODAL.showSnackbar("Mohon pastikan BAPP sudah di approve.", "warning");
+      //   // } else {
+      //   setTabActive(newTabActive);
+      //   // }
+    } else if (
+      thisTask?.document_status === false &&
+      ((!isItemExists && newTabActive === 1) ||
+        (isItemExists && newTabActive === 2))
+    ) {
+      MODAL.showSnackbar("Mohon lengkapi dokumen terlebih dahulu", "warning");
     } else {
       setTabActive(newTabActive);
     }
   }
+  console.log(`states`, states.termin.summary);
   return (
     <Container>
       <StyledSubheader
@@ -107,10 +115,18 @@ const TerminPaper = () => {
           {tabActive === 0 && <Summary />}
           {tabActive === 0 && <Documents />}
           {isItemExists && tabActive === 1 && <DeliveryOrder />}
-          {!isItemExists && tabActive === 1 && <BeritaAcara />}
-          {isItemExists && tabActive === 2 && <BeritaAcara />}
-          {!isItemExists && tabActive === 2 && <FormSAGR />}
-          {isItemExists && tabActive === 3 && <FormSAGR />}
+          {!isItemExists && tabActive === 1 && (
+            <BeritaAcara handleChangeTab={() => handleChangeTab(null, 2)} />
+          )}
+          {isItemExists && tabActive === 2 && (
+            <BeritaAcara handleChangeTab={() => handleChangeTab(null, 3)} />
+          )}
+          {!isItemExists && tabActive === 2 && (
+            <FormSAGR isItemExists={isItemExists} />
+          )}
+          {isItemExists && tabActive === 3 && (
+            <FormSAGR isItemExists={isItemExists} />
+          )}
           {!isItemExists && tabActive === 3 && <SAGRPage />}
           {isItemExists && tabActive === 4 && <SAGRPage />}
         </Container>

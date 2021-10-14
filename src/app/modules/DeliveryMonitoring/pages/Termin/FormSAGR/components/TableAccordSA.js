@@ -26,18 +26,21 @@ const useStyles = makeStyles((theme) => ({
 
 const TableAccordSA = () => {
   const classes = useStyles();
-  const { itemJasa } = React.useContext(FormSAContext);
+  const { itemJasa, saExist, dataSA } = React.useContext(FormSAContext);
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  console.log(`itemJasa`, itemJasa, dataSA, saExist);
+  const saUsed = saExist ? dataSA : itemJasa;
   return (
     <div className={classes.root}>
-      {itemJasa.map((item, id) => {
+      {saUsed.map((item, id) => {
         // console.log("item", item);
-        let dataItemJasa = item.item_services.filter(
-          (service) => service.service
-        );
+        const itemUsed = saExist ? item.services : item.item_services;
+
+        let dataItemJasa = itemUsed.filter((service) => service.service);
         {
           /* dataItemJasa.length > 0 && ( */
         }
@@ -54,7 +57,9 @@ const TableAccordSA = () => {
               id={`panel${id}bh-header`}
               className={classes.expansionPanelHeader}
             >
-              <Typography className={classes.heading}>{item?.desc}</Typography>
+              <Typography className={classes.heading}>
+                {itemJasa[id]?.desc}
+              </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               {dataItemJasa.length > 0 ? (

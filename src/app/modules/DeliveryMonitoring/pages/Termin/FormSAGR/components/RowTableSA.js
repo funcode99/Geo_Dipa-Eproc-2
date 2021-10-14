@@ -11,8 +11,8 @@ import InputWBS from "./InputWBS";
 
 const validationSchema = object().shape({
   // name_service: validation.require("Header Text"),
-  gl_account: validation.require("GL Account"),
   bus_area: validation.require("Bus Area"),
+  gl_account: validation.require("GL Account"),
   cost_center: validation.require("Cost Center"),
   dist_type: validation.require("Distribution Type"),
   // wbs: validation.require("WBS"),
@@ -22,7 +22,9 @@ const validationSchema = object().shape({
 const RowTableSA = ({ item, index }) => {
   const formikRef = React.useRef();
   const wbsRef = React.useRef();
-  const { setArrService, listWBS, readOnly } = useContext(FormSAContext);
+  const { setArrService, listWBS, readOnly, options } = useContext(
+    FormSAContext
+  );
 
   // const _handleSubmit = (data) => {
   //   console.log(`data`, data);
@@ -40,7 +42,7 @@ const RowTableSA = ({ item, index }) => {
   const _open = () => {
     wbsRef.current.open();
   };
-  console.log(`readOnly`, readOnly);
+  console.log(`readOnly`, readOnly, item);
   // console.log(`data row`, formikRef.current);
   const _handleSelected = (data) => {
     // console.log(`data`, data);
@@ -65,16 +67,29 @@ const RowTableSA = ({ item, index }) => {
     // formikRef.current.validateForm();
   }, []);
 
+  const initialValue = React.useMemo(
+    () => ({
+      ...item,
+      dist_type: item?.dist_type,
+      // wbsdata:
+      gl_account: { value: item?.gl_account, label: item?.gl_account },
+      cost_center: { value: item?.costcenter, label: item?.costcenter },
+    }),
+    [item]
+  );
+
   return (
     <React.Fragment key={index}>
       <ModalAddWBS
         innerRef={wbsRef}
         onSelected={_handleSelected}
         onBlur={_handleBlur}
+        data={item?.wbsdata}
+        dist_value={formikRef?.current?.values?.dist_type}
       />
       <Formik
         innerRef={formikRef}
-        initialValues={item}
+        initialValues={initialValue}
         // onSubmit={_handleSubmit}
         // validateOnMount
         validateOnChange={false}
@@ -109,10 +124,13 @@ const RowTableSA = ({ item, index }) => {
                     value: id,
                     label: work_breakdown_ap,
                   })),
+                  gl_account: options.optGL,
+                  cost_center: options.optCost,
                 }}
                 noLabel={true}
                 ChildrenProps={{
                   onOpen: _open,
+                  defaultValue: initialValue.wbs,
                 }}
               />
               {/* )} */}

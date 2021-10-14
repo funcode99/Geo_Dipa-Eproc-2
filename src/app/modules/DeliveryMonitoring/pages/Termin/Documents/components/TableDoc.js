@@ -19,6 +19,7 @@ import TablePaginationCustom from "../../../../../../components/tables/TablePagi
 import urlHelper, {
   openLinkTab,
 } from "../../../../../../service/helper/urlHelper";
+import StatusRemarks from "../../../../../../components/StatusRemarks";
 
 const theadDocuments = [
   { id: "action", label: "" },
@@ -31,17 +32,18 @@ const theadDocuments = [
   { id: "aksi", label: "Action", rightSticky: true },
 ];
 
-const StatusRemarks = ({ status, remarks }) => {
-  const isRejected = status === "REJECTED";
-  return (
-    <div className="d-flex flex-column flex-grow-1">
-      <p className="text-dark-75 font-size-lg mb-1">{status || "-"}</p>
-      <span className="text-muted font-weight-bold">
-        {isRejected ? remarks : null}
-      </span>
-    </div>
-  );
-};
+// const StatusRemarks = ({ status, remarks }) => {
+//   const isRejected = status === "REJECTED";
+
+//   return (
+//     <div className="d-flex flex-column flex-grow-1">
+//       <p className="text-dark-75 font-size-lg mb-1">{status || "-"}</p>
+//       <span className="text-muted font-weight-bold">
+//         {isRejected ? remarks : null}
+//       </span>
+//     </div>
+//   );
+// };
 
 // const BtnAksi = ({ item }) => {
 //   const { handleAction } = React.useContext(DocumentsContext);
@@ -90,6 +92,7 @@ const BtnLihat = ({ url }) => {
 
 const TableDoc = ({ loading }) => {
   const { content, handleAction } = React.useContext(DocumentsContext);
+  console.log(`content`, content);
 
   return (
     <TablePaginationCustom
@@ -104,6 +107,7 @@ const TableDoc = ({ loading }) => {
       renderRows={({ item, index }) => {
         let el = item;
         let id = index;
+        // console.log("otem", item);
         return (
           <RowAccordion
             key={id}
@@ -146,6 +150,9 @@ const TableDoc = ({ loading }) => {
                               <StatusRemarks
                                 status={els?.document_status?.name}
                                 remarks={els?.remarks_status}
+                                url={els?.url}
+                                withFile={true}
+                                approvedBy={els?.approved_by?.username ?? "N/A"}
                               />,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
@@ -174,6 +181,9 @@ const TableDoc = ({ loading }) => {
                         <StatusRemarks
                           status={el?.document_status?.name}
                           remarks={el?.remarks_status}
+                          url={el?.url}
+                          withFile={true}
+                          approvedBy={el?.approved_by?.username ?? "N/A"}
                         />,
                         // el?.percentage && el?.percentage + "%",
                         "-",

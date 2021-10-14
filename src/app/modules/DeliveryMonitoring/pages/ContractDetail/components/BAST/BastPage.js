@@ -169,7 +169,7 @@ const BastPage = ({
   const generateTableContent = (data) => {
     console.log(`data`, data);
 
-    let dataArr = data.map((item, id) => ({
+    let dataArr = data?.map((item, id) => ({
       no: (id += 1),
       user: item?.vendor?.username || item?.user?.username,
       date: formatDate(new Date(item?.createdAt)),
@@ -250,7 +250,7 @@ const BastPage = ({
     // if (_.isEmpty(taskNews)) {
     fetchData();
     // }
-  }, [taskNews]);
+  }, []);
 
   // buat ganti state step
   React.useEffect(() => {
@@ -412,49 +412,51 @@ const BastPage = ({
               }}
               withSubmit={isClient}
               btnChildren={
-                <Dropdown
-                  className="dropdown-inline mr-2"
-                  drop="down"
-                  alignRight
-                >
-                  <Dropdown.Toggle
-                    id="dropdown-toggle-top2"
-                    variant="transparent"
-                    className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                (taskNews?.file_upload || taskNews?.file) && (
+                  <Dropdown
+                    className="dropdown-inline mr-2"
+                    drop="down"
+                    alignRight
                   >
-                    <FormattedMessage id="TITLE.PREVIEW" />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
-                    <ul className="navi navi-hover">
-                      <li className="navi-item">
-                        <Dropdown.Item
-                          // href="#"
-                          className="navi-link"
-                          onClick={() => handleAction("preview", taskNews)}
-                        >
-                          <span className="navi-icon">
-                            <i className="flaticon2-graph-1"></i>
-                          </span>
-                          <span className="navi-text">Document</span>
-                        </Dropdown.Item>
-                      </li>
-                      <li className="navi-item">
-                        <Dropdown.Item
-                          // href="#"
-                          className="navi-link"
-                          onClick={() =>
-                            handleAction("preview_signed", taskNews)
-                          }
-                        >
-                          <span className="navi-icon">
-                            <i className="flaticon2-writing"></i>
-                          </span>
-                          <span className="navi-text">Signed Document</span>
-                        </Dropdown.Item>
-                      </li>
-                    </ul>
-                  </Dropdown.Menu>
-                </Dropdown>
+                    <Dropdown.Toggle
+                      id="dropdown-toggle-top2"
+                      variant="transparent"
+                      className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                    >
+                      <FormattedMessage id="TITLE.PREVIEW" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                      <ul className="navi navi-hover">
+                        <li className="navi-item">
+                          <Dropdown.Item
+                            // href="#"
+                            className="navi-link"
+                            onClick={() => handleAction("preview", taskNews)}
+                          >
+                            <span className="navi-icon">
+                              <i className="flaticon2-graph-1"></i>
+                            </span>
+                            <span className="navi-text">Document</span>
+                          </Dropdown.Item>
+                        </li>
+                        <li className="navi-item">
+                          <Dropdown.Item
+                            // href="#"
+                            className="navi-link"
+                            onClick={() =>
+                              handleAction("preview_signed", taskNews)
+                            }
+                          >
+                            <span className="navi-icon">
+                              <i className="flaticon2-writing"></i>
+                            </span>
+                            <span className="navi-text">Signed Document</span>
+                          </Dropdown.Item>
+                        </li>
+                      </ul>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                )
               }
             >
               {({ fieldProps }) => (

@@ -26,11 +26,11 @@ const ModalConfirmation = ({
   const _handleSubmit = React.useCallback(() => {
     if (typeof onSubmit === "function") {
       if (isReject === true && remarks !== false) onSubmit({ remarks });
-      else if (additionalParams?.isPeriodic && !isReject && percent !== false)
-        onSubmit({ percentage: percent });
+      // else if (additionalParams?.isPeriodic && !isReject && percent !== false)
+      // onSubmit({ percentage: percent });
       else onSubmit();
     }
-  }, [onSubmit, remarks, percent]);
+  }, [onSubmit, remarks]);
   const handleRemarksChange = (e) => {
     setRemarks(e.target.value);
   };
@@ -68,17 +68,10 @@ const ModalConfirmation = ({
         {children}
         {/* <h3>{title}</h3> */}
         {subTitle && <h6>{subTitle}</h6>}
-        {additionalParams?.isPeriodic && !isReject && (
+        {/* {additionalParams?.isPeriodic && !isReject && (
           <React.Fragment>
             <label htmlFor="basic-url">Persentase</label>
             <InputGroup className="mb-3" style={{ width: 121 }}>
-              {/* <FormControl
-                // defaultValue={"20"}
-                // value={percent}
-                onChange={handlePercentChange}
-                // placeholder={"Masukkan Persentase"}
-                aria-label="Amount (to the nearest dollar)"
-              /> */}
               <FormControl
                 style={{
                   width: 80,
@@ -97,7 +90,7 @@ const ModalConfirmation = ({
               </InputGroup.Append>
             </InputGroup>
           </React.Fragment>
-        )}
+        )} */}
         {isReject && (
           <Form.Group
             style={{ width: "100%" }}

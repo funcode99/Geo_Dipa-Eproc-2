@@ -1,37 +1,29 @@
+import { Button } from "@material-ui/core";
 import React from "react";
-import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
-import FormBuilder from "../../../../../components/builder/FormBuilder";
-import formData from "./fieldData";
-import validation from "../../../../../service/helper/validationHelper";
-import { object } from "yup";
-import { Row, Col, Dropdown } from "react-bootstrap";
-import TitleField from "../../../../../components/input/TitleField";
-import TableBuilder from "../../../../../components/builder/TableBuilder";
-import { connect } from "react-redux";
-import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
-import {
-  formatDate,
-  formatDateWTime,
-  formatInitialDate,
-} from "../../../../../libs/date";
-import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
-import useToast from "../../../../../components/toast";
-import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
-import { RowNormal } from "./components";
-import { Button, ButtonGroup } from "@material-ui/core";
+import { Col, Dropdown, Row } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import TablePaginationCustom from "../../../../../components/tables/TablePagination";
-import urlHelper, {
-  openLinkTab,
-} from "../../../../../service/helper/urlHelper";
-import ModalUploadSigned from "./components/ModalUploadSigned";
-import ModalPreview from "./components/ModalPreview";
-import StepperDoc from "./components/StepperDoc";
+import { connect } from "react-redux";
+import { object } from "yup";
 import {
   fetch_api_sg,
   getLoading,
 } from "../../../../../../redux/globalReducer";
+import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
+import FormBuilder from "../../../../../components/builder/FormBuilder";
+import TitleField from "../../../../../components/input/TitleField";
+import TablePaginationCustom from "../../../../../components/tables/TablePagination";
+import useToast from "../../../../../components/toast";
+import { formatDate, formatInitialDate } from "../../../../../libs/date";
+import { openLinkTab } from "../../../../../service/helper/urlHelper";
+import validation from "../../../../../service/helper/validationHelper";
+import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
+import AlertFormGR from "../DeliveryOrder.js/components/AlertFormGR";
 import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
+import ModalPreview from "./components/ModalPreview";
+import ModalUploadSigned from "./components/ModalUploadSigned";
+import StepperDoc from "./components/StepperDoc";
+import formData from "./fieldData";
+import _ from "lodash";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -70,6 +62,7 @@ const BappPage = ({
   taskNews,
   saveTask,
   loadings,
+  handleChangeTab,
 }) => {
   const { func, task_id, task_sa, task_gr } = React.useContext(
     TerminPageContext
@@ -85,6 +78,7 @@ const BappPage = ({
     get: false,
     submit: false,
   });
+  const [dataSAGR, setDataSAGR] = React.useState({});
   const [open, setOpen] = React.useState({
     uploadSign: false,
   });
@@ -152,10 +146,31 @@ const BappPage = ({
   );
 
   const listUsed = status === "client" ? clientMenu : vendorMenu;
+  const dataExist = React.useMemo(
+    () => ({
+      sa: !_.isEmpty(dataSAGR?.sa),
+      gr: !_.isEmpty(dataSAGR?.gr),
+    }),
+    [dataSAGR]
+  );
+  // const saExist = _.isEmpty(dataSAGR?.sa);
+  // const grExist = _.isEmpty(dataSAGR?.gr);
   const isDisabled = React.useMemo(() => isClient && !taskNews, [
     taskNews,
     isClient,
   ]);
+
+  const getDataSAGRForm = () => {
+    fetchApi({
+      key: keys.fetch_sagr,
+      type: "get",
+      url: `delivery/task-sa-gr/${task_id}`,
+      onSuccess: (res) => {
+        // console.log(`res`, res);
+        setDataSAGR(res.data);
+      },
+    });
+  };
 
   const handleError = React.useCallback(
     (err) => {
@@ -298,6 +313,7 @@ const BappPage = ({
   };
 
   React.useEffect(() => {
+    if (_.isEmpty(dataSAGR)) getDataSAGRForm();
     if (taskId !== "") {
       // console.log(`masuk sini`);
       fetchData();
@@ -427,7 +443,7 @@ const BappPage = ({
     }
   };
 
-  // console.log(`res2`, taskNews);
+  console.log(`res2`, dataSAGR, dataExist);
 
   return (
     <React.Fragment>
@@ -492,49 +508,51 @@ const BappPage = ({
               disabledButton={isDisabled}
               withSubmit={isClient}
               btnChildren={
-                <Dropdown
-                  className="dropdown-inline mr-2"
-                  drop="down"
-                  alignRight
-                >
-                  <Dropdown.Toggle
-                    id="dropdown-toggle-top2"
-                    variant="transparent"
-                    className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                (taskNews?.file_upload || taskNews?.file) && (
+                  <Dropdown
+                    className="dropdown-inline mr-2"
+                    drop="down"
+                    alignRight
                   >
-                    <FormattedMessage id="TITLE.PREVIEW" />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
-                    <ul className="navi navi-hover">
-                      <li className="navi-item">
-                        <Dropdown.Item
-                          // href="#"
-                          className="navi-link"
-                          onClick={() => handleAction("preview", taskNews)}
-                        >
-                          <span className="navi-icon">
-                            <i className="flaticon2-graph-1"></i>
-                          </span>
-                          <span className="navi-text">Document</span>
-                        </Dropdown.Item>
-                      </li>
-                      <li className="navi-item">
-                        <Dropdown.Item
-                          // href="#"
-                          className="navi-link"
-                          onClick={() =>
-                            handleAction("preview_signed", taskNews)
-                          }
-                        >
-                          <span className="navi-icon">
-                            <i className="flaticon2-writing"></i>
-                          </span>
-                          <span className="navi-text">Signed Document</span>
-                        </Dropdown.Item>
-                      </li>
-                    </ul>
-                  </Dropdown.Menu>
-                </Dropdown>
+                    <Dropdown.Toggle
+                      id="dropdown-toggle-top2"
+                      variant="transparent"
+                      className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                    >
+                      <FormattedMessage id="TITLE.PREVIEW" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                      <ul className="navi navi-hover">
+                        <li className="navi-item">
+                          <Dropdown.Item
+                            // href="#"
+                            className="navi-link"
+                            onClick={() => handleAction("preview", taskNews)}
+                          >
+                            <span className="navi-icon">
+                              <i className="flaticon2-graph-1"></i>
+                            </span>
+                            <span className="navi-text">Document</span>
+                          </Dropdown.Item>
+                        </li>
+                        <li className="navi-item">
+                          <Dropdown.Item
+                            // href="#"
+                            className="navi-link"
+                            onClick={() =>
+                              handleAction("preview_signed", taskNews)
+                            }
+                          >
+                            <span className="navi-icon">
+                              <i className="flaticon2-writing"></i>
+                            </span>
+                            <span className="navi-text">Signed Document</span>
+                          </Dropdown.Item>
+                        </li>
+                      </ul>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                )
               }
             />
           ) : (
@@ -648,6 +666,9 @@ const BappPage = ({
                     <div className="mt-2">
                       {isClient && (
                         <React.Fragment>
+                          {!dataExist.sa && !dataExist.gr && (
+                            <AlertFormGR onClick={handleChangeTab} />
+                          )}
                           <Button
                             variant="contained"
                             color="secondary"
@@ -721,6 +742,7 @@ const keys = {
   upload_s: "upload-signed",
   approve_s: "approve-signed",
   fetch: "fetch_news_bapp",
+  fetch_sagr: "fetch-sa-gr",
   submit: "submit_news_bapp",
 };
 

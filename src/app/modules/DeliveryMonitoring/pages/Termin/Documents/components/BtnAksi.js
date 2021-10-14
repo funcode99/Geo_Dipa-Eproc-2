@@ -86,7 +86,11 @@ export default function BtnAksi({ item, isPeriodic, handleAction }) {
         label: "Accept Document",
         icon: "fas fa-check-circle text-success",
         type: "accept",
-        params: { accept_id: item?.id, percentage: "20%", isPeriodic },
+        params: {
+          accept_id: item?.id,
+          percentage: item?.percentage,
+          isPeriodic,
+        },
       },
       {
         label: "Reject Document",

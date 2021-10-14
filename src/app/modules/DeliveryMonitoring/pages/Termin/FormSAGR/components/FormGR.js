@@ -7,6 +7,7 @@ import { TerminPageContext } from "../../TerminPageNew/TerminPageNew";
 import { gr_field } from "./DUMMY_DATA";
 import ModalApproveGR from "./ModalApproveGR";
 import { number } from "yup";
+import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 
 const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
@@ -29,7 +30,14 @@ const validationSchema = object().shape({
   unload_pt: validation.require("Unload PT"),
 });
 
-const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
+const FormGR = ({
+  fetch_api_sg,
+  loadings_sg,
+  onRefresh,
+  keys,
+  dataSAGR,
+  isItemExists,
+}) => {
   const refModal = React.useRef();
   const refModal2 = React.useRef();
   const { task_id } = React.useContext(TerminPageContext);
@@ -80,6 +88,10 @@ const FormGR = ({ fetch_api_sg, loadings_sg, onRefresh, keys, dataSAGR }) => {
     }),
     [dataGR]
   );
+  if (!isItemExists) {
+    return <NoDataBox text={"Form Good Receipt not Available"} />;
+  }
+
   return (
     <div>
       <FormBuilder

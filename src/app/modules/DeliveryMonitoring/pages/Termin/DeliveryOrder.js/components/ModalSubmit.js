@@ -109,6 +109,7 @@ const ModalSubmit = ({
           </TableHead>
           <TableBody>
             {tempOrderItems?.map((item, index) => {
+              let qtyAvail = parseFloat(item?.qty_delivery_available);
               return (
                 <TableRow key={index}>
                   <TableCell>
@@ -123,7 +124,7 @@ const ModalSubmit = ({
                     />
                   </TableCell>
                   <TableCell>{item?.item?.desc}</TableCell>
-                  <TableCell>{item?.qty_avail}</TableCell>
+                  <TableCell>{qtyAvail}</TableCell>
                   <TableCell>
                     <Form.Control
                       type="number"

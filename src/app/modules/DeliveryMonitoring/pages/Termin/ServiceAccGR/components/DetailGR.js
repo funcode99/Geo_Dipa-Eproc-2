@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DetailGR = ({ data, type, fullData }) => {
+const DetailGR = ({ data, type, fullData, item }) => {
   const { client, document, vendor, contract } = detailGR;
   const classes = useStyles();
   let dataSA = {};
@@ -210,15 +210,15 @@ const DetailGR = ({ data, type, fullData }) => {
 
   const tab2 = useMemo(
     () => [
-      { label: "Number", value: data ? data?.mat_doc : "dummy" },
+      { label: "Number", value: data ? data?.mat_doc : "-" },
       { label: "Page", value: "1 of 1" },
       {
         label: "Posting Date",
-        value: data ? formatSADate(data?.pstng_date) : "dummy",
+        value: data ? formatSADate(data?.pstng_date) : "-",
       },
       {
         label: "Document Date",
-        value: data ? formatSADate(data?.doc_date) : "dummy",
+        value: data ? formatSADate(data?.doc_date) : "-",
       },
     ],
     [data, document]
@@ -236,16 +236,21 @@ const DetailGR = ({ data, type, fullData }) => {
   );
   const tab4 = useMemo(
     () => [
-      { label: "PO Number", value: fullData?.task_gr?.po_number || "dummy" },
+      { label: "PO Number", value: fullData?.task_gr?.po_number || "-" },
       {
         label: "Movement Type",
-        value: fullData?.task_gr?.gr_items?.[0]?.move_type || "dummy",
+        // value: fullData?.task_gr?.gr_items?.[0]?.move_type || "-",
+        value: item?.type || "-",
       },
-      { label: "Purchasing Group", value: "dummy" },
-      { label: "Telephone", value: "dummy" },
+      {
+        label: "Purchasing Group",
+        value:
+          fullData?.contract?.purch_order?.purch_group?.party?.full_name || "-",
+      },
+      { label: "Telephone", value: "(021) 7982925" },
       {
         label: "Delivery Note",
-        value: data?.ext_number || "dummy",
+        value: data?.header_txt || "-",
       },
     ],
     [data, client, fullData]
@@ -321,9 +326,7 @@ const DetailGR = ({ data, type, fullData }) => {
             <span className={classes.label}>
               Ref. Quality Assurance Acceptance Certificate :{`    `}
             </span>
-            <span className={classes.txtValue}>
-              {data?.ref_doc_no || "dummy"}
-            </span>
+            <span className={classes.txtValue}>{data?.ref_doc_no || "-"}</span>
           </p>
         </Paper>
       </Grid>
