@@ -211,9 +211,9 @@ export async function getSaGr(term) {
 export async function getAsyncSpt(data) {
   return axios.post(`/invoice/async_list_spt`, data);
 }
-export async function getListDocSoftCopy(contractId, termId) {
+export async function getListDocSoftCopy(contractId, termId, type) {
   return axios.get(
-    `/invoice/get_soft_copy_support?contract_id=${contractId}&term_id=${termId}`
+    `/invoice/get_soft_copy_support?contract_id=${contractId}&term_id=${termId}&type=${type}`
   );
 }
 export async function getDetailDocSoftCopy(contractId, termId) {
@@ -416,4 +416,6 @@ export async function getTerminPaid(id) {
 }
 export async function createTerminPaid(data) {
   return axios.post(`invoice/create_invoice_paid/`, data);
+}export async function updateTerminPaid(data) {
+  return axios.post(`invoice/update_invoice_paid/`, data);
 }

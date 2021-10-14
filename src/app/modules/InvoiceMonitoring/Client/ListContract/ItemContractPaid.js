@@ -10,6 +10,7 @@ import {
 import {
   getTerminPaid,
   createTerminPaid,
+  updateTerminPaid,
   getContractAuthority,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
@@ -77,6 +78,17 @@ function ItemContractPaid(props) {
       for (var key in values) {
         data_new.append(key, values[key]);
       }
+      if (contractData.paid_date) {
+        updateTerminPaid(data_new)
+          .then((response) => {
+            setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+            setLoading(false);
+          })
+          .catch((error) => {
+            setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+            setLoading(false);
+          });
+      } else {
       createTerminPaid(data_new)
         .then((response) => {
           setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -86,6 +98,7 @@ function ItemContractPaid(props) {
           setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
           setLoading(false);
         });
+      }
     },
   });
 
