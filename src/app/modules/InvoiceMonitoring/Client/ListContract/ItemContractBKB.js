@@ -61,7 +61,7 @@ function ItemContractBKB(props) {
     minHeightAppv: 80,
   });
 
-  const { intl, setProgressTermin, setDataProgress } = props;
+  const { intl, setProgressTermin, setDataProgress, dataProgress = [] } = props;
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
   const main_authority = "Pusat";
@@ -98,6 +98,10 @@ function ItemContractBKB(props) {
     loading: false,
     statusReq: false,
   });
+
+  const statusHardCopyComplate = dataProgress?.filter(
+    (row) => row.ident_name === "HARDCOPY" && row.status === "COMPLETE"
+  );
 
   const handleChangeParkAp = (e) => {
     setParkApInput(e.target.value);
@@ -762,7 +766,7 @@ function ItemContractBKB(props) {
             disabled={
               modalApproved.loading ||
               (modalApproved.data === "monitoringApproveParkBYR" &&
-                countGiroSigned < 2)
+                countGiroSigned < 1)
             }
             onClick={() => {
               handleApproved();
@@ -1495,9 +1499,7 @@ function ItemContractBKB(props) {
                     </span>
                   </div>
                 </div>
-                <div className="row p-3">
-                  {bkbData?.penalty_remark}
-                </div>
+                <div className="row p-3">{bkbData?.penalty_remark}</div>
               </div>
             </div>
             <div className="row mt-3">
@@ -1560,7 +1562,11 @@ function ItemContractBKB(props) {
                         ) {
                           return (
                             <div
-                              className="col-sm border-right"
+                              className={`col-sm border-right ${
+                                statusHardCopyComplate.length === 0
+                                  ? "d-none"
+                                  : ""
+                              }`}
                               style={{ height: styleCustom.heightAppvDiv }}
                               key={key}
                             >

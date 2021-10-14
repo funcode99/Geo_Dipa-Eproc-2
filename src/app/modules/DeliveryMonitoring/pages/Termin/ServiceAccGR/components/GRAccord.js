@@ -4,7 +4,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import React from "react";
+import React, { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,12 +22,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GRAccord = ({ children, label }) => {
+const GRAccord = ({ children, label, expandeds = true }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  // Kebutuhan Print Data
+  useEffect(() => {
+    console.log("expandeds", expandeds);
+    if (expandeds) setExpanded(`panel${"idx"}`);
+  }, []);
 
   return (
     <div className={classes.root}>

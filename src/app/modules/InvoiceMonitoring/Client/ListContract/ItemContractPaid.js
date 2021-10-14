@@ -18,9 +18,16 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { getRolesParkBYR } from "../../../Master/service/MasterCrud";
 import { DEV_NODE } from "../../../../../redux/BaseHost";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  textDisabled: {
+    backgroundColor: "#F3F6F9",
+  },
+}));
 
 function ItemContractPaid(props) {
-  const { intl, dataProgress } = props;
+  const { intl, dataProgress = [] } = props;
 
   const dataUser = useSelector((state) => state.auth.user.data);
   let monitoring_role = dataUser.monitoring_role
@@ -35,6 +42,7 @@ function ItemContractPaid(props) {
   );
   const [data, setData] = useState({});
   const [taxStaffStatus, setTaxStaffStatus] = useState(false);
+  const classes = useStyles();
 
   const [Toast, setToast] = useToast();
   const user_id = useSelector(
@@ -332,7 +340,11 @@ function ItemContractPaid(props) {
                         <i className="fas fa-file-upload"></i>
                       </span>
                     </div>
-                    <span className={`form-control text-truncate`}>
+                    <span
+                      className={`form-control text-truncate ${
+                        contractData?.file ? classes.textDisabled : ""
+                      }`}
+                    >
                       {contractData?.file ? contractData.file : uploadFilename}
                     </span>
                   </label>
