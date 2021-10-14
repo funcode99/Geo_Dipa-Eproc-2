@@ -1517,15 +1517,20 @@ function ItemContractInvoice(props) {
                     ) : item.ident_name === "GOODS" ||
                       item.ident_name === "SA" ? (
                       <TableCell>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-primary"
-                          onClick={() => {
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
                             print(item.ident_name);
                           }}
                         >
-                          <FormattedMessage id="TITLE.PRINT" />
-                        </button>
+                          {item.ident_name === "GOODS"
+                            ? content?.task_gr_new &&
+                              content?.task_gr_new.length > 0 &&
+                              content?.task_gr_new[0].material_document
+                            : content?.task_sa_new &&
+                              content?.task_sa_new.material_document}
+                        </a>
                       </TableCell>
                     ) : (
                       <TableCell></TableCell>

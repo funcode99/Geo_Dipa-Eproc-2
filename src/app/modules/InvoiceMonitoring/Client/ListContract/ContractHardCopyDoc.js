@@ -1038,15 +1038,20 @@ function ContractHardCopyDoc(props) {
                         ) : item.ident_name === "GOODS" ||
                           item.ident_name === "SA" ? (
                           <TableCell>
-                            <button
-                              type="button"
-                              className="btn btn-sm btn-primary"
-                              onClick={() => {
-                                printSaGr(item.ident_name);
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                print(item.ident_name);
                               }}
                             >
-                              <FormattedMessage id="TITLE.PRINT" />
-                            </button>
+                              {item.ident_name === "GOODS"
+                                ? content?.task_gr_new &&
+                                  content?.task_gr_new.length > 0 &&
+                                  content?.task_gr_new[0].material_document
+                                : content?.task_sa_new &&
+                                  content?.task_sa_new.material_document}
+                            </a>
                           </TableCell>
                         ) : (
                           <TableCell></TableCell>
@@ -1373,7 +1378,7 @@ function ContractHardCopyDoc(props) {
                     type="text"
                     className="form-control"
                     value={rupiah(contractData?.termin_value)}
-                    onChange={(e) => { }}
+                    onChange={(e) => {}}
                     readOnly
                   />
                 </div>
@@ -1438,7 +1443,7 @@ function ContractHardCopyDoc(props) {
                       <input
                         type="checkbox"
                         checked={true}
-                        onChange={(e) => { }}
+                        onChange={(e) => {}}
                       />
                       <span></span>
                     </label>
@@ -1475,7 +1480,7 @@ function ContractHardCopyDoc(props) {
                             <input
                               type="checkbox"
                               checked={true}
-                              onChange={(e) => { }}
+                                onChange={(e) => {}}
                             />
                             <span></span>
                           </label>
@@ -1512,7 +1517,7 @@ function ContractHardCopyDoc(props) {
                                   <input
                                     type="checkbox"
                                     checked={true}
-                                    onChange={(e) => { }}
+                                      onChange={(e) => {}}
                                   />
                                   <span></span>
                                 </label>
@@ -1580,7 +1585,7 @@ function ContractHardCopyDoc(props) {
                             <input
                               type="checkbox"
                               checked={true}
-                              onChange={(e) => { }}
+                                onChange={(e) => {}}
                             />
                             <span></span>
                           </label>
@@ -1633,7 +1638,7 @@ function ContractHardCopyDoc(props) {
                       <input
                         type="checkbox"
                         checked={true}
-                        onChange={(e) => { }}
+                        onChange={(e) => {}}
                       />
                       <span></span>
                     </label>
