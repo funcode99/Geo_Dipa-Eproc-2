@@ -451,7 +451,7 @@ function ItemContractInvoice(props) {
 
   const callApiContractSoftCopy = () => {
     setLoading(true);
-    getListDocSoftCopy(contract, termin)
+    getListDocSoftCopy(contract, termin, "SOFTCOPY")
       .then((result) => {
         setLoading(false);
         setDataDocSoftCopy(result.data.data);

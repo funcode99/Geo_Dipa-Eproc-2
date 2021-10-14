@@ -47,16 +47,16 @@ const TabLists = [
       <i className="fas fa-tasks mb-0 mr-2" style={{ color: "inherit" }}></i>
     ),
   },
-  {
-    id: "routing-slip",
-    label: "Routing Slip",
-    icon: (
-      <i
-        className="fas fa-sticky-note mb-0 mr-2"
-        style={{ color: "inherit" }}
-      ></i>
-    ),
-  },
+  // {
+  //   id: "routing-slip",
+  //   label: "Routing Slip",
+  //   icon: (
+  //     <i
+  //       className="fas fa-sticky-note mb-0 mr-2"
+  //       style={{ color: "inherit" }}
+  //     ></i>
+  //   ),
+  // },
 ];
 
 const ItemContract = (props) => {
@@ -152,13 +152,13 @@ const ItemContract = (props) => {
               setProgressTermin={setTerminProgress}
             />
           )}
-          {tabActive === 3 && (
+          {/* {tabActive === 3 && (
             <ItemContractRoutingSlip
               {...props}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
             />
-          )}
+          )} */}
         </Container>
       </Paper>
     </Container>
