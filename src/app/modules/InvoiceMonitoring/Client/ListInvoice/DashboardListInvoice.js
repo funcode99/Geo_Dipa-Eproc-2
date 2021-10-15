@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import {
   getAllInvoice,
-  getAllProgressTypeGroup,
+  getAllProgressTypeFilter,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
@@ -321,7 +321,7 @@ function DashboardListInvoice(props) {
   };
 
   const callApi = () => {
-    getAllProgressTypeGroup()
+    getAllProgressTypeFilter()
       .then((result) => {
         console.log("result.data", result.data.data);
         var data = Object.assign([], headerTable);
