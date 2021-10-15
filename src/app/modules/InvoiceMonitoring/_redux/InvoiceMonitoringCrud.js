@@ -420,6 +420,12 @@ export async function createTerminPaid(data) {
 export async function updateTerminPaid(data) {
   return axios.post(`invoice/update_invoice_paid/`, data);
 }
+export async function getAllProgressTypeFilter() {
+  return axios.get(`invoice/get_all_progress_filter/`);
+}
 export async function getAllProgressTypeGroup() {
   return axios.get(`invoice/get_all_progress_type_groups/`);
+}
+export async function getTerminProgressVendor(id) {
+  return axios.get(`invoice/get_invoice_progress_vendor/${id}`);
 }

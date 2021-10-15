@@ -13,8 +13,9 @@ import ItemContractSummary from "./ItemContractSummary";
 import ItemContractInvoice from "./ItemContractInvoice";
 import ItemContractRoutingSlip from "./ItemContractRoutingSlip";
 import ItemContractFormVerification from "./ItemContractFormVerification";
-import { getTerminProgress } from "../../_redux/InvoiceMonitoringCrud";
+import { getAllProgressTypeGroup, getTerminProgressVendor } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
+import Steppers from "../../../../components/steppersCustom/Steppers";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -69,6 +70,7 @@ const ItemContract = (props) => {
   const [tabActive, setTabActive] = React.useState(0);
   const [terminProgress, setTerminProgress] = React.useState(null);
   const [data, setData] = React.useState({});
+  const [dataProgress, setDataProgress] = React.useState([]);
 
   useLayoutEffect(() => {
     suhbeader.setTitle(
@@ -104,9 +106,34 @@ const ItemContract = (props) => {
   };
 
   const getTerminProgressData = () => {
-    getTerminProgress(termin)
+    getTerminProgressVendor(termin)
       .then((result) => {
-        setTerminProgress(result.data.data?.progress_type);
+        if (result.data?.data.length) {
+          const data = result.data.data.map(function (row) {
+            return {
+              label: row?.name,
+              status: row?.complete_status
+                ? "COMPLETE"
+                : row?.on_progress_status
+                  ? "ON PROGRESS"
+                  : "NO STARTED",
+              ident_name: row.ident_name,
+            };
+          });
+          setDataProgress(data);
+        } else {
+          getAllProgressTypeGroup()
+            .then((resultTypes) => {
+              const data = resultTypes.data.data.map(function (row) {
+                return {
+                  label: row?.name,
+                  status: "NO STARTED",
+                  ident_name: row.ident_name,
+                };
+              });
+              setDataProgress(data);
+            })
+        }
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -124,6 +151,7 @@ const ItemContract = (props) => {
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
         }
       />
+      <Steppers steps={dataProgress} />
       <Paper className={classes.paper}>
         <Container>
           <Tabs
