@@ -602,5 +602,6 @@
   "SPAN.DAYS": "Days ",
   "SPAN.HOURS": "Hours ",
   "SPAN.MINUTES": "Minutes ",
-  "TITLE.BUSINESS_ENTITY": "Business entity"
+  "TITLE.BUSINESS_ENTITY": "Business entity",
+  "TITLE.PROCESS": "Process"
 }
