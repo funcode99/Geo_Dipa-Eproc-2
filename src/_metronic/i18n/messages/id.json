@@ -601,5 +601,6 @@
   "SPAN.DAYS": "Hari ",
   "SPAN.HOURS": "Jam ",
   "SPAN.MINUTES": "Menit ",
-  "TITLE.BUSINESS_ENTITY": "Badan Usaha"
+  "TITLE.BUSINESS_ENTITY": "Badan Usaha",
+  "TITLE.PROCESS": "Process"
 }

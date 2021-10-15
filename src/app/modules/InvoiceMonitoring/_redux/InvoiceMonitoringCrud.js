@@ -416,6 +416,10 @@ export async function getTerminPaid(id) {
 }
 export async function createTerminPaid(data) {
   return axios.post(`invoice/create_invoice_paid/`, data);
-}export async function updateTerminPaid(data) {
+}
+export async function updateTerminPaid(data) {
   return axios.post(`invoice/update_invoice_paid/`, data);
+}
+export async function getAllProgressTypeGroup() {
+  return axios.get(`invoice/get_all_progress_type_groups/`);
 }

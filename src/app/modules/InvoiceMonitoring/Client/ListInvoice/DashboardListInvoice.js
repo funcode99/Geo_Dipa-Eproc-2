@@ -1,12 +1,11 @@
-import React, {
-  useState,
-  useLayoutEffect,
-  // useCallback
-} from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
-import { getAllInvoice } from "../../_redux/InvoiceMonitoringCrud";
+import {
+  getAllInvoice,
+  getAllProgressTypeGroup,
+} from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -55,7 +54,7 @@ function DashboardListInvoice(props) {
     ]);
   }, []);
 
-  const headerTable = [
+  const [headerTable, setHeaderTable] = useState([
     {
       title: intl.formatMessage({ id: "TITLE.TABLE_HEADER.NO" }),
       name: "no",
@@ -274,7 +273,22 @@ function DashboardListInvoice(props) {
         ],
       },
     },
-  ];
+    {
+      title: intl.formatMessage({
+        id: "TITLE.PROCESS",
+      }),
+      name: "process_name",
+      order: {
+        active: false,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "collection",
+        data: [],
+      },
+    },
+  ]);
 
   const requestApi = (params) => {
     setLoading(true);
@@ -305,6 +319,32 @@ function DashboardListInvoice(props) {
         );
       });
   };
+
+  const callApi = () => {
+    getAllProgressTypeGroup()
+      .then((result) => {
+        console.log("result.data", result.data.data);
+        var data = Object.assign([], headerTable);
+        result.data.data.forEach((element) => {
+          var item = {
+            value: element.ident_name,
+            label: element.name,
+          };
+          data[data.length - 1].filter.data.push(item);
+        });
+        setHeaderTable(data);
+      })
+      .catch((err) => {
+        setToast(
+          intl.formatMessage({
+            id: "REQ.REQUEST_FAILED",
+          }),
+          5000
+        );
+      });
+  };
+
+  useEffect(callApi, []);
 
   return (
     <React.Fragment>
@@ -364,6 +404,7 @@ function DashboardListInvoice(props) {
                   <TableCell>{item.vendor_name}</TableCell>
                   <TableCell>{item.spt_no}</TableCell>
                   <TableCell>{item.routing_slip}</TableCell>
+                  <TableCell>{item.process_name}</TableCell>
                 </TableRow>
               );
             })}
