@@ -213,7 +213,7 @@ function ItemContractBKB(props) {
       });
   }, [termin, intl, setToast]);
 
-  const getContractAuthorityData = useCallback(() => {}, [
+  const getContractAuthorityData = useCallback(() => { }, [
     termin,
     intl,
     setToast,
@@ -620,7 +620,7 @@ function ItemContractBKB(props) {
       setCountGiroSigned(countGiroSigned + 1);
     } else {
       setGiroSignedData(
-        giroSignedData.filter(function(row) {
+        giroSignedData.filter(function (row) {
           return row.id !== e.target.value;
         })
       );
@@ -850,8 +850,8 @@ function ItemContractBKB(props) {
                     <span>
                       {bkbData
                         ? window
-                            .moment(new Date(bkbData?.from_time))
-                            .format("DD MMMM YYYY")
+                          .moment(new Date(bkbData?.from_time))
+                          .format("DD MMMM YYYY")
                         : "-"}
                     </span>
                   </div>
@@ -1171,8 +1171,8 @@ function ItemContractBKB(props) {
                     <span className="mx-auto">
                       {bkbData?.archived_at
                         ? window
-                            .moment(new Date(bkbData?.archived_at))
-                            .format("DD/MM/YYYY")
+                          .moment(new Date(bkbData?.archived_at))
+                          .format("DD/MM/YYYY")
                         : ""}
                     </span>
                   </div>
@@ -1247,8 +1247,8 @@ function ItemContractBKB(props) {
                     <span className="mx-auto">
                       {bkbData?.doc_park_ap_approved_at
                         ? window
-                            .moment(new Date(bkbData?.doc_park_ap_approved_at))
-                            .format("DD/MM/YYYY")
+                          .moment(new Date(bkbData?.doc_park_ap_approved_at))
+                          .format("DD/MM/YYYY")
                         : ""}
                     </span>
                   </div>
@@ -1326,8 +1326,8 @@ function ItemContractBKB(props) {
                     <span className="mx-auto">
                       {bkbData?.doc_park_byr_approved_at
                         ? window
-                            .moment(new Date(bkbData?.doc_park_byr_approved_at))
-                            .format("DD/MM/YYYY")
+                          .moment(new Date(bkbData?.doc_park_byr_approved_at))
+                          .format("DD/MM/YYYY")
                         : ""}
                     </span>
                   </div>
@@ -1349,17 +1349,17 @@ function ItemContractBKB(props) {
                   bkbData?.doc_park_ap_no) ||
                   !submitParkAPStaff ||
                   !bkbData) && (
-                  <div className="row border-bottom">
-                    <div className="col-sm-12 row">
-                      <span className="col-sm-4">
-                        <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
-                      </span>
-                      <span className="col-sm-8">
-                        : {bkbData?.doc_park_ap_no}
-                      </span>
+                    <div className="row border-bottom">
+                      <div className="col-sm-12 row">
+                        <span className="col-sm-4">
+                          <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
+                        </span>
+                        <span className="col-sm-8">
+                          : {bkbData?.doc_park_ap_no}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
                 {(!bkbData?.doc_park_ap_no ||
                   bkbData?.doc_park_ap_state === "REJECTED") &&
                   bkbData &&
@@ -1423,17 +1423,17 @@ function ItemContractBKB(props) {
                   bkbData?.doc_park_ap_state === "REJECTED" ||
                   !submitParkByrStaff ||
                   !bkbData) && (
-                  <div className="row border-bottom">
-                    <div className="col-sm-12 row">
-                      <span className="col-sm-4">
-                        <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
-                      </span>
-                      <span className="col-sm-8">
-                        : {bkbData?.doc_park_byr_no}
-                      </span>
+                    <div className="row border-bottom">
+                      <div className="col-sm-12 row">
+                        <span className="col-sm-4">
+                          <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
+                        </span>
+                        <span className="col-sm-8">
+                          : {bkbData?.doc_park_byr_no}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
                 {((!bkbData?.doc_park_byr_no &&
                   bkbData?.doc_park_ap_state === "APPROVED") ||
                   (bkbData?.doc_park_byr_state === "REJECTED" && bkbData)) &&
@@ -1562,11 +1562,7 @@ function ItemContractBKB(props) {
                         ) {
                           return (
                             <div
-                              className={`col-sm border-right ${
-                                statusHardCopyComplate.length === 0
-                                  ? "d-none"
-                                  : ""
-                              }`}
+                              className={`col-sm border-right`}
                               style={{ height: styleCustom.heightAppvDiv }}
                               key={key}
                             >
@@ -1631,7 +1627,7 @@ function ItemContractBKB(props) {
                                   bkbData?.approved_bkb_role_id === row.id && (
                                     <QRCodeG
                                       value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.approved_bkb_role_id}&type=APPROVED_BKB`}
-                                      // size="90"
+                                    // size="90"
                                     />
                                   )}
                               </div>
@@ -1641,7 +1637,7 @@ function ItemContractBKB(props) {
                                     <FormattedMessage id="TITLE.NAME" />:
                                     {bkbData?.approved_bkb_id &&
                                       bkbData?.approved_bkb_role_id ===
-                                        row.id && (
+                                      row.id && (
                                         <span>{bkbData?.approve_bkb_name}</span>
                                       )}
                                   </span>
@@ -1649,12 +1645,12 @@ function ItemContractBKB(props) {
                                   <span style={{ fontSize: 10 }}>
                                     <FormattedMessage id="TITLE.DATE" />:
                                     {bkbData?.approved_bkb_at &&
-                                    bkbData?.approved_bkb_role_id === row.id
+                                      bkbData?.approved_bkb_role_id === row.id
                                       ? window
-                                          .moment(
-                                            new Date(bkbData?.approved_bkb_at)
-                                          )
-                                          .format("DD/MM/YYYY")
+                                        .moment(
+                                          new Date(bkbData?.approved_bkb_at)
+                                        )
+                                        .format("DD/MM/YYYY")
                                       : ""}
                                   </span>
                                 </div>
@@ -1700,7 +1696,8 @@ function ItemContractBKB(props) {
                         >
                           {monitoring_role?.includes(row.name) &&
                             !row.approved_id &&
-                            bkbData?.approved_bkb_id && (
+                            bkbData?.approved_bkb_id &&
+                            statusHardCopyComplate.length > 0 && (
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm mx-2"
@@ -1724,7 +1721,7 @@ function ItemContractBKB(props) {
                           {row.approved_id && (
                             <QRCodeG
                               value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${row.id}&type=SIGNED_GIRO`}
-                              // size="60"
+                            // size="60"
                             />
                           )}
                         </div>
@@ -1739,8 +1736,8 @@ function ItemContractBKB(props) {
                               <FormattedMessage id="TITLE.DATE" />:
                               {row.approved_at
                                 ? window
-                                    .moment(new Date(row.approved_at))
-                                    .format("DD MMMM YYYY")
+                                  .moment(new Date(row.approved_at))
+                                  .format("DD MMMM YYYY")
                                 : "-"}
                             </span>
                           </div>
