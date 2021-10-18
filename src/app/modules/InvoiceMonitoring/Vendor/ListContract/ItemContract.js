@@ -13,7 +13,7 @@ import ItemContractSummary from "./ItemContractSummary";
 import ItemContractInvoice from "./ItemContractInvoice";
 import ItemContractRoutingSlip from "./ItemContractRoutingSlip";
 import ItemContractFormVerification from "./ItemContractFormVerification";
-import { getAllProgressTypeGroup, getTerminProgressVendor } from "../../_redux/InvoiceMonitoringCrud";
+import { getAllProgressTypeGroup, getTerminProgressVendor, getTerminProgress } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import Steppers from "../../../../components/steppersCustom/Steppers";
 
@@ -134,6 +134,10 @@ const ItemContract = (props) => {
               setDataProgress(data);
             })
         }
+        getTerminProgress(termin)
+          .then((resultProgressIdentName) => {
+            setTerminProgress(resultProgressIdentName.data.data?.progress_type);
+          })
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);

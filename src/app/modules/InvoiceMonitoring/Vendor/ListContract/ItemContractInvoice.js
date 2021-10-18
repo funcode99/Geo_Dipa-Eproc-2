@@ -105,7 +105,7 @@ const supportedFormats = [
 ];
 
 function ItemContractInvoice(props) {
-  const { intl } = props;
+  const { intl, progressTermin } = props;
   const navLists = [
     {
       id: "SPR",
@@ -520,6 +520,7 @@ function ItemContractInvoice(props) {
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
                 supportedFormats={supportedFormats}
+                progressTermin={progressTermin}
               />
             </div>
           )}
@@ -532,6 +533,7 @@ function ItemContractInvoice(props) {
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
                 supportedFormats={supportedFormats}
+                progressTermin={progressTermin}
               />
             </div>
           )}
@@ -544,6 +546,7 @@ function ItemContractInvoice(props) {
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
                 supportedFormats={supportedFormats}
+                progressTermin={progressTermin}
               />
             </div>
           )}
@@ -556,6 +559,7 @@ function ItemContractInvoice(props) {
                 dialogTitleFile={DialogTitleFile}
                 transition={Transition}
                 supportedFormats={supportedFormats}
+                progressTermin={progressTermin}
               />
             </div>
           )}
