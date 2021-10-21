@@ -309,7 +309,7 @@ const Documents = ({
       ))}
       <Card className="mt-5">
         <CardBody>
-          <HeaderTableDoc />
+          <HeaderTableDoc data={content} />
           <TableDoc loading={loadings.list} />
         </CardBody>
       </Card>

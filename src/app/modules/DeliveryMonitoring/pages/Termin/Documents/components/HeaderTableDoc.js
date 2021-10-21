@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import { shallowEqual, useSelector } from "react-redux";
@@ -8,7 +9,7 @@ import { PROGRESS_CONF } from "../BASE_MODAL_CONF";
 import { DocumentsContext } from "../Documents";
 import CardProgress from "./CardProgress";
 
-const HeaderTableDoc = ({ params }) => {
+const HeaderTableDoc = ({ data }) => {
   const { handleAction, handleVisible } = React.useContext(DocumentsContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = (event) => {
@@ -33,10 +34,11 @@ const HeaderTableDoc = ({ params }) => {
   const [propsChart, setPropsChart] = React.useState({});
   const chartRef = React.useRef();
   const openChart = (data) => {
-    chartRef.current.open();
+    chartRef.current.open(data?.charts);
     // setVisible(true);
     setPropsChart({
       baseColor: data.scheme,
+      chart_data: data?.charts,
     });
   };
 
@@ -59,11 +61,18 @@ const HeaderTableDoc = ({ params }) => {
       <div className="kt-portlet">
         <div className="kt-portlet__body  kt-portlet__body--fit">
           <div className="row row-no-padding row-col-separator-xl">
-            {PROGRESS_CONF.map((el, id) => (
-              <div key={id} className="col-md-12 col-lg-6 col-xl-4">
-                <CardProgress title={"Laporan"} onOpen={openChart} {...el} />
-              </div>
-            ))}
+            {PROGRESS_CONF.map((el, id) =>
+              !isEmpty(data?.task_document_charts?.[el?.name]) ? (
+                <div key={id} className="col-md-12 col-lg-6 col-xl-4">
+                  <CardProgress
+                    title={"Laporan"}
+                    data={data?.task_document_charts?.[el?.name]}
+                    onOpen={openChart}
+                    {...el}
+                  />
+                </div>
+              ) : null
+            )}
           </div>
         </div>
       </div>

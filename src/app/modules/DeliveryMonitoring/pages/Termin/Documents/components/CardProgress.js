@@ -2,15 +2,32 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import AreaChart from "../../../../../../components/charts/AreaChart";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
+import { formatDate, formatSADate } from "../../../../../../libs/date";
 
-const CardProgress = ({ title, subTitle, percentage, scheme, onOpen }) => {
+const CardProgress = ({
+  title,
+  subTitle,
+  percentage,
+  scheme,
+  onOpen,
+  data,
+}) => {
   const [visible, setVisible] = React.useState(false);
   const chartRef = React.useRef();
   const openChart = () => {
     // chartRef.current.open();
     // setVisible(true);
-    onOpen({ scheme });
+    onOpen({
+      scheme,
+      charts: data?.chart_data,
+      // charts: data?.chart_data.map((el) => ({
+      //   ...el,
+      //   x: formatDate(new Date(1630454400 * 1000)),
+      // })),
+    });
   };
+  // console.log(`dataggg`, data);
+
   return (
     <React.Fragment>
       <div className="kt-widget24">
@@ -32,7 +49,7 @@ const CardProgress = ({ title, subTitle, percentage, scheme, onOpen }) => {
           <div
             className={`progress-bar kt-bg-${scheme}`}
             role="progressbar"
-            style={{ width: `${percentage}%` }}
+            style={{ width: `${parseFloat(data?.percentage)}%` }}
             aria-valuenow="50"
             aria-valuemin="0"
             aria-valuemax="100"
@@ -40,7 +57,7 @@ const CardProgress = ({ title, subTitle, percentage, scheme, onOpen }) => {
         </div>
         <div className="kt-widget24__action">
           <span className="kt-widget24__change">Progress</span>
-          <span className="kt-widget24__number">{percentage}%</span>
+          <span className="kt-widget24__number">{data?.percentage}%</span>
         </div>
       </div>
       {/* <DialogGlobal

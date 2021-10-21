@@ -3,8 +3,10 @@ import { useHtmlClassService } from "../../../../_metronic/layout";
 import ApexCharts from "apexcharts";
 import objectPath from "object-path";
 import { Paper } from "@material-ui/core";
+import { format } from "date-fns";
+import { formatDate, formatSADate } from "../../../libs/date";
 
-const AreaChart = ({ baseColor }) => {
+const AreaChart = ({ baseColor, chart_data }) => {
   const uiService = useHtmlClassService();
   const layoutProps = React.useMemo(() => {
     return {
@@ -41,25 +43,41 @@ const AreaChart = ({ baseColor }) => {
       return;
     }
 
-    console.log(`layoutProps`, layoutProps);
+    // console.log(`layoutProps`, layoutProps);
 
     const options = getChartOption(layoutProps);
-    options.series[0].data = [11, 12, 21, 35, 63, 75, 89];
-    options.xaxis.categories = [
-      "1 Januari 2020",
-      "1 Februari 2020",
-      "1 Maret 2020",
-      "1 April 2020",
-      "1 Mei 2020",
-      "1 Juni 2020",
-      "1 Juli 2020",
-    ];
+
+    const objData = chart_data.reduce(
+      (acc, el) => {
+        return {
+          data: [...acc.data, el.y],
+          categories: [...acc.categories, formatDate(new Date(el.x * 1000))],
+        };
+      },
+      { data: [], categories: [] }
+    );
+    // console.log(`objData`, objData);
+
+    options.series[0].data = objData.data;
+    options.xaxis.categories = objData.categories;
+
+    // options.series[0].data = [11, 12, 21, 35, 63, 75, 89];
+    // options.xaxis.categories = [
+    //   "1 Januari 2020",
+    //   "1 Februari 2020",
+    //   "1 Maret 2020",
+    //   "1 April 2020",
+    //   "1 Mei 2020",
+    //   "1 Juni 2020",
+    //   "1 Juli 2020",
+    // ];
+
     const chart = new ApexCharts(element, options);
     chart.render();
     return function cleanUp() {
       chart.destroy();
     };
-  }, [layoutProps]);
+  }, [layoutProps, chart_data]);
   return (
     <Paper>
       <div
