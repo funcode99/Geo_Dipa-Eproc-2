@@ -22,8 +22,11 @@ import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 import ModalPreview from "./components/ModalPreview";
 import ModalUploadSigned from "./components/ModalUploadSigned";
 import StepperDoc from "./components/StepperDoc";
-import formData from "./fieldData";
+import formData, { formData1, formData2 } from "./fieldData";
 import _ from "lodash";
+import FieldBuilder from "../../../../../components/builder/FieldBuilder";
+import ApproveRejectBtn from "./components/ApproveRejectBtn";
+import AlertLate from "./components/AlertLate";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -554,7 +557,22 @@ const BappPage = ({
                   </Dropdown>
                 )
               }
-            />
+            >
+              {({ fieldProps }) => (
+                <div>
+                  <Row>
+                    <Col>
+                      <FieldBuilder formData={formData1} {...fieldProps} />
+                    </Col>
+                    <Col>
+                      <FieldBuilder formData={formData2} {...fieldProps} />
+                      <ApproveRejectBtn />
+                    </Col>
+                  </Row>
+                  <AlertLate />
+                </div>
+              )}
+            </FormBuilder>
           ) : (
             <div />
           )}
