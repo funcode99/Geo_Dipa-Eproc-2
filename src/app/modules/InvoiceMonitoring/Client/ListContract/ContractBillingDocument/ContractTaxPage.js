@@ -28,6 +28,7 @@ import {
   softcopy_save,
   getListTax,
   getTerminProgress,
+  getTaxVendor,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -42,6 +43,7 @@ import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
 import { SOCKET } from "../../../../../../redux/BaseHost";
 import { API_EPROC } from "../../../../../../redux/BaseHost";
+import { cloneDeep } from "lodash";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -82,6 +84,12 @@ function ContractTaxPage(props) {
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
   const [listTax, setListTax] = useState([]);
   const [optionSelected, setOptionSelected] = useState({});
+  const [optionSelectedPpn, setOptionSelectedPpn] = useState(null);
+  const [listTaxPpn, setListTaxPpn] = useState([]);
+  const [optionSelectedPph, setOptionSelectedPph] = useState([]);
+  const [listTaxPph, setListTaxPph] = useState([]);
+  const [saveTaxPph, setSaveTaxPph] = useState({});
+  const [modalTaXPph, setModalTaXPph] = useState(false);
 
   const [Toast, setToast] = useToast();
 
@@ -102,11 +110,28 @@ function ContractTaxPage(props) {
 
   const initialValues = {};
   const invoiceName = "TAX";
+  const initialValuesTaxPph = { optionSelectedPph: [] };
 
   const TaxSchema = Yup.object().shape({
     rejected_remark: Yup.string().required(
       intl.formatMessage({
         id: "AUTH.VALIDATION.REQUIRED_FIELD",
+      })
+    ),
+  });
+
+  const TaxSchemaPph = Yup.object().shape({
+    optionSelectedPph: Yup.array().of(
+      Yup.object({
+        checked: Yup.boolean(),
+        wi_tax_base: Yup.string().when("checked", {
+          is: true,
+          then: Yup.string().required(
+            intl.formatMessage({
+              id: "AUTH.VALIDATION.REQUIRED_FIELD",
+            })
+          ),
+        }),
       })
     ),
   });
@@ -180,6 +205,16 @@ function ContractTaxPage(props) {
     },
   });
 
+  const formikPph = useFormik({
+    initialValues: initialValuesTaxPph,
+    validationSchema: TaxSchemaPph,
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
+      console.log(values);
+      setSaveTaxPph(cloneDeep(values));
+      setModalTaXPph(false);
+    },
+  });
+
   const getContractData = useCallback(() => {
     getContractSummary(contract_id, termin)
       .then((response) => {
@@ -199,10 +234,47 @@ function ContractTaxPage(props) {
       });
   }, [contract_id, formik, intl, setToast, user_id]);
 
+  // const getListTaxs = () => {
+  //   getListTax(contract_id, termin)
+  //     .then((response) => {
+  //       setListTax(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+  //     });
+  // };
+
   const getListTaxs = () => {
-    getListTax(contract_id, termin)
+    getTaxVendor(contract_id, termin)
       .then((response) => {
-        setListTax(response.data.data);
+        var dataPpn = [];
+        var dataPph = [];
+        response.data.data.vat_data.forEach((element) => {
+          dataPpn.push({
+            value: element.mwskz,
+            label: `${element?.mwskz} - ${element?.text1}`,
+          });
+        });
+        response.data.data.withholding_data.forEach((element) => {
+          dataPph.push({
+            id: element.id,
+            witht: element.witht,
+            wt_withcd: element.wt_withcd,
+            text40: element.text40,
+            wi_tax_base: contractData.termin_value,
+            checked: false,
+          });
+        });
+        dataPpn = dataPpn.sort((a, b) =>
+          a.value > b.value ? 1 : b.value > a.value ? -1 : 0
+        );
+        dataPph = dataPph.sort((a, b) =>
+          a.value > b.value ? 1 : b.value > a.value ? -1 : 0
+        );
+        setListTaxPpn(dataPpn);
+        setListTaxPph(dataPph);
+        formikPph.setValues({ optionSelectedPph: cloneDeep(dataPph) });
+        getTaxData();
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -213,7 +285,14 @@ function ContractTaxPage(props) {
     getTax(contract_id, termin)
       .then((response) => {
         if (response.data.data !== null) {
-          setOptionSelected(response.data.data.tax_selected);
+          formikPph.resetForm();
+          setSaveTaxPph({
+            optionSelectedPph: cloneDeep(response.data.data.tax_selected),
+          });
+          formikPph.setValues({
+            optionSelectedPph: cloneDeep(response.data.data.tax_selected),
+          });
+          // setOptionSelected(response.data.data.tax_selected);
           setTaxData(response.data.data);
           if (response.data.data) {
             getHistoryTaxData(response["data"]["data"]["id"]);
@@ -272,7 +351,10 @@ function ContractTaxPage(props) {
       approved_by_id: user_id,
       contract_id: contract_id,
       term_id: termin,
-      tax_selected: optionSelected,
+      tax_selected:
+        saveTaxPph && saveTaxPph.optionSelectedPph
+          ? saveTaxPph.optionSelectedPph
+          : listTaxPph,
       progress_data: dataProgress,
     })
       .then((response) => {
@@ -284,8 +366,8 @@ function ContractTaxPage(props) {
         softcopy_save(data_1);
         getTerminProgress(termin).then((result) => {
           if (result.data.data.data) {
-          setProgressTermin(result.data.data?.progress_type);
-          setDataProgress(result.data.data?.data);
+            setProgressTermin(result.data.data?.progress_type);
+            setDataProgress(result.data.data?.data);
           }
         });
         SOCKET.emit("send_notif");
@@ -307,8 +389,8 @@ function ContractTaxPage(props) {
   }, [invoiceName, setInvoiceBillingId, formik, intl, setToast]);
 
   useEffect(getContractData, []);
-  useEffect(getListTaxs, []);
-  useEffect(getTaxData, []);
+  useEffect(getListTaxs, [contractData]);
+  // useEffect(getTaxData, []);
   useEffect(getBillingDocumentIdData, []);
 
   const formatGroupLabel = (data) => (
@@ -317,6 +399,18 @@ function ContractTaxPage(props) {
       <span style={groupBadgeStyles}>{data.options.length}</span>
     </div>
   );
+
+  const handleChecked = (index) => {
+    const temp = formikPph.values.optionSelectedPph;
+    temp[index].checked = !temp[index].checked;
+    formikPph.setFieldValue("optionSelectedPph", temp);
+  };
+
+  const handleSourceText = (e, index) => {
+    const temp = formikPph.values.optionSelectedPph;
+    temp[index].wi_tax_base = e ? e : "";
+    formikPph.setFieldValue("optionSelectedPph", temp);
+  };
 
   return (
     <React.Fragment>
@@ -336,43 +430,38 @@ function ContractTaxPage(props) {
         <DialogContent>
           <div>
             <FormattedMessage id="TITLE.TAX_ATTACHMENT" />
-            {!window.jQuery.isEmptyObject(optionSelected) ? (
-              <ul>
-                {Object.keys(optionSelected).map((element, index) => {
-                  return (
-                    <li key={index.toString()}>
-                      <span>
-                        {optionSelected[element].type_tax +
-                          " - " +
-                          optionSelected[element].group_tax}
+            <ul>
+              {!window.jQuery.isEmptyObject(optionSelectedPpn) && (
+                <li>
+                  <span>PPN</span>
+                  <ol>
+                    <li>
+                      <span className="text-danger">
+                        {optionSelectedPpn.label}
                       </span>
-                      <ol>
-                        {optionSelected[element].master_tax_items.map(
-                          (item, idx) => {
-                            return (
-                              <li key={idx.toString()}>
-                                <span className="text-danger">
-                                  {item.label}
-                                </span>
-                              </li>
-                            );
-                          }
-                        )}
-                      </ol>
                     </li>
-                  );
-                })}
-                {/* {optionSelected.map((item, index) => {
-                  return (
-                    <li key={index.toString()}>
-                      <span className="text-danger">{item.label}</span>
-                    </li>
-                  );
-                })} */}
-              </ul>
-            ) : (
-              <FormattedMessage id="TITLE.NOTHING" />
-            )}
+                  </ol>
+                </li>
+              )}
+              {saveTaxPph && saveTaxPph.optionSelectedPph && (
+                <li>
+                  <span>PPH</span>
+                  <ol>
+                    {saveTaxPph &&
+                      saveTaxPph.optionSelectedPph.map((item, index) => {
+                        return (
+                          <li
+                            key={index.toString()}
+                            className={!item.checked ? "d-none" : ""}
+                          >
+                            <span className="text-danger">{item.text40}</span>
+                          </li>
+                        );
+                      })}
+                  </ol>
+                </li>
+              )}
+            </ul>
           </div>
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.APPROVED.APPROVE_BODY" />
         </DialogContent>
@@ -446,6 +535,301 @@ function ContractTaxPage(props) {
             >
               <span>
                 <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.REJECTED.REJECT_SUBMIT" />
+              </span>
+              {loading && (
+                <span
+                  className="spinner-border spinner-border-sm ml-1"
+                  aria-hidden="true"
+                ></span>
+              )}
+            </button>
+          </DialogActions>
+        </form>
+      </Dialog>
+      <Dialog
+        open={dialogState}
+        // keepMounted
+        maxWidth={false}
+        fullWidth={true}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+        }}
+      >
+        <DialogTitleFile
+          id="alert-dialog-description"
+          onClose={() => {
+            setDialogState(false);
+          }}
+        ></DialogTitleFile>
+        <PerfectScrollbar>
+          <DialogContent>
+            <div className="react-component">
+              <Document
+                file={taxData?.file}
+                onLoadSuccess={onDocumentLoadSuccess}
+              >
+                <Page pageNumber={pageNumber} renderMode="svg" />
+                <div className="page-controls">
+                  <button
+                    type="button"
+                    disabled={pageNumber === 1}
+                    onClick={() => {
+                      setPageNumber(pageNumber - 1);
+                    }}
+                  >
+                    <span>
+                      <i
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
+                        }`}
+                      ></i>
+                    </span>
+                  </button>
+                  <span>
+                    {pageNumber}{" "}
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PDF.OF" />{" "}
+                    {numPages}
+                  </span>
+                  <button
+                    type="button"
+                    disabled={pageNumber === numPages}
+                    onClick={() => {
+                      setPageNumber(pageNumber + 1);
+                    }}
+                  >
+                    <span>
+                      <i
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
+                        }`}
+                      ></i>
+                    </span>
+                  </button>
+                </div>
+              </Document>
+            </div>
+          </DialogContent>
+        </PerfectScrollbar>
+      </Dialog>
+      <Dialog
+        open={modalTaXPph}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="md"
+        fullWidth={true}
+      >
+        <form noValidate autoComplete="off" onSubmit={formikPph.handleSubmit}>
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.CHOOSE_PPH_TAX" />
+          </DialogTitle>
+          <DialogContent>
+            <table>
+              <thead>
+                <tr>
+                  <th style={{ width: "10%" }}>
+                    <FormattedMessage id="TITLE.CHECK" />
+                  </th>
+                  <th style={{ width: "40%" }}>
+                    <FormattedMessage id="TITLE.DESCRIPTION" />
+                  </th>
+                  <th style={{ width: "50%" }}>
+                    <FormattedMessage id="TITLE.VALUE" />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {listTaxPph.map((item, index) => {
+                  return (
+                    <tr key={index.toString()}>
+                      <td>
+                        {formikPph.values.optionSelectedPph[index] &&
+                        formikPph.values.optionSelectedPph[index].checked ? (
+                          <i
+                            className="far fa-check-square font-size-h1 text-primary cursor-pointer"
+                            onClick={() => {
+                              if (
+                                !(
+                                  isSubmit ||
+                                  taxData?.state === "REJECTED" ||
+                                  taxData?.state === "APPROVED" ||
+                                  taxData === null ||
+                                  !props.setTaxStaffStatus ||
+                                  progressTermin?.ident_name !== "TAX"
+                                )
+                              )
+                                handleChecked(index);
+                            }}
+                          ></i>
+                        ) : (
+                          <i
+                            className="far fa-square font-size-h1 text-primary cursor-pointer"
+                            onClick={() => {
+                              if (
+                                !(
+                                  isSubmit ||
+                                  taxData?.state === "REJECTED" ||
+                                  taxData?.state === "APPROVED" ||
+                                  taxData === null ||
+                                  !props.setTaxStaffStatus ||
+                                  progressTermin?.ident_name !== "TAX"
+                                )
+                              )
+                                handleChecked(index);
+                            }}
+                          ></i>
+                        )}
+                      </td>
+                      <td>
+                        <span
+                          className="cursor-pointer"
+                          onClick={() => {
+                            if (
+                              !(
+                                isSubmit ||
+                                taxData?.state === "REJECTED" ||
+                                taxData?.state === "APPROVED" ||
+                                taxData === null ||
+                                !props.setTaxStaffStatus ||
+                                progressTermin?.ident_name !== "TAX"
+                              )
+                            )
+                              handleChecked(index);
+                          }}
+                        >
+                          {item.text40}
+                        </span>
+                      </td>
+                      <td>
+                        <NumberFormat
+                          id={
+                            !(
+                              isSubmit ||
+                              taxData?.state === "REJECTED" ||
+                              taxData?.state === "APPROVED" ||
+                              taxData === null ||
+                              !props.setTaxStaffStatus ||
+                              progressTermin?.ident_name !== "TAX"
+                            )
+                              ? formikPph.values.optionSelectedPph[index] &&
+                                formikPph.values.optionSelectedPph[index]
+                                  .checked
+                                ? "NumberFormat-input"
+                                : "NumberFormat-text"
+                              : "NumberFormat-text"
+                          }
+                          value={
+                            formikPph.values.optionSelectedPph[index]
+                              ?.wi_tax_base
+                          }
+                          displayType={
+                            !(
+                              isSubmit ||
+                              taxData?.state === "REJECTED" ||
+                              taxData?.state === "APPROVED" ||
+                              taxData === null ||
+                              !props.setTaxStaffStatus ||
+                              progressTermin?.ident_name !== "TAX"
+                            )
+                              ? formikPph.values.optionSelectedPph[index] &&
+                                formikPph.values.optionSelectedPph[index]
+                                  .checked
+                                ? "input"
+                                : "text"
+                              : "text"
+                          }
+                          className="form-control"
+                          thousandSeparator={"."}
+                          decimalSeparator={","}
+                          allowEmptyFormatting={true}
+                          allowLeadingZeros={true}
+                          prefix={"Rp "}
+                          onValueChange={(e) => {
+                            handleSourceText(e.floatValue, index);
+                          }}
+                          onClick={(e) => {
+                            if (
+                              !(
+                                isSubmit ||
+                                taxData?.state === "REJECTED" ||
+                                taxData?.state === "APPROVED" ||
+                                taxData === null ||
+                                !props.setTaxStaffStatus ||
+                                progressTermin?.ident_name !== "TAX"
+                              )
+                            ) {
+                              if (
+                                formikPph.values.optionSelectedPph[index] &&
+                                formikPph.values.optionSelectedPph[index]
+                                  .checked
+                              ) {
+                                e.target.focus();
+                                e.target.select();
+                              }
+                            }
+                          }}
+                        />
+                        {formikPph.errors.optionSelectedPph &&
+                          formikPph.errors.optionSelectedPph[index] && (
+                            <div className="text-left">
+                              <small className="text-danger">
+                                {
+                                  formikPph.errors.optionSelectedPph[index]
+                                    .wi_tax_base
+                                }
+                              </small>
+                            </div>
+                          )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                setModalTaXPph(false);
+                formikPph.resetForm();
+                var item =
+                  saveTaxPph.optionSelectedPph &&
+                  saveTaxPph.optionSelectedPph.length > 0
+                    ? cloneDeep(saveTaxPph.optionSelectedPph)
+                    : cloneDeep(listTaxPph);
+                formikPph.setValues({
+                  optionSelectedPph: cloneDeep(item),
+                });
+              }}
+              disabled={loading}
+              type="button"
+            >
+              <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+            </button>
+            <button
+              className="btn btn-primary"
+              disabled={
+                loading ||
+                !formikPph.isValid ||
+                !formikPph.dirty ||
+                isSubmit ||
+                taxData?.state === "REJECTED" ||
+                taxData?.state === "APPROVED" ||
+                taxData === null ||
+                !props.setTaxStaffStatus ||
+                progressTermin?.ident_name !== "TAX"
+              }
+              type="submit"
+            >
+              <span>
+                <FormattedMessage id="TITLE.SAVE" />
               </span>
               {loading && (
                 <span
@@ -820,7 +1204,48 @@ function ContractTaxPage(props) {
                   />
                 </div>
               </div>
-              {listTax.map((item, index) => {
+              <div className="form-group row">
+                <label htmlFor="priceTax" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.TAX" />
+                  {" PPN"}
+                </label>
+                <div className="col-sm-8">
+                  <Select
+                    value={optionSelectedPpn}
+                    onChange={(e) => {
+                      setOptionSelectedPpn(e);
+                    }}
+                    isDisabled={
+                      isSubmit ||
+                      taxData?.state === "REJECTED" ||
+                      taxData?.state === "APPROVED" ||
+                      taxData === null ||
+                      !props.setTaxStaffStatus
+                    }
+                    options={listTaxPpn}
+                    formatGroupLabel={formatGroupLabel}
+                  />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="priceTax" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.TAX" />
+                  {" PPH"}
+                </label>
+                <div className="col-sm-8">
+                  <button
+                    type="button"
+                    className="btn btn-primary w-100"
+                    onClick={() => {
+                      setModalTaXPph(true);
+                    }}
+                  >
+                    <FormattedMessage id="TITLE.CHOOSE_PPH_TAX" />
+                  </button>
+                </div>
+              </div>
+              {/* app/modules/DeliveryMonitoring/pages/Termin/Documents/component/ModalAddDeliverables.js */}
+              {/* {listTax.map((item, index) => {
                 return (
                   <div className="form-group row" key={index.toString()}>
                     <label
@@ -882,11 +1307,10 @@ function ContractTaxPage(props) {
                         }))}
                         formatGroupLabel={formatGroupLabel}
                       />
-                      {/* app/modules/DeliveryMonitoring/pages/Termin/Documents/component/ModalAddDeliverables.js */}
                     </div>
                   </div>
                 );
-              })}
+              })} */}
             </div>
           </div>
         </CardBody>

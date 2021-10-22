@@ -429,3 +429,6 @@ export async function getAllProgressTypeGroup() {
 export async function getTerminProgressVendor(id) {
   return axios.get(`invoice/get_invoice_progress_vendor/${id}`);
 }
+export async function getTaxVendor(contract_id, term_id) {
+  return axios.get(`invoice/invoice_tax_vendor/${contract_id}/${term_id}`);
+}
