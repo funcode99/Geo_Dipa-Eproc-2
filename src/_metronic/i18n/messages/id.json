@@ -602,5 +602,8 @@
   "SPAN.HOURS": "Jam ",
   "SPAN.MINUTES": "Menit ",
   "TITLE.BUSINESS_ENTITY": "Badan Usaha",
-  "TITLE.PROCESS": "Process"
+  "TITLE.PROCESS": "Process",
+  "TITLE.CHOOSE_PPH_TAX": "Pilih Pajak PPH",
+  "TITLE.VALUE": "Nilai",
+  "TITLE.CHECK": "Cek"
 }
