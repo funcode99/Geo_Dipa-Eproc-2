@@ -86,7 +86,6 @@ function ContractTaxPage(props) {
   const [optionSelected, setOptionSelected] = useState({});
   const [optionSelectedPpn, setOptionSelectedPpn] = useState(null);
   const [listTaxPpn, setListTaxPpn] = useState([]);
-  const [optionSelectedPph, setOptionSelectedPph] = useState([]);
   const [listTaxPph, setListTaxPph] = useState([]);
   const [saveTaxPph, setSaveTaxPph] = useState({});
   const [modalTaXPph, setModalTaXPph] = useState(false);
@@ -208,8 +207,9 @@ function ContractTaxPage(props) {
   const formikPph = useFormik({
     initialValues: initialValuesTaxPph,
     validationSchema: TaxSchemaPph,
+    // enableReinitialize: true,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
-      console.log(values);
+      console.log("values", values);
       setSaveTaxPph(cloneDeep(values));
       setModalTaXPph(false);
     },
@@ -247,36 +247,50 @@ function ContractTaxPage(props) {
   const getListTaxs = () => {
     getTaxVendor(contract_id, termin)
       .then((response) => {
-        var dataPpn = [];
-        var dataPph = [];
-        response.data.data.vat_data.forEach((element) => {
-          dataPpn.push({
-            value: element.mwskz,
-            label: `${element?.mwskz} - ${element?.text1}`,
+        console.log("response", response);
+        if (
+          response.data.data.vat_data &&
+          response.data.data.withholding_data
+        ) {
+          var dataPpn = [];
+          var dataPph = [];
+          response.data.data.vat_data.forEach((element) => {
+            dataPpn.push({
+              value: element.mwskz,
+              label: `${element?.mwskz} - ${element?.text1}`,
+            });
           });
-        });
-        response.data.data.withholding_data.forEach((element) => {
-          dataPph.push({
-            id: element.id,
-            witht: element.witht,
-            wt_withcd: element.wt_withcd,
-            text40: element.text40,
-            wi_tax_base: contractData.termin_value,
-            checked: false,
+          response.data.data.withholding_data.forEach((element) => {
+            dataPph.push({
+              id: element.id,
+              witht: element.witht,
+              wt_withcd: element.wt_withcd,
+              text40: element.text40,
+              wi_tax_base: contractData.termin_value,
+              checked: false,
+            });
           });
-        });
-        dataPpn = dataPpn.sort((a, b) =>
-          a.value > b.value ? 1 : b.value > a.value ? -1 : 0
-        );
-        dataPph = dataPph.sort((a, b) =>
-          a.value > b.value ? 1 : b.value > a.value ? -1 : 0
-        );
-        setListTaxPpn(dataPpn);
-        setListTaxPph(dataPph);
-        formikPph.setValues({ optionSelectedPph: cloneDeep(dataPph) });
-        getTaxData();
+          dataPpn = dataPpn.sort((a, b) =>
+            a.value > b.value ? 1 : b.value > a.value ? -1 : 0
+          );
+          dataPph = dataPph.sort((a, b) =>
+            a.value > b.value ? 1 : b.value > a.value ? -1 : 0
+          );
+          var optionSelectedPph_ = { optionSelectedPph: cloneDeep(dataPph) };
+          formikPph.setValues(optionSelectedPph_);
+          setListTaxPpn(dataPpn);
+          setListTaxPph(dataPph);
+          getTaxData();
+          console.log("dataPpn", dataPpn);
+          console.log("dataPph", dataPph);
+          console.log(
+            "formikPph.values.optionSelectedPph",
+            formikPph.values.optionSelectedPph
+          );
+        }
       })
       .catch((error) => {
+        console.log("error", error);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   };
@@ -285,13 +299,13 @@ function ContractTaxPage(props) {
     getTax(contract_id, termin)
       .then((response) => {
         if (response.data.data !== null) {
-          formikPph.resetForm();
-          setSaveTaxPph({
-            optionSelectedPph: cloneDeep(response.data.data.tax_selected),
-          });
-          formikPph.setValues({
-            optionSelectedPph: cloneDeep(response.data.data.tax_selected),
-          });
+          console.log("response.data.data", response.data.data);
+          if (response.data.data.tax_selected)
+            setSaveTaxPph({
+              optionSelectedPph: cloneDeep(response.data.data.tax_selected),
+            });
+          if (response.data.data.tax_vat)
+            setOptionSelectedPpn(cloneDeep(response.data.data.tax_vat));
           // setOptionSelected(response.data.data.tax_selected);
           setTaxData(response.data.data);
           if (response.data.data) {
@@ -355,6 +369,7 @@ function ContractTaxPage(props) {
         saveTaxPph && saveTaxPph.optionSelectedPph
           ? saveTaxPph.optionSelectedPph
           : listTaxPph,
+      tax_vat: optionSelectedPpn,
       progress_data: dataProgress,
     })
       .then((response) => {
@@ -401,6 +416,8 @@ function ContractTaxPage(props) {
   );
 
   const handleChecked = (index) => {
+    console.log("index", index);
+    console.log("formikPph", formikPph);
     const temp = formikPph.values.optionSelectedPph;
     temp[index].checked = !temp[index].checked;
     formikPph.setFieldValue("optionSelectedPph", temp);
@@ -411,6 +428,10 @@ function ContractTaxPage(props) {
     temp[index].wi_tax_base = e ? e : "";
     formikPph.setFieldValue("optionSelectedPph", temp);
   };
+  console.log(
+    "formikPph.values.optionSelectedPph-2",
+    formikPph.values.optionSelectedPph
+  );
 
   return (
     <React.Fragment>
@@ -443,24 +464,26 @@ function ContractTaxPage(props) {
                   </ol>
                 </li>
               )}
-              {saveTaxPph && saveTaxPph.optionSelectedPph && (
-                <li>
-                  <span>PPH</span>
-                  <ol>
-                    {saveTaxPph &&
-                      saveTaxPph.optionSelectedPph.map((item, index) => {
-                        return (
-                          <li
-                            key={index.toString()}
-                            className={!item.checked ? "d-none" : ""}
-                          >
-                            <span className="text-danger">{item.text40}</span>
-                          </li>
-                        );
-                      })}
-                  </ol>
-                </li>
-              )}
+              {saveTaxPph &&
+                saveTaxPph.optionSelectedPph &&
+                saveTaxPph.optionSelectedPph.length > 0 && (
+                  <li>
+                    <span>PPH</span>
+                    <ol>
+                      {saveTaxPph &&
+                        saveTaxPph.optionSelectedPph.map((item, index) => {
+                          return (
+                            <li
+                              key={index.toString()}
+                              className={!item.checked ? "d-none" : ""}
+                            >
+                              <span className="text-danger">{item.text40}</span>
+                            </li>
+                          );
+                        })}
+                    </ol>
+                  </li>
+                )}
             </ul>
           </div>
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.APPROVED.APPROVE_BODY" />
@@ -645,151 +668,153 @@ function ContractTaxPage(props) {
                 </tr>
               </thead>
               <tbody>
-                {listTaxPph.map((item, index) => {
-                  return (
-                    <tr key={index.toString()}>
-                      <td>
-                        {formikPph.values.optionSelectedPph[index] &&
-                        formikPph.values.optionSelectedPph[index].checked ? (
-                          <i
-                            className="far fa-check-square font-size-h1 text-primary cursor-pointer"
-                            onClick={() => {
-                              if (
-                                !(
-                                  isSubmit ||
-                                  taxData?.state === "REJECTED" ||
-                                  taxData?.state === "APPROVED" ||
-                                  taxData === null ||
-                                  !props.setTaxStaffStatus ||
-                                  progressTermin?.ident_name !== "TAX"
+                {formikPph.values.optionSelectedPph &&
+                  formikPph.values.optionSelectedPph.length > 0 &&
+                  listTaxPph.map((item, index) => {
+                    return (
+                      <tr key={index.toString()}>
+                        <td>
+                          {formikPph.values.optionSelectedPph[index] &&
+                          formikPph.values.optionSelectedPph[index].checked ? (
+                            <i
+                              className="far fa-check-square font-size-h1 text-primary cursor-pointer"
+                              onClick={() => {
+                                if (
+                                  !(
+                                    isSubmit ||
+                                    taxData?.state === "REJECTED" ||
+                                    taxData?.state === "APPROVED" ||
+                                    taxData === null ||
+                                    !props.setTaxStaffStatus ||
+                                    progressTermin?.ident_name !== "TAX"
+                                  )
                                 )
-                              )
-                                handleChecked(index);
-                            }}
-                          ></i>
-                        ) : (
-                          <i
-                            className="far fa-square font-size-h1 text-primary cursor-pointer"
-                            onClick={() => {
-                              if (
-                                !(
-                                  isSubmit ||
-                                  taxData?.state === "REJECTED" ||
-                                  taxData?.state === "APPROVED" ||
-                                  taxData === null ||
-                                  !props.setTaxStaffStatus ||
-                                  progressTermin?.ident_name !== "TAX"
+                                  handleChecked(index);
+                              }}
+                            ></i>
+                          ) : (
+                            <i
+                              className="far fa-square font-size-h1 text-primary cursor-pointer"
+                              onClick={() => {
+                                if (
+                                  !(
+                                    isSubmit ||
+                                    taxData?.state === "REJECTED" ||
+                                    taxData?.state === "APPROVED" ||
+                                    taxData === null ||
+                                    !props.setTaxStaffStatus ||
+                                    progressTermin?.ident_name !== "TAX"
+                                  )
                                 )
-                              )
-                                handleChecked(index);
-                            }}
-                          ></i>
-                        )}
-                      </td>
-                      <td>
-                        <span
-                          className="cursor-pointer"
-                          onClick={() => {
-                            if (
-                              !(
-                                isSubmit ||
-                                taxData?.state === "REJECTED" ||
-                                taxData?.state === "APPROVED" ||
-                                taxData === null ||
-                                !props.setTaxStaffStatus ||
-                                progressTermin?.ident_name !== "TAX"
-                              )
-                            )
-                              handleChecked(index);
-                          }}
-                        >
-                          {item.text40}
-                        </span>
-                      </td>
-                      <td>
-                        <NumberFormat
-                          id={
-                            !(
-                              isSubmit ||
-                              taxData?.state === "REJECTED" ||
-                              taxData?.state === "APPROVED" ||
-                              taxData === null ||
-                              !props.setTaxStaffStatus ||
-                              progressTermin?.ident_name !== "TAX"
-                            )
-                              ? formikPph.values.optionSelectedPph[index] &&
-                                formikPph.values.optionSelectedPph[index]
-                                  .checked
-                                ? "NumberFormat-input"
-                                : "NumberFormat-text"
-                              : "NumberFormat-text"
-                          }
-                          value={
-                            formikPph.values.optionSelectedPph[index]
-                              ?.wi_tax_base
-                          }
-                          displayType={
-                            !(
-                              isSubmit ||
-                              taxData?.state === "REJECTED" ||
-                              taxData?.state === "APPROVED" ||
-                              taxData === null ||
-                              !props.setTaxStaffStatus ||
-                              progressTermin?.ident_name !== "TAX"
-                            )
-                              ? formikPph.values.optionSelectedPph[index] &&
-                                formikPph.values.optionSelectedPph[index]
-                                  .checked
-                                ? "input"
-                                : "text"
-                              : "text"
-                          }
-                          className="form-control"
-                          thousandSeparator={"."}
-                          decimalSeparator={","}
-                          allowEmptyFormatting={true}
-                          allowLeadingZeros={true}
-                          prefix={"Rp "}
-                          onValueChange={(e) => {
-                            handleSourceText(e.floatValue, index);
-                          }}
-                          onClick={(e) => {
-                            if (
-                              !(
-                                isSubmit ||
-                                taxData?.state === "REJECTED" ||
-                                taxData?.state === "APPROVED" ||
-                                taxData === null ||
-                                !props.setTaxStaffStatus ||
-                                progressTermin?.ident_name !== "TAX"
-                              )
-                            ) {
-                              if (
-                                formikPph.values.optionSelectedPph[index] &&
-                                formikPph.values.optionSelectedPph[index]
-                                  .checked
-                              ) {
-                                e.target.focus();
-                                e.target.select();
-                              }
-                            }
-                          }}
-                        />
-                        {formikPph.errors.optionSelectedPph &&
-                          formikPph.errors.optionSelectedPph[index] && (
-                            <div className="text-left">
-                              <small className="text-danger">
-                                {
-                                  formikPph.errors.optionSelectedPph[index]
-                                    .wi_tax_base
-                                }
-                              </small>
-                            </div>
+                                  handleChecked(index);
+                              }}
+                            ></i>
                           )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                        </td>
+                        <td>
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => {
+                              if (
+                                !(
+                                  isSubmit ||
+                                  taxData?.state === "REJECTED" ||
+                                  taxData?.state === "APPROVED" ||
+                                  taxData === null ||
+                                  !props.setTaxStaffStatus ||
+                                  progressTermin?.ident_name !== "TAX"
+                                )
+                              )
+                                handleChecked(index);
+                            }}
+                          >
+                            {item.text40}
+                          </span>
+                        </td>
+                        <td>
+                          <NumberFormat
+                            id={
+                              !(
+                                isSubmit ||
+                                taxData?.state === "REJECTED" ||
+                                taxData?.state === "APPROVED" ||
+                                taxData === null ||
+                                !props.setTaxStaffStatus ||
+                                progressTermin?.ident_name !== "TAX"
+                              )
+                                ? formikPph.values.optionSelectedPph[index] &&
+                                  formikPph.values.optionSelectedPph[index]
+                                    .checked
+                                  ? "NumberFormat-input"
+                                  : "NumberFormat-text"
+                                : "NumberFormat-text"
+                            }
+                            value={
+                              formikPph.values.optionSelectedPph[index]
+                                ?.wi_tax_base
+                            }
+                            displayType={
+                              !(
+                                isSubmit ||
+                                taxData?.state === "REJECTED" ||
+                                taxData?.state === "APPROVED" ||
+                                taxData === null ||
+                                !props.setTaxStaffStatus ||
+                                progressTermin?.ident_name !== "TAX"
+                              )
+                                ? formikPph.values.optionSelectedPph[index] &&
+                                  formikPph.values.optionSelectedPph[index]
+                                    .checked
+                                  ? "input"
+                                  : "text"
+                                : "text"
+                            }
+                            className="form-control"
+                            thousandSeparator={"."}
+                            decimalSeparator={","}
+                            allowEmptyFormatting={true}
+                            allowLeadingZeros={true}
+                            prefix={"Rp "}
+                            onValueChange={(e) => {
+                              handleSourceText(e.floatValue, index);
+                            }}
+                            onClick={(e) => {
+                              if (
+                                !(
+                                  isSubmit ||
+                                  taxData?.state === "REJECTED" ||
+                                  taxData?.state === "APPROVED" ||
+                                  taxData === null ||
+                                  !props.setTaxStaffStatus ||
+                                  progressTermin?.ident_name !== "TAX"
+                                )
+                              ) {
+                                if (
+                                  formikPph.values.optionSelectedPph[index] &&
+                                  formikPph.values.optionSelectedPph[index]
+                                    .checked
+                                ) {
+                                  e.target.focus();
+                                  e.target.select();
+                                }
+                              }
+                            }}
+                          />
+                          {formikPph.errors.optionSelectedPph &&
+                            formikPph.errors.optionSelectedPph[index] && (
+                              <div className="text-left">
+                                <small className="text-danger">
+                                  {
+                                    formikPph.errors.optionSelectedPph[index]
+                                      .wi_tax_base
+                                  }
+                                </small>
+                              </div>
+                            )}
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </DialogContent>
@@ -1220,7 +1245,8 @@ function ContractTaxPage(props) {
                       taxData?.state === "REJECTED" ||
                       taxData?.state === "APPROVED" ||
                       taxData === null ||
-                      !props.setTaxStaffStatus
+                      !props.setTaxStaffStatus ||
+                      progressTermin?.ident_name !== "TAX"
                     }
                     options={listTaxPpn}
                     formatGroupLabel={formatGroupLabel}
@@ -1324,7 +1350,8 @@ function ContractTaxPage(props) {
               taxData?.state === "APPROVED" ||
               taxData === null ||
               !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "TAX"
+              progressTermin?.ident_name !== "TAX" ||
+              window.$.isEmptyObject(optionSelectedPpn)
             }
             className="btn btn-primary mx-1"
           >
