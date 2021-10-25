@@ -2,6 +2,7 @@ import { makeStyles, Paper } from "@material-ui/core";
 import React from "react";
 import SVG from "react-inlinesvg";
 import { FormattedMessage } from "react-intl";
+import { TableRow, TableCell } from "@material-ui/core";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
@@ -10,6 +11,7 @@ import { formatDate } from "../../../../libs/date";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
+import Tables from "../../../../components/tableCustomV1/table";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,41 +27,58 @@ const useStyles = makeStyles((theme) => ({
 
 const tableHeaderContractsNew = [
   {
-    id: "contract_no",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
+    name: "contract_no",
+    title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
+    order: { active: true, status: true, type: true },
+    filter: { active: true, type: "text" },
   },
   {
-    id: "po_number",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
+    name: "po_number",
+    title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
+    order: { active: true, status: true, type: true },
+    filter: { active: true, type: "text" },
   },
   {
-    id: "procurement_title",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
+    name: "procurement_title",
+    title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
+    order: { active: true, status: true, type: true },
+    filter: { active: true, type: "text" },
   },
   {
-    id: "po_date",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
+    name: "po_date",
+    title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
+    order: { active: false, status: false },
+    filter: { active: true, type: "text" },
   },
   {
-    id: "contract_date",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />,
+    name: "contract_date",
+    title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />,
+    order: { active: false, status: false },
+    filter: { active: true, type: "text" },
   },
   {
-    id: "group",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />,
+    name: "group",
+    title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />,
+    order: { active: false, status: false },
+    filter: { active: true, type: "text" },
   },
   {
-    id: "vendor",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />,
+    name: "vendor",
+    title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />,
+    order: { active: false, status: false },
+    filter: { active: true, type: "text" },
   },
   {
-    id: "status",
-    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
+    name: "status",
+    title: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
+    order: { active: false, status: false },
+    filter: { active: true, type: "text" },
   },
   {
-    id: "action",
-    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
-    sortable: false,
+    name: "action",
+    title: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
+    order: { active: false, status: false },
+    filter: { active: false, type: "text" },
   },
 ];
 
@@ -69,49 +88,15 @@ const keys = {
 
 export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
   const classes = useStyles();
+  const [dataArr, setDataArr] = React.useState([]);
   const [newContent, setNewContent] = React.useState([]);
 
   const generateTableContent = (data) => {
-    let dataArr = data.map((item, id) => ({
-      contract_no: (
-        <NavLink to={`/${status}/delivery-monitoring/contract/${item.id}`}>
-          {item?.contract_no}
-        </NavLink>
-      ),
-      po_number: item?.purch_order_no,
-      procurement_title: item?.contract_name,
-      po_date:
-        item?.issued_date !== null
-          ? formatDate(new Date(item?.issued_date))
-          : null,
-      contract_date:
-        item?.issued_date !== null
-          ? formatDate(new Date(item?.issued_date))
-          : null,
-      group: item?.user_group?.party?.full_name,
-      vendor: item?.vendor.party?.full_name,
-      status: item?.state,
-      action: (
-        <ButtonAction
-          hoverLabel="More"
-          data={"1"}
-          // handleAction={console.log(null)}
-          ops={[
-            {
-              label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
-              icon: "fas fa-search text-primary pointer",
-              to: {
-                url: `/${status}/delivery-monitoring/contract/${item.id}`,
-                style: {
-                  color: "black",
-                },
-              },
-            },
-          ]}
-        />
-      ),
-    }));
     setNewContent(dataArr);
+  };
+
+  const handleFilter = (data) => {
+    console.log(`datazzz`, data);
   };
 
   const getDataContracts = async () => {
@@ -121,14 +106,51 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
       url: `/delivery/contract`,
       onSuccess: (res) => {
         // console.log(`res.data`, res.data);
-        generateTableContent(res.data);
+        // generateTableContent(res.data);
+        setDataArr(
+          res.data.map((item, index) => ({
+            id: item.id,
+            contract_no: item?.contract_no,
+            po_number: item?.purch_order_no,
+            procurement_title: item?.contract_name,
+            po_date:
+              item?.issued_date !== null
+                ? formatDate(new Date(item?.issued_date))
+                : null,
+            contract_date:
+              item?.issued_date !== null
+                ? formatDate(new Date(item?.issued_date))
+                : null,
+            group: item?.user_group?.party?.full_name,
+            vendor: item?.vendor.party?.full_name,
+            status: item?.state,
+            action: (
+              <ButtonAction
+                hoverLabel="More"
+                data={"1"}
+                // handleAction={console.log(null)}
+                ops={[
+                  {
+                    label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
+                    icon: "fas fa-search text-primary pointer",
+                    to: {
+                      url: `/${status}/delivery-monitoring/contract/${item.id}`,
+                      style: {
+                        color: "black",
+                      },
+                    },
+                  },
+                ]}
+              />
+            ),
+          }))
+        );
       },
     });
   };
 
   React.useEffect(() => {
     getDataContracts();
-    // eslint-disable-next-line
   }, []);
 
   return (
@@ -144,12 +166,40 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
       />
 
       <Paper className={classes.root}>
-        <TablePaginationCustom
+        <Tables
+          dataHeader={tableHeaderContractsNew}
+          handleParams={handleFilter}
+          err={false}
+          loading={false}
+          countData={3}
+          hecto={20}
+        >
+          {dataArr.map((item, index) => (
+            <TableRow key={index.toString()}>
+              <TableCell>
+                <NavLink
+                  to={`/${status}/delivery-monitoring/contract/${item.id}`}
+                >
+                  {item?.contract_no}
+                </NavLink>
+              </TableCell>
+              <TableCell>{item.po_number}</TableCell>
+              <TableCell>{item.procurement_title}</TableCell>
+              <TableCell>{item.po_date}</TableCell>
+              <TableCell>{item.contract_date}</TableCell>
+              <TableCell>{item.group}</TableCell>
+              <TableCell>{item.vendor}</TableCell>
+              <TableCell>{item.status}</TableCell>
+              <TableCell>{item.action}</TableCell>
+            </TableRow>
+          ))}
+        </Tables>
+        {/* <TablePaginationCustom
           headerRows={tableHeaderContractsNew}
           rows={newContent}
           width={1500}
           loading={loadings.fetch}
-        />
+        /> */}
       </Paper>
     </>
   );
