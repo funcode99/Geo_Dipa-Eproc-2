@@ -12,6 +12,10 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 import Tables from "../../../../components/tableCustomV1/table";
+import {
+  getSorting,
+  stableSort,
+} from "../../../../components/tables/TablePagination/TablePaginationCustom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,14 +93,20 @@ const keys = {
 export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
   const classes = useStyles();
   const [dataArr, setDataArr] = React.useState([]);
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("");
   const [newContent, setNewContent] = React.useState([]);
 
   const generateTableContent = (data) => {
     setNewContent(dataArr);
   };
 
-  const handleFilter = (data) => {
-    console.log(`datazzz`, data);
+  const handleFilter = (data, data2) => {
+    const sort = JSON.parse(data2.sort);
+    const filter = JSON.parse(data2.filter);
+    setOrder(sort.order ? "asc" : "desc");
+    setOrderBy(sort.name);
+    // console.log(`datazzz`, sort, filter);
   };
 
   const getDataContracts = async () => {
@@ -174,25 +184,27 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
           countData={3}
           hecto={20}
         >
-          {dataArr.map((item, index) => (
-            <TableRow key={index.toString()}>
-              <TableCell>
-                <NavLink
-                  to={`/${status}/delivery-monitoring/contract/${item.id}`}
-                >
-                  {item?.contract_no}
-                </NavLink>
-              </TableCell>
-              <TableCell>{item.po_number}</TableCell>
-              <TableCell>{item.procurement_title}</TableCell>
-              <TableCell>{item.po_date}</TableCell>
-              <TableCell>{item.contract_date}</TableCell>
-              <TableCell>{item.group}</TableCell>
-              <TableCell>{item.vendor}</TableCell>
-              <TableCell>{item.status}</TableCell>
-              <TableCell>{item.action}</TableCell>
-            </TableRow>
-          ))}
+          {stableSort(dataArr, getSorting(order, orderBy)).map(
+            (item, index) => (
+              <TableRow key={index.toString()}>
+                <TableCell>
+                  <NavLink
+                    to={`/${status}/delivery-monitoring/contract/${item.id}`}
+                  >
+                    {item?.contract_no}
+                  </NavLink>
+                </TableCell>
+                <TableCell>{item.po_number}</TableCell>
+                <TableCell>{item.procurement_title}</TableCell>
+                <TableCell>{item.po_date}</TableCell>
+                <TableCell>{item.contract_date}</TableCell>
+                <TableCell>{item.group}</TableCell>
+                <TableCell>{item.vendor}</TableCell>
+                <TableCell>{item.status}</TableCell>
+                <TableCell>{item.action}</TableCell>
+              </TableRow>
+            )
+          )}
         </Tables>
         {/* <TablePaginationCustom
           headerRows={tableHeaderContractsNew}
