@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector } from "react-redux";
 import { injectIntl, FormattedMessage } from "react-intl";
-import { Card, CardBody, CardHeader, CardHeaderToolbar } from "../../../../../_metronic/_partials/controls";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardHeaderToolbar,
+} from "../../../../../_metronic/_partials/controls";
 import Navs from "../../../../components/navs";
 import ContractInvoicePage from "./ContractBillingDocument/ContractInvoicePage";
 import ContractSprPage from "./ContractBillingDocument/ContractSprPage";
@@ -37,9 +42,8 @@ import { useParams } from "react-router-dom";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 import moment from "moment";
-import {
-  getInvoicePeriods
-} from "../../../Master/service/MasterCrud";
+import { getInvoicePeriods } from "../../../Master/service/MasterCrud";
+import NumberFormat from "react-number-format";
 
 const styles = (theme) => ({
   root: {
@@ -130,6 +134,7 @@ function ItemContractInvoice(props) {
   const [modalUpload, setModalUpload] = useState({
     statusDialog: false,
     data: {},
+    npwp: null,
     loading: false,
     statusReq: false,
   });
@@ -197,6 +202,7 @@ function ItemContractInvoice(props) {
     setModalUpload({ ...modalUpload, loading: true });
     var data = new FormData();
     data.append("file", modalUpload.data.newFile);
+    data.append("npwp", modalUpload.npwp);
     data.append("created_by_id", user_id);
     data.append("ident_name", modalUpload.data.ident_name);
     updateSoftCopyByUser(modalUpload.data.document_monitoring_id, data)
@@ -248,7 +254,7 @@ function ItemContractInvoice(props) {
     } else if (status === "monitoring") {
       window.open(
         DEV_NODE +
-        `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
+          `/invoice/get_file_softcopy?filename=${name}&ident_name=${ident_name}`,
         "_blank"
       );
     } else if (status === "delivery") {
@@ -258,7 +264,7 @@ function ItemContractInvoice(props) {
 
   const callApiContractSoftCopy = () => {
     setLoading(true);
-    getListDocSoftCopy(contract, termin)
+    getListDocSoftCopy(contract, termin, "SOFTCOPY")
       .then((result) => {
         setLoading(false);
         setDataDocSoftCopy(result.data.data);
@@ -286,7 +292,7 @@ function ItemContractInvoice(props) {
   const getInvoicePeriodsData = useCallback(() => {
     getInvoicePeriods()
       .then((response) => {
-        setInvoicePeriodsData(response["data"]["data"][0])
+        setInvoicePeriodsData(response["data"]["data"][0]);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -317,6 +323,30 @@ function ItemContractInvoice(props) {
             </span>
           </DialogTitle>
           <DialogContent>
+            <div className="form-group row">
+              <label className="col-sm-4 col-form-label">
+                <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NPWP" />
+              </label>
+              <div className="col-sm-8 p-0">
+                <NumberFormat
+                  value={modalUpload.npwp}
+                  displayType="input"
+                  className="form-control"
+                  format="##.###.###.#-###.###"
+                  mask="_"
+                  allowEmptyFormatting={true}
+                  allowLeadingZeros={true}
+                  onValueChange={(e) => {
+                    let data_ = Object.assign({}, modalUpload);
+                    data_.npwp = e.floatValue;
+                    setModalUpload({
+                      ...modalUpload,
+                      npwp: data_.npwp,
+                    });
+                  }}
+                />
+              </div>
+            </div>
             <div className="form-group row">
               <label htmlFor="upload" className="col-sm-4 col-form-label">
                 <FormattedMessage id="TITLE.UPLOAD" />
@@ -377,7 +407,9 @@ function ItemContractInvoice(props) {
               disabled={
                 modalUpload.loading ||
                 modalUpload.data.newFile === null ||
-                modalUpload.data.newFile === undefined
+                modalUpload.data.newFile === undefined ||
+                modalUpload.npwp === null ||
+                modalUpload.npwp === undefined
               }
             >
               {!modalUpload.loading && (
@@ -461,20 +493,20 @@ function ItemContractInvoice(props) {
                       <TableCell>
                         {item.softcopy_approved_at
                           ? window
-                            .moment(new Date(item.softcopy_approved_at))
-                            .format("DD MMM YYYY")
+                              .moment(new Date(item.softcopy_approved_at))
+                              .format("DD MMM YYYY")
                           : ""}
                       </TableCell>
                       <TableCell>
                         {(item.softcopy_state === "PENDING" ||
                           item.softcopy_state === null) &&
-                          item.doc_file
+                        item.doc_file
                           ? "WAITING TO APPROVE"
                           : item.softcopy_state === "REJECTED"
-                            ? "REJECTED"
-                            : item.softcopy_state === "APPROVED"
-                              ? "APPROVED"
-                              : "WAITING"}
+                          ? "REJECTED"
+                          : item.softcopy_state === "APPROVED"
+                          ? "APPROVED"
+                          : "WAITING"}
                       </TableCell>
                       <TableCell>
                         {item.softcopy_state === "APPROVED"
@@ -503,7 +535,13 @@ function ItemContractInvoice(props) {
       <Card>
         <CardHeader>
           <CardHeaderToolbar>
-            <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE" values={{ start_day: invoicePeriodsData?.accepted_from_day, end_day: invoicePeriodsData?.accepted_thru_day }} />
+            <FormattedMessage
+              id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE"
+              values={{
+                start_day: invoicePeriodsData?.accepted_from_day,
+                end_day: invoicePeriodsData?.accepted_thru_day,
+              }}
+            />
           </CardHeaderToolbar>
         </CardHeader>
         <CardBody>
