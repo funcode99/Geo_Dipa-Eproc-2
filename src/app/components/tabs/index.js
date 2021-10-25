@@ -61,7 +61,8 @@ export default function Tabs({
       onChange={handleChange}
       indicatorColor="secondary"
       textColor="secondary"
-      variant="standard"
+      variant="scrollable"
+      scrollButtons="auto"
       classes={{ root: classes.root, indicator: classes.customIndicatorColor }}
       {...other}
     >

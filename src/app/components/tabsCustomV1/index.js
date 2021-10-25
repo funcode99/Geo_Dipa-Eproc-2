@@ -74,7 +74,6 @@ export default function Tabs({
         onChange={handleChange}
         indicatorColor="secondary"
         textColor="secondary"
-        variant="standard"
         variant="scrollable"
         scrollButtons="auto"
         classes={{
@@ -96,7 +95,8 @@ export default function Tabs({
           />
         ))}
       </MuiTabs>
-      {!auditStaff && <div>
+      {!auditStaff && (
+        <div>
         <MuiTabs
           value={99}
           onChange={handleChangeTwo}
@@ -118,7 +118,8 @@ export default function Tabs({
             }}
           />
         </MuiTabs>
-      </div>}
+        </div>
+      )}
     </div>
   );
 }
