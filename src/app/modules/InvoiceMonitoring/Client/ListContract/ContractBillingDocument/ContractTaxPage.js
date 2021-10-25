@@ -265,6 +265,7 @@ function ContractTaxPage(props) {
               wt_withcd: element.wt_withcd,
               text40: element.text40,
               wi_tax_base: contractData.termin_value,
+              qsatz: element.qsatz,
               checked: false,
             });
           });
