@@ -740,7 +740,7 @@ function ItemContractBKB(props) {
                 {rolesSignedGiroData?.map((row, key) => {
                   return (
                     <FormControlLabel
-                      className="col-sm-3 mx-0 mb-1"
+                      className="col-sm-4 mx-0 mb-1"
                       key={key}
                       control={
                         <Checkbox
@@ -1075,6 +1075,28 @@ function ItemContractBKB(props) {
                     <td></td>
                   </tr>
                   {bkbData?.tax_selected.length > 0 &&
+                    bkbData?.tax_selected
+                      .filter((value) => value.checked === true)
+                      .map((item, indexs) => {
+                        return (
+                          <tr key={indexs}>
+                            <td colSpan="3" className="text-right">
+                              {item.text40}
+                            </td>
+                            <td>
+                              <div className="d-flex justify-content-between">
+                                <span>{bkbData?.symbol}</span>
+                                <span>
+                                  {rupiah(
+                                    (item.wi_tax_base * item.qsatz) / 100
+                                  ).slice(3)}
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  {/* {bkbData?.tax_selected.length > 0 &&
                     bkbData?.tax_selected.map((item, indexs) => {
                       return (
                         <tr key={indexs}>
@@ -1093,7 +1115,7 @@ function ItemContractBKB(props) {
                           </td>
                         </tr>
                       );
-                    })}
+                    })} */}
                   <tr>
                     <td colSpan="3" className="text-right">
                       <FormattedMessage id="TITLE.FINE_OR_OTHER" />
@@ -1483,6 +1505,15 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                   )}
+
+                <div className="row border-bottom">
+                  <div className="col-sm-12 row">
+                    <span className="col-sm-4">
+                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> MIRO
+                    </span>
+                    <span className="col-sm-8">: {bkbData?.miro_number}</span>
+                  </div>
+                </div>
               </div>
               <div className="col-sm-7 border">
                 <div className="row border-bottom">
