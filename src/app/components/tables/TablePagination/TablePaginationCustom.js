@@ -47,6 +47,7 @@ export function getSorting(order, orderBy) {
 
 function searchFind(rows, query) {
   const columns = rows[0] && Object.keys(rows[0]);
+  console.log(`columns`, columns, rows);
   // (row) => row.procurement_title.toLowerCase().indexOf(query) > -1
   return rows.filter((row) =>
     columns.some((column) => {
@@ -59,6 +60,31 @@ function searchFind(rows, query) {
         );
     })
   );
+}
+
+export function searchFindMulti(rows, queryAll) {
+  const columns = rows[0] && Object.keys(rows[0]);
+  const queries = Object.keys(queryAll);
+  return rows.filter((row) => {
+    const apa = columns
+      .filter((el) => !["action", "id"].includes(el))
+      .reduce((acc, column) => {
+        if (_.isEmpty(queryAll)) return true;
+        else if (acc == true) return true;
+        return queries.reduce((acc, key) => {
+          if (column === key.substr(7)) {
+            return (
+              row[column]
+                .toString()
+                .toLowerCase()
+                .indexOf(queryAll[key].toString().toLowerCase()) > -1
+            );
+          }
+        }, false);
+      });
+    console.log(`apa`, row, apa);
+    return apa;
+  });
 }
 
 const useStyles = makeStyles((theme) => ({
