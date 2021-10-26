@@ -577,6 +577,7 @@ function ItemContractInvoice(props) {
     var data_2 = {
       softcopy_approved_by_id: user_id,
       term_id: termin,
+      contract_id: contract,
     };
     if (modalApproved.data.softcopy_state === null) {
       softcopy_save(data_1)
@@ -1491,7 +1492,8 @@ function ItemContractInvoice(props) {
                     <TableCell>{item.seq}</TableCell>
                     <TableCell>{item.document_name}</TableCell>
                     {item.doc_no &&
-                    item.ident_name !== "GOODS" && item.ident_name !== "SA" ? (
+                    item.ident_name !== "GOODS" &&
+                    item.ident_name !== "SA" ? (
                       item.doc_file ? (
                         <TableCell>
                           <a
