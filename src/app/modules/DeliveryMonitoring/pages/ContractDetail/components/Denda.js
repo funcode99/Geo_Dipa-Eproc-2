@@ -40,7 +40,7 @@ const RowNormal = () => {
         <TableCell key={idx} className="text-dark text-left">
           {Array.isArray(el) ? (
             <InputGroup className="mb-3">
-              <FormControl defaultValue={el[0]} aria-label="Days" />
+              <FormControl disabled defaultValue={el[0]} aria-label="Days" />
               <InputGroup.Append>
                 <InputGroup.Text>{el[1]}</InputGroup.Text>
               </InputGroup.Append>
@@ -68,7 +68,11 @@ const Denda = () => {
             type: el?.pinalty_name,
             value: (
               <InputGroup className="mb-3">
-                <FormControl defaultValue={el?.value} aria-label="Days" />
+                <FormControl
+                  disabled
+                  defaultValue={el?.value}
+                  aria-label="Days"
+                />
                 <InputGroup.Append>
                   <InputGroup.Text>%</InputGroup.Text>
                 </InputGroup.Append>
