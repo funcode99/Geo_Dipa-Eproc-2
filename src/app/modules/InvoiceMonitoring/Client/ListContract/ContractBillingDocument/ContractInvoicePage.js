@@ -753,6 +753,20 @@ function ContractInvoicePage(props) {
               </div>
               <div className="form-group row">
                 <label htmlFor="note" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.LATE_DESC" />
+                </label>
+                <div className="col-sm-8">
+                <input
+                    type="text"
+                    className="form-control"
+                    id="priceStep1"
+                    defaultValue={invoiceData["task"]?.remarks}
+                    disabled
+                  />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="note" className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.FINE_DESC" />
                 </label>
                 <div className="col-sm-8">
