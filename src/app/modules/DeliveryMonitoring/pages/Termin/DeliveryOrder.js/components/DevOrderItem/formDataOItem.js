@@ -71,7 +71,7 @@ export const form_gr = [
   {
     name: "ref_doc_no",
     label: "Ref Doc No",
-    type: "number",
+    // type: "number",
   },
 
   {
@@ -81,6 +81,6 @@ export const form_gr = [
 
   {
     name: "unload_pt",
-    label: "Unload PT",
+    label: "Unloading",
   },
 ];
