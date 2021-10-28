@@ -16,7 +16,7 @@ import {
   submitParkAP,
   approveParkAP,
   submitParkBYR,
-  approveParkBYR,
+  approveParkBYRNew,
   getTerminProgress,
   rejectParkAP,
   updateParkAP,
@@ -25,6 +25,7 @@ import {
   rejectBkb,
   approveGiro,
   getContractAuthority,
+  synchBkbByNo,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -98,6 +99,7 @@ function ItemContractBKB(props) {
     loading: false,
     statusReq: false,
   });
+  const [loadingSync, setLoadingSync] = useState(false);
 
   const statusHardCopyComplate = dataProgress?.filter(
     (row) => row.ident_name === "HARDCOPY" && row.status === "COMPLETE"
@@ -422,15 +424,15 @@ function ItemContractBKB(props) {
     } else if (modalApproved.data === "monitoringApproveParkBYR") {
       const data = {
         id: bkbData.id,
-        doc_park_byr_approved_id: data_login.user_id,
-        desc: bkbData.desc,
-        term_id: termin,
-        contract_id: contract,
+        // doc_park_byr_approved_id: data_login.user_id,
+        // desc: bkbData.desc,
+        // term_id: termin,
+        // contract_id: contract,
         giro_signed_data: giroSignedData,
-        sub_total: bkbData?.sub_total,
-        authority: terminAuthority,
+        // sub_total: bkbData?.sub_total,
+        // authority: terminAuthority,
       };
-      approveParkBYR(data)
+      approveParkBYRNew(data)
         .then((result) => {
           setModalApproved({
             ...modalApproved,
@@ -628,6 +630,23 @@ function ItemContractBKB(props) {
     }
   };
 
+  const synchBkb = () => {
+    setLoadingSync(true);
+    synchBkbByNo({ bkb_no: bkbData?.bkb_number })
+      .then((result) => {
+        getTerminProgress(termin).then((result) => {
+          getBkbData();
+          setProgressTermin(result.data.data?.progress_type);
+          setDataProgress(result.data.data?.data);
+          setLoadingSync(false);
+        });
+      })
+      .catch((err) => {
+        setLoadingSync(false);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
   return (
     <React.Fragment>
       <Toast />
@@ -809,6 +828,37 @@ function ItemContractBKB(props) {
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
+            {approveParkByrStaff &&
+              bkbData?.miro_number &&
+              bkbData?.doc_park_ap_no &&
+              bkbData?.doc_park_byr_no &&
+              !bkbData?.giro_signed_data && (
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm mx-2"
+                  onClick={() => {
+                    setModalApproved({
+                      ...modalApproved,
+                      statusDialog: true,
+                      data: "monitoringApproveParkBYR",
+                    });
+                  }}
+                >
+                  <i className="fas fa-check-circle"></i>
+                  <FormattedMessage id="TITLE.APPROVE" />
+                </button>
+              )}
+            <button
+              type="button"
+              onClick={synchBkb}
+              className="btn btn-sm btn-primary mx-2"
+              disabled={!bkbData?.bkb_number}
+            >
+              <i
+                className={`fas fa-sync ${loadingSync ? "fa-spin" : ""} px-2`}
+              ></i>
+              <FormattedMessage id="TITLE.SYNCHRONIZE_DATA" /> BKB
+            </button>
             <button
               type="button"
               onClick={print}
@@ -1086,11 +1136,7 @@ function ItemContractBKB(props) {
                             <td>
                               <div className="d-flex justify-content-between">
                                 <span>{bkbData?.symbol}</span>
-                                <span>
-                                  {rupiah(
-                                    (item.wi_tax_base * item.qsatz) / 100
-                                  ).slice(3)}
-                                </span>
+                                <span>{rupiah(item.wi_tax_base).slice(3)}</span>
                               </div>
                             </td>
                           </tr>
@@ -1281,30 +1327,7 @@ function ItemContractBKB(props) {
                     paddingBottom: 10,
                   }}
                 >
-                  {approveParkByrStaff &&
-                    bkbData?.doc_park_byr_approved_id == null &&
-                    bkbData?.doc_park_byr_no &&
-                    bkbData?.doc_park_byr_state === "PENDING" && (
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm"
-                        style={{ fontSize: 10, marginTop: 20 }}
-                        onClick={() => {
-                          setModalApproved({
-                            ...modalApproved,
-                            statusDialog: true,
-                            data: "monitoringApproveParkBYR",
-                          });
-                        }}
-                      >
-                        <i
-                          className="fas fa-check-circle"
-                          style={{ fontSize: 8 }}
-                        ></i>
-                        <FormattedMessage id="TITLE.APPROVE" />
-                      </button>
-                    )}
-                  {approveParkByrStaff &&
+                  {/* {approveParkByrStaff &&
                     bkbData?.doc_park_byr_approved_id == null &&
                     bkbData?.doc_park_byr_no &&
                     bkbData?.doc_park_byr_state === "PENDING" && (
@@ -1326,7 +1349,7 @@ function ItemContractBKB(props) {
                         ></i>
                         <FormattedMessage id="TITLE.REJECT" />
                       </button>
-                    )}
+                    )} */}
                   {bkbData?.doc_park_byr_approved_id && (
                     <QRCodeG
                       value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.accounting_budgeting_role_id}&type=APPROVED_PARK_BYR`}
@@ -1357,6 +1380,15 @@ function ItemContractBKB(props) {
                       <FormattedMessage id="TITLE.NO_VENDOR" />
                     </span>
                     <span className="col-sm-8">: {bkbData?.vendor_sap_no}</span>
+                  </div>
+                </div>
+
+                <div className="row border-bottom">
+                  <div className="col-sm-12 row">
+                    <span className="col-sm-4">
+                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> MIRO
+                    </span>
+                    <span className="col-sm-8">: {bkbData?.miro_number}</span>
                   </div>
                 </div>
                 {(((bkbData?.doc_park_ap_state === "PENDING" ||
@@ -1505,15 +1537,6 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                   )}
-
-                <div className="row border-bottom">
-                  <div className="col-sm-12 row">
-                    <span className="col-sm-4">
-                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> MIRO
-                    </span>
-                    <span className="col-sm-8">: {bkbData?.miro_number}</span>
-                  </div>
-                </div>
               </div>
               <div className="col-sm-7 border">
                 <div className="row border-bottom">
