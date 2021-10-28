@@ -47,7 +47,7 @@ export function getSorting(order, orderBy) {
 
 function searchFind(rows, query) {
   const columns = rows[0] && Object.keys(rows[0]);
-  console.log(`columns`, columns, rows);
+  // console.log(`columns`, columns, rows);
   // (row) => row.procurement_title.toLowerCase().indexOf(query) > -1
   return rows.filter((row) =>
     columns.some((column) => {
@@ -82,7 +82,7 @@ export function searchFindMulti(rows, queryAll) {
           }
         }, false);
       });
-    console.log(`apa`, row, apa);
+    // console.log(`apa`, row, apa);
     return apa;
   });
 }
