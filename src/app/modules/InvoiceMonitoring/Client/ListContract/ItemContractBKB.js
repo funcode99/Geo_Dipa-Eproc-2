@@ -26,6 +26,7 @@ import {
   approveGiro,
   getContractAuthority,
   synchBkbByNo,
+  approveParkBYR,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
@@ -424,15 +425,15 @@ function ItemContractBKB(props) {
     } else if (modalApproved.data === "monitoringApproveParkBYR") {
       const data = {
         id: bkbData.id,
-        // doc_park_byr_approved_id: data_login.user_id,
-        // desc: bkbData.desc,
-        // term_id: termin,
-        // contract_id: contract,
+        doc_park_byr_approved_id: data_login.user_id,
+        desc: bkbData.desc,
+        term_id: termin,
+        contract_id: contract,
         giro_signed_data: giroSignedData,
-        // sub_total: bkbData?.sub_total,
-        // authority: terminAuthority,
+        sub_total: bkbData?.sub_total,
+        authority: terminAuthority,
       };
-      approveParkBYRNew(data)
+      approveParkBYR(data)
         .then((result) => {
           setModalApproved({
             ...modalApproved,
@@ -828,26 +829,6 @@ function ItemContractBKB(props) {
       <Card>
         <CardHeader title="">
           <CardHeaderToolbar>
-            {approveParkByrStaff &&
-              bkbData?.miro_number &&
-              bkbData?.doc_park_ap_no &&
-              bkbData?.doc_park_byr_no &&
-              !bkbData?.giro_signed_data && (
-                <button
-                  type="button"
-                  className="btn btn-primary btn-sm mx-2"
-                  onClick={() => {
-                    setModalApproved({
-                      ...modalApproved,
-                      statusDialog: true,
-                      data: "monitoringApproveParkBYR",
-                    });
-                  }}
-                >
-                  <i className="fas fa-check-circle"></i>
-                  <FormattedMessage id="TITLE.APPROVE" />
-                </button>
-              )}
             <button
               type="button"
               onClick={synchBkb}
@@ -1209,6 +1190,9 @@ function ItemContractBKB(props) {
                   <FormattedMessage id="TITLE.FINANCE" />:
                 </span>
               </div>
+              <div className="col-sm border text-center">
+                <span>Treasury :</span>
+              </div>
             </div>
             <div className="row">
               <div className="col-sm border" style={{ height: 125 }}>
@@ -1249,9 +1233,10 @@ function ItemContractBKB(props) {
                   }}
                 >
                   {approveParkAPStaff &&
-                    bkbData?.doc_park_ap_approved_id == null &&
                     bkbData?.doc_park_ap_no &&
-                    bkbData?.doc_park_ap_state === "PENDING" && (
+                    bkbData?.miro_number &&
+                    (bkbData?.doc_park_ap_state === "PENDING" ||
+                      bkbData?.doc_park_ap_state === null) && (
                       <button
                         type="button"
                         className="btn btn-primary btn-sm mx-2"
@@ -1272,9 +1257,10 @@ function ItemContractBKB(props) {
                       </button>
                     )}
                   {approveParkAPStaff &&
-                    bkbData?.doc_park_ap_approved_id == null &&
                     bkbData?.doc_park_ap_no &&
-                    bkbData?.doc_park_ap_state === "PENDING" && (
+                    bkbData?.miro_number &&
+                    (bkbData?.doc_park_ap_state === "PENDING" ||
+                      bkbData?.doc_park_ap_state === null) && (
                       <button
                         type="button"
                         className="btn btn-danger btn-sm mx-2"
@@ -1350,24 +1336,244 @@ function ItemContractBKB(props) {
                         <FormattedMessage id="TITLE.REJECT" />
                       </button>
                     )} */}
-                  {bkbData?.doc_park_byr_approved_id && (
+                  {/* {bkbData?.doc_park_byr_approved_id && (
                     <QRCodeG
                       value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.accounting_budgeting_role_id}&type=APPROVED_PARK_BYR`}
                     />
-                  )}
+                  )} */}
                   <div className="d-flex align-items-end">
-                    <span className="mx-auto">
-                      {bkbData?.park_byr_approve_name}
-                    </span>
+                    <span className="mx-auto">{bkbData?.inv_approved_by}</span>
                   </div>
                   <div className="d-flex align-items-end">
                     <span className="mx-auto">
-                      {bkbData?.doc_park_byr_approved_at
+                      {bkbData?.invoice_date
                         ? window
-                            .moment(new Date(bkbData?.doc_park_byr_approved_at))
+                            .moment(new Date(bkbData?.invoice_date))
                             .format("DD/MM/YYYY")
                         : ""}
                     </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="col-sm border text-center"
+                style={{ height: 125 }}
+              >
+                <div
+                  className="text-center"
+                  style={{
+                    height: styleCustom.minHeightAppv,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                  }}
+                >
+                  {/* <div className="row">
+                    {rolesBKBData?.map((row, key) => {
+                      if (
+                        parseFloat(bkbData?.sub_total) >= row?.min_value &&
+                        parseFloat(bkbData?.sub_total) <= row?.max_value
+                      ) {
+                        return (
+                          <div
+                            className="col-sm border text-center px-0"
+                            key={key}
+                          >
+                            <span style={{ fontSize: 10 }}>{row?.name}</span>
+                          </div>
+                        );
+                      }
+                    })}
+                  </div> */}
+                  <div className="">
+                    {approveParkByrStaff &&
+                      bkbData?.doc_park_byr_no &&
+                      bkbData?.inv_approved_by &&
+                      bkbData?.doc_park_ap_state === "APPROVED" &&
+                      (bkbData?.doc_park_byr_state === "PEDDING" ||
+                        bkbData?.doc_park_byr_state === null) && (
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-sm mx-2"
+                          style={{ fontSize: 10, marginTop: 20 }}
+                          onClick={() => {
+                            setModalApproved({
+                              ...modalApproved,
+                              statusDialog: true,
+                              data: "monitoringApproveParkBYR",
+                            });
+                          }}
+                        >
+                          <i className="fas fa-check-circle"></i>
+                          <FormattedMessage id="TITLE.APPROVE" />
+                        </button>
+                      )}
+                    {approveParkByrStaff &&
+                      bkbData?.doc_park_byr_no &&
+                      bkbData?.inv_approved_by &&
+                      bkbData?.doc_park_ap_state === "APPROVED" &&
+                      (bkbData?.doc_park_byr_state === "PEDDING" ||
+                        bkbData?.doc_park_byr_state === null) && (
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm mx-2"
+                          style={{ fontSize: 10, marginTop: 20 }}
+                          onClick={() => {
+                            setModalRejected({
+                              ...modalRejected,
+                              statusDialog: true,
+                              data: "rejectParkBYR",
+                            });
+                          }}
+                        >
+                          <i
+                            className="fas fa-times-circle"
+                            style={{ fontSize: 8 }}
+                          ></i>
+                          <FormattedMessage id="TITLE.REJECT" />
+                        </button>
+                      )}
+
+                    {bkbData?.doc_park_byr_approved_id && (
+                      <QRCodeG
+                        value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.accounting_budgeting_role_id}&type=APPROVED_PARK_BYR`}
+                      />
+                    )}
+                    <div className="d-flex align-items-end">
+                      <span className="mx-auto">
+                        {bkbData?.park_byr_approve_name}
+                      </span>
+                    </div>
+                    <div className="d-flex align-items-end">
+                      <span className="mx-auto">
+                        {bkbData?.doc_park_byr_approved_at
+                          ? window
+                              .moment(
+                                new Date(bkbData?.doc_park_byr_approved_at)
+                              )
+                              .format("DD/MM/YYYY")
+                          : ""}
+                      </span>
+                    </div>
+                    {/* {rolesBKBData?.map((row, key) => {
+                      if (
+                        parseFloat(bkbData?.sub_total) >= row?.min_value &&
+                        parseFloat(bkbData?.sub_total) <= row?.max_value
+                      ) {
+                        return (
+                          <div
+                            className={`col-sm border-right`}
+                            style={{ height: styleCustom.heightAppvDiv }}
+                            key={key}
+                          >
+                            <div
+                              className="text-center"
+                              style={{
+                                height: 100,
+                                paddingTop: 5,
+                                paddingBottom: 5,
+                              }}
+                            >
+                              {monitoring_role.findIndex(
+                                (element) => element === row.name
+                              ) >= 0 &&
+                                bkbData?.approved_bkb_id === null &&
+                                bkbData?.doc_park_byr_approved_id && (
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary btn-sm"
+                                    style={{ fontSize: 10, marginTop: 20 }}
+                                    onClick={() => {
+                                      setModalApproved({
+                                        ...modalApproved,
+                                        statusDialog: true,
+                                        data: "approveBKB",
+                                        role_id: row.id,
+                                      });
+                                    }}
+                                  >
+                                    <i
+                                      className="fas fa-check-circle"
+                                      style={{ fontSize: 8 }}
+                                    ></i>
+                                    <FormattedMessage id="TITLE.APPROVE" />
+                                  </button>
+                                )}
+                              {monitoring_role.findIndex(
+                                (element) => element === row.name
+                              ) >= 0 &&
+                                bkbData?.approved_bkb_id === null &&
+                                bkbData?.doc_park_byr_approved_id && (
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger btn-sm mx-2"
+                                    style={{ fontSize: 10, marginTop: 20 }}
+                                    onClick={() => {
+                                      setModalRejected({
+                                        ...modalRejected,
+                                        statusDialog: true,
+                                        data: "rejectBKB",
+                                      });
+                                    }}
+                                  >
+                                    <i
+                                      className="fas fa-times-circle"
+                                      style={{ fontSize: 8 }}
+                                    ></i>
+                                    <FormattedMessage id="TITLE.REJECT" />
+                                  </button>
+                                )}
+                              {bkbData?.approved_bkb_id &&
+                                bkbData?.approved_bkb_role_id === row.id && (
+                                  <QRCodeG
+                                    value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.approved_bkb_role_id}&type=APPROVED_BKB`}
+                                    // size="90"
+                                  />
+                                )}
+                            </div>
+                            <div className="d-flex align-items-end">
+                              <span className="mx-auto">
+                                {bkbData?.approve_bkb_name}
+                              </span>
+                            </div>
+                            <div className="d-flex align-items-end">
+                              <span className="mx-auto">
+                                {bkbData?.approved_bkb_at
+                                  ? window
+                                      .moment(
+                                        new Date(bkbData?.approved_bkb_at)
+                                      )
+                                      .format("DD/MM/YYYY")
+                                  : ""}
+                              </span>
+                            </div>
+                            <div className="text-center">
+                              <div>
+                                <span style={{ fontSize: 10 }}>
+                                  <FormattedMessage id="TITLE.NAME" />:
+                                  {bkbData?.approved_bkb_id &&
+                                    bkbData?.approved_bkb_role_id ===
+                                      row.id && (
+                                      <span>{bkbData?.approve_bkb_name}</span>
+                                    )}
+                                </span>
+                                <br />
+                                <span style={{ fontSize: 10 }}>
+                                  <FormattedMessage id="TITLE.DATE" />:
+                                  {bkbData?.approved_bkb_at &&
+                                  bkbData?.approved_bkb_role_id === row.id
+                                    ? window
+                                        .moment(
+                                          new Date(bkbData?.approved_bkb_at)
+                                        )
+                                        .format("DD/MM/YYYY")
+                                    : ""}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    })} */}
                   </div>
                 </div>
               </div>
@@ -1462,14 +1668,7 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                   )}
-                {((bkbData?.doc_park_byr_no &&
-                  (bkbData?.doc_park_byr_state === "PENDING" ||
-                    bkbData?.doc_park_byr_state === "APPROVED")) ||
-                  bkbData?.doc_park_ap_state === null ||
-                  bkbData?.doc_park_ap_state === "PENDING" ||
-                  bkbData?.doc_park_ap_state === "REJECTED" ||
-                  !submitParkByrStaff ||
-                  !bkbData) && (
+                {bkbData?.doc_park_byr_no && (
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
                       <span className="col-sm-4">
@@ -1550,9 +1749,9 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-sm-5">
+              {/* <div className="col-sm-5">
                 <div className="row">
-                  {/* <div className="col-sm-4 border">
+                  <div className="col-sm-4 border">
                     <div className="row border">
                       <div className="col-sm text-center">
                         <span>
@@ -1574,7 +1773,7 @@ function ItemContractBKB(props) {
                         </span>
                       </div>
                     </div>
-                  </div> */}
+                  </div>
 
                   <div className="col-sm-12 border">
                     <div className="row border">
@@ -1709,8 +1908,8 @@ function ItemContractBKB(props) {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-sm-7 border">
+              </div> */}
+              <div className="col-sm-12 border">
                 <div className="text-center">
                   <span>
                     <FormattedMessage id="TITLE.APPROVED_CEK_OR_GIRO" />
@@ -1765,12 +1964,11 @@ function ItemContractBKB(props) {
                                 <FormattedMessage id="TITLE.APPROVE" />
                               </button>
                             )}
-                          {row.approved_id && (
+                          {/* {row.approved_id && (
                             <QRCodeG
                               value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${row.id}&type=SIGNED_GIRO`}
-                              // size="60"
                             />
-                          )}
+                          )} */}
                         </div>
                         <div className="d-flex align-items-end">
                           <div>
