@@ -62,13 +62,15 @@ const TerminPaper = () => {
       //   // } else {
       //   setTabActive(newTabActive);
       //   // }
-    } else if (
-      thisTask?.document_status === false &&
-      ((!isItemExists && newTabActive === 1) ||
-        (isItemExists && newTabActive === 2))
-    ) {
-      MODAL.showSnackbar("Mohon lengkapi dokumen terlebih dahulu", "warning");
-    } else {
+    }
+    // else if (
+    //   thisTask?.document_status === false &&
+    //   ((!isItemExists && newTabActive === 1) ||
+    //     (isItemExists && newTabActive === 2))
+    // ) {
+    //   MODAL.showSnackbar("Mohon lengkapi dokumen terlebih dahulu", "warning");
+    // }
+    else {
       setTabActive(newTabActive);
     }
   }

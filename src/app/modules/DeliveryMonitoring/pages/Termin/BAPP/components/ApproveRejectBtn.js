@@ -1,27 +1,28 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Button, ButtonGroup } from "@material-ui/core";
 import { Form } from "react-bootstrap";
 import BasicInput from "../../../../../../components/input/BasicInput";
 
-const ApproveRejectBtn = () => {
-  const [action, setAction] = React.useState(null);
-  const [remarks, setRemarks] = React.useState(false);
+const ApproveRejectBtn = forwardRef(({}, ref) => {
+  const [action, setAction] = React.useState("approve");
+  const [remarks, setRemarks] = React.useState();
   const isReject = action === "reject";
   const isApprove = action === "approve";
   const _changeAction = (type) => {
     setAction(type);
   };
   const handleRemarksChange = (e) => {
-    setRemarks(e.target.value);
+    setRemarks(e);
   };
+  React.useImperativeHandle(ref, () => ({ isApprove, remarks }));
   return (
     <div>
       <ButtonGroup
         aria-label="Pick Action"
         style={{
           height: 38,
-          marginTop: 103,
-          marginBottom: 16,
+          // marginTop: 103,
+          marginBottom: 24,
         }}
       >
         <Button
@@ -47,7 +48,8 @@ const ApproveRejectBtn = () => {
               name={"remarks"}
               label={"Remarks"}
               onChange={handleRemarksChange}
-              disabled
+              // value={remarks}
+              // disabled
               //   defaultValue={remarks}
             />
           </div>
@@ -69,6 +71,6 @@ const ApproveRejectBtn = () => {
       )} */}
     </div>
   );
-};
+});
 
 export default ApproveRejectBtn;

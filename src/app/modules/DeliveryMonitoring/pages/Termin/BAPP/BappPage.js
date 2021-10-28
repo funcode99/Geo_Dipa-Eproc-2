@@ -76,6 +76,7 @@ const BappPage = ({
   const uploadRef = React.useRef();
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
+  const onTimeRef = React.useRef();
   const [stepActive, setStepActive] = React.useState(null);
   const [loading, setLoading] = React.useState({
     get: false,
@@ -270,7 +271,8 @@ const BappPage = ({
 
   const _handleSubmit = (data) => {
     // handleLoading("submit", true);
-
+    console.log(`onTimeRef`, onTimeRef.current);
+    const { isApprove, remarks } = onTimeRef.current;
     let params = {};
     let url = ``;
     // switch (status) {
@@ -281,7 +283,10 @@ const BappPage = ({
       no: data.nomor_bapp,
       date: data.tanggal_bapp,
       review_text: data.hasil_pekerjaan,
+      is_on_time: isApprove,
+      remarks,
     };
+
     //     break;
     //   case "client":
     //     url = `delivery/task-news/${taskNews?.id}/review`;
@@ -566,10 +571,10 @@ const BappPage = ({
                     </Col>
                     <Col>
                       <FieldBuilder formData={formData2} {...fieldProps} />
-                      <ApproveRejectBtn />
+                      <ApproveRejectBtn ref={onTimeRef} />
+                      <AlertLate />
                     </Col>
                   </Row>
-                  <AlertLate />
                 </div>
               )}
             </FormBuilder>
