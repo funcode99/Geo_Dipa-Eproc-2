@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, Button } from "react-bootstrap";
 
-const AlertLate = ({ onClick }) => {
+const AlertLate = ({ onClick, dataLate }) => {
   return (
     <Alert
       variant="warning"
@@ -11,9 +11,14 @@ const AlertLate = ({ onClick }) => {
         <Alert.Heading className={"h5"}>
           Berkas berikut terlambat disediakan oleh vendor :
         </Alert.Heading>
-        <p className={"mb-0"}>
+        <ul>
+          {dataLate.map((el, id) => (
+            <li key={id}>{el}</li>
+          ))}
+        </ul>
+        {/* <p className={"mb-0"}>
           Laporan Harian, Sertifikat kalibrasi, Manual Book
-        </p>
+        </p> */}
       </div>
       {/* <div>
         <Button onClick={onClick} variant="outline-warning">

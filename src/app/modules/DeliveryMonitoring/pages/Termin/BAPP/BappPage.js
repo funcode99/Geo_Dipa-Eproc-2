@@ -77,6 +77,7 @@ const BappPage = ({
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
   const onTimeRef = React.useRef();
+  const [lateData, setLateData] = React.useState([]);
   const [stepActive, setStepActive] = React.useState(null);
   const [loading, setLoading] = React.useState({
     get: false,
@@ -325,6 +326,7 @@ const BappPage = ({
     if (taskId !== "") {
       // console.log(`masuk sini`);
       fetchData();
+      handleApi("late_deliverable");
     }
   }, [taskId, fetchData]);
 
@@ -442,6 +444,17 @@ const BappPage = ({
             fetchData({ visible: false, message: "" });
 
             rejectRef.current.close();
+          },
+        });
+        break;
+      case "late_deliverable":
+        fetchApi({
+          key: keys.late_deliv,
+          type: "get",
+          url: `delivery/task/${taskId}/document-late`,
+          onSuccess: (res) => {
+            const mappedData = res.data.map((el) => el?.document?.name);
+            setLateData(mappedData);
           },
         });
         break;
@@ -572,7 +585,7 @@ const BappPage = ({
                     <Col>
                       <FieldBuilder formData={formData2} {...fieldProps} />
                       <ApproveRejectBtn ref={onTimeRef} />
-                      <AlertLate />
+                      <AlertLate dataLate={lateData} />
                     </Col>
                   </Row>
                 </div>
@@ -767,6 +780,7 @@ const keys = {
   fetch: "fetch_news_bapp",
   fetch_sagr: "fetch-sa-gr",
   submit: "submit_news_bapp",
+  late_deliv: "late-deliverable-fetch",
 };
 
 const mapState = (state) => {
