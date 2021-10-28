@@ -432,3 +432,9 @@ export async function getTerminProgressVendor(id) {
 export async function getTaxVendor(contract_id, term_id) {
   return axios.get(`invoice/invoice_tax_vendor/${contract_id}/${term_id}`);
 }
+export async function synchBkbByNo(data) {
+  return axios.post(`sap/progress_bkb`, data);
+}
+export async function approveParkBYRNew(data) {
+  return axios.post(`invoice/giro_data_submit`, data);
+}
