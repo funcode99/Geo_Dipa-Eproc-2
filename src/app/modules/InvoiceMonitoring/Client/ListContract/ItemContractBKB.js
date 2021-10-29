@@ -52,6 +52,7 @@ import {
 } from "../../../Master/service/MasterCrud";
 import { useParams } from "react-router-dom";
 import { SOCKET } from "../../../../../redux/BaseHost";
+import { MODAL } from "../../../../../service/modalSession/ModalService";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -640,6 +641,13 @@ function ItemContractBKB(props) {
           setProgressTermin(result.data.data?.progress_type);
           setDataProgress(result.data.data?.data);
           setLoadingSync(false);
+          MODAL.showSnackbar(
+            intl.formatMessage({
+              id: "TITLE.DONE_DATA_SYNC",
+            }),
+            "success",
+            5000
+          );
         });
       })
       .catch((err) => {
@@ -1582,19 +1590,19 @@ function ItemContractBKB(props) {
               <div className="col-sm-5 border">
                 <div className="row border-bottom">
                   <div className="col-sm-12 row">
-                    <span className="col-sm-4">
+                    <span className="col-sm-7">
                       <FormattedMessage id="TITLE.NO_VENDOR" />
                     </span>
-                    <span className="col-sm-8">: {bkbData?.vendor_sap_no}</span>
+                    <span className="col-sm-5">: {bkbData?.vendor_sap_no}</span>
                   </div>
                 </div>
 
                 <div className="row border-bottom">
                   <div className="col-sm-12 row">
-                    <span className="col-sm-4">
+                    <span className="col-sm-7">
                       <FormattedMessage id="TITLE.NO_DOCUMENT" /> MIRO
                     </span>
-                    <span className="col-sm-8">: {bkbData?.miro_number}</span>
+                    <span className="col-sm-5">: {bkbData?.miro_number}</span>
                   </div>
                 </div>
                 {(((bkbData?.doc_park_ap_state === "PENDING" ||
@@ -1604,10 +1612,10 @@ function ItemContractBKB(props) {
                   !bkbData) && (
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
-                      <span className="col-sm-4">
+                      <span className="col-sm-7">
                         <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
                       </span>
-                      <span className="col-sm-8">
+                      <span className="col-sm-5">
                         : {bkbData?.doc_park_ap_no}
                       </span>
                     </div>
@@ -1622,11 +1630,11 @@ function ItemContractBKB(props) {
                         <div className="form-group row mb-0">
                           <label
                             htmlFor="parkApInput"
-                            className="col-sm-4 col-form-label col-form-label-sm"
+                            className="col-sm-7 col-form-label col-form-label-sm"
                           >
                             <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
                           </label>
-                          <div className="col-sm-8 pr-0">
+                          <div className="col-sm-5 pr-0">
                             <div className="input-group input-group-sm">
                               <input
                                 type="text"
@@ -1671,10 +1679,10 @@ function ItemContractBKB(props) {
                 {bkbData?.doc_park_byr_no && (
                   <div className="row border-bottom">
                     <div className="col-sm-12 row">
-                      <span className="col-sm-4">
+                      <span className="col-sm-7">
                         <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
                       </span>
-                      <span className="col-sm-8">
+                      <span className="col-sm-5">
                         : {bkbData?.doc_park_byr_no}
                       </span>
                     </div>
@@ -1689,11 +1697,11 @@ function ItemContractBKB(props) {
                         <div className="form-group row mb-0">
                           <label
                             htmlFor="colFormLabelSm-1"
-                            className="col-sm-4 col-form-label col-form-label-sm"
+                            className="col-sm-7 col-form-label col-form-label-sm"
                           >
                             <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
                           </label>
-                          <div className="col-sm-8 pr-0">
+                          <div className="col-sm-5 pr-0">
                             <div className="input-group input-group-sm">
                               <input
                                 type="text"
