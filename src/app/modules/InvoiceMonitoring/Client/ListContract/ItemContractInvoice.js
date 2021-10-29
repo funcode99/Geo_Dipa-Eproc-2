@@ -1525,12 +1525,7 @@ function ItemContractInvoice(props) {
                             print(item.ident_name);
                           }}
                         >
-                          {item.ident_name === "GOODS"
-                            ? content?.task_gr_new &&
-                              content?.task_gr_new.length > 0 &&
-                              content?.task_gr_new[0].material_document
-                            : content?.task_sa_new &&
-                              content?.task_sa_new.material_document}
+                          {item.doc_no}
                         </a>
                       </TableCell>
                     ) : (
