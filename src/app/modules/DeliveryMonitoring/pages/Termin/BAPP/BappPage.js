@@ -211,7 +211,7 @@ const BappPage = ({
     // console.log(`data`, data);
     let dataArr = data?.map((item, id) => ({
       no: (id += 1),
-      user: item?.vendor?.username || item?.user?.username,
+      user: item?.user ? item?.user?.party?.full_name : item?.vendor?.full_name,
       date: formatDate(new Date(item?.createdAt)),
       // date: formatDateWTime(new Date(item?.createdAt)),
       activity: item?.description,

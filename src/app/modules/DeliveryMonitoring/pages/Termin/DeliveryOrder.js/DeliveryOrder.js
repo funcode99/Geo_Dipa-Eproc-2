@@ -156,7 +156,7 @@ const DeliveryOrder = ({
         setInitAvailItems(items);
         if (dataOrderItem !== {}) {
           let findItem = res?.data?.task_deliveries.filter(
-            (el) => el.id === dataOrderItem.id
+            (el) => el?.id === dataOrderItem?.id
           )[0];
           setDataOrderItem(findItem);
         }
@@ -324,7 +324,7 @@ const DeliveryOrder = ({
     let result = [];
     olds.forEach((item1, index1) => {
       news.forEach((item2, index2) => {
-        if (item1.id === item2.id) {
+        if (item1?.id === item2?.id) {
           let objData = {};
           objData = {
             name: item1?.item?.desc,
@@ -474,7 +474,7 @@ const DeliveryOrder = ({
           };
           dataArr.push(objData);
         })
-      : (dataArr = tblHeadDlvItem.map((item) => ({ [item.id]: "" })));
+      : (dataArr = tblHeadDlvItem.map((item) => ({ [item?.id]: "" })));
     setTableContent(dataArr);
   };
 
