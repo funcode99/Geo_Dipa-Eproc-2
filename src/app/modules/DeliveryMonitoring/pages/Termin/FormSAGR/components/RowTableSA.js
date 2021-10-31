@@ -73,7 +73,7 @@ const RowTableSA = ({ item, index }) => {
       dist_type: item?.dist_type,
       // wbsdata:
       gl_account: { value: item?.gl_account, label: item?.gl_account },
-      cost_center: { value: item?.costcenter, label: item?.costcenter },
+      cost_center: { value: item?.cost_center, label: item?.cost_center },
     }),
     [item]
   );
