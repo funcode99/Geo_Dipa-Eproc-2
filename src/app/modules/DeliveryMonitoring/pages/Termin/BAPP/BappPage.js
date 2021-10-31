@@ -77,6 +77,7 @@ const BappPage = ({
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
   const onTimeRef = React.useRef();
+  const postGRRef = React.useRef();
   const [lateData, setLateData] = React.useState([]);
   const [stepActive, setStepActive] = React.useState(null);
   const [loading, setLoading] = React.useState({
@@ -464,6 +465,19 @@ const BappPage = ({
     }
   };
 
+  const _fetchToSAP = (type) => {
+    console.log(`submitt`, type);
+    fetchApi({
+      key: keys.post_to_sap,
+      type: "post",
+      alertAppear: "both",
+      url: `delivery/sap/${type}/${task_id}`,
+      onSuccess: (res) => {
+        postGRRef.current.close();
+      },
+    });
+  };
+
   console.log(`res2`, dataSAGR, dataExist);
 
   return (
@@ -529,7 +543,7 @@ const BappPage = ({
               disabledButton={isDisabled}
               withSubmit={isClient}
               btnChildren={
-                (taskNews?.file_upload || taskNews?.file) && (
+                <React.Fragment>
                   <Dropdown
                     className="dropdown-inline mr-2"
                     drop="down"
@@ -538,9 +552,9 @@ const BappPage = ({
                     <Dropdown.Toggle
                       id="dropdown-toggle-top2"
                       variant="transparent"
-                      className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                      className="btn btn-light-success btn-sm font-weight-bolder dropdown-toggle"
                     >
-                      <FormattedMessage id="TITLE.PREVIEW" />
+                      Post to SAP
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
                       <ul className="navi navi-hover">
@@ -548,32 +562,78 @@ const BappPage = ({
                           <Dropdown.Item
                             // href="#"
                             className="navi-link"
-                            onClick={() => handleAction("preview", taskNews)}
+                            onClick={() => _fetchToSAP("gr-101")}
                           >
-                            <span className="navi-icon">
-                              <i className="flaticon2-graph-1"></i>
-                            </span>
-                            <span className="navi-text">Document</span>
+                            <span className="navi-text">GR 101</span>
                           </Dropdown.Item>
                         </li>
                         <li className="navi-item">
                           <Dropdown.Item
                             // href="#"
                             className="navi-link"
-                            onClick={() =>
-                              handleAction("preview_signed", taskNews)
-                            }
+                            onClick={() => _fetchToSAP("gr-103")}
                           >
-                            <span className="navi-icon">
-                              <i className="flaticon2-writing"></i>
-                            </span>
-                            <span className="navi-text">Signed Document</span>
+                            <span className="navi-text">GR 103</span>
+                          </Dropdown.Item>
+                        </li>
+                        <li className="navi-item">
+                          <Dropdown.Item
+                            // href="#"
+                            className="navi-link"
+                            onClick={() => _fetchToSAP("gr-105")}
+                          >
+                            <span className="navi-text">GR 105</span>
                           </Dropdown.Item>
                         </li>
                       </ul>
                     </Dropdown.Menu>
                   </Dropdown>
-                )
+                  {(taskNews?.file_upload || taskNews?.file) && (
+                    <Dropdown
+                      className="dropdown-inline mr-2"
+                      drop="down"
+                      alignRight
+                    >
+                      <Dropdown.Toggle
+                        id="dropdown-toggle-top2"
+                        variant="transparent"
+                        className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                      >
+                        <FormattedMessage id="TITLE.PREVIEW" />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                        <ul className="navi navi-hover">
+                          <li className="navi-item">
+                            <Dropdown.Item
+                              // href="#"
+                              className="navi-link"
+                              onClick={() => handleAction("preview", taskNews)}
+                            >
+                              <span className="navi-icon">
+                                <i className="flaticon2-graph-1"></i>
+                              </span>
+                              <span className="navi-text">Document</span>
+                            </Dropdown.Item>
+                          </li>
+                          <li className="navi-item">
+                            <Dropdown.Item
+                              // href="#"
+                              className="navi-link"
+                              onClick={() =>
+                                handleAction("preview_signed", taskNews)
+                              }
+                            >
+                              <span className="navi-icon">
+                                <i className="flaticon2-writing"></i>
+                              </span>
+                              <span className="navi-text">Signed Document</span>
+                            </Dropdown.Item>
+                          </li>
+                        </ul>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )}
+                </React.Fragment>
               }
             >
               {({ fieldProps }) => (
@@ -770,6 +830,11 @@ const BappPage = ({
           </Row>
         </CardBody>
       </Card>
+      {/* <ModalApproveGR
+        innerRef={postGRRef}
+        gr={"GR 101"}
+        onSubmit={() => _fetchToSAP("gr-101")}
+      /> */}
     </React.Fragment>
   );
 };
@@ -781,6 +846,7 @@ const keys = {
   fetch_sagr: "fetch-sa-gr",
   submit: "submit_news_bapp",
   late_deliv: "late-deliverable-fetch",
+  post_to_sap: "post_to_sap",
 };
 
 const mapState = (state) => {
