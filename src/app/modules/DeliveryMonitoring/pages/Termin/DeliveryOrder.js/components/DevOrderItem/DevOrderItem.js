@@ -164,6 +164,8 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
     return { ...params, onClick: () => openModal(params.type) };
   };
 
+  const isFileApproved = data?.file_approve_status?.code === "approved";
+
   console.log(`data devorderitem`, data);
 
   return (
@@ -179,6 +181,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
         loading={loadings[KEYS_TERMIN.p_t_approve_do_doc]}
         file={data.file}
         isClient={authStatus === "client"}
+        isFileApproved={isFileApproved}
       />
       {visible && Object.keys(data).length && (
         <Card style={{ marginTop: 21 }}>

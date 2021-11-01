@@ -20,6 +20,7 @@ const ModalPreviewDODoc = ({
   file,
   isClient,
   handleSubmit,
+  isFileApproved,
 }) => {
   console.log(`otem`, loading);
   const [dataForm, setDataForm] = React.useState({});
@@ -61,9 +62,10 @@ const ModalPreviewDODoc = ({
   };
   const isReject = action === "reject";
   const isApprove = action === "approve";
+  const isNeedApprove = isClient && !isFileApproved;
   return (
     <DialogGlobal
-      maxWidth={"md"}
+      maxWidth={isNeedApprove ? "md" : "sm"}
       title={`Preview Signed Delivery Order`}
       ref={innerRef}
       onYes={_handleSubmit}
@@ -76,7 +78,11 @@ const ModalPreviewDODoc = ({
         ),
       }}
     >
-      <div className={`d-flex`}>
+      <div
+        className={`d-flex ${
+          !isNeedApprove ? "justify-content-center align-items-center" : ""
+        }`}
+      >
         <div
           className={`d-flex flex-column justify-content-center align-items-center`}
         >
@@ -89,7 +95,7 @@ const ModalPreviewDODoc = ({
             Lihat Dokumen
           </ButtonContained>
         </div>
-        {isClient && (
+        {isNeedApprove && (
           <div className={`d-flex flex-column  ml-8 mr-3`}>
             <ButtonGroup aria-label="Pick Action">
               <Button
