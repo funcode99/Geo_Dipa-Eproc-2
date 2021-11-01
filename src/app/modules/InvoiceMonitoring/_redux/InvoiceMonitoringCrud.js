@@ -386,6 +386,9 @@ export async function rejectParkBYR(data) {
 export async function updateParkBYR(data) {
   return axios.post(`invoice/park_byr_update`, data);
 }
+export async function approveInvPosting(data) {
+  return axios.post(`invoice/inv_posting_approved`, data);
+}
 export async function getAllMismatch(params) {
   return axios.get(`invoice/mismatch_all${params ? "?" + params : ""}`);
 }
