@@ -137,7 +137,7 @@ function UserRoles(props) {
         status: false,
       },
       filter: {
-        active: false,
+        active: true,
         type: "text",
       },
     },
