@@ -686,6 +686,7 @@ function ItemContractBKB(props) {
             5000
           );
         });
+        SOCKET.emit("send_notif");
       })
       .catch((err) => {
         setLoadingSync(false);

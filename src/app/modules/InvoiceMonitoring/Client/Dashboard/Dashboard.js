@@ -68,6 +68,7 @@ function Dashboard(props) {
         type: "donut",
       },
       series: [44, 55, 13, 43, 22],
+      labels: ["test-1", "test-2", "test-3", "test-4", "test-5"],
       responsive: [
         {
           //   breakpoint: 480,
