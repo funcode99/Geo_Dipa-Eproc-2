@@ -147,13 +147,17 @@ const TableDoc = ({ loading }) => {
                               // els?.url === null
                               //   ? "WAITING TO UPLOAD"
                               //   : "AVAILABLE",
-                              <StatusRemarks
-                                status={els?.document_status?.name}
-                                remarks={els?.remarks_status}
-                                url={els?.url}
-                                withFile={true}
-                                approvedBy={els?.approved_by?.username ?? "N/A"}
-                              />,
+                              <div>
+                                <StatusRemarks
+                                  status={els?.document_status?.name}
+                                  remarks={els?.remarks_status}
+                                  url={els?.url}
+                                  withFile={true}
+                                  approvedBy={
+                                    els?.approved_by?.party?.full_name ?? "N/A"
+                                  }
+                                />
+                              </div>,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
                               els?.remarks,
@@ -178,13 +182,17 @@ const TableDoc = ({ loading }) => {
                         el?.document_custom_name ?? el?.document?.name,
                         formatDate(new Date(el?.due_date)),
                         // el?.url === null ? "WAITING TO UPLOAD" : "AVAILABLE",
-                        <StatusRemarks
-                          status={el?.document_status?.name}
-                          remarks={el?.remarks_status}
-                          url={el?.url}
-                          withFile={true}
-                          approvedBy={el?.approved_by?.username ?? "N/A"}
-                        />,
+                        <div>
+                          <StatusRemarks
+                            status={el?.document_status?.name}
+                            remarks={el?.remarks_status}
+                            url={el?.url}
+                            withFile={true}
+                            approvedBy={
+                              el?.approved_by?.party?.full_name ?? "N/A"
+                            }
+                          />
+                        </div>,
                         // el?.percentage && el?.percentage + "%",
                         "-",
                         <BtnLihat url={el?.url} />,

@@ -36,12 +36,14 @@ export const formData2 = [
     {
       name: "spec",
       label: <FormattedMessage id="TITLE.SPESIFICATION" />,
-      disabled: true,
+      readOnly: true,
+      // disabled: true,
     },
     {
       name: "desc",
       label: <FormattedMessage id="TITLE.DESCRIPTION" />,
-      disabled: true,
+      readOnly: true,
+      // disabled: true,
     },
   ],
 ];
