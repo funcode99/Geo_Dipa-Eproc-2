@@ -41,6 +41,7 @@ import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
 import { SOCKET } from "../../../../../../redux/BaseHost";
+import { cloneDeep } from "lodash";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -60,6 +61,8 @@ function ContractInvoicePage(props) {
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
+  const [addtionalPayment, setAddtionalPayment] = useState([]);
+  const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
 
   const [Toast, setToast] = useToast();
 
@@ -70,7 +73,14 @@ function ContractInvoicePage(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const invoiceName = "INVOICE";
-  const { intl, classes, progressTermin, setProgressTermin, setDataProgress, dataProgress } = props;
+  const {
+    intl,
+    classes,
+    progressTermin,
+    setProgressTermin,
+    setDataProgress,
+    dataProgress,
+  } = props;
 
   const initialValues = {};
 
@@ -188,6 +198,11 @@ function ContractInvoicePage(props) {
         setInvoiceData(response.data.data);
         if (response.data.data) {
           getHistoryInvoiceData(response["data"]["data"]["id"]);
+          setAddtionalPayment(
+            response.data?.data?.invoice_additional_value_data
+              ? response.data?.data?.invoice_additional_value_data
+              : []
+          );
         }
       })
       .catch((error) => {
@@ -223,7 +238,8 @@ function ContractInvoicePage(props) {
       term_id: termin,
       penalty: invoiceData?.penalty,
       progress_data: dataProgress,
-      penalty_remark: invoiceData?.penalty_remark
+      penalty_remark: invoiceData?.penalty_remark,
+      invoice_additional_value_data: addtionalPayment,
     })
       .then((response) => {
         setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
@@ -232,13 +248,12 @@ function ContractInvoicePage(props) {
         setIsSubmit(true);
         getHistoryInvoiceData(invoiceData.id);
         softcopy_save(data_1);
-        getTerminProgress(termin)
-          .then((result) => {
+        getTerminProgress(termin).then((result) => {
             if (result.data.data.data) {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
             }
-          })
+        });
         SOCKET.emit("send_notif");
       })
       .catch((error) => {
@@ -278,6 +293,22 @@ function ContractInvoicePage(props) {
   useEffect(getContractData, []);
   useEffect(getInvoiceData, []);
   useEffect(getBillingDocumentIdData, []);
+
+  // const disabledAddtionalPayment = async () => {
+  //   if (addtionalPayment.length === 0) return true;
+  //   try {
+  //     await new Promise((resolve, reject) => {
+  //       for (let i = 0; i < addtionalPayment.length; i++) {
+  //         const element = addtionalPayment[i];
+  //         // if(element.value )
+  //         if (i === addtionalPayment.length - 1) resolve();
+  //       }
+  //     });
+  //     return false;
+  //   } catch (error) {
+  //     return true;
+  //   }
+  // };
 
   return (
     <React.Fragment>
@@ -422,7 +453,8 @@ function ContractInvoicePage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
                           }`}
                       ></i>
                     </span>
@@ -441,7 +473,8 @@ function ContractInvoicePage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
                           }`}
                       ></i>
                     </span>
@@ -575,6 +608,210 @@ function ContractInvoicePage(props) {
           </button>
         </DialogActions>
       </Dialog>
+      <Dialog
+        open={modalAddtionalPayment}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="md"
+        fullWidth={true}
+      >
+        <form
+          autoComplete="off"
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
+          </DialogTitle>
+          <DialogContent>
+            <table>
+              <thead>
+                <tr>
+                  <th style={{ width: "50%" }}>
+                    <FormattedMessage id="TITLE.DESCRIPTION" />
+                  </th>
+                  <th style={{ width: "40%" }}>
+                    <FormattedMessage id="TITLE.VALUE" />
+                  </th>
+                  <th style={{ width: "10%" }}>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-primary"
+                      onClick={() => {
+                        let addtionalPayments = cloneDeep(addtionalPayment);
+                        let item = {
+                          description: "",
+                          value: 0,
+                        };
+                        addtionalPayments.push(item);
+                        setAddtionalPayment(addtionalPayments);
+                      }}
+                      disabled={
+                        isSubmit ||
+                        invoiceData?.state === "REJECTED" ||
+                        invoiceData?.state === "APPROVED" ||
+                        invoiceData === null ||
+                        !props.billingStaffStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                      }
+                    >
+                      <FormattedMessage id="TITLE.ADD" />
+                    </button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {addtionalPayment.map((item, index) => {
+                  return (
+                    <tr key={index.toString()}>
+                      <td>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={item.description}
+                          onChange={(e) => {
+                            let addtionalPayments = cloneDeep(addtionalPayment);
+                            addtionalPayments[index].description =
+                              e.target.value;
+                            setAddtionalPayment(addtionalPayments);
+                          }}
+                          required={true}
+                          disabled={
+                            isSubmit ||
+                            invoiceData?.state === "REJECTED" ||
+                            invoiceData?.state === "APPROVED" ||
+                            invoiceData === null ||
+                            !props.billingStaffStatus ||
+                            progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          }
+                        />
+                      </td>
+                      <td>
+                        <NumberFormat
+                          id={
+                            isSubmit ||
+                            invoiceData?.state === "REJECTED" ||
+                            invoiceData?.state === "APPROVED" ||
+                            invoiceData === null ||
+                            !props.billingStaffStatus ||
+                            progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                              ? "NumberFormat-text"
+                              : "NumberFormat-input"
+                          }
+                          value={item.value}
+                          displayType={
+                            isSubmit ||
+                            invoiceData?.state === "REJECTED" ||
+                            invoiceData?.state === "APPROVED" ||
+                            invoiceData === null ||
+                            !props.billingStaffStatus ||
+                            progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                              ? "text"
+                              : "input"
+                          }
+                          className="form-control"
+                          thousandSeparator={"."}
+                          decimalSeparator={","}
+                          allowEmptyFormatting={true}
+                          allowLeadingZeros={true}
+                          prefix={"Rp "}
+                          onValueChange={(e) => {
+                            let addtionalPayments = cloneDeep(addtionalPayment);
+                            addtionalPayments[index].value = e.floatValue
+                              ? e.floatValue
+                              : 0;
+                            setAddtionalPayment(addtionalPayments);
+                          }}
+                          onClick={(e) => {
+                            if (
+                              !(
+                                isSubmit ||
+                                invoiceData?.state === "REJECTED" ||
+                                invoiceData?.state === "APPROVED" ||
+                                invoiceData === null ||
+                                !props.billingStaffStatus ||
+                                progressTermin?.ident_name !==
+                                  "BILLING_SOFTCOPY"
+                              )
+                            )
+                              e.target.select();
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger"
+                          onClick={() => {
+                            let addtionalPayments = cloneDeep(addtionalPayment);
+                            addtionalPayments.splice(index, 1);
+                            console.log("addtionalPayments", addtionalPayments);
+                            setAddtionalPayment(addtionalPayments);
+                          }}
+                          disabled={
+                            isSubmit ||
+                            invoiceData?.state === "REJECTED" ||
+                            invoiceData?.state === "APPROVED" ||
+                            invoiceData === null ||
+                            !props.billingStaffStatus ||
+                            progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          }
+                        >
+                          <FormattedMessage id="BUTTON.DELETE" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                setModalAddtionalPayment(false);
+                setAddtionalPayment(
+                  cloneDeep(
+                    invoiceData?.invoice_additional_value_data
+                      ? invoiceData?.invoice_additional_value_data
+                      : []
+                  )
+                );
+              }}
+              disabled={loading}
+              type="button"
+            >
+              <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+            </button>
+            <button
+              className="btn btn-primary"
+              disabled={
+                isSubmit ||
+                invoiceData?.state === "REJECTED" ||
+                invoiceData?.state === "APPROVED" ||
+                invoiceData === null ||
+                !props.billingStaffStatus ||
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              }
+              type="submit"
+            >
+              <span>
+                <FormattedMessage id="TITLE.SAVE" />
+              </span>
+              {loading && (
+                <span
+                  className="spinner-border spinner-border-sm ml-1"
+                  aria-hidden="true"
+                ></span>
+              )}
+            </button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <Card>
         <CardBody>
           <div className="row">
@@ -656,6 +893,20 @@ function ContractInvoicePage(props) {
                   </div>
                 </label>
               </div>
+              <div className="form-group row">
+                <label htmlFor="poNumber" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="poNumber"
+                    defaultValue={contractData["purch_order_no"]}
+                    disabled
+                  />
+                </div>
+              </div>
             </div>
             <div className="col-md-6">
               <div className="form-group row">
@@ -676,20 +927,6 @@ function ContractInvoicePage(props) {
                 </div>
               </div>
               <div className="form-group row">
-                <label htmlFor="poNumber" className="col-sm-4 col-form-label">
-                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER" />
-                </label>
-                <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="poNumber"
-                    defaultValue={contractData["purch_order_no"]}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
                 <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
                   <FormattedMessage
                     id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE"
@@ -704,6 +941,22 @@ function ContractInvoicePage(props) {
                     defaultValue={contractData["termin_value_new"]}
                     disabled
                   />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
+                </label>
+                <div className="col-sm-8">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-primary w-100"
+                    onClick={() => {
+                      setModalAddtionalPayment(true);
+                    }}
+                  >
+                    <FormattedMessage id="TITLE.SELECT" />
+                  </button>
                 </div>
               </div>
               <div className="form-group row">
@@ -858,7 +1111,8 @@ function ContractInvoicePage(props) {
                   </TableCell>
                   <TableCell>
                     <span
-                      className={`${item.state === "REJECTED"
+                      className={`${
+                        item.state === "REJECTED"
                           ? "text-danger"
                           : "text-success"
                         } pointer font-weight-bold`}
