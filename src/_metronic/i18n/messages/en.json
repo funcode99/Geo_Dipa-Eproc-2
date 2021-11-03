@@ -607,5 +607,6 @@
   "TITLE.PROCESS": "Process",
   "TITLE.CHOOSE_PPH_TAX": "Choose PPH Tax",
   "TITLE.VALUE": "Value",
-  "TITLE.CHECK": "Check"
+  "TITLE.CHECK": "Check",
+  "TITLE.ADDTIONAL_PAYMENT": "Additional Payment"
 }
