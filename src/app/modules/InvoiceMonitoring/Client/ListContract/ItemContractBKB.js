@@ -219,98 +219,6 @@ function ItemContractBKB(props) {
 
   const handleApproved = () => {
     setModalApproved({ ...modalApproved, loading: true });
-    // if (modalApproved.data === "approveBKB") {
-    //   const data = {
-    //     id: bkbData.id,
-    //     approved_bkb_id: data_login.user_id,
-    //     term_id: termin,
-    //     desc: bkbData.desc,
-    //     approved_bkb_role_id: modalApproved.role_id,
-    //     contract_id: contract,
-    //     giro_signed_data: bkbData.giro_signed_data,
-    //   };
-    //   approveBkb(data)
-    //     .then((result) => {
-    //       setModalApproved({
-    //         ...modalApproved,
-    //         statusReq: true,
-    //         loading: true,
-    //       });
-    //       setTimeout(() => {
-    //         getBkbData();
-    //         setModalApproved({
-    //           ...modalApproved,
-    //           statusDialog: false,
-    //           loading: false,
-    //         });
-    //       }, 2500);
-    //       SOCKET.emit("send_notif");
-    //     })
-    //     .catch((err) => {
-    //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    //     });
-    // } else if (modalApproved.data === "submitDataParkAp") {
-    //   const data = {
-    //     id: bkbData.id,
-    //     desc: bkbData.desc ? bkbData.desc : "",
-    //     doc_park_ap_no: parkApInput,
-    //     doc_park_ap_submit_id: data_login.user_id,
-    //     term_id: termin,
-    //     contract_id: contract,
-    //     sub_total: bkbData?.sub_total,
-    //     authority: terminAuthority,
-    //   };
-    //   submitParkAP(data)
-    //     .then((result) => {
-    //       setModalApproved({
-    //         ...modalApproved,
-    //         statusReq: true,
-    //         loading: true,
-    //       });
-    //       setTimeout(() => {
-    //         getBkbData();
-    //         setModalApproved({
-    //           ...modalApproved,
-    //           statusDialog: false,
-    //           loading: false,
-    //         });
-    //       }, 2500);
-    //       SOCKET.emit("send_notif");
-    //     })
-    //     .catch((err) => {
-    //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    //     });
-    // } else if (modalApproved.data === "updateDataParkAp") {
-    //   const data = {
-    //     id: bkbData.id,
-    //     desc: bkbData.desc,
-    //     doc_park_ap_no: parkApInput,
-    //     doc_park_ap_update_id: data_login.user_id,
-    //     term_id: termin,
-    //     contract_id: contract,
-    //     sub_total: bkbData?.sub_total,
-    //     authority: terminAuthority,
-    //   };
-    //   updateParkAP(data)
-    //     .then((result) => {
-    //       setModalApproved({
-    //         ...modalApproved,
-    //         statusReq: true,
-    //         loading: true,
-    //       });
-    //       setTimeout(() => {
-    //         getBkbData();
-    //         setModalApproved({
-    //           ...modalApproved,
-    //           statusDialog: false,
-    //           loading: false,
-    //         });
-    //       }, 2500);
-    //       SOCKET.emit("send_notif");
-    //     })
-    //     .catch((err) => {
-    //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    //     });
     if (modalApproved.data === "monitoringApproveParkAP") {
       const data = {
         id: bkbData.id,
@@ -327,7 +235,8 @@ function ItemContractBKB(props) {
           posting_by: bkbData?.doc_park_ap_by,
           posting_at: bkbData?.doc_park_ap_at
         },
-        inv_approved_by: bkbData?.inv_approved_by
+        inv_approved_by: bkbData?.inv_approved_by,
+        doc_park_ap_no: bkbData?.doc_park_ap_no
       };
       approveParkAP(data)
         .then((result) => {
@@ -369,7 +278,8 @@ function ItemContractBKB(props) {
           posting_by: bkbData?.inv_approved_by,
           posting_at: bkbData?.inv_approved_at
         },
-        doc_park_byr_by: bkbData?.doc_park_byr_by
+        doc_park_byr_by: bkbData?.doc_park_byr_by,
+
       };
       approveInvPosting(data)
         .then((result) => {
@@ -395,64 +305,6 @@ function ItemContractBKB(props) {
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
-      // } else if (modalApproved.data === "submitDataParkByr") {
-      //   const data = {
-      //     id: bkbData.id,
-      //     doc_park_byr_no: parkByrInput,
-      //     doc_park_byr_submit_id: data_login.user_id,
-      //     desc: bkbData.desc,
-      //     term_id: termin,
-      //     contract_id: contract,
-      //   };
-      //   submitParkBYR(data)
-      //     .then((result) => {
-      //       setModalApproved({
-      //         ...modalApproved,
-      //         statusReq: true,
-      //         loading: true,
-      //       });
-      //       setTimeout(() => {
-      //         getBkbData();
-      //         setModalApproved({
-      //           ...modalApproved,
-      //           statusDialog: false,
-      //           loading: false,
-      //         });
-      //       }, 2500);
-      //       SOCKET.emit("send_notif");
-      //     })
-      //     .catch((err) => {
-      //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      //     });
-      // } else if (modalApproved.data === "updateDataParkByr") {
-      //   const data = {
-      //     id: bkbData.id,
-      //     desc: bkbData.desc,
-      //     doc_park_byr_no: parkByrInput,
-      //     doc_park_byr_update_id: data_login.user_id,
-      //     term_id: termin,
-      //     contract_id: contract,
-      //   };
-      //   updateParkBYR(data)
-      //     .then((result) => {
-      //       setModalApproved({
-      //         ...modalApproved,
-      //         statusReq: true,
-      //         loading: true,
-      //       });
-      //       setTimeout(() => {
-      //         getBkbData();
-      //         setModalApproved({
-      //           ...modalApproved,
-      //           statusDialog: false,
-      //           loading: false,
-      //         });
-      //       }, 2500);
-      //       SOCKET.emit("send_notif");
-      //     })
-      //     .catch((err) => {
-      //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      //     });
     } else if (modalApproved.data === "monitoringApproveParkBYR") {
       const data = {
         id: bkbData.id,
@@ -470,6 +322,7 @@ function ItemContractBKB(props) {
           posting_by: bkbData?.doc_park_byr_by,
           posting_at: bkbData?.doc_park_byr_at
         },
+        doc_park_byr_no: bkbData?.doc_park_byr_no
       };
       approveParkBYR(data)
         .then((result) => {
@@ -495,46 +348,6 @@ function ItemContractBKB(props) {
         .catch((err) => {
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
         });
-      // } else if (modalApproved.data === "approveSignedGiro") {
-      //   const giro_signed_data = Object.assign([], bkbData?.giro_signed_data);
-      //   const index = giro_signed_data.findIndex(
-      //     (element) => element.id === modalApproved.role_id
-      //   );
-      //   giro_signed_data[index].role_id = modalApproved.role_id;
-      //   giro_signed_data[index].approved_id = data_login.user_id;
-      //   const data = {
-      //     id: bkbData.id,
-      //     index: index,
-      //     giro_signed_data: giro_signed_data,
-      //     user_id: data_login.user_id,
-      //     desc: bkbData.desc,
-      //     term_id: termin,
-      //     contract_id: contract,
-      //   };
-      //   approveGiro(data)
-      //     .then((result) => {
-      //       setModalApproved({
-      //         ...modalApproved,
-      //         statusReq: true,
-      //         loading: true,
-      //       });
-      //       getTerminProgress(termin).then((result) => {
-      //         setProgressTermin(result.data.data?.progress_type);
-      //         setDataProgress(result.data.data?.data);
-      //       });
-      //       setTimeout(() => {
-      //         getBkbData();
-      //         setModalApproved({
-      //           ...modalApproved,
-      //           statusDialog: false,
-      //           loading: false,
-      //         });
-      //       }, 2500);
-      //       SOCKET.emit("send_notif");
-      //     })
-      //     .catch((err) => {
-      //       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      //     });
     }
   };
 
@@ -559,6 +372,7 @@ function ItemContractBKB(props) {
         contract_id: contract,
         sub_total: bkbData?.sub_total,
         authority: terminAuthority,
+        doc_park_ap_no: bkbData?.doc_park_ap_no
       };
       rejectParkAP(data)
         .then((result) => {
@@ -596,40 +410,9 @@ function ItemContractBKB(props) {
           : bkbData.doc_park_byr_submit_at,
         term_id: termin,
         contract_id: contract,
+        doc_park_byr_no: bkbData?.doc_park_byr_no
       };
       rejectParkBYR(data)
-        .then((result) => {
-          setModalRejected({
-            ...modalRejected,
-            statusReq: true,
-            loading: true,
-          });
-          setTimeout(() => {
-            getBkbData();
-            setModalRejected({
-              ...modalRejected,
-              statusDialog: false,
-              loading: false,
-            });
-          }, 2500);
-          SOCKET.emit("send_notif");
-        })
-        .catch((err) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-        });
-    } else if (modalRejected.data === "rejectBKB") {
-      var note = document.getElementById("commentRejected").value;
-      const data = {
-        id: bkbData.id,
-        desc: bkbData.desc,
-        user_id: data_login.user_id,
-        rejected_remark: note,
-        term_id: termin,
-        contract_id: contract,
-        sub_total: bkbData?.sub_total,
-        authority: terminAuthority,
-      };
-      rejectBkb(data)
         .then((result) => {
           setModalRejected({
             ...modalRejected,
@@ -1252,7 +1035,7 @@ function ItemContractBKB(props) {
                 >
                   {bkbData && (
                     <QRCodeG
-                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.verif_staff_role_id}&type=ARCHIVED_BKB`}
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&type=ARCHIVED_BKB`}
                     />
                   )}
                   <div className="d-flex align-items-end">
@@ -1328,7 +1111,7 @@ function ItemContractBKB(props) {
                     )}
                   {bkbData?.doc_park_ap_approved_id && (
                     <QRCodeG
-                      value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.accounting_budgeting_role_id}&type=APPROVED_PARK_AP`}
+                      value={`${window.location.origin}/qrcode?term_id=${termin}&type=APPROVED_PARK_AP`}
                     />
                   )}
                   <div className="d-flex align-items-end">
@@ -1407,7 +1190,7 @@ function ItemContractBKB(props) {
                           )}
                         {bkbData?.inv_approved_state === "APPROVED" && (
                     <QRCodeG
-                            value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.inv_approved_data?.role_id}&type=INV_APPROVED`}
+                            value={`${window.location.origin}/qrcode?term_id=${termin}&type=APPROVED_INV`}
                     />
                         )}
                         {bkbData?.inv_approved_state === "APPROVED" && (<div className="d-flex align-items-end">
@@ -1503,7 +1286,7 @@ function ItemContractBKB(props) {
 
                     {bkbData?.doc_park_byr_approved_id && (
                       <QRCodeG
-                        value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${bkbData?.accounting_budgeting_role_id}&type=APPROVED_PARK_BYR`}
+                        value={`${window.location.origin}/qrcode?term_id=${termin}&type=APPROVED_PARK_BYR`}
                       />
                     )}
                     <div className="d-flex align-items-end">
@@ -1805,7 +1588,13 @@ function ItemContractBKB(props) {
                     </span>
                   </div>
                 </div>
-                <div className="row p-3">{bkbData?.penalty_remark}</div>
+                <div className="row p-3">
+                  {bkbData?.desc.split(";").map((row) => {
+                    return (
+                      <span className="col-sm-12 p-0">{row}</span>
+                    )
+                  })}
+                </div>
               </div>
             </div>
             <div className="row mt-3">
