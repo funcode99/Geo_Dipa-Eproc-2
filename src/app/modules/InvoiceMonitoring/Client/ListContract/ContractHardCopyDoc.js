@@ -451,7 +451,14 @@ function ContractHardCopyDoc(props) {
               });
             })
             .catch((error) => {
-              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+              if (error.response?.data && error.response?.data.message) {
+                setToast(error.response?.data.message, 10000);
+              } else {
+                setToast(
+                  intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+                  10000
+                );
+              }
             });
         }
         SOCKET.emit("send_notif");

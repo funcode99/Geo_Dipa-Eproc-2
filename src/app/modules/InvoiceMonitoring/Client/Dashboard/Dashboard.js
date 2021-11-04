@@ -52,6 +52,24 @@ function Dashboard(props) {
   const [Toast, setToast] = useToast();
   const [dataOverview, setDataOverview] = useState({});
   const suhbeader = useSubheader();
+  const [optionChart, setOptionChart] = useState({
+    chart: {
+      type: "donut",
+    },
+    series: [],
+    labels: ["New Invoice", "Active Invoice", "Paid Invoice"],
+    legend: {
+      position: "bottom",
+    },
+    plotOptions: {
+      pie: {
+        customScale: 1,
+        donut: {
+          size: "0%",
+        },
+      },
+    },
+  });
 
   useLayoutEffect(() => {
     suhbeader.setBreadcrumbs([
@@ -63,28 +81,13 @@ function Dashboard(props) {
   }, []);
 
   useEffect(() => {
-    var options = {
-      chart: {
-        type: "donut",
-      },
-      series: [44, 55, 13, 43, 22],
-      labels: ["test-1", "test-2", "test-3", "test-4", "test-5"],
-      responsive: [
-        {
-          //   breakpoint: 480,
-          options: {
-            legend: {
-              position: "bottom",
-            },
-          },
-        },
-      ],
-    };
     if (document.querySelector("#chart")) {
-      var chart = new ApexCharts(document.querySelector("#chart"), options);
+      const myNode = document.getElementById("chart");
+      myNode.innerHTML = "";
+      var chart = new ApexCharts(document.querySelector("#chart"), optionChart);
       chart.render();
     }
-  }, []);
+  }, [optionChart]);
 
   const callApiPlant = () => {
     getAllPlant()
@@ -129,7 +132,12 @@ function Dashboard(props) {
     )
       .then((result) => {
         var data = result.data.data;
-        if (data.length > 0) setDataOverview(data[0]);
+        setDataOverview(data);
+        var series = [];
+        series.push(data.invoice_hari_ini);
+        series.push(data.invoice_active);
+        series.push(data.total_invoice_dibayar);
+        setOptionChart({ ...optionChart, series });
       })
       .catch((err) => {
         setToast(
@@ -353,16 +361,20 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-primary rounded-circle">
+                        <span
+                          className="symbol-label rounded-circle"
+                          style={{ border: "2px solid" }}
+                        >
                           <h1 className="h-50 align-self-center">
-                            <i className="fas fa-file-invoice-dollar fa-sm text-white"></i>
+                            {/* <i className="fas fa-file-invoice-dollar fa-sm text-white"></i> */}
+                            {dataOverview?.total_invoice_count || 0}
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h3 className="m-auto text-primary">
+                        <h3 className="m-auto">
                           {rupiah(dataOverview?.total_invoice || 0)}
                         </h3>
                       </div>
@@ -382,17 +394,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-success rounded-circle">
-                          <h1 className="h-50 align-self-center">
-                            <i className="fas fa-calculator fa-sm text-white"></i>
+                        <span className="symbol-label bg-primary rounded-circle">
+                          <h1 className="h-50 align-self-center text-white">
+                            {/* <i className="fas fa-calculator fa-sm text-white"></i> */}
+                            {dataOverview?.invoice_hari_ini_count || 0}
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h3 className="m-auto text-success">
-                          {dataOverview?.invoice_hari_ini || 0}
+                        <h3 className="m-auto text-primary">
+                          {rupiah(dataOverview?.invoice_hari_ini || 0)}
                         </h3>
                       </div>
                       <div className="text-center font-size-xs">
@@ -412,8 +425,9 @@ function Dashboard(props) {
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
                         <span className="symbol-label bg-success rounded-circle">
-                          <h1 className="h-50 align-self-center">
-                            <i className="fas fa-calculator fa-sm text-white"></i>
+                          <h1 className="h-50 align-self-center text-white">
+                            {/* <i className="fas fa-calculator fa-sm text-white"></i> */}
+                            {dataOverview?.invoice_active_count || 0}
                           </h1>
                         </span>
                       </div>
@@ -421,7 +435,7 @@ function Dashboard(props) {
                     <div className="py-3 w-75">
                       <div className="d-flex">
                         <h3 className="m-auto text-success">
-                          {dataOverview?.invoice_active || 0}
+                          {rupiah(dataOverview?.invoice_active || 0)}
                         </h3>
                       </div>
                       <div className="text-center font-size-xs">
@@ -441,8 +455,9 @@ function Dashboard(props) {
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
                         <span className="symbol-label bg-warning rounded-circle">
-                          <h1 className="h-50 align-self-center">
-                            <i className="fas fa-receipt fa-sm text-white"></i>
+                          <h1 className="h-50 align-self-center text-white">
+                            {/* <i className="fas fa-receipt fa-sm text-white"></i> */}
+                            {dataOverview?.total_invoice_dibayar_count || 0}
                           </h1>
                         </span>
                       </div>
@@ -469,17 +484,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-success rounded-circle">
-                          <h1 className="h-50 align-self-center">
-                            <i className="fas fa-calculator fa-sm text-white"></i>
+                        <span className="symbol-label bg-danger rounded-circle">
+                          <h1 className="h-50 align-self-center text-white">
+                            {/* <i className="fas fa-calculator fa-sm text-white"></i> */}
+                            {dataOverview?.out_sla_25_count || 0}
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h3 className="m-auto text-success">
-                          {dataOverview?.out_sla_25 || 0}
+                        <h3 className="m-auto text-danger">
+                          {rupiah(dataOverview?.out_sla_25 || 0)}
                         </h3>
                       </div>
                       <div className="text-center font-size-xs">
@@ -498,17 +514,18 @@ function Dashboard(props) {
                   <div className="d-flex">
                     <div className="p-3 w-25">
                       <div className="symbol symbol-40 mr-1">
-                        <span className="symbol-label bg-success rounded-circle">
-                          <h1 className="h-50 align-self-center">
-                            <i className="fas fa-calculator fa-sm text-white"></i>
+                        <span className="symbol-label bg-danger rounded-circle">
+                          <h1 className="h-50 align-self-center text-white">
+                            {/* <i className="fas fa-calculator fa-sm text-white"></i> */}
+                            {dataOverview?.out_sla_30_count || 0}
                           </h1>
                         </span>
                       </div>
                     </div>
                     <div className="py-3 w-75">
                       <div className="d-flex">
-                        <h3 className="m-auto text-success">
-                          {dataOverview?.out_sla_30 || 0}
+                        <h3 className="m-auto text-danger">
+                          {rupiah(dataOverview?.out_sla_30 || 0)}
                         </h3>
                       </div>
                       <div className="text-center font-size-xs">
@@ -537,7 +554,7 @@ function Dashboard(props) {
                     <div className="py-3 w-75">
                       <div className="d-flex">
                         <h3 className="m-auto text-danger">
-                          {rupiah(dataOverview?.average || 0)}
+                          {dataOverview?.average || 0}
                         </h3>
                       </div>
                       <div className="text-center font-size-xs">

@@ -42,10 +42,17 @@ import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
 import { SOCKET } from "../../../../../../redux/BaseHost";
 import { cloneDeep } from "lodash";
+import { makeStyles } from "@material-ui/core/styles";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const useStyles = makeStyles((theme) => ({
+  MuiDialogActionsPosistion: {
+    justifyContent: "space-between",
+  },
+}));
 
 function ContractInvoicePage(props) {
   const [loading, setLoading] = useState(false);
@@ -63,6 +70,7 @@ function ContractInvoicePage(props) {
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
   const [addtionalPayment, setAddtionalPayment] = useState([]);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
+  const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
 
@@ -294,21 +302,14 @@ function ContractInvoicePage(props) {
   useEffect(getInvoiceData, []);
   useEffect(getBillingDocumentIdData, []);
 
-  // const disabledAddtionalPayment = async () => {
-  //   if (addtionalPayment.length === 0) return true;
-  //   try {
-  //     await new Promise((resolve, reject) => {
-  //       for (let i = 0; i < addtionalPayment.length; i++) {
-  //         const element = addtionalPayment[i];
-  //         // if(element.value )
-  //         if (i === addtionalPayment.length - 1) resolve();
-  //       }
-  //     });
-  //     return false;
-  //   } catch (error) {
-  //     return true;
-  //   }
-  // };
+  const totalAddtionalPayment = () => {
+    if (addtionalPayment && addtionalPayment.length === 0) return 0;
+    var total = 0;
+    addtionalPayment.forEach((element) => {
+      total += element.value;
+    });
+    return total;
+  };
 
   return (
     <React.Fragment>
@@ -621,6 +622,11 @@ function ContractInvoicePage(props) {
           autoComplete="off"
           onSubmit={(e) => {
             e.preventDefault();
+            setModalAddtionalPayment(false);
+            setInvoiceData({
+              ...invoiceData,
+              invoice_additional_value_data: cloneDeep(addtionalPayment),
+            });
           }}
         >
           <DialogTitle id="alert-dialog-slide-title">
@@ -769,9 +775,14 @@ function ContractInvoicePage(props) {
               </tbody>
             </table>
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes_.MuiDialogActionsPosistion}>
+            <div>
+              <FormattedMessage id="TITLE.TOTAL_PRICE_IS" />:{" "}
+              {rupiah(totalAddtionalPayment())}
+            </div>
+            <div>
             <button
-              className="btn btn-secondary"
+                className="btn btn-secondary mx-1"
               onClick={() => {
                 setModalAddtionalPayment(false);
                 setAddtionalPayment(
@@ -788,7 +799,7 @@ function ContractInvoicePage(props) {
               <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
             </button>
             <button
-              className="btn btn-primary"
+                className="btn btn-primary mx-1"
               disabled={
                 isSubmit ||
                 invoiceData?.state === "REJECTED" ||
@@ -809,6 +820,7 @@ function ContractInvoicePage(props) {
                 ></span>
               )}
             </button>
+            </div>
           </DialogActions>
         </form>
       </Dialog>
@@ -957,6 +969,23 @@ function ContractInvoicePage(props) {
                   >
                     <FormattedMessage id="TITLE.SELECT" />
                   </button>
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.TOTAL_AMOUNT" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="priceContract"
+                    value={rupiah(
+                      contractData["termin_value"] + totalAddtionalPayment()
+                    )}
+                    onChange={() => {}}
+                    disabled
+                  />
                 </div>
               </div>
               <div className="form-group row">

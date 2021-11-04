@@ -124,8 +124,16 @@ function ItemContractBKB(props) {
                   .then((responseRoles) => {
                     setRolesBKBData(responseRoles["data"]["data"]);
                     responseRoles["data"]["data"].map((row, key) => {
-                      if (parseFloat(response["data"]["data"].sub_total) >= row.min_value && parseFloat(response["data"]["data"].sub_total) <= row.max_value) {
-                        setRoleInvoicePostingStaff({ role_id: row.id, role_name: row.name })
+                      if (
+                        parseFloat(response["data"]["data"].sub_total) >=
+                          row.min_value &&
+                        parseFloat(response["data"]["data"].sub_total) <=
+                          row.max_value
+                      ) {
+                        setRoleInvoicePostingStaff({
+                          role_id: row.id,
+                          role_name: row.name,
+                        });
                       }
                     });
                   })
@@ -141,13 +149,19 @@ function ItemContractBKB(props) {
                   .then((responseRoles) => {
                     let sub_total = response.data.data.sub_total;
                     responseRoles.data.data.map((row, key) => {
-                      if (parseFloat(sub_total) >= row.min_value && parseFloat(sub_total) <= row.max_value) {
+                      if (
+                        parseFloat(sub_total) >= row.min_value &&
+                        parseFloat(sub_total) <= row.max_value
+                      ) {
                         setApproveParkAPStaff(
                           monitoring_role.findIndex(
                             (element) => element === row.name
                           ) >= 0
                         );
-                        setRoleApproveParkAPStaff({ role_id: row.id, role_name: row.name })
+                        setRoleApproveParkAPStaff({
+                          role_id: row.id,
+                          role_name: row.name,
+                        });
                       }
                     });
                   })
@@ -161,9 +175,19 @@ function ItemContractBKB(props) {
                   .then((responseRoles) => {
                     let sub_total = response.data.data.sub_total;
                     responseRoles.data.data.map((row, key) => {
-                      if (parseFloat(sub_total) >= row.min_value && parseFloat(sub_total) <= row.max_value) {
-                        setApproveParkByrStaff(monitoring_role.findIndex((element) => element === row.name) >= 0);
-                        setRoleApproveParkBYRStaff({ role_id: row.id, role_name: row.name })
+                      if (
+                        parseFloat(sub_total) >= row.min_value &&
+                        parseFloat(sub_total) <= row.max_value
+                      ) {
+                        setApproveParkByrStaff(
+                          monitoring_role.findIndex(
+                            (element) => element === row.name
+                          ) >= 0
+                        );
+                        setRoleApproveParkBYRStaff({
+                          role_id: row.id,
+                          role_name: row.name,
+                        });
                       }
                     });
                   })
@@ -197,7 +221,7 @@ function ItemContractBKB(props) {
       });
   }, [termin, intl, setToast]);
 
-  const getContractAuthorityData = useCallback(() => { }, [
+  const getContractAuthorityData = useCallback(() => {}, [
     termin,
     intl,
     setToast,
@@ -233,10 +257,10 @@ function ItemContractBKB(props) {
           approved_id: data_login.user_id,
           approved_by: data_login.full_name,
           posting_by: bkbData?.doc_park_ap_by,
-          posting_at: bkbData?.doc_park_ap_at
+          posting_at: bkbData?.doc_park_ap_at,
         },
         inv_approved_by: bkbData?.inv_approved_by,
-        doc_park_ap_no: bkbData?.doc_park_ap_no
+        doc_park_ap_no: bkbData?.doc_park_ap_no,
       };
       approveParkAP(data)
         .then((result) => {
@@ -276,10 +300,9 @@ function ItemContractBKB(props) {
           approved_id: data_login.user_id,
           approved_by: data_login.full_name,
           posting_by: bkbData?.inv_approved_by,
-          posting_at: bkbData?.inv_approved_at
+          posting_at: bkbData?.inv_approved_at,
         },
         doc_park_byr_by: bkbData?.doc_park_byr_by,
-
       };
       approveInvPosting(data)
         .then((result) => {
@@ -320,9 +343,9 @@ function ItemContractBKB(props) {
           approved_id: data_login.user_id,
           approved_by: data_login.full_name,
           posting_by: bkbData?.doc_park_byr_by,
-          posting_at: bkbData?.doc_park_byr_at
+          posting_at: bkbData?.doc_park_byr_at,
         },
-        doc_park_byr_no: bkbData?.doc_park_byr_no
+        doc_park_byr_no: bkbData?.doc_park_byr_no,
       };
       approveParkBYR(data)
         .then((result) => {
@@ -372,7 +395,7 @@ function ItemContractBKB(props) {
         contract_id: contract,
         sub_total: bkbData?.sub_total,
         authority: terminAuthority,
-        doc_park_ap_no: bkbData?.doc_park_ap_no
+        doc_park_ap_no: bkbData?.doc_park_ap_no,
       };
       rejectParkAP(data)
         .then((result) => {
@@ -410,7 +433,7 @@ function ItemContractBKB(props) {
           : bkbData.doc_park_byr_submit_at,
         term_id: termin,
         contract_id: contract,
-        doc_park_byr_no: bkbData?.doc_park_byr_no
+        doc_park_byr_no: bkbData?.doc_park_byr_no,
       };
       rejectParkBYR(data)
         .then((result) => {
@@ -444,7 +467,7 @@ function ItemContractBKB(props) {
       setCountGiroSigned(countGiroSigned + 1);
     } else {
       setGiroSignedData(
-        giroSignedData.filter(function (row) {
+        giroSignedData.filter(function(row) {
           return row.id !== e.target.value;
         })
       );
@@ -928,6 +951,28 @@ function ItemContractBKB(props) {
                       </tr>
                     );
                   })}
+                  {bkbData?.invoice_additional_value_data?.map((row, key) => {
+                    // Jenis Dokumen
+                    return (
+                      <tr key={key}>
+                        <td className="text-center">
+                          {bkbData?.invoice_no} / {bkbData?.purch_order_no}
+                        </td>
+                        <td className="text-center">
+                          {window
+                            .moment(new Date(bkbData?.invoice_date))
+                            .format("DD MMMM YYYY")}
+                        </td>
+                        <td className="text-justify">{row.description}</td>
+                        <td>
+                          <div className="d-flex justify-content-between">
+                            <span>{bkbData?.symbol}</span>
+                            <span>{rupiah(row.value).slice(3)}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                   <tr>
                     <td colSpan="3" className="text-right">
                       <FormattedMessage id="TITLE.LESS" />:
@@ -1123,7 +1168,9 @@ function ItemContractBKB(props) {
                     <span className="mx-auto">
                       {bkbData?.doc_park_ap_data?.approved_at
                         ? window
-                          .moment(new Date(bkbData?.doc_park_ap_data?.approved_at))
+                            .moment(
+                              new Date(bkbData?.doc_park_ap_data?.approved_at)
+                            )
                             .format("DD/MM/YYYY")
                         : ""}
                     </span>
@@ -1135,7 +1182,10 @@ function ItemContractBKB(props) {
                 style={{ height: 125 }}
               >
                 {rolesBKBData?.map((row, key) => {
-                  if (parseFloat(bkbData?.sub_total) >= row?.min_value && parseFloat(bkbData?.sub_total) <= row?.max_value) {
+                  if (
+                    parseFloat(bkbData?.sub_total) >= row?.min_value &&
+                    parseFloat(bkbData?.sub_total) <= row?.max_value
+                  ) {
                     return (
                 <div
                   className="text-center"
@@ -1146,7 +1196,9 @@ function ItemContractBKB(props) {
                   }}
                         key={key}
                       >
-                        {(monitoring_role.findIndex((element) => element === row.name) >= 0) &&
+                        {monitoring_role.findIndex(
+                          (element) => element === row.name
+                        ) >= 0 &&
                           bkbData?.inv_approved_state === "PENDING" && (
                             <button
                               type="button"
@@ -1167,7 +1219,9 @@ function ItemContractBKB(props) {
                               <FormattedMessage id="TITLE.APPROVE" />
                             </button>
                           )}
-                        {(monitoring_role.findIndex((element) => element === row.name) >= 0) &&
+                        {monitoring_role.findIndex(
+                          (element) => element === row.name
+                        ) >= 0 &&
                           bkbData?.inv_approved_state === "PENDING" && (
                       <button
                         type="button"
@@ -1193,16 +1247,20 @@ function ItemContractBKB(props) {
                             value={`${window.location.origin}/qrcode?term_id=${termin}&type=APPROVED_INV`}
                     />
                         )}
-                        {bkbData?.inv_approved_state === "APPROVED" && (<div className="d-flex align-items-end">
+                        {bkbData?.inv_approved_state === "APPROVED" && (
+                          <div className="d-flex align-items-end">
                           <span className="mx-auto">
                             {bkbData?.inv_approved_data?.approved_by}
                           </span>
-                        </div>)}
-                        {bkbData?.inv_approved_state === "APPROVED" && (<div className="d-flex align-items-end">
+                          </div>
+                        )}
+                        {bkbData?.inv_approved_state === "APPROVED" && (
+                          <div className="d-flex align-items-end">
                     <span className="mx-auto">
                             {bkbData?.inv_approved_data?.role_name}
                     </span>
-                        </div>)}
+                          </div>
+                        )}
                   </div>
                     );
                   }
@@ -1590,9 +1648,7 @@ function ItemContractBKB(props) {
                 </div>
                 <div className="row p-3">
                   {bkbData?.desc.split(";").map((row) => {
-                    return (
-                      <span className="col-sm-12 p-0">{row}</span>
-                    )
+                    return <span className="col-sm-12 p-0">{row}</span>;
                   })}
                 </div>
               </div>
