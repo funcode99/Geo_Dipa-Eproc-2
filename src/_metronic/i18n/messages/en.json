@@ -608,5 +608,6 @@
   "TITLE.CHOOSE_PPH_TAX": "Choose PPH Tax",
   "TITLE.VALUE": "Value",
   "TITLE.CHECK": "Check",
-  "TITLE.ADDTIONAL_PAYMENT": "Additional Payment"
+  "TITLE.ADDTIONAL_PAYMENT": "Additional Payment",
+  "TITLE.DATE_PAID": "Date Paid:"
 }

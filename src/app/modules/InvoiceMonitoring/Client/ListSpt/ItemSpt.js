@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { Container, makeStyles, Paper } from "@material-ui/core";
+import {
+  Container,
+  makeStyles,
+  Paper,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slide,
+} from "@material-ui/core";
 // import Tabs from "../../../../components/tabs";
 import Subheader from "../../../../components/subheader";
 // import { useSubheader } from "../../../../../_metronic/layout";
-import { getItemSpt } from "../../_redux/InvoiceMonitoringCrud";
+import {
+  getItemSpt,
+  uploadProofOfPayment,
+} from "../../_redux/InvoiceMonitoringCrud";
 import {
   Card,
   CardBody,
@@ -15,6 +26,14 @@ import {
 import LinearProgress from "@material-ui/core/LinearProgress";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
+import moment from "moment";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { connect, useSelector, shallowEqual } from "react-redux";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,7 +46,22 @@ const ItemSpt = (props) => {
   const classes = useStyles();
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(true);
+  const [dialogPayment, setDialogPayment] = useState(false);
   const [data, setData] = useState({});
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+
+  const initialValues = {};
+
+  const InvoiceSchema = Yup.object().shape({
+    paid_date: Yup.string().required(
+      intl.formatMessage({
+        id: "AUTH.VALIDATION.REQUIRED_FIELD",
+      })
+    ),
+  });
 
   const print = () => {
     var printContents = window.$("#printSPT").html();
@@ -57,9 +91,103 @@ const ItemSpt = (props) => {
 
   useEffect(getDataSpt, []);
 
+  const formik = useFormik({
+    initialValues,
+    validationSchema: InvoiceSchema,
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
+      setLoading(true);
+      values.created_by_id = user_id;
+      uploadProofOfPayment(match.params.id, values)
+        .then((result) => {
+          setLoading(false);
+          setDialogPayment(false);
+          getDataSpt();
+          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 5000);
+        })
+        .catch((err) => {
+          //   setErr(true);
+          setLoading(false);
+          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+        });
+    },
+  });
+
   return (
     <React.Fragment>
       <Toast />
+      <Dialog
+        open={dialogPayment}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.PROOF_OF_PAYMENT" />
+          </DialogTitle>
+          <DialogContent>
+            <div className="form-group row">
+              <label className="col-sm-4 col-form-label">
+                <FormattedMessage id="TITLE.DATE_PAID" />
+              </label>
+              <div className="col-sm-8">
+                <input
+                  type="date"
+                  className="form-control"
+                  {...formik.getFieldProps("paid_date")}
+                />
+                {formik.touched.paid_date && formik.errors.paid_date && (
+                  <span className="text-center text-danger">
+                    {formik.errors.paid_date}
+                  </span>
+                )}
+              </div>
+            </div>
+            {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.REJECTED.REJECT_BODY" />
+            <textarea
+              rows="2"
+              cols=""
+              className="form-control"
+              placeholder="komentar"
+              disabled={loading}
+              {...formik.getFieldProps("rejected_remark")}
+            ></textarea>
+            {formik.touched.rejected_remark && formik.errors.rejected_remark ? (
+              <span className="text-center text-danger">
+                {formik.errors.rejected_remark}
+              </span>
+            ) : null} */}
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setDialogPayment(false)}
+              disabled={loading}
+            >
+              <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+            </button>
+            <button
+              className="btn btn-primary"
+              disabled={
+                loading || (formik.touched && !formik.isValid) || !formik.dirty
+              }
+            >
+              <span>
+                <FormattedMessage id="TITLE.SAVE" />
+              </span>
+              {loading && (
+                <span
+                  className="spinner-border spinner-border-sm ml-1"
+                  aria-hidden="true"
+                ></span>
+              )}
+            </button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <Container className="px-0">
         <Subheader
           text={data?.spt_no}
@@ -75,8 +203,19 @@ const ItemSpt = (props) => {
             <CardHeaderToolbar>
               <button
                 type="button"
+                className="btn btn-sm btn-primary mx-1"
+                onClick={() => {
+                  setDialogPayment(true);
+                }}
+                disabled={loading}
+              >
+                <i className="fas fa-file-upload"></i>
+                <FormattedMessage id="TITLE.PROOF_OF_PAYMENT" />
+              </button>
+              <button
+                type="button"
                 onClick={print}
-                className="btn btn-sm btn-primary"
+                className="btn btn-sm btn-primary mx-1"
               >
                 <i className="fas fa-print"></i>
                 <FormattedMessage id="TITLE.PRINT" /> From Verifikasi
@@ -86,7 +225,7 @@ const ItemSpt = (props) => {
           <CardBody id="printSPT">
             <div>
               <div className="row">
-                <div className="col-sm-12">
+                <div className="col-sm-7">
                   <h3 className="text-uppercase">
                     <FormattedMessage id="TITLE.PAYMENT_SPT" />
                   </h3>
@@ -94,6 +233,16 @@ const ItemSpt = (props) => {
                     <FormattedMessage id="TITLE.ATTACHMENT_LETTER_NO_SPT" />{" "}
                     {data?.spt_no}
                   </h6>
+                </div>
+                <div className="col-sm-5">
+                  <h3 className="text-uppercase">
+                    <FormattedMessage id="TITLE.DATE_PAID" />
+                    {moment(new Date()).format("DD MMM YYYY")}
+                  </h3>
+                  {/* <h6 className="text-truncate">
+                    <FormattedMessage id="TITLE.PROOF_OF_PAYMENT" />:
+                    {data?.spt_no}
+                  </h6> */}
                 </div>
               </div>
               <div className="row mt-5">
