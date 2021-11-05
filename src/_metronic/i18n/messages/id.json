@@ -607,5 +607,6 @@
   "TITLE.CHOOSE_PPH_TAX": "Pilih Pajak PPH",
   "TITLE.VALUE": "Nilai",
   "TITLE.CHECK": "Cek",
-  "TITLE.ADDTIONAL_PAYMENT": "Pembayaran Tambahan"
+  "TITLE.ADDTIONAL_PAYMENT": "Pembayaran Tambahan",
+  "TITLE.DATE_PAID": "Tanggal Bayar:"
 }

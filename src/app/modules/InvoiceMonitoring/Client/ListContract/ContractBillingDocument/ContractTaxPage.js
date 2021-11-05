@@ -97,6 +97,7 @@ function ContractTaxPage(props) {
   const [saveTaxPph, setSaveTaxPph] = useState({});
   const [modalTaXPph, setModalTaXPph] = useState(false);
   const [addtionalPayment, setAddtionalPayment] = useState([]);
+  const [setstatus, setSetstatus] = useState(true);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const classes_ = useStyles();
 
@@ -322,12 +323,14 @@ function ContractTaxPage(props) {
           if (response.data.data) {
             getHistoryTaxData(response["data"]["data"]["id"]);
           }
-          if (!addtionalPayment || addtionalPayment.length === 0)
+          if (setstatus) {
+            setSetstatus(false);
             setAddtionalPayment(
               response.data?.data?.invoice_additional_value_data
                 ? response.data?.data?.invoice_additional_value_data
                 : []
             );
+        }
         }
       })
       .catch((error) => {
