@@ -80,6 +80,8 @@ const ItemSpt = (props) => {
       .then((result) => {
         setLoading(false);
         console.log("result", result.data.data);
+        if (result.data.data.paid_date)
+          formik.setFieldValue("paid_date", result.data.data.paid_date);
         setData(result.data.data);
       })
       .catch((err) => {
@@ -237,7 +239,9 @@ const ItemSpt = (props) => {
                 <div className="col-sm-5">
                   <h3 className="text-uppercase">
                     <FormattedMessage id="TITLE.DATE_PAID" />
-                    {moment(new Date()).format("DD MMM YYYY")}
+                    {data.paid_date
+                      ? moment(new Date(data.paid_date)).format("DD MMM YYYY")
+                      : "-----"}
                   </h3>
                   {/* <h6 className="text-truncate">
                     <FormattedMessage id="TITLE.PROOF_OF_PAYMENT" />:
