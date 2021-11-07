@@ -441,3 +441,6 @@ export async function synchBkbByNo(data) {
 export async function approveParkBYRNew(data) {
   return axios.post(`invoice/giro_data_submit`, data);
 }
+export async function uploadProofOfPayment(spt_header_id, data) {
+  return axios.post(`invoice/insert_paid_date/${spt_header_id}`, data);
+}
