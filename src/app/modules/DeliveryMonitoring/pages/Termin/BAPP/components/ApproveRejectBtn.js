@@ -3,7 +3,7 @@ import { Button, ButtonGroup } from "@material-ui/core";
 import { Form } from "react-bootstrap";
 import BasicInput from "../../../../../../components/input/BasicInput";
 
-const ApproveRejectBtn = forwardRef(({}, ref) => {
+const ApproveRejectBtn = forwardRef(({ isDisabled }, ref) => {
   const [action, setAction] = React.useState("approve");
   const [remarks, setRemarks] = React.useState();
   const isReject = action === "reject";
@@ -19,6 +19,7 @@ const ApproveRejectBtn = forwardRef(({}, ref) => {
     <div>
       <ButtonGroup
         aria-label="Pick Action"
+        disabled={isDisabled}
         style={{
           height: 38,
           // marginTop: 103,

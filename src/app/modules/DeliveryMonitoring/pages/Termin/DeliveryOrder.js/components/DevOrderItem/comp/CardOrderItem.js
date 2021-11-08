@@ -133,7 +133,7 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
         </span>
       }
     >
-      <Divider />
+      {/* <Divider /> */}
       <div className="d-flex justify-content-between mt-3">
         <span>
           <FormattedMessage id="TITLE.QUANTITY_TOTAL" /> {data?.qty}

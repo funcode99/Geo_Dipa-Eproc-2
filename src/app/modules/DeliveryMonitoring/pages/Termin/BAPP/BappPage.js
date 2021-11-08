@@ -23,7 +23,7 @@ import ModalPreview from "./components/ModalPreview";
 import ModalUploadSigned from "./components/ModalUploadSigned";
 import StepperDoc from "./components/StepperDoc";
 import formData, { formData1, formData2 } from "./fieldData";
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import FieldBuilder from "../../../../../components/builder/FieldBuilder";
 import ApproveRejectBtn from "./components/ApproveRejectBtn";
 import AlertLate from "./components/AlertLate";
@@ -161,8 +161,8 @@ const BappPage = ({
   );
   // const saExist = _.isEmpty(dataSAGR?.sa);
   // const grExist = _.isEmpty(dataSAGR?.gr);
-  const isDisabled = React.useMemo(() => isClient && !taskNews, [
-    taskNews,
+  const isDisabled = React.useMemo(() => isClient && !isEmpty(taskNews?.file), [
+    taskNews?.file,
     isClient,
   ]);
 
@@ -478,7 +478,7 @@ const BappPage = ({
     });
   };
 
-  console.log(`res2`, dataSAGR, dataExist);
+  console.log(`res2`, taskNews);
 
   return (
     <React.Fragment>
@@ -653,7 +653,10 @@ const BappPage = ({
                     </Col>
                     <Col>
                       <FieldBuilder formData={formData2} {...fieldProps} />
-                      <ApproveRejectBtn ref={onTimeRef} />
+                      <ApproveRejectBtn
+                        ref={onTimeRef}
+                        isDisabled={isDisabled}
+                      />
                       <AlertLate dataLate={lateData} />
                     </Col>
                   </Row>
