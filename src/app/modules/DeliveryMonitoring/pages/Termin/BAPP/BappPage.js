@@ -585,6 +585,15 @@ const BappPage = ({
                             <span className="navi-text">GR 105</span>
                           </Dropdown.Item>
                         </li>
+                        <li className="navi-item">
+                          <Dropdown.Item
+                            // href="#"
+                            className="navi-link"
+                            onClick={() => _fetchToSAP("sa")}
+                          >
+                            <span className="navi-text">SA</span>
+                          </Dropdown.Item>
+                        </li>
                       </ul>
                     </Dropdown.Menu>
                   </Dropdown>
