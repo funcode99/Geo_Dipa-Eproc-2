@@ -1042,7 +1042,7 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={invoiceData["task"]?.remarks}
+                    defaultValue={invoiceData?.task?.remarks}
                     disabled
                   />
                 </div>
