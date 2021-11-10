@@ -39,7 +39,22 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
   },
+  textHover: {
+    "&:hover i": {
+      color: "#181C32 !important",
+    },
+  },
+  textDisabled: {
+    backgroundColor: "#F3F6F9",
+  },
 }));
+
+const supportedFormats = [
+  "application/pdf",
+  "application/x-pdf",
+  "application/x-bzpdf",
+  "application/x-gzpdf",
+];
 
 const ItemSpt = (props) => {
   const { intl, match } = props;
@@ -47,13 +62,16 @@ const ItemSpt = (props) => {
   const [Toast, setToast] = useToast();
   const [loading, setLoading] = useState(true);
   const [dialogPayment, setDialogPayment] = useState(false);
+  const [uploadFilename, setUploadFilename] = useState("Pilih File");
   const [data, setData] = useState({});
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
     shallowEqual
   );
 
-  const initialValues = {};
+  const initialValues = {
+    file: "",
+  };
 
   const InvoiceSchema = Yup.object().shape({
     paid_date: Yup.string().required(
@@ -61,6 +79,19 @@ const ItemSpt = (props) => {
         id: "AUTH.VALIDATION.REQUIRED_FIELD",
       })
     ),
+    file: Yup.mixed()
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      )
+      .test(
+        "fileType",
+        intl.formatMessage({
+          id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FILE_TYPE_PDF",
+        }),
+        (value) => supportedFormats.includes(value?.type)
+      ),
   });
 
   const print = () => {
@@ -79,9 +110,10 @@ const ItemSpt = (props) => {
     getItemSpt(match.params.id)
       .then((result) => {
         setLoading(false);
-        console.log("result", result.data.data);
         if (result.data.data.paid_date)
           formik.setFieldValue("paid_date", result.data.data.paid_date);
+        if (result.data.data.file)
+          setUploadFilename(result.data.data.file_name);
         setData(result.data.data);
       })
       .catch((err) => {
@@ -99,7 +131,15 @@ const ItemSpt = (props) => {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       values.created_by_id = user_id;
-      uploadProofOfPayment(match.params.id, values)
+      values.spt_no = data?.spt_no
+      var data_new = new FormData();
+      for (var key in values) {
+        if (key != 'file') {
+          data_new.append(key, values[key]);
+        }
+      }
+      data_new.append('file', values.file)
+      uploadProofOfPayment(match.params.id, data_new)
         .then((result) => {
           setLoading(false);
           setDialogPayment(false);
@@ -113,6 +153,21 @@ const ItemSpt = (props) => {
         });
     },
   });
+
+  const handleUpload = (e) => {
+    if (e.currentTarget.files.length) {
+      setUploadFilename(e.currentTarget.files[0].name);
+    } else {
+      setUploadFilename(
+        intl.formatMessage({
+          id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+        })
+      );
+    }
+    formik.setTouched({ ...formik.touched, file: true });
+    formik.setFieldValue("file_name", e.currentTarget.files[0]?.name);
+    formik.setFieldValue("file", e.currentTarget.files[0]);
+  };
 
   return (
     <React.Fragment>
@@ -139,6 +194,7 @@ const ItemSpt = (props) => {
                 <input
                   type="date"
                   className="form-control"
+                  disabled={data?.paid_date}
                   {...formik.getFieldProps("paid_date")}
                 />
                 {formik.touched.paid_date && formik.errors.paid_date && (
@@ -148,25 +204,77 @@ const ItemSpt = (props) => {
                 )}
               </div>
             </div>
-            {/* <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.REJECTED.REJECT_BODY" />
-            <textarea
-              rows="2"
-              cols=""
-              className="form-control"
-              placeholder="komentar"
-              disabled={loading}
-              {...formik.getFieldProps("rejected_remark")}
-            ></textarea>
-            {formik.touched.rejected_remark && formik.errors.rejected_remark ? (
-              <span className="text-center text-danger">
-                {formik.errors.rejected_remark}
-              </span>
-            ) : null} */}
+            <div className="form-group row">
+              <label
+                htmlFor="upload"
+                className="col-sm-4 col-form-label"
+              >
+                <FormattedMessage id="TITLE.FILE" />
+              </label>
+              <label
+                htmlFor={data.file ? "" : "upload"}
+                className={`input-group mb-3 col-sm-8 ${data.file ? ""
+                  : "pointer"
+                  }`}
+              >
+                {!data.file && (
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">
+                      <i className="fas fa-file-upload"></i>
+                    </span>
+                  </div>
+                )}
+                <span
+                  className={`form-control text-truncate ${data.file ? classes.textDisabled
+                    : ""
+                    }`}
+                >
+                  {uploadFilename}
+                </span>
+                {data.file && (
+                  <div className="input-group-append pointer">
+                    <span
+                      className={`input-group-text ${classes.textHover}`}
+                    >
+                      <a
+                        download={data?.file_name}
+                        href={data?.file}
+                      >
+                        <i className="fas fa-download"></i>
+                      </a>
+                    </span>
+                  </div>
+                )}
+              </label>
+              <label className="offset-sm-4 col-sm-8 col-form-label">
+                {formik.touched.file && formik.errors.file && (
+                  <span className="text-center text-danger">
+                    {formik.errors.file}
+                  </span>
+                )}
+              </label>
+              <input
+                type="file"
+                className="d-none"
+                id="upload"
+                // disabled={data?.paid_date}
+                onChange={(e) => handleUpload(e)}
+              />
+            </div>
           </DialogContent>
           <DialogActions>
             <button
               className="btn btn-secondary"
-              onClick={() => setDialogPayment(false)}
+              type="button"
+              onClick={() => {
+                setDialogPayment(false)
+                formik.resetForm()
+                setUploadFilename(
+                  intl.formatMessage({
+                    id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+                  })
+                );
+              }}
               disabled={loading}
             >
               <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
