@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React from "react";
+import React, { useMemo } from "react";
 import { rupiah } from "../../../../../../libs/currency";
 import RowAdditional from "./RowAdditional";
 
@@ -12,23 +12,25 @@ const getSubTotal = (data) => {
   return subTotal;
 };
 
-const getTotal = (subTotal) => {
-  if (_.isEmpty(subTotal)) return 0;
+const getTotal = (subTotal = 0) => {
+  // if (_.isEmpty(subTotal)) return 0;
   let ppn = parseFloat(10 / 100);
   let extra = parseFloat(subTotal * ppn);
+  console.log(`subTotal`, subTotal, ppn, extra);
   return parseFloat(subTotal + extra);
 };
 
 const FooterSA = ({ data }) => {
-  // console.log(`data task_sa`, data);
-  const subTotal = getSubTotal(data);
-  const total = getTotal(subTotal);
+  const subTotal = useMemo(() => getSubTotal(data), [data]);
+  // const subTotal = getSubTotal(data);
+  const total = useMemo(() => getTotal(subTotal), [subTotal]);
+  // const total = getTotal(subTotal);
 
   return (
     <React.Fragment>
-      <RowAdditional label={"Subtotal"} value={rupiah(subTotal)} />
-      <RowAdditional label={"PPN 10%"} value={`10%`} />
-      <RowAdditional label={"Total"} value={rupiah(total)} />
+      <RowAdditional label={"Total value Excl. Tax"} value={rupiah(subTotal)} />
+      <RowAdditional label={"VAT 10%"} value={`10%`} />
+      <RowAdditional label={"Total value Inc. Tax"} value={rupiah(total)} />
     </React.Fragment>
   );
 };
