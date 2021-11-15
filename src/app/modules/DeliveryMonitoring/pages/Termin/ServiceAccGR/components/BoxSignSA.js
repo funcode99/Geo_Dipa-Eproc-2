@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoxSignSA = ({ title }) => {
+const BoxSignSA = ({ title, noQR }) => {
   const classes = useStyles();
   const tab4 = React.useMemo(
     () => [
@@ -44,15 +44,19 @@ const BoxSignSA = ({ title }) => {
     []
   );
   return (
-    <Grid item xs={3}>
+    <Grid item xs={4}>
       <Paper className={classes.paper}>
         <div className={"d-flex flex-column align-items-center"}>
-          <QRCodeG
-            value={`${
-              window.location.origin
-            }/qrcode?term_id=${"termin"}&role_id=${"bkbData?.approved_bkb_role_id"}&type=APPROVED_BKB`}
-            // size="90"
-          />
+          {noQR ? (
+            <div style={{ width: 72, height: 72 }} />
+          ) : (
+            <QRCodeG
+              value={`${
+                window.location.origin
+              }/qrcode?term_id=${"termin"}&role_id=${"bkbData?.approved_bkb_role_id"}&type=APPROVED_BKB`}
+              // size="90"
+            />
+          )}
           <span className={classes.txtJudul}>{title}</span>
         </div>
         <table>
