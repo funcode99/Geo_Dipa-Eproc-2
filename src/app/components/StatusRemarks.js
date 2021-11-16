@@ -1,6 +1,13 @@
 import React from "react";
 
-const StatusRemarks = ({ status, remarks, url, withFile, approvedBy }) => {
+const StatusRemarks = ({
+  status,
+  remarks,
+  url,
+  withFile,
+  approvedBy,
+  className,
+}) => {
   const isRejected = status === "REJECTED";
   const isApproved = status === "APPROVED";
   const isWaiting = status === "WAITING";
@@ -12,12 +19,21 @@ const StatusRemarks = ({ status, remarks, url, withFile, approvedBy }) => {
 
   // if (isApproved) {
   return (
-    <div className="d-flex flex-column align-items-start">
+    <div className={`d-flex flex-column align-items-start ${className}`}>
       <span
         className={`label label-lg label-light-${colorScheme} label-inline mr-2`}
       >
         {waitingText || status || "-"}&nbsp;
-        <span style={{ fontWeight: "bold" }}>{`  ` + approvedText}</span>
+        <span
+          style={{
+            fontWeight: "bold",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {`  ` + approvedText}
+        </span>
       </span>
       {isRejected && (
         <span className="text-muted font-weight-bold">{rejectText}</span>

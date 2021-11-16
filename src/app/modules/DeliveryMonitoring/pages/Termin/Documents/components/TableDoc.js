@@ -157,6 +157,17 @@ const TableDoc = ({ loading }) => {
                                     els?.approved_by?.party?.full_name ?? "N/A"
                                   }
                                 />
+                                <StatusRemarks
+                                  className={"mt-1"}
+                                  status={els?.wr_document_status?.name}
+                                  remarks={els?.wr_remarks}
+                                  url={els?.url}
+                                  withFile={true}
+                                  approvedBy={
+                                    els?.wr_approved_by?.party?.full_name ??
+                                    "N/A"
+                                  }
+                                />
                               </div>,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
@@ -190,6 +201,16 @@ const TableDoc = ({ loading }) => {
                             withFile={true}
                             approvedBy={
                               el?.approved_by?.party?.full_name ?? "N/A"
+                            }
+                          />
+                          <StatusRemarks
+                            className={"mt-1"}
+                            status={el?.wr_document_status?.name}
+                            remarks={el?.wr_remarks}
+                            url={el?.url}
+                            withFile={true}
+                            approvedBy={
+                              el?.wr_approved_by?.party?.full_name ?? "N/A"
                             }
                           />
                         </div>,

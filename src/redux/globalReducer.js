@@ -61,9 +61,14 @@ export const getAuthorizedUser = ({ auth, deliveryMonitoring }) => {
   const facility_id =
     deliveryMonitoring?.dataContractById?.authority?.facility_id;
   const filter_auth_user = plant_data.filter(({ id }) => id === facility_id);
-  console.log(`plant_data`, filter_auth_user.length > 0);
-  // console.log(`plant_data`, facility_id);
   return filter_auth_user.length > 0;
+};
+
+export const getClientStatus = ({ auth }) => {
+  const client_role = "TMS : User Division";
+  const roles_eproc = auth?.user?.data?.roles_eproc;
+  const filteredData = roles_eproc.filter(({ name }) => name === client_role);
+  return filteredData.length > 0;
 };
 
 // sagas below
