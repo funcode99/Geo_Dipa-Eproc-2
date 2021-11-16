@@ -53,9 +53,6 @@ export function Topbar() {
       setCount(data.length);
       setNewsTodo(data);
     });
-    SOCKET2.emit("notification", (data) => {
-      console.log("data SOCKET2", data);
-    });
   }, [SOCKET]);
 
   return (
