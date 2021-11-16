@@ -327,7 +327,7 @@ const BastPage = ({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews.id}/status`,
+          url: `delivery/task-news/${taskNews.id}/status-bast`,
           params: {
             approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
           },

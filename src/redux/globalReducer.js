@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import { persistReducer } from "redux-persist";
 import { call, delay, put, takeEvery } from "redux-saga/effects";
 import apiHelper from "../app/service/helper/apiHelper";
@@ -53,6 +54,16 @@ export const getLoading = (state, key) => {
   const { loadings } = state.globalReducer;
   const loadState = loadings.includes(key);
   return loadState;
+};
+
+export const getAuthorizedUser = ({ auth, deliveryMonitoring }) => {
+  const plant_data = auth?.user?.data?.plant_data;
+  const facility_id =
+    deliveryMonitoring?.dataContractById?.authority?.facility_id;
+  const filter_auth_user = plant_data.filter(({ id }) => id === facility_id);
+  console.log(`plant_data`, filter_auth_user.length > 0);
+  // console.log(`plant_data`, facility_id);
+  return filter_auth_user.length > 0;
 };
 
 // sagas below

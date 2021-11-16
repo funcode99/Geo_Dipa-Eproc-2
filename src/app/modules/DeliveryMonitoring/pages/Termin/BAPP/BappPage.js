@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { object } from "yup";
 import {
   fetch_api_sg,
+  getAuthorizedUser,
   getLoading,
 } from "../../../../../../redux/globalReducer";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
@@ -66,6 +67,7 @@ const BappPage = ({
   saveTask,
   loadings,
   handleChangeTab,
+  userAuth,
 }) => {
   const { func, task_id, task_sa, task_gr } = React.useContext(
     TerminPageContext
@@ -161,10 +163,11 @@ const BappPage = ({
   );
   // const saExist = _.isEmpty(dataSAGR?.sa);
   // const grExist = _.isEmpty(dataSAGR?.gr);
-  const isDisabled = React.useMemo(() => isClient && !isEmpty(taskNews?.file), [
-    taskNews?.file,
-    isClient,
-  ]);
+
+  const isDisabled = React.useMemo(
+    () => isClient && !userAuth && !isEmpty(taskNews?.file),
+    [taskNews?.file, isClient]
+  );
 
   const getDataSAGRForm = () => {
     fetchApi({
@@ -478,7 +481,7 @@ const BappPage = ({
     });
   };
 
-  console.log(`res2`, taskNews);
+  console.log(`plant_data`, taskNews, contract, userAuth);
 
   return (
     <React.Fragment>
@@ -864,6 +867,7 @@ const keys = {
 const mapState = (state) => {
   const { auth, deliveryMonitoring } = state;
   return {
+    userAuth: getAuthorizedUser(state),
     status: auth.user.data.status,
     contract: deliveryMonitoring.dataContractById,
     taskNews: deliveryMonitoring.dataTask?.news,
