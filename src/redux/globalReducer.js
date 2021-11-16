@@ -89,7 +89,7 @@ export function* saga() {
       let { data } = yield call(apiHelper.fetchGlobalApi, action.payload);
       // let data = yield call(apiHelper.fetchGlobalApi, action.payload);
       console.log(`resnew + ${key}`, data);
-      if (data.status === true) {
+      if (data.status === true || data.status === "success") {
         if (typeof onSuccess === "function") onSuccess(data);
         if (alertAppear === "both")
           MODAL.showSnackbar(data?.message ?? "Success", "success");

@@ -11,7 +11,8 @@ import UserNotificationsDropdown from "../extras/dropdowns/UserNotificationsDrop
 // import { MyCartDropdown } from "../extras/dropdowns/MyCartDropdown";
 import { LanguageSelectorDropdown } from "../extras/dropdowns/LanguageSelectorDropdown";
 import { QuickUserToggler } from "../extras/QuiclUserToggler";
-import { SOCKET } from "../../../../redux/BaseHost";
+import { SOCKET, SOCKET2 } from "../../../../redux/BaseHost";
+import UserNotificationDeliveryDropdown from "../extras/dropdowns/UserNotificationDeliveryDropdown";
 
 export function Topbar() {
   const uiService = useHtmlClassService();
@@ -58,6 +59,12 @@ export function Topbar() {
     <div className="topbar">
       {/* {layoutProps.viewSearchDisplay && <SearchDropdown />} */}
 
+      {layoutProps.viewNotificationsDisplay && user?.status === "client" && (
+        <UserNotificationDeliveryDropdown
+          newsTodo={newsTodo}
+          countMessage={count}
+        />
+      )}
       {layoutProps.viewNotificationsDisplay && user?.status === "client" && (
         <UserNotificationsDropdown newsTodo={newsTodo} countMessage={count} />
       )}
