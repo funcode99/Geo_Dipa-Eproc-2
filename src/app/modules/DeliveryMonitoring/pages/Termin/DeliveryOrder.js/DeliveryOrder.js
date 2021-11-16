@@ -23,6 +23,7 @@ import { useFormik } from "formik";
 import DevOrderItem from "./components/DevOrderItem";
 import {
   fetch_api_sg,
+  getClientStatus,
   getLoading,
 } from "../../../../../../redux/globalReducer";
 import { tblHeadDlvItem } from "./components/fieldData";
@@ -95,6 +96,7 @@ const DeliveryOrder = ({
   status,
   fetchApi,
   loadings,
+  isAlsoClient,
 }) => {
   const { func, task_id } = React.useContext(TerminPageContext);
   const taskId = task_id;
@@ -273,35 +275,50 @@ const DeliveryOrder = ({
     });
   };
 
+  const handleApproveAPI = React.useCallback(
+    (amIWarehouse, callback) => {
+      console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
+      fetchApi({
+        key: keys.submit_item,
+        type: "post",
+        url: `delivery/task-delivery-item/${dataOrderItem.id}/status`,
+        alertAppear: "both",
+        params: {
+          items: Object.values(itemForm).map((el) => {
+            let params = {
+              ...el,
+              specification: el.spec,
+              qty_approved: parseFloat(el.qty_approved),
+            };
+            if (amIWarehouse) {
+              params.warehouse_approve_status_id = el.approve_status_id;
+              delete params.approve_status_id;
+            }
+            return params;
+          }),
+        },
+        onSuccess: (res) => {
+          getTask();
+          func.onRefresh();
+          submitItemRef.current.close();
+          handleVisible("confirm", {}, []);
+          if (typeof callback === "function") callback();
+        },
+      });
+    },
+    [dataOrderItem, itemForm, fetchApi]
+  );
+
   const handleConfirmItem = React.useCallback(() => {
-    console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
-    fetchApi({
-      key: keys.submit_item,
-      type: "post",
-      url: `delivery/task-delivery-item/${dataOrderItem.id}/status`,
-      alertAppear: "both",
-      params: {
-        items: Object.values(itemForm).map((el) => {
-          let params = {
-            ...el,
-            specification: el.spec,
-            qty_approved: parseFloat(el.qty_approved),
-          };
-          if (isWarehouse) {
-            params.warehouse_approve_status_id = el.approve_status_id;
-            delete params.approve_status_id;
-          }
-          return params;
-        }),
-      },
-      onSuccess: (res) => {
-        getTask();
-        func.onRefresh();
-        submitItemRef.current.close();
-        handleVisible("confirm", {}, []);
-      },
-    });
-  }, [dataOrderItem, itemForm, fetchApi]);
+    // console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
+    if (isWarehouse) {
+      handleApproveAPI(true, () => {
+        if (isAlsoClient) handleApproveAPI(false);
+      });
+    } else {
+      handleApproveAPI(false);
+    }
+  }, [isAlsoClient, isWarehouse, handleApproveAPI]);
 
   const handleModal = (type, data) => {
     const option = ["update", "detail"];
@@ -658,6 +675,7 @@ const mapState = (state) => {
     tempOrderItems: deliveryMonitoring.dataTempOrderItems,
     updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
     status: auth.user.data.status,
+    isAlsoClient: getClientStatus(state),
     loadings: {
       submit_item: getLoading(state, keys.submit_item),
       fetch: getLoading(state, keys.fetch),

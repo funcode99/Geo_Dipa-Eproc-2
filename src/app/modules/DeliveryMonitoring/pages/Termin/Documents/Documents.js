@@ -327,7 +327,7 @@ const Documents = ({
           break;
       }
     },
-    [open, isWarehouse, isAlsoClient]
+    [open, isWarehouse, isAlsoClient, approveDoc]
   );
 
   React.useEffect(() => {
