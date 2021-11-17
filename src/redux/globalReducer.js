@@ -60,7 +60,7 @@ export const getAuthorizedUser = ({ auth, deliveryMonitoring }) => {
   const plant_data = auth?.user?.data?.plant_data;
   const facility_id =
     deliveryMonitoring?.dataContractById?.authority?.facility_id;
-  const filter_auth_user = plant_data.filter(({ id }) => id === facility_id);
+  const filter_auth_user = plant_data?.filter(({ id }) => id === facility_id);
   return filter_auth_user.length > 0;
 };
 
