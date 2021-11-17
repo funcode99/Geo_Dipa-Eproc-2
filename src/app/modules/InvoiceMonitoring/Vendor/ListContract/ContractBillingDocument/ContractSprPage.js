@@ -1443,7 +1443,7 @@ function ContractSprPage(props) {
                 !invoicePeriodsStatus
               }
             >
-              <FormattedMessage id="TITLE.UPLOAD" />
+              <FormattedMessage id="TITLE.SAVE" />
               {loading && (
                 <span
                   className="spinner-border spinner-border-sm ml-1"
