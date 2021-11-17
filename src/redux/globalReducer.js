@@ -61,7 +61,7 @@ export const getAuthorizedUser = ({ auth, deliveryMonitoring }) => {
   const facility_id =
     deliveryMonitoring?.dataContractById?.authority?.facility_id;
   const filter_auth_user = plant_data?.filter(({ id }) => id === facility_id);
-  return filter_auth_user.length > 0;
+  return filter_auth_user?.length > 0;
 };
 
 export const getClientStatus = ({ auth }) => {
