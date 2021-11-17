@@ -36,9 +36,7 @@ import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
-import {
-  getInvoicePeriods
-} from "../../../../Master/service/MasterCrud";
+import { getInvoicePeriods } from "../../../../Master/service/MasterCrud";
 import { SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractInvoicePage(props) {
@@ -204,8 +202,8 @@ function ContractInvoicePage(props) {
                 "from_time",
                 responses["data"]["data"]["from_time"]
                   ? window
-                    .moment(new Date(responses["data"]["data"]["from_time"]))
-                    .format("YYYY-MM-DD")
+                      .moment(new Date(responses["data"]["data"]["from_time"]))
+                      .format("YYYY-MM-DD")
                   : ""
               );
               setUploadFilename(responses["data"]["data"]["file_name"]);
@@ -230,8 +228,8 @@ function ContractInvoicePage(props) {
               "from_time",
               response["data"]["data"]["from_time"]
                 ? window
-                  .moment(new Date(response["data"]["data"]["from_time"]))
-                  .format("YYYY-MM-DD")
+                    .moment(new Date(response["data"]["data"]["from_time"]))
+                    .format("YYYY-MM-DD")
                 : ""
             );
             setUploadFilename(response["data"]["data"]["file_name"]);
@@ -334,8 +332,8 @@ function ContractInvoicePage(props) {
             "from_time",
             dataFormInvoice.from_time
               ? window
-                .moment(new Date(dataFormInvoice.from_time))
-                .format("YYYY-MM-DD")
+                  .moment(new Date(dataFormInvoice.from_time))
+                  .format("YYYY-MM-DD")
               : ""
           );
           formik.setFieldValue(
@@ -389,8 +387,8 @@ function ContractInvoicePage(props) {
               "from_time",
               response["data"]["data"]["from_time"]
                 ? window
-                  .moment(new Date(response["data"]["data"]["from_time"]))
-                  .format("YYYY-MM-DD")
+                    .moment(new Date(response["data"]["data"]["from_time"]))
+                    .format("YYYY-MM-DD")
                 : ""
             );
           }
@@ -426,11 +424,24 @@ function ContractInvoicePage(props) {
   const getInvoicePeriodsData = useCallback(() => {
     getInvoicePeriods()
       .then((response) => {
-        const day_now = moment(new Date()).format('D')
-        if (parseInt(response["data"]["data"][0]["accepted_thru_day"]) >= parseInt(response["data"]["data"][0]["accepted_from_day"])) {
-          setInvoicePeriodsStatus(day_now >= parseInt(response["data"]["data"][0]["accepted_from_day"]) && day_now <= parseInt(response["data"]["data"][0]["accepted_thru_day"]))
+        const day_now = moment(new Date()).format("D");
+        if (
+          parseInt(response["data"]["data"][0]["accepted_thru_day"]) >=
+          parseInt(response["data"]["data"][0]["accepted_from_day"])
+        ) {
+          setInvoicePeriodsStatus(
+            day_now >=
+              parseInt(response["data"]["data"][0]["accepted_from_day"]) &&
+              day_now <=
+                parseInt(response["data"]["data"][0]["accepted_thru_day"])
+          );
         } else {
-          setInvoicePeriodsStatus(day_now >= parseInt(response["data"]["data"][0]["accepted_from_day"]) || day_now <= parseInt(response["data"]["data"][0]["accepted_thru_day"]))
+          setInvoicePeriodsStatus(
+            day_now >=
+              parseInt(response["data"]["data"][0]["accepted_from_day"]) ||
+              day_now <=
+                parseInt(response["data"]["data"][0]["accepted_thru_day"])
+          );
         }
       })
       .catch((error) => {
@@ -515,8 +526,9 @@ function ContractInvoicePage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -534,8 +546,9 @@ function ContractInvoicePage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -634,11 +647,11 @@ function ContractInvoicePage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                      "YYYY-MM-DD HH:mm:ss"
-                    )
+                        "YYYY-MM-DD HH:mm:ss"
+                      )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                      "YYYY-MM-DD HH:mm:ss"
-                    )}
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
                 </span>
               </div>
             </div>
@@ -687,9 +700,9 @@ function ContractInvoicePage(props) {
                       className="form-control"
                       id="numberInvoice"
                       disabled={
-                        (loading ||
-                          invoiceStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        invoiceStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       defaultValue={
@@ -723,9 +736,9 @@ function ContractInvoicePage(props) {
                       className="form-control"
                       id="dateInvoice"
                       disabled={
-                        (loading ||
-                          invoiceStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        invoiceStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       onBlur={formik.handleBlur}
@@ -762,9 +775,9 @@ function ContractInvoicePage(props) {
                       className="form-control"
                       id="note"
                       disabled={
-                        (loading ||
-                          invoiceStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                        loading ||
+                        invoiceStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
                       }
                       defaultValue={
@@ -791,11 +804,13 @@ function ContractInvoicePage(props) {
                   </label>
                   <label
                     htmlFor="upload"
-                    className={`input-group mb-3 col-sm-8 ${(invoiceStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
-                      !invoicePeriodsStatus ? ""
-                      : "pointer"
-                      }`}
+                    className={`input-group mb-3 col-sm-8 ${
+                      invoiceStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                      !invoicePeriodsStatus
+                        ? ""
+                        : "pointer"
+                    }`}
                   >
                     {!invoiceStatus && (
                       <div className="input-group-prepend">
@@ -805,11 +820,13 @@ function ContractInvoicePage(props) {
                       </div>
                     )}
                     <span
-                      className={`form-control text-truncate ${(invoiceStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
-                        !invoicePeriodsStatus ? classes.textDisabled
-                        : ""
-                        }`}
+                      className={`form-control text-truncate ${
+                        invoiceStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        !invoicePeriodsStatus
+                          ? classes.textDisabled
+                          : ""
+                      }`}
                     >
                       {uploadFilename}
                     </span>
@@ -844,9 +861,9 @@ function ContractInvoicePage(props) {
                     className="d-none"
                     id="upload"
                     disabled={
-                      (loading ||
-                        invoiceStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                      loading ||
+                      invoiceStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                       !invoicePeriodsStatus
                     }
                     onChange={(e) => handleUpload(e)}
@@ -934,13 +951,13 @@ function ContractInvoicePage(props) {
               className="btn btn-primary mx-1"
               disabled={
                 (formik.touched && !formik.isValid) ||
-                (loading ||
+                loading ||
                   invoiceStatus ||
-                  progressTermin?.ident_name !== "BILLING_SOFTCOPY") ||
+                  progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                 !invoicePeriodsStatus
               }
             >
-              <FormattedMessage id="TITLE.UPLOAD" />
+              <FormattedMessage id="TITLE.SAVE" />
               {loading && (
                 <span
                   className="spinner-border spinner-border-sm ml-1"
@@ -979,10 +996,11 @@ function ContractInvoicePage(props) {
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`${item.state === "REJECTED"
-                          ? "text-danger"
-                          : "text-success"
-                          } pointer font-weight-bold`}
+                        className={`${
+                          item.state === "REJECTED"
+                            ? "text-danger"
+                            : "text-success"
+                        } pointer font-weight-bold`}
                         onClick={() => handleHistory(index)}
                       >
                         {item.state === "REJECTED" ? (
