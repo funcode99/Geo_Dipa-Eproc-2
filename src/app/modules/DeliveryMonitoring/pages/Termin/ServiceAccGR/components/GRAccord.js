@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GRAccord = ({ children, label, expandeds = true }) => {
+const GRAccord = ({ children, label, expandeds = true, id }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
@@ -35,7 +35,7 @@ const GRAccord = ({ children, label, expandeds = true }) => {
   }, []);
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} id={id}>
       <ExpansionPanel
         key={"idx"}
         expanded={expanded === `panel${"idx"}`}
