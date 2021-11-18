@@ -124,7 +124,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
     [dataSA]
   );
 
-  // console.log(`dataSA`, dataSA);
+  console.log(`dataSA`, dataSAGR);
 
   const options = { optCost, optGL };
 
@@ -143,6 +143,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
           saExist,
           dataSA,
           options,
+          baseSA: dataSAGR?.base_sa,
         }}
       >
         {/* <TableSA /> */}

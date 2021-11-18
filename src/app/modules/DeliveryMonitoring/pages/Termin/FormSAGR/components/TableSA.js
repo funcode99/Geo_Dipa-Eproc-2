@@ -19,9 +19,9 @@ const TableSA = ({ itemJasa }) => {
     ],
     []
   );
-  const { readOnly, dataSA } = React.useContext(FormSAContext);
+  const { readOnly, dataSA, baseSA, saExist } = React.useContext(FormSAContext);
   const dataUsed = readOnly ? dataSA.services : itemJasa;
-  // console.log(`dataUsed`, dataUsed);
+  //   console.log(`dataUsed`, dataUsed, baseSA);
 
   return (
     <TablePaginationCustom
@@ -30,11 +30,13 @@ const TableSA = ({ itemJasa }) => {
         name_service: el?.service?.short_text || "",
         service_id: el?.service?.id || "",
         qty: el?.qty,
-        wbsdata: el?.wbs,
+        wbsdata: saExist ? el?.wbs : baseSA?.wbs,
         dist_type: option_dist_type.filter(
           (els) => els.value === el?.distribution_type
         )[0],
-        cost_center: el?.costcenter,
+        bus_area: saExist ? el?.bus_area : baseSA?.bus_area,
+        gl_account: saExist ? el?.gl_account : baseSA?.gl_account,
+        cost_center: saExist ? el?.costcenter : baseSA?.cost_center,
         ...el,
       }))}
       // rows={dataRow}

@@ -23,6 +23,7 @@ import { useFormik } from "formik";
 import DevOrderItem from "./components/DevOrderItem";
 import {
   fetch_api_sg,
+  getClientStatus,
   getLoading,
 } from "../../../../../../redux/globalReducer";
 import { tblHeadDlvItem } from "./components/fieldData";
@@ -95,6 +96,7 @@ const DeliveryOrder = ({
   status,
   fetchApi,
   loadings,
+  isAlsoClient,
 }) => {
   const { func, task_id } = React.useContext(TerminPageContext);
   const taskId = task_id;
@@ -109,6 +111,7 @@ const DeliveryOrder = ({
   const [tableContent, setTableContent] = React.useState([]);
   const [isUpdate, setIsUpdate] = React.useState(false);
   const [options, setOptions] = React.useState([]);
+  const [isWarehouse, setIsWarehouse] = React.useState(false);
   const isVendor = status === "vendor";
   const excludeAction = isVendor ? [""] : ["update", "delete"];
   const [dataOrderItem, setDataOrderItem] = React.useState({});
@@ -156,7 +159,7 @@ const DeliveryOrder = ({
         setInitAvailItems(items);
         if (dataOrderItem !== {}) {
           let findItem = res?.data?.task_deliveries.filter(
-            (el) => el.id === dataOrderItem.id
+            (el) => el?.id === dataOrderItem?.id
           )[0];
           setDataOrderItem(findItem);
         }
@@ -272,27 +275,50 @@ const DeliveryOrder = ({
     });
   };
 
+  const handleApproveAPI = React.useCallback(
+    (amIWarehouse, callback) => {
+      console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
+      fetchApi({
+        key: keys.submit_item,
+        type: "post",
+        url: `delivery/task-delivery-item/${dataOrderItem.id}/status`,
+        alertAppear: "both",
+        params: {
+          items: Object.values(itemForm).map((el) => {
+            let params = {
+              ...el,
+              specification: el.spec,
+              qty_approved: parseFloat(el.qty_approved),
+            };
+            if (amIWarehouse) {
+              params.warehouse_approve_status_id = el.approve_status_id;
+              delete params.approve_status_id;
+            }
+            return params;
+          }),
+        },
+        onSuccess: (res) => {
+          getTask();
+          func.onRefresh();
+          submitItemRef.current.close();
+          handleVisible("confirm", {}, []);
+          if (typeof callback === "function") callback();
+        },
+      });
+    },
+    [dataOrderItem, itemForm, fetchApi]
+  );
+
   const handleConfirmItem = React.useCallback(() => {
     // console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
-    fetchApi({
-      key: keys.submit_item,
-      type: "post",
-      url: `delivery/task-delivery-item/${dataOrderItem.id}/status`,
-      alertAppear: "both",
-      params: {
-        items: Object.values(itemForm).map((el) => ({
-          ...el,
-          qty_approved: parseFloat(el.qty_approved),
-        })),
-      },
-      onSuccess: (res) => {
-        getTask();
-        func.onRefresh();
-        submitItemRef.current.close();
-        handleVisible("confirm", {}, []);
-      },
-    });
-  }, [dataOrderItem, itemForm, fetchApi]);
+    if (isWarehouse) {
+      handleApproveAPI(true, () => {
+        if (isAlsoClient) handleApproveAPI(false);
+      });
+    } else {
+      handleApproveAPI(false);
+    }
+  }, [isAlsoClient, isWarehouse, handleApproveAPI]);
 
   const handleModal = (type, data) => {
     const option = ["update", "detail"];
@@ -324,7 +350,8 @@ const DeliveryOrder = ({
     let result = [];
     olds.forEach((item1, index1) => {
       news.forEach((item2, index2) => {
-        if (item1.id === item2.id) {
+        if (item1?.id === item2?.id) {
+          console.log(`item2`, item2);
           let objData = {};
           objData = {
             name: item1?.item?.desc,
@@ -332,6 +359,7 @@ const DeliveryOrder = ({
             qty_approved: item2?.qty_approved,
             approve_status: item2.approve_status,
             reject_text: item2.reject_text,
+            spec: item2.spec,
           };
           result.push(objData);
         }
@@ -344,6 +372,7 @@ const DeliveryOrder = ({
     let temp = [...arrItems];
     let result = [];
     temp.forEach((el) => {
+      console.log(`el`, el);
       let objData = {};
       if (el?.approve_status?.code !== "waiting") {
         objData = {
@@ -352,6 +381,7 @@ const DeliveryOrder = ({
           qty_approved: el?.qty_approved,
           approve_status: el?.approve_status?.name,
           reject_text: el?.reject_text,
+          spec: el?.spec,
         };
         result.push(objData);
       }
@@ -474,7 +504,7 @@ const DeliveryOrder = ({
           };
           dataArr.push(objData);
         })
-      : (dataArr = tblHeadDlvItem.map((item) => ({ [item.id]: "" })));
+      : (dataArr = tblHeadDlvItem.map((item) => ({ [item?.id]: "" })));
     setTableContent(dataArr);
   };
 
@@ -495,6 +525,20 @@ const DeliveryOrder = ({
         approveStatusOptions = changeSequenceOptions(approveStatusOptions);
         addClassToOptions(approveStatusOptions);
         setOptions(approveStatusOptions);
+      },
+    });
+    fetchApi({
+      key: keys.token_data,
+      type: "get",
+      url: `/auth/get_token_data`,
+      onSuccess: (res) => {
+        const userType = res.data.data.monitoring_role?.find(
+          (a) => a == "Logistic Staff" || a == "Warehouse Staff"
+        )
+          ? "warehouse"
+          : "user";
+        setIsWarehouse(userType === "warehouse" ? true : false);
+        // console.log(`res token data`, res, userType);
       },
     });
   };
@@ -523,6 +567,7 @@ const DeliveryOrder = ({
         onSubmit={() => handleConfirmItem()}
         loading={loadings.submit_item}
         data={open.tempItems}
+        // data={Object.values(itemForm)}
       />
 
       <ModalDelete
@@ -604,6 +649,7 @@ const DeliveryOrder = ({
           handleAction={handleAction}
           isVendor={isVendor}
           onRefresh={handleRefresh}
+          isWarehouse={isWarehouse}
           // handleSubmit={() => handleAction("confirm", null)}
         />
       )}
@@ -618,6 +664,7 @@ const keys = {
   detail: "update-delivery-order-status",
   delete: "delete-delivery-order",
   option: "approve-status-option",
+  token_data: "get-token-data",
 };
 
 const mapState = (state) => {
@@ -628,6 +675,7 @@ const mapState = (state) => {
     tempOrderItems: deliveryMonitoring.dataTempOrderItems,
     updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
     status: auth.user.data.status,
+    isAlsoClient: getClientStatus(state),
     loadings: {
       submit_item: getLoading(state, keys.submit_item),
       fetch: getLoading(state, keys.fetch),

@@ -11,6 +11,7 @@ const theadService = [
   { id: "qty", label: "Qty Total" },
   { id: "qty_avail", label: <FormattedMessage id="TITLE.QTY_AVAILABLE" /> },
   { id: "uom", label: "Uom" },
+  { id: "gr_price", label: "Gross Value" },
   { id: "net_value", label: <FormattedMessage id="TITLE.NET_VALUE" /> },
 ];
 

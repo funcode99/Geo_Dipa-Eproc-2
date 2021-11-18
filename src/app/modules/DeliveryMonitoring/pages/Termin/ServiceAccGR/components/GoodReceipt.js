@@ -27,7 +27,7 @@ const GoodReceipt = ({ data, loading }) => {
               rows={els?.gr_items.map((el, id) => ({
                 line: el?.line_id,
                 mat_no: parseInt(el?.material),
-                desc: "",
+                desc: el?.item_text,
                 order_qty: el?.po_pr_qnt,
                 rcvd_qty: el?.entry_qnt,
                 uom: el?.entry_uom,

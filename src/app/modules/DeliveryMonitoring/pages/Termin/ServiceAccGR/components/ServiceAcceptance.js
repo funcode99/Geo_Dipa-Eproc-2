@@ -12,7 +12,7 @@ import RowAdditional from "./RowAdditional";
 const ServiceAcceptance = ({ data, loading }) => {
   const task_sa = data?.task_sa;
   // const { sa_header, sa_items } = task_sa;
-  // console.log(`task_sa`, task_sa);
+  console.log(`task_sa`, data);
 
   if (task_sa == null) {
     return <NoDataBox text={"Service Acceptance not Available"} />;
@@ -37,8 +37,11 @@ const ServiceAcceptance = ({ data, loading }) => {
         footerComponent={<FooterSA data={task_sa?.sa_items} />}
       />
       <Grid container spacing={1} className={"mt-3"}>
-        <BoxSignSA title={"VENDOR"} />
-        <BoxSignSA title={"GENERAL MANAGER"} />
+        <BoxSignSA noQR title={"VENDOR"} />
+        <Grid item xs={4}></Grid>
+        <BoxSignSA
+          title={data?.contract?.contract_party?.party_1_director_position}
+        />
       </Grid>
     </React.Fragment>
   );

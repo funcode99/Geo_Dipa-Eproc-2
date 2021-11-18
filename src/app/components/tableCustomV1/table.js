@@ -104,7 +104,7 @@ const Tables = (props) => {
       filterSorts = Object.assign({}, filterSorts, pagination);
       setFilterSort({ ...filterSorts });
       let params = new URLSearchParams(filterSorts).toString();
-      handleParams(params);
+      handleParams(params, filterSort);
     },
     [filterTable, sortData, filterSort, intl, paginations]
   );

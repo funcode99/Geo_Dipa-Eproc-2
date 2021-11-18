@@ -23,6 +23,22 @@ const RowGuarantee = ({ item, index }) => {
   // console.log(`item`, item, statusItem, contractById?.contract_guarantees);
   const isRejected =
     statusItem?.length && statusItem[0]?.approve_status?.name === "REJECTED";
+  const isApproved =
+    statusItem?.length && statusItem[0]?.approve_status?.name === "APPROVED";
+  const approveItem = isApproved
+    ? []
+    : [
+        {
+          label: "TITLE.APPROVE",
+          icon: "fas fa-check-circle text-success",
+          type: "approve",
+        },
+        {
+          label: "TITLE.REJECT",
+          icon: "fas fa-times-circle text-danger",
+          type: "reject",
+        },
+      ];
   return (
     <TableRow hover style={{ backgroundColor: !valueUsed && "#f1f1f1" }}>
       <TableCell>
@@ -57,16 +73,7 @@ const RowGuarantee = ({ item, index }) => {
                   icon: "fas fa-search text-primary",
                   type: "preview",
                 },
-                {
-                  label: "TITLE.APPROVE",
-                  icon: "fas fa-check-circle text-success",
-                  type: "approve",
-                },
-                {
-                  label: "TITLE.REJECT",
-                  icon: "fas fa-times-circle text-danger",
-                  type: "reject",
-                },
+                ...approveItem,
               ]}
             />
           ) : isRejected ? (

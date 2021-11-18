@@ -27,16 +27,19 @@ export const PROGRESS_CONF = [
     subTitle: "Harian",
     scheme: "danger",
     percentage: "20",
+    name: "daily",
   },
   {
     subTitle: "Mingguan",
     scheme: "warning",
     percentage: "30",
+    name: "weekly",
   },
   {
     subTitle: "Bulanan",
     scheme: "success",
     percentage: "50",
+    name: "monthly",
   },
 ];
 

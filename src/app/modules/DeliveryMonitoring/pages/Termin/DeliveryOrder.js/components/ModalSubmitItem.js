@@ -64,6 +64,8 @@ const ModalSubmitItem = ({
     setChecked((prev) => !prev);
   };
 
+  console.log("itemsss", data);
+
   return (
     <DialogGlobal
       ref={innerRef}
@@ -98,7 +100,7 @@ const ModalSubmitItem = ({
                     key={index}
                     // align={index > 1 ? "right" : "left"}
                   >
-                    {item}
+                    {"item"}
                   </TableCell>
                 ))}
               </TableRow>
@@ -107,7 +109,7 @@ const ModalSubmitItem = ({
               {data.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell>{(index += 1)}</TableCell>
-                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.spec}</TableCell>
                   <TableCell>{item.qty}</TableCell>
                   <TableCell>{item.qty_approved}</TableCell>
                   <TableCell>{item.approve_status}</TableCell>

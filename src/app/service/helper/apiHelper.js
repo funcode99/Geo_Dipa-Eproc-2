@@ -27,6 +27,8 @@ const apiHelper = {
         return axios.put(url, params);
       case "delete":
         return axios.delete(url);
+      case "getParams":
+        return axios.get(url, { params });
       default:
         throw "please set type !";
     }

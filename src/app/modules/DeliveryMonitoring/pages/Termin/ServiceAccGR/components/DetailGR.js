@@ -207,6 +207,7 @@ const DetailGR = ({ data, type, fullData, item }) => {
     ],
     [client]
   );
+  //   console.log(`fullData`, fullData, item);
 
   const tab2 = useMemo(
     () => [
@@ -236,7 +237,7 @@ const DetailGR = ({ data, type, fullData, item }) => {
   );
   const tab4 = useMemo(
     () => [
-      { label: "PO Number", value: fullData?.task_gr?.po_number || "-" },
+      { label: "PO Number", value: item?.po_number || "-" },
       {
         label: "Movement Type",
         // value: fullData?.task_gr?.gr_items?.[0]?.move_type || "-",

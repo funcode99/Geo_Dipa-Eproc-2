@@ -106,7 +106,7 @@ export const gr_field = [
     {
       name: "ref_doc_no",
       label: "Ref Doc No",
-      type: "number",
+      // type: "number",
     },
   ],
   [
@@ -116,7 +116,7 @@ export const gr_field = [
     },
     {
       name: "unload_pt",
-      label: "Unload PT",
+      label: "Unloading",
     },
   ],
   //   [

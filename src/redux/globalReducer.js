@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import { persistReducer } from "redux-persist";
 import { call, delay, put, takeEvery } from "redux-saga/effects";
 import apiHelper from "../app/service/helper/apiHelper";
@@ -55,6 +56,21 @@ export const getLoading = (state, key) => {
   return loadState;
 };
 
+export const getAuthorizedUser = ({ auth, deliveryMonitoring }) => {
+  const plant_data = auth?.user?.data?.plant_data;
+  const facility_id =
+    deliveryMonitoring?.dataContractById?.authority?.facility_id;
+  const filter_auth_user = plant_data?.filter(({ id }) => id === facility_id);
+  return filter_auth_user?.length > 0;
+};
+
+export const getClientStatus = ({ auth }) => {
+  const client_role = "TMS : User Division";
+  const roles_eproc = auth?.user?.data?.roles_eproc;
+  const filteredData = roles_eproc.filter(({ name }) => name === client_role);
+  return filteredData.length > 0;
+};
+
 // sagas below
 /**
  * key:required
@@ -73,7 +89,7 @@ export function* saga() {
       let { data } = yield call(apiHelper.fetchGlobalApi, action.payload);
       // let data = yield call(apiHelper.fetchGlobalApi, action.payload);
       console.log(`resnew + ${key}`, data);
-      if (data.status === true) {
+      if (data.status === true || data.status === "success") {
         if (typeof onSuccess === "function") onSuccess(data);
         if (alertAppear === "both")
           MODAL.showSnackbar(data?.message ?? "Success", "success");

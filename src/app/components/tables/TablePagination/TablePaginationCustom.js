@@ -29,7 +29,7 @@ function desc(a, b, orderBy) {
   return 0;
 }
 
-function stableSort(array, cmp) {
+export function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
@@ -39,7 +39,7 @@ function stableSort(array, cmp) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function getSorting(order, orderBy) {
+export function getSorting(order, orderBy) {
   return order === "desc"
     ? (a, b) => desc(a, b, orderBy)
     : (a, b) => -desc(a, b, orderBy);
@@ -47,6 +47,7 @@ function getSorting(order, orderBy) {
 
 function searchFind(rows, query) {
   const columns = rows[0] && Object.keys(rows[0]);
+  // console.log(`columns`, columns, rows);
   // (row) => row.procurement_title.toLowerCase().indexOf(query) > -1
   return rows.filter((row) =>
     columns.some((column) => {
@@ -59,6 +60,31 @@ function searchFind(rows, query) {
         );
     })
   );
+}
+
+export function searchFindMulti(rows, queryAll) {
+  const columns = rows[0] && Object.keys(rows[0]);
+  const queries = Object.keys(queryAll);
+  return rows.filter((row) => {
+    const apa = columns
+      .filter((el) => !["action", "id"].includes(el))
+      .reduce((acc, column) => {
+        if (_.isEmpty(queryAll)) return true;
+        else if (acc == true) return true;
+        return queries.reduce((acc, key) => {
+          if (column === key.substr(7)) {
+            return (
+              row[column]
+                .toString()
+                .toLowerCase()
+                .indexOf(queryAll[key].toString().toLowerCase()) > -1
+            );
+          }
+        }, false);
+      });
+    // console.log(`apa`, row, apa);
+    return apa;
+  });
 }
 
 const useStyles = makeStyles((theme) => ({

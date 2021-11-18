@@ -27,7 +27,7 @@ const validationSchema = object().shape({
     .required("Ref Doc No harus diisi")
     .typeError("Masukkan harus berupa angka"),
   bill_of_lading: validation.require("Bill of Lading"),
-  unload_pt: validation.require("Unload PT"),
+  unload_pt: validation.require("Unloading"),
 });
 
 const FormGR = ({

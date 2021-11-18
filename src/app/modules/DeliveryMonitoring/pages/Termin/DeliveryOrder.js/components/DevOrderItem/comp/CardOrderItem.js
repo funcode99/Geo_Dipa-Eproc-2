@@ -15,16 +15,21 @@ import BtnApproveReject from "./BtnApproveReject";
 
 const handleReadOnly = (arr, inputName = "all", state) => {
   let tempArr = [...arr[0]];
+  let tempArr2 = [...arr[1]];
 
   if (inputName === "all") {
     tempArr.map((item) => (item.readOnly = state));
+    tempArr2.map((item) => (item.readOnly = state));
   } else {
     tempArr.map((item) => {
       if (item.name === inputName) return (item.readOnly = state);
     });
+    tempArr2.map((item) => {
+      if (item.name === inputName) return (item.readOnly = state);
+    });
   }
 
-  return [tempArr, arr[1]];
+  return [tempArr, tempArr2];
 };
 
 const CardOrderItem = ({ data, options, setItem, isVendor }) => {
@@ -32,6 +37,7 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
   const [componentIndex, setComponentIndex] = React.useState(2);
   const compUsed = options?.[componentIndex] ?? {};
   const [formDataUsed, setFormDataUsed] = React.useState(formData2);
+  const hasMaterialNo = data?.item?.product;
 
   const handleChange = (state) => {
     setComponentIndex(state ? 1 : 0);
@@ -106,13 +112,16 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
     if (isVendor) {
       const updateFormData = handleReadOnly(formDataUsed, "all", true);
       setFormDataUsed(updateFormData);
+    } else {
+      const updateFormData = handleReadOnly(formDataUsed, "spec", false);
+      setFormDataUsed(updateFormData);
     }
   }, [data]);
 
   return (
     <ExpansionBox
       custTitle={`${data?.item?.desc}${
-        data?.item?.product ? " - " + parseInt(data?.item?.product?.code) : ""
+        hasMaterialNo ? " - " + parseInt(data?.item?.product?.code) : ""
       }`}
       defaultExpanded={false}
       //   classCont={"col-12"}
@@ -124,7 +133,7 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
         </span>
       }
     >
-      <Divider />
+      {/* <Divider /> */}
       <div className="d-flex justify-content-between mt-3">
         <span>
           <FormattedMessage id="TITLE.QUANTITY_TOTAL" /> {data?.qty}

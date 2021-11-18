@@ -14,6 +14,7 @@ import BASE_MODAL_CONF from "./BASE_MODAL_CONF";
 import ModalEditDraft from "./components/ModalEditDraft";
 import {
   fetch_api_sg,
+  getClientStatus,
   getLoading,
   set_loading_done_rd,
   set_loading_rd,
@@ -31,6 +32,7 @@ const keys = {
   upload: "upload-deliverables",
   resend: "resend-deliverables",
   list: "list-deliverables",
+  token_data: "get-token-data",
 };
 
 const Documents = ({
@@ -39,6 +41,7 @@ const Documents = ({
   set_loading_rd,
   set_loading_done_rd,
   fetch_api_sg,
+  isAlsoClient,
   // loadStepper,
 }) => {
   const { func, task_id } = React.useContext(TerminPageContext);
@@ -67,6 +70,7 @@ const Documents = ({
     delete: false,
     tempParams: {},
   });
+  const [isWarehouse, setIsWarehouse] = React.useState(false);
   const [Toast, setToast] = useToast();
   const handleError = React.useCallback(
     (err) => {
@@ -117,7 +121,70 @@ const Documents = ({
         if (res.status === true) setContent(res?.data);
       },
     });
+    fetch_api_sg({
+      key: keys.token_data,
+      type: "get",
+      url: `/auth/get_token_data`,
+      onSuccess: (res) => {
+        const userType = res.data.data.monitoring_role?.find(
+          (a) => a == "Logistic Staff" || a == "Warehouse Staff"
+        )
+          ? "warehouse"
+          : "user";
+        setIsWarehouse(userType === "warehouse" ? true : false);
+        // console.log(`res token data`, res, userType);
+      },
+    });
   }, [taskId]);
+
+  const approveDoc = React.useCallback(
+    ({ type, amIWarehouse, callback }) => {
+      const { isPeriodic, percentage } = open?.tempParams;
+      const usedParams = isPeriodic ? { percentage } : {};
+      fetch_api_sg({
+        key: keys.accept,
+        type: "post",
+        alertAppear: "both",
+        params: usedParams,
+        url: `delivery/task-document/${open?.tempParams?.accept_id}/approve${
+          amIWarehouse ? "-warehouse" : ""
+        }`,
+        onSuccess: () => {
+          fetchData();
+          func.onRefresh();
+          handleLoading(type, false);
+          handleVisible(type);
+          if (typeof callback === "function") callback();
+        },
+      });
+    },
+    [open]
+  );
+  const rejectDoc = React.useCallback(
+    ({ type, amIWarehouse, callback, params }) => {
+      const { isPeriodic, percentage } = open?.tempParams;
+      const usedParams = isPeriodic ? { percentage } : {};
+      fetch_api_sg({
+        key: keys.reject,
+        type: "post",
+        alertAppear: "both",
+        params: {
+          remarks_status: params?.remarks,
+        },
+        url: `delivery/task-document/${open?.tempParams?.reject_id}/reject${
+          amIWarehouse ? "-warehouse" : ""
+        }`,
+        onSuccess: () => {
+          fetchData();
+          func.onRefresh();
+          handleLoading(type, false);
+          handleVisible(type);
+          if (typeof callback === "function") callback();
+        },
+      });
+    },
+    [open]
+  );
 
   // submit ke api
   const handleApi = React.useCallback(
@@ -199,40 +266,51 @@ const Documents = ({
           // RESEND MASIH PAKE API UPLOAD
           break;
         case "accept":
-          // console.log(`accept`, open?.tempParams);
-          const { isPeriodic, percentage } = open?.tempParams;
-          const usedParams = isPeriodic ? { percentage } : {};
-          fetch_api_sg({
-            key: keys.accept,
-            type: "post",
-            alertAppear: "both",
-            params: usedParams,
-            url: `delivery/task-document/${open?.tempParams?.accept_id}/approve`,
-            onSuccess: () => {
-              fetchData();
-              func.onRefresh();
-              handleLoading(type, false);
-              handleVisible(type);
-            },
-          });
+          if (isWarehouse) {
+            approveDoc({
+              amIWarehouse: true,
+              callback: () => {
+                // todo, liat dulu warehousenya client juga bukan
+                if (isAlsoClient) approveDoc({ type, amIWarehouse: false });
+              },
+              type,
+            });
+          } else {
+            approveDoc({ type, amIWarehouse: false });
+          }
           break;
         case "reject":
           // console.log(`reject`, type, open?.tempParams?.reject_id, params);
-          fetch_api_sg({
-            key: keys.reject,
-            type: "post",
-            alertAppear: "both",
-            params: {
-              remarks_status: params?.remarks,
-            },
-            url: `delivery/task-document/${open?.tempParams?.reject_id}/reject`,
-            onSuccess: () => {
-              fetchData();
-              func.onRefresh();
-              handleLoading(type, false);
-              handleVisible(type);
-            },
-          });
+          if (isWarehouse) {
+            rejectDoc({
+              amIWarehouse: true,
+              callback: () => {
+                // todo, liat dulu warehousenya client juga bukan
+                if (isAlsoClient)
+                  rejectDoc({ type, amIWarehouse: false, params });
+              },
+              type,
+              params,
+            });
+          } else {
+            rejectDoc({ type, amIWarehouse: false, params });
+          }
+
+          // fetch_api_sg({
+          //   key: keys.reject,
+          //   type: "post",
+          //   alertAppear: "both",
+          //   params: {
+          //     remarks_status: params?.remarks,
+          //   },
+          //   url: `delivery/task-document/${open?.tempParams?.reject_id}/reject`,
+          //   onSuccess: () => {
+          //     fetchData();
+          //     func.onRefresh();
+          //     handleLoading(type, false);
+          //     handleVisible(type);
+          //   },
+          // });
           break;
         case "submit":
           // console.log(`submit`, type, open?.tempParams?.submit_id);
@@ -249,7 +327,7 @@ const Documents = ({
           break;
       }
     },
-    [open]
+    [open, isWarehouse, isAlsoClient, approveDoc]
   );
 
   React.useEffect(() => {
@@ -309,7 +387,7 @@ const Documents = ({
       ))}
       <Card className="mt-5">
         <CardBody>
-          <HeaderTableDoc />
+          <HeaderTableDoc data={content} />
           <TableDoc loading={loadings.list} />
         </CardBody>
       </Card>
@@ -330,6 +408,7 @@ const mapState = (state) => ({
     upload: getLoading(state, keys.upload),
     resend: getLoading(state, keys.resend),
   },
+  isAlsoClient: getClientStatus(state),
 });
 
 const mapDispatch = {

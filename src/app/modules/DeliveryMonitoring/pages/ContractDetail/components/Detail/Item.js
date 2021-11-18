@@ -270,11 +270,12 @@ const Item = ({ handleClick, status }) => {
                 return (
                   <RowAccordion
                     key={el.id}
-                    data={["accordIcon", el.desc, "", "", "", "", ""]}
+                    data={["accordIcon", el.desc, "", "", "", "", "", ""]}
                     dataAll={el.item_services}
                   >
                     {(item) => {
                       return item?.map((item2) => {
+                        console.log("iterm", item, item2);
                         return (
                           <TableRow
                             hover
@@ -348,6 +349,7 @@ const Item = ({ handleClick, status }) => {
                             <TableCell>
                               {el?.measurement_unit?.ident_name}
                             </TableCell>
+                            <TableCell>{rupiah(item2?.gr_price)}</TableCell>
                             <TableCell>{rupiah(item2?.net_value)}</TableCell>
                           </TableRow>
                         );

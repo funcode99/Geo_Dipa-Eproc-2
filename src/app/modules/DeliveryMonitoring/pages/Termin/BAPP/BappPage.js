@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { object } from "yup";
 import {
   fetch_api_sg,
+  getAuthorizedUser,
   getLoading,
 } from "../../../../../../redux/globalReducer";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
@@ -22,8 +23,11 @@ import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 import ModalPreview from "./components/ModalPreview";
 import ModalUploadSigned from "./components/ModalUploadSigned";
 import StepperDoc from "./components/StepperDoc";
-import formData from "./fieldData";
-import _ from "lodash";
+import formData, { formData1, formData2 } from "./fieldData";
+import _, { isEmpty } from "lodash";
+import FieldBuilder from "../../../../../components/builder/FieldBuilder";
+import ApproveRejectBtn from "./components/ApproveRejectBtn";
+import AlertLate from "./components/AlertLate";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -63,6 +67,7 @@ const BappPage = ({
   saveTask,
   loadings,
   handleChangeTab,
+  userAuth,
 }) => {
   const { func, task_id, task_sa, task_gr } = React.useContext(
     TerminPageContext
@@ -73,6 +78,9 @@ const BappPage = ({
   const uploadRef = React.useRef();
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
+  const onTimeRef = React.useRef();
+  const postGRRef = React.useRef();
+  const [lateData, setLateData] = React.useState([]);
   const [stepActive, setStepActive] = React.useState(null);
   const [loading, setLoading] = React.useState({
     get: false,
@@ -155,10 +163,11 @@ const BappPage = ({
   );
   // const saExist = _.isEmpty(dataSAGR?.sa);
   // const grExist = _.isEmpty(dataSAGR?.gr);
-  const isDisabled = React.useMemo(() => isClient && !taskNews, [
-    taskNews,
-    isClient,
-  ]);
+
+  const isDisabled = React.useMemo(
+    () => isClient && !userAuth && !isEmpty(taskNews?.file),
+    [taskNews?.file, isClient]
+  );
 
   const getDataSAGRForm = () => {
     fetchApi({
@@ -205,7 +214,7 @@ const BappPage = ({
     // console.log(`data`, data);
     let dataArr = data?.map((item, id) => ({
       no: (id += 1),
-      user: item?.vendor?.username || item?.user?.username,
+      user: item?.user ? item?.user?.party?.full_name : item?.vendor?.full_name,
       date: formatDate(new Date(item?.createdAt)),
       // date: formatDateWTime(new Date(item?.createdAt)),
       activity: item?.description,
@@ -267,7 +276,8 @@ const BappPage = ({
 
   const _handleSubmit = (data) => {
     // handleLoading("submit", true);
-
+    console.log(`onTimeRef`, onTimeRef.current);
+    const { isApprove, remarks } = onTimeRef.current;
     let params = {};
     let url = ``;
     // switch (status) {
@@ -278,7 +288,10 @@ const BappPage = ({
       no: data.nomor_bapp,
       date: data.tanggal_bapp,
       review_text: data.hasil_pekerjaan,
+      is_on_time: isApprove,
+      remarks,
     };
+
     //     break;
     //   case "client":
     //     url = `delivery/task-news/${taskNews?.id}/review`;
@@ -317,6 +330,7 @@ const BappPage = ({
     if (taskId !== "") {
       // console.log(`masuk sini`);
       fetchData();
+      handleApi("late_deliverable");
     }
   }, [taskId, fetchData]);
 
@@ -437,13 +451,37 @@ const BappPage = ({
           },
         });
         break;
+      case "late_deliverable":
+        fetchApi({
+          key: keys.late_deliv,
+          type: "get",
+          url: `delivery/task/${taskId}/document-late`,
+          onSuccess: (res) => {
+            const mappedData = res.data.map((el) => el?.document?.name);
+            setLateData(mappedData);
+          },
+        });
+        break;
 
       default:
         break;
     }
   };
 
-  console.log(`res2`, dataSAGR, dataExist);
+  const _fetchToSAP = (type) => {
+    console.log(`submitt`, type);
+    fetchApi({
+      key: keys.post_to_sap,
+      type: "post",
+      alertAppear: "both",
+      url: `delivery/sap/${type}/${task_id}`,
+      onSuccess: (res) => {
+        postGRRef.current.close();
+      },
+    });
+  };
+
+  console.log(`plant_data`, taskNews, contract, userAuth);
 
   return (
     <React.Fragment>
@@ -508,7 +546,7 @@ const BappPage = ({
               disabledButton={isDisabled}
               withSubmit={isClient}
               btnChildren={
-                (taskNews?.file_upload || taskNews?.file) && (
+                <React.Fragment>
                   <Dropdown
                     className="dropdown-inline mr-2"
                     drop="down"
@@ -517,9 +555,9 @@ const BappPage = ({
                     <Dropdown.Toggle
                       id="dropdown-toggle-top2"
                       variant="transparent"
-                      className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                      className="btn btn-light-success btn-sm font-weight-bolder dropdown-toggle"
                     >
-                      <FormattedMessage id="TITLE.PREVIEW" />
+                      Post to SAP
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
                       <ul className="navi navi-hover">
@@ -527,34 +565,107 @@ const BappPage = ({
                           <Dropdown.Item
                             // href="#"
                             className="navi-link"
-                            onClick={() => handleAction("preview", taskNews)}
+                            onClick={() => _fetchToSAP("gr-101")}
                           >
-                            <span className="navi-icon">
-                              <i className="flaticon2-graph-1"></i>
-                            </span>
-                            <span className="navi-text">Document</span>
+                            <span className="navi-text">GR 101</span>
                           </Dropdown.Item>
                         </li>
                         <li className="navi-item">
                           <Dropdown.Item
                             // href="#"
                             className="navi-link"
-                            onClick={() =>
-                              handleAction("preview_signed", taskNews)
-                            }
+                            onClick={() => _fetchToSAP("gr-103")}
                           >
-                            <span className="navi-icon">
-                              <i className="flaticon2-writing"></i>
-                            </span>
-                            <span className="navi-text">Signed Document</span>
+                            <span className="navi-text">GR 103</span>
+                          </Dropdown.Item>
+                        </li>
+                        <li className="navi-item">
+                          <Dropdown.Item
+                            // href="#"
+                            className="navi-link"
+                            onClick={() => _fetchToSAP("gr-105")}
+                          >
+                            <span className="navi-text">GR 105</span>
+                          </Dropdown.Item>
+                        </li>
+                        <li className="navi-item">
+                          <Dropdown.Item
+                            // href="#"
+                            className="navi-link"
+                            onClick={() => _fetchToSAP("sa")}
+                          >
+                            <span className="navi-text">SA</span>
                           </Dropdown.Item>
                         </li>
                       </ul>
                     </Dropdown.Menu>
                   </Dropdown>
-                )
+                  {(taskNews?.file_upload || taskNews?.file) && (
+                    <Dropdown
+                      className="dropdown-inline mr-2"
+                      drop="down"
+                      alignRight
+                    >
+                      <Dropdown.Toggle
+                        id="dropdown-toggle-top2"
+                        variant="transparent"
+                        className="btn btn-light-primary btn-sm font-weight-bolder dropdown-toggle"
+                      >
+                        <FormattedMessage id="TITLE.PREVIEW" />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                        <ul className="navi navi-hover">
+                          <li className="navi-item">
+                            <Dropdown.Item
+                              // href="#"
+                              className="navi-link"
+                              onClick={() => handleAction("preview", taskNews)}
+                            >
+                              <span className="navi-icon">
+                                <i className="flaticon2-graph-1"></i>
+                              </span>
+                              <span className="navi-text">Document</span>
+                            </Dropdown.Item>
+                          </li>
+                          <li className="navi-item">
+                            <Dropdown.Item
+                              // href="#"
+                              className="navi-link"
+                              onClick={() =>
+                                handleAction("preview_signed", taskNews)
+                              }
+                            >
+                              <span className="navi-icon">
+                                <i className="flaticon2-writing"></i>
+                              </span>
+                              <span className="navi-text">Signed Document</span>
+                            </Dropdown.Item>
+                          </li>
+                        </ul>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )}
+                </React.Fragment>
               }
-            />
+            >
+              {({ fieldProps }) => (
+                <div>
+                  <Row>
+                    <Col>
+                      <FieldBuilder formData={formData1} {...fieldProps} />
+                    </Col>
+                    <Col>
+                      <FieldBuilder formData={formData2} {...fieldProps} />
+                      <ApproveRejectBtn
+                        ref={onTimeRef}
+                        isDisabled={isDisabled}
+                      />
+                      <AlertLate dataLate={lateData} />
+                    </Col>
+                  </Row>
+                </div>
+              )}
+            </FormBuilder>
           ) : (
             <div />
           )}
@@ -734,6 +845,11 @@ const BappPage = ({
           </Row>
         </CardBody>
       </Card>
+      {/* <ModalApproveGR
+        innerRef={postGRRef}
+        gr={"GR 101"}
+        onSubmit={() => _fetchToSAP("gr-101")}
+      /> */}
     </React.Fragment>
   );
 };
@@ -744,11 +860,14 @@ const keys = {
   fetch: "fetch_news_bapp",
   fetch_sagr: "fetch-sa-gr",
   submit: "submit_news_bapp",
+  late_deliv: "late-deliverable-fetch",
+  post_to_sap: "post_to_sap",
 };
 
 const mapState = (state) => {
   const { auth, deliveryMonitoring } = state;
   return {
+    userAuth: getAuthorizedUser(state),
     status: auth.user.data.status,
     contract: deliveryMonitoring.dataContractById,
     taskNews: deliveryMonitoring.dataTask?.news,

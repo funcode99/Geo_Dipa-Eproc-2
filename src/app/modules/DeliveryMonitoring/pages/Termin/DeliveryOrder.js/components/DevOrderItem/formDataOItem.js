@@ -36,12 +36,14 @@ export const formData2 = [
     {
       name: "spec",
       label: <FormattedMessage id="TITLE.SPESIFICATION" />,
-      disabled: true,
+      readOnly: true,
+      // disabled: true,
     },
     {
       name: "desc",
       label: <FormattedMessage id="TITLE.DESCRIPTION" />,
-      disabled: true,
+      readOnly: true,
+      // disabled: true,
     },
   ],
 ];
@@ -71,7 +73,7 @@ export const form_gr = [
   {
     name: "ref_doc_no",
     label: "Ref Doc No",
-    type: "number",
+    // type: "number",
   },
 
   {
@@ -81,6 +83,6 @@ export const form_gr = [
 
   {
     name: "unload_pt",
-    label: "Unload PT",
+    label: "Unloading",
   },
 ];

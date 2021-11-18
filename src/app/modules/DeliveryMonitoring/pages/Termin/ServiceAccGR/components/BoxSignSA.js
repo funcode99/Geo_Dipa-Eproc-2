@@ -1,5 +1,6 @@
 import { Grid, makeStyles, Paper } from "@material-ui/core";
 import React from "react";
+import { QRCodeG } from "../../../../../../components/qrCodeGenerate/QRCodeGenerate";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoxSignSA = ({ title }) => {
+const BoxSignSA = ({ title, noQR }) => {
   const classes = useStyles();
   const tab4 = React.useMemo(
     () => [
-      { label: "SIGNATURE", value: "" },
+      // { label: "SIGNATURE", value: "" },
       {
         label: "NAME",
         value: "",
@@ -43,8 +44,21 @@ const BoxSignSA = ({ title }) => {
     []
   );
   return (
-    <Grid item xs={3}>
+    <Grid item xs={4}>
       <Paper className={classes.paper}>
+        <div className={"d-flex flex-column align-items-center"}>
+          {noQR ? (
+            <div style={{ width: 72, height: 72 }} />
+          ) : (
+            <QRCodeG
+              value={`${
+                window.location.origin
+              }/qrcode?term_id=${"termin"}&role_id=${"bkbData?.approved_bkb_role_id"}&type=APPROVED_BKB`}
+              // size="90"
+            />
+          )}
+          <span className={classes.txtJudul}>{title}</span>
+        </div>
         <table>
           <colgroup>
             <col width="50px" />
@@ -52,7 +66,7 @@ const BoxSignSA = ({ title }) => {
             <col />
           </colgroup>
           <tbody>
-            <tr className={"mb-2"}>
+            {/* <tr className={"mb-2"}>
               <td className={"td2"}>
                 <span className={classes.label}>{""}</span>
               </td>
@@ -60,9 +74,17 @@ const BoxSignSA = ({ title }) => {
                 <span className={classes.label}></span>
               </td>
               <td className={"td2"}>
-                <span className={classes.txtJudul}>{title}</span>
+                <div>
+                  <QRCodeG
+                    value={`${
+                      window.location.origin
+                    }/qrcode?term_id=${"termin"}&role_id=${"bkbData?.approved_bkb_role_id"}&type=APPROVED_BKB`}
+                    // size="90"
+                  />
+                  <span className={classes.txtJudul}>{title}</span>
+                </div>
               </td>
-            </tr>
+            </tr> */}
             {tab4.map(({ label, value }, id4) => (
               <tr key={id4}>
                 <td className={"td2"}>
