@@ -1018,7 +1018,19 @@ function ContractHardCopyDoc(props) {
                     return (
                       <TableRow key={index.toString()}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>{item.document_name}</TableCell>
+                        <TableCell>
+                          {item.document_name}
+                          {item.ident_name === "GOODS" &&
+                          content?.task_gr_new &&
+                          content?.task_gr_new.length > 0
+                            ? `(${
+                                content?.task_gr_new.filter(
+                                  (value) =>
+                                    value.material_document === item.doc_no
+                                )[0].type
+                              })`
+                            : ""}
+                        </TableCell>
                         {item.doc_no &&
                         item.ident_name !== "GOODS" &&
                         item.ident_name !== "SA" ? (
@@ -1050,15 +1062,14 @@ function ContractHardCopyDoc(props) {
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
-                                printSaGr(item.ident_name);
+                                printSaGr(
+                                  item.ident_name === "SA"
+                                    ? item.ident_name
+                                    : item.doc_no
+                                );
                               }}
                             >
-                              {item.ident_name === "GOODS"
-                                ? content?.task_gr_new &&
-                                  content?.task_gr_new.length > 0 &&
-                                  content?.task_gr_new[0].material_document
-                                : content?.task_sa_new &&
-                                  content?.task_sa_new.material_document}
+                              {item.doc_no}
                             </a>
                           </TableCell>
                         ) : (

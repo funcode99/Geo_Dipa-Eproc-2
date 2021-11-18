@@ -1048,8 +1048,8 @@ function ItemContractInvoice(props) {
   };
   useEffect(callApiSaGr, []);
 
-  const print = (ident_name) => {
-    var printContents = window.$(`#${ident_name}`).html();
+  const print = (id) => {
+    var printContents = window.$(`#${id}`).html();
     window.$("#root").css("display", "none");
     window.$("#print-content").addClass("p-5");
     window.$("#print-content").html(printContents);
@@ -1490,7 +1490,18 @@ function ItemContractInvoice(props) {
                 return (
                   <TableRow key={index.toString()}>
                     <TableCell>{item.seq}</TableCell>
-                    <TableCell>{item.document_name}</TableCell>
+                    <TableCell>
+                      {item.document_name}
+                      {item.ident_name === "GOODS" &&
+                      content?.task_gr_new &&
+                      content?.task_gr_new.length > 0
+                        ? `(${
+                            content?.task_gr_new.filter(
+                              (value) => value.material_document === item.doc_no
+                            )[0].type
+                          })`
+                        : ""}
+                    </TableCell>
                     {item.doc_no &&
                     item.ident_name !== "GOODS" &&
                     item.ident_name !== "SA" ? (
@@ -1522,7 +1533,11 @@ function ItemContractInvoice(props) {
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            print(item.ident_name);
+                            print(
+                              item.ident_name === "SA"
+                                ? item.ident_name
+                                : item.doc_no
+                            );
                           }}
                         >
                           {item.doc_no}
