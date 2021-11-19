@@ -55,8 +55,9 @@ function ItemContractPaid(props) {
   const termin = props.match.params.termin;
 
   const statusPaidNoStarted = dataProgress?.filter(
-    (row) => row.ident_name === "SLIP" && row.status === "COMPLETE"
+    (row) => row.ident_name === "READY_TO_PAY" && row.status === "COMPLETE"
   );
+
   const initialValues = {
     paid_date: "",
     term_id: termin,
@@ -393,7 +394,7 @@ function ItemContractPaid(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 !taxStaffStatus ||
-                statusPaidNoStarted == 0 ||
+                statusPaidNoStarted > 0 ||
                 contractData?.file
               }
             >
