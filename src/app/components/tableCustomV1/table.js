@@ -165,13 +165,18 @@ const Tables = (props) => {
           .replace(/[Rp .]/g, "")
           .replace(/[,]/g, ".");
       }
+      let pagination = paginations;
+      pagination.page = 0;
+      setPaginations({
+        ...pagination,
+      });
       setFilterTable({ ...filterTables });
       requestFilterSort(filterTables);
     }
   };
 
   const resetValueFilter = (property, type) => {
-    let filterTables = Object.assign({}, filterTable);
+    let filterTables = filterTable;
     if (type === "collection") {
       filterTables[property] = [];
     } else {

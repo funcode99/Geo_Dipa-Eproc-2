@@ -12,6 +12,7 @@ import {
   createTerminPaid,
   updateTerminPaid,
   getContractAuthority,
+  getTerminProgress,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ItemContractPaid(props) {
-  const { intl, dataProgress = [] } = props;
+  const { intl, dataProgress = [], setDataProgress } = props;
 
   const dataUser = useSelector((state) => state.auth.user.data);
   let monitoring_role = dataUser.monitoring_role
@@ -81,6 +82,9 @@ function ItemContractPaid(props) {
       if (contractData.paid_date) {
         updateTerminPaid(data_new)
           .then((response) => {
+            getTerminProgress(termin).then((result) => {
+              setDataProgress(result.data.data?.data);
+            });
             setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
             setLoading(false);
           })
@@ -91,6 +95,9 @@ function ItemContractPaid(props) {
       } else {
       createTerminPaid(data_new)
         .then((response) => {
+            getTerminProgress(termin).then((result) => {
+              setDataProgress(result.data.data?.data);
+            });
           setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
           setLoading(false);
         })
