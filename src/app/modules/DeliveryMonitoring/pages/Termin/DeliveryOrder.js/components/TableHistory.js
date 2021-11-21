@@ -44,10 +44,10 @@ const TableHistory = ({ data = initData, tableHeader = initTHead }) => {
       // style={{
       //   height: 300,
       // }}
-      stickyHeader
+      // stickyHeader
       size="small"
     >
-      <TableHead>
+      <TableHead style={{ background: "lightgrey" }}>
         <TableRow>
           {initTHead.map((item, index) => {
             return (
