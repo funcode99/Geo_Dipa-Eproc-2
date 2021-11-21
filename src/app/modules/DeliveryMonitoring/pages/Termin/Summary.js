@@ -59,6 +59,8 @@ function Summary({}) {
     loadings,
     fetch_api_sg,
     authStatus,
+    dataTask,
+    isRejected,
   } = React.useContext(TerminPageContext);
   const taskId = task_id;
   const [navActive, setNavActive] = React.useState(navLists[0].id);
@@ -73,6 +75,7 @@ function Summary({}) {
   const [qtyErrors, setQtyErrors] = React.useState([]);
 
   const isClient = authStatus === "client";
+  const notRejected = !isRejected;
 
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
@@ -252,8 +255,8 @@ function Summary({}) {
   const handleChecklistBarang = (qtyValue, qtyAvailable, itemId, desc) => {
     // addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
 
-    console.log(`qtyValue`, qtyValue);
-    console.log(`qtyAvailable`, qtyAvailable);
+    // console.log(`qtyValue`, qtyValue);
+    // console.log(`qtyAvailable`, qtyAvailable);
 
     let tempBarang = dataBarang;
 
@@ -752,10 +755,14 @@ function Summary({}) {
                                     }
                                     size="small"
                                     checked={service.checked}
-                                    // disabled={
-                                    //   service.qty_available === 0 ? true : false
-                                    // }
-                                    disabled
+                                    disabled={
+                                      notRejected
+                                        ? true
+                                        : service.qty_available === 0
+                                        ? true
+                                        : false
+                                    }
+                                    // disabled
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -784,11 +791,13 @@ function Summary({}) {
                                           flex: "none",
                                         }}
                                         max={service.qty_available}
-                                        disabled={!service.checked}
+                                        disabled={
+                                          notRejected || !service.checked
+                                        }
                                         defaultValue={parseFloat(
                                           service.qty_available
                                         ).toFixed(1)}
-                                        disabled
+                                        // disabled
                                         onChange={(e) =>
                                           addSubmitJasa(
                                             e.target.value,
@@ -843,7 +852,7 @@ function Summary({}) {
                                     }
                                     size="small"
                                     checked={service.checked}
-                                    disabled
+                                    disabled={notRejected}
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -874,7 +883,9 @@ function Summary({}) {
                                             service.service.qty_available
                                           ) + parseFloat(service.qty)
                                         ).toFixed(1)}
-                                        disabled={!service.checked}
+                                        disabled={
+                                          notRejected || !service.checked
+                                        }
                                         defaultValue={parseFloat(
                                           service.qty
                                         ).toFixed(1)}
@@ -961,8 +972,14 @@ function Summary({}) {
                           width={50}
                           variant="body"
                           checked={item.checked}
-                          // disabled={item.qty_available === 0 ? true : false}
-                          disabled
+                          disabled={
+                            notRejected
+                              ? true
+                              : item.qty_available === 0
+                              ? true
+                              : false
+                          }
+                          // disabled
                         />
                       </TableCell>
                       <TableCell className="align-middle">
@@ -985,11 +1002,11 @@ function Summary({}) {
                                 width: 80,
                                 flex: "none",
                               }}
-                              disabled
+                              // disabled
                               min={0.1}
                               step={0.1}
                               max={item.qty_available}
-                              // disabled={!item.checked}
+                              disabled={notRejected || !item.checked}
                               defaultValue={parseFloat(
                                 item.qty_available
                               ).toFixed(1)}
@@ -1043,7 +1060,7 @@ function Summary({}) {
                           width={50}
                           variant="body"
                           checked={item.checked}
-                          disabled
+                          disabled={notRejected}
                         />
                       </TableCell>
                       <TableCell className="align-middle">
@@ -1074,8 +1091,8 @@ function Summary({}) {
                                 parseFloat(item.qty) +
                                 parseFloat(item.item.qty_available)
                               ).toFixed(1)}
-                              disabled
-                              // disabled={!item.checked}
+                              // disabled
+                              disabled={notRejected || !item.checked}
                               defaultValue={parseFloat(item.qty).toFixed(1)}
                               onChange={(e) =>
                                 addSubmitBarang(
@@ -1116,7 +1133,7 @@ function Summary({}) {
             />
           )}
           {/* tidak bisa edit */}
-          {isClient && false && (
+          {isClient && !notRejected && (
             <div className="mt-4 d-flex justify-content-end w-100">
               <Button
                 variant="contained"

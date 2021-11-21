@@ -173,6 +173,7 @@ const mapState = (state) => {
       task_sa: dataTask?.task_sa,
       task_gr: dataTask?.task_gr,
       dataTask,
+      isRejected: dataTask.approve_status.code === "rejected" ? true : false,
     },
   };
 };
