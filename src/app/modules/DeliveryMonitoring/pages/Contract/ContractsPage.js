@@ -199,7 +199,12 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
           handleParams={handleFilter}
           err={false}
           loading={false}
-          countData={3}
+          countData={
+            searchFindMulti(
+              stableSort(dataArr, getSorting(order, orderBy)),
+              filterBy
+            ).length
+          }
           hecto={20}
         >
           {searchFindMulti(
