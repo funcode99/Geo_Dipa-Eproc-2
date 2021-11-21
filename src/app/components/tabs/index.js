@@ -66,17 +66,20 @@ export default function Tabs({
       classes={{ root: classes.root, indicator: classes.customIndicatorColor }}
       {...other}
     >
-      {tabLists.map((item) => (
-        <MuiTab
-          key={item.id}
-          label={item.label}
-          icon={item.icon}
-          classes={{
-            root: classes.tabRoot,
-            wrapper: classes.tabWrapper,
-          }}
-        />
-      ))}
+      {tabLists.map(
+        (item) =>
+          item?.display !== "none" && (
+            <MuiTab
+              key={item.id}
+              label={item.label}
+              icon={item.icon}
+              classes={{
+                root: classes.tabRoot,
+                wrapper: classes.tabWrapper,
+              }}
+            />
+          )
+      )}
     </MuiTabs>
   );
 }
