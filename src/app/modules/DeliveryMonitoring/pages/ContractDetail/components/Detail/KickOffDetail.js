@@ -68,7 +68,8 @@ const KickOffDetail = ({
         : {
             path_preview: "",
           },
-      skpp_date: contractStart?.skpp_date || formatInitialDate(),
+      // skpp_date: contractStart?.skpp_date || formatInitialDate(),
+      skpp_date: contractStart?.skpp_date || "",
       spmk_document: contractStart?.spmk_document
         ? {
             path_preview: contractStart?.spmk_document,
@@ -76,7 +77,7 @@ const KickOffDetail = ({
         : {
             path_preview: "",
           },
-      spmk_date: contractStart?.spmk_date || formatInitialDate(),
+      spmk_date: contractStart?.spmk_date || "",
       contract_type:
         setDefaultSelect("contract_type", contractStart?.contract_type) || "",
     }),
