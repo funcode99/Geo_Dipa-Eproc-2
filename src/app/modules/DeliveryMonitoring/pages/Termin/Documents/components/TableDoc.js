@@ -91,7 +91,10 @@ const BtnLihat = ({ url }) => {
 };
 
 const TableDoc = ({ loading }) => {
-  const { content, handleAction } = React.useContext(DocumentsContext);
+  const { content, handleAction, isWarehouse } = React.useContext(
+    DocumentsContext
+  );
+  const warehouseText = isWarehouse ? "WAREHOUSE" : "USER";
   console.log(`content`, content);
 
   return (
@@ -156,6 +159,7 @@ const TableDoc = ({ loading }) => {
                                   approvedBy={
                                     els?.approved_by?.party?.full_name ?? "N/A"
                                   }
+                                  role={warehouseText}
                                 />
                                 <StatusRemarks
                                   className={"mt-1"}
@@ -167,6 +171,7 @@ const TableDoc = ({ loading }) => {
                                     els?.wr_approved_by?.party?.full_name ??
                                     "N/A"
                                   }
+                                  role={warehouseText}
                                 />
                               </div>,
                               els?.percentage && els?.percentage + "%",
@@ -202,6 +207,7 @@ const TableDoc = ({ loading }) => {
                             approvedBy={
                               el?.approved_by?.party?.full_name ?? "N/A"
                             }
+                            role={warehouseText}
                           />
                           <StatusRemarks
                             className={"mt-1"}
@@ -212,6 +218,7 @@ const TableDoc = ({ loading }) => {
                             approvedBy={
                               el?.wr_approved_by?.party?.full_name ?? "N/A"
                             }
+                            role={warehouseText}
                           />
                         </div>,
                         // el?.percentage && el?.percentage + "%",
@@ -228,113 +235,6 @@ const TableDoc = ({ loading }) => {
         );
       }}
     />
-  );
-  return (
-    <div className="responsive">
-      <div className="table-wrapper-scroll-y my-custom-scrollbar">
-        <div className="segment-table">
-          <div className="hecto-17">
-            <StyledTable>
-              <StyledTableHead>
-                <StyledHead>
-                  {theadDocuments.map((item) => (
-                    <TableCell
-                      className="text-white align-middle"
-                      key={item.id}
-                    >
-                      {item.label}
-                    </TableCell>
-                  ))}
-                </StyledHead>
-              </StyledTableHead>
-              <TableBody>
-                {content?.task_documents?.map((el, id) => {
-                  // Jenis Dokumen
-                  return (
-                    <RowAccordion
-                      key={id}
-                      dataAll={el}
-                      data={["accordIcon", el.name, "-", "-", "-", "-", ""]}
-                    >
-                      {(item) => {
-                        const isPeriodic = item.is_periodic;
-                        // Periode Dokumen
-                        return isPeriodic
-                          ? item?.periodes?.map((el, id) => (
-                              <RowAccordion
-                                key={id}
-                                classBtn={"pl-12"}
-                                dataAll={el}
-                                data={[
-                                  "accordIcon",
-                                  el?.name,
-                                  "-",
-                                  "-",
-                                  "-",
-                                  "-",
-                                  "",
-                                ]}
-                              >
-                                {/* Dokumen */}
-                                {(item2) =>
-                                  item2?.documents?.map((els, idx) => (
-                                    <RowAccordion
-                                      key={idx}
-                                      classBtn={"pl-17"}
-                                      data={[
-                                        "accordIcon",
-                                        els?.document_custom_name ??
-                                          els?.document?.name,
-                                        formatDate(new Date(els?.due_date)),
-                                        els?.url === null
-                                          ? "WAITING TO UPLOAD"
-                                          : "AVAILABLE",
-                                        <BtnLihat url={els?.url} />,
-                                        els?.remarks,
-                                        <BtnAksi
-                                          item={els}
-                                          handleAction={handleAction}
-                                          isPeriodic={isPeriodic}
-                                        />,
-                                      ]}
-                                    />
-                                  ))
-                                }
-                              </RowAccordion>
-                            ))
-                          : item?.documents?.map((el, id) => (
-                              <RowAccordion
-                                //  Dokumen
-                                key={id}
-                                classBtn={"pl-17"}
-                                data={[
-                                  "accordIcon",
-                                  el?.document_custom_name ??
-                                    el?.document?.name,
-                                  formatDate(new Date(el?.due_date)),
-                                  el?.url === null
-                                    ? "WAITING TO UPLOAD"
-                                    : "AVAILABLE",
-                                  <BtnLihat url={el?.url} />,
-                                  el?.remarks,
-                                  <BtnAksi
-                                    item={el}
-                                    handleAction={handleAction}
-                                  />,
-                                  //   "aksi",
-                                ]}
-                              />
-                            ));
-                      }}
-                    </RowAccordion>
-                  );
-                })}
-              </TableBody>
-            </StyledTable>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 };
 
