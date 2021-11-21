@@ -286,8 +286,9 @@ const Documents = ({
               amIWarehouse: true,
               callback: () => {
                 // todo, liat dulu warehousenya client juga bukan
-                if (isAlsoClient)
-                  rejectDoc({ type, amIWarehouse: false, params });
+                // if (isAlsoClient) {
+                //   rejectDoc({ type, amIWarehouse: false, params });
+                // }
               },
               type,
               params,

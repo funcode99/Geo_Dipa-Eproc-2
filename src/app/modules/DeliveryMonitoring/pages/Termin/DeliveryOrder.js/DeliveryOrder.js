@@ -312,9 +312,10 @@ const DeliveryOrder = ({
   const handleConfirmItem = React.useCallback(() => {
     // console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
     if (isWarehouse) {
-      handleApproveAPI(true, () => {
-        if (isAlsoClient) handleApproveAPI(false);
-      });
+      handleApproveAPI(true);
+      // handleApproveAPI(true, () => {
+      //   if (isAlsoClient) handleApproveAPI(false);
+      // });
     } else {
       handleApproveAPI(false);
     }
