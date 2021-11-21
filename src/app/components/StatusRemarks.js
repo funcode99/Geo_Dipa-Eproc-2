@@ -7,6 +7,7 @@ const StatusRemarks = ({
   withFile,
   approvedBy,
   className,
+  role,
 }) => {
   const isRejected = status === "REJECTED";
   const isApproved = status === "APPROVED";
@@ -21,9 +22,9 @@ const StatusRemarks = ({
   return (
     <div className={`d-flex flex-column align-items-start ${className}`}>
       <span
-        className={`label label-lg label-light-${colorScheme} label-inline mr-2`}
+        className={`label label-sm label-light-${colorScheme} label-inline mr-2`}
       >
-        {waitingText || status || "-"}&nbsp;
+        {(waitingText && `${waitingText} ${role}`) || status || "-"}&nbsp;
         <span
           style={{
             fontWeight: "bold",

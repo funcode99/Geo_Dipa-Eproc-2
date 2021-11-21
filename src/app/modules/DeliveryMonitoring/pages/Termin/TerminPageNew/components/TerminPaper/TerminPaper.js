@@ -34,6 +34,7 @@ const TerminPaper = () => {
   const stepperProg = React.useMemo(() => states.termin.stepper, [states]);
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
+  const isClient = authStatus === "client";
 
   const checkDataBarang = () => {
     const temp = [...dataBarang];
@@ -42,8 +43,16 @@ const TerminPaper = () => {
   };
   const isItemExists = checkDataBarang();
   const tabUsed = isItemExists
-    ? TERMIN_TAB_LIST
-    : TERMIN_TAB_LIST.filter((item) => item.id !== "delivery-order");
+    ? isClient
+      ? TERMIN_TAB_LIST
+      : TERMIN_TAB_LIST.map((el) =>
+          el.id === "form-sa-gr" ? { ...el, display: "none" } : { ...el }
+        )
+    : isClient
+    ? TERMIN_TAB_LIST.filter((item) => item.id !== "delivery-order")
+    : TERMIN_TAB_LIST.filter((item) => item.id !== "delivery-order").map((el) =>
+        el.id === "form-sa-gr" ? { ...el, display: "none" } : { ...el }
+      );
   const getTask = React.useCallback(() => {
     const task = dataContractById?.tasks?.find((item) => item.id === task_id);
     // return task?.name ?? "";

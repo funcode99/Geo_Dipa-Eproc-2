@@ -344,6 +344,7 @@ const Documents = ({
         handleVisible,
         open,
         handleApi,
+        isWarehouse,
       }}
     >
       <Toast />
