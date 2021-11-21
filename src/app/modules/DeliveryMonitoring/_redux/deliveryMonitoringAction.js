@@ -8,6 +8,7 @@ export const actionTypes = {
   SetDataOrderItems: "[Set Data Order Items] Action",
   SetDataTempOrderItems: "[Set Data Temp Order Items] Action",
   SetDataUpdateOrderItems: "[Set Data Update Order Items] Action",
+  saveNotifDM: "SAVE_NOTIFICATION_DM",
 };
 
 export const save_data_task = (payload) => ({

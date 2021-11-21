@@ -16,6 +16,7 @@ const initialDelivMonitoringState = {
   dataOrderItems: [],
   dataTempOrderItems: [],
   dataUpdateOrderItems: [],
+  notifDeliveryMonitoring: [],
 };
 
 export const reducer = persistReducer(
@@ -90,6 +91,13 @@ export const reducer = persistReducer(
         };
       }
 
+      case actionTypes.saveNotifDM: {
+        return {
+          ...state,
+          notifDeliveryMonitoring: action.payload,
+        };
+      }
+
       default:
         return state;
     }
@@ -104,5 +112,10 @@ export const setDataDeverableDoc = (dataDeverableDoc) => ({
 
 export const set_contract_id = (payload) => ({
   type: actionTypes.SetContractById,
+  payload,
+});
+
+export const store_notif_dm_rd = (payload) => ({
+  type: actionTypes.saveNotifDM,
   payload,
 });

@@ -59,7 +59,7 @@ export function Topbar() {
     <div className="topbar">
       {/* {layoutProps.viewSearchDisplay && <SearchDropdown />} */}
 
-      {layoutProps.viewNotificationsDisplay && user?.status === "client" && (
+      {layoutProps.viewNotificationsDisplay && (
         <UserNotificationDeliveryDropdown
           newsTodo={newsTodo}
           countMessage={count}

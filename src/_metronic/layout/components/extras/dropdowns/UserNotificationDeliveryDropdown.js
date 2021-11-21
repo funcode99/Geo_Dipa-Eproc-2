@@ -11,9 +11,13 @@ import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
 import { Link } from "react-router-dom";
 import Badge from "@material-ui/core/Badge";
 import { makeStyles } from "@material-ui/core/styles";
-import { connect, shallowEqual, useSelector } from "react-redux";
+import { connect, shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as reducer from "../../../../../app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringSlice";
 import { injectIntl } from "react-intl";
+import { useLocation } from "react-router";
+import { store_notif_dm_rd } from "../../../../../app/modules/DeliveryMonitoring/_redux/deliveryMonitoringSlice";
+import { fetch_api_sg } from "../../../../../redux/globalReducer";
+import { DEV_NODE2 } from "../../../../../redux/BaseHost";
 
 const perfectScrollbarOptions = {
   wheelSpeed: 2,
@@ -31,6 +35,9 @@ function UserNotificationDeliveryDropdown(props) {
   const bgImage = toAbsoluteUrl("/media/misc/bg-1.jpg");
   const classes = useStyles();
   const uiService = useHtmlClassService();
+  const location = useLocation();
+  const dispatch = useDispatch();
+
   const layoutProps = useMemo(() => {
     return {
       offcanvas:
@@ -44,7 +51,35 @@ function UserNotificationDeliveryDropdown(props) {
     shallowEqual
   );
 
+  const notifData = useSelector(
+    (state) => state.deliveryMonitoring.notifDeliveryMonitoring
+  );
+
   const unreadNotifCount = DUMMY_DATA?.result?.total_unread || 0;
+
+  const refresh = () => {
+    dispatch(
+      fetch_api_sg({
+        key: "tes notif",
+        type: "getParams",
+        url: DEV_NODE2 + "/notification",
+        params: { limit: 10, offset: 0 },
+        onSuccess: (res) => {
+          console.log("resnotif", res);
+          // dispatch(store_notif_dm_rd(res.data));
+        },
+        onFail: (err) => {
+          console.log("resnotiferr", err);
+        },
+      })
+    );
+  };
+
+  React.useEffect(() => {
+    refresh();
+  }, [location]);
+
+  console.log(`topbar-location`, location);
 
   return (
     <>
