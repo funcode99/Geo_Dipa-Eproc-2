@@ -43,11 +43,7 @@ const ModalPreviewDODoc = ({
       handleSubmit({
         remarks,
         action,
-        clean: () => {
-          setAction(null);
-          setRemarks(false);
-          setChecked(false);
-        },
+        clean: handleClean,
         dataEvent,
       });
   };
@@ -60,6 +56,15 @@ const ModalPreviewDODoc = ({
   const handleRemarksChange = (e) => {
     setRemarks(e.target.value);
   };
+  const handleClean = () => {
+    setAction(null);
+    setRemarks(false);
+    setChecked(false);
+  };
+
+  React.useEffect(() => {
+    handleClean();
+  }, [file]);
   const isReject = action === "reject";
   const isApprove = action === "approve";
   const isNeedApprove = isClient && !isFileApproved;
