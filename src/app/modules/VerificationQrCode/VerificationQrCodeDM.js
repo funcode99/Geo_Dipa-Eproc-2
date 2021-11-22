@@ -13,6 +13,23 @@ import { Container } from "@material-ui/core";
 import { verificationQr } from "./_redux/VerificationQrCodeCrud";
 import { fetch_api_sg } from "../../../redux/globalReducer";
 
+const renderRow = ({ label, labelEN, value, styles }) => {
+  return (
+    <div className="form-group mt-5 mb-0">
+      <label>
+        <small className="form-text">{label}</small>
+        <small
+          className="form-text font-italic"
+          style={{ fontSize: styles.fontSizeItalicCard }}
+        >
+          {labelEN}
+        </small>
+      </label>
+      <h6 className="form-control-plaintext p-0">{value}</h6>
+    </div>
+  );
+};
+
 function VerificationQrCodeDM({ fetch_api_sg }) {
   // const { intl } = props;
   const [styles] = useState({
@@ -48,30 +65,12 @@ function VerificationQrCodeDM({ fetch_api_sg }) {
         url: `/delivery/task/${params.doc_id}/${params.type}/${params.user}`,
         onSuccess: (res) => {
           console.log(`res`, res);
+          setData(res.data);
+          setLoading(false);
+          setTokenStatus(true);
         },
       });
-      //   verificationQr(
-      //     query.get("term_id"),
-      //     query.get("role_id"),
-      //     query.get("type")
-      //   )
-      //     .then((result) => {
-      //       setData(result.data.data);
-      //       setLoading(false);
-      //       setTokenStatus(true);
-      //     })
-      //     .catch((err) => {
-      //       setLoading(false);
-      //       setTokenStatus(false);
-      //       // setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-      //     });
     }
-    // setTimeout(()=> {
-    //   setToast("error || Go To Home Page", 3000);
-    //   setTimeout(() => {
-    //     history.push("/");
-    //   }, 2000);
-    // }, 2000);
   }, []);
 
   return (
@@ -140,104 +139,43 @@ function VerificationQrCodeDM({ fetch_api_sg }) {
 
                 {tokenStatus && (
                   <div name="validToken">
-                    <div className="form-group mt-5 mb-0">
-                      <label>
-                        <small className="form-text">Nama Dokumen:</small>
-                        <small
-                          className="form-text font-italic"
-                          style={{ fontSize: styles.fontSizeItalicCard }}
-                        >
-                          Document Title:
-                        </small>
-                      </label>
-                      <h6 className="form-control-plaintext p-0">
-                        {data?.document_name}
-                      </h6>
-                    </div>
-                    <div className="form-group mt-5 mb-0">
-                      <label>
-                        <small className="form-text">Nomor Dokumen:</small>
-                        <small
-                          className="form-text font-italic"
-                          style={{ fontSize: styles.fontSizeItalicCard }}
-                        >
-                          Document Number:
-                        </small>
-                      </label>
-                      <h6 className="form-control-plaintext p-0">
-                        {data?.document_number}
-                      </h6>
-                    </div>
-                    <div className="form-group mt-5 mb-0">
-                      <label>
-                        <small className="form-text">Nama Penyedia:</small>
-                        <small
-                          className="form-text font-italic"
-                          style={{ fontSize: styles.fontSizeItalicCard }}
-                        >
-                          Vendor Name:
-                        </small>
-                      </label>
-                      <h6 className="form-control-plaintext p-0">
-                        {data?.vendor_name}
-                      </h6>
-                    </div>
-                    <div className="form-group mt-5 mb-0">
-                      <label>
-                        <small className="form-text">Judul Kontrak:</small>
-                        <small
-                          className="form-text font-italic"
-                          style={{ fontSize: styles.fontSizeItalicCard }}
-                        >
-                          Contract Name:
-                        </small>
-                      </label>
-                      <h6 className="form-control-plaintext p-0">
-                        {data?.contract_name}
-                      </h6>
-                    </div>
-                    <div className="form-group mt-5 mb-0">
-                      <label>
-                        <small className="form-text">Nomor Kontrak:</small>
-                        <small
-                          className="form-text font-italic"
-                          style={{ fontSize: styles.fontSizeItalicCard }}
-                        >
-                          Contract Number:
-                        </small>
-                      </label>
-                      <h6 className="form-control-plaintext p-0">
-                        {data?.contract_no}
-                      </h6>
-                    </div>
-                    <div className="form-group mt-5 mb-0">
-                      <label>
-                        <small className="form-text">Nomor Purch Order:</small>
-                        <small
-                          className="form-text font-italic"
-                          style={{ fontSize: styles.fontSizeItalicCard }}
-                        >
-                          Purch Order Number:
-                        </small>
-                      </label>
-                      <h6 className="form-control-plaintext p-0">
-                        {data?.purch_order_no}
-                      </h6>
-                    </div>
-                    <div className="form-group mt-5 mb-0">
-                      <label>
-                        <small className="form-text">Termin:</small>
-                        <small
-                          className="form-text font-italic"
-                          style={{ fontSize: styles.fontSizeItalicCard }}
-                        >
-                          Termin:
-                        </small>
-                      </label>
-                      <h6 className="form-control-plaintext p-0">
-                        {data?.term_name}
-                      </h6>
-                    </div>
+                    {renderRow({
+                      label: "Judul:",
+                      labelEN: "Title:",
+                      value: data?.title,
+                      styles: styles,
+                    })}
+                    {renderRow({
+                      label: "Nama Contract:",
+                      labelEN: "Contract Name:",
+                      value: data?.contract_name,
+                      styles: styles,
+                    })}
+                    {renderRow({
+                      label: "Nomor Contract:",
+                      labelEN: "Contract Number:",
+                      value: data?.contract_no,
+                      styles: styles,
+                    })}
+                    {renderRow({
+                      label: "Nomor Purch Order:",
+                      labelEN: "Purch Orde Number:",
+                      value: data?.po_number,
+                      styles: styles,
+                    })}
+                    {renderRow({
+                      label: "Nama Penyedia:",
+                      labelEN: "Vendor Name:",
+                      value: data?.vendor_name,
+                      styles: styles,
+                    })}
+                    {renderRow({
+                      label: "Nama Termin:",
+                      labelEN: "Term Name:",
+                      value: data?.termin_name,
+                      styles: styles,
+                    })}
+
                     <div className="form-group mt-5 mb-1">
                       <label>
                         <small className="form-text">
@@ -268,7 +206,7 @@ function VerificationQrCodeDM({ fetch_api_sg }) {
                                 Nama/Name:
                               </small>
                               <h6 className="text-uppercase">
-                                {data?.full_name}
+                                {data?.signed_by}
                               </h6>
                             </div>
                           </div>
@@ -281,7 +219,7 @@ function VerificationQrCodeDM({ fetch_api_sg }) {
                                 Posisi/Position:
                               </small>
                               <h6 className="text-uppercase">
-                                {data?.role_name}
+                                {data?.signed_by_position}
                               </h6>
                             </div>
                           </div>
@@ -294,9 +232,9 @@ function VerificationQrCodeDM({ fetch_api_sg }) {
                                 Waktu/Time:
                               </small>
                               <h6 className="text-uppercase">
-                                {data?.approved_date
+                                {data?.signed_at
                                   ? window.moment
-                                      .utc(new Date(data?.approved_date))
+                                      .utc(new Date(data?.signed_at))
                                       .format("DD-MM-YYYY HH:mm:ss")
                                   : ""}
                               </h6>

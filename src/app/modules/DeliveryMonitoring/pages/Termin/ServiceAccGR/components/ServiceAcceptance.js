@@ -12,17 +12,23 @@ import RowAdditional from "./RowAdditional";
 const ServiceAcceptance = ({ data, isClient, loading }) => {
   const task_sa = data?.task_sa;
   // const { sa_header, sa_items } = task_sa;
-  console.log(`task_sa`, data);
+  const qr_params = React.useMemo(
+    () => ({
+      id: data?.task_sa?.id,
+      type: "sa",
+      user: isClient ? "user" : "vendor",
+    }),
+    [data, isClient]
+  );
+  console.log(`task_sa`, data, qr_params);
 
   if (task_sa == null) {
     return <NoDataBox text={"Service Acceptance not Available"} />;
   }
 
-  const qr_params = {
-    id: task_sa?.id,
-    type: "sa",
-    user: isClient ? "user" : "vendor",
-  };
+  // useMemo(() => ({
+
+  // }), [task_sa,isClient])
 
   return (
     <React.Fragment>
