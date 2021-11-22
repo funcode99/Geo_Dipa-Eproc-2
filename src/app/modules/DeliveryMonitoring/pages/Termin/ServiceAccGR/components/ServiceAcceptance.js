@@ -43,8 +43,8 @@ const ServiceAcceptance = ({ data, isClient, loading }) => {
         footerComponent={<FooterSA data={task_sa?.sa_items} />}
       />
       <Grid container spacing={1} className={"mt-3"}>
-        <BoxSignSA params={qr_params} noQR title={"VENDOR"} />
-        <Grid item xs={4}></Grid>
+        {/* <BoxSignSA params={qr_params} noQR title={"VENDOR"} /> */}
+        <Grid item xs={8}></Grid>
         <BoxSignSA
           params={qr_params}
           title={data?.contract?.contract_party?.party_1_director_position}
