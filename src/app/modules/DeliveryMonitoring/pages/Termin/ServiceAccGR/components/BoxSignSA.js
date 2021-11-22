@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoxSignSA = ({ title, noQR }) => {
+const BoxSignSA = ({ title, noQR, params }) => {
   const classes = useStyles();
   const tab4 = React.useMemo(
     () => [
@@ -51,9 +51,7 @@ const BoxSignSA = ({ title, noQR }) => {
             <div style={{ width: 72, height: 72 }} />
           ) : (
             <QRCodeG
-              value={`${
-                window.location.origin
-              }/qrcode?term_id=${"termin"}&role_id=${"bkbData?.approved_bkb_role_id"}&type=APPROVED_BKB`}
+              value={`${window.location.origin}/qrcode-dm?doc_id=${params?.id}&type=${params?.type}&user=${params?.user}`}
               // size="90"
             />
           )}

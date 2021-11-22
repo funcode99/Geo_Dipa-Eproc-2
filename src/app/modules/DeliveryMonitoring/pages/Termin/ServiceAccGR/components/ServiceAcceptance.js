@@ -9,7 +9,7 @@ import DetailSA from "./DetailSA";
 import FooterSA from "./FooterSA";
 import RowAdditional from "./RowAdditional";
 
-const ServiceAcceptance = ({ data, loading }) => {
+const ServiceAcceptance = ({ data, isClient, loading }) => {
   const task_sa = data?.task_sa;
   // const { sa_header, sa_items } = task_sa;
   console.log(`task_sa`, data);
@@ -17,6 +17,12 @@ const ServiceAcceptance = ({ data, loading }) => {
   if (task_sa == null) {
     return <NoDataBox text={"Service Acceptance not Available"} />;
   }
+
+  const qr_params = {
+    id: task_sa?.id,
+    type: "sa",
+    user: isClient ? "user" : "vendor",
+  };
 
   return (
     <React.Fragment>
@@ -37,9 +43,10 @@ const ServiceAcceptance = ({ data, loading }) => {
         footerComponent={<FooterSA data={task_sa?.sa_items} />}
       />
       <Grid container spacing={1} className={"mt-3"}>
-        <BoxSignSA noQR title={"VENDOR"} />
+        <BoxSignSA params={qr_params} noQR title={"VENDOR"} />
         <Grid item xs={4}></Grid>
         <BoxSignSA
+          params={qr_params}
           title={data?.contract?.contract_party?.party_1_director_position}
         />
       </Grid>
