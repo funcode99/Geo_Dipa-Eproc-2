@@ -45,7 +45,7 @@ function VerificationQrCodeDM({ fetch_api_sg }) {
       fetch_api_sg({
         key: "qr-code-dm",
         type: "get",
-        url: `task/${params.doc_id}/${params.type}/${params.user}`,
+        url: `/delivery/task/${params.doc_id}/${params.type}/${params.user}`,
         onSuccess: (res) => {
           console.log(`res`, res);
         },
