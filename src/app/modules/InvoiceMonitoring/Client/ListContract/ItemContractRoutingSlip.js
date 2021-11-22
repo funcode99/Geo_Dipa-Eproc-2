@@ -728,87 +728,9 @@ function ItemContractRoutingSlip(props) {
                       <td>Approve Park BYR Dokumen</td>
                     </tr>
                   )}
-                  {slipData?.bkb_document_date_in && (
-                    <tr>
-                      <td>8</td>
-                      <td>Treasury Process</td>
-                      <td>{slipData?.bkb_creator?.party?.full_name}</td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.bkb_document_date_in))
-                          .format("DD MMM YYYY")}
-                      </td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.bkb_document_date_in))
-                          .format("HH:mm")}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.bkb_document_date_out
-                          ? window
-                              .moment(new Date(slipData?.bkb_document_date_out))
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.bkb_document_date_out
-                          ? window
-                              .moment(new Date(slipData?.bkb_document_date_out))
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {(() => {
-                        var duration = window.moment.duration(
-                          window
-                            .moment(new Date(slipData?.bkb_document_date_out))
-                            .diff(
-                              window.moment(
-                                new Date(slipData?.bkb_document_date_in)
-                              )
-                            )
-                        );
-                        const days = Math.floor(duration.asDays());
-                        duration.subtract(window.moment.duration(days, "days"));
-                        const hours = duration.hours();
-                        duration.subtract(
-                          window.moment.duration(hours, "hours")
-                        );
-                        const minutes = duration.minutes();
-                        duration.subtract(
-                          window.moment.duration(minutes, "minutes")
-                        );
-                        return (
-                          <td className="text-center">
-                            {slipData?.bkb_document_date_in &&
-                            slipData?.bkb_document_date_out ? (
-                              <div>
-                                {days > 0 && (
-                                  <span>
-                                    {days} <FormattedMessage id="SPAN.DAYS" />
-                                  </span>
-                                )}
-                                {hours > 0 && (
-                                  <span>
-                                    {hours} <FormattedMessage id="SPAN.HOURS" />
-                                  </span>
-                                )}
-                                <span>
-                                  {minutes}{" "}
-                                  <FormattedMessage id="SPAN.MINUTES" />
-                                </span>
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        );
-                      })()}
-                      <td>BKB Dokumen</td>
-                    </tr>
-                  )}
                   {slipData?.spt_date_in && (
                     <tr>
-                      <td>9</td>
+                      <td>8</td>
                       <td>Treasury Process</td>
                       <td>{slipData?.spt_creator?.party?.full_name}</td>
                       <td className="text-center">
