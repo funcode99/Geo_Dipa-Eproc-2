@@ -71,7 +71,7 @@ const BoxSignSA = ({ title, noQR, params, fetch_api_sg }) => {
           ) : (
             <QRCodeG
               value={`${window.location.origin}/qrcode-dm?doc_id=${params?.id}&type=${params?.type}&user=${params?.user}`}
-              onClick={handleOpenQR}
+              // onClick={handleOpenQR}
               // size="90"
             />
           )}
