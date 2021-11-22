@@ -1,5 +1,7 @@
 import { Grid, makeStyles, Paper } from "@material-ui/core";
-import React from "react";
+import React, { useCallback } from "react";
+import { connect } from "react-redux";
+import { fetch_api_sg } from "../../../../../../../redux/globalReducer";
 import { QRCodeG } from "../../../../../../components/qrCodeGenerate/QRCodeGenerate";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoxSignSA = ({ title, noQR, params }) => {
+const BoxSignSA = ({ title, noQR, params, fetch_api_sg }) => {
   const classes = useStyles();
   const tab4 = React.useMemo(
     () => [
@@ -43,6 +45,23 @@ const BoxSignSA = ({ title, noQR, params }) => {
     ],
     []
   );
+  const handleOpenQR = useCallback(
+    (value) => {
+      fetch_api_sg({
+        key: "qr-code-dm",
+        type: "post",
+        url: `/delivery/task/${params.id}/${params.type}/${params.user}`,
+        onSuccess: (res) => {
+          console.log(`res`, res);
+          var string = value;
+          if (string.indexOf("http") === 0) {
+            window.open(value, "_blank");
+          }
+        },
+      });
+    },
+    [fetch_api_sg, params]
+  );
   return (
     <Grid item xs={4}>
       <Paper className={classes.paper}>
@@ -52,6 +71,7 @@ const BoxSignSA = ({ title, noQR, params }) => {
           ) : (
             <QRCodeG
               value={`${window.location.origin}/qrcode-dm?doc_id=${params?.id}&type=${params?.type}&user=${params?.user}`}
+              onClick={handleOpenQR}
               // size="90"
             />
           )}
@@ -111,4 +131,4 @@ const BoxSignSA = ({ title, noQR, params }) => {
   );
 };
 
-export default BoxSignSA;
+export default connect(null, { fetch_api_sg })(BoxSignSA);

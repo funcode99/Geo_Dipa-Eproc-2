@@ -49,9 +49,13 @@ const TerminPaper = () => {
           el.id === "form-sa-gr" ? { ...el, display: "none" } : { ...el }
         )
     : isClient
-    ? TERMIN_TAB_LIST.filter((item) => item.id !== "delivery-order")
-    : TERMIN_TAB_LIST.filter((item) => item.id !== "delivery-order").map((el) =>
-        el.id === "form-sa-gr" ? { ...el, display: "none" } : { ...el }
+    ? TERMIN_TAB_LIST.map((el) =>
+        el.id === "delivery-order" ? { ...el, display: "none" } : { ...el }
+      )
+    : TERMIN_TAB_LIST.map((el) =>
+        el.id === "form-sa-gr" || el.id === "delivery-order"
+          ? { ...el, display: "none" }
+          : { ...el }
       );
   const getTask = React.useCallback(() => {
     const task = dataContractById?.tasks?.find((item) => item.id === task_id);
@@ -125,7 +129,13 @@ const TerminPaper = () => {
           {/* {tabActive === 0 && <SummaryTermin />} */}
           {tabActive === 0 && <Summary />}
           {tabActive === 0 && <Documents />}
-          {isItemExists && tabActive === 1 && <DeliveryOrder />}
+          {tabActive === 1 && <DeliveryOrder />}
+          {tabActive === 2 && (
+            <BeritaAcara handleChangeTab={() => handleChangeTab(null, 3)} />
+          )}
+          {tabActive === 3 && <FormSAGR isItemExists={isItemExists} />}
+          {tabActive === 4 && <SAGRPage />}
+          {/* {isItemExists && tabActive === 1 && <DeliveryOrder />}
           {!isItemExists && tabActive === 1 && (
             <BeritaAcara handleChangeTab={() => handleChangeTab(null, 2)} />
           )}
@@ -139,7 +149,7 @@ const TerminPaper = () => {
             <FormSAGR isItemExists={isItemExists} />
           )}
           {!isItemExists && tabActive === 3 && <SAGRPage />}
-          {isItemExists && tabActive === 4 && <SAGRPage />}
+          {isItemExists && tabActive === 4 && <SAGRPage />} */}
         </Container>
       </Paper>
     </Container>
