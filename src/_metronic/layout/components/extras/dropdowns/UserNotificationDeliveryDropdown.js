@@ -34,6 +34,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const key = "notif-dm";
+const contract_pages = {
+  checkIsUploadedDocumentPO: 1,
+  checkIsUploadedContractGuaranteeDocument: 7,
+  checkIsTerminSet: 2,
+  checkIsTerminApproved: 2,
+};
+const termin_pages = {
+  checkIsDeliverableSet: 1,
+  checkIsUploadedDeliverable: 1,
+  checkIsDeliverableDocumentApproved: 1,
+  checkIsDeliverOrderApproved: 2,
+  checkIsDeliverOrderItemApproved: 2,
+  checkIsUploadDeliverOrderSignedDocument: 2,
+  checkIsApprovedDeliverOrderSignedDocument: 2,
+  checkIsNeedCreateBAPP: 3,
+  checkIsUploadedSignedBAPP: 3,
+  checkIsApprovedUploadedSignedBAPP: 3,
+};
 
 function UserNotificationDeliveryDropdown(props) {
   const bgImage = toAbsoluteUrl("/media/misc/bg-1.jpg");
@@ -61,7 +79,7 @@ function UserNotificationDeliveryDropdown(props) {
 
   const unreadNotifCount = notifMeta?.data_unread || 0;
 
-  const fetch_notif = ({ refresh, page }) => {
+  const fetchNotif = ({ refresh, page }) => {
     const current_page = refresh ? 1 : page;
     const limit = 10;
     const offset = (current_page - 1) * limit;
@@ -72,7 +90,7 @@ function UserNotificationDeliveryDropdown(props) {
         url: DEV_NODE2 + "/notification",
         params: { limit, offset },
         onSuccess: (res) => {
-          console.log("resnotif", res);
+          // console.log("resnotif", res);
           const { data, total_data, total_unread } = res.result;
           dispatch(
             store_notif_dm_rd({
@@ -91,8 +109,25 @@ function UserNotificationDeliveryDropdown(props) {
     );
   };
 
+  const fetchDetailNotif = React.useCallback(
+    ({ id }) => {
+      dispatch(
+        fetch_api_sg({
+          key,
+          type: "get",
+          url: DEV_NODE2 + `/notification/${id}`,
+          onSuccess: (res) => {
+            // console.log("resnotif", res);
+            fetchNotif({ refresh: true });
+          },
+        })
+      );
+    },
+    [dispatch, fetch_api_sg]
+  );
+
   React.useEffect(() => {
-    fetch_notif({ refresh: true });
+    fetchNotif({ refresh: true });
   }, [location]);
 
   console.log(`topbar-location`, location);
@@ -176,15 +211,24 @@ function UserNotificationDeliveryDropdown(props) {
                     style={{ maxHeight: "300px", position: "relative" }}
                   >
                     {notifDeliveryMonitoring?.map((item, index) => {
+                      {
+                        /* console.log("notif", item); */
+                      }
+                      const isContractPage = !!Object.keys(
+                        contract_pages
+                      ).includes(item?.node_type);
+                      const isTerminPage = !!Object.keys(termin_pages).includes(
+                        item?.node_type
+                      );
+                      const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}`;
+                      const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}`;
                       return (
                         <Link
-                          to={
-                            `/${status}/delivery-monitoring/contract/` +
-                            item.data.contract_id
-                          }
+                          to={isContractPage ? linkContract : linkTermin}
                           className="navi-item"
                           key={index.toString()}
                           onClick={() => {
+                            fetchDetailNotif({ id: item?._id });
                             // tabInvoice.tab = item.menu_tab || 0;
                             // tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                             // props.set_data_tab_invaoice(tabInvoice);
@@ -215,7 +259,7 @@ function UserNotificationDeliveryDropdown(props) {
                   </PerfectScrollbar>
                 </div>
                 <PaginationNotif
-                  onChange={fetch_notif}
+                  onChange={fetchNotif}
                   total_page={notifMeta?.total_page}
                   page={notifMeta?.page}
                 />
