@@ -17,6 +17,13 @@ const initialDelivMonitoringState = {
   dataTempOrderItems: [],
   dataUpdateOrderItems: [],
   notifDeliveryMonitoring: [],
+  notifMeta: {
+    page: 1,
+    per_page: 10,
+    data_unread: 0,
+    data_available: 0,
+    total_page: 1,
+  },
 };
 
 export const reducer = persistReducer(
@@ -92,9 +99,11 @@ export const reducer = persistReducer(
       }
 
       case actionTypes.saveNotifDM: {
+        const { list, meta } = action.payload;
         return {
           ...state,
-          notifDeliveryMonitoring: action.payload,
+          notifDeliveryMonitoring: list,
+          notifMeta: meta,
         };
       }
 
