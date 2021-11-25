@@ -144,6 +144,7 @@
   "TITLE.MODAL_CREATE.LABEL.BODY_FAILED": "Server error, please try again later.",
   "TITLE.MODAL_CREATE.LABEL.BUTTON_FAILED": "Close",
   "TITLE.TODAY": "Today",
+  "TITLE.LIST_GR": "GR",
   "TITLE.CHANGE_PASSWORD": "Change Password",
   "TITLE.CHANGE_PASSWORD.SPAN": "Change your account password",
   "CHANGE_PASSWORD.INPUT.CURRENT_PASSWORD": "Current Password",

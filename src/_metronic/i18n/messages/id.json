@@ -102,6 +102,7 @@
   "ECOMMERCE.CUSTOMERS.UPDATE_STATUS.MESSAGE": "Status pelanggan yang dipilih telah berhasil diperbarui",
   "ECOMMERCE.CUSTOMERS.EDIT.UPDATE_MESSAGE": "Pelanggan telah diperbarui",
   "ECOMMERCE.CUSTOMERS.EDIT.ADD_MESSAGE": "Pelanggan telah dibuat",
+  "TITLE.GR": "GR",
   "TITLE.CREATE_ACCOUNT": "Buat Akun Baru",
   "TITLE.CREATE_ACCOUNT.NEW_ACCOUNT": "Buat Akun",
   "TITLE.CREATE_ACCOUNT.NEW_ACCOUNT.SPAN": "Buat akun baru untuk delivery & invoice monitoring",
