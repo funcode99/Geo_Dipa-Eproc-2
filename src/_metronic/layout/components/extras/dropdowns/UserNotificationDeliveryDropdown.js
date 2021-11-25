@@ -211,24 +211,22 @@ function UserNotificationDeliveryDropdown(props) {
                     style={{ maxHeight: "300px", position: "relative" }}
                   >
                     {notifDeliveryMonitoring?.map((item, index) => {
-                      {
-                        /* console.log("notif", item); */
-                      }
-                      const isContractPage = !!Object.keys(
-                        contract_pages
-                      ).includes(item?.node_type);
-                      const isTerminPage = !!Object.keys(termin_pages).includes(
-                        item?.node_type
-                      );
-                      const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}`;
-                      const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}`;
+                      const isContractPage = Object.keys(contract_pages).filter(
+                        (e) => e === item?.node_type
+                      )?.[0];
+                      const isTerminPage = Object.keys(termin_pages).filter(
+                        (e) => e === item?.node_type
+                      )?.[0];
+                      const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
+                      const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
+                      console.log("notif", isContractPage, isTerminPage);
                       return (
                         <Link
-                          to={isContractPage ? linkContract : linkTermin}
+                          to={!!isContractPage ? linkContract : linkTermin}
                           className="navi-item"
                           key={index.toString()}
                           onClick={() => {
-                            fetchDetailNotif({ id: item?._id });
+                            // fetchDetailNotif({ id: item?._id });
                             // tabInvoice.tab = item.menu_tab || 0;
                             // tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                             // props.set_data_tab_invaoice(tabInvoice);
