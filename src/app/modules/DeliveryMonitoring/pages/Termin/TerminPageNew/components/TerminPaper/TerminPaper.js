@@ -34,7 +34,8 @@ const TerminPaper = () => {
   } = React.useContext(TerminPageContext);
   const stepperProg = React.useMemo(() => states.termin.stepper, [states]);
   const classes = useStyles();
-  const [tabActive, setTabActive] = React.useState(0);
+  const [tabActive, setTabActive] = React.useState(3);
+  const [firstTime, setfirstTime] = React.useState(0);
   const isClient = authStatus === "client";
 
   const checkDataBarang = () => {
@@ -65,8 +66,8 @@ const TerminPaper = () => {
   }, [dataContractById, task_id]);
   function handleChangeTab(e, newTabActive) {
     const lastTabIndex = tabUsed.length - 1;
-    // let thisTask = getTask(task_id);
     let thisTask = states?.termin?.summary;
+    // let thisTask = getTask(task_id);
 
     if (newTabActive > 0 && thisTask?.approve_status?.name !== "APPROVED") {
       MODAL.showSnackbar("Mohon Approve termin ini terlebih dahulu", "warning");
@@ -90,8 +91,13 @@ const TerminPaper = () => {
   }
 
   React.useEffect(() => {
-    console.log(`forceTabActive`, forceTabActive);
-  }, [forceTabActive]);
+    let thisTask = states?.termin?.summary;
+    if (firstTime === 1) return;
+    if (!!forceTabActive && firstTime === 0) {
+      handleChangeTab(null, forceTabActive - 1);
+      if (!!thisTask) setfirstTime(1);
+    }
+  }, [states]);
 
   console.log(`states`, states.termin.summary);
   return (
