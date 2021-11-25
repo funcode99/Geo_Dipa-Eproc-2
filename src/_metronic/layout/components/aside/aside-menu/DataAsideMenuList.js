@@ -171,8 +171,8 @@ export const DataAsideMenuListVendor = [
         title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
         subMenu: [
           {
-            rootPath: "/vendor/delivery-monitoring-1/error-v/1",
-            title: "TITLE.TEST",
+            rootPath: "/vendor/delivery-monitoring/gr",
+            title: "TITLE.LIST_GR",
           },
         ],
       },

@@ -13,6 +13,7 @@ import {
   ContractDetailPage,
   TerminPage,
   TerminPageNew,
+  GRPage
 } from "../pages";
 
 function RootVendorDelivery(props) {
@@ -46,6 +47,11 @@ function RootVendorDelivery(props) {
       <Route
         path="/vendor/delivery-monitoring/contract"
         component={ContractsPage}
+      />
+
+      <Route
+        path="/vendor/delivery-monitoring/gr"
+        component={GRPage}
       />
     </Switch>
   );
