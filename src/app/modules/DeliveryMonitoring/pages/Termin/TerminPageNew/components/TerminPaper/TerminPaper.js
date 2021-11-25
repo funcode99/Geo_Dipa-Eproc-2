@@ -30,6 +30,7 @@ const TerminPaper = () => {
     authStatus,
     func,
     loadings,
+    forceTabActive,
   } = React.useContext(TerminPageContext);
   const stepperProg = React.useMemo(() => states.termin.stepper, [states]);
   const classes = useStyles();
@@ -87,6 +88,11 @@ const TerminPaper = () => {
       setTabActive(newTabActive);
     }
   }
+
+  React.useEffect(() => {
+    console.log(`forceTabActive`, forceTabActive);
+  }, [forceTabActive]);
+
   console.log(`states`, states.termin.summary);
   return (
     <Container>

@@ -29,6 +29,10 @@ function RootClientDelivery(props) {
       />
 
       <Route
+        path="/client/delivery-monitoring/contract/task/:task_id/:tab"
+        component={TerminPageNew}
+      />
+      <Route
         path="/client/delivery-monitoring/contract/task/:task_id"
         component={TerminPageNew}
       />
@@ -37,6 +41,11 @@ function RootClientDelivery(props) {
         component={TerminPage}
       /> */}
 
+      <Route
+        path="/client/delivery-monitoring/contract/:contract_id/:tab"
+        component={ContractDetailPage}
+        exact={true}
+      />
       <Route
         path="/client/delivery-monitoring/contract/:contract_id"
         component={ContractDetailPage}

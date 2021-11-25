@@ -29,6 +29,10 @@ function RootVendorDelivery(props) {
       />
 
       <Route
+        path="/vendor/delivery-monitoring/contract/task/:task_id/:tab"
+        component={TerminPageNew}
+      />
+      <Route
         path="/vendor/delivery-monitoring/contract/task/:task_id"
         component={TerminPageNew}
       />
@@ -37,6 +41,11 @@ function RootVendorDelivery(props) {
         component={TerminPage}
       /> */}
 
+      <Route
+        path="/vendor/delivery-monitoring/contract/:contract_id/:tab"
+        component={ContractDetailPage}
+        exact={true}
+      />
       <Route
         path="/vendor/delivery-monitoring/contract/:contract_id"
         component={ContractDetailPage}
