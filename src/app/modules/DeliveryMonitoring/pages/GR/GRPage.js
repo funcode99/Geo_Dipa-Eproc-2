@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
 
 const tableHeaderContractsNew = [
     {
-        id: "id",
-        label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
+        id: "material_document",
+        label: 'Material Document',
     },
     {
         id: "po_number",
@@ -49,24 +49,8 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
 
     const generateTableContent = (data) => {
         let dataArr = data.map((item, id) => ({
-            contract_no: (
-                <NavLink to={`/${status}/delivery-monitoring/contract/${item.id}`}>
-                    {item?.contract_no}
-                </NavLink>
-            ),
-            po_number: item?.purch_order_no,
-            procurement_title: item?.contract_name,
-            po_date:
-                item?.issued_date !== null
-                    ? formatDate(new Date(item?.issued_date))
-                    : null,
-            contract_date:
-                item?.issued_date !== null
-                    ? formatDate(new Date(item?.issued_date))
-                    : null,
-            group: item?.user_group?.party?.full_name,
-            vendor: item?.vendor.party?.full_name,
-            status: item?.state,
+            material_document: item?.material_document,
+            po_number: item?.po_number,
             action: (
                 <ButtonAction
                     hoverLabel="More"
@@ -74,10 +58,10 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
                     // handleAction={console.log(null)}
                     ops={[
                         {
-                            label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
+                            label: "Detail",
                             icon: "fas fa-search text-primary pointer",
                             to: {
-                                url: `/${status}/delivery-monitoring/contract/${item.id}`,
+                                url: `/${status}/delivery-monitoring/gr/${item.id}`,
                                 style: {
                                     color: "black",
                                 },
@@ -94,7 +78,7 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
         fetch_api_sg({
             key: keys.fetch,
             type: "get",
-            url: `/delivery/sa`,
+            url: `/delivery/gr`,
             onSuccess: (res) => {
                 // console.log(`res.data`, res.data);
                 generateTableContent(res.data);
@@ -109,9 +93,8 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
 
     return (
         <>
-            asd
             <Subheader
-                text="GR List"
+                text="Good Receipt"
                 IconComponent={
                     <SVG
                         src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")}
@@ -124,7 +107,6 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
                 <TablePaginationCustom
                     headerRows={tableHeaderContractsNew}
                     rows={newContent}
-                    width={1500}
                     loading={loadings.fetch}
                 />
             </Paper>

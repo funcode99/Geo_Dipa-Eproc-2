@@ -11,14 +11,9 @@ export const DataAsideMenuListClient = [
         subMenu: null,
       },
       {
-        rootPath: "/client/delivery-monitoring-1/error-v",
+        rootPath: "/client/delivery-monitoring/gr",
         title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
-        subMenu: [
-          {
-            rootPath: "/client/delivery-monitoring-1/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
       {
         rootPath: "/client/delivery-monitoring-2/error-v",
