@@ -109,12 +109,14 @@ const TabLists = [
 
 export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   const classes = useStyles();
-  const { contract_id } = useParams();
+  const { contract_id, tab: forceTabActive } = useParams();
   const [Toast, setToast] = useToast();
   // const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
   const [tabActive, setTabActive] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
+  const [firstTime, setfirstTime] = React.useState(0);
+
   // let authStatus = useSelector(
   //   (state) => state.auth.user.data.status,
   //   shallowEqual
@@ -191,6 +193,14 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   function handleChangeTab(event, newTabActive) {
     setTabActive(newTabActive);
   }
+
+  React.useEffect(() => {
+    if (firstTime === 1) return;
+    if (!!forceTabActive && firstTime === 0) {
+      handleChangeTab(null, forceTabActive - 1);
+      if (!!dataContractById) setfirstTime(1);
+    }
+  }, [dataContractById]);
 
   return (
     <React.Fragment>
