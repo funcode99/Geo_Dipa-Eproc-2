@@ -6,7 +6,7 @@ export const DataAsideMenuListClient = [
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       {
-        rootPath: "/client/delivery-monitoring",
+        rootPath: "/client/delivery-monitoring/contract",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },
@@ -16,15 +16,20 @@ export const DataAsideMenuListClient = [
         subMenu: null,
       },
       {
-        rootPath: "/client/delivery-monitoring-2/error-v",
+        rootPath: "/client/delivery-monitoring/sa",
         title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
-        subMenu: [
-          {
-            rootPath: "/client/delivery-monitoring-2/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
+      // {
+      //   rootPath: "/client/delivery-monitoring-2/error-v",
+      //   title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
+      //   subMenu: [
+      //     {
+      //       rootPath: "/client/delivery-monitoring-2/error-v/1",
+      //       title: "TITLE.TEST",
+      //     },
+      //   ],
+      // },
     ],
   },
   {
@@ -157,7 +162,7 @@ export const DataAsideMenuListVendor = [
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       {
-        rootPath: "/vendor/delivery-monitoring",
+        rootPath: "/vendor/delivery-monitoring/contract",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },

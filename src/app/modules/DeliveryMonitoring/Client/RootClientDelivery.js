@@ -14,6 +14,7 @@ import {
   TerminPage,
   TerminPageNew,
   GRPage,
+  SAPage,
 } from "../pages";
 
 function RootClientDelivery(props) {
@@ -54,6 +55,7 @@ function RootClientDelivery(props) {
       />
 
       <Route path="/client/delivery-monitoring/gr" component={GRPage} />
+      <Route path="/client/delivery-monitoring/sa" component={SAPage} />
     </Switch>
   );
 }

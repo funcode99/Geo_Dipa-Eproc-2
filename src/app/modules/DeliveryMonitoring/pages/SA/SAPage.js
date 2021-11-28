@@ -2,14 +2,12 @@ import { makeStyles, Paper } from "@material-ui/core";
 import React from "react";
 import SVG from "react-inlinesvg";
 import { FormattedMessage } from "react-intl";
+import { connect } from "react-redux";
+import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
-import { formatDate } from "../../../../libs/date";
-import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
-import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,10 +38,10 @@ const tableHeaderContractsNew = [
 ];
 
 const keys = {
-  fetch: "get-data-gr",
+  fetch: "get-data-sa",
 };
 
-export const GRPage = ({ fetch_api_sg, loadings, status }) => {
+export const SAPage = ({ fetch_api_sg, loadings, status }) => {
   const classes = useStyles();
   const [newContent, setNewContent] = React.useState([]);
 
@@ -78,9 +76,9 @@ export const GRPage = ({ fetch_api_sg, loadings, status }) => {
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      url: `/delivery/gr`,
+      url: `/delivery/sa`,
       onSuccess: (res) => {
-        // console.log(`res.data`, res.data);
+        console.log(`res.data`, res.data);
         generateTableContent(res.data);
       },
     });
@@ -125,4 +123,4 @@ const mapDispatch = {
   fetch_api_sg,
 };
 
-export default connect(mapState, mapDispatch)(GRPage);
+export default connect(mapState, mapDispatch)(SAPage);
