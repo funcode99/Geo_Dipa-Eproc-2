@@ -265,6 +265,7 @@ function UserNotificationDeliveryDropdown(props) {
                   onChange={fetchNotif}
                   total_page={notifMeta?.total_page}
                   page={notifMeta?.page}
+                  withLabel
                 />
               </div>
             </form>

@@ -12,7 +12,12 @@ const useStyles = makeStyles({
   },
 });
 
-export default function PaginationNotif({ onChange, total_page, page }) {
+export default function PaginationNotif({
+  onChange,
+  total_page,
+  page,
+  withLabel,
+}) {
   const classes = useStyles();
   const theme = useTheme();
   //   const [activeStep, setActiveStep] = React.useState(0);
@@ -39,7 +44,7 @@ export default function PaginationNotif({ onChange, total_page, page }) {
           onClick={handleNext}
           disabled={activeStep === step - 1}
         >
-          Next
+          {!!withLabel && "Next"}
           {theme.direction === "rtl" ? (
             <KeyboardArrowLeft />
           ) : (
@@ -54,7 +59,7 @@ export default function PaginationNotif({ onChange, total_page, page }) {
           ) : (
             <KeyboardArrowLeft />
           )}
-          Back
+          {!!withLabel && "Back"}
         </Button>
       }
     />
