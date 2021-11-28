@@ -8,6 +8,7 @@ import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +45,7 @@ const keys = {
 export const SAPage = ({ fetch_api_sg, loadings, status }) => {
   const classes = useStyles();
   const [newContent, setNewContent] = React.useState([]);
+  const history = useHistory();
 
   const generateTableContent = (data) => {
     let dataArr = data.map((item, id) => ({
@@ -52,18 +54,12 @@ export const SAPage = ({ fetch_api_sg, loadings, status }) => {
       action: (
         <ButtonAction
           hoverLabel="More"
-          data={"1"}
-          // handleAction={console.log(null)}
+          data={item}
+          handleAction={handleAction}
           ops={[
             {
               label: "TITLE.DETAIL",
               icon: "fas fa-search text-primary pointer",
-              to: {
-                url: `/${status}/delivery-monitoring/gr/${item.id}`,
-                style: {
-                  color: "black",
-                },
-              },
             },
           ]}
         />
@@ -83,6 +79,13 @@ export const SAPage = ({ fetch_api_sg, loadings, status }) => {
       },
     });
   };
+
+  const handleAction = React.useCallback((type, data) => {
+    console.log(`type`, type, data);
+    history.push(
+      `/${status}/delivery-monitoring/sa/${data?.task_id}/${data?.id}`
+    );
+  }, []);
 
   React.useEffect(() => {
     getDataContracts();

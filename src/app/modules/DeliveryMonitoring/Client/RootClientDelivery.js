@@ -14,7 +14,9 @@ import {
   TerminPage,
   TerminPageNew,
   GRPage,
+  DetailGRPage,
   SAPage,
+  DetailSAPage,
 } from "../pages";
 
 function RootClientDelivery(props) {
@@ -29,9 +31,12 @@ function RootClientDelivery(props) {
         exact={true}
         to="/client/delivery-monitoring/contract"
       />
-
       <Route
         path="/client/delivery-monitoring/contract/task/:task_id/:tab"
+        component={TerminPageNew}
+      />
+      <Route
+        path="/client/delivery-monitoring/contract/task/:task_id"
         component={TerminPageNew}
       />
       <Route
@@ -40,20 +45,22 @@ function RootClientDelivery(props) {
         exact={true}
       />
       <Route
-        path="/client/delivery-monitoring/contract/task/:task_id"
-        component={TerminPageNew}
-      />
-      <Route
         path="/client/delivery-monitoring/contract/:contract_id"
         component={ContractDetailPage}
         exact={true}
       />
-
+      <Route
+        path="/client/delivery-monitoring/gr/:task_id/:gr_id"
+        component={DetailGRPage}
+      />
+      <Route
+        path="/client/delivery-monitoring/sa/:task_id/:sa_id"
+        component={DetailSAPage}
+      />
       <Route
         path="/client/delivery-monitoring/contract"
         component={ContractsPage}
       />
-
       <Route path="/client/delivery-monitoring/gr" component={GRPage} />
       <Route path="/client/delivery-monitoring/sa" component={SAPage} />
     </Switch>

@@ -4,6 +4,8 @@ import TerminPage from "./Termin/TerminPage";
 import TerminPageNew from "./Termin/TerminPageNew";
 import GRPage from "./GR/GRPage";
 import SAPage from "./SA/SAPage";
+import DetailGRPage from "./GR/DetailGRPage";
+import DetailSAPage from "./SA/DetailSAPage";
 
 export {
   ContractsPage,
@@ -12,4 +14,6 @@ export {
   TerminPage,
   GRPage,
   SAPage,
+  DetailGRPage,
+  DetailSAPage,
 };
