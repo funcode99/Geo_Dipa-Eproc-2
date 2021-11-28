@@ -6,6 +6,11 @@ export const DataAsideMenuListClient = [
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       {
+        rootPath: "/client/delivery-monitoring/dashboard",
+        title: "MENU.DASHBOARD",
+        subMenu: null,
+      },
+      {
         rootPath: "/client/delivery-monitoring/contract",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,

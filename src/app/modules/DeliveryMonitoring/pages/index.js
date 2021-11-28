@@ -6,6 +6,7 @@ import GRPage from "./GR/GRPage";
 import SAPage from "./SA/SAPage";
 import DetailGRPage from "./GR/DetailGRPage";
 import DetailSAPage from "./SA/DetailSAPage";
+import DashboardDM from "./dashboard/DashboardDM";
 
 export {
   ContractsPage,
@@ -16,4 +17,5 @@ export {
   SAPage,
   DetailGRPage,
   DetailSAPage,
+  DashboardDM,
 };

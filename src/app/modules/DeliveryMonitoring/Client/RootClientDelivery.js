@@ -17,6 +17,7 @@ import {
   DetailGRPage,
   SAPage,
   DetailSAPage,
+  DashboardDM,
 } from "../pages";
 
 function RootClientDelivery(props) {
@@ -29,7 +30,7 @@ function RootClientDelivery(props) {
       <Redirect
         from="/client/delivery-monitoring"
         exact={true}
-        to="/client/delivery-monitoring/contract"
+        to="/client/delivery-monitoring/dashboard"
       />
       <Route
         path="/client/delivery-monitoring/contract/task/:task_id/:tab"
@@ -56,6 +57,10 @@ function RootClientDelivery(props) {
       <Route
         path="/client/delivery-monitoring/sa/:task_id/:sa_id"
         component={DetailSAPage}
+      />
+      <Route
+        path="/client/delivery-monitoring/dashboard"
+        component={DashboardDM}
       />
       <Route
         path="/client/delivery-monitoring/contract"
