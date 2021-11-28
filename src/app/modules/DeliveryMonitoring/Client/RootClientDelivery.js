@@ -13,7 +13,7 @@ import {
   ContractDetailPage,
   TerminPage,
   TerminPageNew,
-  GRPage
+  GRPage,
 } from "../pages";
 
 function RootClientDelivery(props) {
@@ -34,18 +34,13 @@ function RootClientDelivery(props) {
         component={TerminPageNew}
       />
       <Route
-        path="/client/delivery-monitoring/contract/task/:task_id"
-        component={TerminPageNew}
-      />
-      {/* <Route
-        path="/client/delivery-monitoring/contract/task/:task_id"
-        component={TerminPage}
-      /> */}
-
-      <Route
         path="/client/delivery-monitoring/contract/:contract_id/:tab"
         component={ContractDetailPage}
         exact={true}
+      />
+      <Route
+        path="/client/delivery-monitoring/contract/task/:task_id"
+        component={TerminPageNew}
       />
       <Route
         path="/client/delivery-monitoring/contract/:contract_id"
@@ -58,10 +53,7 @@ function RootClientDelivery(props) {
         component={ContractsPage}
       />
 
-      <Route
-        path="/client/delivery-monitoring/gr"
-        component={GRPage}
-      />
+      <Route path="/client/delivery-monitoring/gr" component={GRPage} />
     </Switch>
   );
 }
