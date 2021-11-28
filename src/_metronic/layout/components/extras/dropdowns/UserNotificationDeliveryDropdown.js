@@ -130,8 +130,6 @@ function UserNotificationDeliveryDropdown(props) {
     fetchNotif({ refresh: true });
   }, [location]);
 
-  console.log(`topbar-location`, location);
-
   return (
     <>
       {layoutProps.offcanvas && (
@@ -219,7 +217,9 @@ function UserNotificationDeliveryDropdown(props) {
                       )?.[0];
                       const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
                       const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
-                      console.log("notif", isContractPage, isTerminPage);
+                      {
+                        /* console.log("notif", item, isContractPage, isTerminPage); */
+                      }
                       return (
                         <Link
                           to={!!isContractPage ? linkContract : linkTermin}
@@ -245,9 +245,14 @@ function UserNotificationDeliveryDropdown(props) {
                                 {item?.title}
                               </div>
                               <div className="text-muted">
-                                {`${item.data.contract_no ||
+                                {linkContract &&
+                                  `${item.data.contract_name ||
+                                    "Nomor Kontrak"}`}
+                                {linkTermin &&
+                                  `${item.data.task_name || "Nomor Termin"}`}
+                                {/* {`${item.data.contract_name ||
                                   "Nomor Kontrak"}-${item.data.task_name ||
-                                  "Nama Termin"}`}
+                                  "Nama Termin"}`} */}
                               </div>
                             </div>
                           </div>

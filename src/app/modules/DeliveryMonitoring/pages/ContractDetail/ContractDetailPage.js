@@ -14,7 +14,7 @@ import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
-import { useParams, withRouter } from "react-router-dom";
+import { useLocation, useParams, withRouter } from "react-router-dom";
 import Tabs from "../../../../components/tabs";
 import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
@@ -109,6 +109,7 @@ const TabLists = [
 
 export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   const classes = useStyles();
+  const location = useLocation();
   const { contract_id, tab: forceTabActive } = useParams();
   const [Toast, setToast] = useToast();
   // const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
@@ -116,6 +117,14 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   const [tabActive, setTabActive] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   const [firstTime, setfirstTime] = React.useState(0);
+  const [tempProps, setTempProps] = React.useState({
+    task_id: "",
+    tab: 0,
+  });
+  const [old, setOld] = React.useState({
+    needRefresh: false,
+    path: "",
+  });
 
   // let authStatus = useSelector(
   //   (state) => state.auth.user.data.status,
@@ -195,12 +204,40 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   }
 
   React.useEffect(() => {
+    if (
+      tempProps.contract_id != contract_id ||
+      tempProps.tab != forceTabActive
+    ) {
+      setfirstTime(0);
+      setInitialSubmitItems();
+    }
     if (firstTime === 1) return;
     if (!!forceTabActive && firstTime === 0) {
       handleChangeTab(null, forceTabActive - 1);
-      if (!!dataContractById) setfirstTime(1);
+      if (!!dataContractById) {
+        setfirstTime(1);
+        setTempProps({
+          contract_id,
+          tab: forceTabActive,
+        });
+      }
     }
   }, [dataContractById, contract_id, forceTabActive]);
+
+  React.useEffect(() => {
+    if (location.pathname !== old.path) {
+      setOld({
+        needRefresh: true,
+        path: location.pathname,
+      });
+      setTimeout(() => {
+        setOld((e) => ({
+          ...e,
+          needRefresh: false,
+        }));
+      }, 500);
+    }
+  }, [location]);
 
   return (
     <React.Fragment>
@@ -263,7 +300,11 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
         </Container>
         <hr className="p-0 m-0" />
         {tabActive === 0 && <KickOffDetail />}
-        {tabActive === 1 && <DetailPage contractId={contract_id} />}
+        <DetailPage
+          show={tabActive === 1}
+          refresh={old.needRefresh}
+          contractId={contract_id}
+        />
         {tabActive === 2 && <ParaPihak />}
         {tabActive === 3 && <DokContract />}
         {tabActive === 4 && <HargaPekerjaan />}
