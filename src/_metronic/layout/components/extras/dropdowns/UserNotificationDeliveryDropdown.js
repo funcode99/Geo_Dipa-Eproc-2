@@ -226,7 +226,7 @@ function UserNotificationDeliveryDropdown(props) {
                           className="navi-item"
                           key={index.toString()}
                           onClick={() => {
-                            // fetchDetailNotif({ id: item?._id });
+                            fetchDetailNotif({ id: item?._id });
                             // tabInvoice.tab = item.menu_tab || 0;
                             // tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                             // props.set_data_tab_invaoice(tabInvoice);
