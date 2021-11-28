@@ -33,6 +33,13 @@ export class TerminPageNew extends PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log(`thispprops`, this.props, prevProps);
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.handleRefresh();
+    }
+  }
+
   handleRefresh = () => {
     this.handleApiCenter({ key: KEYS_TERMIN.f_termin });
   };
@@ -139,6 +146,7 @@ export class TerminPageNew extends PureComponent {
           states: this.state,
         }}
       >
+        {/* {map_state.loadings[KEYS_TERMIN.f_termin] ? <div /> : <TerminPaper />} */}
         <TerminPaper />
       </TerminPageContext.Provider>
     );

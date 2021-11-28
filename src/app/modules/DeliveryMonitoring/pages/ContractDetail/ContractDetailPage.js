@@ -200,7 +200,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
       handleChangeTab(null, forceTabActive - 1);
       if (!!dataContractById) setfirstTime(1);
     }
-  }, [dataContractById]);
+  }, [dataContractById, contract_id, forceTabActive]);
 
   return (
     <React.Fragment>
