@@ -107,6 +107,8 @@ const DetailPage = ({
   authStatus,
   fetch_api_sg,
   loadings,
+  refresh,
+  show,
 }) => {
   const [newContent, setNewContent] = React.useState([]);
   const [confirm, setConfirm] = React.useState({ show: false, id: "" });
@@ -456,15 +458,25 @@ const DetailPage = ({
     });
   };
 
-  React.useEffect(() => {
-    getContractById(contractId);
-    if (tasks && tasks.length > 0) {
-      generateTableContent(tasks);
-    }
+  // React.useEffect(() => {
+  //   getContractById(contractId);
+  //   if (tasks && tasks.length > 0) {
+  //     generateTableContent(tasks);
+  //   }
 
-    getOptions();
-    // eslint-disable-next-line
-  }, []);
+  //   getOptions(contractId);
+  //   // eslint-disable-next-line
+  // }, []);
+
+  React.useEffect(() => {
+    if (refresh === true) {
+      getContractById(contractId);
+      if (tasks && tasks.length > 0) {
+        generateTableContent(tasks);
+      }
+      getOptions(contractId);
+    }
+  }, [refresh]);
 
   const handleApi = (type, params) => {
     switch (type) {
@@ -505,7 +517,7 @@ const DetailPage = ({
     }
   };
 
-  return (
+  return show ? (
     <React.Fragment>
       <ModalTerm
         innerRef={submitRef}
@@ -550,6 +562,8 @@ const DetailPage = ({
         </ExpansionBox>
       </Container>
     </React.Fragment>
+  ) : (
+    <div />
   );
 };
 

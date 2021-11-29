@@ -15,7 +15,9 @@ const StatusRemarks = ({
   const approvedText = isApproved ? `by ${approvedBy}` : "";
   const rejectText = isRejected ? remarks : "";
   const waitingText =
-    isWaiting && withFile ? `${status} ${url ? "APPROVAL" : "UPLOAD"}` : status;
+    isWaiting && withFile
+      ? `${status} ${url ? `APPROVAL ${role}` : `UPLOAD ${role}`}`
+      : status;
   const colorScheme = isApproved ? "primary" : isRejected ? "danger" : "dark";
 
   // if (isApproved) {
@@ -24,7 +26,7 @@ const StatusRemarks = ({
       <span
         className={`label label-sm label-light-${colorScheme} label-inline mr-2`}
       >
-        {(waitingText && `${waitingText} ${role}`) || status || "-"}&nbsp;
+        {waitingText || status || "-"}&nbsp;
         <span
           style={{
             fontWeight: "bold",

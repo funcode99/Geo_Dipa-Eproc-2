@@ -1,7 +1,7 @@
 import React from "react";
 import QRCode from "qrcode.react";
 
-export const QRCodeG = ({ value, size = 72 }) => {
+export const QRCodeG = ({ value, size = 72, onClick }) => {
   const [dataQr] = React.useState({
     value: value,
     size: Number(size) < 57 ? 57 : Number(size),
@@ -31,6 +31,10 @@ export const QRCodeG = ({ value, size = 72 }) => {
       imageSettings={dataQr.imageSettings}
       className="pointer"
       onClick={() => {
+        if (typeof onClick === "function") {
+          onClick(dataQr.value);
+          return;
+        }
         var string = dataQr.value;
         if (string.indexOf("http") === 0) {
           window.open(dataQr.value, "_blank");

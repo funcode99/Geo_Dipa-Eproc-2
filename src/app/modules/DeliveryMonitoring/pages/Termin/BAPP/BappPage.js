@@ -547,59 +547,61 @@ const BappPage = ({
               withSubmit={isClient}
               btnChildren={
                 <React.Fragment>
-                  <Dropdown
-                    className="dropdown-inline mr-2"
-                    drop="down"
-                    alignRight
-                  >
-                    <Dropdown.Toggle
-                      id="dropdown-toggle-top2"
-                      variant="transparent"
-                      className="btn btn-light-success btn-sm font-weight-bolder dropdown-toggle"
+                  {isClient && (
+                    <Dropdown
+                      className="dropdown-inline mr-2"
+                      drop="down"
+                      alignRight
                     >
-                      Post to SAP
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
-                      <ul className="navi navi-hover">
-                        <li className="navi-item">
-                          <Dropdown.Item
-                            // href="#"
-                            className="navi-link"
-                            onClick={() => _fetchToSAP("gr-101")}
-                          >
-                            <span className="navi-text">GR 101</span>
-                          </Dropdown.Item>
-                        </li>
-                        <li className="navi-item">
-                          <Dropdown.Item
-                            // href="#"
-                            className="navi-link"
-                            onClick={() => _fetchToSAP("gr-103")}
-                          >
-                            <span className="navi-text">GR 103</span>
-                          </Dropdown.Item>
-                        </li>
-                        <li className="navi-item">
-                          <Dropdown.Item
-                            // href="#"
-                            className="navi-link"
-                            onClick={() => _fetchToSAP("gr-105")}
-                          >
-                            <span className="navi-text">GR 105</span>
-                          </Dropdown.Item>
-                        </li>
-                        <li className="navi-item">
-                          <Dropdown.Item
-                            // href="#"
-                            className="navi-link"
-                            onClick={() => _fetchToSAP("sa")}
-                          >
-                            <span className="navi-text">SA</span>
-                          </Dropdown.Item>
-                        </li>
-                      </ul>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                      <Dropdown.Toggle
+                        id="dropdown-toggle-top2"
+                        variant="transparent"
+                        className="btn btn-light-success btn-sm font-weight-bolder dropdown-toggle"
+                      >
+                        Post to SAP
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu className="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                        <ul className="navi navi-hover">
+                          <li className="navi-item">
+                            <Dropdown.Item
+                              // href="#"
+                              className="navi-link"
+                              onClick={() => _fetchToSAP("gr-101")}
+                            >
+                              <span className="navi-text">GR 101</span>
+                            </Dropdown.Item>
+                          </li>
+                          <li className="navi-item">
+                            <Dropdown.Item
+                              // href="#"
+                              className="navi-link"
+                              onClick={() => _fetchToSAP("gr-103")}
+                            >
+                              <span className="navi-text">GR 103</span>
+                            </Dropdown.Item>
+                          </li>
+                          <li className="navi-item">
+                            <Dropdown.Item
+                              // href="#"
+                              className="navi-link"
+                              onClick={() => _fetchToSAP("gr-105")}
+                            >
+                              <span className="navi-text">GR 105</span>
+                            </Dropdown.Item>
+                          </li>
+                          <li className="navi-item">
+                            <Dropdown.Item
+                              // href="#"
+                              className="navi-link"
+                              onClick={() => _fetchToSAP("sa")}
+                            >
+                              <span className="navi-text">SA</span>
+                            </Dropdown.Item>
+                          </li>
+                        </ul>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )}
                   {(taskNews?.file_upload || taskNews?.file) && (
                     <Dropdown
                       className="dropdown-inline mr-2"

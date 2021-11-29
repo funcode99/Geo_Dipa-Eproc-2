@@ -12,6 +12,7 @@ import { Layout } from "../_metronic/layout";
 import BasePage from "./BasePage";
 import { Logout, AuthPage } from "./modules/Auth";
 import ErrorsPage from "./modules/ErrorsExamples/ErrorsPage";
+import VerificationQrCodeDM from "./modules/VerificationQrCode/VerificationQrCodeDM";
 
 const UserNewAccountHomePage = lazy(() =>
   import("./modules/UserCreate/CreateNewAccountHome")
@@ -36,6 +37,7 @@ export function Routes() {
     <Switch>
       <Route path="/create-account" component={UserNewAccountHomePage} />
       <Route path="/qrcode" component={VerificationQrCode} />
+      <Route path="/qrcode-dm" component={VerificationQrCodeDM} />
       <Route path="/update-do-status" component={DeliveryOrderStatusPg} />
       {!isAuthorized ? (
         /*Render auth page when user at `/auth` and not authorized.*/

@@ -30,10 +30,16 @@ const TerminPaper = () => {
     authStatus,
     func,
     loadings,
+    forceTabActive,
   } = React.useContext(TerminPageContext);
   const stepperProg = React.useMemo(() => states.termin.stepper, [states]);
   const classes = useStyles();
   const [tabActive, setTabActive] = React.useState(0);
+  const [firstTime, setfirstTime] = React.useState(0);
+  const [tempProps, setTempProps] = React.useState({
+    task_id: "",
+    tab: 0,
+  });
   const isClient = authStatus === "client";
 
   const checkDataBarang = () => {
@@ -49,9 +55,13 @@ const TerminPaper = () => {
           el.id === "form-sa-gr" ? { ...el, display: "none" } : { ...el }
         )
     : isClient
-    ? TERMIN_TAB_LIST.filter((item) => item.id !== "delivery-order")
-    : TERMIN_TAB_LIST.filter((item) => item.id !== "delivery-order").map((el) =>
-        el.id === "form-sa-gr" ? { ...el, display: "none" } : { ...el }
+    ? TERMIN_TAB_LIST.map((el) =>
+        el.id === "delivery-order" ? { ...el, display: "none" } : { ...el }
+      )
+    : TERMIN_TAB_LIST.map((el) =>
+        el.id === "form-sa-gr" || el.id === "delivery-order"
+          ? { ...el, display: "none" }
+          : { ...el }
       );
   const getTask = React.useCallback(() => {
     const task = dataContractById?.tasks?.find((item) => item.id === task_id);
@@ -60,9 +70,9 @@ const TerminPaper = () => {
   }, [dataContractById, task_id]);
   function handleChangeTab(e, newTabActive) {
     const lastTabIndex = tabUsed.length - 1;
-    // let thisTask = getTask(task_id);
     let thisTask = states?.termin?.summary;
-
+    // let thisTask = getTask(task_id);
+    console.log(`states newTabActive`, newTabActive);
     if (newTabActive > 0 && thisTask?.approve_status?.name !== "APPROVED") {
       MODAL.showSnackbar("Mohon Approve termin ini terlebih dahulu", "warning");
       // } else if (newTabActive === lastTabIndex) {
@@ -81,9 +91,31 @@ const TerminPaper = () => {
     // }
     else {
       setTabActive(newTabActive);
+      if (firstTime === 0) {
+        setfirstTime(1);
+        setTempProps({
+          task_id,
+          tab: forceTabActive,
+        });
+      }
     }
   }
-  console.log(`states`, states.termin.summary);
+
+  React.useEffect(() => {
+    if (tempProps.task_id != task_id || tempProps.tab != forceTabActive) {
+      setfirstTime(0);
+    }
+    if (firstTime === 1) return;
+    if (!!forceTabActive) {
+      handleChangeTab(null, forceTabActive - 1);
+    }
+  }, [states, forceTabActive, firstTime, task_id]);
+
+  // React.useEffect(() => {
+  //   if (firstTime === 1) setfirstTime(0);
+  // }, [states]);
+
+  console.log(`states`, states.termin.summary, tabActive);
   return (
     <Container>
       <StyledSubheader
@@ -125,7 +157,11 @@ const TerminPaper = () => {
           {/* {tabActive === 0 && <SummaryTermin />} */}
           {tabActive === 0 && <Summary />}
           {tabActive === 0 && <Documents />}
-          {isItemExists && tabActive === 1 && <DeliveryOrder />}
+          {tabActive === 1 && <DeliveryOrder />}
+          {tabActive === 2 && <BeritaAcara />}
+          {tabActive === 3 && <FormSAGR isItemExists={isItemExists} />}
+          {tabActive === 4 && <SAGRPage />}
+          {/* {isItemExists && tabActive === 1 && <DeliveryOrder />}
           {!isItemExists && tabActive === 1 && (
             <BeritaAcara handleChangeTab={() => handleChangeTab(null, 2)} />
           )}
@@ -139,7 +175,7 @@ const TerminPaper = () => {
             <FormSAGR isItemExists={isItemExists} />
           )}
           {!isItemExists && tabActive === 3 && <SAGRPage />}
-          {isItemExists && tabActive === 4 && <SAGRPage />}
+          {isItemExists && tabActive === 4 && <SAGRPage />} */}
         </Container>
       </Paper>
     </Container>

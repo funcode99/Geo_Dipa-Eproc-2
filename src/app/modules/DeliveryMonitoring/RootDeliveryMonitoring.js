@@ -31,9 +31,18 @@ function RootDeliveryMonitoring(props) {
         path="/client/delivery-monitoring/contract/task/:task_id"
         component={TerminPage}
       />
+      <Route
+        path="/client/delivery-monitoring/contract/task/:task_id/:tab"
+        component={TerminPage}
+      />
 
       <Route
         path="/client/delivery-monitoring/contract/:contract_id"
+        component={ContractDetailPage}
+        exact={true}
+      />
+      <Route
+        path="/client/delivery-monitoring/contract/:contract_id/:tab"
         component={ContractDetailPage}
         exact={true}
       />

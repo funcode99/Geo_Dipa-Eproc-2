@@ -14,13 +14,16 @@ const navListSA = [
 
 const SAGRPage = () => {
   const [navActive, setNavActive] = React.useState(navListSA[0].id);
-  const { func, task_id, loadings } = React.useContext(TerminPageContext);
+  const { func, task_id, loadings, authStatus } = React.useContext(
+    TerminPageContext
+  );
   const [content, setContent] = React.useState({
     task_sa: null,
     task_gr: null,
     contract: null,
   });
   const loading = loadings[KEYS_TERMIN.f_sa_gr];
+  const isClient = authStatus === "client";
 
   const handleRefresh = () => {
     func.handleApi({
@@ -49,10 +52,14 @@ const SAGRPage = () => {
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
           />
           {navActive === "link-sa" && (
-            <ServiceAcceptance data={content} loading={loading} />
+            <ServiceAcceptance
+              data={content}
+              isClient={isClient}
+              loading={loading}
+            />
           )}
           {navActive === "link-gr" && (
-            <GoodReceipt data={content} loading={loading} />
+            <GoodReceipt data={content} isClient={isClient} loading={loading} />
           )}
         </CardBody>
       </Card>

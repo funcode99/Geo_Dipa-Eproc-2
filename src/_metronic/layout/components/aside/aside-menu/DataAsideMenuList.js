@@ -6,30 +6,35 @@ export const DataAsideMenuListClient = [
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       {
-        rootPath: "/client/delivery-monitoring",
+        rootPath: "/client/delivery-monitoring/dashboard",
+        title: "MENU.DASHBOARD",
+        subMenu: null,
+      },
+      {
+        rootPath: "/client/delivery-monitoring/contract",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },
       {
-        rootPath: "/client/delivery-monitoring-1/error-v",
+        rootPath: "/client/delivery-monitoring/gr",
         title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
-        subMenu: [
-          {
-            rootPath: "/client/delivery-monitoring-1/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
       {
-        rootPath: "/client/delivery-monitoring-2/error-v",
+        rootPath: "/client/delivery-monitoring/sa",
         title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
-        subMenu: [
-          {
-            rootPath: "/client/delivery-monitoring-2/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
+      // {
+      //   rootPath: "/client/delivery-monitoring-2/error-v",
+      //   title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
+      //   subMenu: [
+      //     {
+      //       rootPath: "/client/delivery-monitoring-2/error-v/1",
+      //       title: "TITLE.TEST",
+      //     },
+      //   ],
+      // },
     ],
   },
   {
@@ -162,7 +167,7 @@ export const DataAsideMenuListVendor = [
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       {
-        rootPath: "/vendor/delivery-monitoring",
+        rootPath: "/vendor/delivery-monitoring/contract",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },
@@ -171,8 +176,8 @@ export const DataAsideMenuListVendor = [
         title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
         subMenu: [
           {
-            rootPath: "/vendor/delivery-monitoring-1/error-v/1",
-            title: "TITLE.TEST",
+            rootPath: "/vendor/delivery-monitoring/gr",
+            title: "TITLE.LIST_GR",
           },
         ],
       },

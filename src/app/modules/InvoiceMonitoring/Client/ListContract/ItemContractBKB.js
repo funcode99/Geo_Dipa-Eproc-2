@@ -1645,8 +1645,10 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
                 <div className="row p-3">
-                  {bkbData?.desc.split(";").map((row) => {
-                    return <span className="col-sm-12 p-0">{row}</span>;
+                  {bkbData?.desc?.split(";").map((row) => {
+                    return (
+                      <span className="col-sm-12 p-0">{row}</span>
+                    )
                   })}
                 </div>
               </div>

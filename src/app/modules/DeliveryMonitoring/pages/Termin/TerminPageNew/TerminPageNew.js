@@ -33,6 +33,13 @@ export class TerminPageNew extends PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log(`thispprops`, this.props, prevProps);
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.handleRefresh();
+    }
+  }
+
   handleRefresh = () => {
     this.handleApiCenter({ key: KEYS_TERMIN.f_termin });
   };
@@ -116,9 +123,9 @@ export class TerminPageNew extends PureComponent {
   };
 
   render() {
-    // console.log(`this.props`, this.props, this.state);
+    console.log(`this.props`, this.props, this.state);
     const { history, map_state, match } = this.props;
-    const { task_id } = match.params;
+    const { task_id, tab } = match.params;
 
     return (
       <TerminPageContext.Provider
@@ -127,6 +134,7 @@ export class TerminPageNew extends PureComponent {
           history,
           match,
           task_id,
+          forceTabActive: tab || null,
 
           // task_id: "136dee5a-8670-41e0-a855-c9f346949f06",
           // task_id: "28a08954-17a4-43d4-a710-7d8f17b3de9e",
@@ -138,6 +146,7 @@ export class TerminPageNew extends PureComponent {
           states: this.state,
         }}
       >
+        {/* {map_state.loadings[KEYS_TERMIN.f_termin] ? <div /> : <TerminPaper />} */}
         <TerminPaper />
       </TerminPageContext.Provider>
     );

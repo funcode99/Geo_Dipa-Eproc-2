@@ -13,6 +13,7 @@ import {
   ContractDetailPage,
   TerminPage,
   TerminPageNew,
+  GRPage
 } from "../pages";
 
 function RootVendorDelivery(props) {
@@ -29,6 +30,10 @@ function RootVendorDelivery(props) {
       />
 
       <Route
+        path="/vendor/delivery-monitoring/contract/task/:task_id/:tab"
+        component={TerminPageNew}
+      />
+      <Route
         path="/vendor/delivery-monitoring/contract/task/:task_id"
         component={TerminPageNew}
       />
@@ -38,6 +43,11 @@ function RootVendorDelivery(props) {
       /> */}
 
       <Route
+        path="/vendor/delivery-monitoring/contract/:contract_id/:tab"
+        component={ContractDetailPage}
+        exact={true}
+      />
+      <Route
         path="/vendor/delivery-monitoring/contract/:contract_id"
         component={ContractDetailPage}
         exact={true}
@@ -46,6 +56,11 @@ function RootVendorDelivery(props) {
       <Route
         path="/vendor/delivery-monitoring/contract"
         component={ContractsPage}
+      />
+
+      <Route
+        path="/vendor/delivery-monitoring/gr"
+        component={GRPage}
       />
     </Switch>
   );
