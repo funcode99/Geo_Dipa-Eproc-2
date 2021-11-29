@@ -655,14 +655,7 @@ function ContractInvoicePage(props) {
                         addtionalPayments.push(item);
                         setAddtionalPayment(addtionalPayments);
                       }}
-                      disabled={
-                        isSubmit ||
-                        invoiceData?.state === "REJECTED" ||
-                        invoiceData?.state === "APPROVED" ||
-                        invoiceData === null ||
-                        !props.billingStaffStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                      }
+                      disabled
                     >
                       <FormattedMessage id="TITLE.ADD" />
                     </button>
@@ -685,39 +678,32 @@ function ContractInvoicePage(props) {
                             setAddtionalPayment(addtionalPayments);
                           }}
                           required={true}
-                          disabled={
-                            isSubmit ||
-                            invoiceData?.state === "REJECTED" ||
-                            invoiceData?.state === "APPROVED" ||
-                            invoiceData === null ||
-                            !props.billingStaffStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                          }
+                          disabled
                         />
                       </td>
                       <td>
                         <NumberFormat
-                          id={
-                            isSubmit ||
-                            invoiceData?.state === "REJECTED" ||
-                            invoiceData?.state === "APPROVED" ||
-                            invoiceData === null ||
-                            !props.billingStaffStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                              ? "NumberFormat-text"
-                              : "NumberFormat-input"
-                          }
+                            id="NumberFormat-text"
+                          // id={
+                          //   isSubmit ||
+                          //   invoiceData?.state === "REJECTED" ||
+                          //   invoiceData?.state === "APPROVED" ||
+                          //   invoiceData === null ||
+                          //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          //     ? "NumberFormat-text"
+                          //     : "NumberFormat-input"
+                          // }
                           value={item.value}
-                          displayType={
-                            isSubmit ||
-                            invoiceData?.state === "REJECTED" ||
-                            invoiceData?.state === "APPROVED" ||
-                            invoiceData === null ||
-                            !props.billingStaffStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                              ? "text"
-                              : "input"
-                          }
+                          displayType = "text"
+                          // displayType={
+                          //   isSubmit ||
+                          //   invoiceData?.state === "REJECTED" ||
+                          //   invoiceData?.state === "APPROVED" ||
+                          //   invoiceData === null ||
+                          //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          //     ? "text"
+                          //     : "input"
+                          // }
                           className="form-control"
                           thousandSeparator={"."}
                           decimalSeparator={","}
@@ -731,40 +717,39 @@ function ContractInvoicePage(props) {
                               : 0;
                             setAddtionalPayment(addtionalPayments);
                           }}
-                          onClick={(e) => {
-                            if (
-                              !(
-                                isSubmit ||
-                                invoiceData?.state === "REJECTED" ||
-                                invoiceData?.state === "APPROVED" ||
-                                invoiceData === null ||
-                                !props.billingStaffStatus ||
-                                progressTermin?.ident_name !==
-                                  "BILLING_SOFTCOPY"
-                              )
-                            )
-                              e.target.select();
-                          }}
+                          // onClick={(e) => {
+                          //   if (
+                          //     !(
+                          //       isSubmit ||
+                          //       invoiceData?.state === "REJECTED" ||
+                          //       invoiceData?.state === "APPROVED" ||
+                          //       invoiceData === null ||
+                          //       progressTermin?.ident_name !==
+                          //         "BILLING_SOFTCOPY"
+                          //     )
+                          //   )
+                          //     e.target.select();
+                          // }}
                         />
                       </td>
                       <td>
                         <button
                           type="button"
                           className="btn btn-sm btn-danger"
-                          onClick={() => {
-                            let addtionalPayments = cloneDeep(addtionalPayment);
-                            addtionalPayments.splice(index, 1);
-                            console.log("addtionalPayments", addtionalPayments);
-                            setAddtionalPayment(addtionalPayments);
-                          }}
-                          disabled={
-                            isSubmit ||
-                            invoiceData?.state === "REJECTED" ||
-                            invoiceData?.state === "APPROVED" ||
-                            invoiceData === null ||
-                            !props.billingStaffStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                          }
+                          disabled
+                          // onClick={() => {
+                          //   let addtionalPayments = cloneDeep(addtionalPayment);
+                          //   addtionalPayments.splice(index, 1);
+                          //   console.log("addtionalPayments", addtionalPayments);
+                          //   setAddtionalPayment(addtionalPayments);
+                          // }}
+                          // disabled={
+                          //   isSubmit ||
+                          //   invoiceData?.state === "REJECTED" ||
+                          //   invoiceData?.state === "APPROVED" ||
+                          //   invoiceData === null ||
+                          //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          // }
                         >
                           <FormattedMessage id="BUTTON.DELETE" />
                         </button>
@@ -800,14 +785,15 @@ function ContractInvoicePage(props) {
             </button>
             <button
                 className="btn btn-primary mx-1"
-              disabled={
-                isSubmit ||
-                invoiceData?.state === "REJECTED" ||
-                invoiceData?.state === "APPROVED" ||
-                invoiceData === null ||
-                !props.billingStaffStatus ||
-                progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-              }
+                disabled
+              // disabled={
+              //   isSubmit ||
+              //   invoiceData?.state === "REJECTED" ||
+              //   invoiceData?.state === "APPROVED" ||
+              //   invoiceData === null ||
+              //   !props.billingStaffStatus ||
+              //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              // }
               type="submit"
             >
               <span>

@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogActions,
   TableRow,
-  TableCell,
+  TableCell, Slide,
 } from "@material-ui/core";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
@@ -38,6 +38,18 @@ import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import { getInvoicePeriods } from "../../../../Master/service/MasterCrud";
 import { SOCKET } from "../../../../../../redux/BaseHost";
+import NumberFormat from "react-number-format";
+import {cloneDeep} from "lodash";
+import {makeStyles} from "@material-ui/core/styles";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+const useStyles = makeStyles((theme) => ({
+  MuiDialogActionsPosistion: {
+    justifyContent: "space-between",
+  },
+}));
 
 function ContractInvoicePage(props) {
   const [loading, setLoading] = useState(false);
@@ -54,6 +66,20 @@ function ContractInvoicePage(props) {
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
+
+  const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
+  const [addtionalPayment, setAddtionalPayment] = useState([]);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const classes_ = useStyles();
+
+  const totalAddtionalPayment = () => {
+    if (addtionalPayment && addtionalPayment.length === 0) return 0;
+    var total = 0;
+    addtionalPayment.forEach((element) => {
+      total += element.value;
+    });
+    return total;
+  };
 
   const [Toast, setToast] = useToast();
 
@@ -192,6 +218,7 @@ function ContractInvoicePage(props) {
       for (var key in values) {
         data.append(key, values[key]);
       }
+      data.append('invoice_additional_value_data', JSON.stringify(addtionalPayment))
       if (invoiceUpdate) {
         updateInvoice(invoiceId, data)
           .then((response) => {
@@ -355,6 +382,11 @@ function ContractInvoicePage(props) {
           setInvoiceStatus(false);
         } else {
           gethistoryInvoiceData(response["data"]["data"]["id"]);
+          setAddtionalPayment(
+              response.data?.data?.invoice_additional_value_data
+                  ? response.data?.data?.invoice_additional_value_data
+                  : []
+          );
           setInvoiceId(response["data"]["data"]["id"]);
           formik.setFieldValue(
             "draft_no",
@@ -681,6 +713,206 @@ function ContractInvoicePage(props) {
           </button>
         </DialogActions>
       </Dialog>
+      <Dialog
+          open={modalAddtionalPayment}
+          TransitionComponent={Transition}
+          keepMounted
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+          maxWidth="md"
+          fullWidth={true}
+      >
+        <form
+            autoComplete="off"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setModalAddtionalPayment(false);
+              setInvoiceData({
+                ...invoiceData,
+                invoice_additional_value_data: cloneDeep(addtionalPayment),
+              });
+            }}
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
+          </DialogTitle>
+          <DialogContent>
+            <table>
+              <thead>
+              <tr>
+                <th style={{ width: "50%" }}>
+                  <FormattedMessage id="TITLE.DESCRIPTION" />
+                </th>
+                <th style={{ width: "40%" }}>
+                  <FormattedMessage id="TITLE.VALUE" />
+                </th>
+                <th style={{ width: "10%" }}>
+                  <button
+                      type="button"
+                      className="btn btn-sm btn-primary"
+                      onClick={() => {
+                        let addtionalPayments = cloneDeep(addtionalPayment);
+                        let item = {
+                          description: "",
+                          value: 0,
+                        };
+                        addtionalPayments.push(item);
+                        setAddtionalPayment(addtionalPayments);
+                      }}
+                      disabled={
+                        loading ||
+                        invoiceStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        !invoicePeriodsStatus
+                      }
+                  >
+                    <FormattedMessage id="TITLE.ADD" />
+                  </button>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              {addtionalPayment.map((item, index) => {
+                return (
+                    <tr key={index.toString()}>
+                      <td>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={item.description}
+                            onChange={(e) => {
+                              let addtionalPayments = cloneDeep(addtionalPayment);
+                              addtionalPayments[index].description =
+                                  e.target.value;
+                              setAddtionalPayment(addtionalPayments);
+                            }}
+                            disabled={
+                              loading ||
+                              invoiceStatus ||
+                              progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                              !invoicePeriodsStatus
+                            }
+                            required={true}
+                        />
+                      </td>
+                      <td>
+                        <NumberFormat
+                            id={
+                              loading ||
+                              invoiceStatus ||
+                              progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                              !invoicePeriodsStatus
+                                  ? "NumberFormat-text"
+                                  : "NumberFormat-input"
+                            }
+                            value={item.value}
+                            displayType={
+                              loading ||
+                              invoiceStatus ||
+                              progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                              !invoicePeriodsStatus
+                                  ? "text"
+                                  : "input"
+                            }
+                            className="form-control"
+                            thousandSeparator={"."}
+                            decimalSeparator={","}
+                            allowEmptyFormatting={true}
+                            allowLeadingZeros={true}
+                            prefix={"Rp "}
+                            onValueChange={(e) => {
+                              let addtionalPayments = cloneDeep(addtionalPayment);
+                              addtionalPayments[index].value = e.floatValue
+                                  ? e.floatValue
+                                  : 0;
+                              setAddtionalPayment(addtionalPayments);
+                            }}
+                            onClick={(e) => {
+                              if (
+                                  !(
+                                      loading ||
+                                      invoiceStatus ||
+                                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                                      !invoicePeriodsStatus
+                                  )
+                              )
+                                e.target.select();
+                            }}
+                        />
+                      </td>
+                      <td>
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              let addtionalPayments = cloneDeep(addtionalPayment);
+                              addtionalPayments.splice(index, 1);
+                              console.log("addtionalPayments", addtionalPayments);
+                              setAddtionalPayment(addtionalPayments);
+                            }}
+                            disabled={
+                              loading ||
+                              invoiceStatus ||
+                              progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                              !invoicePeriodsStatus
+                            }
+                        >
+                          <FormattedMessage id="BUTTON.DELETE" />
+                        </button>
+                      </td>
+                    </tr>
+                );
+              })}
+              </tbody>
+            </table>
+          </DialogContent>
+          <DialogActions className={classes_.MuiDialogActionsPosistion}>
+            <div>
+              <FormattedMessage id="TITLE.TOTAL_PRICE_IS" />:{" "}
+              {rupiah(totalAddtionalPayment())}
+            </div>
+            <div>
+              <button
+                  className="btn btn-secondary mx-1"
+                  onClick={() => {
+                    setModalAddtionalPayment(false);
+                    setAddtionalPayment(
+                        cloneDeep(
+                            invoiceData?.invoice_additional_value_data
+                                ? invoiceData?.invoice_additional_value_data
+                                : []
+                        )
+                    );
+                  }}
+                  disabled={loading}
+                  type="button"
+              >
+                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+              </button>
+              <button
+                  className="btn btn-primary mx-1"
+                  type="submit"
+                  disabled={
+                    loading ||
+                    invoiceStatus ||
+                    progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                    !invoicePeriodsStatus
+                  }
+              >
+              <span>
+                <FormattedMessage id="TITLE.SAVE" />
+              </span>
+                {loading && (
+                    <span
+                        className="spinner-border spinner-border-sm ml-1"
+                        aria-hidden="true"
+                    ></span>
+                )}
+              </button>
+            </div>
+          </DialogActions>
+        </form>
+      </Dialog>
       <Card>
         <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
           <CardBody>
@@ -920,6 +1152,127 @@ function ContractInvoicePage(props) {
                       defaultValue={contractData["termin_value_new"]}
                       disabled
                     />
+                  </div>
+                </div>
+
+                <div className="form-group row">
+                  <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
+                  </label>
+                  <div className="col-sm-8">
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-primary w-100"
+                        onClick={() => {
+                          setModalAddtionalPayment(true);
+                        }}
+                    >
+                      <FormattedMessage id="TITLE.SELECT" />
+                    </button>
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.TOTAL_AMOUNT" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="priceContract"
+                        value={rupiah(
+                            contractData["termin_value"] + totalAddtionalPayment()
+                        )}
+                        onChange={() => {}}
+                        disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label
+                      htmlFor="priceTaxInvoice"
+                      className="col-sm-4 col-form-label"
+                  >
+                    <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />
+                  </label>
+                  <div className="col-sm-8">
+                    <NumberFormat
+                        id={
+                          isSubmit ||
+                          invoiceData?.state === "REJECTED" ||
+                          invoiceData?.state === "APPROVED" ||
+                          invoiceData === null ||
+                          !props.billingStaffStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                              ? "NumberFormat-text"
+                              : "NumberFormat-input"
+                        }
+                        value={invoiceData?.penalty}
+                        displayType={
+                          isSubmit ||
+                          invoiceData?.state === "REJECTED" ||
+                          invoiceData?.state === "APPROVED" ||
+                          invoiceData === null ||
+                          !props.billingStaffStatus ||
+                          progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                              ? "text"
+                              : "input"
+                        }
+                        className="form-control"
+                        thousandSeparator={"."}
+                        decimalSeparator={","}
+                        allowEmptyFormatting={true}
+                        allowLeadingZeros={true}
+                        prefix={"Rp "}
+                        onValueChange={(e) => {
+                          setInvoiceData({
+                            ...invoiceData,
+                            penalty: e.floatValue,
+                          });
+                        }}
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="note" className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.LATE_DESC" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="priceStep1"
+                        defaultValue={invoiceData?.task?.remarks}
+                        disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label htmlFor="note" className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.FINE_DESC" />
+                  </label>
+                  <div className="col-sm-8">
+                  <textarea
+                      rows="4"
+                      cols=""
+                      className="form-control"
+                      id="note"
+                      disabled={
+                        isSubmit ||
+                        invoiceData?.state === "REJECTED" ||
+                        invoiceData?.state === "APPROVED" ||
+                        invoiceData === null ||
+                        !props.billingStaffStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                      }
+                      onChange={(e) => {
+                        setInvoiceData({
+                          ...invoiceData,
+                          penalty_remark: e.target.value,
+                        });
+                      }}
+                      value={invoiceData?.penalty_remark}
+                  ></textarea>
                   </div>
                 </div>
                 {/* <div className="form-group row">

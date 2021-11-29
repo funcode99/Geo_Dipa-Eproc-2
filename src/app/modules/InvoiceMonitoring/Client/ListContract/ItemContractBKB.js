@@ -395,7 +395,6 @@ function ItemContractBKB(props) {
         contract_id: contract,
         sub_total: bkbData?.sub_total,
         authority: terminAuthority,
-        doc_park_ap_no: bkbData?.doc_park_ap_no,
       };
       rejectParkAP(data)
         .then((result) => {
@@ -433,7 +432,6 @@ function ItemContractBKB(props) {
           : bkbData.doc_park_byr_submit_at,
         term_id: termin,
         contract_id: contract,
-        doc_park_byr_no: bkbData?.doc_park_byr_no,
       };
       rejectParkBYR(data)
         .then((result) => {
