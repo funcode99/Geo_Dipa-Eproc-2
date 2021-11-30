@@ -47,36 +47,39 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
     });
   };
   const disabled = [""];
-  const _handleSubmit = ({ begdate, enddate, ...data }) => {
-    const params = {
-      ...data,
-      beg_date: begdate,
-      end_date: enddate,
-      services: Object.values(arrService).map((item) => ({
-        service_id: item.service_id,
-        distribution_type: item.dist_type.value,
-        gl_account: item.gl_account.code,
-        bus_area: item.bus_area,
-        costcenter: item.cost_center.code,
-        // wbs_elem: item.wbs.label,
-        // value: item.value,
-        wbs: item.wbsdata,
-      })),
-    };
-    console.log(`data`, params, data, dataSA);
-    fetch_api_sg({
-      key: keys.upload_sa,
-      type: "post",
-      url: `delivery/task-sa/${task_id}`,
-      alertAppear: "both",
-      params,
-      onSuccess: (res) => {
-        console.log("post sa", res);
-        onRefresh();
-        // setlistWBS(res.data);
-      },
-    });
-  };
+  const _handleSubmit = React.useCallback(
+    ({ begdate, enddate, ...data }) => {
+      const params = {
+        ...data,
+        beg_date: begdate,
+        end_date: enddate,
+        services: Object.values(arrService).map((item) => ({
+          service_id: item.service_id,
+          distribution_type: item.dist_type.value,
+          gl_account: item.gl_account.value,
+          bus_area: item.bus_area,
+          costcenter: item.cost_center.value,
+          // wbs_elem: item.wbs.label,
+          // value: item.value,
+          wbs: item.wbsdata,
+        })),
+      };
+      console.log(`data`, params, data, arrService);
+      fetch_api_sg({
+        key: keys.upload_sa,
+        type: "post",
+        url: `delivery/task-sa/${task_id}`,
+        alertAppear: "both",
+        params,
+        onSuccess: (res) => {
+          console.log("post sa", res);
+          onRefresh();
+          // setlistWBS(res.data);
+        },
+      });
+    },
+    [arrService]
+  );
   const fetchOption = () => {
     fetch_api_sg({
       key: "option-gl",
