@@ -38,6 +38,7 @@ export { AdvanceTablesWidget9 } from "./advance-tables/AdvanceTablesWidget9";
 export { TilesWidget1 } from "./tiles/TilesWidget1";
 export { TilesWidget3 } from "./tiles/TilesWidget3";
 export { TilesWidget10 } from "./tiles/TilesWidget10";
+export { TilesWidgetInformation } from "./tiles/TilesWidgetInformation";
 export { TilesWidget11 } from "./tiles/TilesWidget11";
 export { TilesWidget12 } from "./tiles/TilesWidget12";
 export { TilesWidget13 } from "./tiles/TilesWidget13";
