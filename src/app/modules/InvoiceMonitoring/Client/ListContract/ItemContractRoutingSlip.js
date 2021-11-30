@@ -806,7 +806,7 @@ function ItemContractRoutingSlip(props) {
                   {slipData?.spt_date_in && (
                     <tr>
                       <td>9</td>
-                      <td>Done</td>
+                      <td>Finished</td>
                       <td>{slipData?.paid?.spt_creator?.party?.full_name}</td>
                       <td className="text-center">
                         {window
