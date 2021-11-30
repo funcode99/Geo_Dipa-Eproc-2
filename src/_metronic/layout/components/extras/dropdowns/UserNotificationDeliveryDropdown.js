@@ -20,6 +20,7 @@ import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
 import { useHtmlClassService } from "../../../_core/MetronicLayout";
 import PaginationNotif from "./PaginationNotif";
+import { actionTypes } from "../../../../../app/modules/DeliveryMonitoring/_redux/deliveryMonitoringAction";
 
 const perfectScrollbarOptions = {
   wheelSpeed: 2,
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const key = "notif-dm";
+const key_contract = "get-contract-by-id";
 const contract_pages = {
   checkIsUploadedDocumentPO: 1,
   checkIsUploadedContractGuaranteeDocument: 7,
@@ -53,7 +55,7 @@ const termin_pages = {
   checkIsApprovedUploadedSignedBAPP: 3,
 };
 
-function UserNotificationDeliveryDropdown(props) {
+function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
   const bgImage = toAbsoluteUrl("/media/misc/bg-1.jpg");
   const classes = useStyles();
   const uiService = useHtmlClassService();
@@ -124,6 +126,23 @@ function UserNotificationDeliveryDropdown(props) {
       );
     },
     [dispatch, fetch_api_sg]
+  );
+
+  const getContractById = React.useCallback(
+    (contractId) => {
+      dispatch(
+        fetch_api_sg({
+          keys: key_contract,
+          type: "get",
+          url: `/delivery/contract/${contractId}`,
+          onSuccess: (res) => {
+            console.log(`res`, res.data);
+            saveContractById(res?.data);
+          },
+        })
+      );
+    },
+    [saveContractById, fetch_api_sg]
   );
 
   React.useEffect(() => {
@@ -217,16 +236,15 @@ function UserNotificationDeliveryDropdown(props) {
                       )?.[0];
                       const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
                       const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
-                      {
-                        /* console.log("notif", item, isContractPage, isTerminPage); */
-                      }
+                      console.log("notif", item, isContractPage, isTerminPage);
                       return (
                         <Link
                           to={!!isContractPage ? linkContract : linkTermin}
                           className="navi-item"
                           key={index.toString()}
                           onClick={() => {
-                            fetchDetailNotif({ id: item?._id });
+                            // fetchDetailNotif({ id: item?._id });
+                            getContractById(item?.data?.contract_id);
                             // tabInvoice.tab = item.menu_tab || 0;
                             // tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                             // props.set_data_tab_invaoice(tabInvoice);
@@ -276,6 +294,16 @@ function UserNotificationDeliveryDropdown(props) {
   );
 }
 
+const mapDispatch = (dispatch) => ({
+  saveContractById: (payload) => {
+    dispatch({
+      type: actionTypes.SetContractById,
+      payload: payload,
+    });
+  },
+  fetchApiSg: (payload) => dispatch(fetch_api_sg(payload)),
+});
+
 export default injectIntl(
-  connect(null, reducer.actions)(UserNotificationDeliveryDropdown)
+  connect(null, mapDispatch)(UserNotificationDeliveryDropdown)
 );
