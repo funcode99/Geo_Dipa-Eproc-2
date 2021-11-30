@@ -608,5 +608,7 @@
   "TITLE.VALUE": "Nilai",
   "TITLE.CHECK": "Cek",
   "TITLE.ADDTIONAL_PAYMENT": "Pembayaran Tambahan",
-  "TITLE.DATE_PAID": "Tanggal Bayar:"
+  "TITLE.DATE_PAID": "Tanggal Bayar:",
+  "TITLE.VERIFICATION_AND_TAX_DATE": "Tanggal Verifikasi dan Pajak",
+  "TITLE.VERIFICATION_HARDCOPY_DATE": "Tanggal Verifikasi Hardcopy"
 }
