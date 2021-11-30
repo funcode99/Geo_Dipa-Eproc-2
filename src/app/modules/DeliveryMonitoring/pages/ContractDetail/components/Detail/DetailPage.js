@@ -21,6 +21,7 @@ import ModalApproveTermin from "./ModalApproveTermin";
 import { MODAL } from "../../../../../../../service/modalSession/ModalService";
 import StatusRemarks from "../../../../../../components/StatusRemarks";
 import { Button } from "react-bootstrap";
+import apiHelper from "../../../../../../service/helper/apiHelper";
 
 const tableHeaderTerminNew = [
   {
@@ -121,6 +122,7 @@ const DetailPage = ({
   const deleteRef = React.useRef();
   const approveRef = React.useRef();
   const rejectRef = React.useRef();
+  const revisionRef = React.useRef();
   const history = useHistory();
 
   const addCheckedField = (data, type) => {
@@ -258,6 +260,9 @@ const DetailPage = ({
           // MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
           rejectRef.current.open(data);
           break;
+        case "revision":
+          revisionRef.current.open(data);
+          break;
         default:
           break;
       }
@@ -273,35 +278,40 @@ const DetailPage = ({
       arrData = data.map((item, index) => {
         let optionsAction = [
           {
-            label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
-            icon: "fas fa-edit text-primary",
-            disabled:
-              item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
-                ? true
-                : false,
-            type: "update",
-          },
-          {
-            label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
-            icon: "fas fa-trash text-danger",
-            type: "delete",
+            label: "TITLE.REVISION",
+            icon: "fas fa-file-prescription text-warning",
+            type: "revision",
           },
         ];
         // console.log(`item`, item);
 
         if (item?.approve_status?.name !== "APPROVED") {
-          optionsAction.reverse();
-          optionsAction.push({
-            label: "TITLE.REJECT",
-            icon: "fas fa-times-circle text-warning",
-            type: "reject",
-          });
-          optionsAction.push({
-            label: "TITLE.APPROVE",
-            icon: "fas fa-check-circle text-success",
-            type: "approve",
-          });
-          optionsAction.reverse();
+          optionsAction = [
+            {
+              label: "TITLE.APPROVE",
+              icon: "fas fa-check-circle text-success",
+              type: "approve",
+            },
+            {
+              label: "TITLE.REJECT",
+              icon: "fas fa-times-circle text-warning",
+              type: "reject",
+            },
+            {
+              label: "CONTRACT_DETAIL.TABLE_ACTION.EDIT",
+              icon: "fas fa-edit text-primary",
+              disabled:
+                item.task_status_id === "89a4fe6c-9ce2-4595-b8f0-914d17c91bb4"
+                  ? true
+                  : false,
+              type: "update",
+            },
+            {
+              label: "CONTRACT_DETAIL.TABLE_ACTION.DELETE",
+              icon: "fas fa-trash text-danger",
+              type: "delete",
+            },
+          ];
         }
 
         console.log(`item`, item);
@@ -511,6 +521,24 @@ const DetailPage = ({
           },
         });
         break;
+      case "revision":
+        const paramsUsed = {
+          approve_status_id: apiHelper.revisionId,
+          reject_text: params?.remarks_fill,
+        };
+        console.log(`coba`, paramsUsed);
+        fetch_api_sg({
+          key: keys.revision,
+          type: "post",
+          alertAppear: "both",
+          url: `delivery/task/${params?.id}/change-status`,
+          params: paramsUsed,
+          onSuccess: (res) => {
+            getContractById(contractId);
+            revisionRef.current.close();
+          },
+        });
+        break;
 
       default:
         break;
@@ -539,6 +567,14 @@ const DetailPage = ({
         loading={loadings.reject}
         onSubmit={(e) => handleApi("reject", e)}
         isReject={true}
+      />
+      <ModalApproveTermin
+        ref={revisionRef}
+        loading={loadings.revision}
+        onSubmit={(e) => handleApi("revision", e)}
+        isReject={true}
+        title={"Revisi Termin"}
+        checkboxLabel={"Need revision on this termin"}
       />
 
       <ModalDelete
@@ -574,6 +610,7 @@ const keys = {
   delete: "delete-term",
   approve: "approve-termin",
   reject: "reject-termin",
+  revision: "revision-termin",
 };
 
 const mapState = (state) => {
@@ -589,6 +626,7 @@ const mapState = (state) => {
       delete: getLoading(state, keys.delete),
       approve: getLoading(state, keys.approve),
       reject: getLoading(state, keys.reject),
+      revision: getLoading(state, keys.revision),
     },
   };
 };

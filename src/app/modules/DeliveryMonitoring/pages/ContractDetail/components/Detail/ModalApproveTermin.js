@@ -5,7 +5,7 @@ import { FormattedMessage } from "react-intl";
 import { Form } from "react-bootstrap";
 
 const ModalApproveTermin = React.forwardRef(
-  ({ isReject, loading, onSubmit }, ref) => {
+  ({ isReject, loading, onSubmit, title, checkboxLabel }, ref) => {
     const [checked, setChecked] = React.useState(false);
     const [remarks, setRemarks] = React.useState(false);
     const [dataProps, setDataProps] = React.useState({});
@@ -38,7 +38,7 @@ const ModalApproveTermin = React.forwardRef(
     return (
       <DialogGlobal
         ref={innerRef}
-        title={"Persetujuan Termin"}
+        title={"Persetujuan Termin" || title}
         textYes={
           <FormattedMessage id={isReject ? "TITLE.REJECT" : "TITLE.APPROVE"} />
         }
@@ -79,10 +79,12 @@ const ModalApproveTermin = React.forwardRef(
             />
           }
           label={
-            <FormattedMessage
-              id={isReject ? "TITLE.I_REJECTED" : "TITLE.I_APPROVED"}
-              values={{ termTitle: dataProps?.name }}
-            />
+            checkboxLabel || (
+              <FormattedMessage
+                id={isReject ? "TITLE.I_REJECTED" : "TITLE.I_APPROVED"}
+                values={{ termTitle: dataProps?.name }}
+              />
+            )
           }
           // label={`Dengan ini saya menyetujui termin \"${terminTitle}\" `}
         />
