@@ -175,8 +175,8 @@ const ToDoDM = (props) => {
                         {item.title}
                       </Link>
                       <span className="text-danger font-weight-bold font-size-sm">
-                        {`${item?.data?.contract_no}-${item?.data
-                          ?.contract_name || item?.data?.task_name} || '-`}
+                        {`${item?.data?.contract_no} - ${item?.data
+                          ?.contract_name || item?.data?.task_name}`}
                       </span>
                     </div>
                   </div>
