@@ -1298,7 +1298,8 @@ function ItemContractBKB(props) {
                       bkbData?.doc_park_byr_no &&
                       bkbData?.inv_approved_by &&
                       bkbData?.doc_park_ap_state === "APPROVED" &&
-                      bkbData?.doc_park_byr_state === "PENDING" && (
+                      bkbData?.doc_park_byr_state === "PENDING" && 
+                      statusHardCopyComplate && (
                         <button
                           type="button"
                           className="btn btn-primary btn-sm mx-2"
@@ -1319,7 +1320,8 @@ function ItemContractBKB(props) {
                       bkbData?.doc_park_byr_no &&
                       bkbData?.inv_approved_by &&
                       bkbData?.doc_park_ap_state === "APPROVED" &&
-                      bkbData?.doc_park_byr_state === "PENDING" && (
+                      bkbData?.doc_park_byr_state === "PENDING" && 
+                      statusHardCopyComplate && (
                         <button
                           type="button"
                           className="btn btn-danger btn-sm mx-2"
