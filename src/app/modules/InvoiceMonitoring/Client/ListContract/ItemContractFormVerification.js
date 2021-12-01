@@ -180,33 +180,45 @@ function ItemContractFormVerification(props) {
                       type="text"
                       className="form-control"
                       value={rupiah(contractData?.termin_value)}
-                      onChange={(e) => {}}
+                      onChange={(e) => { }}
                       readOnly
                     />
                   </div>
                 </div>
                 <div className="form-group row mb-1">
                   <label className="col-sm-4 col-form-label">
-                    Tanggal Masuk
+                    <FormattedMessage id="TITLE.VERIFICATION_AND_TAX_DATE" />
                   </label>
                   <div className="col-sm-8">
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue="25 Maret 2020"
+                      defaultValue={contractData?.approved_at_tax
+                        ? window
+                          .moment(
+                            new Date(contractData?.approved_at_tax)
+                          )
+                          .format("DD/MM/YYYY")
+                        : ""}
                       readOnly
                     />
                   </div>
                 </div>
                 <div className="form-group row mb-1">
                   <label className="col-sm-4 col-form-label">
-                    Jatuh Tempo Pembayaran
+                    <FormattedMessage id="TITLE.VERIFICATION_HARDCOPY_DATE" />
                   </label>
                   <div className="col-sm-8">
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue="25 Maret 2020 - 30 Maret 2020"
+                      defaultValue={contractData?.hardcopy_date_out
+                        ? window
+                          .moment(
+                            new Date(contractData?.hardcopy_date_out)
+                          )
+                          .format("DD/MM/YYYY")
+                        : ""}
                       readOnly
                     />
                   </div>

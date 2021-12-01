@@ -77,6 +77,7 @@ function ItemContractPaid(props) {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       var data_new = new FormData();
+      data_new.append('created_by_id', user_id)
       for (var key in values) {
         data_new.append(key, values[key]);
       }

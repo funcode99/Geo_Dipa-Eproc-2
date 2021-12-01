@@ -61,6 +61,7 @@ function Summary({}) {
     authStatus,
     dataTask,
     isRejected,
+    isRevision,
   } = React.useContext(TerminPageContext);
   const taskId = task_id;
   const [navActive, setNavActive] = React.useState(navLists[0].id);
@@ -75,7 +76,7 @@ function Summary({}) {
   const [qtyErrors, setQtyErrors] = React.useState([]);
 
   const isClient = authStatus === "client";
-  const notRejected = !isRejected;
+  const notRevision = !isRevision;
 
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
@@ -756,7 +757,7 @@ function Summary({}) {
                                     size="small"
                                     checked={service.checked}
                                     disabled={
-                                      notRejected
+                                      notRevision
                                         ? true
                                         : service.qty_available === 0
                                         ? true
@@ -792,7 +793,7 @@ function Summary({}) {
                                         }}
                                         max={service.qty_available}
                                         disabled={
-                                          notRejected || !service.checked
+                                          notRevision || !service.checked
                                         }
                                         defaultValue={parseFloat(
                                           service.qty_available
@@ -852,7 +853,7 @@ function Summary({}) {
                                     }
                                     size="small"
                                     checked={service.checked}
-                                    disabled={notRejected}
+                                    disabled={notRevision}
                                   />
                                 </TableCell>
                                 <TableCell className="align-middle">
@@ -884,7 +885,7 @@ function Summary({}) {
                                           ) + parseFloat(service.qty)
                                         ).toFixed(1)}
                                         disabled={
-                                          notRejected || !service.checked
+                                          notRevision || !service.checked
                                         }
                                         defaultValue={parseFloat(
                                           service.qty
@@ -973,7 +974,7 @@ function Summary({}) {
                           variant="body"
                           checked={item.checked}
                           disabled={
-                            notRejected
+                            notRevision
                               ? true
                               : item.qty_available === 0
                               ? true
@@ -1006,7 +1007,7 @@ function Summary({}) {
                               min={0.1}
                               step={0.1}
                               max={item.qty_available}
-                              disabled={notRejected || !item.checked}
+                              disabled={notRevision || !item.checked}
                               defaultValue={parseFloat(
                                 item.qty_available
                               ).toFixed(1)}
@@ -1060,7 +1061,7 @@ function Summary({}) {
                           width={50}
                           variant="body"
                           checked={item.checked}
-                          disabled={notRejected}
+                          disabled={notRevision}
                         />
                       </TableCell>
                       <TableCell className="align-middle">
@@ -1092,7 +1093,7 @@ function Summary({}) {
                                 parseFloat(item.item.qty_available)
                               ).toFixed(1)}
                               // disabled
-                              disabled={notRejected || !item.checked}
+                              disabled={notRevision || !item.checked}
                               defaultValue={parseFloat(item.qty).toFixed(1)}
                               onChange={(e) =>
                                 addSubmitBarang(
@@ -1133,7 +1134,7 @@ function Summary({}) {
             />
           )}
           {/* tidak bisa edit */}
-          {isClient && !notRejected && (
+          {isClient && !notRevision && (
             <div className="mt-4 d-flex justify-content-end w-100">
               <Button
                 variant="contained"

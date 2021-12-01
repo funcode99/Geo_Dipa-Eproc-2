@@ -205,6 +205,7 @@
   "TITLE.UPLOAD": "Upload",
   "TITLE.PREVIEW": "Preview",
   "TITLE.APPROVE": "Approve",
+  "TITLE.REVISION": "Revision",
   "TITLE.REJECT": "Reject",
   "TITLE.MORE": "More",
   "TITLE.FILE": "File",
@@ -610,5 +611,7 @@
   "TITLE.VALUE": "Value",
   "TITLE.CHECK": "Check",
   "TITLE.ADDTIONAL_PAYMENT": "Additional Payment",
-  "TITLE.DATE_PAID": "Date Paid:"
+  "TITLE.DATE_PAID": "Date Paid:",
+  "TITLE.VERIFICATION_AND_TAX_DATE": "Verification and Tax Date",
+  "TITLE.VERIFICATION_HARDCOPY_DATE": "Verification Hardcopy Date"
 }

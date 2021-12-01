@@ -311,7 +311,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
         {tabActive === 5 && <JangkaWaktu />}
         {tabActive === 6 && <Jaminan />}
         {tabActive === 7 && <Denda />}
-        {tabActive === 8 && <ParaPihak2 />}
+        {/* {tabActive === 8 && <ParaPihak2 />} */}
         {/* {tabActive === 8 && <BAST />} */}
       </Paper>
     </React.Fragment>

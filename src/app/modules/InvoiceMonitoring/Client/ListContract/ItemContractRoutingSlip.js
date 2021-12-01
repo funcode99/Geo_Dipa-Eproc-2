@@ -803,6 +803,81 @@ function ItemContractRoutingSlip(props) {
                       <td>SPT Dokumen</td>
                     </tr>
                   )}
+                  {slipData?.spt_date_in && (
+                    <tr>
+                      <td>9</td>
+                      <td>Finished</td>
+                      <td>{slipData?.paid?.spt_creator?.party?.full_name}</td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.spt_date_in))
+                          .format("DD MMM YYYY")}
+                      </td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.spt_date_in))
+                          .format("HH:mm")}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.paid?.created_at
+                          ? window
+                            .moment(new Date(slipData?.paid?.created_at))
+                            .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.paid?.created_at
+                          ? window
+                            .moment(new Date(slipData?.paid?.created_at))
+                            .format("HH:mm")
+                          : "-"}
+                      </td>
+                      {(() => {
+                        var duration = window.moment.duration(
+                          window
+                            .moment(new Date(slipData?.paid?.created_at))
+                            .diff(
+                              window.moment(new Date(slipData?.spt_date_in))
+                            )
+                        );
+                        const days = Math.floor(duration.asDays());
+                        duration.subtract(window.moment.duration(days, "days"));
+                        const hours = duration.hours();
+                        duration.subtract(
+                          window.moment.duration(hours, "hours")
+                        );
+                        const minutes = duration.minutes();
+                        duration.subtract(
+                          window.moment.duration(minutes, "minutes")
+                        );
+                        return (
+                          <td className="text-center">
+                            {slipData?.spt_date_in && slipData?.paid?.created_at ? (
+                              <div>
+                                {days !== 0 && (
+                                  <span>
+                                    {days} <FormattedMessage id="SPAN.DAYS" />
+                                  </span>
+                                )}
+                                {hours > 0 && (
+                                  <span>
+                                    {hours} <FormattedMessage id="SPAN.HOURS" />
+                                  </span>
+                                )}
+                                <span>
+                                  {minutes}{" "}
+                                  <FormattedMessage id="SPAN.MINUTES" />
+                                </span>
+                              </div>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                        );
+                      })()}
+                      <td>Paid Dokumen</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
