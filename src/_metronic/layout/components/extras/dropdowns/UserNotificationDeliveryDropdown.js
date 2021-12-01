@@ -93,7 +93,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
         params: { limit, offset },
         onSuccess: (res) => {
           // console.log("resnotif", res);
-          const { data, total_data, total_unread } = res.result;
+          const { data, total_data, total_unread } = res?.result;
           dispatch(
             store_notif_dm_rd({
               list: data,
@@ -264,10 +264,10 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                               </div>
                               <div className="text-muted">
                                 {linkContract &&
-                                  `${item.data.contract_name ||
+                                  `${item?.data?.contract_name ||
                                     "Nomor Kontrak"}`}
                                 {linkTermin &&
-                                  `${item.data.task_name || "Nomor Termin"}`}
+                                  `${item?.data?.task_name || "Nomor Termin"}`}
                                 {/* {`${item.data.contract_name ||
                                   "Nomor Kontrak"}-${item.data.task_name ||
                                   "Nama Termin"}`} */}

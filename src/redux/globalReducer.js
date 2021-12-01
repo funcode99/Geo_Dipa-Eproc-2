@@ -67,7 +67,7 @@ export const getAuthorizedUser = ({ auth, deliveryMonitoring }) => {
 export const getClientStatus = ({ auth }) => {
   const client_role = "TMS : User Division";
   const roles_eproc = auth?.user?.data?.roles_eproc;
-  const filteredData = roles_eproc.filter(({ name }) => name === client_role);
+  const filteredData = roles_eproc?.filter(({ name }) => name === client_role);
   return filteredData.length > 0;
 };
 
