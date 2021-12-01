@@ -425,7 +425,7 @@ function ContractTaxPage(props) {
 
   useEffect(getContractData, []);
   useEffect(getListTaxs, [contractData, addtionalPayment]);
-  // useEffect(getTaxData, []);
+  useEffect(getTaxData, []);
   useEffect(getBillingDocumentIdData, []);
 
   const formatGroupLabel = (data) => (
