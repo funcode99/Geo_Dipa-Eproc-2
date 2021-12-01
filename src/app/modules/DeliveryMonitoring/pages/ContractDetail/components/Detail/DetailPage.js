@@ -316,29 +316,31 @@ const DetailPage = ({
 
         console.log(`item`, item);
 
+        // <Button
+        //   variant="link"
+        //   onClick={() => {
+        //     // if (item?.approve_status?.name === "APPROVED")
+        //     history.push(
+        //       `/${authStatus}/delivery-monitoring/contract/task/${item.id}`
+        //     );
+        //     // else
+        //     //   MODAL.showSnackbar(
+        //     //     "Mohon Approve termin ini terlebih dahulu",
+        //     //     "warning"
+        //     //   );
+        //   }}
+        // >
+        {
+          /* </Button> */
+        }
         return {
           number: (index += 1),
           scope_of_work: (
-            <Button
-              variant="link"
-              onClick={() => {
-                // if (item?.approve_status?.name === "APPROVED")
-                history.push(
-                  `/${authStatus}/delivery-monitoring/contract/task/${item.id}`
-                );
-                // else
-                //   MODAL.showSnackbar(
-                //     "Mohon Approve termin ini terlebih dahulu",
-                //     "warning"
-                //   );
-              }}
-            >
-              {/* <NavLink
+            <NavLink
               to={`/${authStatus}/delivery-monitoring/contract/task/${item.id}`}
-            > */}
+            >
               {item.name}
-              {/* </NavLink> */}
-            </Button>
+            </NavLink>
           ),
           start_date:
             item.start_date !== null
