@@ -66,7 +66,6 @@ const ActivityDM = (props) => {
       url: DEV_NODE2 + "/todo",
       params: { limit, offset, is_finished: true },
       onSuccess: (res) => {
-        console.log("restodo", res);
         const { data, total_data } = res.result;
 
         setDataTodo({
@@ -132,7 +131,6 @@ const ActivityDM = (props) => {
                   </div>
                 ) : (
                   dataTodo.list?.map((item, index) => {
-                    console.log("item", item);
                     return (
                       <div
                         className="timeline-item align-items-start cursor-pointer text-hover-primary"
