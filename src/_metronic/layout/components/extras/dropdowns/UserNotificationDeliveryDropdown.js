@@ -92,17 +92,17 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
         url: DEV_NODE2 + "/notification",
         params: { limit, offset },
         onSuccess: (res) => {
-          if (isEmpty(res.result.data)) return;
-          const { data, total_data, total_unread } = res?.result;
+        //   if (isEmpty(res.result.data)) return;
+        //   const { data, total_data, total_unread } = res?.result;
           dispatch(
             store_notif_dm_rd({
-              list: data,
+              list: res?.result?.data,
               meta: {
                 page: current_page,
                 per_page: 10,
-                data_unread: total_unread,
-                data_available: total_data,
-                total_page: ceil(total_data / 10),
+                data_unread: res?.result?.total_unread,
+                data_available: res?.result?.total_data,
+                total_page: ceil(res?.result?.total_data / 10),
               },
             })
           );
