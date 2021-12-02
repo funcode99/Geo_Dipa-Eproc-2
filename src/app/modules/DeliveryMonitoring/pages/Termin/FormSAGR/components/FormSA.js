@@ -11,7 +11,7 @@ import TableSA from "./TableSA";
 
 export const FormSAContext = React.createContext({});
 
-const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
+const FormSA = ({ fetch_api_sg, keys,dataContractById, loadings_sg, onRefresh, dataSAGR }) => {
   const [arrService, setArrService] = useState({});
   const [listWBS, setlistWBS] = useState([]);
   const [itemJasa, setItemJasa] = useState([]);
@@ -25,7 +25,7 @@ const FormSA = ({ fetch_api_sg, keys, loadings_sg, onRefresh, dataSAGR }) => {
     fetch_api_sg({
       key: keys.fetch_wbs,
       type: "get",
-      url: `delivery/wbs`,
+      url: `delivery/wbs/${dataContractById?.id}`,
       onSuccess: (res) => {
         console.log("reswbs", res);
         setlistWBS(res.data);

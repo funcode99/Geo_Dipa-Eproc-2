@@ -33,7 +33,7 @@ const RowTableSA = ({ item, index }) => {
     console.log("formikRef.current", formikRef.current);
     setArrService((prev) => ({
       ...prev,
-      [`service_${index}`]: {
+      [`service_${item?.id}`]: {
         ...formikRef.current.values,
         isValid: formikRef.current.isValid,
       },
@@ -61,7 +61,7 @@ const RowTableSA = ({ item, index }) => {
   useEffect(() => {
     setArrService((prev) => ({
       ...prev,
-      [`service_${index}`]: { item, isValid: false },
+      [`service_${item?.id}`]: { item, isValid: false },
     }));
     // _handleBlur();
     // formikRef.current.validateForm();
