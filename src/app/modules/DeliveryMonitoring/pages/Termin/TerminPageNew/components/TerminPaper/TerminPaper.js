@@ -158,7 +158,7 @@ const TerminPaper = () => {
           {tabActive === 0 && <Summary />}
           {tabActive === 0 && <Documents />}
           {tabActive === 1 && <DeliveryOrder />}
-          {tabActive === 2 && <BeritaAcara />}
+          {tabActive === 2 && <BeritaAcara handleChangeTab={() => handleChangeTab(null, 3)} />}
           {tabActive === 3 && <FormSAGR isItemExists={isItemExists} />}
           {tabActive === 4 && <SAGRPage />}
           {/* {isItemExists && tabActive === 1 && <DeliveryOrder />}
