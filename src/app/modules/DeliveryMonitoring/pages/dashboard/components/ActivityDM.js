@@ -67,7 +67,7 @@ const ActivityDM = (props) => {
       url: DEV_NODE2 + "/todo",
       params: { limit, offset, is_finished: true },
       onSuccess: (res) => {
-		if (isEmpty(res.data)) return;
+		if (isEmpty(res.result.data)) return;
 		const { data, total_data } = res.result;
         setDataTodo({
           list: data,

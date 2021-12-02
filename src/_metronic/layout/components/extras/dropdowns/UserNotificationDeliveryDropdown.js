@@ -10,7 +10,7 @@ import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import Badge from "@material-ui/core/Badge";
 import { makeStyles } from "@material-ui/core/styles";
-import { ceil } from "lodash";
+import { ceil, isEmpty } from "lodash";
 import objectPath from "object-path";
 import { store_notif_dm_rd } from "../../../../../app/modules/DeliveryMonitoring/_redux/deliveryMonitoringSlice";
 import * as reducer from "../../../../../app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringSlice";
@@ -92,7 +92,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
         url: DEV_NODE2 + "/notification",
         params: { limit, offset },
         onSuccess: (res) => {
-          // console.log("resnotif", res);
+          if (isEmpty(res.result.data)) return;
           const { data, total_data, total_unread } = res?.result;
           dispatch(
             store_notif_dm_rd({
@@ -136,7 +136,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
           type: "get",
           url: `/delivery/contract/${contractId}`,
           onSuccess: (res) => {
-            console.log(`res`, res.data);
+            console.log(`res`, res?.data);
             saveContractById(res?.data);
           },
         })
