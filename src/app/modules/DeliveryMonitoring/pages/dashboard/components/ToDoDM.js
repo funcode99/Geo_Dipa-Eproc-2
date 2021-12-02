@@ -6,6 +6,7 @@ import { injectIntl } from "react-intl";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import {isEmpty} from 'lodash'
 import { DEV_NODE2 } from "../../../../../../redux/BaseHost";
 import {
   fetch_api_sg,
@@ -62,8 +63,8 @@ const ToDoDM = (props) => {
       params: { limit, offset },
       onSuccess: (res) => {
         console.log("restodo", res);
-        const { data, total_data } = res.result;
-
+		if (isEmpty(res.data)) return;
+        const { data, total_data } = res.result
         setDataTodo({
           list: data,
           meta: {
