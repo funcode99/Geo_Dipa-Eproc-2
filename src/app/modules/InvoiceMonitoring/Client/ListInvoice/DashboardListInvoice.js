@@ -299,7 +299,8 @@ function DashboardListInvoice(props) {
     });
     setErr(false);
     setParamsTable(params);
-    getAllInvoice(params)
+    const plant = is_main ? 'Pusat' : 'Unit'
+    getAllInvoice(params, plant, user_id)
       .then((result) => {
         setLoading(false);
         setData({

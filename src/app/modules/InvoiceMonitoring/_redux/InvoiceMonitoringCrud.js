@@ -395,8 +395,8 @@ export async function getAllMismatch(params) {
 export async function getAllBkb(params) {
   return axios.get(`invoice/get_all_bkb${params ? "?" + params : ""}`);
 }
-export async function getAllInvoice(params) {
-  return axios.get(`invoice/get_invoice_list${params ? "?" + params : ""}`);
+export async function getAllInvoice(params, plant, user_id) {
+  return axios.get(`invoice/get_invoice_list?plant=${plant}&user_id=${user_id}${params ? "&" + params : ""}`);
 }
 export async function getAllPlant() {
   return axios.get(`invoice/get_dashboard_plant`);
