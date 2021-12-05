@@ -1006,7 +1006,7 @@ function ItemContractSummary(props) {
             type="button"
             className="btn btn-primary mx-1"
             onClick={assignPic}
-            disabled={loading}
+            disabled={loading || picContractData.length === 0}
           >
             Simpan
             {loading && (
