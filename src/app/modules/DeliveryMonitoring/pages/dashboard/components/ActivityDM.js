@@ -104,78 +104,78 @@ const ActivityDM = (props) => {
             />
           </div>
         </div>
-        <div className={`card card-custom  ${className}`}>
-          {/* Header */}
+        {/* <div className={`card card-custom  ${className}`}> */}
+        {/* Header */}
 
-          {/* Body */}
-          <div className="card-body">
-            <PerfectScrollbar
-              options={perfectScrollbarOptions}
-              className="scroll pr-7 mr-n7"
-              style={{
-                maxHeight: "calc(100%)",
-                position: "relative",
-              }}
-            >
-              <div className="timeline timeline-6 mt-3">
-                {loading ? (
-                  <div>
-                    <div className="timeline-item align-items-start">
-                      <Skeleton animation="wave" className="w-100" />
-                    </div>
-                    <div className="timeline-item align-items-start">
-                      <Skeleton animation="wave" className="w-100" />
-                    </div>
-                    <div className="timeline-item align-items-start">
-                      <Skeleton animation="wave" className="w-100" />
-                    </div>
+        {/* Body */}
+        <div className="card-body">
+          <PerfectScrollbar
+            options={perfectScrollbarOptions}
+            className="scroll pr-7 mr-n7"
+            style={{
+              maxHeight: "calc(100%)",
+              position: "relative",
+            }}
+          >
+            <div className="timeline timeline-6 mt-3">
+              {loading ? (
+                <div>
+                  <div className="timeline-item align-items-start">
+                    <Skeleton animation="wave" className="w-100" />
                   </div>
-                ) : (
-                  dataTodo.list?.map((item, index) => {
-                    return (
-                      <div
-                        className="timeline-item align-items-start cursor-pointer text-hover-primary"
-                        key={index.toString()}
-                      >
-                        <div className="timeline-label font-weight-bolder text-dark-75 font-size-sm">
-                          {window
-                            .moment(new Date(item.created_at))
-                            .format("HH:mm")}
-                        </div>
+                  <div className="timeline-item align-items-start">
+                    <Skeleton animation="wave" className="w-100" />
+                  </div>
+                  <div className="timeline-item align-items-start">
+                    <Skeleton animation="wave" className="w-100" />
+                  </div>
+                </div>
+              ) : (
+                dataTodo.list?.map((item, index) => {
+                  return (
+                    <div
+                      className="timeline-item align-items-start cursor-pointer text-hover-primary"
+                      key={index.toString()}
+                    >
+                      <div className="timeline-label font-weight-bolder text-dark-75 font-size-sm">
+                        {window
+                          .moment(new Date(item.created_at))
+                          .format("HH:mm")}
+                      </div>
 
-                        <div className="timeline-badge">
-                          <i className="fa fa-genderless text-success icon-xl"></i>
-                        </div>
+                      <div className="timeline-badge">
+                        <i className="fa fa-genderless text-success icon-xl"></i>
+                      </div>
 
-                        <div className="timeline-content font-weight-bolder font-size-sm text-dark-75 pl-3">
-                          <span className="text-muted">
-                            Nomor Kontrak{" "}
-                            <span className="text-danger">
-                              {item?.data?.contract_no}
-                            </span>
-                            {/* <span className="text-danger">
+                      <div className="timeline-content font-weight-bolder font-size-sm text-dark-75 pl-3">
+                        <span className="text-muted">
+                          Nomor Kontrak{" "}
+                          <span className="text-danger">
+                            {item?.data?.contract_no}
+                          </span>
+                          {/* <span className="text-danger">
                               {item?.data?.contract_no + " (" + item.vendor_name + ")"}
                             </span> */}{" "}
-                            -{" "}
-                          </span>
-                          {/* {`${item?.title}(${item.name_user})`} */}
-                          {`${item?.title} `}
-                          <span className="text-muted">
-                            (
-                            {window
-                              .moment(new Date(item.created_at))
-                              .format("DD MM YYYY")}
-                            )
-                          </span>
-                        </div>
+                          -{" "}
+                        </span>
+                        {/* {`${item?.title}(${item.name_user})`} */}
+                        {`${item?.title} `}
+                        <span className="text-muted">
+                          (
+                          {window
+                            .moment(new Date(item.created_at))
+                            .format("DD MM YYYY")}
+                          )
+                        </span>
                       </div>
-                    );
-                  })
-                )}
-              </div>
-            </PerfectScrollbar>
-          </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </PerfectScrollbar>
         </div>
+        {/* </div> */}
         {/* Body */}
       </div>
     </>

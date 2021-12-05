@@ -6,10 +6,6 @@ import React, { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useHtmlClassService } from "../../../../../../_metronic/layout";
 
-// import { toAbsoluteUrl } from "../../../_helpers";
-// import { useHtmlClassService } from "../../../layout";
-// import { DropdownMenu2 } from "../../dropdowns";
-
 const SummaryStatsDM = ({ data, className, authStatus }) => {
   const uiService = useHtmlClassService();
 

@@ -1,11 +1,37 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React from "react";
-import SVG from "react-inlinesvg";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-// import { toAbsoluteUrl } from "../../../_helpers";
+import React, { useState, useCallback } from "react";
+import { Dropdown } from "react-bootstrap";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { Link } from "react-router-dom";
+import { DropdownMenu2 } from "../../../../../../_metronic/_partials/dropdowns";
+import { rupiah } from "../../../../../libs/currency";
 
-const ContractPriceTable = ({ className }) => {
+const ContractPriceTable = ({
+  data,
+  option,
+  authStatus,
+  onFetch,
+  loading,
+  className,
+}) => {
+  const [selected, setSelected] = useState(option?.[0]?.name);
+  React.useEffect(() => {
+    if (!!option) {
+      // onFetch(option?.[0]?.plant_id);
+      onFetch(option?.[0]?.id);
+      setSelected(option?.[0]?.name);
+    }
+  }, [option]);
+
+  const handleSelect = useCallback(
+    (item) => {
+      // onFetch(item?.plant_id);
+      onFetch(item?.id);
+      setSelected(item?.name);
+    },
+    [onFetch, setSelected]
+  );
   return (
     <>
       {/* begin::Advance Table Widget 9 */}
@@ -14,25 +40,35 @@ const ContractPriceTable = ({ className }) => {
         <div className="card-header border-0 py-5">
           <h3 className="card-title align-items-start flex-column">
             <span className="card-label font-weight-bolder text-dark">
-              Agents Stats
-            </span>
-            <span className="text-muted mt-3 font-weight-bold font-size-sm">
-              More than 400+ new members
+              Contract Prices
             </span>
           </h3>
           <div className="card-toolbar">
-            <a
-              href="#"
-              className="btn btn-info font-weight-bolder font-size-sm mr-3"
-            >
-              New Arrivals
-            </a>
-            <a
-              href="#"
-              className="btn btn-danger font-weight-bolder font-size-sm"
-            >
-              Create
-            </a>
+            {/* <div className="card-toolbar"> */}
+            <Dropdown className="dropdown-inline" drop="down" alignRight>
+              <Dropdown.Toggle
+                className="btn-primary btn-sm font-weight-bolder dropdown-toggle px-5"
+                variant="transparent"
+                id="dropdown-toggle-top"
+              >
+                {selected || "Choose Group"}
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <ul className="navi navi-hover">
+                  {option?.map((opt, id) => (
+                    <li key={id} className="navi-item">
+                      <Dropdown.Item
+                        // href="#"
+                        className="navi-link"
+                        onClick={() => handleSelect(opt)}
+                      >
+                        <span className="navi-text">{opt?.name}</span>
+                      </Dropdown.Item>
+                    </li>
+                  ))}
+                </ul>
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
         </div>
         {/* end::Header */}
@@ -45,286 +81,59 @@ const ContractPriceTable = ({ className }) => {
               <table className="table table-head-custom table-vertical-center table-head-bg table-borderless">
                 <thead>
                   <tr className="text-left">
-                    <th style={{ minWidth: "250px" }} className="pl-7">
-                      <span className="text-dark-75">products</span>
+                    <th style={{ minWidth: "450px" }} className="pl-7">
+                      <span className="text-dark-75">Contract</span>
                     </th>
-                    <th style={{ minWidth: "120px" }}>earnings</th>
-                    <th style={{ minWidth: "100px" }}>comission</th>
+                    <th style={{ minWidth: "120px" }}>Price</th>
+                    {/* <th style={{ minWidth: "100px" }}>comission</th>
                     <th style={{ minWidth: "100px" }}>company</th>
-                    <th style={{ minWidth: "100px" }}>rating</th>
-                    <th style={{ minWidth: "100px" }} />
+                    <th style={{ minWidth: "100px" }}>rating</th> */}
+                    <th style={{ minWidth: "150px" }} />
                   </tr>
                 </thead>
+                {/* <PerfectScrollbar
+                  options={perfectScrollbarOptions}
+                  className="scroll"
+                  style={{
+                    maxHeight: "calc(100% - 25px)",
+                    position: "relative",
+                  }}
+                > */}
                 <tbody>
-                  <tr>
-                    <td className="pl-0 py-8">
-                      <div className="d-flex align-items-center">
-                        <div className="symbol symbol-50 symbol-light mr-4">
-                          <span className="symbol-label">
-                            <SVG
-                              className="h-75 align-self-end"
-                              src={toAbsoluteUrl(
-                                "/media/svg/avatars/001-boy.svg"
-                              )}
-                            ></SVG>
-                          </span>
+                  {data?.map((item, id) => (
+                    <tr key={id}>
+                      <td className="pl-0 py-8">
+                        <div className="d-flex align-items-center">
+                          <div>
+                            <Link
+                              to="#"
+                              className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg"
+                            >
+                              {item?.contract_name}
+                            </Link>
+                            <span className="text-muted font-weight-bold d-block">
+                              {item?.contract_no}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <a
-                            href="#"
-                            className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg"
-                          >
-                            Brad Simmons
-                          </a>
-                          <span className="text-muted font-weight-bold d-block">
-                            HTML, JS, ReactJS
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        $8,000,000
-                      </span>
-                      <span className="text-muted font-weight-bold">
-                        In Proccess
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        $520
-                      </span>
-                      <span className="text-muted font-weight-bold">Paid</span>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        Intertico
-                      </span>
-                      <span className="text-muted font-weight-bold">
-                        Web, UI/UX Design
-                      </span>
-                    </td>
-                    <td>
-                      <img
-                        src={`${toAbsoluteUrl("/media/logos/stars.png")}`}
-                        alt="image"
-                        style={{ width: "5rem" }}
-                      />
-                      <span className="text-muted font-weight-bold d-block">
-                        Best Rated
-                      </span>
-                    </td>
-                    <td className="pr-0 text-right">
-                      <a
-                        href="#"
-                        className="btn btn-light-success font-weight-bolder font-size-sm"
-                      >
-                        View Offer
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="pl-0 py-0">
-                      <div className="d-flex align-items-center">
-                        <div className="symbol symbol-50 symbol-light mr-4">
-                          <span className="symbol-label">
-                            <SVG
-                              className="h-75 align-self-end"
-                              src={toAbsoluteUrl(
-                                "/media/svg/avatars/018-girl-9.svg"
-                              )}
-                            ></SVG>{" "}
-                          </span>
-                        </div>
-                        <div>
-                          <a
-                            href="#"
-                            className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg"
-                          >
-                            Jessie Clarcson
-                          </a>
-                          <span className="text-muted font-weight-bold d-block">
-                            C#, ASP.NET, MS SQL
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        $23,000,000
-                      </span>
-                      <span className="text-muted font-weight-bold">
-                        Pending
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        $1,600
-                      </span>
-                      <span className="text-muted font-weight-bold">
-                        Rejected
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        Agoda
-                      </span>
-                      <span className="text-muted font-weight-bold">
-                        Houses & Hotels
-                      </span>
-                    </td>
-                    <td>
-                      <img
-                        src={`${toAbsoluteUrl("/media/logos/stars.png")}`}
-                        alt="image"
-                        style={{ width: "5rem" }}
-                      />
-                      <span className="text-muted font-weight-bold d-block">
-                        Above Average
-                      </span>
-                    </td>
-                    <td className="pr-0 text-right">
-                      <a
-                        href="#"
-                        className="btn btn-light-success font-weight-bolder font-size-sm"
-                      >
-                        View Offer
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="pl-0 py-8">
-                      <div className="d-flex align-items-center">
-                        <div className="symbol symbol-50 symbol-light mr-4">
-                          <span className="symbol-label">
-                            <SVG
-                              className="h-75 align-self-end"
-                              src={toAbsoluteUrl(
-                                "/media/svg/avatars/047-girl-25.svg"
-                              )}
-                            ></SVG>{" "}
-                          </span>
-                        </div>
-                        <div>
-                          <a
-                            href="#"
-                            className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg"
-                          >
-                            Lebron Wayde
-                          </a>
-                          <span className="text-muted font-weight-bold d-block">
-                            PHP, Laravel, VueJS
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        $34,000,000
-                      </span>
-                      <span className="text-muted font-weight-bold">Paid</span>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        $6,700
-                      </span>
-                      <span className="text-muted font-weight-bold">Paid</span>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        RoadGee
-                      </span>
-                      <span className="text-muted font-weight-bold">
-                        Transportation
-                      </span>
-                    </td>
-                    <td>
-                      <img
-                        src={`${toAbsoluteUrl("/media/logos/stars.png")}`}
-                        alt="image"
-                        style={{ width: "5rem" }}
-                      />
-                      <span className="text-muted font-weight-bold d-block">
-                        Best Rated
-                      </span>
-                    </td>
-                    <td className="pr-0 text-right">
-                      <a
-                        href="#"
-                        className="btn btn-light-success font-weight-bolder font-size-sm"
-                      >
-                        View Offer
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="pl-0 py-0">
-                      <div className="d-flex align-items-center">
-                        <div className="symbol symbol-50 symbol-light mr-4">
-                          <span className="symbol-label">
-                            <SVG
-                              className="h-75 align-self-end"
-                              src={toAbsoluteUrl(
-                                "/media/svg/avatars/014-girl-7.svg"
-                              )}
-                            ></SVG>
-                          </span>
-                        </div>
-                        <div>
-                          <a
-                            href="#"
-                            className="text-dark font-weight-bolder text-hover-primary mb-1 font-size-lg"
-                          >
-                            Natali Trump
-                          </a>
-                          <span className="text-muted font-weight-bold d-block">
-                            Python, PostgreSQL, ReactJS
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        $2,600,000
-                      </span>
-                      <span className="text-muted font-weight-bold">Paid</span>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        $14,000
-                      </span>
-                      <span className="text-muted font-weight-bold">
-                        Pending
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                        The Hill
-                      </span>
-                      <span className="text-muted font-weight-bold">
-                        Insurance
-                      </span>
-                    </td>
-                    <td>
-                      <img
-                        src={`${toAbsoluteUrl("/media/logos/stars.png")}`}
-                        alt="image"
-                        style={{ width: "5rem" }}
-                      />
-                      <span className="text-muted font-weight-bold d-block">
-                        Average
-                      </span>
-                    </td>
-                    <td className="pr-0  text-right">
-                      <a
-                        href="#"
-                        className="btn btn-light-success font-weight-bolder font-size-sm"
-                      >
-                        View Offer
-                      </a>
-                    </td>
-                  </tr>
+                      </td>
+                      <td>
+                        <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
+                          {rupiah(parseInt(item?.contract_value))}
+                        </span>
+                      </td>
+                      <td className="pr-0 text-right">
+                        <Link
+                          to={`/${authStatus}/delivery-monitoring/contract/${item?.id}`}
+                          className="btn btn-light-success font-weight-bolder font-size-sm"
+                        >
+                          View More
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
+                {/* </PerfectScrollbar> */}
               </table>
             </div>
             {/* end::Table */}
@@ -336,5 +145,8 @@ const ContractPriceTable = ({ className }) => {
     </>
   );
 };
-
+const perfectScrollbarOptions = {
+  wheelSpeed: 2,
+  wheelPropagation: false,
+};
 export default ContractPriceTable;
