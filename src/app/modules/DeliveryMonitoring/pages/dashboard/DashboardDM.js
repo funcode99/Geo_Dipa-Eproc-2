@@ -45,7 +45,7 @@ class DashboardDM extends Component {
   fetchPrice = () => {
     this.props.fetchApiSg({
       key: keys.cont_price,
-      type: "get",
+      type: "getParams",
       url: "/delivery/dashboard/contract-price",
       onSuccess: (res) => {
         console.log("res" + keys.cont_price, res);
@@ -74,6 +74,26 @@ class DashboardDM extends Component {
       },
     });
   };
+  fetchSummaryStats = () => {
+    this.props.fetchApiSg({
+      key: keys.sum_stats,
+      type: "get",
+      url: "/delivery/dashboard/summary-stats",
+      onSuccess: (res) => {
+        console.log("res" + keys.sum_stats, res);
+      },
+    });
+  };
+  fetchContOnProgress = () => {
+    this.props.fetchApiSg({
+      key: keys.cont_on_progress,
+      type: "get",
+      url: "/delivery/dashboard/contract-on-progress",
+      onSuccess: (res) => {
+        console.log("res" + keys.cont_on_progress, res);
+      },
+    });
+  };
 
   render() {
     // return <DemoOnly />;
@@ -84,7 +104,7 @@ class DashboardDM extends Component {
             <ToDoDM className="card-stretch gutter-b" />
           </div>
           <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "60vh" }}>
-            <SummaryStatsDM />
+            {/* <SummaryStatsDM /> */}
           </div>
         </div>
         <div className={"row"}>
@@ -95,7 +115,7 @@ class DashboardDM extends Component {
             <ActivityDM className="card-stretch gutter-b" checked />
           </div>
         </div>
-        {/* <DemoOnly /> */}
+        <DemoOnly />
       </React.Fragment>
     );
   }
@@ -107,6 +127,8 @@ const keys = {
   cont_price: "get-contract-price",
   cont_progress: "get-contract-progress",
   dev_progress: "get-delivery-progress",
+  sum_stats: "get-summary-stats",
+  cont_on_progress: "get-delivery-progress",
 };
 
 const mapState = (state) => {
@@ -117,6 +139,8 @@ const mapState = (state) => {
       cont_price: getLoading(state, keys.cont_price),
       cont_progress: getLoading(state, keys.cont_progress),
       dev_progress: getLoading(state, keys.dev_progress),
+      sum_stats: getLoading(state, keys.sum_stats),
+      cont_on_progress: getLoading(state, keys.cont_on_progress),
     },
   };
 };
