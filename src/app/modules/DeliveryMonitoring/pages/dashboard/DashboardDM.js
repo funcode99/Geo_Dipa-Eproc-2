@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
+import { DemoOnly } from "../../../../../_metronic/_partials/dashboards/DemoOnly";
 import ActivityDM from "./components/ActivityDM";
+import SummaryStatsDM from "./components/SummaryStatsDM";
 import ToDoDM from "./components/ToDoDM";
 
 class DashboardDM extends Component {
@@ -76,14 +78,25 @@ class DashboardDM extends Component {
   render() {
     // return <DemoOnly />;
     return (
-      <div className={"row"}>
-        <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
-          <ToDoDM className="card-stretch gutter-b" />
+      <React.Fragment>
+        <div className={"row"}>
+          <div className="col-lg-8 col-xxl-8" style={{ maxHeight: "60vh" }}>
+            <ToDoDM className="card-stretch gutter-b" />
+          </div>
+          <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "60vh" }}>
+            <SummaryStatsDM />
+          </div>
         </div>
-        <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
-          <ActivityDM className="card-stretch gutter-b" checked />
+        <div className={"row"}>
+          <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
+            <ToDoDM className="card-stretch gutter-b" />
+          </div>
+          <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
+            <ActivityDM className="card-stretch gutter-b" checked />
+          </div>
         </div>
-      </div>
+        {/* <DemoOnly /> */}
+      </React.Fragment>
     );
   }
 }
