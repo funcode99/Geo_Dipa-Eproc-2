@@ -1,18 +1,16 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React, { useMemo, useEffect } from "react";
-import SVG from "react-inlinesvg";
-import objectPath from "object-path";
 import ApexCharts from "apexcharts";
-import { Dropdown } from "react-bootstrap";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import objectPath from "object-path";
+import React, { useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useHtmlClassService } from "../../../../../../_metronic/layout";
-import { DropdownMenu2 } from "../../../../../../_metronic/_partials/dropdowns";
+
 // import { toAbsoluteUrl } from "../../../_helpers";
 // import { useHtmlClassService } from "../../../layout";
 // import { DropdownMenu2 } from "../../dropdowns";
 
-const SummaryStatsDM = ({ className }) => {
+const SummaryStatsDM = ({ data, className, authStatus }) => {
   const uiService = useHtmlClassService();
 
   const layoutProps = useMemo(() => {
@@ -89,38 +87,41 @@ const SummaryStatsDM = ({ className }) => {
             <div className="col bg-light-warning px-6 py-8 rounded-xl mr-7 mb-7">
               <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
                 <span className="text-warning font-weight-bolder d-block font-size-lg">
-                  $2,000,000
+                  {data?.on_progress}
                 </span>
               </span>
-              <a
-                href="#"
+              <Link
+                to={`/${authStatus}/delivery-monitoring/contract`}
                 className="text-warning font-weight-bold font-size-h6"
               >
                 On Progress
-              </a>
+              </Link>
             </div>
             <div className="col bg-light-primary px-6 py-8 rounded-xl mr-7 mb-7">
               <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
                 <span className="text-primary font-weight-bolder d-block font-size-lg">
-                  $2,000,000
+                  {data?.sagr}
                 </span>
               </span>
-              <a
-                href="#"
+              <Link
+                to={`/${authStatus}/delivery-monitoring/contract`}
                 className="text-primary font-weight-bold font-size-h6"
               >
                 Success
-              </a>
+              </Link>
             </div>
             <div className="col bg-light-danger px-6 py-8 rounded-xl mr-7 mb-7">
               <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
                 <span className="text-danger font-weight-bolder d-block font-size-lg">
-                  $2,000,000
+                  {data?.overdue}
                 </span>
               </span>
-              <a href="#" className="text-danger font-weight-bold font-size-h6">
+              <Link
+                to={`/${authStatus}/delivery-monitoring/contract`}
+                className="text-danger font-weight-bold font-size-h6"
+              >
                 Overdue
-              </a>
+              </Link>
             </div>
           </div>
         </div>

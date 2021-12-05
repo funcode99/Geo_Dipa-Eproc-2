@@ -9,7 +9,9 @@ import ToDoDM from "./components/ToDoDM";
 class DashboardDM extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      summary_stat: {},
+    };
   }
 
   componentDidMount() {
@@ -18,6 +20,8 @@ class DashboardDM extends Component {
     this.fetchPrice();
     this.fetchContProgress();
     this.fetchDeliveryProgress();
+    this.fetchSummaryStats();
+    this.fetchContOnProgress();
   }
 
   fetchOverdueContract = () => {
@@ -81,6 +85,7 @@ class DashboardDM extends Component {
       url: "/delivery/dashboard/summary-stats",
       onSuccess: (res) => {
         console.log("res" + keys.sum_stats, res);
+        this.setState({ summary_stat: res?.data });
       },
     });
   };
@@ -97,6 +102,8 @@ class DashboardDM extends Component {
 
   render() {
     // return <DemoOnly />;
+    const { summary_stat } = this.state;
+    const { authStatus } = this.props;
     return (
       <React.Fragment>
         <div className={"row"}>
@@ -104,7 +111,7 @@ class DashboardDM extends Component {
             <ToDoDM className="card-stretch gutter-b" />
           </div>
           <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "60vh" }}>
-            {/* <SummaryStatsDM /> */}
+            <SummaryStatsDM data={summary_stat} authStatus={authStatus} />
           </div>
         </div>
         <div className={"row"}>
@@ -115,7 +122,7 @@ class DashboardDM extends Component {
             <ActivityDM className="card-stretch gutter-b" checked />
           </div>
         </div>
-        <DemoOnly />
+        {/* <DemoOnly /> */}
       </React.Fragment>
     );
   }
@@ -133,6 +140,7 @@ const keys = {
 
 const mapState = (state) => {
   return {
+    authStatus: state.auth.user.data.status,
     loadings: {
       overdue: getLoading(state, keys.overdue),
       sa_gr: getLoading(state, keys.sa_gr),
