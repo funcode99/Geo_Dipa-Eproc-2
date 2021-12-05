@@ -71,6 +71,13 @@ export const getClientStatus = ({ auth }) => {
   return !!filteredData?.length > 0;
 };
 
+export const getClientIsAdmin = ({ auth }) => {
+  const client_role = "DM : PMO";
+  const roles_eproc = auth?.user?.data?.roles_eproc;
+  const filteredData = roles_eproc?.filter(({ name }) => name === client_role);
+  return !!filteredData?.length > 0;
+};
+
 // sagas below
 /**
  * key:required

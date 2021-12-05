@@ -1,8 +1,7 @@
-import React, { Component } from "react";
 import { connect } from "react-redux";
+import React, { Component } from "react";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
-import ActivityDM from "./components/ActivityDM";
-import ToDoDM from "./components/ToDoDM";
+import { DemoOnly } from "../../../../../_metronic/_partials/dashboards/DemoOnly";
 
 class DashboardDM extends Component {
   constructor(props) {
@@ -74,17 +73,7 @@ class DashboardDM extends Component {
   };
 
   render() {
-    // return <DemoOnly />;
-    return (
-      <div className={"row"}>
-        <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
-          <ToDoDM className="card-stretch gutter-b" />
-        </div>
-        <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
-          <ActivityDM className="card-stretch gutter-b" checked />
-        </div>
-      </div>
-    );
+    return <DemoOnly />;
   }
 }
 

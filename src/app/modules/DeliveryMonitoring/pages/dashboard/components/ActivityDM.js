@@ -7,7 +7,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { Dropdown } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import {isEmpty} from 'lodash'
+import { isEmpty } from "lodash";
 import { DEV_NODE2 } from "../../../../../../redux/BaseHost";
 import {
   fetch_api_sg,
@@ -67,8 +67,8 @@ const ActivityDM = (props) => {
       url: DEV_NODE2 + "/todo",
       params: { limit, offset, is_finished: true },
       onSuccess: (res) => {
-		if (isEmpty(res.result.data)) return;
-		const { data, total_data } = res.result;
+        if (isEmpty(res.result.data)) return;
+        const { data, total_data } = res.result;
         setDataTodo({
           list: data,
           meta: {
@@ -108,12 +108,12 @@ const ActivityDM = (props) => {
           {/* Header */}
 
           {/* Body */}
-          <div className="card-body pt-4">
+          <div className="card-body">
             <PerfectScrollbar
               options={perfectScrollbarOptions}
               className="scroll pr-7 mr-n7"
               style={{
-                maxHeight: "calc(100% - 25px)",
+                maxHeight: "calc(100%)",
                 position: "relative",
               }}
             >
