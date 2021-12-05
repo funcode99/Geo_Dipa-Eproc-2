@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 import { DemoOnly } from "../../../../../_metronic/_partials/dashboards/DemoOnly";
 import ActivityDM from "./components/ActivityDM";
+import ContractPriceTable from "./components/ContractPriceTableDM";
 import SummaryStatsDM from "./components/SummaryStatsDM";
 import ToDoDM from "./components/ToDoDM";
 
@@ -47,9 +48,11 @@ class DashboardDM extends Component {
   };
 
   fetchPrice = () => {
+    const params = { group_id: "7c255e96-9d20-4109-8426-92a5fa2b89ed" };
     this.props.fetchApiSg({
       key: keys.cont_price,
       type: "getParams",
+      params,
       url: "/delivery/dashboard/contract-price",
       onSuccess: (res) => {
         console.log("res" + keys.cont_price, res);
@@ -107,10 +110,10 @@ class DashboardDM extends Component {
     return (
       <React.Fragment>
         <div className={"row"}>
-          <div className="col-lg-8 col-xxl-8" style={{ maxHeight: "60vh" }}>
-            <ToDoDM className="card-stretch gutter-b" />
+          <div className="col-lg-8 col-xxl-9" style={{ maxHeight: "60vh" }}>
+            <ContractPriceTable />
           </div>
-          <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "60vh" }}>
+          <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
             <SummaryStatsDM data={summary_stat} authStatus={authStatus} />
           </div>
         </div>

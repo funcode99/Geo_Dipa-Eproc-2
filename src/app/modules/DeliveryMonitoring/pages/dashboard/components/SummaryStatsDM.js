@@ -74,15 +74,18 @@ const SummaryStatsDM = ({ data, className, authStatus }) => {
       </div>
       {/* Body */}
       <div className="card-body p-0 position-relative overflow-hidden">
+        {/* <h3 className="card-title font-weight-bolder text-white">
+          Summary Contract
+        </h3> */}
         {/* Chart */}
-        <div
+        {/* <div
           id="kt_mixed_widget_1_chart"
           className="card-rounded-bottom bg-danger"
           style={{ height: "200px" }}
-        ></div>
+        ></div> */}
 
         {/* Stat */}
-        <div className="card-spacer mt-n25">
+        <div className="card-spacer mt25">
           <div className="row m-0">
             <div className="col bg-light-warning px-6 py-8 rounded-xl mr-7 mb-7">
               <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
