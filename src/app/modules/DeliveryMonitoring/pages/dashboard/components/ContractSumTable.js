@@ -6,22 +6,22 @@ import { formatDate } from "../../../../../libs/date";
 import ButtonAction from "../../../../../components/buttonAction/ButtonAction";
 
 const tableHeaderContractsNew = [
-  {
-    id: "contract_no",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
-  },
-  {
-    id: "po_number",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
-  },
+  //   {
+  //     id: "contract_no",
+  //     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
+  //   },
+  //   {
+  //     id: "po_number",
+  //     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
+  //   },
   {
     id: "procurement_title",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
   },
-  {
-    id: "po_date",
-    label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
-  },
+  //   {
+  //     id: "po_date",
+  //     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
+  //   },
   {
     id: "contract_date",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />,
@@ -34,10 +34,10 @@ const tableHeaderContractsNew = [
     id: "vendor",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />,
   },
-  {
-    id: "status",
-    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
-  },
+  //   {
+  //     id: "status",
+  //     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
+  //   },
   //   {
   //     id: "action",
   //     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
@@ -46,27 +46,27 @@ const tableHeaderContractsNew = [
 ];
 const ContractSumTable = ({ data, loading, status }) => {
   const [newContent, setNewContent] = React.useState([]);
+  console.log(`data`, data);
 
-  const generateTableContent = useCallback(() => {
+  const generateTableContent = React.useCallback(() => {
     let dataArr = data.map((item, id) => ({
-      contract_no: (
-        <NavLink to={`/${status}/delivery-monitoring/contract/${item.id}`}>
-          {item?.contract_no}
+      procurement_title: (
+        <NavLink to={`/${status}/delivery-monitoring/contract/${item?.id}`}>
+          {item?.contract_name}
         </NavLink>
       ),
-      po_number: item?.purch_order_no,
-      procurement_title: item?.contract_name,
-      po_date:
-        item?.issued_date !== null
-          ? formatDate(new Date(item?.issued_date))
-          : null,
-      contract_date:
-        item?.issued_date !== null
-          ? formatDate(new Date(item?.issued_date))
-          : null,
+      // po_number: item?.purch_order_no,
+      //   procurement_title: item?.contract_name,
+      contract_date: !!item?.purch_order?.issued_date
+        ? formatDate(new Date(item?.purch_order?.issued_date))
+        : null,
+      //   po_date:
+      //     item?.issued_date !== null
+      //       ? formatDate(new Date(item?.issued_date))
+      //       : null,
       group: item?.user_group?.party?.full_name,
-      vendor: item?.vendor.party?.full_name,
-      status: item?.state,
+      vendor: item?.vendor?.party?.full_name,
+      //   status: item?.state,
       //   action: (
       //     <ButtonAction
       //       hoverLabel="More"
@@ -98,8 +98,10 @@ const ContractSumTable = ({ data, loading, status }) => {
     <TablePaginationCustom
       headerRows={tableHeaderContractsNew}
       rows={newContent}
-      width={1500}
+      width={1000}
       loading={loading}
+      withPagination={false}
+      withSearch={false}
     />
   );
 };

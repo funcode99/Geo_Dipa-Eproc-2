@@ -5,6 +5,7 @@ import { DemoOnly } from "../../../../../_metronic/_partials/dashboards/DemoOnly
 import DialogGlobal from "../../../../components/modals/DialogGlobal";
 import ActivityDM from "./components/ActivityDM";
 import ContractPriceTable from "./components/ContractPriceTableDM";
+import ContractSumTable from "./components/ContractSumTable";
 import SummaryStatsDM from "./components/SummaryStatsDM";
 import ToDoDM from "./components/ToDoDM";
 
@@ -16,6 +17,10 @@ class DashboardDM extends Component {
       summary_stat: {},
       plant_datas: [],
       contract_prices: [],
+      overdue_list: [],
+      onprogress_list: [],
+      success_list: [],
+      selected_contract: "onprogress_list",
     };
   }
 
@@ -37,6 +42,7 @@ class DashboardDM extends Component {
       url: "/delivery/dashboard/overdue-contract",
       onSuccess: (res) => {
         console.log("res" + keys.overdue, res);
+        this.setState({ overdue_list: res?.data });
       },
     });
   };
@@ -48,6 +54,7 @@ class DashboardDM extends Component {
       url: "/delivery/dashboard/sa-gr-contract",
       onSuccess: (res) => {
         console.log("res" + keys.sa_gr, res);
+        this.setState({ success_list: res?.data });
       },
     });
   };
@@ -105,6 +112,7 @@ class DashboardDM extends Component {
       url: "/delivery/dashboard/contract-on-progress",
       onSuccess: (res) => {
         console.log("res" + keys.cont_on_progress, res);
+        this.setState({ onprogress_list: res?.data });
       },
     });
   };
@@ -124,11 +132,17 @@ class DashboardDM extends Component {
 
   openModal = (type) => {
     this.modalRef.current.open();
+    this.setState({ selected_contract: type });
   };
 
   render() {
     // return <DemoOnly />;
-    const { summary_stat, plant_datas, contract_prices } = this.state;
+    const {
+      summary_stat,
+      plant_datas,
+      contract_prices,
+      selected_contract,
+    } = this.state;
     const { authStatus, plant_data, loadings } = this.props;
     return (
       <React.Fragment>
@@ -167,17 +181,16 @@ class DashboardDM extends Component {
           // visible={visible}
           isSubmit={false}
           isCancel={false}
+          maxWidth={"md"}
           // textNo={
           //   <FormattedMessage id="TITLE.MODAL_CREATE.LABEL.BUTTON_FAILED" />
           // }
-          title={"Chart Report"}
+          title={`Contract ${selected_contract}`}
         >
-          <ContractPriceTable
-            data={contract_prices}
-            option={plant_data}
-            onFetch={this.fetchPrice}
-            loading={loadings.cont_price}
-            authStatus={authStatus}
+          <ContractSumTable
+            status={authStatus}
+            data={this.state[`${selected_contract}_list`]}
+            // loading={true}
           />
           {/* <AreaChart /> */}
         </DialogGlobal>

@@ -26,7 +26,7 @@ const SummaryStatsDM = ({ data, className, authStatus, openModal }) => {
               <Link
                 // to={`/${authStatus}/delivery-monitoring/contract`}
                 className="text-warning font-weight-bold font-size-h6"
-                onClick={openModal}
+                onClick={() => openModal("onprogress")}
               >
                 On Progress
               </Link>
@@ -40,7 +40,7 @@ const SummaryStatsDM = ({ data, className, authStatus, openModal }) => {
               <Link
                 // to={`/${authStatus}/delivery-monitoring/contract`}
                 className="text-primary font-weight-bold font-size-h6"
-                onClick={openModal}
+                onClick={() => openModal("success")}
               >
                 Success
               </Link>
@@ -54,7 +54,7 @@ const SummaryStatsDM = ({ data, className, authStatus, openModal }) => {
               <Link
                 // to={`/${authStatus}/delivery-monitoring/contract`}
                 className="text-danger font-weight-bold font-size-h6"
-                onClick={openModal}
+                onClick={() => openModal("overdue")}
               >
                 Overdue
               </Link>
