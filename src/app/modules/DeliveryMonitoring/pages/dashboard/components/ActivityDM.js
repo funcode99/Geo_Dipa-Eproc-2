@@ -94,7 +94,7 @@ const ActivityDM = (props) => {
         {/* Head */}
         <div className="card-header border-0">
           <h3 className="card-title font-weight-bolder text-dark">
-            Delivery Monitoring Activity
+            Delivery Activity
           </h3>
           <div className="card-toolbar">
             <PaginationNotif

@@ -127,15 +127,18 @@ class DashboardDM extends Component {
     return (
       <React.Fragment>
         <div className={"row"}>
-          <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
+          <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "60vh" }}>
             <ToDoDM className="card-stretch gutter-b" />
           </div>
-          <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
+          <div className="col-lg-4 col-xxl-5" style={{ maxHeight: "60vh" }}>
             <ActivityDM className="card-stretch gutter-b" checked />
+          </div>
+          <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
+            <SummaryStatsDM data={summary_stat} authStatus={authStatus} />
           </div>
         </div>
         <div className={"row"}>
-          <div className="col-lg-8 col-xxl-9" style={{ maxHeight: "60vh" }}>
+          <div className="col-lg-8 col-xxl-12" style={{ maxHeight: "60vh" }}>
             <ContractPriceTable
               data={contract_prices}
               option={plant_data}
@@ -144,9 +147,9 @@ class DashboardDM extends Component {
               authStatus={authStatus}
             />
           </div>
-          <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
+          {/* <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
             <SummaryStatsDM data={summary_stat} authStatus={authStatus} />
-          </div>
+          </div> */}
         </div>
         {/* <DemoOnly /> */}
       </React.Fragment>
