@@ -6,7 +6,7 @@ import { injectIntl } from "react-intl";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import {isEmpty} from 'lodash'
+import { isEmpty } from "lodash";
 import { DEV_NODE2 } from "../../../../../../redux/BaseHost";
 import {
   fetch_api_sg,
@@ -63,8 +63,8 @@ const ToDoDM = (props) => {
       params: { limit, offset },
       onSuccess: (res) => {
         console.log("restodo", res);
-		if (isEmpty(res.result.data)) return;
-        const { data, total_data } = res.result
+        if (isEmpty(res.result.data)) return;
+        const { data, total_data } = res.result;
         setDataTodo({
           list: data,
           meta: {
@@ -101,7 +101,7 @@ const ToDoDM = (props) => {
         {/* Head */}
         <div className="card-header border-0">
           <h3 className="card-title font-weight-bolder text-dark">
-            Delivery Monitoring Todo
+            Delivery Todo
           </h3>
           <div className="card-toolbar">
             <PaginationNotif

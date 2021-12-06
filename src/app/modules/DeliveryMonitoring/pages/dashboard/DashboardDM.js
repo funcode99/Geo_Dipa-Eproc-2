@@ -1,19 +1,26 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 import { DemoOnly } from "../../../../../_metronic/_partials/dashboards/DemoOnly";
+import DialogGlobal from "../../../../components/modals/DialogGlobal";
 import ActivityDM from "./components/ActivityDM";
 import ContractPriceTable from "./components/ContractPriceTableDM";
+import ContractSumTable from "./components/ContractSumTable";
 import SummaryStatsDM from "./components/SummaryStatsDM";
 import ToDoDM from "./components/ToDoDM";
 
 class DashboardDM extends Component {
   constructor(props) {
     super(props);
+    this.modalRef = createRef();
     this.state = {
       summary_stat: {},
       plant_datas: [],
       contract_prices: [],
+      overdue_list: [],
+      onprogress_list: [],
+      success_list: [],
+      selected_contract: "onprogress_list",
     };
   }
 
@@ -35,6 +42,7 @@ class DashboardDM extends Component {
       url: "/delivery/dashboard/overdue-contract",
       onSuccess: (res) => {
         console.log("res" + keys.overdue, res);
+        this.setState({ overdue_list: res?.data });
       },
     });
   };
@@ -46,6 +54,7 @@ class DashboardDM extends Component {
       url: "/delivery/dashboard/sa-gr-contract",
       onSuccess: (res) => {
         console.log("res" + keys.sa_gr, res);
+        this.setState({ success_list: res?.data });
       },
     });
   };
@@ -103,6 +112,7 @@ class DashboardDM extends Component {
       url: "/delivery/dashboard/contract-on-progress",
       onSuccess: (res) => {
         console.log("res" + keys.cont_on_progress, res);
+        this.setState({ onprogress_list: res?.data });
       },
     });
   };
@@ -120,22 +130,39 @@ class DashboardDM extends Component {
     });
   };
 
+  openModal = (type) => {
+    this.modalRef.current.open();
+    this.setState({ selected_contract: type });
+  };
+
   render() {
     // return <DemoOnly />;
-    const { summary_stat, plant_datas, contract_prices } = this.state;
+    const {
+      summary_stat,
+      plant_datas,
+      contract_prices,
+      selected_contract,
+    } = this.state;
     const { authStatus, plant_data, loadings } = this.props;
     return (
       <React.Fragment>
         <div className={"row"}>
-          <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
+          <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "60vh" }}>
             <ToDoDM className="card-stretch gutter-b" />
           </div>
-          <div className="col-lg-6 col-xxl-6" style={{ maxHeight: "50vh" }}>
+          <div className="col-lg-4 col-xxl-5" style={{ maxHeight: "60vh" }}>
             <ActivityDM className="card-stretch gutter-b" checked />
+          </div>
+          <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
+            <SummaryStatsDM
+              data={summary_stat}
+              authStatus={authStatus}
+              openModal={this.openModal}
+            />
           </div>
         </div>
         <div className={"row"}>
-          <div className="col-lg-8 col-xxl-9" style={{ maxHeight: "60vh" }}>
+          <div className="col-lg-8 col-xxl-12" style={{ maxHeight: "60vh" }}>
             <ContractPriceTable
               data={contract_prices}
               option={plant_data}
@@ -144,11 +171,29 @@ class DashboardDM extends Component {
               authStatus={authStatus}
             />
           </div>
-          <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
+          {/* <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
             <SummaryStatsDM data={summary_stat} authStatus={authStatus} />
-          </div>
+          </div> */}
         </div>
         {/* <DemoOnly /> */}
+        <DialogGlobal
+          ref={this.modalRef}
+          // visible={visible}
+          isSubmit={false}
+          isCancel={false}
+          maxWidth={"md"}
+          // textNo={
+          //   <FormattedMessage id="TITLE.MODAL_CREATE.LABEL.BUTTON_FAILED" />
+          // }
+          title={`Contract ${selected_contract}`}
+        >
+          <ContractSumTable
+            status={authStatus}
+            data={this.state[`${selected_contract}_list`]}
+            // loading={true}
+          />
+          {/* <AreaChart /> */}
+        </DialogGlobal>
       </React.Fragment>
     );
   }
