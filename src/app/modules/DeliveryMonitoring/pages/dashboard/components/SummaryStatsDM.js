@@ -1,51 +1,9 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import ApexCharts from "apexcharts";
-import objectPath from "object-path";
-import React, { useEffect, useMemo } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useHtmlClassService } from "../../../../../../_metronic/layout";
 
-const SummaryStatsDM = ({ data, className, authStatus }) => {
-  const uiService = useHtmlClassService();
-
-  const layoutProps = useMemo(() => {
-    return {
-      colorsGrayGray500: objectPath.get(
-        uiService.config,
-        "js.colors.gray.gray500"
-      ),
-      colorsGrayGray200: objectPath.get(
-        uiService.config,
-        "js.colors.gray.gray200"
-      ),
-      colorsGrayGray300: objectPath.get(
-        uiService.config,
-        "js.colors.gray.gray300"
-      ),
-      colorsThemeBaseDanger: objectPath.get(
-        uiService.config,
-        "js.colors.theme.base.danger"
-      ),
-      fontFamily: objectPath.get(uiService.config, "js.fontFamily"),
-    };
-  }, [uiService]);
-
-  useEffect(() => {
-    const element = document.getElementById("kt_mixed_widget_1_chart");
-    if (!element) {
-      return;
-    }
-
-    const options = getChartOptions(layoutProps);
-
-    const chart = new ApexCharts(element, options);
-    chart.render();
-    return function cleanUp() {
-      chart.destroy();
-    };
-  }, [layoutProps]);
-
+const SummaryStatsDM = ({ data, className, authStatus, openModal }) => {
   return (
     <div className={`card card-custom bg-gray-100 ${className}`}>
       {/* Header */}
@@ -53,33 +11,9 @@ const SummaryStatsDM = ({ data, className, authStatus }) => {
         <h3 className="card-title font-weight-bolder text-white">
           Summary Contract
         </h3>
-        {/* <div className="card-toolbar">
-          <Dropdown className="dropdown-inline" drop="down" alignRight>
-            <Dropdown.Toggle
-              className="btn btn-transparent-white btn-sm font-weight-bolder dropdown-toggle px-5"
-              variant="transparent"
-              id="dropdown-toggle-top"
-            >
-              Export
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="dropdown-menu dropdown-menu-sm dropdown-menu-right">
-              <DropdownMenu2 />
-            </Dropdown.Menu>
-          </Dropdown>
-        </div> */}
       </div>
       {/* Body */}
       <div className="card-body p-0 position-relative overflow-hidden">
-        {/* <h3 className="card-title font-weight-bolder text-white">
-          Summary Contract
-        </h3> */}
-        {/* Chart */}
-        {/* <div
-          id="kt_mixed_widget_1_chart"
-          className="card-rounded-bottom bg-danger"
-          style={{ height: "200px" }}
-        ></div> */}
-
         {/* Stat */}
         <div className="card-spacer mt25">
           <div className="row m-0">
@@ -90,8 +24,9 @@ const SummaryStatsDM = ({ data, className, authStatus }) => {
                 </span>
               </span>
               <Link
-                to={`/${authStatus}/delivery-monitoring/contract`}
+                // to={`/${authStatus}/delivery-monitoring/contract`}
                 className="text-warning font-weight-bold font-size-h6"
+                onClick={openModal}
               >
                 On Progress
               </Link>
@@ -103,8 +38,9 @@ const SummaryStatsDM = ({ data, className, authStatus }) => {
                 </span>
               </span>
               <Link
-                to={`/${authStatus}/delivery-monitoring/contract`}
+                // to={`/${authStatus}/delivery-monitoring/contract`}
                 className="text-primary font-weight-bold font-size-h6"
+                onClick={openModal}
               >
                 Success
               </Link>
@@ -116,8 +52,9 @@ const SummaryStatsDM = ({ data, className, authStatus }) => {
                 </span>
               </span>
               <Link
-                to={`/${authStatus}/delivery-monitoring/contract`}
+                // to={`/${authStatus}/delivery-monitoring/contract`}
                 className="text-danger font-weight-bold font-size-h6"
+                onClick={openModal}
               >
                 Overdue
               </Link>
@@ -138,135 +75,3 @@ const SummaryStatsDM = ({ data, className, authStatus }) => {
 };
 
 export default SummaryStatsDM;
-
-function getChartOptions(layoutProps) {
-  const strokeColor = "#D13647";
-
-  const options = {
-    series: [
-      {
-        name: "Net Profit",
-        data: [30, 45, 32, 70, 40, 40, 40],
-      },
-    ],
-    chart: {
-      type: "area",
-      height: 200,
-      toolbar: {
-        show: false,
-      },
-      zoom: {
-        enabled: false,
-      },
-      sparkline: {
-        enabled: true,
-      },
-      dropShadow: {
-        enabled: true,
-        enabledOnSeries: undefined,
-        top: 5,
-        left: 0,
-        blur: 3,
-        color: strokeColor,
-        opacity: 0.5,
-      },
-    },
-    plotOptions: {},
-    legend: {
-      show: false,
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    fill: {
-      type: "solid",
-      opacity: 0,
-    },
-    stroke: {
-      curve: "smooth",
-      show: true,
-      width: 3,
-      colors: [strokeColor],
-    },
-    xaxis: {
-      categories: ["Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      labels: {
-        show: false,
-        style: {
-          colors: layoutProps.colorsGrayGray500,
-          fontSize: "12px",
-          fontFamily: layoutProps.fontFamily,
-        },
-      },
-      crosshairs: {
-        show: false,
-        position: "front",
-        stroke: {
-          color: layoutProps.colorsGrayGray300,
-          width: 1,
-          dashArray: 3,
-        },
-      },
-    },
-    yaxis: {
-      min: 0,
-      max: 80,
-      labels: {
-        show: false,
-        style: {
-          colors: layoutProps.colorsGrayGray500,
-          fontSize: "12px",
-          fontFamily: layoutProps.fontFamily,
-        },
-      },
-    },
-    states: {
-      normal: {
-        filter: {
-          type: "none",
-          value: 0,
-        },
-      },
-      hover: {
-        filter: {
-          type: "none",
-          value: 0,
-        },
-      },
-      active: {
-        allowMultipleDataPointsSelection: false,
-        filter: {
-          type: "none",
-          value: 0,
-        },
-      },
-    },
-    tooltip: {
-      style: {
-        fontSize: "12px",
-        fontFamily: layoutProps.fontFamily,
-      },
-      y: {
-        formatter: function(val) {
-          return "$" + val + " thousands";
-        },
-      },
-      marker: {
-        show: false,
-      },
-    },
-    colors: ["transparent"],
-    markers: {
-      colors: layoutProps.colorsThemeBaseDanger,
-      strokeColor: [strokeColor],
-      strokeWidth: 3,
-    },
-  };
-  return options;
-}

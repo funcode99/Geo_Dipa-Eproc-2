@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 import { DemoOnly } from "../../../../../_metronic/_partials/dashboards/DemoOnly";
+import DialogGlobal from "../../../../components/modals/DialogGlobal";
 import ActivityDM from "./components/ActivityDM";
 import ContractPriceTable from "./components/ContractPriceTableDM";
 import SummaryStatsDM from "./components/SummaryStatsDM";
@@ -10,6 +11,7 @@ import ToDoDM from "./components/ToDoDM";
 class DashboardDM extends Component {
   constructor(props) {
     super(props);
+    this.modalRef = createRef();
     this.state = {
       summary_stat: {},
       plant_datas: [],
@@ -120,6 +122,10 @@ class DashboardDM extends Component {
     });
   };
 
+  openModal = (type) => {
+    this.modalRef.current.open();
+  };
+
   render() {
     // return <DemoOnly />;
     const { summary_stat, plant_datas, contract_prices } = this.state;
@@ -134,7 +140,11 @@ class DashboardDM extends Component {
             <ActivityDM className="card-stretch gutter-b" checked />
           </div>
           <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
-            <SummaryStatsDM data={summary_stat} authStatus={authStatus} />
+            <SummaryStatsDM
+              data={summary_stat}
+              authStatus={authStatus}
+              openModal={this.openModal}
+            />
           </div>
         </div>
         <div className={"row"}>
@@ -152,6 +162,25 @@ class DashboardDM extends Component {
           </div> */}
         </div>
         {/* <DemoOnly /> */}
+        <DialogGlobal
+          ref={this.modalRef}
+          // visible={visible}
+          isSubmit={false}
+          isCancel={false}
+          // textNo={
+          //   <FormattedMessage id="TITLE.MODAL_CREATE.LABEL.BUTTON_FAILED" />
+          // }
+          title={"Chart Report"}
+        >
+          <ContractPriceTable
+            data={contract_prices}
+            option={plant_data}
+            onFetch={this.fetchPrice}
+            loading={loadings.cont_price}
+            authStatus={authStatus}
+          />
+          {/* <AreaChart /> */}
+        </DialogGlobal>
       </React.Fragment>
     );
   }
