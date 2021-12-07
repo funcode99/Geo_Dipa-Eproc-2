@@ -16,7 +16,7 @@ const StatusRemarks = ({
   const rejectText = isRejected ? remarks : "";
   const waitingText =
     isWaiting && withFile
-      ? `${status} ${url ? `APPROVAL ${role}` : `UPLOAD ${role}`}`
+      ? `${status} ${url ? `APPROVAL ${role}` : `UPLOAD`}`
       : status;
   const colorScheme = isApproved ? "primary" : isRejected ? "danger" : "dark";
 
