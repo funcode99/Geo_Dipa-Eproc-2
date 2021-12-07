@@ -457,7 +457,11 @@ const BappPage = ({
           type: "get",
           url: `delivery/task/${taskId}/document-late`,
           onSuccess: (res) => {
-            const mappedData = res.data.map((el) => el?.document?.name);
+            console.log(`res`, res);
+            const mappedData = res.data.map(
+              (el) =>
+                `${el?.document?.name} (${formatDate(new Date(el?.due_date))})`
+            );
             setLateData(mappedData);
           },
         });
