@@ -12,6 +12,7 @@ const GoodReceipt = ({ data, loading }) => {
   if (_.isEmpty(task_gr_new)) {
     return <NoDataBox text={"Good Receipt not Available"} />;
   }
+  console.log(`task_gr_new`, task_gr_new);
 
   return (
     <div className={"mt-5"}>
@@ -26,7 +27,7 @@ const GoodReceipt = ({ data, loading }) => {
               withSearch={false}
               rows={els?.gr_items.map((el, id) => ({
                 line: el?.line_id,
-                mat_no: parseInt(el?.material),
+                mat_no: parseInt(el?.material) || "-",
                 desc: el?.item_text,
                 order_qty: el?.po_pr_qnt,
                 rcvd_qty: el?.entry_qnt,
