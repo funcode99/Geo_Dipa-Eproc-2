@@ -66,6 +66,10 @@ const tableHeaderTerminNew = [
     ),
   },
   {
+    id: "termin_progress",
+    label: "Termin Progress",
+  },
+  {
     id: "status",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
   },
@@ -354,6 +358,16 @@ const DetailPage = ({
           document_progress: "",
           // approve_status: item?.approve_status?.name,
           // status: item?.approve_status?.name,
+          termin_progress: (
+            <div>
+              <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
+                {item?.last_step?.label}
+              </span>
+              <span className="text-muted font-weight-bold">
+                {item?.last_step?.state}
+              </span>
+            </div>
+          ),
           status: (
             <StatusRemarks
               status={item?.approve_status?.name}
