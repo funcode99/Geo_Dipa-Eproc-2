@@ -100,6 +100,8 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
   const [orderBy, setOrderBy] = React.useState("");
   const [filterBy, setFilterBy] = React.useState({});
   const [newContent, setNewContent] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const generateTableContent = (data) => {
     setNewContent(dataArr);
@@ -113,6 +115,14 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
     setFilterBy(filter);
     console.log(`datazzz`, filter, data2);
   };
+
+  function handleChangePage(newPage) {
+    setPage(newPage);
+  }
+
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(+event.target.value);
+  }
 
   const getDataContracts = async () => {
     fetch_api_sg({
@@ -206,29 +216,33 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
             ).length
           }
           hecto={20}
+          onChangePage={handleChangePage}
+          onChangePerPage={handleChangeRowsPerPage}
         >
           {searchFindMulti(
             stableSort(dataArr, getSorting(order, orderBy)),
             filterBy
-          ).map((item, index) => (
-            <TableRow key={index.toString()}>
-              <TableCell>
-                <NavLink
-                  to={`/${status}/delivery-monitoring/contract/${item.id}`}
-                >
-                  {item?.contract_no}
-                </NavLink>
-              </TableCell>
-              <TableCell>{item.po_number}</TableCell>
-              <TableCell>{item.procurement_title}</TableCell>
-              <TableCell>{item.po_date}</TableCell>
-              <TableCell>{item.contract_date}</TableCell>
-              <TableCell>{item.group}</TableCell>
-              <TableCell>{item.vendor}</TableCell>
-              <TableCell>{item.status}</TableCell>
-              <TableCell>{item.action}</TableCell>
-            </TableRow>
-          ))}
+          )
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((item, index) => (
+              <TableRow key={index.toString()}>
+                <TableCell>
+                  <NavLink
+                    to={`/${status}/delivery-monitoring/contract/${item.id}`}
+                  >
+                    {item?.contract_no}
+                  </NavLink>
+                </TableCell>
+                <TableCell>{item.po_number}</TableCell>
+                <TableCell>{item.procurement_title}</TableCell>
+                <TableCell>{item.po_date}</TableCell>
+                <TableCell>{item.contract_date}</TableCell>
+                <TableCell>{item.group}</TableCell>
+                <TableCell>{item.vendor}</TableCell>
+                <TableCell>{item.status}</TableCell>
+                <TableCell>{item.action}</TableCell>
+              </TableRow>
+            ))}
         </Tables>
         {/* <TablePaginationCustom
           headerRows={tableHeaderContractsNew}

@@ -95,7 +95,7 @@ export const SAPage = ({ fetch_api_sg, loadings, status }) => {
   return (
     <>
       <Subheader
-        text="Good Receipt"
+        text="Service Acceptance"
         IconComponent={
           <SVG
             src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")}

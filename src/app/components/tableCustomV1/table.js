@@ -38,6 +38,8 @@ const Tables = (props) => {
     children,
     countData = 0,
     hecto = 1,
+    onChangePage,
+    onChangePerPage,
   } = props;
   const [paginations, setPaginations] = React.useState({
     numberColum: 0,
@@ -120,6 +122,7 @@ const Tables = (props) => {
       ...pagination,
     });
     requestFilterSort();
+    onChangePage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -131,6 +134,7 @@ const Tables = (props) => {
       ...pagination,
     });
     requestFilterSort();
+    onChangePerPage(event);
   };
 
   const createSortHandler = (item) => {
