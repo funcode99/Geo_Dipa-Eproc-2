@@ -147,10 +147,10 @@ class DashboardDM extends Component {
     return (
       <React.Fragment>
         <div className={"row"}>
-          <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "60vh" }}>
+          <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "70vh" }}>
             <ToDoDM className="card-stretch gutter-b" />
           </div>
-          <div className="col-lg-4 col-xxl-5" style={{ maxHeight: "60vh" }}>
+          <div className="col-lg-4 col-xxl-5" style={{ maxHeight: "70vh" }}>
             <ActivityDM className="card-stretch gutter-b" checked />
           </div>
           <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
@@ -162,7 +162,7 @@ class DashboardDM extends Component {
           </div>
         </div>
         <div className={"row"}>
-          <div className="col-lg-8 col-xxl-12" style={{ maxHeight: "60vh" }}>
+          <div className="col-lg-8 col-xxl-12">
             <ContractPriceTable
               data={contract_prices}
               option={plant_data}
