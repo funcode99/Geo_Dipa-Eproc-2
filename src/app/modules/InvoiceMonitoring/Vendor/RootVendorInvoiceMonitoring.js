@@ -4,6 +4,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import DashboardListContract from "./ListContract/DashboardListContract";
 import ItemContract from "./ListContract/ItemContract";
 import ListTermContract from "./ListContract/ListTermContract";
+import DashboardListInvoice from "./ListInvoice/DashboardListInvoice";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 
@@ -33,6 +34,10 @@ function RootVendorInvoiceMonitoring(props) {
       <Route
         path="/vendor/invoice_monitoring/contract"
         component={DashboardListContract}
+      />
+      <Route
+        path="/vendor/invoice_monitoring/invoice_document"
+        component={DashboardListInvoice}
       />
     </Switch>
   );

@@ -3,7 +3,7 @@ import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import {
-  getAllInvoice,
+  getAllInvoiceVendor,
   getAllProgressTypeFilter,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
@@ -15,16 +15,18 @@ import * as reducer from "../../_redux/InvoiceMonitoringSlice";
 import { useSubheader } from "../../../../../_metronic/layout";
 
 function DashboardListInvoice(props) {
+  const vendor_id = useSelector(
+    (state) => state.auth.user.data.vendor_id,
+    shallowEqual
+  );
+
+  const main_vendor = useSelector(
+    (state) => state.auth.user.data.main_vendor,
+    shallowEqual
+  );
+
   const user_id = useSelector(
     (state) => state.auth.user.data.user_id,
-    shallowEqual
-  );
-  const is_finance = useSelector(
-    (state) => state.auth.user.data.is_finance,
-    shallowEqual
-  );
-  const is_main = useSelector(
-    (state) => state.auth.user.data.is_main,
     shallowEqual
   );
 
@@ -46,7 +48,7 @@ function DashboardListInvoice(props) {
   useLayoutEffect(() => {
     suhbeader.setBreadcrumbs([
       {
-        pathname: `/client/invoice_monitoring/invoice_document`,
+        pathname: `/vendor/invoice_monitoring/invoice_document`,
         title: intl.formatMessage({
           id: "MENU.INVOICE_MONITORING.INVOICE_DOCUMENT",
         }),
@@ -299,8 +301,7 @@ function DashboardListInvoice(props) {
     });
     setErr(false);
     setParamsTable(params);
-    const plant = is_main ? 'Pusat' : 'Unit'
-    getAllInvoice(params, plant, user_id, is_finance)
+    getAllInvoiceVendor(params, vendor_id, main_vendor, user_id)
       .then((result) => {
         setLoading(false);
         setData({
@@ -372,7 +373,7 @@ function DashboardListInvoice(props) {
                   </TableCell>
                   <TableCell>
                     <Link
-                      to={`/client/invoice_monitoring/contract/${item.contract_id}/${item.term_id}`}
+                      to={`/vendor/invoice_monitoring/contract/${item.contract_id}/${item.term_id}`}
                       onClick={() => {
                         tabInvoice.tab = 1;
                         tabInvoice.tabInvoice = 1;
