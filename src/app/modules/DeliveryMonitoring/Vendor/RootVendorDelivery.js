@@ -13,7 +13,11 @@ import {
   ContractDetailPage,
   TerminPage,
   TerminPageNew,
-  GRPage
+  GRPage,
+  DetailGRPage,
+  SAPage,
+  DetailSAPage,
+  DashboardDM,
 } from "../pages";
 
 function RootVendorDelivery(props) {
@@ -52,16 +56,20 @@ function RootVendorDelivery(props) {
         component={ContractDetailPage}
         exact={true}
       />
-
+      <Route
+        path="/vendor/delivery-monitoring/gr/:task_id/:gr_id"
+        component={DetailGRPage}
+      />
+      <Route
+        path="/vendor/delivery-monitoring/sa/:task_id/:sa_id"
+        component={DetailSAPage}
+      />
       <Route
         path="/vendor/delivery-monitoring/contract"
         component={ContractsPage}
       />
-
-      <Route
-        path="/vendor/delivery-monitoring/gr"
-        component={GRPage}
-      />
+      <Route path="/client/delivery-monitoring/gr" component={GRPage} />
+      <Route path="/client/delivery-monitoring/sa" component={SAPage} />
     </Switch>
   );
 }
