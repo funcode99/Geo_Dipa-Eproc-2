@@ -147,14 +147,15 @@ class DashboardDM extends Component {
     return (
       <React.Fragment>
         <div className={"row"}>
-          <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "70vh" }}>
+          <div className="col-lg-4 col-xxl-4" style={{ maxHeight: "60vh" }}>
             <ToDoDM className="card-stretch gutter-b" />
           </div>
-          <div className="col-lg-4 col-xxl-5" style={{ maxHeight: "70vh" }}>
+          <div className="col-lg-4 col-xxl-5" style={{ maxHeight: "60vh" }}>
             <ActivityDM className="card-stretch gutter-b" checked />
           </div>
           <div className="col-lg-4 col-xxl-3" style={{ maxHeight: "60vh" }}>
             <SummaryStatsDM
+              className="card-stretch gutter-b"
               data={summary_stat}
               authStatus={authStatus}
               openModal={this.openModal}
