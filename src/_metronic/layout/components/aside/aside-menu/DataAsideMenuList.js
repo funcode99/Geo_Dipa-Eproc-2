@@ -208,20 +208,6 @@ export const DataAsideMenuListVendor = [
         title: "MENU.INVOICE_MONITORING.INVOICE_DOCUMENT",
         subMenu: null,
       },
-      {
-        rootPath: "/vendor/invoice_monitoring-4/error-v",
-        title: "MENU.INVOICE_MONITORING.TAX",
-        subMenu: [
-          {
-            rootPath: "/vendor/invoice_monitoring-4/error-v/1",
-            title: "TITLE.TEST",
-          },
-          {
-            rootPath: "/vendor/invoice_monitoring-4/error-v/2",
-            title: "TITLE.TEST",
-          },
-        ],
-      },
     ],
   },
   {
