@@ -146,6 +146,7 @@ function ItemContractRoutingSlip(props) {
                     <td className="td-6 text-center">Jam Masuk</td>
                     <td className="td-11 text-center">Tanggal Keluar</td>
                     <td className="td-6 text-center">Jam Keluar</td>
+                    {/*<td className="td-10 text-center">Durasi</td>*/}
                     <td className="td-21 text-center">Keterangan</td>
                   </tr>
                 </thead>
@@ -171,7 +172,7 @@ function ItemContractRoutingSlip(props) {
                               .format("HH:mm")
                           : "-"}
                       </td>
-                      <td className="text-center">-</td>
+                      {/*<td className="text-center">-</td>*/}
                       <td>SA / GR Terbit</td>
                     </tr>
                   }
@@ -230,58 +231,58 @@ function ItemContractRoutingSlip(props) {
                               .format("HH:mm")
                           : "-"}
                       </td>
-                      {(() => {
-                        var duration = window.moment.duration(
-                          window
-                            .moment(
-                              new Date(
-                                slipData?.support_deliverables_document_softcopy_date_out
-                              )
-                            )
-                            .diff(
-                              window.moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_in
-                                )
-                              )
-                            )
-                        );
-                        const days = Math.floor(duration.asDays());
-                        duration.subtract(window.moment.duration(days, "days"));
-                        const hours = duration.hours();
-                        duration.subtract(
-                          window.moment.duration(hours, "hours")
-                        );
-                        const minutes = duration.minutes();
-                        duration.subtract(
-                          window.moment.duration(minutes, "minutes")
-                        );
-                        return (
-                          <td className="text-center">
-                            {slipData?.support_deliverables_document_softcopy_date_in &&
-                            slipData?.support_deliverables_document_softcopy_date_out ? (
-                              <div>
-                                {days > 0 && (
-                                  <span>
-                                    {days} <FormattedMessage id="SPAN.DAYS" />
-                                  </span>
-                                )}
-                                {hours > 0 && (
-                                  <span>
-                                    {hours} <FormattedMessage id="SPAN.HOURS" />
-                                  </span>
-                                )}
-                                <span>
-                                  {minutes}{" "}
-                                  <FormattedMessage id="SPAN.MINUTES" />
-                                </span>
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        );
-                      })()}
+                      {/*{(() => {*/}
+                      {/*  var duration = window.moment.duration(*/}
+                      {/*    window*/}
+                      {/*      .moment(*/}
+                      {/*        new Date(*/}
+                      {/*          slipData?.support_deliverables_document_softcopy_date_out*/}
+                      {/*        )*/}
+                      {/*      )*/}
+                      {/*      .diff(*/}
+                      {/*        window.moment(*/}
+                      {/*          new Date(*/}
+                      {/*            slipData?.support_deliverables_document_softcopy_date_in*/}
+                      {/*          )*/}
+                      {/*        )*/}
+                      {/*      )*/}
+                      {/*  );*/}
+                      {/*  const days = Math.floor(duration.asDays());*/}
+                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
+                      {/*  const hours = duration.hours();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(hours, "hours")*/}
+                      {/*  );*/}
+                      {/*  const minutes = duration.minutes();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(minutes, "minutes")*/}
+                      {/*  );*/}
+                      {/*  return (*/}
+                      {/*    <td className="text-center">*/}
+                      {/*      {slipData?.support_deliverables_document_softcopy_date_in &&*/}
+                      {/*      slipData?.support_deliverables_document_softcopy_date_out ? (*/}
+                      {/*        <div>*/}
+                      {/*          {days > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          {hours > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          <span>*/}
+                      {/*            {minutes}{" "}*/}
+                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
+                      {/*          </span>*/}
+                      {/*        </div>*/}
+                      {/*      ) : (*/}
+                      {/*        "-"*/}
+                      {/*      )}*/}
+                      {/*    </td>*/}
+                      {/*  );*/}
+                      {/*})()}*/}
                       <td>Softcopy Dokumen Pendukung</td>
                     </tr>
                   )}
@@ -340,58 +341,58 @@ function ItemContractRoutingSlip(props) {
                               .format("HH:mm")
                           : "-"}
                       </td>
-                      {(() => {
-                        var duration = window.moment.duration(
-                          window
-                            .moment(
-                              new Date(
-                                slipData?.support_deliverables_document_softcopy_date_out
-                              )
-                            )
-                            .diff(
-                              window.moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_in
-                                )
-                              )
-                            )
-                        );
-                        const days = Math.floor(duration.asDays());
-                        duration.subtract(window.moment.duration(days, "days"));
-                        const hours = duration.hours();
-                        duration.subtract(
-                          window.moment.duration(hours, "hours")
-                        );
-                        const minutes = duration.minutes();
-                        duration.subtract(
-                          window.moment.duration(minutes, "minutes")
-                        );
-                        return (
-                          <td className="text-center">
-                            {slipData?.support_deliverables_document_softcopy_date_in &&
-                            slipData?.support_deliverables_document_softcopy_date_out ? (
-                              <div>
-                                {days > 0 && (
-                                  <span>
-                                    {days} <FormattedMessage id="SPAN.DAYS" />
-                                  </span>
-                                )}
-                                {hours > 0 && (
-                                  <span>
-                                    {hours} <FormattedMessage id="SPAN.HOURS" />
-                                  </span>
-                                )}
-                                <span>
-                                  {minutes}{" "}
-                                  <FormattedMessage id="SPAN.MINUTES" />
-                                </span>
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        );
-                      })()}
+                      {/*{(() => {*/}
+                      {/*  var duration = window.moment.duration(*/}
+                      {/*    window*/}
+                      {/*      .moment(*/}
+                      {/*        new Date(*/}
+                      {/*          slipData?.support_deliverables_document_softcopy_date_out*/}
+                      {/*        )*/}
+                      {/*      )*/}
+                      {/*      .diff(*/}
+                      {/*        window.moment(*/}
+                      {/*          new Date(*/}
+                      {/*            slipData?.support_deliverables_document_softcopy_date_in*/}
+                      {/*          )*/}
+                      {/*        )*/}
+                      {/*      )*/}
+                      {/*  );*/}
+                      {/*  const days = Math.floor(duration.asDays());*/}
+                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
+                      {/*  const hours = duration.hours();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(hours, "hours")*/}
+                      {/*  );*/}
+                      {/*  const minutes = duration.minutes();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(minutes, "minutes")*/}
+                      {/*  );*/}
+                      {/*  return (*/}
+                      {/*    <td className="text-center">*/}
+                      {/*      {slipData?.support_deliverables_document_softcopy_date_in &&*/}
+                      {/*      slipData?.support_deliverables_document_softcopy_date_out ? (*/}
+                      {/*        <div>*/}
+                      {/*          {days > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          {hours > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          <span>*/}
+                      {/*            {minutes}{" "}*/}
+                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
+                      {/*          </span>*/}
+                      {/*        </div>*/}
+                      {/*      ) : (*/}
+                      {/*        "-"*/}
+                      {/*      )}*/}
+                      {/*    </td>*/}
+                      {/*  );*/}
+                      {/*})()}*/}
                       <td>Softcopy Dokumen Deliverables</td>
                     </tr>
                   )}
@@ -440,58 +441,58 @@ function ItemContractRoutingSlip(props) {
                               .format("HH:mm")
                           : "-"}
                       </td>
-                      {(() => {
-                        var duration = window.moment.duration(
-                          window
-                            .moment(
-                              new Date(
-                                slipData?.billing_document_softcopy_date_out
-                              )
-                            )
-                            .diff(
-                              window.moment(
-                                new Date(
-                                  slipData?.billing_document_softcopy_date_in
-                                )
-                              )
-                            )
-                        );
-                        const days = Math.floor(duration.asDays());
-                        duration.subtract(window.moment.duration(days, "days"));
-                        const hours = duration.hours();
-                        duration.subtract(
-                          window.moment.duration(hours, "hours")
-                        );
-                        const minutes = duration.minutes();
-                        duration.subtract(
-                          window.moment.duration(minutes, "minutes")
-                        );
-                        return (
-                          <td className="text-center">
-                            {slipData?.billing_document_softcopy_date_in &&
-                            slipData?.billing_document_softcopy_date_out ? (
-                              <div>
-                                {days > 0 && (
-                                  <span>
-                                    {days} <FormattedMessage id="SPAN.DAYS" />
-                                  </span>
-                                )}
-                                {hours > 0 && (
-                                  <span>
-                                    {hours} <FormattedMessage id="SPAN.HOURS" />
-                                  </span>
-                                )}
-                                <span>
-                                  {minutes}{" "}
-                                  <FormattedMessage id="SPAN.MINUTES" />
-                                </span>
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        );
-                      })()}
+                      {/*{(() => {*/}
+                      {/*  var duration = window.moment.duration(*/}
+                      {/*    window*/}
+                      {/*      .moment(*/}
+                      {/*        new Date(*/}
+                      {/*          slipData?.billing_document_softcopy_date_out*/}
+                      {/*        )*/}
+                      {/*      )*/}
+                      {/*      .diff(*/}
+                      {/*        window.moment(*/}
+                      {/*          new Date(*/}
+                      {/*            slipData?.billing_document_softcopy_date_in*/}
+                      {/*          )*/}
+                      {/*        )*/}
+                      {/*      )*/}
+                      {/*  );*/}
+                      {/*  const days = Math.floor(duration.asDays());*/}
+                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
+                      {/*  const hours = duration.hours();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(hours, "hours")*/}
+                      {/*  );*/}
+                      {/*  const minutes = duration.minutes();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(minutes, "minutes")*/}
+                      {/*  );*/}
+                      {/*  return (*/}
+                      {/*    <td className="text-center">*/}
+                      {/*      {slipData?.billing_document_softcopy_date_in &&*/}
+                      {/*      slipData?.billing_document_softcopy_date_out ? (*/}
+                      {/*        <div>*/}
+                      {/*          {days > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          {hours > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          <span>*/}
+                      {/*            {minutes}{" "}*/}
+                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
+                      {/*          </span>*/}
+                      {/*        </div>*/}
+                      {/*      ) : (*/}
+                      {/*        "-"*/}
+                      {/*      )}*/}
+                      {/*    </td>*/}
+                      {/*  );*/}
+                      {/*})()}*/}
                       <td>Tax Verification</td>
                     </tr>
                   )}
@@ -524,52 +525,52 @@ function ItemContractRoutingSlip(props) {
                               .format("HH:mm")
                           : "-"}
                       </td>
-                      {(() => {
-                        var duration = window.moment.duration(
-                          window
-                            .moment(new Date(slipData?.hardcopy_date_out))
-                            .diff(
-                              window.moment(
-                                new Date(slipData?.hardcopy_date_in)
-                              )
-                            )
-                        );
-                        const days = Math.floor(duration.asDays());
-                        duration.subtract(window.moment.duration(days, "days"));
-                        const hours = duration.hours();
-                        duration.subtract(
-                          window.moment.duration(hours, "hours")
-                        );
-                        const minutes = duration.minutes();
-                        duration.subtract(
-                          window.moment.duration(minutes, "minutes")
-                        );
-                        return (
-                          <td className="text-center">
-                            {slipData?.hardcopy_date_in &&
-                            slipData?.hardcopy_date_out ? (
-                              <div>
-                                {days > 0 && (
-                                  <span>
-                                    {days} <FormattedMessage id="SPAN.DAYS" />
-                                  </span>
-                                )}
-                                {hours > 0 && (
-                                  <span>
-                                    {hours} <FormattedMessage id="SPAN.HOURS" />
-                                  </span>
-                                )}
-                                <span>
-                                  {minutes}{" "}
-                                  <FormattedMessage id="SPAN.MINUTES" />
-                                </span>
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        );
-                      })()}
+                      {/*{(() => {*/}
+                      {/*  var duration = window.moment.duration(*/}
+                      {/*    window*/}
+                      {/*      .moment(new Date(slipData?.hardcopy_date_out))*/}
+                      {/*      .diff(*/}
+                      {/*        window.moment(*/}
+                      {/*          new Date(slipData?.hardcopy_date_in)*/}
+                      {/*        )*/}
+                      {/*      )*/}
+                      {/*  );*/}
+                      {/*  const days = Math.floor(duration.asDays());*/}
+                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
+                      {/*  const hours = duration.hours();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(hours, "hours")*/}
+                      {/*  );*/}
+                      {/*  const minutes = duration.minutes();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(minutes, "minutes")*/}
+                      {/*  );*/}
+                      {/*  return (*/}
+                      {/*    <td className="text-center">*/}
+                      {/*      {slipData?.hardcopy_date_in &&*/}
+                      {/*      slipData?.hardcopy_date_out ? (*/}
+                      {/*        <div>*/}
+                      {/*          {days > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          {hours > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          <span>*/}
+                      {/*            {minutes}{" "}*/}
+                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
+                      {/*          </span>*/}
+                      {/*        </div>*/}
+                      {/*      ) : (*/}
+                      {/*        "-"*/}
+                      {/*      )}*/}
+                      {/*    </td>*/}
+                      {/*  );*/}
+                      {/*})()}*/}
                       <td>Hardcopy Dokumen</td>
                     </tr>
                   )}
@@ -602,50 +603,50 @@ function ItemContractRoutingSlip(props) {
                               .format("HH:mm")
                           : "-"}
                       </td>
-                      {(() => {
-                        var duration = window.moment.duration(
-                          window
-                            .moment(new Date(slipData?.park_ap_date_out))
-                            .diff(
-                              window.moment(new Date(slipData?.park_ap_date_in))
-                            )
-                        );
-                        const days = Math.floor(duration.asDays());
-                        duration.subtract(window.moment.duration(days, "days"));
-                        const hours = duration.hours();
-                        duration.subtract(
-                          window.moment.duration(hours, "hours")
-                        );
-                        const minutes = duration.minutes();
-                        duration.subtract(
-                          window.moment.duration(minutes, "minutes")
-                        );
-                        return (
-                          <td className="text-center">
-                            {slipData?.park_ap_date_in &&
-                            slipData?.park_ap_date_out ? (
-                              <div>
-                                {days > 0 && (
-                                  <span>
-                                    {days} <FormattedMessage id="SPAN.DAYS" />
-                                  </span>
-                                )}
-                                {hours > 0 && (
-                                  <span>
-                                    {hours} <FormattedMessage id="SPAN.HOURS" />
-                                  </span>
-                                )}
-                                <span>
-                                  {minutes}{" "}
-                                  <FormattedMessage id="SPAN.MINUTES" />
-                                </span>
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        );
-                      })()}
+                      {/*{(() => {*/}
+                      {/*  var duration = window.moment.duration(*/}
+                      {/*    window*/}
+                      {/*      .moment(new Date(slipData?.park_ap_date_out))*/}
+                      {/*      .diff(*/}
+                      {/*        window.moment(new Date(slipData?.park_ap_date_in))*/}
+                      {/*      )*/}
+                      {/*  );*/}
+                      {/*  const days = Math.floor(duration.asDays());*/}
+                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
+                      {/*  const hours = duration.hours();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(hours, "hours")*/}
+                      {/*  );*/}
+                      {/*  const minutes = duration.minutes();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(minutes, "minutes")*/}
+                      {/*  );*/}
+                      {/*  return (*/}
+                      {/*    <td className="text-center">*/}
+                      {/*      {slipData?.park_ap_date_in &&*/}
+                      {/*      slipData?.park_ap_date_out ? (*/}
+                      {/*        <div>*/}
+                      {/*          {days > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          {hours > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          <span>*/}
+                      {/*            {minutes}{" "}*/}
+                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
+                      {/*          </span>*/}
+                      {/*        </div>*/}
+                      {/*      ) : (*/}
+                      {/*        "-"*/}
+                      {/*      )}*/}
+                      {/*    </td>*/}
+                      {/*  );*/}
+                      {/*})()}*/}
                       <td>Approve Park AP Dokumen</td>
                     </tr>
                   )}
@@ -678,53 +679,128 @@ function ItemContractRoutingSlip(props) {
                               .format("HH:mm")
                           : "-"}
                       </td>
-                      {(() => {
-                        var duration = window.moment.duration(
-                          window
-                            .moment(new Date(slipData?.park_byr_date_out))
-                            .diff(
-                              window.moment(
-                                new Date(slipData?.park_byr_date_in)
-                              )
-                            )
-                        );
-                        const days = Math.floor(duration.asDays());
-                        duration.subtract(window.moment.duration(days, "days"));
-                        const hours = duration.hours();
-                        duration.subtract(
-                          window.moment.duration(hours, "hours")
-                        );
-                        const minutes = duration.minutes();
-                        duration.subtract(
-                          window.moment.duration(minutes, "minutes")
-                        );
-                        return (
-                          <td className="text-center">
-                            {slipData?.park_byr_date_in &&
-                            slipData?.park_byr_date_out ? (
-                              <div>
-                                {days > 0 && (
-                                  <span>
-                                    {days} <FormattedMessage id="SPAN.DAYS" />
-                                  </span>
-                                )}
-                                {hours > 0 && (
-                                  <span>
-                                    {hours} <FormattedMessage id="SPAN.HOURS" />
-                                  </span>
-                                )}
-                                <span>
-                                  {minutes}{" "}
-                                  <FormattedMessage id="SPAN.MINUTES" />
-                                </span>
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        );
-                      })()}
+                      {/*{(() => {*/}
+                      {/*  var duration = window.moment.duration(*/}
+                      {/*    window*/}
+                      {/*      .moment(new Date(slipData?.park_byr_date_out))*/}
+                      {/*      .diff(*/}
+                      {/*        window.moment(*/}
+                      {/*          new Date(slipData?.park_byr_date_in)*/}
+                      {/*        )*/}
+                      {/*      )*/}
+                      {/*  );*/}
+                      {/*  const days = Math.floor(duration.asDays());*/}
+                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
+                      {/*  const hours = duration.hours();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(hours, "hours")*/}
+                      {/*  );*/}
+                      {/*  const minutes = duration.minutes();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(minutes, "minutes")*/}
+                      {/*  );*/}
+                      {/*  return (*/}
+                      {/*    <td className="text-center">*/}
+                      {/*      {slipData?.park_byr_date_in &&*/}
+                      {/*      slipData?.park_byr_date_out ? (*/}
+                      {/*        <div>*/}
+                      {/*          {days > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          {hours > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          <span>*/}
+                      {/*            {minutes}{" "}*/}
+                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
+                      {/*          </span>*/}
+                      {/*        </div>*/}
+                      {/*      ) : (*/}
+                      {/*        "-"*/}
+                      {/*      )}*/}
+                      {/*    </td>*/}
+                      {/*  );*/}
+                      {/*})()}*/}
                       <td>Approve Park BYR Dokumen</td>
+                    </tr>
+                  )}
+                  {slipData?.spt_date_in && (
+                    <tr>
+                      <td>8</td>
+                      <td>Treasury Process</td>
+                      <td>{slipData?.spt_creator?.party?.full_name}</td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.spt_date_in))
+                          .format("DD MMM YYYY")}
+                      </td>
+                      <td className="text-center">
+                        {window
+                          .moment(new Date(slipData?.spt_date_in))
+                          .format("HH:mm")}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.spt_date_out
+                          ? window
+                              .moment(new Date(slipData?.spt_date_out))
+                              .format("DD MMM YYYY")
+                          : "-"}
+                      </td>
+                      <td className="text-center">
+                        {slipData?.spt_date_out
+                          ? window
+                              .moment(new Date(slipData?.spt_date_out))
+                              .format("HH:mm")
+                          : "-"}
+                      </td>
+                      {/*{(() => {*/}
+                      {/*  var duration = window.moment.duration(*/}
+                      {/*    window*/}
+                      {/*      .moment(new Date(slipData?.spt_date_out))*/}
+                      {/*      .diff(*/}
+                      {/*        window.moment(new Date(slipData?.spt_date_in))*/}
+                      {/*      )*/}
+                      {/*  );*/}
+                      {/*  const days = Math.floor(duration.asDays());*/}
+                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
+                      {/*  const hours = duration.hours();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(hours, "hours")*/}
+                      {/*  );*/}
+                      {/*  const minutes = duration.minutes();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(minutes, "minutes")*/}
+                      {/*  );*/}
+                      {/*  return (*/}
+                      {/*    <td className="text-center">*/}
+                      {/*      {slipData?.spt_date_in && slipData?.spt_date_out ? (*/}
+                      {/*        <div>*/}
+                      {/*          {days !== 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          {hours > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          <span>*/}
+                      {/*            {minutes}{" "}*/}
+                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
+                      {/*          </span>*/}
+                      {/*        </div>*/}
+                      {/*      ) : (*/}
+                      {/*        "-"*/}
+                      {/*      )}*/}
+                      {/*    </td>*/}
+                      {/*  );*/}
+                      {/*})()}*/}
+                      <td>SPT Dokumen</td>
                     </tr>
                   )}
                   {slipData?.spt_date_in && (
@@ -756,55 +832,268 @@ function ItemContractRoutingSlip(props) {
                             .format("HH:mm")
                           : "-"}
                       </td>
-                      {(() => {
-                        var duration = window.moment.duration(
-                          window
-                            .moment(new Date(slipData?.paid?.created_at))
-                            .diff(
-                              window.moment(new Date(slipData?.spt_date_in))
-                            )
-                        );
-                        const days = Math.floor(duration.asDays());
-                        duration.subtract(window.moment.duration(days, "days"));
-                        const hours = duration.hours();
-                        duration.subtract(
-                          window.moment.duration(hours, "hours")
-                        );
-                        const minutes = duration.minutes();
-                        duration.subtract(
-                          window.moment.duration(minutes, "minutes")
-                        );
-                        return (
-                          <td className="text-center">
-                            {slipData?.spt_date_in && slipData?.paid?.created_at ? (
-                              <div>
-                                {days !== 0 && (
-                                  <span>
-                                    {days} <FormattedMessage id="SPAN.DAYS" />
-                                  </span>
-                                )}
-                                {hours > 0 && (
-                                  <span>
-                                    {hours} <FormattedMessage id="SPAN.HOURS" />
-                                  </span>
-                                )}
-                                <span>
-                                  {minutes}{" "}
-                                  <FormattedMessage id="SPAN.MINUTES" />
-                                </span>
-                              </div>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        );
-                      })()}
+                      {/*{(() => {*/}
+                      {/*  var duration = window.moment.duration(*/}
+                      {/*    window*/}
+                      {/*      .moment(new Date(slipData?.paid?.created_at))*/}
+                      {/*      .diff(*/}
+                      {/*        window.moment(new Date(slipData?.spt_date_in))*/}
+                      {/*      )*/}
+                      {/*  );*/}
+                      {/*  const days = Math.floor(duration.asDays());*/}
+                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
+                      {/*  const hours = duration.hours();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(hours, "hours")*/}
+                      {/*  );*/}
+                      {/*  const minutes = duration.minutes();*/}
+                      {/*  duration.subtract(*/}
+                      {/*    window.moment.duration(minutes, "minutes")*/}
+                      {/*  );*/}
+                      {/*  return (*/}
+                      {/*    <td className="text-center">*/}
+                      {/*      {slipData?.spt_date_in && slipData?.paid?.created_at ? (*/}
+                      {/*        <div>*/}
+                      {/*          {days !== 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          {hours > 0 && (*/}
+                      {/*            <span>*/}
+                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
+                      {/*            </span>*/}
+                      {/*          )}*/}
+                      {/*          <span>*/}
+                      {/*            {minutes}{" "}*/}
+                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
+                      {/*          </span>*/}
+                      {/*        </div>*/}
+                      {/*      ) : (*/}
+                      {/*        "-"*/}
+                      {/*      )}*/}
+                      {/*    </td>*/}
+                      {/*  );*/}
+                      {/*})()}*/}
                       <td>Paid Dokumen</td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
+            {/* <div className="row border">
+              <div
+                className="col-sm border-right text-center"
+                style={{ backgroundColor: "whitesmoke" }}
+              >
+                <span style={{ fontSize: 10 }}>Diisi Oleh</span>
+                <div>Finance</div>
+              </div>
+              <div
+                className="col-sm border-right text-center"
+                style={{ backgroundColor: "whitesmoke" }}
+              >
+                <span style={{ fontSize: 10 }}>Diisi Oleh</span>
+                <div>Budget</div>
+              </div>
+              <div
+                className="col-sm text-center"
+                style={{ backgroundColor: "whitesmoke" }}
+              >
+                <span style={{ fontSize: 10 }}>Diisi Oleh</span>
+                <div>Accounting</div>
+              </div>
+            </div>
+            <div className="row border">
+              <div className="col-sm border-right text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>Uraian</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>Jumlah</span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm border-right text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>Kode Anggaran</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>Jumlah</span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>Kode Akun</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>Jumlah</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row border">
+              <div className="col-sm border-right text-left">
+                <div className="row mt-3">
+                  <div className="col-sm-6 border-right">
+                    <span>1. Tagihan</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>{rupiah(slipData?.bkb?.sub_total).slice(3)}</span>
+                  </div>
+                </div>
+                <div className="row mt-3">
+                  <div className="col-sm-6 border-right">
+                    <span>2. Potongan</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>171.666.000</span>
+                  </div>
+                </div>
+                {slipData?.tax?.tax_selected?.map((item, index) => {
+                  const data = JSON.parse(item?.value)
+                  return (
+                    <div className="row mt-3" key={index}>
+                      <div className="col-sm-6 border-right">
+                        <span className="pl-3">{data.description} - {data.value}%</span>
+                      </div>
+                      <div className="col-sm-6">
+                        <span>({rupiah(data.tax_value).slice(3)})</span>
+                      </div>
+                    </div>
+                  )
+                })}
+                <div className="row mt-3">
+                  <div className="col-sm-6 border-right">
+                    <span className="pl-3">Denda</span>
+                  </div>
+                  <div className="col-sm-6">({rupiah(slipData?.invoice?.penalty).slice(3)})</div>
+                </div>
+                <div className="row mt-3">
+                  <div className="col-sm-6 border-right">
+                    <span>3. Jumlah Dibayar</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>{rupiah(slipData?.bkb?.total_amount).slice(3)}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm border-right text-left">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>Kode Anggaran</span>
+                  </div>
+                  <div className="col-sm-6"><span>Jumlah</span></div>
+                </div>
+              </div>
+              <div className="col-sm text-left">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>Kode Akun</span>
+                  </div>
+                  <div className="col-sm-6"><span>Jumlah</span></div>
+                </div>
+              </div>
+            </div>
+            <div className="row border">
+              <div className="col-sm border-right text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>Tanggal Masuk</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>Tanggal Keluar</span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm border-right text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>Tanggal Masuk</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>Tanggal Keluar</span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>Tanggal Masuk</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>Tanggal Keluar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row border">
+              <div className="col-sm border-right text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span>20 Mei 2020</span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span>20 Mei 2020</span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm border-right text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span></span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm text-center">
+                <div className="row">
+                  <div className="col-sm-6 border-right">
+                    <span></span>
+                  </div>
+                  <div className="col-sm-6">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row border">
+              <div className="col-sm border-right text-center">
+                <span>Tanda Tangan &#38; Nama</span>
+              </div>
+              <div className="col-sm border-right text-center">
+                <span>Tanda Tangan &#38; Nama</span>
+              </div>
+              <div className="col-sm text-center">
+                <span>Tanda Tangan &#38; Nama</span>
+              </div>
+            </div>
+            <div className="row border">
+              <div
+                className="col-sm border-right d-flex align-items-end"
+                style={{ height: 80 }}
+              >
+                <span className="mx-auto">Merry</span>
+              </div>
+              <div
+                className="col-sm border-right d-flex align-items-end"
+                style={{ height: 80 }}
+              >
+                <span></span>
+              </div>
+              <div
+                className="col-sm border-right d-flex align-items-end"
+                style={{ height: 80 }}
+              >
+                <span></span>
+              </div>
+            </div> */}
           </div>
         </CardBody>
       </Card>
