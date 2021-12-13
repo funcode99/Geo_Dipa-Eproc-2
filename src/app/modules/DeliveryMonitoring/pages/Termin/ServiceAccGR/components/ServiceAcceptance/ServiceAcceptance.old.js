@@ -1,13 +1,13 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
-import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
-import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
-import { rupiah } from "../../../../../../libs/currency";
-import { tableHeader1 } from "../fieldData";
-import BoxSignSA from "./BoxSignSA";
-import DetailSA from "./DetailSA";
-import FooterSA from "./FooterSA";
-import RowAdditional from "./RowAdditional";
+import NoDataBox from "../../../../../../../components/boxes/NoDataBox/NoDataBox";
+import TablePaginationCustom from "../../../../../../../components/tables/TablePagination";
+import { rupiah } from "../../../../../../../libs/currency";
+import { tableHeader1 } from "../../fieldData";
+import BoxSignSA from "../BoxSignSA";
+import DetailSA from "../DetailSA";
+import FooterSA from "../FooterSA";
+import RowAdditional from "../RowAdditional";
 
 const ServiceAcceptance = ({ data, isClient, loading }) => {
   const task_sa = data?.task_sa;
