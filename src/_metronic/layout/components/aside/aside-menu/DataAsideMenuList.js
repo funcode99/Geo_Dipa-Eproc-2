@@ -166,31 +166,51 @@ export const DataAsideMenuListVendor = [
     icon: "/All/route-solid.svg",
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
+      // {
+      //   rootPath: "/vendor/delivery-monitoring/dashboard",
+      //   title: "MENU.DASHBOARD",
+      //   subMenu: null,
+      // },
       {
         rootPath: "/vendor/delivery-monitoring/contract",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },
       {
-        rootPath: "/vendor/delivery-monitoring-1/error-v",
+        rootPath: "/vendor/delivery-monitoring/gr",
         title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
-        subMenu: [
-          {
-            rootPath: "/vendor/delivery-monitoring/gr",
-            title: "TITLE.LIST_GR",
-          },
-        ],
+        subMenu: null,
       },
       {
-        rootPath: "/vendor/delivery-monitoring-2/error-v",
+        rootPath: "/vendor/delivery-monitoring/sa",
         title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
-        subMenu: [
-          {
-            rootPath: "/vendor/delivery-monitoring-2/error-v/1",
-            title: "TITLE.TEST",
-          },
-        ],
+        subMenu: null,
       },
+      // {
+      //   rootPath: "/vendor/delivery-monitoring/contract",
+      //   title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+      //   subMenu: null,
+      // },
+      // {
+      //   rootPath: "/vendor/delivery-monitoring-1/error-v",
+      //   title: "MENU.DELIVERY_MONITORING.GOOD_RECEIPT",
+      //   subMenu: [
+      //     {
+      //       rootPath: "/vendor/delivery-monitoring/gr",
+      //       title: "TITLE.LIST_GR",
+      //     },
+      //   ],
+      // },
+      // {
+      //   rootPath: "/vendor/delivery-monitoring-2/error-v",
+      //   title: "MENU.DELIVERY_MONITORING.SERVICE_ACCEPTANCE",
+      //   subMenu: [
+      //     {
+      //       rootPath: "/vendor/delivery-monitoring-2/error-v/1",
+      //       title: "TITLE.TEST",
+      //     },
+      //   ],
+      // },
     ],
   },
   {

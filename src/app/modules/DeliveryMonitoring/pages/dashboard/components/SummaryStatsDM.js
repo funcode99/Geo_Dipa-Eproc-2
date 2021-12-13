@@ -12,63 +12,52 @@ const SummaryStatsDM = ({ data, className, authStatus, openModal }) => {
           Summary Contract
         </h3>
       </div>
-      {/* Body */}
-      <div className="card-body p-0 position-relative overflow-hidden">
-        {/* Stat */}
-        <div className="card-spacer mt25">
-          <div className="row m-0">
-            <div className="col bg-light-warning px-6 py-8 rounded-xl mr-7 mb-7">
-              <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
-                <span className="text-warning font-weight-bolder d-block font-size-lg">
-                  {data?.on_progress}
-                </span>
-              </span>
-              <Link
-                // to={`/${authStatus}/delivery-monitoring/contract`}
-                className="text-warning font-weight-bold font-size-h6"
-                onClick={() => openModal("onprogress")}
-              >
-                On Progress
-              </Link>
-            </div>
-            <div className="col bg-light-primary px-6 py-8 rounded-xl mr-7 mb-7">
-              <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
-                <span className="text-primary font-weight-bolder d-block font-size-lg">
-                  {data?.sagr}
-                </span>
-              </span>
-              <Link
-                // to={`/${authStatus}/delivery-monitoring/contract`}
-                className="text-primary font-weight-bold font-size-h6"
-                onClick={() => openModal("success")}
-              >
-                Success
-              </Link>
-            </div>
-            <div className="col bg-light-danger px-6 py-8 rounded-xl mr-7 mb-7">
-              <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
-                <span className="text-danger font-weight-bolder d-block font-size-lg">
-                  {data?.overdue}
-                </span>
-              </span>
-              <Link
-                // to={`/${authStatus}/delivery-monitoring/contract`}
-                className="text-danger font-weight-bold font-size-h6"
-                onClick={() => openModal("overdue")}
-              >
-                Overdue
-              </Link>
-            </div>
-          </div>
+      {/* Stat */}
+      <div className="card-spacer mt10">
+        {/* <div className="row m-0"> */}
+        <div className=" bg-light-warning px-8 py-3 rounded-xl mb-7">
+          <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
+            <span className="text-warning font-weight-bolder d-block font-size-lg">
+              {data?.on_progress}
+            </span>
+          </span>
+          <Link
+            // to={`/${authStatus}/delivery-monitoring/contract`}
+            className="text-warning font-weight-bold font-size-h6"
+            onClick={() => openModal("onprogress")}
+          >
+            On Progress
+          </Link>
         </div>
-
-        {/* Resize */}
-        <div className="resize-triggers">
-          <div className="expand-trigger">
-            <div style={{ width: "411px", height: "461px" }} />
-          </div>
-          <div className="contract-trigger" />
+        <div className=" bg-light-primary px-8 py-3 rounded-xl mb-7">
+          <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
+            <span className="text-primary font-weight-bolder d-block font-size-lg">
+              {data?.sagr}
+            </span>
+          </span>
+          <Link
+            // to={`/${authStatus}/delivery-monitoring/contract`}
+            className="text-primary font-weight-bold font-size-h6"
+            onClick={() => openModal("success")}
+          >
+            Success
+          </Link>
         </div>
+        <div className=" bg-light-danger px-8 py-3 rounded-xl mb-7">
+          <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
+            <span className="text-danger font-weight-bolder d-block font-size-lg">
+              {data?.overdue}
+            </span>
+          </span>
+          <Link
+            // to={`/${authStatus}/delivery-monitoring/contract`}
+            className="text-danger font-weight-bold font-size-h6"
+            onClick={() => openModal("overdue")}
+          >
+            Overdue
+          </Link>
+        </div>
+        {/* </div> */}
       </div>
     </div>
   );
