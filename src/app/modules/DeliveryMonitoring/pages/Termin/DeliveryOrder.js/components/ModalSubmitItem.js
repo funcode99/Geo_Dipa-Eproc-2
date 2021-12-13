@@ -109,7 +109,7 @@ const ModalSubmitItem = ({
               {data.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell>{(index += 1)}</TableCell>
-                  <TableCell>{item.spec}</TableCell>
+                  <TableCell>{item.name}</TableCell>
                   <TableCell>{item.qty}</TableCell>
                   <TableCell>{item.qty_approved}</TableCell>
                   <TableCell>{item.approve_status}</TableCell>
