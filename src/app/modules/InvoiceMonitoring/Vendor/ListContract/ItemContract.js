@@ -200,6 +200,7 @@ const ItemContract = (props) => {
               {...props}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
+              terminName={data.termin_name || ""}
             />
           )}
           {/* {tabActive === 3 && (
