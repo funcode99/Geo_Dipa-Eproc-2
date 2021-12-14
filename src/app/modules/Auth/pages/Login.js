@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
+import { openLinkTab } from "../../../service/helper/urlHelper";
 
 /*
   INTL (i18n) docs:
@@ -210,6 +211,26 @@ function Login(props) {
             <p className="text-center mb-0">E.procurement@geodipa.co.id</p>
             <p className="text-center mb-0">T. +62 21 7982925</p>
             <p className="text-center mb-0">F. +62 21 7982930</p>
+          </div>
+          <div className="mx-auto mb-2 col-md-12 text-primary">
+            <Link
+              onClick={() => {
+                openLinkTab(
+                  "http://192.168.0.168:5000/user-manual-delivery-monitoring.pdf"
+                );
+              }}
+            >
+              <p className="text-center mb-0">
+                <i
+                  className="fas fa-file-word text-primary font-16"
+                  aria-hidden="true"
+                ></i>
+                <span>&nbsp;</span>
+                <span className="font-16">
+                  <b>Manual Book</b>
+                </span>
+              </p>
+            </Link>
           </div>
         </div>
       </form>
