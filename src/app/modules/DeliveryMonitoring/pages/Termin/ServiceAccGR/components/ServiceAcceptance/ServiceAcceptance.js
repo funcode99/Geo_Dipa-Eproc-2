@@ -1,3 +1,4 @@
+import { Grid } from "@material-ui/core";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import {
@@ -6,41 +7,35 @@ import {
   CardHeader,
   CardHeaderToolbar,
 } from "../../../../../../../../_metronic/_partials/controls";
+import NoDataBox from "../../../../../../../components/boxes/NoDataBox/NoDataBox";
+import BoxSignSA from "../BoxSignSA";
 import SectionHeader from "./components/SectionHeader";
 import SectionSummary from "./components/SectionSummary";
 import SectionTable from "./components/SectionTable";
+import DetailServAcceptance from "./DetailServAcceptance";
 
-const ServiceAcceptance = () => {
-  const print = () => {
-    var printContents = window.$("#printSA").html();
-    window.$("#root").css("display", "none");
-    window.$("#print-content").addClass("p-5");
-    window.$("#print-content").html(printContents);
-    window.print();
-    window.$("#root").removeAttr("style");
-    window.$("#print-content").removeClass("p-5");
-    window.$("#print-content").html("");
-  };
+const ServiceAcceptance = ({ data, isClient }) => {
+  const task_sa = data?.task_sa;
+  const qr_params = React.useMemo(
+    () => ({
+      id: data?.task_sa?.id,
+      type: "sa",
+      user: isClient ? "user" : "vendor",
+    }),
+    [data, isClient]
+  );
+
+  if (task_sa == null) {
+    return <NoDataBox text={"Service Acceptance not Available"} />;
+  }
+
   return (
-    <Card>
-      <CardHeader>
-        <CardHeaderToolbar>
-          <button
-            type="button"
-            onClick={print}
-            className="btn btn-sm btn-primary"
-          >
-            <i className="fas fa-print"></i>
-            <FormattedMessage id="TITLE.PRINT" /> SA
-          </button>
-        </CardHeaderToolbar>
-      </CardHeader>
-      <CardBody id="printSA">
-        <SectionHeader />
-        <SectionSummary />
-        <SectionTable />
-      </CardBody>
-    </Card>
+    <DetailServAcceptance
+      header={task_sa?.sa_header}
+      fullData={{}}
+      items={task_sa?.sa_items}
+      dataSA={task_sa}
+    />
   );
 };
 

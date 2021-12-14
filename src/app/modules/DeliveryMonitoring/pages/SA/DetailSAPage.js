@@ -11,6 +11,8 @@ import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../libs/currency";
 import BoxSignSA from "../Termin/ServiceAccGR/components/BoxSignSA";
 import FooterSA from "../Termin/ServiceAccGR/components/FooterSA";
+import DetailServAcceptance from "../Termin/ServiceAccGR/components/ServiceAcceptance/DetailServAcceptance";
+import NoDataBox from "../../../../components/boxes/NoDataBox/NoDataBox";
 
 const tableHeader1 = [
   { id: "no", label: <FormattedMessage id="TITLE.NO" /> },
@@ -51,34 +53,19 @@ const DetailSAPage = ({ fetch_api_sg, loading, status }) => {
     handleRefresh();
   }, []);
 
+  if (content == null) {
+    return <NoDataBox text={"Service Acceptance not Available"} />;
+  }
+
   return (
     <Card>
       <CardBody>
-        <DetailSA data={content?.sa_header} fullData={{}} type="SA" />
-        <TablePaginationCustom
-          headerRows={tableHeader1}
-          // width={1210}
-          withPagination={false}
-          withSearch={false}
-          rows={content?.sa_items?.map((el, id) => ({
-            no: id + 1,
-            service: el?.short_text,
-            qty: el?.quantity,
-            uom: el?.base_uom,
-            unit_price: rupiah(el?.gr_price),
-            net_value: rupiah(el?.net_value),
-          }))}
-          footerComponent={<FooterSA data={content?.sa_items} />}
+        <DetailServAcceptance
+          header={content?.sa_header}
+          fullData={{}}
+          items={content?.sa_items}
+          dataSA={content}
         />
-        <Grid container spacing={1} className={"mt-3"}>
-          {/* <BoxSignSA params={qr_params} noQR title={"VENDOR"} /> */}
-          <Grid item xs={8}></Grid>
-          <BoxSignSA
-            params={qr_params}
-            title={"MASIH DUMMY"}
-            // title={data?.contract?.contract_party?.party_1_director_position}
-          />
-        </Grid>
       </CardBody>
     </Card>
   );
