@@ -13,19 +13,19 @@ const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
   post_date: validation.require("Header Text"),
   gr_receipt: validation.require("GR Receipt"),
-  // ref_doc_no: validation.require("Ref Doc No"),
-  ref_doc_no: number()
-    // .max(16, "Maksimal 16 karakter")
-    .test("len", "Maksimal 16 karakter", (val) => {
-      if (val) {
-        if (val.toString().length <= 16) return true;
-        else return false;
-      } else {
-        return false;
-      }
-    })
-    .required("Ref Doc No harus diisi")
-    .typeError("Masukkan harus berupa angka"),
+  ref_doc_no: validation.require("Ref Doc No"),
+  // ref_doc_no: number()
+  //   // .max(16, "Maksimal 16 karakter")
+  //   .test("len", "Maksimal 16 karakter", (val) => {
+  //     if (val) {
+  //       if (val.toString().length <= 16) return true;
+  //       else return false;
+  //     } else {
+  //       return false;
+  //     }
+  //   })
+  //   .required("Ref Doc No harus diisi")
+  //   .typeError("Masukkan harus berupa angka"),
   bill_of_lading: validation.require("Bill of Lading"),
   unload_pt: validation.require("Unloading"),
 });
