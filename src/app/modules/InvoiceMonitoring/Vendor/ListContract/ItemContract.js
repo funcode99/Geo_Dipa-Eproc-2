@@ -16,6 +16,7 @@ import ItemContractFormVerification from "./ItemContractFormVerification";
 import { getAllProgressTypeGroup, getTerminProgressVendor, getTerminProgress } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import Steppers from "../../../../components/steppersCustom/Steppers";
+import ItemContractPaid from "./ItemContractPaid";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,6 +47,16 @@ const TabLists = [
     label: "Form Verifikasi",
     icon: (
       <i className="fas fa-tasks mb-0 mr-2" style={{ color: "inherit" }}></i>
+    ),
+  },
+  {
+    id: "paid",
+    label: "Paid Document",
+    icon: (
+      <i
+        className="fas fa-sticky-note mb-0 mr-2"
+        style={{ color: "inherit" }}
+      ></i>
     ),
   },
   // {
@@ -179,6 +190,13 @@ const ItemContract = (props) => {
           )}
           {tabActive === 2 && (
             <ItemContractFormVerification
+              {...props}
+              progressTermin={terminProgress}
+              setProgressTermin={setTerminProgress}
+            />
+          )}
+          {tabActive === 3 && (
+            <ItemContractPaid
               {...props}
               progressTermin={terminProgress}
               setProgressTermin={setTerminProgress}
