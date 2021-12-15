@@ -44,7 +44,8 @@ const HeaderTableDoc = ({ data }) => {
 
   return (
     <div>
-      <div className="d-flex justify-content-end w-100 mb-5">
+      <div className="d-flex justify-content-between align-items-center w-100 mb-5">
+        <h2>Daftar Deliverables</h2>
         {status === "client" && (
           <button
             className="btn btn-outline-success btn-sm"
