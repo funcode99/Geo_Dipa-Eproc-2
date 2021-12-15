@@ -1,5 +1,5 @@
 import { FormattedMessage } from "react-intl";
-import { object } from "yup";
+import { object, string, date } from "yup";
 import validation from "../../../../../../service/helper/validationHelper";
 import InputWBS from "./InputWBS";
 import React from "react";
@@ -201,15 +201,27 @@ export const rowTableSA_field = [
 
 export const validationSchema_sa = object().shape({
   ext_number: validation.require("Extension Number"),
-  short_text: validation.require("Short Text"),
+  // short_text: validation.require("Short Text"),
+  short_text: string()
+    .required("Short text harus diisi")
+    .max(40, "Maksimal 40 character"),
   location: validation.require("Location"),
   begdate: validation.require("Begin Date"),
   enddate: validation.require("End Date"),
-  person_int: validation.require("Person Internal"),
-  person_ext: validation.require("Person External"),
+  person_int: string()
+    .required("Person Internal harus diisi")
+    .max(12, "Maksimal 12 character"),
+  person_ext: string()
+    .required("Person External harus diisi")
+    .max(12, "Maksimal 12 character"),
   post_date: validation.require("Post Date"),
   ref_doc_no: validation.require("Ref Doc No"),
-  doc_text: validation.require("Doc Text"),
+  ref_doc_no: string()
+    .required("Ref Doc No harus diisi")
+    .max(16, "Maksimal 16 character"),
+  doc_text: string()
+    .required("Doc Text harus diisi")
+    .max(25, "Maksimal 25 character"),
   // po_item: validation.require("PO Item"),
   // po_number: validation.require("PO Number"),
   // doc_date: validation.require("Document Date"),
