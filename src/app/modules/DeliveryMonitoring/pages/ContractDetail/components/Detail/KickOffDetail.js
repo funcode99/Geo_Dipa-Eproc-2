@@ -121,12 +121,7 @@ const KickOffDetail = ({
       <CardBody>
         <FormBuilder
           loading={loadings.post}
-          onSubmit={
-            _handleSubmit
-            //   () => {
-            //   MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
-            // }
-          }
+          onSubmit={_handleSubmit}
           validation={formValidation}
           formData={fieldKickOff}
           initial={initValues}

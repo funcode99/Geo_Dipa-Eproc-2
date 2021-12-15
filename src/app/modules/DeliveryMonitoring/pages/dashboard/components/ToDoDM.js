@@ -13,6 +13,7 @@ import {
   getLoading,
 } from "../../../../../../redux/globalReducer";
 import PaginationNotif from "../../../../../../_metronic/layout/components/extras/dropdowns/PaginationNotif";
+import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 
 const perfectScrollbarOptions = {
   wheelSpeed: 2,
@@ -40,7 +41,14 @@ const termin_pages = {
 };
 
 const ToDoDM = (props) => {
-  const { className, fetch_api_sg, intl, status, loading } = props;
+  const {
+    className,
+    fetchApiSg,
+    intl,
+    status,
+    loading,
+    saveContractById,
+  } = props;
   const [dataTodo, setDataTodo] = React.useState({
     list: [],
     meta: {
@@ -56,7 +64,7 @@ const ToDoDM = (props) => {
     const current_page = !!refresh ? 1 : page;
     const limit = 10;
     const offset = (current_page - 1) * limit;
-    fetch_api_sg({
+    fetchApiSg({
       key,
       type: "getParams",
       url: DEV_NODE2 + "/todo",
@@ -95,6 +103,21 @@ const ToDoDM = (props) => {
     var randomColor = Math.floor(Math.random() * 16777215).toString(16);
     return randomColor;
   };
+
+  const getContractById = React.useCallback(
+    (contractId) => {
+      fetchApiSg({
+        keys: "key_contract",
+        type: "get",
+        url: `/delivery/contract/${contractId}`,
+        onSuccess: (res) => {
+          console.log(`res`, res?.data);
+          saveContractById(res?.data);
+        },
+      });
+    },
+    [saveContractById, fetchApiSg]
+  );
   return (
     <>
       <div className={`card card-custom ${className}`}>
@@ -168,6 +191,8 @@ const ToDoDM = (props) => {
                         to={!!isContractPage ? linkContract : linkTermin}
                         className="text-dark-75 text-hover-primary font-weight-bold font-size-sm mb-1"
                         onClick={() => {
+                          getContractById(item?.data?.contract_id);
+
                           //   tabInvoice.tab = item.menu_tab || 0;
                           //   tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                           //   props.set_data_tab_invaoice(tabInvoice);
@@ -197,8 +222,24 @@ const mapState = (state) => ({
   user_id: state.auth.user.data.user_id,
 });
 
-const mapDispatch = {
-  fetch_api_sg,
-};
+// const mapDispatch = {
+//   fetch_api_sg,
+//   saveContractById: (payload) => {
+//     dispatch({
+//       type: actionTypes.SetContractById,
+//       payload,
+//     });
+//   },
+// };
+
+const mapDispatch = (dispatch) => ({
+  saveContractById: (payload) => {
+    dispatch({
+      type: actionTypes.SetContractById,
+      payload,
+    });
+  },
+  fetchApiSg: (payload) => dispatch(fetch_api_sg(payload)),
+});
 
 export default injectIntl(connect(mapState, mapDispatch)(ToDoDM));
