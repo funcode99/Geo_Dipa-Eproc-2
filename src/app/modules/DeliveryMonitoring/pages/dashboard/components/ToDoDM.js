@@ -40,6 +40,12 @@ const termin_pages = {
   checkIsApprovedUploadedSignedBAPP: 3,
 };
 
+const sort = (data) => {
+  return data.sort(function(a, b) {
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+};
+
 const ToDoDM = (props) => {
   const {
     className,
@@ -118,6 +124,8 @@ const ToDoDM = (props) => {
     },
     [saveContractById, fetchApiSg]
   );
+
+  console.log(`dataTodo`, dataTodo);
   return (
     <>
       <div className={`card card-custom ${className}`}>
@@ -155,7 +163,7 @@ const ToDoDM = (props) => {
                 </div>
               </div>
             ) : (
-              dataTodo.list?.map((item, index) => {
+              sort(dataTodo.list)?.map((item, index) => {
                 var bgColor = getColor();
                 const isContractPage = Object.keys(contract_pages).filter(
                   (e) => e === item?.node_type
