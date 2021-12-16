@@ -32,7 +32,7 @@ const ServiceAcceptance = ({ data, isClient }) => {
   return (
     <DetailServAcceptance
       header={task_sa?.sa_header}
-      fullData={{}}
+      fullData={data}
       items={task_sa?.sa_items}
       dataSA={task_sa}
     />

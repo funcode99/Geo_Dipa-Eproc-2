@@ -14,6 +14,7 @@ import SectionSummary from "./components/SectionSummary";
 import SectionTable from "./components/SectionTable";
 
 const DetailServAcceptance = (props) => {
+  const { fullData } = props;
   const print = () => {
     var printContents = window.$("#printSA").html();
     window.$("#root").css("display", "none");
@@ -24,6 +25,7 @@ const DetailServAcceptance = (props) => {
     window.$("#print-content").removeClass("p-5");
     window.$("#print-content").html("");
   };
+  console.log(`props`, props);
   return (
     <Card>
       <CardHeader title="">
@@ -45,8 +47,12 @@ const DetailServAcceptance = (props) => {
         <Grid container spacing={1} className={"mt-3"}>
           <Grid item xs={8}></Grid>
           <BoxSignSA
-          // params={qr_params}
-          // title={data?.contract?.contract_party?.party_1_director_position}
+            name={
+              fullData?.contract?.contract_party
+                ?.party_1_director_position_full_name
+            }
+            date={fullData?.task_sa_array?.[0]?.createdAt}
+            {...props.signProps}
           />
         </Grid>
       </CardBody>
