@@ -180,6 +180,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
         handleSubmit={handleSubmitPreview}
         loading={loadings[KEYS_TERMIN.p_t_approve_do_doc]}
         file={data.file}
+		data={data}
         isClient={authStatus === "client"}
         isFileApproved={isFileApproved}
       />
