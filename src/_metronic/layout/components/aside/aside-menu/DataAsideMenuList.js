@@ -67,20 +67,20 @@ export const DataAsideMenuListClient = [
         title: "MENU.INVOICE_MONITORING.SPT",
         subMenu: null,
       },
-      {
-        rootPath: "/client/invoice_monitoring-4/error-v",
-        title: "MENU.INVOICE_MONITORING.TAX",
-        subMenu: [
-          {
-            rootPath: "/client/invoice_monitoring-4/error-v/1",
-            title: "TITLE.TEST",
-          },
-          {
-            rootPath: "/client/invoice_monitoring-4/error-v/2",
-            title: "TITLE.TEST",
-          },
-        ],
-      },
+      // {
+      //   rootPath: "/client/invoice_monitoring-4/error-v",
+      //   title: "MENU.INVOICE_MONITORING.TAX",
+      //   subMenu: [
+      //     {
+      //       rootPath: "/client/invoice_monitoring-4/error-v/1",
+      //       title: "TITLE.TEST",
+      //     },
+      //     {
+      //       rootPath: "/client/invoice_monitoring-4/error-v/2",
+      //       title: "TITLE.TEST",
+      //     },
+      //   ],
+      // },
       {
         rootPath: "/client/invoice_monitoring/mismatch",
         title: "MENU.INVOICE_MONITORING.CONTRACT_TROUBLES",
