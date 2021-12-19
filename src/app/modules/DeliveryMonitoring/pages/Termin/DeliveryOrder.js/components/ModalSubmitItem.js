@@ -80,6 +80,7 @@ const ModalSubmitItem = ({
         className: checked ? "bg-primary text-light" : "bg-secondary",
         disabled: !checked,
       }}
+      onClose={onClose}
     >
       {data.length > 0 && (
         <React.Fragment>
