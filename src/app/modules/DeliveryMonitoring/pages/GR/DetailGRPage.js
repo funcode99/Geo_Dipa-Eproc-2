@@ -6,6 +6,7 @@ import DetailGR from "../Termin/ServiceAccGR/components/DetailGR";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
 import { Paper } from "@material-ui/core";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import DetailGoodRcpt from "../Termin/ServiceAccGR/components/GoodReceipt/DetailGoodRcpt";
 
 const tblHeadGRItems = [
   { id: "line", label: "Line" },
@@ -40,7 +41,19 @@ const DetailGRPage = ({ fetch_api_sg, loading }) => {
   return (
     <Card>
       <CardBody>
-        <DetailGR data={content?.gr_header} item={content} fullData={{}} />
+        <DetailGoodRcpt
+          header={content?.gr_header}
+          fullData={{}}
+          items={content?.gr_items}
+          dataSA={content}
+          //  signProps={{
+          //    name:
+          //      content?.task?.contract?.contract_party
+          //        ?.party_1_director_position_full_name,
+          //    date: content?.createdAt,
+          //  }}
+        />
+        {/* <DetailGR data={content?.gr_header} item={content} fullData={{}} />
         <TablePaginationCustom
           headerRows={tblHeadGRItems}
           // width={1210}
@@ -56,7 +69,7 @@ const DetailGRPage = ({ fetch_api_sg, loading }) => {
             sloc: el?.stge_loc,
             stor_bin: "",
           }))}
-        />
+        /> */}
       </CardBody>
     </Card>
   );
