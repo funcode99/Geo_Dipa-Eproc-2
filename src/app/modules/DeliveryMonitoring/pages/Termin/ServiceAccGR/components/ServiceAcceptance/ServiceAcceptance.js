@@ -35,6 +35,7 @@ const ServiceAcceptance = ({ data, isClient }) => {
       fullData={data}
       items={task_sa?.sa_items}
       dataSA={task_sa}
+      isClient={isClient}
     />
   );
 };

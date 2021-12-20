@@ -14,7 +14,7 @@ import SectionSummary from "./components/SectionSummary";
 import SectionTable from "./components/SectionTable";
 
 const DetailServAcceptance = (props) => {
-  const { fullData } = props;
+  const { fullData, dataSA, isClient } = props;
   const print = () => {
     var printContents = window.$("#printSA").html();
     window.$("#root").css("display", "none");
@@ -25,6 +25,14 @@ const DetailServAcceptance = (props) => {
     window.$("#print-content").removeClass("p-5");
     window.$("#print-content").html("");
   };
+  const qr_params = React.useMemo(
+    () => ({
+      id: dataSA?.id,
+      type: "sa",
+      user: isClient ? "user" : "vendor",
+    }),
+    [dataSA, isClient]
+  );
   console.log(`props`, props);
   return (
     <Card>
@@ -53,6 +61,7 @@ const DetailServAcceptance = (props) => {
             }
             date={fullData?.task_sa_array?.[0]?.createdAt}
             {...props.signProps}
+            params={qr_params}
           />
         </Grid>
       </CardBody>
