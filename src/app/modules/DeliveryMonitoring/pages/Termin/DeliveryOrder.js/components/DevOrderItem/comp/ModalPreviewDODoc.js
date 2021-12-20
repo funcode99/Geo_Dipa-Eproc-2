@@ -82,7 +82,7 @@ const ModalPreviewDODoc = ({
   }, [file]);
   const isReject = action === "reject";
   const isApprove = action === "approve";
-  const isNeedApprove = isClient && !isFileApproved && hasMaterialItem;
+  const isNeedApprove = isClient && !isFileApproved ;
   return (
     <DialogGlobal
       maxWidth={isNeedApprove ? "md" : "sm"}
@@ -147,7 +147,7 @@ const ModalPreviewDODoc = ({
                 />
               </Form.Group>
             )}
-            {!isApprove && (
+            {!isApprove && hasMaterialItem && (
               <FormBuilder
                 ref={grFormRef}
                 withSubmit={false}
