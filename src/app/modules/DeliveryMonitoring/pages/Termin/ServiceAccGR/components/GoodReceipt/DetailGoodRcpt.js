@@ -15,7 +15,7 @@ import SectionTable from "./components/SectionTable";
 import SectionTable2 from "./components/SectionTable2";
 
 const DetailGoodRcpt = (props) => {
-  const { fullData } = props;
+  const { fullData, dataGR, isClient } = props;
   const print = () => {
     var printContents = window.$("#printSA").html();
     window.$("#root").css("display", "none");
@@ -26,6 +26,14 @@ const DetailGoodRcpt = (props) => {
     window.$("#print-content").removeClass("p-5");
     window.$("#print-content").html("");
   };
+  const qr_params = React.useMemo(
+    () => ({
+      id: dataGR?.id,
+      type: "gr",
+      user: isClient ? "user" : "vendor",
+    }),
+    [dataGR, isClient]
+  );
   console.log(`props`, props);
   return (
     <Card className={"d-flex"} style={{ flex: 1 }}>
@@ -47,17 +55,18 @@ const DetailGoodRcpt = (props) => {
         <SectionSummary {...props} />
         {/* <SectionTable {...props} /> */}
         <SectionTable2 {...props} />
-        {/* <Grid container spacing={1} className={"mt-3"}>
+        <Grid container spacing={1} className={"mt-3"}>
           <Grid item xs={8}></Grid>
           <BoxSignSA
             name={
               fullData?.contract?.contract_party
                 ?.party_1_director_position_full_name
             }
-            date={fullData?.task_sa_array?.[0]?.createdAt}
+            // date={fullData?.task_sa_array?.[0]?.createdAt}
             {...props.signProps}
+            params={qr_params}
           />
-        </Grid> */}
+        </Grid>
       </CardBody>
     </Card>
   );

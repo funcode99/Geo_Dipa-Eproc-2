@@ -71,6 +71,7 @@ const DetailSAPage = ({ fetch_api_sg, loading, status }) => {
                 ?.party_1_director_position_full_name,
             date: content?.createdAt,
           }}
+          isClient={isClient}
         />
       </CardBody>
     </Card>

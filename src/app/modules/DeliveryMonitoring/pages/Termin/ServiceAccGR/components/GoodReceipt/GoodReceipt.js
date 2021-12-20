@@ -7,7 +7,7 @@ import DetailGR from "../DetailGR";
 import GRAccord from "../GRAccord";
 import DetailGoodRcpt from "./DetailGoodRcpt";
 
-const GoodReceipt = ({ data, loading }) => {
+const GoodReceipt = ({ data, loading, isClient }) => {
   const task_gr = data?.task_gr;
   const task_gr_new = data?.task_gr_new;
   if (_.isEmpty(task_gr_new)) {
@@ -44,6 +44,7 @@ const GoodReceipt = ({ data, loading }) => {
               fullData={data}
               items={els?.gr_items}
               dataGR={els}
+              isClient={isClient}
             />
           </>
         </GRAccord>
