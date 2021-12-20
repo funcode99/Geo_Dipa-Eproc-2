@@ -43,9 +43,9 @@ const DetailGRPage = ({ fetch_api_sg, loading }) => {
       <CardBody>
         <DetailGoodRcpt
           header={content?.gr_header}
-          fullData={{}}
+          fullData={content?.task}
           items={content?.gr_items}
-          dataSA={content}
+          dataGR={content}
           //  signProps={{
           //    name:
           //      content?.task?.contract?.contract_party
