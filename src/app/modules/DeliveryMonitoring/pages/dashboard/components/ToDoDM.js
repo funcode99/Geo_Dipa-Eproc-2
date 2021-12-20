@@ -7,7 +7,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { isEmpty } from "lodash";
-import { DEV_NODE2 } from "../../../../../../redux/BaseHost";
+import { DEV_NODE2, SOCKET_DM } from "../../../../../../redux/BaseHost";
 import {
   fetch_api_sg,
   getLoading,
@@ -103,7 +103,13 @@ const ToDoDM = (props) => {
     //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
     //   });
   };
-  React.useEffect(() => callApiTodo({ refresh: true }), []);
+  React.useEffect(() => {
+    callApiTodo({ refresh: true });
+    SOCKET_DM.on("deliveryMonitoring", function(node_payload) {
+      console.log("ini_web_socket dari todo", node_payload);
+      callApiTodo({ refresh: true });
+    });
+  }, []);
 
   const getColor = () => {
     var randomColor = Math.floor(Math.random() * 16777215).toString(16);
