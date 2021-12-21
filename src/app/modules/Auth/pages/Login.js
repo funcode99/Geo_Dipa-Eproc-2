@@ -107,7 +107,7 @@ function Login(props) {
     <div className="login-form login-signin" id="kt_login_signin_form">
       {/* begin::Head */}
       <div className="text-center mb-10 mb-lg-20">
-        <img src="/media/logos/logo-eprocurement.png" alt="Logo" />
+        <img src="/media/logos/logo_geodipa.png" alt="Logo" />
       </div>
       <div className="text-center mb-10 mb-lg-20">
         <h3 className="font-size-h2">
