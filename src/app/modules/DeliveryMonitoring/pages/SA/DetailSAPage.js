@@ -62,9 +62,16 @@ const DetailSAPage = ({ fetch_api_sg, loading, status }) => {
       <CardBody>
         <DetailServAcceptance
           header={content?.sa_header}
-          fullData={{}}
+          fullData={content?.task}
           items={content?.sa_items}
           dataSA={content}
+          signProps={{
+            name:
+              content?.task?.contract?.contract_party
+                ?.party_1_director_position_full_name,
+            date: content?.createdAt,
+          }}
+          isClient={isClient}
         />
       </CardBody>
     </Card>

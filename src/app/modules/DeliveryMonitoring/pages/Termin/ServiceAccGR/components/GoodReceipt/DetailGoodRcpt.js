@@ -12,9 +12,10 @@ import BoxSignSA from "../BoxSignSA";
 import SectionHeader from "./components/SectionHeader";
 import SectionSummary from "./components/SectionSummary";
 import SectionTable from "./components/SectionTable";
+import SectionTable2 from "./components/SectionTable2";
 
-const DetailServAcceptance = (props) => {
-  const { fullData, dataSA, isClient } = props;
+const DetailGoodRcpt = (props) => {
+  const { fullData, dataGR, isClient } = props;
   const print = () => {
     var printContents = window.$("#printSA").html();
     window.$("#root").css("display", "none");
@@ -27,15 +28,16 @@ const DetailServAcceptance = (props) => {
   };
   const qr_params = React.useMemo(
     () => ({
-      id: dataSA?.id,
-      type: "sa",
+      id: dataGR?.id,
+      type: "gr",
       user: isClient ? "user" : "vendor",
     }),
-    [dataSA, isClient]
+    [dataGR, isClient]
   );
   console.log(`props`, props);
   return (
-    <Card>
+    <Card className={"d-flex"} style={{ flex: 1 }}>
+      {/* <Card> */}
       <CardHeader title="">
         <CardHeaderToolbar>
           <button
@@ -44,14 +46,15 @@ const DetailServAcceptance = (props) => {
             className="btn btn-sm btn-primary"
           >
             <i className="fas fa-print"></i>
-            <FormattedMessage id="TITLE.PRINT" /> SA
+            <FormattedMessage id="TITLE.PRINT" /> GR
           </button>
         </CardHeaderToolbar>
       </CardHeader>
       <CardBody id="printSA">
         <SectionHeader {...props} />
         <SectionSummary {...props} />
-        <SectionTable {...props} />
+        {/* <SectionTable {...props} /> */}
+        <SectionTable2 {...props} />
         <Grid container spacing={1} className={"mt-3"}>
           <Grid item xs={8}></Grid>
           <BoxSignSA
@@ -59,7 +62,7 @@ const DetailServAcceptance = (props) => {
               fullData?.contract?.contract_party
                 ?.party_1_director_position_full_name
             }
-            date={fullData?.task_sa_array?.[0]?.createdAt}
+            // date={fullData?.task_sa_array?.[0]?.createdAt}
             {...props.signProps}
             params={qr_params}
           />
@@ -69,4 +72,4 @@ const DetailServAcceptance = (props) => {
   );
 };
 
-export default DetailServAcceptance;
+export default DetailGoodRcpt;

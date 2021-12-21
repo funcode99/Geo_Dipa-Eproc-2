@@ -14,7 +14,7 @@ import { ceil, isEmpty } from "lodash";
 import objectPath from "object-path";
 import { store_notif_dm_rd } from "../../../../../app/modules/DeliveryMonitoring/_redux/deliveryMonitoringSlice";
 import * as reducer from "../../../../../app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringSlice";
-import { DEV_NODE2 } from "../../../../../redux/BaseHost";
+import { DEV_NODE2, SOCKET_DM } from "../../../../../redux/BaseHost";
 import { fetch_api_sg } from "../../../../../redux/globalReducer";
 import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
@@ -152,6 +152,10 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
 
   React.useEffect(() => {
     fetchNotif({ refresh: true });
+    SOCKET_DM.on("deliveryMonitoring", function(node_payload) {
+      console.log("ini_web_socket dari notif", node_payload);
+      fetchNotif({ refresh: true });
+    });
   }, [location]);
 
   return (

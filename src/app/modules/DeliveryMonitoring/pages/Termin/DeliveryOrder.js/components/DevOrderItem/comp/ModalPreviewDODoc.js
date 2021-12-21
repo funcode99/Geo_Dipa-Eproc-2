@@ -13,6 +13,19 @@ import ButtonContained from "../../../../../../../../components/button/ButtonGlo
 import DialogGlobal from "../../../../../../../../components/modals/DialogGlobal";
 import { openLinkTab } from "../../../../../../../../service/helper/urlHelper";
 import { form_gr } from "../formDataOItem";
+import { isEmpty } from "lodash";
+
+const hasNoMaterialItem = (data) => {
+  const filteredData = data?.task_delivery_items?.filter(
+    ({ item }, id) =>
+      !!(
+        isEmpty(item?.material) ||
+        item?.material === "undefined" ||
+        item?.material === "null"
+      )
+  );
+  return !!filteredData?.length;
+};
 
 const ModalPreviewDODoc = ({
   innerRef,
@@ -21,6 +34,7 @@ const ModalPreviewDODoc = ({
   isClient,
   handleSubmit,
   isFileApproved,
+  data,
 }) => {
   console.log(`otem`, loading);
   const [dataForm, setDataForm] = React.useState({});
@@ -28,6 +42,7 @@ const ModalPreviewDODoc = ({
   const [checked, setChecked] = React.useState(false);
   const [remarks, setRemarks] = React.useState(false);
   const grFormRef = React.useRef();
+  const hasMaterialItem = !hasNoMaterialItem(data);
 
   const _openFile = () => {
     // openLinkTab("http://192.168.0.168:5000/task-document/BAPPBAST.pdf");
@@ -67,7 +82,7 @@ const ModalPreviewDODoc = ({
   }, [file]);
   const isReject = action === "reject";
   const isApprove = action === "approve";
-  const isNeedApprove = isClient && !isFileApproved;
+  const isNeedApprove = isClient && !isFileApproved ;
   return (
     <DialogGlobal
       maxWidth={isNeedApprove ? "md" : "sm"}
@@ -132,7 +147,7 @@ const ModalPreviewDODoc = ({
                 />
               </Form.Group>
             )}
-            {isApprove && (
+            {!isApprove && hasMaterialItem && (
               <FormBuilder
                 ref={grFormRef}
                 withSubmit={false}

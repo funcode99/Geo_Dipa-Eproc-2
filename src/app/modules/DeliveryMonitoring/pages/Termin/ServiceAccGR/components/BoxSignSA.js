@@ -3,6 +3,7 @@ import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import { fetch_api_sg } from "../../../../../../../redux/globalReducer";
 import { QRCodeG } from "../../../../../../components/qrCodeGenerate/QRCodeGenerate";
+import { formatDate, formatUpdateDate } from "../../../../../../libs/date";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,18 +33,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoxSignSA = ({ title, noQR, params, fetch_api_sg }) => {
+const BoxSignSA = ({ title, noQR, params, fetch_api_sg, name, date }) => {
   const classes = useStyles();
   const tab4 = React.useMemo(
     () => [
       // { label: "SIGNATURE", value: "" },
       {
         label: "NAME",
-        value: "",
+        value: name || "",
       },
-      { label: "DATE", value: "" },
+      { label: "DATE", value: date ? formatDate(new Date(date)) : "" },
     ],
-    []
+    [name, date]
   );
   const handleOpenQR = useCallback(
     (value) => {

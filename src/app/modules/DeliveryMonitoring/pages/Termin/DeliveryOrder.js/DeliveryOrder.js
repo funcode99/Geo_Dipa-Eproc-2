@@ -300,7 +300,7 @@ const DeliveryOrder = ({
         onSuccess: (res) => {
           getTask();
           func.onRefresh();
-          submitItemRef.current.close();
+          // submitItemRef.current.close();
           handleVisible("confirm", {}, []);
           if (typeof callback === "function") callback();
         },
@@ -436,7 +436,7 @@ const DeliveryOrder = ({
 
         setTimeout(() => {
           handleVisible("confirm", data, dataArr);
-          submitItemRef.current.open();
+          // submitItemRef.current.open();
         }, 200);
         break;
 
