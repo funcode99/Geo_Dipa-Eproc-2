@@ -180,6 +180,47 @@ const ToDoDM = (props) => {
                 const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
                 const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
                 return (
+                  <div className="d-flex align-items-center flex-grow-1">
+                    <label className="checkbox checkbox-lg checkbox-lg checkbox-single flex-shrink-0 mr-4">
+                      <input
+                        type="checkbox"
+                        value={item.is_finished ? "1" : "0"}
+                      />
+                      <span></span>
+                    </label>
+
+                    <div className="d-flex flex-wrap align-items-center justify-content-between w-100">
+                      <div className="d-flex flex-column align-items-cente py-2 w-75">
+                        <Link
+                          to={!!isContractPage ? linkContract : linkTermin}
+                          onClick={() => {
+                            getContractById(item?.data?.contract_id);
+
+                            //   tabInvoice.tab = item.menu_tab || 0;
+                            //   tabInvoice.tabInvoice = item.sub_menu_tab || 0;
+                            //   props.set_data_tab_invaoice(tabInvoice);
+                          }}
+                          className="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1"
+                        >
+                          {item.title}
+                        </Link>
+
+                        <span className="text-muted font-weight-bold">
+                          {`${item?.data?.contract_name} ${
+                            item?.data?.task_name
+                              ? "- " + item?.data?.task_name
+                              : ""
+                          }`}
+                        </span>
+                      </div>
+
+                      <span className="label label-lg label-light-primary label-inline font-weight-bold py-4">
+                        {`${item?.data?.contract_no}`}
+                      </span>
+                    </div>
+                  </div>
+                );
+                return (
                   <div
                     className="d-flex align-items-center mb-10"
                     key={index.toString()}

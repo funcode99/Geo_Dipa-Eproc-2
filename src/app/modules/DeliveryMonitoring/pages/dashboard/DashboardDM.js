@@ -176,7 +176,7 @@ class DashboardDM extends Component {
             <SummaryStatsDM data={summary_stat} authStatus={authStatus} />
           </div> */}
         </div>
-        {/* <DemoOnly /> */}
+        <DemoOnly />
         <DialogGlobal
           ref={this.modalRef}
           // visible={visible}
