@@ -49,7 +49,8 @@ const ModalPreviewDODoc = ({
     if (file) openLinkTab(file);
   };
   const _handleSubmit = () => {
-    grFormRef.current.handleSubmit();
+    if (!!grFormRef.current?.handleSubmit) grFormRef.current.handleSubmit();
+    else _onSubmit();
   };
 
   const _onSubmit = (dataEvent) => {
@@ -82,7 +83,7 @@ const ModalPreviewDODoc = ({
   }, [file]);
   const isReject = action === "reject";
   const isApprove = action === "approve";
-  const isNeedApprove = isClient && !isFileApproved ;
+  const isNeedApprove = isClient && !isFileApproved;
   return (
     <DialogGlobal
       maxWidth={isNeedApprove ? "md" : "sm"}
