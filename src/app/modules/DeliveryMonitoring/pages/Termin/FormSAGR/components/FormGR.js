@@ -105,26 +105,26 @@ const FormGR = ({
             // readOnly: grExist,
           }
         }
-        btnChildren={
-          <React.Fragment>
-            {dataSAGR?.gr_status?.gr_101 == true && (
-              <button
-                onClick={() => refModal.current.open()}
-                className={`btn btn-sm btn-label-warning btn-bold mr-3`}
-              >
-                Post GR 101
-              </button>
-            )}
-            {dataSAGR?.gr_status?.gr_103 == true && (
-              <button
-                onClick={() => refModal2.current.open()}
-                className={`btn btn-sm btn-label-success btn-bold mr-3`}
-              >
-                Post GR 103
-              </button>
-            )}
-          </React.Fragment>
-        }
+        // btnChildren={
+        //   <React.Fragment>
+        //     {dataSAGR?.gr_status?.gr_101 == true && (
+        //       <button
+        //         onClick={() => refModal.current.open()}
+        //         className={`btn btn-sm btn-label-warning btn-bold mr-3`}
+        //       >
+        //         Post GR 101
+        //       </button>
+        //     )}
+        //     {dataSAGR?.gr_status?.gr_103 == true && (
+        //       <button
+        //         onClick={() => refModal2.current.open()}
+        //         className={`btn btn-sm btn-label-success btn-bold mr-3`}
+        //       >
+        //         Post GR 103
+        //       </button>
+        //     )}
+        //   </React.Fragment>
+        // }
       />
       <ModalApproveGR
         innerRef={refModal}
