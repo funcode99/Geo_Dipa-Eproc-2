@@ -36,7 +36,7 @@ const FormSchema = Yup.object().shape({
   date: Yup.date()
     .required(<FormattedMessage id="TITLE.DATE_IS_REQUIRE" />)
     .nullable(),
-  remarks: Yup.string(),
+  remarks: Yup.string().required("Remarks harus diisi"),
 });
 
 const initialValues = {
@@ -558,6 +558,8 @@ const DeliveryOrder = ({
     // setDataOrderItem({});
     // setTimeout(() => setDataOrderItem(tempData), 350);
   };
+
+  console.log(`formik`, formik);
 
   return (
     <React.Fragment>
