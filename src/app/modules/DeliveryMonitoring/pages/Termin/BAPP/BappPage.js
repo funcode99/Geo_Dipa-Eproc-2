@@ -28,6 +28,7 @@ import _, { isEmpty } from "lodash";
 import FieldBuilder from "../../../../../components/builder/FieldBuilder";
 import ApproveRejectBtn from "./components/ApproveRejectBtn";
 import AlertLate from "./components/AlertLate";
+import apiHelper from "../../../../../service/helper/apiHelper";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -339,8 +340,9 @@ const BappPage = ({
     const isApproved = taskNews?.approve_status?.code === "approved";
     // setStepActive(1);
     if (taskNews?.approve_status) {
-      if (isApproved) setStepActive(3);
-      else if (taskNews?.file_upload) {
+      // if (isApproved) setStepActive(3);
+      // else
+      if (taskNews?.file_upload) {
         if (isReject) setStepActive(1);
         else setStepActive(2);
       } else if (taskNews?.file) {
@@ -423,7 +425,7 @@ const BappPage = ({
           alertAppear: "both",
           url: `delivery/task-news/${taskNews.id}/status`,
           params: {
-            approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
+            approve_status_id: apiHelper.approveId,
           },
           onSuccess: (res) => {
             // this.handleRefresh();
