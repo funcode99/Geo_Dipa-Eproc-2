@@ -90,7 +90,7 @@ function DashboardListBkb(props) {
     setErr(false);
     setParamsTable(params);
     setLoading(false);
-    getAllBkb(params)
+    getAllBkb(params, is_main, user_id, is_finance)
       .then((result) => {
         setLoading(false);
         setData({
