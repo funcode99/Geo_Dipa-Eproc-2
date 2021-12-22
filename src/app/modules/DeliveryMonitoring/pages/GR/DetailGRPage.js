@@ -50,12 +50,12 @@ const DetailGRPage = ({ fetch_api_sg, loading, authStatus }) => {
             items={content?.gr_items}
             dataGR={content}
             isClient={isClient}
-            //  signProps={{
-            //    name:
-            //      content?.task?.contract?.contract_party
-            //        ?.party_1_director_position_full_name,
-            //    date: content?.createdAt,
-            //  }}
+            signProps={{
+              name:
+                content?.task?.contract?.contract_party
+                  ?.party_1_director_position_full_name,
+              date: content?.createdAt,
+            }}
           />
         )}
         {/* <DetailGR data={content?.gr_header} item={content} fullData={{}} />
