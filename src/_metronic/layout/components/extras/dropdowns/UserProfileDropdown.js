@@ -61,9 +61,9 @@ export function UserProfileDropdown(props) {
                 <div className="text-dark m-0 flex-grow-1 mr-3 font-size-h5">
                   {user.data.full_name}
                 </div>
-                <span className="label label-light-success label-lg font-weight-bold label-inline">
+                {/* <span className="label label-light-success label-lg font-weight-bold label-inline">
                   {props?.countMessage || 0} messages
-                </span>
+                </span> */}
               </div>
               <div className="separator separator-solid"></div>
             </>
@@ -87,9 +87,9 @@ export function UserProfileDropdown(props) {
               <div className="text-white m-0 flex-grow-1 mr-3 font-size-h5">
                 {user.data.full_name}
               </div>
-              <span className="label label-success label-lg font-weight-bold label-inline">
+              {/* <span className="label label-success label-lg font-weight-bold label-inline">
                 {props?.countMessage || 0} messages
-              </span>
+              </span> */}
             </div>
           )}
         </>
