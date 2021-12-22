@@ -855,7 +855,7 @@ function ContractTaxPage(props) {
                               handleChecked(index);
                           }}
                         >
-                          {item.text40}
+                          {item.wt_withcd} - {item.text40}
                         </span>
                       </td>
                       <td>
