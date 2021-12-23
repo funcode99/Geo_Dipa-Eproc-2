@@ -204,9 +204,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                     color="primary"
                   >
                     <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/delivery-notif.svg"
-                      )}
+                      src={toAbsoluteUrl("/media/svg/icons/All/delivery.svg")}
                     />
                   </Badge>
                 </span>
