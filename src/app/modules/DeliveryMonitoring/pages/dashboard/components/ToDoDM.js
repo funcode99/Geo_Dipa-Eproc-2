@@ -169,7 +169,7 @@ const ToDoDM = (props) => {
                 </div>
               </div>
             ) : (
-              sort(dataTodo.list)?.map((item, index) => {
+              dataTodo.list?.map((item, index) => {
                 var bgColor = getColor();
                 const isContractPage = Object.keys(contract_pages).filter(
                   (e) => e === item?.node_type

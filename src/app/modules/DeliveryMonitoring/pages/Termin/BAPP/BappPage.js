@@ -340,9 +340,8 @@ const BappPage = ({
     const isApproved = taskNews?.approve_status?.code === "approved";
     // setStepActive(1);
     if (taskNews?.approve_status) {
-      // if (isApproved) setStepActive(3);
-      // else
-      if (taskNews?.file_upload) {
+      if (isApproved) setStepActive(3);
+      else if (taskNews?.file_upload) {
         if (isReject) setStepActive(1);
         else setStepActive(2);
       } else if (taskNews?.file) {
