@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+} from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
@@ -26,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function Dashboard(props) {
-  const { intl } = props;
+  const { intl, plant_data } = props;
   const [range, setRange] = useState({
     ident_name: "day",
     name: "Harian",
@@ -89,22 +94,31 @@ function Dashboard(props) {
     }
   }, [optionChart]);
 
-  const callApiPlant = () => {
-    getAllPlant()
-      .then((result) => {
-        var data = Object.assign([], plant);
-        var data_ = data.concat(result.data.data);
-        setPlant(data_);
-      })
-      .catch((err) => {
-        setToast(
-          intl.formatMessage({
-            id: "REQ.REQUEST_FAILED",
-          }),
-          5000
-        );
+  const callApiPlant = useCallback(() => {
+    setPlant(plant_data);
+    if (!!plant_data.length) {
+      setUnit({
+        ...unit,
+        name: plant_data?.[0]?.name,
+        plant_id: plant_data?.[0]?.plant_id,
       });
-  };
+    }
+
+    // getAllPlant()
+    //   .then((result) => {
+    //     var data = Object.assign([], plant);
+    //     var data_ = data.concat(result.data.data);
+    //     setPlant(data_);
+    //   })
+    //   .catch((err) => {
+    //     setToast(
+    //       intl.formatMessage({
+    //         id: "REQ.REQUEST_FAILED",
+    //       }),
+    //       5000
+    //     );
+    //   });
+  }, [plant_data, setPlant, setUnit]);
 
   const callApiPeriod = () => {
     getAllPeriod()
@@ -705,4 +719,10 @@ function Dashboard(props) {
   );
 }
 
-export default injectIntl(connect(null, null)(Dashboard));
+const mapState = (state) => {
+  return {
+    plant_data: state.auth.user.data.plant_data,
+  };
+};
+
+export default injectIntl(connect(mapState, null)(Dashboard));
