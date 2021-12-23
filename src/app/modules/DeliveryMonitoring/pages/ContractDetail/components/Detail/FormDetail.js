@@ -544,7 +544,9 @@ const FormDetail = (props) => {
                     required
                     type="text"
                     placeholder="Kewenangan"
-                    defaultValue={dataContractById?.authority_group?.alias_name}
+                    defaultValue={
+                      dataContractById?.authority_group?.party?.full_name
+                    }
                     disabled
                   />
                 </Col>
@@ -558,7 +560,9 @@ const FormDetail = (props) => {
                     required
                     type="text"
                     placeholder="User"
-                    defaultValue={dataContractById?.user_group?.alias_name}
+                    defaultValue={
+                      dataContractById?.user_group?.party?.full_name
+                    }
                     disabled
                   />
                 </Col>
