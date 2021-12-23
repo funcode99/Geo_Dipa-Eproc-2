@@ -584,10 +584,10 @@ function Dashboard(props) {
           </div>
           <div className="row my-4">
             <div className="col-md-8 p-1">
-              <Card className="border">
+              {/* <Card className="border">
                 <CardBody className="p-1">
                   <div className={`card card-custom card-stretch`}>
-                    {/* Head */}
+
                     <div className="card-header border-0 pt-5">
                       <h3 className="card-title align-items-start flex-column">
                         <span className="card-label font-weight-bolder text-dark">
@@ -596,7 +596,7 @@ function Dashboard(props) {
                       </h3>
                       <div className="card-toolbar"></div>
                     </div>
-                    {/* Body */}
+
                     <div className="card-body pt-3 pb-0">
                       <div className="table-responsive">
                         <table className="table table-borderless table-vertical-center">
@@ -639,13 +639,15 @@ function Dashboard(props) {
                           <tbody>
                             <tr>
                               <td className="pl-0 py-4">
-                                {/* <div className="symbol symbol-50 symbol-light mr-1">
-                                  <span className="symbol-label">
-                                    <h1 className="h-50 align-self-center">
-                                      P
-                                    </h1>
-                                  </span>
-                                </div> */}
+                                {
+                                  //<div className="symbol symbol-50 symbol-light mr-1">
+                                  //<span className="symbol-label">
+                                  //  <h1 className="h-50 align-self-center">
+                                  //    P
+                                  //  </h1>
+                                  //</span>
+                                  //</div>
+                                }
                                 PT ABC
                               </td>
                               <td className="pl-0">
@@ -707,7 +709,7 @@ function Dashboard(props) {
                     </div>
                   </div>
                 </CardBody>
-              </Card>
+              </Card> */}
             </div>
             <div className="col-md-4 p-1">
               <div id="chart"></div>
