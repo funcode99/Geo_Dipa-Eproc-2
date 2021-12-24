@@ -101,7 +101,7 @@ const ModalSubmit = ({
           <TableHead>
             <TableRow>
               {tableHeader.map((item, index) => (
-                <TableCell className="bg-white" key={index}>
+                <TableCell className="bg-white text-dark" key={index}>
                   {item}
                 </TableCell>
               ))}
