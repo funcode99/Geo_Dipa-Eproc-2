@@ -15,19 +15,21 @@ import {
   DataAsideMenuListVendor,
 } from "./DataAsideMenuList";
 import { getRolesAdmin } from "../../../../../app/modules/Master/service/MasterCrud";
+import { getFinanceUser } from "../../../../../redux/globalReducer";
 
 export function AsideMenuList({ layoutProps }) {
   const location = useLocation();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)
       ? ` ${!hasSubmenu &&
-      "menu-item-active"} menu-item-open menu-item-not-hightlighted`
+          "menu-item-active"} menu-item-open menu-item-not-hightlighted`
       : "";
   };
   let status = useSelector(
     (state) => state.auth.user.data.status,
     shallowEqual
   );
+  let isFinance = useSelector((state) => getFinanceUser(state));
   const dataUser = useSelector((state) => state.auth.user.data);
   let monitoring_role = dataUser.monitoring_role
     ? dataUser.monitoring_role
@@ -41,24 +43,57 @@ export function AsideMenuList({ layoutProps }) {
   // });
 
   const getRolesAdminData = useCallback(() => {
-    getRolesAdmin().then(
-      (responseRoles) => {
-        setAsideMenu(status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor)
-        let found = false
-        responseRoles["data"]["data"].map((item, index) => {
-          if (monitoring_role.findIndex((element) => element === item.name) >= 0) {
-            found = true
-          }
-        });
-        if (!found) {
-          let asideMenuTemp = DataAsideMenuListClient.filter(function (obj) {
-            return obj.title !== "MENU.USER_MANAGEMENT" && obj.title !== "MENU.MASTER_DATA";
-          });
-          setAsideMenu(status === "client" ? asideMenuTemp : DataAsideMenuListVendor)
-        }
+    getRolesAdmin().then((responseRoles) => {
+      if (status === "client" && !isFinance) {
+        // replace sub menu invoice monitoring, if only user is not finance department
+        let newList = DataAsideMenuListClient.reduce(
+          (acc, item, index, arr) => {
+            if (item.title === "MENU.INVOICE_MONITORING")
+              return [
+                ...acc,
+                {
+                  ...item,
+                  subMenu: [
+                    {
+                      rootPath: "/client/invoice_monitoring/contract",
+                      title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+                      subMenu: null,
+                    },
+                  ],
+                },
+              ];
+            return [...acc, item];
+          },
+          []
+        );
+        console.log(`newList`, newList);
+        setAsideMenu(newList);
+        return;
       }
-    );
-  }, []);
+      setAsideMenu(
+        status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor
+      );
+      let found = false;
+      responseRoles["data"]["data"].map((item, index) => {
+        if (
+          monitoring_role.findIndex((element) => element === item.name) >= 0
+        ) {
+          found = true;
+        }
+      });
+      if (!found) {
+        let asideMenuTemp = DataAsideMenuListClient.filter(function(obj) {
+          return (
+            obj.title !== "MENU.USER_MANAGEMENT" &&
+            obj.title !== "MENU.MASTER_DATA"
+          );
+        });
+        setAsideMenu(
+          status === "client" ? asideMenuTemp : DataAsideMenuListVendor
+        );
+      }
+    });
+  }, [isFinance]);
 
   useEffect(getRolesAdminData, []);
 
@@ -85,9 +120,9 @@ export function AsideMenuList({ layoutProps }) {
               key={index.toString()}
               className={`${
                 item.subMenu && item.subMenu.length > 0
-                ? "menu-item menu-item-submenu"
-                : "menu-item"
-                } ${getMenuItemActive(item.rootPath, true)}`}
+                  ? "menu-item menu-item-submenu"
+                  : "menu-item"
+              } ${getMenuItemActive(item.rootPath, true)}`}
               aria-haspopup="true"
               data-menu-toggle="hover"
             >
@@ -129,9 +164,9 @@ export function AsideMenuList({ layoutProps }) {
                           key={index_1.toString()}
                           className={`${
                             submenu.subMenu && submenu.subMenu.length > 0
-                            ? "menu-item menu-item-submenu"
-                            : "menu-item"
-                            }  ${getMenuItemActive(submenu.rootPath)}`}
+                              ? "menu-item menu-item-submenu"
+                              : "menu-item"
+                          }  ${getMenuItemActive(submenu.rootPath)}`}
                           aria-haspopup="true"
                         >
                           <NavLink

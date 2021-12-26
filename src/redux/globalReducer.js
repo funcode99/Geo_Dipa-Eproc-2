@@ -78,6 +78,10 @@ export const getClientIsAdmin = ({ auth }) => {
   return !!filteredData?.length > 0;
 };
 
+export const getFinanceUser = ({ auth }) => {
+  return auth?.user?.data?.is_finance;
+};
+
 // sagas below
 /**
  * key:required
