@@ -13,9 +13,18 @@ import {
   DropdownMenu4,
 } from "../../../../../../_metronic/_partials/dropdowns";
 import { KTUtil } from "../../../../../../_metronic/_assets/js/components/util";
+import { Link } from "react-router-dom";
+import { rupiah } from "../../../../../libs/currency";
 
-export default function SumaryStatsDM({ className }) {
+export default function SumaryStatsDM({
+  data,
+  className,
+  authStatus,
+  openModal,
+  pie_chart_datas,
+}) {
   const uiService = useHtmlClassService();
+  const chartKey = "kt_mixed_widget_14_chart" + new Date();
 
   const layoutProps = useMemo(() => {
     return {
@@ -31,6 +40,14 @@ export default function SumaryStatsDM({ className }) {
         uiService.config,
         "js.colors.theme.base.success"
       ),
+      colorsThemeBaseWarning: objectPath.get(
+        uiService.config,
+        "js.colors.theme.base.warning"
+      ),
+      colorsThemeBaseDanger: objectPath.get(
+        uiService.config,
+        "js.colors.theme.base.danger"
+      ),
       colorsThemeLightSuccess: objectPath.get(
         uiService.config,
         "js.colors.theme.light.success"
@@ -40,20 +57,27 @@ export default function SumaryStatsDM({ className }) {
   }, [uiService]);
 
   useEffect(() => {
-    const element = document.getElementById("kt_mixed_widget_14_chart");
+    const element = document.getElementById(chartKey);
     if (!element) {
       return;
     }
 
     const height = parseInt(KTUtil.css(element, "height"));
-    const options = getChartOptions(layoutProps, height);
+    const options = getChartOptions(layoutProps, height, [
+      parseInt(pie_chart_datas.sagr),
+      parseInt(pie_chart_datas.on_progress),
+      parseInt(pie_chart_datas.overdue),
+      // 12,
+      // 32,
+      // 55,
+    ]);
 
     const chart = new ApexCharts(element, options);
     chart.render();
     return function cleanUp() {
       chart.destroy();
     };
-  }, [layoutProps]);
+  }, [layoutProps, pie_chart_datas]);
 
   return (
     <div className={`card card-custom ${className}`}>
@@ -64,7 +88,7 @@ export default function SumaryStatsDM({ className }) {
       {/* Body */}
       <div className="card-body d-flex flex-column">
         <div className="flex-grow-1">
-          <div id="kt_mixed_widget_14_chart" style={{ height: "200px" }}></div>
+          <div id={chartKey} style={{ height: "200px" }}></div>
         </div>
         {/* <div className="pt-5">
           <p className="text-center font-weight-normal font-size-lg pb-7">
@@ -80,32 +104,66 @@ export default function SumaryStatsDM({ className }) {
           </a>
         </div> */}
       </div>
+      <div className="card-spacer mt10">
+        <div className=" bg-light-success px-8 py-3 rounded-xl mb-7">
+          <Link
+            className="text-success font-weight-bold font-size-h6"
+            onClick={() => openModal("success")}
+          >
+            {data?.sagr} Success
+          </Link>
+        </div>
+        <div className=" bg-light-warning px-8 py-3 rounded-xl mb-7">
+          <Link
+            className="text-warning font-weight-bold font-size-h6"
+            onClick={() => openModal("onprogress")}
+          >
+            {data?.on_progress} On Progress
+          </Link>
+        </div>
+        <div className=" bg-light-danger px-8 py-3 rounded-xl mb-7">
+          <Link
+            className="text-danger font-weight-bold font-size-h6"
+            onClick={() => openModal("overdue")}
+          >
+            {data?.overdue} Overdue
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
 
-function getChartOptions(layoutProps, height) {
+let series_labels = ["Success", "On Progress", "Overdue"];
+
+function getChartOptions(layoutProps, height, series) {
   var options = {
     chart: {
       width: "100%",
       type: "donut",
     },
     enabledOnSeries: true,
-    colors: ["#1ab7ea", "#0084ff", "#39539E", "#0077B5"],
-
+    // colors: ["#1ab7ea", "#0084ff", "#39539E", "#0077B5"],
+    colors: [
+      layoutProps.colorsThemeBaseSuccess,
+      layoutProps.colorsThemeBaseWarning,
+      layoutProps.colorsThemeBaseDanger,
+    ],
     dataLabels: {
       enabled: false,
     },
-    series: [76, 67, 61, 90],
+    // series: [76, 67, 61],
+    series,
     tooltip: {
       enabled: true,
       y: {
         formatter: function(val) {
-          return val;
+          return rupiah(val);
         },
         title: {
-          formatter: function(seriesName) {
-            return seriesName;
+          formatter: function(seriesName, index) {
+            console.log(`index`, index);
+            return series_labels[index.seriesIndex] || seriesName;
           },
         },
       },

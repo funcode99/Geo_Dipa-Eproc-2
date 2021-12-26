@@ -26,18 +26,18 @@ const SummaryStatsDM = ({ data, className, authStatus, openModal }) => {
             className="text-warning font-weight-bold font-size-h6"
             onClick={() => openModal("onprogress")}
           >
-            On Progresss
+            On Progress
           </Link>
         </div>
-        <div className=" bg-light-primary px-8 py-3 rounded-xl mb-7">
+        <div className=" bg-light-success px-8 py-3 rounded-xl mb-7">
           <span className="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
-            <span className="text-primary font-weight-bolder d-block font-size-lg">
+            <span className="text-success font-weight-bolder d-block font-size-lg">
               {data?.sagr}
             </span>
           </span>
           <Link
             // to={`/${authStatus}/delivery-monitoring/contract`}
-            className="text-primary font-weight-bold font-size-h6"
+            className="text-success font-weight-bold font-size-h6"
             onClick={() => openModal("success")}
           >
             Success

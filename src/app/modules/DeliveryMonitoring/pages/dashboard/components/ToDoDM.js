@@ -185,6 +185,7 @@ const ToDoDM = (props) => {
                       <input
                         type="checkbox"
                         value={item.is_finished ? "1" : "0"}
+                        disabled
                       />
                       <span></span>
                     </label>
