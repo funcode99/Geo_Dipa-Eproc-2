@@ -262,8 +262,9 @@ const BastPage = ({
         if (isReject) setStepActive(1);
         else setStepActive(2);
       } else if (taskNews?.file) {
-        if (taskNews?.review_text !== null) setStepActive(1);
-        else setStepActive(0);
+        // if (taskNews?.review_text !== null) setStepActive(1);
+        // else setStepActive(0);
+        setStepActive(1);
       }
     }
   }, [taskNews]);
