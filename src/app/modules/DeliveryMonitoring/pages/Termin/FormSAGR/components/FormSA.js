@@ -11,7 +11,14 @@ import TableSA from "./TableSA";
 
 export const FormSAContext = React.createContext({});
 
-const FormSA = ({ fetch_api_sg, keys,dataContractById, loadings_sg, onRefresh, dataSAGR }) => {
+const FormSA = ({
+  fetch_api_sg,
+  keys,
+  dataContractById,
+  loadings_sg,
+  onRefresh,
+  dataSAGR,
+}) => {
   const [arrService, setArrService] = useState({});
   const [listWBS, setlistWBS] = useState([]);
   const [itemJasa, setItemJasa] = useState([]);
@@ -127,6 +134,23 @@ const FormSA = ({ fetch_api_sg, keys,dataContractById, loadings_sg, onRefresh, d
     [dataSA]
   );
 
+  const initial_header = React.useMemo(
+    () => ({
+      // ext_number: dataSA?.ext_number,
+      // short_text: validation.require("Short Text"),
+      // location: validation.require("Location"),
+      // person_int: validation.require("Person Internal"),
+      // person_ext: validation.require("Person External"),
+      // post_date: validation.require("Post Date"),
+      // ref_doc_no: validation.require("Ref Doc No"),
+      // doc_text: validation.require("Doc Text"),
+      // po_item: validation.require("PO Item"),
+      person_int: dataSAGR?.base_sa?.person_internal,
+      person_ext: dataSAGR?.base_sa?.person_external,
+    }),
+    [dataSAGR]
+  );
+
   console.log(`dataSA`, dataSAGR);
 
   const options = { optCost, optGL };
@@ -158,7 +182,7 @@ const FormSA = ({ fetch_api_sg, keys,dataContractById, loadings_sg, onRefresh, d
           onSubmit={_handleSubmit}
           formData={sa_field}
           validation={validationSchema_sa}
-          initial={initial}
+          initial={saExist ? initial : initial_header}
           fieldProps={
             {
               // readOnly: saExist || itemJasa.length === 0,
