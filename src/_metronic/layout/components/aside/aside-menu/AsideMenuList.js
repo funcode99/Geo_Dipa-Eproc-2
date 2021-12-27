@@ -9,16 +9,20 @@ import {
   FormattedMessage,
   // injectIntl
 } from "react-intl";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import {
   DataAsideMenuListClient,
   DataAsideMenuListVendor,
 } from "./DataAsideMenuList";
 import { getRolesAdmin } from "../../../../../app/modules/Master/service/MasterCrud";
-import { getFinanceUser } from "../../../../../redux/globalReducer";
+import {
+  clean_loading_state_rd,
+  getFinanceUser,
+} from "../../../../../redux/globalReducer";
 
 export function AsideMenuList({ layoutProps }) {
   const location = useLocation();
+  const dispatch = useDispatch();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)
       ? ` ${!hasSubmenu &&
@@ -95,7 +99,10 @@ export function AsideMenuList({ layoutProps }) {
     });
   }, [isFinance]);
 
-  useEffect(getRolesAdminData, []);
+  useEffect(() => {
+    getRolesAdminData();
+    dispatch(clean_loading_state_rd());
+  }, []);
 
   return (
     <>

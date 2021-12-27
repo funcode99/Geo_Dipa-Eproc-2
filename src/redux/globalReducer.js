@@ -9,6 +9,7 @@ const globalRedTypes = {
   SET_LOADING: "SET_LOADING",
   SET_LOADING_DONE: "SET_LOADING_DONE",
   FETCH_API_SAGA: "FETCH_API_SAGA",
+  CLEAR_LOADING: "CLEAR_LOADING_STATE",
 };
 
 const initialState = {
@@ -29,6 +30,11 @@ export const reducer = persistReducer(
           ...state,
           loadings: state.loadings.filter((item) => item !== action.payload),
         };
+      case globalRedTypes.CLEAR_LOADING:
+        return {
+          ...state,
+          loadings: [],
+        };
       default:
         return state;
     }
@@ -42,6 +48,10 @@ export const set_loading_rd = (payload) => ({
 });
 export const set_loading_done_rd = (payload) => ({
   type: globalRedTypes.SET_LOADING_DONE,
+  payload,
+});
+export const clean_loading_state_rd = (payload) => ({
+  type: globalRedTypes.CLEAR_LOADING,
   payload,
 });
 export const fetch_api_sg = (payload) => ({
