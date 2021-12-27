@@ -3,6 +3,7 @@ import { headerTableSA, option_dist_type, sa_field } from "./DUMMY_DATA";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import RowTableSA from "./RowTableSA";
 import { FormSAContext } from "./FormSA";
+import { isEmpty } from "lodash";
 
 const TableSA = ({ itemJasa }) => {
   const dataRow = useMemo(
@@ -44,7 +45,13 @@ const TableSA = ({ itemJasa }) => {
       loading={false}
       withPagination={true}
       withSearch={false}
-      renderRows={RowTableSA}
+      renderRows={({ item, index }) =>
+        isEmpty(item) ? (
+          <div key={index}></div>
+        ) : (
+          <RowTableSA item={item} index={index} />
+        )
+      }
       fieldProps={{
         listOptions: {
           dist_type: option_dist_type,

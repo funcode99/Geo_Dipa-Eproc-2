@@ -237,8 +237,8 @@ export default function TablePaginationCustom({
                 {searchFind(stableSort(rows, getSorting(order, orderBy)), query)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                    // const isItemSelected = isSelected(row.name);
+                    // const labelId = `enhanced-table-checkbox-${index}`;
                     if (typeof renderRows === "function") {
                       return renderRows({ item: row, index });
                     }
