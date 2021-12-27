@@ -156,7 +156,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
       console.log("ini_web_socket dari notif", node_payload);
       fetchNotif({ refresh: true });
     });
-  }, [location]);
+  }, []);
 
   return (
     <>
