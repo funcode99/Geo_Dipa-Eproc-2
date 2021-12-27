@@ -21,7 +21,7 @@ const TableSA = ({ itemJasa }) => {
   );
   const { readOnly, dataSA, baseSA, saExist } = React.useContext(FormSAContext);
   const dataUsed = readOnly ? dataSA.services : itemJasa;
-  //   console.log(`dataUsed`, dataUsed, baseSA);
+  // console.log(`dataUsed`, dataUsed, baseSA);
 
   return (
     <TablePaginationCustom
@@ -42,7 +42,7 @@ const TableSA = ({ itemJasa }) => {
       // rows={dataRow}
       width={2000}
       loading={false}
-      withPagination={false}
+      withPagination={true}
       withSearch={false}
       renderRows={RowTableSA}
       fieldProps={{
