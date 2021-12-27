@@ -147,11 +147,15 @@ const FormSA = ({
       // po_item: validation.require("PO Item"),
       person_int: dataSAGR?.base_sa?.person_internal,
       person_ext: dataSAGR?.base_sa?.person_external,
+      begdate: dataSAGR?.base_sa?.task_start_date,
+      enddate: dataSAGR?.base_sa?.task_due_date,
+      ref_doc_no: dataSAGR?.base_sa?.no,
+      ext_number: dataSAGR?.base_sa?.vendor_no,
     }),
     [dataSAGR]
   );
 
-  // console.log(`dataSA`, dataSAGR, dataSA);
+  console.log(`dataSA`, dataSAGR, dataSA);
 
   const options = { optCost, optGL };
 
