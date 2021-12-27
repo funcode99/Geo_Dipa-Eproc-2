@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import { Button, ButtonGroup } from "@material-ui/core";
 import { Form } from "react-bootstrap";
 import BasicInput from "../../../../../../components/input/BasicInput";
+import TextAreaInput from "../../../../../../components/input/TextAreaInput";
 
 const ApproveRejectBtn = forwardRef(({ isDisabled }, ref) => {
   const [action, setAction] = React.useState("approve");
@@ -45,10 +46,12 @@ const ApproveRejectBtn = forwardRef(({ isDisabled }, ref) => {
         <div className="form-group row">
           <label className={`col-sm-4 col-form-label`}>remarks</label>
           <div className={`col-sm-8`}>
-            <BasicInput
+            <TextAreaInput
               name={"remarks"}
               label={"Remarks"}
               onChange={handleRemarksChange}
+              typeInput={"TextAreaInput"}
+
               // value={remarks}
               // disabled
               //   defaultValue={remarks}
