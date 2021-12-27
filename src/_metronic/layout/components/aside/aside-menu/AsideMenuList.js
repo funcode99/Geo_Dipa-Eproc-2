@@ -72,11 +72,13 @@ export function AsideMenuList({ layoutProps }) {
         );
         console.log(`newList`, newList);
         setAsideMenu(newList);
-        return;
+      } else {
+        setAsideMenu(
+          status === "client"
+            ? DataAsideMenuListClient
+            : DataAsideMenuListVendor
+        );
       }
-      setAsideMenu(
-        status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor
-      );
       let found = false;
       responseRoles["data"]["data"].map((item, index) => {
         if (
