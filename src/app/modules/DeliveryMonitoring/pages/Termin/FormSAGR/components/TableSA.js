@@ -42,8 +42,9 @@ const TableSA = ({ itemJasa }) => {
       }))}
       // rows={dataRow}
       width={2000}
+      maxHeight={300}
       loading={false}
-      withPagination={true}
+      withPagination={false}
       withSearch={false}
       renderRows={({ item, index }) =>
         isEmpty(item) ? (
