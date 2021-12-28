@@ -33,6 +33,7 @@ export function AsideMenuList({ layoutProps }) {
     (state) => state.auth.user.data.status,
     shallowEqual
   );
+  const isClient = status === "client";
   let isFinance = useSelector((state) => getFinanceUser(state));
   const dataUser = useSelector((state) => state.auth.user.data);
   let monitoring_role = dataUser.monitoring_role
@@ -48,37 +49,34 @@ export function AsideMenuList({ layoutProps }) {
 
   const getRolesAdminData = useCallback(() => {
     getRolesAdmin().then((responseRoles) => {
-      if (status === "client" && !isFinance) {
+      let newList = [];
+      const userNonFinance = isClient && !isFinance;
+      if (isClient && !isFinance) {
         // replace sub menu invoice monitoring, if only user is not finance department
-        let newList = DataAsideMenuListClient.reduce(
-          (acc, item, index, arr) => {
-            if (item.title === "MENU.INVOICE_MONITORING")
-              return [
-                ...acc,
-                {
-                  ...item,
-                  subMenu: [
-                    {
-                      rootPath: "/client/invoice_monitoring/contract",
-                      title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
-                      subMenu: null,
-                    },
-                  ],
-                },
-              ];
-            return [...acc, item];
-          },
-          []
-        );
-        console.log(`newList`, newList);
+        newList = DataAsideMenuListClient.reduce((acc, item, index, arr) => {
+          if (item.title === "MENU.INVOICE_MONITORING")
+            return [
+              ...acc,
+              {
+                ...item,
+                subMenu: [
+                  {
+                    rootPath: "/client/invoice_monitoring/contract",
+                    title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+                    subMenu: null,
+                  },
+                ],
+              },
+            ];
+          return [...acc, item];
+        }, []);
         setAsideMenu(newList);
       } else {
         setAsideMenu(
-          status === "client"
-            ? DataAsideMenuListClient
-            : DataAsideMenuListVendor
+          isClient ? DataAsideMenuListClient : DataAsideMenuListVendor
         );
       }
+      // console.log(`newList`, newList, userNonFinance, isClient, isFinance);
       let found = false;
       responseRoles["data"]["data"].map((item, index) => {
         if (
@@ -88,18 +86,17 @@ export function AsideMenuList({ layoutProps }) {
         }
       });
       if (!found) {
-        let asideMenuTemp = DataAsideMenuListClient.filter(function(obj) {
+        let usedData = userNonFinance ? newList : DataAsideMenuListClient;
+        let asideMenuTemp = usedData.filter(function(obj) {
           return (
             obj.title !== "MENU.USER_MANAGEMENT" &&
             obj.title !== "MENU.MASTER_DATA"
           );
         });
-        setAsideMenu(
-          status === "client" ? asideMenuTemp : DataAsideMenuListVendor
-        );
+        setAsideMenu(isClient ? asideMenuTemp : DataAsideMenuListVendor);
       }
     });
-  }, [isFinance]);
+  }, [isFinance, isClient]);
 
   useEffect(() => {
     getRolesAdminData();
