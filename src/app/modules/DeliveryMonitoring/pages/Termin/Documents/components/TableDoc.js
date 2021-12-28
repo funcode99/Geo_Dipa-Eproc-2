@@ -116,6 +116,7 @@ const TableDoc = ({ loading }) => {
             key={id}
             dataAll={el}
             data={["accordIcon", el.name, "-", "-", "-", "-", "-", ""]}
+            initialState
           >
             {(item) => {
               const isPeriodic = item.is_periodic;
