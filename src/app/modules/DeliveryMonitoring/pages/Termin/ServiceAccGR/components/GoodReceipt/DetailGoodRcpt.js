@@ -62,7 +62,7 @@ const DetailGoodRcpt = (props) => {
               fullData?.contract?.contract_party
                 ?.party_1_director_position_full_name
             }
-            // date={fullData?.task_sa_array?.[0]?.createdAt}
+            date={dataGR?.createdAt}
             {...props.signProps}
             params={qr_params}
           />
