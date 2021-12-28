@@ -338,7 +338,7 @@ const FormDetail = (props) => {
         fullWidth={true}
       >
         <DialogTitle id="alert-dialog-slide-title">
-          Daftar Email PIC / {editEmail ? "Ubah" : "Tambah"}
+          Daftar Email PIC Vendor / {editEmail ? "Ubah" : "Tambah"}
         </DialogTitle>
         <DialogContent>
           <div ref={updateEmailRef}>
@@ -630,7 +630,7 @@ const FormDetail = (props) => {
               </Form.Group>
               <Form.Group as={Row}>
                 <Form.Label column md="4">
-                  PIC
+                  PIC Vendor
                 </Form.Label>
                 <Col md="8" className="input-group">
                   <StyledSelect
