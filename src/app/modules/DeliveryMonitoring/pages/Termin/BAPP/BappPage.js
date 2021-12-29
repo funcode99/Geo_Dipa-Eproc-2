@@ -98,6 +98,7 @@ const BappPage = ({
   // });
   const [content, setContent] = React.useState([]);
   const isClient = status === "client";
+  const isApproved = taskNews?.approve_status?.code === "approved";
 
   const initialValues = React.useMemo(
     () => ({
@@ -337,7 +338,7 @@ const BappPage = ({
 
   // buat ganti state step
   React.useEffect(() => {
-    const isApproved = taskNews?.approve_status?.code === "approved";
+    // const isApproved = taskNews?.approve_status?.code === "approved";
     // setStepActive(1);
     if (taskNews?.approve_status) {
       if (isApproved) setStepActive(3);
@@ -349,7 +350,7 @@ const BappPage = ({
         else setStepActive(0);
       }
     }
-  }, [taskNews]);
+  }, [taskNews, isApproved]);
   // console.log(`taskNews`, taskNews, loadings);
 
   let disabledInput = Object.keys(initialValues);
@@ -552,7 +553,7 @@ const BappPage = ({
               withSubmit={isClient}
               btnChildren={
                 <React.Fragment>
-                  {isClient && (
+                  {isClient && isApproved && (
                     <Dropdown
                       className="dropdown-inline mr-2"
                       drop="down"
