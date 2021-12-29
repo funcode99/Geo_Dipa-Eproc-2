@@ -586,7 +586,8 @@ const FormDetail = (props) => {
               </Form.Group>
               <Form.Group as={Row}>
                 <Form.Label column md="4">
-                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NAME" />
+                  {/* <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NAME" /> */}
+                  PO Header Text
                 </Form.Label>
                 <Col md="8">
                   <Form.Control
@@ -600,7 +601,8 @@ const FormDetail = (props) => {
               </Form.Group>
               <Form.Group as={Row}>
                 <Form.Label column sm="4">
-                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PRICE" />
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PRICE" /> (exc
+                  PPN)
                 </Form.Label>
                 <Col md="8">
                   <Form.Control
