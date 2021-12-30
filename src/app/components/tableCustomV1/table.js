@@ -122,7 +122,7 @@ const Tables = (props) => {
       ...pagination,
     });
     requestFilterSort();
-    onChangePage(newPage);
+    // onChangePage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
