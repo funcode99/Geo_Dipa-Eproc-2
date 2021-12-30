@@ -148,7 +148,7 @@ const ModalPreviewDODoc = ({
                 />
               </Form.Group>
             )}
-            {!isApprove && hasMaterialItem && (
+            {isApprove && hasMaterialItem && (
               <FormBuilder
                 ref={grFormRef}
                 withSubmit={false}

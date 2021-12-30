@@ -79,7 +79,7 @@ const RowTableSA = ({ item, index }) => {
   );
 
   return (
-    <React.Fragment key={index}>
+    <React.Fragment key={item?.id}>
       <ModalAddWBS
         innerRef={wbsRef}
         onSelected={_handleSelected}

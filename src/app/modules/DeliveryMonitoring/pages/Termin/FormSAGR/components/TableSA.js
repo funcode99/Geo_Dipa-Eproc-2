@@ -3,6 +3,7 @@ import { headerTableSA, option_dist_type, sa_field } from "./DUMMY_DATA";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
 import RowTableSA from "./RowTableSA";
 import { FormSAContext } from "./FormSA";
+import { isEmpty } from "lodash";
 
 const TableSA = ({ itemJasa }) => {
   const dataRow = useMemo(
@@ -21,7 +22,7 @@ const TableSA = ({ itemJasa }) => {
   );
   const { readOnly, dataSA, baseSA, saExist } = React.useContext(FormSAContext);
   const dataUsed = readOnly ? dataSA.services : itemJasa;
-  //   console.log(`dataUsed`, dataUsed, baseSA);
+  // console.log(`dataUsed`, dataUsed, baseSA);
 
   return (
     <TablePaginationCustom
@@ -41,10 +42,17 @@ const TableSA = ({ itemJasa }) => {
       }))}
       // rows={dataRow}
       width={2000}
+      maxHeight={300}
       loading={false}
       withPagination={false}
       withSearch={false}
-      renderRows={RowTableSA}
+      renderRows={({ item, index }) =>
+        isEmpty(item) ? (
+          <div key={index}></div>
+        ) : (
+          <RowTableSA item={item} index={index} />
+        )
+      }
       fieldProps={{
         listOptions: {
           dist_type: option_dist_type,

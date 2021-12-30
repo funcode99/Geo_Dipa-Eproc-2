@@ -247,7 +247,7 @@ const Item = ({ handleClick, status }) => {
   };
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <Toast />
 
       {/* <Container>

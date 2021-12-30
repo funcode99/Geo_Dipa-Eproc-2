@@ -15,6 +15,12 @@ import {
 import { KTUtil } from "../../../../../../_metronic/_assets/js/components/util";
 import { Link } from "react-router-dom";
 import { rupiah } from "../../../../../libs/currency";
+import PerfectScrollbar from "react-perfect-scrollbar";
+
+const perfectScrollbarOptions = {
+  wheelSpeed: 2,
+  wheelPropagation: false,
+};
 
 export default function SumaryStatsDM({
   data,
@@ -85,12 +91,19 @@ export default function SumaryStatsDM({
       <div className="card-header border-0 pt-5">
         <h3 className="card-title font-weight-bolder ">Summary Contract</h3>
       </div>
-      {/* Body */}
-      <div className="card-body d-flex flex-column">
-        <div className="flex-grow-1">
-          <div id={chartKey} style={{ height: "200px" }}></div>
-        </div>
-        {/* <div className="pt-5">
+      <PerfectScrollbar
+        options={perfectScrollbarOptions}
+        className="scroll pr-7 mr-n7"
+        style={{
+          maxHeight: "calc(100% - 25px)",
+          position: "relative",
+        }}
+      >
+        <div className="card-body d-flex flex-column">
+          <div className="flex-grow-1">
+            <div id={chartKey} style={{ height: "200px" }}></div>
+          </div>
+          {/* <div className="pt-5">
           <p className="text-center font-weight-normal font-size-lg pb-7">
             Notes: Current sprint requires stakeholders
             <br />
@@ -103,33 +116,35 @@ export default function SumaryStatsDM({
             Generate Report
           </a>
         </div> */}
-      </div>
-      <div className="card-spacer mt10">
-        <div className=" bg-light-success px-8 py-3 rounded-xl mb-7">
-          <Link
-            className="text-success font-weight-bold font-size-h6"
-            onClick={() => openModal("success")}
-          >
-            {data?.sagr} Success
-          </Link>
         </div>
-        <div className=" bg-light-warning px-8 py-3 rounded-xl mb-7">
-          <Link
-            className="text-warning font-weight-bold font-size-h6"
-            onClick={() => openModal("onprogress")}
-          >
-            {data?.on_progress} On Progress
-          </Link>
+        <div className="card-spacer mt10">
+          <div className=" bg-light-success px-8 py-3 rounded-xl mb-7">
+            <Link
+              className="text-success font-weight-bold font-size-h6"
+              onClick={() => openModal("success")}
+            >
+              {data?.sagr} Success
+            </Link>
+          </div>
+          <div className=" bg-light-warning px-8 py-3 rounded-xl mb-7">
+            <Link
+              className="text-warning font-weight-bold font-size-h6"
+              onClick={() => openModal("onprogress")}
+            >
+              {data?.on_progress} On Progress
+            </Link>
+          </div>
+          <div className=" bg-light-danger px-8 py-3 rounded-xl mb-7">
+            <Link
+              className="text-danger font-weight-bold font-size-h6"
+              onClick={() => openModal("overdue")}
+            >
+              {data?.overdue} Overdue
+            </Link>
+          </div>
         </div>
-        <div className=" bg-light-danger px-8 py-3 rounded-xl mb-7">
-          <Link
-            className="text-danger font-weight-bold font-size-h6"
-            onClick={() => openModal("overdue")}
-          >
-            {data?.overdue} Overdue
-          </Link>
-        </div>
-      </div>
+      </PerfectScrollbar>
+      {/* Body */}
     </div>
   );
 }
@@ -139,7 +154,8 @@ let series_labels = ["Success", "On Progress", "Overdue"];
 function getChartOptions(layoutProps, height, series) {
   var options = {
     chart: {
-      width: "100%",
+      height: height,
+      // width: "100%",
       type: "donut",
     },
     enabledOnSeries: true,

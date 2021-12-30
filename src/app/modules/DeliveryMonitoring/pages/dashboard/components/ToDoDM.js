@@ -1,6 +1,6 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
 import Skeleton from "@material-ui/lab/Skeleton";
-import { ceil } from "lodash";
+import { ceil, debounce } from "lodash";
 import React from "react";
 import { injectIntl } from "react-intl";
 import PerfectScrollbar from "react-perfect-scrollbar";
@@ -103,11 +103,16 @@ const ToDoDM = (props) => {
     //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
     //   });
   };
+
+  // re-fetch if there is changes. will fetch new notif after 10 seconds
+  const reFetchTodo = debounce(() => callApiTodo({ refresh: true }), 10000);
+
   React.useEffect(() => {
     callApiTodo({ refresh: true });
     SOCKET_DM.on("deliveryMonitoring", function(node_payload) {
       console.log("ini_web_socket dari todo", node_payload);
-      callApiTodo({ refresh: true });
+      // callApiTodo({ refresh: true });
+      reFetchTodo();
     });
   }, []);
 

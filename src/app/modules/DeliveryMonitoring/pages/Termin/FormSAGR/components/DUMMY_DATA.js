@@ -112,7 +112,7 @@ export const gr_field = [
   [
     {
       name: "gr_receipt",
-      label: "GR Receipt",
+      label: "Goods Recipient",
     },
     {
       name: "unload_pt",

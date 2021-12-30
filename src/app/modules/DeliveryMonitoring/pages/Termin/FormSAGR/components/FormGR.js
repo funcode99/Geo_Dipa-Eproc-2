@@ -12,7 +12,7 @@ import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
   post_date: validation.require("Header Text"),
-  gr_receipt: validation.require("GR Receipt"),
+  gr_receipt: validation.require("Goods Recipient"),
   ref_doc_no: validation.require("Ref Doc No"),
   // ref_doc_no: number()
   //   // .max(16, "Maksimal 16 karakter")

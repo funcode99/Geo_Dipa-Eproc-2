@@ -10,7 +10,7 @@ import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import Badge from "@material-ui/core/Badge";
 import { makeStyles } from "@material-ui/core/styles";
-import { ceil, isEmpty } from "lodash";
+import { ceil, debounce, isEmpty } from "lodash";
 import objectPath from "object-path";
 import { store_notif_dm_rd } from "../../../../../app/modules/DeliveryMonitoring/_redux/deliveryMonitoringSlice";
 import * as reducer from "../../../../../app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringSlice";
@@ -150,13 +150,17 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
     [saveContractById, fetch_api_sg]
   );
 
+  // re-fetch if there is changes. will fetch new notif after 10 seconds
+  const reFetchNotif = debounce(() => fetchNotif({ refresh: true }), 10000);
+
   React.useEffect(() => {
     fetchNotif({ refresh: true });
     SOCKET_DM.on("deliveryMonitoring", function(node_payload) {
       console.log("ini_web_socket dari notif", node_payload);
-      fetchNotif({ refresh: true });
+      reFetchNotif();
+      // fetchNotif({ refresh: true });
     });
-  }, [location]);
+  }, []);
 
   return (
     <>

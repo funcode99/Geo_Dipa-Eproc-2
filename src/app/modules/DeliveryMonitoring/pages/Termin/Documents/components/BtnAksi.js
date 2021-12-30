@@ -54,19 +54,19 @@ export default function BtnAksi({ item, isPeriodic, handleAction }) {
   const vendorMenu = React.useMemo(
     () => [
       {
-        label: "Upload Draft",
+        label: "Upload Document",
         icon: "fas fa-upload text-primary",
         type: "upload",
         params: { upload_id: item?.id, isPeriodic },
       },
       //   {
-      //     label: "Edit Draft",
+      //     label: "Edit Document",
       //     icon: "fas fa-edit text-warning",
       //     type: "edit",
       //     params: { edit_id: item?.id },
       //   },
       {
-        label: "Resend Draft",
+        label: "Resend Document",
         icon: "fas fa-redo text-warning",
         type: "resend",
         params: { resend_id: item?.id, isPeriodic },
