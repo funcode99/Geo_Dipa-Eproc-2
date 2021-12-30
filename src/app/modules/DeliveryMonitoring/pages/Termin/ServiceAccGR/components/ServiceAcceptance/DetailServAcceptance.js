@@ -1,6 +1,11 @@
-import { Grid } from "@material-ui/core";
+import { CircularProgress, Grid } from "@material-ui/core";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetch_api_sg,
+  getLoading,
+} from "../../../../../../../../redux/globalReducer";
 import {
   Card,
   CardBody,
@@ -13,7 +18,11 @@ import SectionHeader from "./components/SectionHeader";
 import SectionSummary from "./components/SectionSummary";
 import SectionTable from "./components/SectionTable";
 
+const key = "cancelling-sa";
+
 const DetailServAcceptance = (props) => {
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => getLoading(state, key));
   const { fullData, dataSA, isClient } = props;
   const print = () => {
     var printContents = window.$("#printSA").html();
@@ -33,11 +42,37 @@ const DetailServAcceptance = (props) => {
     }),
     [dataSA, isClient]
   );
+  const onCancelSA = React.useCallback(() => {
+    dispatch(
+      fetch_api_sg({
+        key,
+        type: "post",
+        url: `/delivery/sap/cancel-sa/${dataSA?.id}`,
+        alertAppear: "both",
+      })
+    );
+  }, [dispatch, dataSA]);
   console.log(`props`, props);
   return (
     <Card>
       <CardHeader title="">
         <CardHeaderToolbar>
+          <div className="kt-widget19__action">
+            <button
+              onClick={onCancelSA}
+              disabled={loading}
+              className={`btn btn-sm btn-label-danger btn-bold mr-3`}
+            >
+              {loading && (
+                <CircularProgress
+                  className={"mr-2"}
+                  size="0.875rem"
+                  color="inherit"
+                />
+              )}
+              Cancel SA
+            </button>
+          </div>
           <button
             type="button"
             onClick={print}
