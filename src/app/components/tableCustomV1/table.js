@@ -134,7 +134,7 @@ const Tables = (props) => {
       ...pagination,
     });
     requestFilterSort();
-    onChangePerPage(event);
+    // onChangePerPage(event);
   };
 
   const createSortHandler = (item) => {
