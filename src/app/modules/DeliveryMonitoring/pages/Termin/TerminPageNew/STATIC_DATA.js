@@ -24,6 +24,7 @@ export const KEYS_TERMIN = {
   // post
   p_t_summary: "post-termin-summary",
   p_t_upload_do: "post-termin-upload-do",
+  p_t_edit_termin: "post-termin-update-termin",
   // approve
   p_t_approve_do_doc: "post-termin-upload-do-document",
   // reject

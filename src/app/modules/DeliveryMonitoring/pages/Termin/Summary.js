@@ -28,11 +28,31 @@ import { connect } from "react-redux";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 import { TerminPageContext } from "./TerminPageNew/TerminPageNew";
 import { KEYS_TERMIN } from "./TerminPageNew/STATIC_DATA";
+import * as Yup from "yup";
+import validation from "../../../../service/helper/validationHelper";
+import FormBuilder from "../../../../components/builder/FormBuilder";
 
 const tHeadSubmitItems = [
   "No",
   <FormattedMessage id="TITLE.NAME" />,
   <FormattedMessage id="TITLE.QUANTITY" />,
+];
+
+const formTerminField = [
+  {
+    name: "name",
+    label: "Scope of Work",
+  },
+  {
+    name: "start_date",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.START_DATE" />,
+    typeInput: "SelectDateInput",
+  },
+  {
+    name: "due_date",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />,
+    typeInput: "SelectDateInput",
+  },
 ];
 
 const theadItems = [
@@ -46,6 +66,14 @@ const theadItems = [
   { id: "net-value", label: "Net Value" },
   // { id: 'wbs', label: 'WBS' },
 ];
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(3, "Input minimal 3 karakter")
+    .required("Scope of work can not empty"),
+  start_date: Yup.date().required("Date can not empty"),
+  due_date: Yup.date().required("Date can not empty"),
+});
 
 const navLists = [
   { id: "link-jasa", label: <FormattedMessage id="SUMMARY.NAV.SERVICE" /> },
@@ -73,10 +101,22 @@ function Summary({}) {
   );
   const dispatch = useDispatch();
   const submitRef = React.useRef();
+  const formRef = React.useRef();
+
   const [qtyErrors, setQtyErrors] = React.useState([]);
 
   const isClient = authStatus === "client";
-  const notRevision = !isRevision;
+  const needRevision = isRevision || isRejected;
+  const notRevision = !needRevision;
+
+  const initialSubmitTermin = React.useMemo(
+    () => ({
+      name: dataTask?.name,
+      start_date: dataTask?.start_date,
+      due_date: dataTask?.due_date,
+    }),
+    [dataTask]
+  );
 
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
@@ -211,6 +251,8 @@ function Summary({}) {
     }
     // eslint-disable-next-line
   }, []);
+
+  console.log(`dataTask`, dataTask);
 
   const handleExpand = (event, itemId) => {
     let tempJasa = dataJasa;
@@ -491,61 +533,41 @@ function Summary({}) {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (data) => {
+    console.log(`data`, data);
     func.handleApi({
-      key: KEYS_TERMIN.p_t_summary,
+      key: KEYS_TERMIN.p_t_edit_termin,
       params: {
         task_items: itemBarang,
         task_services: itemJasa,
+        ...data,
       },
       onSuccess: (res) => {
         getAllItems(taskId);
         submitRef.current.close();
       },
     });
-
-    // fetch_api_sg({
-    //   key: keys.submit,
-    //   type: "post",
-    //   url: `/delivery/task/${taskId}`,
+    //   return;
+    // }
+    // func.handleApi({
+    //   key: KEYS_TERMIN.p_t_summary,
     //   params: {
-    //   task_items: itemBarang,
-    //   task_services: itemJasa,
+    //     task_items: itemBarang,
+    //     task_services: itemJasa,
     //   },
-    //   alertAppear: "both",
     //   onSuccess: (res) => {
     //     getAllItems(taskId);
     //     submitRef.current.close();
     //   },
     // });
+  };
 
-    // try {
-    //   enableLoading();
-
-    //   const requestData = {
-    //     task_items: itemBarang,
-    //     task_services: itemJasa,
-    //   };
-
-    //   const {
-    //     data: { status },
-    //   } = await deliveryMonitoring.submitItems(requestData, taskId);
-
-    //   if (status) {
-    //     setToast(<FormattedMessage id="MESSAGE.SUCCESS_SUBMIT_ITEM" />, 5000);
-    //     getAllItems(taskId);
-    //     handleVisibleModal("submit");
-    //   }
-    // } catch (error) {
-    //   if (
-    //     error.response?.status !== 400 &&
-    //     error.response?.data.message !== "TokenExpiredError"
-    //   ) {
-    //     setToast(error.response?.data.message, 5000);
-    //   }
-    // } finally {
-    //   disableLoading();
-    // }
+  const _onSubmit = () => {
+    if (!!formRef.current?.handleSubmit) {
+      formRef.current.handleSubmit();
+      return;
+    }
+    handleSubmit(initialSubmitTermin);
   };
 
   return (
@@ -557,16 +579,24 @@ function Summary({}) {
         ref={submitRef}
         // visible={showModal.submit}
         // onClose={() => handleVisibleModal("submit")}
-        onYes={handleSubmit}
+        onYes={_onSubmit}
         textYes={<FormattedMessage id="TITLE.YES" />}
         title={<FormattedMessage id="TITLE.SUBMIT_TERM_ITEMS" />}
-        loading={loadings[KEYS_TERMIN.p_t_summary]}
+        loading={loadings[KEYS_TERMIN.p_t_edit_termin]}
         btnNoProps={{
           className: "bg-secondary text-black",
         }}
         // minWidth="40vw"
         // maxWidth="70vw"
       >
+        <FormBuilder
+          ref={formRef}
+          formData={formTerminField}
+          withSubmit={false}
+          validation={validationSchema}
+          initial={initialSubmitTermin}
+          onSubmit={handleSubmit}
+        />
         {itemJasa.length > 0 && (
           <div className="mb-5">
             <h4>
