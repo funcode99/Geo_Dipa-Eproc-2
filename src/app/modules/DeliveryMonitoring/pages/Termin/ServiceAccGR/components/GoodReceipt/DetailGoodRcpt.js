@@ -1,20 +1,27 @@
-import { Grid } from "@material-ui/core";
+import { CircularProgress, Grid } from "@material-ui/core";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetch_api_sg,
+  getLoading,
+} from "../../../../../../../../redux/globalReducer";
 import {
   Card,
   CardBody,
   CardHeader,
   CardHeaderToolbar,
 } from "../../../../../../../../_metronic/_partials/controls";
-import NoDataBox from "../../../../../../../components/boxes/NoDataBox/NoDataBox";
 import BoxSignSA from "../BoxSignSA";
 import SectionHeader from "./components/SectionHeader";
 import SectionSummary from "./components/SectionSummary";
-import SectionTable from "./components/SectionTable";
 import SectionTable2 from "./components/SectionTable2";
 
+const key = "cancelling-gr";
+
 const DetailGoodRcpt = (props) => {
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => getLoading(state, key));
   const { fullData, dataGR, isClient } = props;
   const print = () => {
     var printContents = window.$("#printSA").html();
@@ -34,12 +41,39 @@ const DetailGoodRcpt = (props) => {
     }),
     [dataGR, isClient]
   );
-  console.log(`props`, props);
+
+  const onCancelGR = React.useCallback(() => {
+    dispatch(
+      fetch_api_sg({
+        key,
+        type: "post",
+        url: `/delivery/sap/cancel-gr/${dataGR?.id}`,
+        alertAppear: "both",
+      })
+    );
+  }, [dispatch, dataGR]);
+  // console.log(`props`, props);
   return (
     <Card className={"d-flex"} style={{ flex: 1 }}>
       {/* <Card> */}
       <CardHeader title="">
         <CardHeaderToolbar>
+          <div className="kt-widget19__action">
+            <button
+              onClick={onCancelGR}
+              disabled={loading}
+              className={`btn btn-sm btn-label-danger btn-bold mr-3`}
+            >
+              {loading && (
+                <CircularProgress
+                  className={"mr-2"}
+                  size="0.875rem"
+                  color="inherit"
+                />
+              )}
+              Cancel GR
+            </button>
+          </div>
           <button
             type="button"
             onClick={print}
