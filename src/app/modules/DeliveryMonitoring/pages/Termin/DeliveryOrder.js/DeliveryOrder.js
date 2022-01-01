@@ -454,7 +454,7 @@ const DeliveryOrder = ({
     data
       ? data.forEach((item, index) => {
           console.log(`item`, item);
-		  const isApproved = item?.approve_status?.code !== "approved";
+		  const isApproved = item?.approve_status?.code === "approved";
           let objData = {
             no: (index += 1),
             // desc: item?.name || "",
