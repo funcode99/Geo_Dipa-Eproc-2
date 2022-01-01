@@ -5,7 +5,7 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { DEV_NODE2, SOCKET_DM } from "../../../../../../redux/BaseHost";
 import {
@@ -65,6 +65,7 @@ const ToDoDM = (props) => {
       total_page: 1,
     },
   });
+  const history = useHistory();
 
   const callApiTodo = ({ refresh, page }) => {
     const current_page = !!refresh ? 1 : page;
@@ -122,7 +123,7 @@ const ToDoDM = (props) => {
   };
 
   const getContractById = React.useCallback(
-    (contractId) => {
+    (contractId, link) => {
       fetchApiSg({
         keys: "key_contract",
         type: "get",
@@ -130,10 +131,11 @@ const ToDoDM = (props) => {
         onSuccess: (res) => {
           console.log(`res`, res?.data);
           saveContractById(res?.data);
+          history.push(link);
         },
       });
     },
-    [saveContractById, fetchApiSg]
+    [saveContractById, fetchApiSg, history]
   );
 
   console.log(`dataTodo`, dataTodo);
@@ -198,9 +200,13 @@ const ToDoDM = (props) => {
                     <div className="d-flex flex-wrap align-items-center justify-content-between w-100">
                       <div className="d-flex flex-column align-items-cente py-2 w-75">
                         <Link
-                          to={!!isContractPage ? linkContract : linkTermin}
+                          //   to={!!isContractPage ? linkContract : linkTermin}
+                          to={"#"}
                           onClick={() => {
-                            getContractById(item?.data?.contract_id);
+                            getContractById(
+                              item?.data?.contract_id,
+                              !!isContractPage ? linkContract : linkTermin
+                            );
 
                             //   tabInvoice.tab = item.menu_tab || 0;
                             //   tabInvoice.tabInvoice = item.sub_menu_tab || 0;
