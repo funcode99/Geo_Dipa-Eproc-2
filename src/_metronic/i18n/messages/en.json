@@ -548,7 +548,7 @@
   "TITLE.PURCHASE_GROUPS": "Purchase Groups",
   "TITLE.FROM_DATE": "From Date",
   "TITLE.THRU_DATE": "Thru Date",
-  "TITLE.CONTRACT_TYPE": "Contract Type",
+  "TITLE.CONTRACT_TYPE": "Contract Type*",
   "TITLE.STATUS_REMARKS": "Status Remarks",
   "TITLE.CHANGE_ITEM_STATUS": "Change item status",
   "TITLE.QUANTITY_TOTAL": "Quantity total",
@@ -582,7 +582,7 @@
   "TITLE.PAYMENT_RECEIPT": "Payment Document Receipt",
   "TITLE.ATTACHMENT_DOC": "Document Attachment",
   "TITLE.SPESIFICATION": "Spesification",
-  "TITLE.PO_DOCUMENT": "PO Document",
+  "TITLE.PO_DOCUMENT": "PO Document*",
   "TITLE.CHOOSE_PO_DOCUMENT": "Choose PO document",
   "TITLE.SELECT_CONTRACT_TYPE": "Select contract type",
   "TITLE.I_APPROVED": "I approved the {termTitle}",
@@ -613,5 +613,7 @@
   "TITLE.ADDTIONAL_PAYMENT": "Additional Payment",
   "TITLE.DATE_PAID": "Date Paid:",
   "TITLE.VERIFICATION_AND_TAX_DATE": "Verification and Tax Date",
-  "TITLE.VERIFICATION_HARDCOPY_DATE": "Verification Hardcopy Date"
+  "TITLE.VERIFICATION_HARDCOPY_DATE": "Verification Hardcopy Date",
+  "LABEL.OPEN_FILE": "Open file",
+  "LABEL.FILE_UNAVAILABLE": "File unavailable"
 }

@@ -129,7 +129,7 @@ const KickOffDetail = ({
         saveContractById(res?.data);
       },
     });
-  }, [saveContractById, fetch_api_sg]);
+  }, [saveContractById, fetch_api_sg, contractId]);
 
   return (
     <Card>
