@@ -32,6 +32,7 @@ import { MODAL } from "../../../../../../service/modalSession/ModalService";
 import StatusRemarks from "../../../../../components/StatusRemarks";
 import { NavLink } from "react-router-dom";
 import {Search} from "@material-ui/icons";
+import { DemoOnly } from "../../../../../../_metronic/_partials/dashboards/DemoOnly";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required(<FormattedMessage id="TITLE.DESC_IS_REQUIRE" />),
@@ -676,6 +677,7 @@ const DeliveryOrder = ({
           // handleSubmit={() => handleAction("confirm", null)}
         />
       )}
+	  {/* <DemoOnly /> */}
     </React.Fragment>
   );
 };
