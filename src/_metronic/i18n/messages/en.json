@@ -434,6 +434,7 @@
   "TITLE.DOCUMENT_CONTRACT": "Contract Document",
   "TITLE.DOCUMENT_BILLING": "Billing Document",
   "TITLE.DESCRIPTION": "Description",
+  "TITLE.DESTINATION_UNIT": "Destination Unit",
   "TITLE.UNIT_PRICE": "Unit Price",
   "TITLE.DESC_IS_REQUIRE": "Description is required.",
   "TITLE.MODAL_DELETE.TITLE": "Are you sure you want to delete this data?",

@@ -434,6 +434,7 @@
   "TITLE.DOCUMENT_CONTRACT": "Dokumen Kontrak",
   "TITLE.DOCUMENT_BILLING": "Dokumen Tagihan",
   "TITLE.DESCRIPTION": "Deskripsi",
+  "TITLE.DESTINATION_UNIT": "Unit Tujuan",
   "TITLE.UNIT_PRICE": "Harga per Unit",
   "TITLE.DESC_IS_REQUIRE": "Deskripsi wajib diisi.",
   "TITLE.MODAL_DELETE.TITLE": "Yakin ingin menghapus data ini?",

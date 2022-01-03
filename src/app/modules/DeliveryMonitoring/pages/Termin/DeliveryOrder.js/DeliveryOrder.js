@@ -31,7 +31,7 @@ import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 import { MODAL } from "../../../../../../service/modalSession/ModalService";
 import StatusRemarks from "../../../../../components/StatusRemarks";
 import { NavLink } from "react-router-dom";
-import {Search} from "@material-ui/icons";
+import { Search } from "@material-ui/icons";
 import { DemoOnly } from "../../../../../../_metronic/_partials/dashboards/DemoOnly";
 
 const FormSchema = Yup.object().shape({
@@ -48,6 +48,7 @@ const initialValues = {
   remarks: "",
   status: 4,
   status_remarks: "",
+  destination: "",
 };
 
 const addClassToOptions = (data) => {
@@ -454,7 +455,7 @@ const DeliveryOrder = ({
     data
       ? data.forEach((item, index) => {
           console.log(`item`, item);
-		  const isApproved = item?.approve_status?.code === "approved";
+          const isApproved = item?.approve_status?.code === "approved";
           let objData = {
             no: (index += 1),
             // desc: item?.name || "",
@@ -465,7 +466,9 @@ const DeliveryOrder = ({
               >
                 {item?.name || ""}
               </NavLink>
-            ) : item?.name || "",
+            ) : (
+              item?.name || ""
+            ),
             date: item?.date !== null ? formatDate(new Date(item?.date)) : null,
             remarks: item.remarks || "",
             // approve_status: item?.approve_status?.name,
@@ -677,7 +680,7 @@ const DeliveryOrder = ({
           // handleSubmit={() => handleAction("confirm", null)}
         />
       )}
-	  {/* <DemoOnly /> */}
+      {/* <DemoOnly /> */}
     </React.Fragment>
   );
 };
