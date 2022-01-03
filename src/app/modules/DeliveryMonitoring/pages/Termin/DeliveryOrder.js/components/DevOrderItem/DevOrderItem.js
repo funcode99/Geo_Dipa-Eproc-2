@@ -257,7 +257,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
             {/* <Row> */}
             {data?.task_delivery_items.map((el, id) => (
               <CardOrderItem
-                key={id}
+                key={el.id}
                 data={el}
                 isVendor={isVendor}
                 {...other}

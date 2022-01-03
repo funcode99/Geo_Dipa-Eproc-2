@@ -120,6 +120,7 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
 
   return (
     <ExpansionBox
+      key={data?.id}
       custTitle={`${data?.item?.desc}${
         hasMaterialNo ? " - " + parseInt(data?.item?.product?.code) : ""
       }`}

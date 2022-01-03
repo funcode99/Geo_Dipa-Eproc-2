@@ -99,6 +99,7 @@ const ModalSubmitItem = ({
                 {tHeadSubmitItems.map((item, index) => (
                   <TableCell
                     key={index}
+                    className="bg-white text-dark"
                     // align={index > 1 ? "right" : "left"}
                   >
                     {"item"}
