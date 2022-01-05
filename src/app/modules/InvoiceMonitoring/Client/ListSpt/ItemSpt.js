@@ -79,19 +79,19 @@ const ItemSpt = (props) => {
         id: "AUTH.VALIDATION.REQUIRED_FIELD",
       })
     ),
-    file: Yup.mixed()
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      )
-      .test(
-        "fileType",
-        intl.formatMessage({
-          id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FILE_TYPE_PDF",
-        }),
-        (value) => supportedFormats.includes(value?.type)
-      ),
+    // file: Yup.mixed()
+    //   .required(
+    //     intl.formatMessage({
+    //       id: "AUTH.VALIDATION.REQUIRED_FIELD",
+    //     })
+    //   )
+    //   .test(
+    //     "fileType",
+    //     intl.formatMessage({
+    //       id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FILE_TYPE_PDF",
+    //     }),
+    //     (value) => supportedFormats.includes(value?.type)
+    //   ),
   });
 
   const print = () => {
@@ -131,14 +131,14 @@ const ItemSpt = (props) => {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       values.created_by_id = user_id;
-      values.spt_no = data?.spt_no
+      values.spt_no = data?.spt_no;
       var data_new = new FormData();
       for (var key in values) {
-        if (key != 'file') {
+        if (key != "file") {
           data_new.append(key, values[key]);
         }
       }
-      data_new.append('file', values.file)
+      data_new.append("file", values.file);
       uploadProofOfPayment(match.params.id, data_new)
         .then((result) => {
           setLoading(false);
@@ -189,6 +189,7 @@ const ItemSpt = (props) => {
             <div className="form-group row">
               <label className="col-sm-4 col-form-label">
                 <FormattedMessage id="TITLE.DATE_PAID" />
+                <span className="text-danger">*</span>
               </label>
               <div className="col-sm-8">
                 <input
@@ -205,17 +206,14 @@ const ItemSpt = (props) => {
               </div>
             </div>
             <div className="form-group row">
-              <label
-                htmlFor="upload"
-                className="col-sm-4 col-form-label"
-              >
+              <label htmlFor="upload" className="col-sm-4 col-form-label">
                 <FormattedMessage id="TITLE.FILE" />
               </label>
               <label
                 htmlFor={data.file ? "" : "upload"}
-                className={`input-group mb-3 col-sm-8 ${data.file ? ""
-                  : "pointer"
-                  }`}
+                className={`input-group mb-3 col-sm-8 ${
+                  data.file ? "" : "pointer"
+                }`}
               >
                 {!data.file && (
                   <div className="input-group-prepend">
@@ -225,21 +223,16 @@ const ItemSpt = (props) => {
                   </div>
                 )}
                 <span
-                  className={`form-control text-truncate ${data.file ? classes.textDisabled
-                    : ""
-                    }`}
+                  className={`form-control text-truncate ${
+                    data.file ? classes.textDisabled : ""
+                  }`}
                 >
                   {uploadFilename}
                 </span>
                 {data.file && (
                   <div className="input-group-append pointer">
-                    <span
-                      className={`input-group-text ${classes.textHover}`}
-                    >
-                      <a
-                        download={data?.file_name}
-                        href={data?.file}
-                      >
+                    <span className={`input-group-text ${classes.textHover}`}>
+                      <a download={data?.file_name} href={data?.file}>
                         <i className="fas fa-download"></i>
                       </a>
                     </span>
@@ -267,11 +260,12 @@ const ItemSpt = (props) => {
               className="btn btn-secondary"
               type="button"
               onClick={() => {
-                setDialogPayment(false)
-                formik.resetForm()
+                setDialogPayment(false);
+                formik.resetForm();
                 setUploadFilename(
                   intl.formatMessage({
-                    id: "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
+                    id:
+                      "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.DEFAULT_FILENAME",
                   })
                 );
               }}
