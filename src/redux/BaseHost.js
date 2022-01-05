@@ -2,9 +2,11 @@ import storage from "redux-persist/lib/storage";
 import io from "socket.io-client";
 
 export const DEV_RUBY = "http://api2-eproc.geodipa.co.id:81";
-export const DEV_NODE = "http://192.168.0.168:5000";
+//export const DEV_NODE = "http://192.168.0.168:5000";
+export const DEV_NODE = "http://localhost:5000";
 export const API_EPROC = "http://api2-eproc.geodipa.co.id:3000";
-export const SOCKET = io.connect("http://192.168.0.168:5001");
+//export const SOCKET = io.connect("http://192.168.0.168:5001");
+export const SOCKET = io.connect("http://localhost:5001");
 export const DEV_NODE2 = "http://192.168.0.168:8083";
 export const STG = "";
 export const PROD = "";
