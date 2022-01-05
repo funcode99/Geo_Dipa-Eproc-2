@@ -1195,12 +1195,15 @@ function ContractTaxPage(props) {
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NUMBER" />
                 </label>
                 <div className="col-sm-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="numberInvoice"
-                    disabled
-                    defaultValue={taxData?.tax_no}
+                  <NumberFormat
+                      id={"NumberFormat-text"}
+                      value={taxData?.tax_no}
+                      displayType={"text"}
+                      className="form-control"
+                      format="###.###-##.########"
+                      mask="_"
+                      allowEmptyFormatting={true}
+                      allowLeadingZeros={true}
                   />
                 </div>
               </div>
