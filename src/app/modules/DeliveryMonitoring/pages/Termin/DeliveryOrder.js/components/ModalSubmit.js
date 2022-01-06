@@ -55,6 +55,7 @@ const ModalSubmit = ({
   errors,
   handleError,
   updateData,
+  listPlants,
 }) => {
   const isUpdate = Object.keys(updateData).length > 0;
   const hasMaterial = React.useMemo(() => hasMaterialItem(tempOrderItems), [
@@ -195,7 +196,7 @@ const ModalSubmit = ({
               : null}
           </span>
 
-          {hasMaterial && false && (
+          {hasMaterial && (
             <React.Fragment>
               <InputLabel id="destination" className="mt-6">
                 <FormattedMessage id="TITLE.DESTINATION_UNIT" />
@@ -211,9 +212,13 @@ const ModalSubmit = ({
                 style={{ height: 37 }}
                 {...formik.getFieldProps("destination")}
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {listPlants?.map((plant, id) => (
+                  <MenuItem key={plant.id} value={plant.id}>
+                    {plant?.facility?.name}
+                  </MenuItem>
+                ))}
+                {/* <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem> */}
               </Select>
               <span className="text-danger">
                 {formik.touched.destination && formik.errors.destination

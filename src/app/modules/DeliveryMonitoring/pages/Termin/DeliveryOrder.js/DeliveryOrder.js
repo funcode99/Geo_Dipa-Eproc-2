@@ -141,6 +141,7 @@ const DeliveryOrder = ({
   const excludeAction = isVendor ? [""] : ["update", "delete"];
   const [dataOrderItem, setDataOrderItem] = React.useState({});
   const [itemForm, setItemForm] = React.useState({});
+  const [allPlants, setAllPlants] = React.useState([]);
   const submitItemRef = React.useRef();
   const deleteRef = React.useRef();
   const submitRef = React.useRef();
@@ -250,6 +251,17 @@ const DeliveryOrder = ({
           handleErrorSubmit("item", true);
         } else {
           // console.log(`isUpdate`, isUpdate);
+          const params = {
+            name: values.name,
+            date: values.date,
+            remarks: values.remarks,
+            items: submitItem.map((item) => ({
+              task_item_id: item.id,
+              qty: item.qty,
+            })),
+            dest_plant_id: values.destination,
+          };
+          console.log(`params`, params);
 
           fetchApi({
             key: keys.submit,
@@ -257,16 +269,7 @@ const DeliveryOrder = ({
             url: isUpdate
               ? `/delivery/task-delivery/${open?.tempParams?.id}`
               : `/delivery/task-delivery/${taskId}`,
-            params: {
-              name: values.name,
-              date: values.date,
-              remarks: values.remarks,
-              items: submitItem.map((item) => ({
-                task_item_id: item.id,
-                qty: item.qty,
-              })),
-              //   destination: values.destination,
-            },
+            params,
             alertAppear: "both",
             onSuccess: (res) => {
               // console.log(`res`, res);
@@ -593,12 +596,27 @@ const DeliveryOrder = ({
     });
   };
 
+  const getAllPlants = React.useCallback(() => {
+    fetchApi({
+      key: keys.all_plants,
+      type: "get",
+      url: `/delivery/options`,
+      onSuccess: (res) => {
+        console.log(`res`, res);
+        setAllPlants(res.data?.plants);
+      },
+    });
+  }, []);
+
   React.useEffect(() => {
     getTask();
     // generateTableContent(orderItems);
     setInitAvailItems(items);
     getOptions();
   }, [items]);
+  React.useEffect(() => {
+    getAllPlants();
+  }, []);
 
   const handleRefresh = () => {
     getTask();
@@ -640,6 +658,7 @@ const DeliveryOrder = ({
         handleError={handleErrorSubmit}
         updateData={open.tempParams}
         isUpdate={isUpdate}
+        listPlants={allPlants}
       />
 
       <ModalDetail
@@ -718,6 +737,7 @@ const keys = {
   delete: "delete-delivery-order",
   option: "approve-status-option",
   token_data: "get-token-data",
+  all_plants: "get-all-plants",
 };
 
 const mapState = (state) => {
