@@ -977,6 +977,17 @@ function ItemContractBKB(props) {
                     </td>
                     <td></td>
                   </tr>
+                  <tr>
+                    <td colSpan="3" className="text-right">
+                      PPN
+                    </td>
+                    <td>
+                      <div className="d-flex justify-content-between">
+                        <span>Rp.(NEED API)</span>
+                        <span>{rupiah(1000000.172983).slice(3)}</span>
+                      </div>
+                    </td>
+                  </tr>
                   {bkbData?.tax_selected.length > 0 &&
                     bkbData?.tax_selected
                       .filter((value) => value.checked === true)
@@ -1185,13 +1196,13 @@ function ItemContractBKB(props) {
                     parseFloat(bkbData?.sub_total) <= row?.max_value
                   ) {
                     return (
-                <div
-                  className="text-center"
-                  style={{
-                    height: styleCustom.minHeightAppv,
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                  }}
+                      <div
+                        className="text-center"
+                        style={{
+                          height: styleCustom.minHeightAppv,
+                          paddingTop: 10,
+                          paddingBottom: 10,
+                        }}
                         key={key}
                       >
                         {monitoring_role.findIndex(
@@ -1209,7 +1220,7 @@ function ItemContractBKB(props) {
                                   data: "monitoringApproveInvPosting",
                                 });
                               }}
-                >
+                            >
                               <i
                                 className="fas fa-check-circle"
                                 style={{ fontSize: 8 }}
@@ -1221,45 +1232,45 @@ function ItemContractBKB(props) {
                           (element) => element === row.name
                         ) >= 0 &&
                           bkbData?.inv_approved_state === "PENDING" && (
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-sm mx-2"
-                        style={{ fontSize: 10, marginTop: 20 }}
-                        onClick={() => {
-                          setModalRejected({
-                            ...modalRejected,
-                            statusDialog: true,
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-sm mx-2"
+                              style={{ fontSize: 10, marginTop: 20 }}
+                              onClick={() => {
+                                setModalRejected({
+                                  ...modalRejected,
+                                  statusDialog: true,
                                   data: "rejectInvPosting",
-                          });
-                        }}
-                      >
-                        <i
-                          className="fas fa-times-circle"
-                          style={{ fontSize: 8 }}
-                        ></i>
-                        <FormattedMessage id="TITLE.REJECT" />
-                      </button>
+                                });
+                              }}
+                            >
+                              <i
+                                className="fas fa-times-circle"
+                                style={{ fontSize: 8 }}
+                              ></i>
+                              <FormattedMessage id="TITLE.REJECT" />
+                            </button>
                           )}
                         {bkbData?.inv_approved_state === "APPROVED" && (
-                    <QRCodeG
+                          <QRCodeG
                             value={`${window.location.origin}/qrcode?term_id=${termin}&type=APPROVED_INV`}
-                    />
+                          />
                         )}
                         {bkbData?.inv_approved_state === "APPROVED" && (
                           <div className="d-flex align-items-end">
-                          <span className="mx-auto">
-                            {bkbData?.inv_approved_data?.approved_by}
-                          </span>
+                            <span className="mx-auto">
+                              {bkbData?.inv_approved_data?.approved_by}
+                            </span>
                           </div>
                         )}
                         {bkbData?.inv_approved_state === "APPROVED" && (
                           <div className="d-flex align-items-end">
-                    <span className="mx-auto">
-                            {bkbData?.inv_approved_data?.role_name}
-                    </span>
+                            <span className="mx-auto">
+                              {bkbData?.inv_approved_data?.role_name}
+                            </span>
                           </div>
                         )}
-                  </div>
+                      </div>
                     );
                   }
                 })}
@@ -1298,7 +1309,7 @@ function ItemContractBKB(props) {
                       bkbData?.doc_park_byr_no &&
                       bkbData?.inv_approved_by &&
                       bkbData?.doc_park_ap_state === "APPROVED" &&
-                      bkbData?.doc_park_byr_state === "PENDING" && 
+                      bkbData?.doc_park_byr_state === "PENDING" &&
                       statusHardCopyComplate && (
                         <button
                           type="button"
@@ -1320,7 +1331,7 @@ function ItemContractBKB(props) {
                       bkbData?.doc_park_byr_no &&
                       bkbData?.inv_approved_by &&
                       bkbData?.doc_park_ap_state === "APPROVED" &&
-                      bkbData?.doc_park_byr_state === "PENDING" && 
+                      bkbData?.doc_park_byr_state === "PENDING" &&
                       statusHardCopyComplate && (
                         <button
                           type="button"
@@ -1506,16 +1517,16 @@ function ItemContractBKB(props) {
                     <span className="col-sm-5">: {bkbData?.miro_number}</span>
                   </div>
                 </div>
-                  <div className="row border-bottom">
-                    <div className="col-sm-12 row">
-                      <span className="col-sm-7">
-                        <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
-                      </span>
-                      <span className="col-sm-5">
-                        : {bkbData?.doc_park_ap_no}
-                      </span>
-                    </div>
+                <div className="row border-bottom">
+                  <div className="col-sm-12 row">
+                    <span className="col-sm-7">
+                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
+                    </span>
+                    <span className="col-sm-5">
+                      : {bkbData?.doc_park_ap_no}
+                    </span>
                   </div>
+                </div>
                 {/* {(!bkbData?.doc_park_ap_no ||
                   bkbData?.doc_park_ap_state === "REJECTED") &&
                   bkbData &&
@@ -1571,16 +1582,16 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                   )} */}
-                  <div className="row border-bottom">
-                    <div className="col-sm-12 row">
-                      <span className="col-sm-7">
-                        <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
-                      </span>
-                      <span className="col-sm-5">
-                        : {bkbData?.doc_park_byr_no}
-                      </span>
-                    </div>
+                <div className="row border-bottom">
+                  <div className="col-sm-12 row">
+                    <span className="col-sm-7">
+                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
+                    </span>
+                    <span className="col-sm-5">
+                      : {bkbData?.doc_park_byr_no}
+                    </span>
                   </div>
+                </div>
                 {/* {((!bkbData?.doc_park_byr_no &&
                   bkbData?.doc_park_ap_state === "APPROVED") ||
                   (bkbData?.doc_park_byr_state === "REJECTED" && bkbData)) &&
@@ -1648,9 +1659,7 @@ function ItemContractBKB(props) {
                 </div>
                 <div className="row p-3">
                   {bkbData?.desc?.split(";").map((row) => {
-                    return (
-                      <span className="col-sm-12 p-0">{row}</span>
-                    )
+                    return <span className="col-sm-12 p-0">{row}</span>;
                   })}
                 </div>
               </div>
