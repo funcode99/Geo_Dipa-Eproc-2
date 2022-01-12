@@ -103,9 +103,10 @@ function ItemContractBKB(props) {
   });
   const [loadingSync, setLoadingSync] = useState(false);
 
-  const statusHardCopyComplate = dataProgress?.filter(
-    (row) => row.ident_name === "HARDCOPY" && row.status === "COMPLETE"
-  );
+  const statusHardCopyComplate =
+    !!dataProgress?.filter(
+      (row) => row.ident_name === "HARDCOPY" && row.status === "COMPLETE"
+    ).length > 0;
 
   const getBkbData = useCallback(() => {
     getBkb(termin)
@@ -1864,7 +1865,7 @@ function ItemContractBKB(props) {
                           {monitoring_role?.includes(row.name) &&
                             !row.approved_id &&
                             bkbData?.approved_bkb_id &&
-                            statusHardCopyComplate.length > 0 && (
+                            statusHardCopyComplate && (
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm mx-2"
