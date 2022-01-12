@@ -27,6 +27,7 @@ import { rupiah } from "../../../../libs/currency";
 import {
   dateNullable,
   dateToHourNullable,
+  getDuration,
 } from "../../../../service/helper/dateHelper";
 
 // const Transition = React.forwardRef(function Transition(props, ref) {
@@ -105,26 +106,26 @@ function ItemContractRoutingSlip(props) {
             <div className="row mt-5">
               <div className="col-sm-12">
                 <div className="row">
-                  <div className="col-sm-2">
+                  <div className="col-sm-3">
                     <span>Nama Supplier</span>
                   </div>
-                  <div className="col-sm-10">
+                  <div className="col-sm-9">
                     <span>{slipData?.vendor?.party?.full_name}</span>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-sm-2">
+                  <div className="col-sm-3">
                     <span>No. Invoice</span>
                   </div>
-                  <div className="col-sm-10">
+                  <div className="col-sm-9">
                     <span>{slipData?.invoice_no}</span>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-sm-2">
+                  <div className="col-sm-3">
                     <span>Tanggal Invoice</span>
                   </div>
-                  <div className="col-sm-10">
+                  <div className="col-sm-9">
                     <span>
                       {slipData?.invoice_date
                         ? window
@@ -132,6 +133,14 @@ function ItemContractRoutingSlip(props) {
                             .format("DD MMM YYYY")
                         : ""}
                     </span>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-3">
+                    <span>Jangka Waktu Pembayaran</span>
+                  </div>
+                  <div className="col-sm-9">
+                    <span>{getDuration(slipData?.selisih_paid_to_tax)}</span>
                   </div>
                 </div>
               </div>
