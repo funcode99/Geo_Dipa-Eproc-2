@@ -111,6 +111,7 @@ function ItemContractBKB(props) {
     getBkb(termin)
       .then((response) => {
         if (response["data"]["data"]) {
+          console.log(`bkbData`, response);
           setBkbData(response["data"]["data"]);
           setParkApInput(response["data"]["data"]["doc_park_ap_no"]);
           setParkByrInput(response["data"]["data"]["doc_park_byr_no"]);
@@ -977,17 +978,21 @@ function ItemContractBKB(props) {
                     </td>
                     <td></td>
                   </tr>
-                  <tr>
-                    <td colSpan="3" className="text-right">
-                      PPN
-                    </td>
-                    <td>
-                      <div className="d-flex justify-content-between">
-                        <span>Rp.(NEED API)</span>
-                        <span>{rupiah(1000000.172983).slice(3)}</span>
-                      </div>
-                    </td>
-                  </tr>
+                  {bkbData?.ppn?.tax_value ? (
+                    <tr>
+                      <td colSpan="3" className="text-right">
+                        {bkbData?.ppn?.label}
+                      </td>
+                      <td>
+                        <div className="d-flex justify-content-between">
+                          <span>Rp.</span>
+                          <span>
+                            {rupiah(bkbData?.ppn?.tax_amount).slice(3)}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : null}
                   {bkbData?.tax_selected.length > 0 &&
                     bkbData?.tax_selected
                       .filter((value) => value.checked === true)
