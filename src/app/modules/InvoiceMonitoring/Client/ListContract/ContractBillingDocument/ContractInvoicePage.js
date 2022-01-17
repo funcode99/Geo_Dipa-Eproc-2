@@ -984,27 +984,25 @@ function ContractInvoicePage(props) {
                 <div className="col-sm-8">
                   <NumberFormat
                     id={
-                      // isSubmit ||
-                      // invoiceData?.state === "REJECTED" ||
-                      // invoiceData?.state === "APPROVED" ||
-                      // invoiceData === null ||
-                      // !props.billingStaffStatus ||
-                      // progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                      //   ? "NumberFormat-text"
-                      //   :
-                      "NumberFormat-input"
+                      isSubmit ||
+                      invoiceData?.state === "REJECTED" ||
+                      invoiceData?.state === "APPROVED" ||
+                      invoiceData === null ||
+                      !props.billingStaffStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                        ? "NumberFormat-text"
+                        : "NumberFormat-input"
                     }
                     value={invoiceData?.penalty}
                     displayType={
-                      // isSubmit ||
-                      // invoiceData?.state === "REJECTED" ||
-                      // invoiceData?.state === "APPROVED" ||
-                      // invoiceData === null ||
-                      // !props.billingStaffStatus ||
-                      // progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                      //   ? "text"
-                      //   :
-                      "input"
+                      isSubmit ||
+                      invoiceData?.state === "REJECTED" ||
+                      invoiceData?.state === "APPROVED" ||
+                      invoiceData === null ||
+                      !props.billingStaffStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                        ? "text"
+                        : "input"
                     }
                     isAllowed={({ floatValue }) =>
                       floatValue <=
