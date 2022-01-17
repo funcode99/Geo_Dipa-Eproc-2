@@ -25,24 +25,25 @@ const perfectScrollbarOptions = {
 };
 
 const key = "get-data-activity-dm";
-const contract_pages = {
-  checkIsUploadedDocumentPO: 1,
-  checkIsUploadedContractGuaranteeDocument: 7,
-  checkIsTerminSet: 2,
-  checkIsTerminApproved: 2,
-};
-const termin_pages = {
-  checkIsDeliverableSet: 1,
-  checkIsUploadedDeliverable: 1,
-  checkIsDeliverableDocumentApproved: 1,
-  checkIsDeliverOrderApproved: 2,
-  checkIsDeliverOrderItemApproved: 2,
-  checkIsUploadDeliverOrderSignedDocument: 2,
-  checkIsApprovedDeliverOrderSignedDocument: 2,
-  checkIsNeedCreateBAPP: 3,
-  checkIsUploadedSignedBAPP: 3,
-  checkIsApprovedUploadedSignedBAPP: 3,
-};
+// const contract_pages = {
+//   checkIsUploadedDocumentPO: 1,
+//   checkIsUploadedContractGuaranteeDocument: 7,
+//   checkIsTerminSet: 2,
+//   checkIsTerminApproved: 2,
+// };
+// const termin_pages = {
+//   checkIsDeliverableSet: 1,
+//   checkIsUploadedDeliverable: 1,
+//   checkIsDeliverableDocumentApproved: 1,
+//   checkIsDeliverableDocumentRejected: 1,
+//   checkIsDeliverOrderApproved: 2,
+//   checkIsDeliverOrderItemApproved: 2,
+//   checkIsUploadDeliverOrderSignedDocument: 2,
+//   checkIsApprovedDeliverOrderSignedDocument: 2,
+//   checkIsNeedCreateBAPP: 3,
+//   checkIsUploadedSignedBAPP: 3,
+//   checkIsApprovedUploadedSignedBAPP: 3,
+// };
 
 const ActivityDM = (props) => {
   const { className, fetch_api_sg, intl, status, loading } = props;

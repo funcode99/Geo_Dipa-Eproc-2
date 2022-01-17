@@ -36,16 +36,17 @@ const useStyles = makeStyles((theme) => ({
 
 const key = "notif-dm";
 const key_contract = "get-contract-by-id";
-const contract_pages = {
+export const contract_pages = {
   checkIsUploadedDocumentPO: 1,
   checkIsUploadedContractGuaranteeDocument: 7,
   checkIsTerminSet: 2,
   checkIsTerminApproved: 2,
 };
-const termin_pages = {
+export const termin_pages = {
   checkIsDeliverableSet: 1,
   checkIsUploadedDeliverable: 1,
   checkIsDeliverableDocumentApproved: 1,
+  checkIsDeliverableDocumentRejected: 1,
   checkIsDeliverOrderApproved: 2,
   checkIsDeliverOrderItemApproved: 2,
   checkIsUploadDeliverOrderSignedDocument: 2,
