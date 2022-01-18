@@ -251,9 +251,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                       )?.[0];
                       const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
                       const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
-                      {
-                        /* console.log("notif", item, isContractPage, isTerminPage); */
-                      }
+                      console.log("notif", item, isContractPage, isTerminPage);
                       return (
                         <Link
                           //   to={!!isContractPage ? linkContract : linkTermin}
@@ -286,9 +284,14 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                               <div className="text-muted">
                                 {linkContract &&
                                   `${item?.data?.contract_name ||
-                                    "Nomor Kontrak"}`}
+                                    "Nama Kontrak"}`}
                                 {linkTermin &&
-                                  `${item?.data?.task_name || "Nomor Termin"}`}
+                                  ` - ${item?.data?.task_name ||
+                                    "Nomor Termin"} ${
+                                    item?.data?.document_type
+                                      ? ` - ${item?.data?.document_type}`
+                                      : ""
+                                  }`}
                                 {/* {`${item.data.contract_name ||
                                   "Nomor Kontrak"}-${item.data.task_name ||
                                   "Nama Termin"}`} */}
