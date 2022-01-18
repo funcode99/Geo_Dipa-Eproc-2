@@ -251,7 +251,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                       )?.[0];
                       const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
                       const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
-                      console.log("notif", item, isContractPage, isTerminPage);
+                      // console.log("notif", item, isContractPage, isTerminPage);
                       return (
                         <Link
                           //   to={!!isContractPage ? linkContract : linkTermin}
