@@ -48,6 +48,7 @@ export const termin_pages = {
   checkIsDeliverableDocumentApproved: 1,
   checkIsDeliverableDocumentRejected: 1,
   checkIsDeliverOrderApproved: 2,
+  checkIsDeliverOrderRejected: 2,
   checkIsDeliverOrderItemApproved: 2,
   checkIsUploadDeliverOrderSignedDocument: 2,
   checkIsApprovedDeliverOrderSignedDocument: 2,
