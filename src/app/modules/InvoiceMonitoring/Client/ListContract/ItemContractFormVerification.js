@@ -69,7 +69,7 @@ function ItemContractFormVerification(props) {
   };
 
   const callApiContractSoftCopy = () => {
-    getListDocSoftCopy(contract_id, termin)
+    getListDocSoftCopy(contract_id, termin, "HARDCOPY")
       .then((result) => {
         setDataDocHardCopy(result.data.data);
         setContractHardCopy(false);
@@ -243,7 +243,7 @@ function ItemContractFormVerification(props) {
                   </h6>
                 </div>
               </div>
-              {dataDocHardCopy.map((item, index) => {
+              {dataBillingHardCopy.map((item, index) => {
                 return (
                   <div className="row mt-3" key={index.toString()}>
                     <div className="col-sm-4">
@@ -284,7 +284,7 @@ function ItemContractFormVerification(props) {
                   </div>
                 );
               })}
-              {dataBillingHardCopy.map((item, index) => {
+              {dataDocHardCopy.map((item, index) => {
                 return (
                   <div className="row mt-3" key={index.toString()}>
                     <div className="col-sm-4">
