@@ -180,7 +180,7 @@ function ItemContractFormVerification(props) {
                       type="text"
                       className="form-control"
                       value={rupiah(contractData?.termin_value)}
-                      onChange={(e) => { }}
+                      onChange={(e) => {}}
                       readOnly
                     />
                   </div>
@@ -193,13 +193,13 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue={contractData?.approved_at_tax
-                        ? window
-                          .moment(
-                            new Date(contractData?.approved_at_tax)
-                          )
-                          .format("DD/MM/YYYY")
-                        : ""}
+                      defaultValue={
+                        contractData?.approved_at_tax
+                          ? window
+                              .moment(new Date(contractData?.approved_at_tax))
+                              .format("DD/MM/YYYY")
+                          : ""
+                      }
                       readOnly
                     />
                   </div>
@@ -212,13 +212,13 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue={contractData?.hardcopy_date_out
-                        ? window
-                          .moment(
-                            new Date(contractData?.hardcopy_date_out)
-                          )
-                          .format("DD/MM/YYYY")
-                        : ""}
+                      defaultValue={
+                        contractData?.hardcopy_date_out
+                          ? window
+                              .moment(new Date(contractData?.hardcopy_date_out))
+                              .format("DD/MM/YYYY")
+                          : ""
+                      }
                       readOnly
                     />
                   </div>
@@ -365,10 +365,10 @@ function ItemContractFormVerification(props) {
                                         ?.hardcopy_state === "REJECTED"
                                         ? el?.document_monitoring
                                             ?.hardcopy_history.length > 0 &&
-                                        el?.document_monitoring
-                                          ?.hardcopy_history[
                                           el?.document_monitoring
-                                            ?.hardcopy_history.length - 1
+                                            ?.hardcopy_history[
+                                            el?.document_monitoring
+                                              ?.hardcopy_history.length - 1
                                           ].rejected_re
                                         : null}
                                     </span>
@@ -425,10 +425,10 @@ function ItemContractFormVerification(props) {
                                 {el?.document_monitoring?.hardcopy_state ===
                                 "REJECTED"
                                   ? el?.document_monitoring?.hardcopy_history
-                                  .length > 0 &&
-                                  el?.document_monitoring?.hardcopy_history[
-                                    el?.document_monitoring?.hardcopy_history
-                                      .length - 1
+                                      .length > 0 &&
+                                    el?.document_monitoring?.hardcopy_history[
+                                      el?.document_monitoring?.hardcopy_history
+                                        .length - 1
                                     ].rejected_re
                                   : null}
                               </span>
