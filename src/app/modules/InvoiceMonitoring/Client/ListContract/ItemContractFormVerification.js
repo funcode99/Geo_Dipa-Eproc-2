@@ -284,6 +284,47 @@ function ItemContractFormVerification(props) {
                   </div>
                 );
               })}
+              {dataBillingHardCopy.map((item, index) => {
+                return (
+                  <div className="row mt-3" key={index.toString()}>
+                    <div className="col-sm-4">
+                      <label
+                        className={
+                          item.hardcopy_state === "APPROVED"
+                            ? "checkboxs-true"
+                            : item.hardcopy_state === "REJECTED"
+                            ? "checkboxs-false"
+                            : "checkboxs"
+                        }
+                      >
+                        <input
+                          type="checkbox"
+                          checked={true}
+                          onChange={(e) => {}}
+                        />
+                        <span></span>
+                      </label>
+                      <span className="ml-2">{item.document_name}</span>
+                    </div>
+                    <div className="col-sm-3 border-bottom">
+                      <span>
+                        {item.hardcopy_approved_at
+                          ? window
+                              .moment(new Date(item.hardcopy_approved_at))
+                              .format("DD MMM YYYY")
+                          : null}
+                      </span>
+                    </div>
+                    <div className="col-sm-5 border-bottom">
+                      <span>
+                        {item.hardcopy_state === "REJECTED"
+                          ? item.hardcopy_rejected_remark
+                          : null}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
               {dataDeliverables?.map((item, index) => {
                 const isPeriodic = item.is_periodic;
                 return isPeriodic
@@ -437,47 +478,6 @@ function ItemContractFormVerification(props) {
                         );
                       }
                     });
-              })}
-              {dataBillingHardCopy.map((item, index) => {
-                return (
-                  <div className="row mt-3" key={index.toString()}>
-                    <div className="col-sm-4">
-                      <label
-                        className={
-                          item.hardcopy_state === "APPROVED"
-                            ? "checkboxs-true"
-                            : item.hardcopy_state === "REJECTED"
-                            ? "checkboxs-false"
-                            : "checkboxs"
-                        }
-                      >
-                        <input
-                          type="checkbox"
-                          checked={true}
-                          onChange={(e) => {}}
-                        />
-                        <span></span>
-                      </label>
-                      <span className="ml-2">{item.document_name}</span>
-                    </div>
-                    <div className="col-sm-3 border-bottom">
-                      <span>
-                        {item.hardcopy_approved_at
-                          ? window
-                              .moment(new Date(item.hardcopy_approved_at))
-                              .format("DD MMM YYYY")
-                          : null}
-                      </span>
-                    </div>
-                    <div className="col-sm-5 border-bottom">
-                      <span>
-                        {item.hardcopy_state === "REJECTED"
-                          ? item.hardcopy_rejected_remark
-                          : null}
-                      </span>
-                    </div>
-                  </div>
-                );
               })}
             </div>
             <div className="row mt-4">
