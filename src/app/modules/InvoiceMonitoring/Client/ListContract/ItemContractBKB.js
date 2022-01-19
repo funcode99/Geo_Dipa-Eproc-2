@@ -108,6 +108,10 @@ function ItemContractBKB(props) {
       (row) => row.ident_name === "HARDCOPY" && row.status === "COMPLETE"
     ).length > 0;
 
+  const hasInternetBanking = !!bkbData?.giro_signed_data?.filter(
+    (giro) => giro?.ident_name === "INTERNET_BANKING"
+  ).length;
+
   const getBkbData = useCallback(() => {
     getBkb(termin)
       .then((response) => {
@@ -499,6 +503,8 @@ function ItemContractBKB(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
+
+  console.log("bkbData", bkbData);
 
   return (
     <React.Fragment>
@@ -1833,86 +1839,97 @@ function ItemContractBKB(props) {
               </div> */}
               <div className="col-sm-12 border">
                 <div className="text-center">
-                  <span>
-                    <FormattedMessage id="TITLE.APPROVED_CEK_OR_GIRO" />
-                  </span>
+                  <b>
+                    {hasInternetBanking ? (
+                      "Internet Banking"
+                    ) : (
+                      <FormattedMessage id="TITLE.APPROVED_CEK_OR_GIRO" />
+                    )}
+                  </b>
                 </div>
-                <div className="row border-top">
-                  {bkbData?.giro_signed_data?.map((row, key) => {
-                    return (
-                      <div className="col-sm border text-center px-0" key={key}>
-                        <span style={{ fontSize: 10 }}>{row.name}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="row">
-                  {bkbData?.giro_signed_data?.map((row, key) => {
-                    return (
-                      <div
-                        className="col-sm border-right"
-                        style={{ height: styleCustom.heightAppvDiv }}
-                        key={key}
-                      >
-                        <div
-                          className="text-center"
-                          style={{
-                            height: styleCustom.minHeightAppv,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                          }}
-                        >
-                          {monitoring_role?.includes(row.name) &&
-                            !row.approved_id &&
-                            bkbData?.approved_bkb_id &&
-                            statusHardCopyComplate && (
-                              <button
-                                type="button"
-                                className="btn btn-primary btn-sm mx-2"
-                                style={{ fontSize: 10, marginTop: 20 }}
-                                onClick={() => {
-                                  setModalApproved({
-                                    ...modalApproved,
-                                    statusDialog: true,
-                                    data: "approveSignedGiro",
-                                    role_id: row.id,
-                                  });
-                                }}
-                              >
-                                <i
-                                  className="fas fa-check-circle"
-                                  style={{ fontSize: 8 }}
-                                ></i>
-                                <FormattedMessage id="TITLE.APPROVE" />
-                              </button>
-                            )}
-                          {/* {row.approved_id && (
+                {!hasInternetBanking && (
+                  <>
+                    <div className="row border-top">
+                      {bkbData?.giro_signed_data?.map((row, key) => {
+                        return (
+                          <div
+                            className="col-sm border text-center px-0"
+                            key={key}
+                          >
+                            <span style={{ fontSize: 10 }}>{row.name}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="row">
+                      {bkbData?.giro_signed_data?.map((row, key) => {
+                        return (
+                          <div
+                            className="col-sm border-right"
+                            style={{ height: styleCustom.heightAppvDiv }}
+                            key={key}
+                          >
+                            <div
+                              className="text-center"
+                              style={{
+                                height: styleCustom.minHeightAppv,
+                                paddingTop: 5,
+                                paddingBottom: 5,
+                              }}
+                            >
+                              {monitoring_role?.includes(row.name) &&
+                                !row.approved_id &&
+                                bkbData?.approved_bkb_id &&
+                                statusHardCopyComplate && (
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary btn-sm mx-2"
+                                    style={{ fontSize: 10, marginTop: 20 }}
+                                    onClick={() => {
+                                      setModalApproved({
+                                        ...modalApproved,
+                                        statusDialog: true,
+                                        data: "approveSignedGiro",
+                                        role_id: row.id,
+                                      });
+                                    }}
+                                  >
+                                    <i
+                                      className="fas fa-check-circle"
+                                      style={{ fontSize: 8 }}
+                                    ></i>
+                                    <FormattedMessage id="TITLE.APPROVE" />
+                                  </button>
+                                )}
+                              {/* {row.approved_id && (
                             <QRCodeG
                               value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${row.id}&type=SIGNED_GIRO`}
                             />
                           )} */}
-                        </div>
-                        <div className="d-flex align-items-end">
-                          <div>
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />:
-                              {row.approved_name}
-                            </span>
-                            <br />
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.DATE" />:
-                              {row.approved_at
-                                ? window
-                                    .moment(new Date(row.approved_at))
-                                    .format("DD MMMM YYYY")
-                                : "-"}
-                            </span>
+                            </div>
+                            <div className="d-flex align-items-end">
+                              <div>
+                                <span style={{ fontSize: 8 }}>
+                                  <FormattedMessage id="TITLE.NAME" />:
+                                  {row.approved_name}
+                                </span>
+                                <br />
+                                <span style={{ fontSize: 8 }}>
+                                  <FormattedMessage id="TITLE.DATE" />:
+                                  {row.approved_at
+                                    ? window
+                                        .moment(new Date(row.approved_at))
+                                        .format("DD MMMM YYYY")
+                                    : "-"}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
