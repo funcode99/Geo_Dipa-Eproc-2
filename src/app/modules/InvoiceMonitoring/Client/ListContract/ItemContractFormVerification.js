@@ -405,7 +405,7 @@ function ItemContractFormVerification(props) {
                                 />
                                 <span></span>
                               </label>
-                              <span className="ml-2">{el.document.name}</span>
+                              <span className="ml-2">{`${item?.name} : ${el.document.name}`}</span>
                             </div>
                             <div className="col-sm-3 border-bottom">
                               <span>
