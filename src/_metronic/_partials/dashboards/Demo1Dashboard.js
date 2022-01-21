@@ -17,10 +17,10 @@ export function Demo1Dashboard() {
   return (
     <>
       <div className="row">
-        <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "95vh" }}>
+        <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "60vh" }}>
           <ListsWidget4 className="card-stretch gutter-b" />
         </div>
-        <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "95vh" }}>
+        <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "60vh" }}>
           <ListsWidget9 className="card-stretch gutter-b" />
         </div>
 

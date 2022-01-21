@@ -29,6 +29,10 @@ import {
   getListTax,
   getTerminProgress,
   getTaxVendor,
+  checkBkbExist,
+  createBkb,
+  getInvoice,
+  getContractAuthority,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -45,6 +49,7 @@ import { SOCKET } from "../../../../../../redux/BaseHost";
 import { API_EPROC } from "../../../../../../redux/BaseHost";
 import { cloneDeep } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
+import { getRolesAcceptance } from "../../../../Master/service/MasterCrud";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -98,6 +103,10 @@ function ContractTaxPage(props) {
   const [modalTaXPph, setModalTaXPph] = useState(false);
   const [addtionalPayment, setAddtionalPayment] = useState([]);
   const [setstatus, setSetstatus] = useState(true);
+  const [invoiceBkbExist, setInvoiceBkbExist] = useState(false);
+  const [invoiceData, setInvoiceData] = useState({});
+  const [contractAuthority, setContractAuthority] = useState("");
+  const [approveHardCopyRole, setApproveHardCopyRole] = useState(false);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const classes_ = useStyles();
 
@@ -107,6 +116,10 @@ function ContractTaxPage(props) {
     (state) => state.auth.user.data.user_id,
     shallowEqual
   );
+  const data_login = useSelector((state) => state.auth.user.data, shallowEqual);
+  const monitoring_role = data_login.monitoring_role
+    ? data_login.monitoring_role
+    : [];
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const {
@@ -330,7 +343,7 @@ function ContractTaxPage(props) {
                 ? response.data?.data?.invoice_additional_value_data
                 : []
             );
-        }
+          }
         }
       })
       .catch((error) => {
@@ -381,6 +394,15 @@ function ContractTaxPage(props) {
       created_by_id: user_id,
       filename: taxData?.file_name,
     };
+    const data_2 = {
+      contract_id: contract_id, //v
+      term_id: termin, //v
+      vendor_id: invoiceData.vendor_id,
+      sub_total: invoiceData.invoice_value,
+      created_by_id: user_id,
+      updated_by_id: user_id,
+      authority: contractAuthority,
+    };
     approveTax(taxData.id, {
       approved_by_id: user_id,
       contract_id: contract_id,
@@ -405,6 +427,31 @@ function ContractTaxPage(props) {
             setDataProgress(result.data.data?.data);
           }
         });
+        if (invoiceBkbExist) {
+          setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
+        } else {
+          createBkb(data_2)
+            .then((response) => {
+              setInvoiceBkbExist(true);
+              setToast(
+                intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
+                10000
+              );
+              getTerminProgress(termin).then((result) => {
+                setDataProgress(result.data.data?.data);
+              });
+            })
+            .catch((error) => {
+              if (error.response?.data && error.response?.data.message) {
+                setToast(error.response?.data.message, 10000);
+              } else {
+                setToast(
+                  intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+                  10000
+                );
+              }
+            });
+        }
         SOCKET.emit("send_notif");
       })
       .catch((error) => {
@@ -423,10 +470,58 @@ function ContractTaxPage(props) {
       });
   }, [invoiceName, setInvoiceBillingId, formik, intl, setToast]);
 
+  const checkBkb = () => {
+    checkBkbExist(termin)
+      .then((result) => {
+        setInvoiceBkbExist(result.data.data.isExist);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  };
+
+  const getInvoiceData = useCallback(() => {
+    getInvoice(contract_id, termin)
+      .then((response) => {
+        setInvoiceData(response.data.data);
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, setInvoiceData, intl, setToast]);
+
+  const getContractAuthorityData = useCallback(() => {
+    getContractAuthority(termin)
+      .then((response) => {
+        if (response["data"]["data"]) {
+          setContractAuthority(response["data"]["data"]["authority"]);
+          getRolesAcceptance(response["data"]["data"]["authority"]).then(
+            (responseRoles) => {
+              responseRoles["data"]["data"].map((item, index) => {
+                if (
+                  monitoring_role.findIndex(
+                    (element) => element === item.name
+                  ) >= 0
+                ) {
+                  setApproveHardCopyRole(true);
+                }
+              });
+            }
+          );
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
+  }, [termin, intl, setToast]);
+
   useEffect(getContractData, []);
   useEffect(getListTaxs, [contractData, addtionalPayment]);
   useEffect(getTaxData, []);
   useEffect(getBillingDocumentIdData, []);
+  useEffect(checkBkb, []);
+  useEffect(getInvoiceData, []);
+  useEffect(getContractAuthorityData, []);
 
   const formatGroupLabel = (data) => (
     <div style={groupStyles}>
@@ -1195,12 +1290,15 @@ function ContractTaxPage(props) {
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.TAX_NUMBER" />
                 </label>
                 <div className="col-sm-8">
-                  <input
-                    type="text"
+                  <NumberFormat
+                    id={"NumberFormat-text"}
+                    value={taxData?.tax_no}
+                    displayType={"text"}
                     className="form-control"
-                    id="numberInvoice"
-                    disabled
-                    defaultValue={taxData?.tax_no}
+                    format="###.###-##.########"
+                    mask="_"
+                    allowEmptyFormatting={true}
+                    allowLeadingZeros={true}
                   />
                 </div>
               </div>

@@ -649,21 +649,33 @@ function ContractTaxPage(props) {
                     <span className="text-danger">*</span>
                   </label>
                   <div className="col-sm-8">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="numberTax"
-                      disabled={
+                    <NumberFormat
+                      id={
                         loading ||
                         taxStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
+                            ? "NumberFormat-text"
+                            : "NumberFormat-input"
                       }
-                      {...formik.getFieldProps("tax_no")}
-                      onChange={(e) => {
-                        dataFormTaxVendor.tax_no = e.target.value;
+                      value={formik.values.tax_no}
+                      displayType={
+                        loading ||
+                        taxStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        !invoicePeriodsStatus
+                            ? "text"
+                            : "input"
+                      }
+                      className="form-control"
+                      format="###.###-##.########"
+                      mask="_"
+                      allowEmptyFormatting={true}
+                      allowLeadingZeros={true}
+                      onValueChange={(e) => {
+                        dataFormTaxVendor.tax_no = e.floatValue;
                         props.set_data_tax_vendor(dataFormTaxVendor);
-                        formik.setFieldValue("tax_no", e.target.value);
+                        formik.setFieldValue("tax_no", e.floatValue);
                       }}
                     />
                   </div>

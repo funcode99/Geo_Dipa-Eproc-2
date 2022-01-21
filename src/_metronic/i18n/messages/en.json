@@ -612,7 +612,7 @@
   "TITLE.VALUE": "Value",
   "TITLE.CHECK": "Check",
   "TITLE.ADDTIONAL_PAYMENT": "Additional Payment",
-  "TITLE.DATE_PAID": "Date Paid:",
+  "TITLE.DATE_PAID": "Date Paid",
   "TITLE.VERIFICATION_AND_TAX_DATE": "Verification and Tax Date",
   "TITLE.VERIFICATION_HARDCOPY_DATE": "Verification Hardcopy Date",
   "LABEL.OPEN_FILE": "Open file",

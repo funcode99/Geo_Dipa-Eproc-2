@@ -36,17 +36,19 @@ const useStyles = makeStyles((theme) => ({
 
 const key = "notif-dm";
 const key_contract = "get-contract-by-id";
-const contract_pages = {
+export const contract_pages = {
   checkIsUploadedDocumentPO: 1,
   checkIsUploadedContractGuaranteeDocument: 7,
   checkIsTerminSet: 2,
   checkIsTerminApproved: 2,
 };
-const termin_pages = {
+export const termin_pages = {
   checkIsDeliverableSet: 1,
   checkIsUploadedDeliverable: 1,
   checkIsDeliverableDocumentApproved: 1,
+  checkIsDeliverableDocumentRejected: 1,
   checkIsDeliverOrderApproved: 2,
+  checkIsDeliverOrderRejected: 2,
   checkIsDeliverOrderItemApproved: 2,
   checkIsUploadDeliverOrderSignedDocument: 2,
   checkIsApprovedDeliverOrderSignedDocument: 2,
@@ -249,9 +251,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                       )?.[0];
                       const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
                       const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
-                      {
-                        /* console.log("notif", item, isContractPage, isTerminPage); */
-                      }
+                      // console.log("notif", item, isContractPage, isTerminPage);
                       return (
                         <Link
                           //   to={!!isContractPage ? linkContract : linkTermin}
@@ -284,9 +284,14 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                               <div className="text-muted">
                                 {linkContract &&
                                   `${item?.data?.contract_name ||
-                                    "Nomor Kontrak"}`}
+                                    "Nama Kontrak"}`}
                                 {linkTermin &&
-                                  `${item?.data?.task_name || "Nomor Termin"}`}
+                                  ` - ${item?.data?.task_name ||
+                                    "Nomor Termin"} ${
+                                    item?.data?.document_type
+                                      ? ` - ${item?.data?.document_type}`
+                                      : ""
+                                  }`}
                                 {/* {`${item.data.contract_name ||
                                   "Nomor Kontrak"}-${item.data.task_name ||
                                   "Nama Termin"}`} */}

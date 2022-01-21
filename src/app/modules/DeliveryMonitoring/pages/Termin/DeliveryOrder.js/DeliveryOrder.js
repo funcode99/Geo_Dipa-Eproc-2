@@ -33,12 +33,21 @@ import StatusRemarks from "../../../../../components/StatusRemarks";
 import { NavLink } from "react-router-dom";
 import { Search } from "@material-ui/icons";
 import { DemoOnly } from "../../../../../../_metronic/_partials/dashboards/DemoOnly";
+import { isEmpty } from "lodash";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required(<FormattedMessage id="TITLE.DESC_IS_REQUIRE" />),
   date: Yup.date()
     .required(<FormattedMessage id="TITLE.DATE_IS_REQUIRE" />)
     .nullable(),
+  remarks: Yup.string().required("Remarks harus diisi"),
+});
+const FormSchemaMaterial = Yup.object().shape({
+  name: Yup.string().required(<FormattedMessage id="TITLE.DESC_IS_REQUIRE" />),
+  date: Yup.date()
+    .required(<FormattedMessage id="TITLE.DATE_IS_REQUIRE" />)
+    .nullable(),
+  destination: Yup.string().required("Tujuan harus diisi"),
   remarks: Yup.string().required("Remarks harus diisi"),
 });
 
@@ -90,6 +99,18 @@ const changeSequenceOptions = (arr) => {
   return temp;
 };
 
+const hasMaterialItem = (data) => {
+  const filteredData = data?.filter(
+    ({ item }, id) =>
+      !(
+        isEmpty(item?.material) ||
+        item?.material === "undefined" ||
+        item?.material === "null"
+      )
+  );
+  return !!filteredData?.length;
+};
+
 const DeliveryOrder = ({
   // taskId,
   items,
@@ -120,10 +141,14 @@ const DeliveryOrder = ({
   const excludeAction = isVendor ? [""] : ["update", "delete"];
   const [dataOrderItem, setDataOrderItem] = React.useState({});
   const [itemForm, setItemForm] = React.useState({});
+  const [allPlants, setAllPlants] = React.useState([]);
   const submitItemRef = React.useRef();
   const deleteRef = React.useRef();
   const submitRef = React.useRef();
   const detailRef = React.useRef();
+  const hasMaterial = React.useMemo(() => hasMaterialItem(tempOrderItems), [
+    tempOrderItems,
+  ]);
 
   const handleVisible = (key, tempParams = {}, tempItems = [], state) => {
     // console.log(`tempParams`, tempParams);
@@ -179,7 +204,7 @@ const DeliveryOrder = ({
 
   const formik = useFormik({
     initialValues,
-    validationSchema: FormSchema,
+    validationSchema: hasMaterial ? FormSchemaMaterial : FormSchema,
     onSubmit: async (values, { setStatus, setSubmitting, resetForm }) => {
       console.log(`masuk sini`);
       console.log(`open`, open);
@@ -226,6 +251,17 @@ const DeliveryOrder = ({
           handleErrorSubmit("item", true);
         } else {
           // console.log(`isUpdate`, isUpdate);
+          const params = {
+            name: values.name,
+            date: values.date,
+            remarks: values.remarks,
+            items: submitItem.map((item) => ({
+              task_item_id: item.id,
+              qty: item.qty,
+            })),
+            dest_plant_id: values.destination,
+          };
+          console.log(`params`, params);
 
           fetchApi({
             key: keys.submit,
@@ -233,15 +269,7 @@ const DeliveryOrder = ({
             url: isUpdate
               ? `/delivery/task-delivery/${open?.tempParams?.id}`
               : `/delivery/task-delivery/${taskId}`,
-            params: {
-              name: values.name,
-              date: values.date,
-              remarks: values.remarks,
-              items: submitItem.map((item) => ({
-                task_item_id: item.id,
-                qty: item.qty,
-              })),
-            },
+            params,
             alertAppear: "both",
             onSuccess: (res) => {
               // console.log(`res`, res);
@@ -568,12 +596,27 @@ const DeliveryOrder = ({
     });
   };
 
+  const getAllPlants = React.useCallback(() => {
+    fetchApi({
+      key: keys.all_plants,
+      type: "get",
+      url: `/delivery/options`,
+      onSuccess: (res) => {
+        console.log(`res`, res);
+        setAllPlants(res.data?.plants);
+      },
+    });
+  }, []);
+
   React.useEffect(() => {
     getTask();
     // generateTableContent(orderItems);
     setInitAvailItems(items);
     getOptions();
   }, [items]);
+  React.useEffect(() => {
+    getAllPlants();
+  }, []);
 
   const handleRefresh = () => {
     getTask();
@@ -615,6 +658,7 @@ const DeliveryOrder = ({
         handleError={handleErrorSubmit}
         updateData={open.tempParams}
         isUpdate={isUpdate}
+        listPlants={allPlants}
       />
 
       <ModalDetail
@@ -693,6 +737,7 @@ const keys = {
   delete: "delete-delivery-order",
   option: "approve-status-option",
   token_data: "get-token-data",
+  all_plants: "get-all-plants",
 };
 
 const mapState = (state) => {

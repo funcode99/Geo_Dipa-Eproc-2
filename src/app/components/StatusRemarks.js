@@ -18,7 +18,11 @@ const StatusRemarks = ({
     isWaiting && withFile
       ? `${status} ${url ? `APPROVAL ${role}` : `UPLOAD`}`
       : status;
-  const colorScheme = isApproved ? "primary" : isRejected ? "danger" : "dark";
+  const colorScheme = isApproved
+    ? "primary"
+    : isRejected
+    ? "danger"
+    : "warning";
 
   // if (isApproved) {
   return (

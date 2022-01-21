@@ -69,7 +69,7 @@ function ItemContractFormVerification(props) {
   };
 
   const callApiContractSoftCopy = () => {
-    getListDocSoftCopy(contract_id, termin)
+    getListDocSoftCopy(contract_id, termin, "HARDCOPY")
       .then((result) => {
         setDataDocHardCopy(result.data.data);
         setContractHardCopy(false);
@@ -180,7 +180,7 @@ function ItemContractFormVerification(props) {
                       type="text"
                       className="form-control"
                       value={rupiah(contractData?.termin_value)}
-                      onChange={(e) => { }}
+                      onChange={(e) => {}}
                       readOnly
                     />
                   </div>
@@ -193,13 +193,13 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue={contractData?.approved_at_tax
-                        ? window
-                          .moment(
-                            new Date(contractData?.approved_at_tax)
-                          )
-                          .format("DD/MM/YYYY")
-                        : ""}
+                      defaultValue={
+                        contractData?.approved_at_tax
+                          ? window
+                              .moment(new Date(contractData?.approved_at_tax))
+                              .format("DD/MM/YYYY")
+                          : ""
+                      }
                       readOnly
                     />
                   </div>
@@ -212,13 +212,13 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue={contractData?.hardcopy_date_out
-                        ? window
-                          .moment(
-                            new Date(contractData?.hardcopy_date_out)
-                          )
-                          .format("DD/MM/YYYY")
-                        : ""}
+                      defaultValue={
+                        contractData?.hardcopy_date_out
+                          ? window
+                              .moment(new Date(contractData?.hardcopy_date_out))
+                              .format("DD/MM/YYYY")
+                          : ""
+                      }
                       readOnly
                     />
                   </div>
@@ -243,6 +243,47 @@ function ItemContractFormVerification(props) {
                   </h6>
                 </div>
               </div>
+              {dataBillingHardCopy.map((item, index) => {
+                return (
+                  <div className="row mt-3" key={index.toString()}>
+                    <div className="col-sm-4">
+                      <label
+                        className={
+                          item.hardcopy_state === "APPROVED"
+                            ? "checkboxs-true"
+                            : item.hardcopy_state === "REJECTED"
+                            ? "checkboxs-false"
+                            : "checkboxs"
+                        }
+                      >
+                        <input
+                          type="checkbox"
+                          checked={true}
+                          onChange={(e) => {}}
+                        />
+                        <span></span>
+                      </label>
+                      <span className="ml-2">{item.document_name}</span>
+                    </div>
+                    <div className="col-sm-3 border-bottom">
+                      <span>
+                        {item.hardcopy_approved_at
+                          ? window
+                              .moment(new Date(item.hardcopy_approved_at))
+                              .format("DD MMM YYYY")
+                          : null}
+                      </span>
+                    </div>
+                    <div className="col-sm-5 border-bottom">
+                      <span>
+                        {item.hardcopy_state === "REJECTED"
+                          ? item.hardcopy_rejected_remark
+                          : null}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
               {dataDocHardCopy.map((item, index) => {
                 return (
                   <div className="row mt-3" key={index.toString()}>
@@ -365,10 +406,10 @@ function ItemContractFormVerification(props) {
                                         ?.hardcopy_state === "REJECTED"
                                         ? el?.document_monitoring
                                             ?.hardcopy_history.length > 0 &&
-                                        el?.document_monitoring
-                                          ?.hardcopy_history[
                                           el?.document_monitoring
-                                            ?.hardcopy_history.length - 1
+                                            ?.hardcopy_history[
+                                            el?.document_monitoring
+                                              ?.hardcopy_history.length - 1
                                           ].rejected_re
                                         : null}
                                     </span>
@@ -405,7 +446,7 @@ function ItemContractFormVerification(props) {
                                 />
                                 <span></span>
                               </label>
-                              <span className="ml-2">{el.document.name}</span>
+                              <span className="ml-2">{`${item?.name} : ${el.document.name}`}</span>
                             </div>
                             <div className="col-sm-3 border-bottom">
                               <span>
@@ -425,10 +466,10 @@ function ItemContractFormVerification(props) {
                                 {el?.document_monitoring?.hardcopy_state ===
                                 "REJECTED"
                                   ? el?.document_monitoring?.hardcopy_history
-                                  .length > 0 &&
-                                  el?.document_monitoring?.hardcopy_history[
-                                    el?.document_monitoring?.hardcopy_history
-                                      .length - 1
+                                      .length > 0 &&
+                                    el?.document_monitoring?.hardcopy_history[
+                                      el?.document_monitoring?.hardcopy_history
+                                        .length - 1
                                     ].rejected_re
                                   : null}
                               </span>
@@ -437,47 +478,6 @@ function ItemContractFormVerification(props) {
                         );
                       }
                     });
-              })}
-              {dataBillingHardCopy.map((item, index) => {
-                return (
-                  <div className="row mt-3" key={index.toString()}>
-                    <div className="col-sm-4">
-                      <label
-                        className={
-                          item.hardcopy_state === "APPROVED"
-                            ? "checkboxs-true"
-                            : item.hardcopy_state === "REJECTED"
-                            ? "checkboxs-false"
-                            : "checkboxs"
-                        }
-                      >
-                        <input
-                          type="checkbox"
-                          checked={true}
-                          onChange={(e) => {}}
-                        />
-                        <span></span>
-                      </label>
-                      <span className="ml-2">{item.document_name}</span>
-                    </div>
-                    <div className="col-sm-3 border-bottom">
-                      <span>
-                        {item.hardcopy_approved_at
-                          ? window
-                              .moment(new Date(item.hardcopy_approved_at))
-                              .format("DD MMM YYYY")
-                          : null}
-                      </span>
-                    </div>
-                    <div className="col-sm-5 border-bottom">
-                      <span>
-                        {item.hardcopy_state === "REJECTED"
-                          ? item.hardcopy_rejected_remark
-                          : null}
-                      </span>
-                    </div>
-                  </div>
-                );
               })}
             </div>
             <div className="row mt-4">

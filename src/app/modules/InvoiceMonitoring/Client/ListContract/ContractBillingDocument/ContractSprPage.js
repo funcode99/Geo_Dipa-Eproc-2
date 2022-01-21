@@ -29,7 +29,8 @@ import {
   getFileBank,
   getBillingDocumentId,
   softcopy_save,
-  getTerminProgress
+  getTerminProgress,
+  getInvoice,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -44,6 +45,8 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import { SOCKET } from "../../../../../../redux/BaseHost";
+import { cloneDeep } from "lodash";
+import NumberFormat from "react-number-format";
 
 const styles = (theme) => ({
   root: {
@@ -70,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
   textDisabled: {
     backgroundColor: "#F3F6F9",
   },
+  MuiDialogActionsPosistion: {
+    justifyContent: "space-between",
+  },
 }));
 
 const DialogTitleFile = withStyles(styles)((props) => {
@@ -93,8 +99,21 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+// const useStyles = makeStyles((theme) => ({
+//   MuiDialogActionsPosistion: {
+//     justifyContent: "space-between",
+//   },
+// }));
+
 function ContractSprPage(props) {
-  const { intl, classes, progressTermin, setProgressTermin, dataProgress, setDataProgress } = props;
+  const {
+    intl,
+    classes,
+    progressTermin,
+    setProgressTermin,
+    dataProgress,
+    setDataProgress,
+  } = props;
   const [loading, setLoading] = useState(false);
   const [contractData, setContractData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -111,7 +130,11 @@ function ContractSprPage(props) {
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
+  const [addtionalPayment, setAddtionalPayment] = useState([]);
+  const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
+  const [invoiceData, setInvoiceData] = useState({});
 
+  const classes_ = useStyles();
   const headerTable = [
     {
       title: intl.formatMessage({
@@ -252,7 +275,7 @@ function ContractSprPage(props) {
       document_id: invoiceBillingId,
       document_no: sppData?.spr_no,
       created_by_id: user_id,
-      filename: sppData?.file_name
+      filename: sppData?.file_name,
     };
     approveSpp(sppData.id, {
       approved_by_id: user_id,
@@ -267,13 +290,12 @@ function ContractSprPage(props) {
         setIsSubmit(true);
         getHistorySppData(sppData.id);
         softcopy_save(data_1);
-        getTerminProgress(termin)
-          .then((result) => {
-            if (result.data.data.data) {
+        getTerminProgress(termin).then((result) => {
+          if (result.data.data.data) {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
-            }
-          })
+          }
+        });
         SOCKET.emit("send_notif");
       })
       .catch((error) => {
@@ -320,9 +342,44 @@ function ContractSprPage(props) {
       });
   }, [invoiceName, setInvoiceBillingId, formik, intl, setToast]);
 
+  const getInvoiceData = useCallback(() => {
+    getInvoice(contract_id, termin)
+      .then((response) => {
+        setInvoiceData(response.data.data);
+        if (response.data.data) {
+          // getHistoryInvoiceData(response["data"]["data"]["id"]);
+          setAddtionalPayment(
+            response.data?.data?.invoice_additional_value_data
+              ? response.data?.data?.invoice_additional_value_data
+              : []
+          );
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [
+    contract_id,
+    setInvoiceData,
+    // getHistoryInvoiceData,
+    formik,
+    intl,
+    setToast,
+  ]);
+
   useEffect(getContractData, []);
   useEffect(getSppData, []);
   useEffect(getBillingDocumentIdData, []);
+  useEffect(getInvoiceData, []);
+
+  const totalAddtionalPayment = () => {
+    if (addtionalPayment && addtionalPayment.length === 0) return 0;
+    var total = 0;
+    addtionalPayment.forEach((element) => {
+      total += element.value;
+    });
+    return total;
+  };
 
   return (
     <React.Fragment>
@@ -469,8 +526,9 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumber === 1 ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-left ${
+                          pageNumber === 1 ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -488,8 +546,9 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumber === numPages ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-right ${
+                          pageNumber === numPages ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -537,8 +596,9 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-left ${pageNumberBank === 1 ? "" : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-left ${
+                          pageNumberBank === 1 ? "" : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -556,10 +616,11 @@ function ContractSprPage(props) {
                   >
                     <span>
                       <i
-                        className={`fas fa-chevron-right ${pageNumberBank === numPagesBank
-                          ? ""
-                          : "text-secondary"
-                          }`}
+                        className={`fas fa-chevron-right ${
+                          pageNumberBank === numPagesBank
+                            ? ""
+                            : "text-secondary"
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -662,11 +723,11 @@ function ContractSprPage(props) {
                       :{" "}
                       {modalHistoryData["state"] === "REJECTED"
                         ? moment(
-                          new Date(modalHistoryData["rejected_at"])
-                        ).format("YYYY-MM-DD HH:mm:ss")
+                            new Date(modalHistoryData["rejected_at"])
+                          ).format("YYYY-MM-DD HH:mm:ss")
                         : moment(
-                          new Date(modalHistoryData["approved_at"])
-                        ).format("YYYY-MM-DD HH:mm:ss")}
+                            new Date(modalHistoryData["approved_at"])
+                          ).format("YYYY-MM-DD HH:mm:ss")}
                     </span>
                   </div>
                 </div>
@@ -767,6 +828,109 @@ function ContractSprPage(props) {
             <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
           </button>
         </DialogActions>
+      </Dialog>
+      <Dialog
+        open={modalAddtionalPayment}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="md"
+        fullWidth={true}
+      >
+        <form
+          autoComplete="off"
+          onSubmit={(e) => {
+            // e.preventDefault();
+            // setModalAddtionalPayment(false);
+          }}
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
+          </DialogTitle>
+          <DialogContent>
+            <table>
+              <thead>
+                <tr>
+                  <th style={{ width: "50%" }}>
+                    <FormattedMessage id="TITLE.DESCRIPTION" />
+                  </th>
+                  <th style={{ width: "40%" }}>
+                    <FormattedMessage id="TITLE.VALUE" />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {addtionalPayment.map((item, index) => {
+                  return (
+                    <tr key={index.toString()}>
+                      <td>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={item.description}
+                          onChange={(e) => {
+                            let addtionalPayments = cloneDeep(addtionalPayment);
+                            addtionalPayments[index].description =
+                              e.target.value;
+                            setAddtionalPayment(addtionalPayments);
+                          }}
+                          required={true}
+                          disabled
+                        />
+                      </td>
+                      <td>
+                        <NumberFormat
+                          id="NumberFormat-text"
+                          value={item.value}
+                          displayType="text"
+                          className="form-control"
+                          thousandSeparator={"."}
+                          decimalSeparator={","}
+                          allowEmptyFormatting={true}
+                          allowLeadingZeros={true}
+                          prefix={"Rp "}
+                          onValueChange={(e) => {
+                            let addtionalPayments = cloneDeep(addtionalPayment);
+                            addtionalPayments[index].value = e.floatValue
+                              ? e.floatValue
+                              : 0;
+                            setAddtionalPayment(addtionalPayments);
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </DialogContent>
+          <DialogActions className={classes_.MuiDialogActionsPosistion}>
+            <div>
+              <FormattedMessage id="TITLE.TOTAL_PRICE_IS" />:{" "}
+              {rupiah(totalAddtionalPayment())}
+            </div>
+            <div>
+              <button
+                className="btn btn-secondary mx-1"
+                onClick={() => {
+                  setModalAddtionalPayment(false);
+                  setAddtionalPayment(
+                    cloneDeep(
+                      invoiceData?.invoice_additional_value_data
+                        ? invoiceData?.invoice_additional_value_data
+                        : []
+                    )
+                  );
+                }}
+                disabled={loading}
+                type="button"
+              >
+                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+              </button>
+            </div>
+          </DialogActions>
+        </form>
       </Dialog>
       <Card>
         <CardBody>
@@ -944,14 +1108,10 @@ function ContractSprPage(props) {
               </div>
               {!sppData?.bank_refference && (
                 <div className="form-group row">
-                  <label
-                    className="col-sm-4 col-form-label"
-                  >
+                  <label className="col-sm-4 col-form-label">
                     <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SPP_DOCUMENT.BANK_UPLOAD" />
                   </label>
-                  <label
-                    className="input-group mb-3 col-sm-8 pointer"
-                  >
+                  <label className="input-group mb-3 col-sm-8 pointer">
                     <span
                       className={`form-control text-truncate h-100 ${classes.textDisabled}`}
                     >
@@ -1030,6 +1190,39 @@ function ContractSprPage(props) {
                   />
                 </div>
               </div>
+              <div className="form-group row">
+                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
+                </label>
+                <div className="col-sm-8">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-primary w-100"
+                    onClick={() => {
+                      setModalAddtionalPayment(true);
+                    }}
+                  >
+                    <FormattedMessage id="TITLE.SELECT" />
+                  </button>
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="priceStep1" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.TOTAL_AMOUNT" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="priceContract"
+                    value={rupiah(
+                      contractData["termin_value"] + totalAddtionalPayment()
+                    )}
+                    onChange={() => {}}
+                    disabled
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </CardBody>
@@ -1093,10 +1286,11 @@ function ContractSprPage(props) {
                   </TableCell>
                   <TableCell>
                     <span
-                      className={`${item.state === "REJECTED"
-                        ? "text-danger"
-                        : "text-success"
-                        } pointer font-weight-bold`}
+                      className={`${
+                        item.state === "REJECTED"
+                          ? "text-danger"
+                          : "text-success"
+                      } pointer font-weight-bold`}
                       onClick={() => handleHistory(index)}
                     >
                       {item.state === "REJECTED" ? (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,6 +7,9 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
 import { openLinkTab } from "../../../service/helper/urlHelper";
+import { IconButton } from "@material-ui/core";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 /*
   INTL (i18n) docs:
@@ -26,6 +29,7 @@ const initialValues = {
 function Login(props) {
   const { intl } = props;
   const [loading, setLoading] = useState(false);
+  const [seePassword, setSeePassword] = useState(false);
   const LoginSchema = Yup.object().shape({
     username: Yup.string()
       .min(
@@ -77,6 +81,10 @@ function Login(props) {
 
     return "";
   };
+
+  const handleVisiblePassword = useCallback(() => {
+    setSeePassword((e) => !e);
+  }, [setSeePassword]);
 
   const formik = useFormik({
     initialValues,
@@ -149,13 +157,31 @@ function Login(props) {
         <div className="form-group fv-plugins-icon-container">
           <input
             placeholder="Password"
-            type="password"
-            className={`form-control form-control-solid border border-info h-auto py-3 px-6 ${getInputClasses(
-              "password"
-            )}`}
+            type={seePassword ? "text" : "password"}
+            // className={`form-control form-control-solid border border-info h-auto py-3 px-6 ${getInputClasses(
+            //   "password"
+            // )}`}
+            className={`form-control form-control-solid border border-info h-auto py-3 px-6 pr-15`}
             name="password"
             {...formik.getFieldProps("password")}
           />
+          <div style={{ height: 1 }}>
+            <IconButton
+              style={{
+                position: "absolute",
+                right: "1.9rem",
+                zIndex: 2,
+                marginTop: -42,
+              }}
+              color="dark"
+              aria-label="visible password"
+              component="span"
+              onClick={handleVisiblePassword}
+            >
+              {seePassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </IconButton>
+          </div>
+
           {formik.touched.password && formik.errors.password ? (
             <div className="fv-plugins-message-container">
               <div className="fv-help-block">{formik.errors.password}</div>

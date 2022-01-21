@@ -35,6 +35,7 @@ import ListsWidget4 from "../widgets/lists/ListsWidget4";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
 import { useSubheader } from "../../../../../_metronic/layout";
+import { Demo1Dashboard } from "../../../../../_metronic/_partials/dashboards/Demo1Dashboard";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -306,9 +307,10 @@ function Dashboard(props) {
           </DialogActions>
         </Form>
       </Dialog>
+      <Demo1Dashboard />
       <Card>
         <CardBody>
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between mt-5">
             <h6>Overview</h6>
             <div className="d-flex">
               <Dropdown className="mx-2">

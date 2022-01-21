@@ -103,14 +103,20 @@ function ItemContractBKB(props) {
   });
   const [loadingSync, setLoadingSync] = useState(false);
 
-  const statusHardCopyComplate = dataProgress?.filter(
-    (row) => row.ident_name === "HARDCOPY" && row.status === "COMPLETE"
-  );
+  const statusHardCopyComplate =
+    !!dataProgress?.filter(
+      (row) => row.ident_name === "HARDCOPY" && row.status === "COMPLETE"
+    ).length > 0;
+
+  const hasInternetBanking = !!bkbData?.giro_signed_data?.filter(
+    (giro) => giro?.ident_name === "INTERNET_BANKING"
+  ).length;
 
   const getBkbData = useCallback(() => {
     getBkb(termin)
       .then((response) => {
         if (response["data"]["data"]) {
+          console.log(`bkbData`, response);
           setBkbData(response["data"]["data"]);
           setParkApInput(response["data"]["data"]["doc_park_ap_no"]);
           setParkByrInput(response["data"]["data"]["doc_park_byr_no"]);
@@ -497,6 +503,8 @@ function ItemContractBKB(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
+
+  console.log("bkbData", bkbData);
 
   return (
     <React.Fragment>
@@ -977,6 +985,21 @@ function ItemContractBKB(props) {
                     </td>
                     <td></td>
                   </tr>
+                  {bkbData?.ppn?.tax_value ? (
+                    <tr>
+                      <td colSpan="3" className="text-right">
+                        {bkbData?.ppn?.label}
+                      </td>
+                      <td>
+                        <div className="d-flex justify-content-between">
+                          <span>Rp.</span>
+                          <span>
+                            {rupiah(bkbData?.ppn?.tax_amount).slice(3)}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : null}
                   {bkbData?.tax_selected.length > 0 &&
                     bkbData?.tax_selected
                       .filter((value) => value.checked === true)
@@ -1185,13 +1208,13 @@ function ItemContractBKB(props) {
                     parseFloat(bkbData?.sub_total) <= row?.max_value
                   ) {
                     return (
-                <div
-                  className="text-center"
-                  style={{
-                    height: styleCustom.minHeightAppv,
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                  }}
+                      <div
+                        className="text-center"
+                        style={{
+                          height: styleCustom.minHeightAppv,
+                          paddingTop: 10,
+                          paddingBottom: 10,
+                        }}
                         key={key}
                       >
                         {monitoring_role.findIndex(
@@ -1209,7 +1232,7 @@ function ItemContractBKB(props) {
                                   data: "monitoringApproveInvPosting",
                                 });
                               }}
-                >
+                            >
                               <i
                                 className="fas fa-check-circle"
                                 style={{ fontSize: 8 }}
@@ -1221,45 +1244,45 @@ function ItemContractBKB(props) {
                           (element) => element === row.name
                         ) >= 0 &&
                           bkbData?.inv_approved_state === "PENDING" && (
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-sm mx-2"
-                        style={{ fontSize: 10, marginTop: 20 }}
-                        onClick={() => {
-                          setModalRejected({
-                            ...modalRejected,
-                            statusDialog: true,
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-sm mx-2"
+                              style={{ fontSize: 10, marginTop: 20 }}
+                              onClick={() => {
+                                setModalRejected({
+                                  ...modalRejected,
+                                  statusDialog: true,
                                   data: "rejectInvPosting",
-                          });
-                        }}
-                      >
-                        <i
-                          className="fas fa-times-circle"
-                          style={{ fontSize: 8 }}
-                        ></i>
-                        <FormattedMessage id="TITLE.REJECT" />
-                      </button>
+                                });
+                              }}
+                            >
+                              <i
+                                className="fas fa-times-circle"
+                                style={{ fontSize: 8 }}
+                              ></i>
+                              <FormattedMessage id="TITLE.REJECT" />
+                            </button>
                           )}
                         {bkbData?.inv_approved_state === "APPROVED" && (
-                    <QRCodeG
+                          <QRCodeG
                             value={`${window.location.origin}/qrcode?term_id=${termin}&type=APPROVED_INV`}
-                    />
+                          />
                         )}
                         {bkbData?.inv_approved_state === "APPROVED" && (
                           <div className="d-flex align-items-end">
-                          <span className="mx-auto">
-                            {bkbData?.inv_approved_data?.approved_by}
-                          </span>
+                            <span className="mx-auto">
+                              {bkbData?.inv_approved_data?.approved_by}
+                            </span>
                           </div>
                         )}
                         {bkbData?.inv_approved_state === "APPROVED" && (
                           <div className="d-flex align-items-end">
-                    <span className="mx-auto">
-                            {bkbData?.inv_approved_data?.role_name}
-                    </span>
+                            <span className="mx-auto">
+                              {bkbData?.inv_approved_data?.role_name}
+                            </span>
                           </div>
                         )}
-                  </div>
+                      </div>
                     );
                   }
                 })}
@@ -1298,7 +1321,7 @@ function ItemContractBKB(props) {
                       bkbData?.doc_park_byr_no &&
                       bkbData?.inv_approved_by &&
                       bkbData?.doc_park_ap_state === "APPROVED" &&
-                      bkbData?.doc_park_byr_state === "PENDING" && 
+                      bkbData?.doc_park_byr_state === "PENDING" &&
                       statusHardCopyComplate && (
                         <button
                           type="button"
@@ -1320,7 +1343,7 @@ function ItemContractBKB(props) {
                       bkbData?.doc_park_byr_no &&
                       bkbData?.inv_approved_by &&
                       bkbData?.doc_park_ap_state === "APPROVED" &&
-                      bkbData?.doc_park_byr_state === "PENDING" && 
+                      bkbData?.doc_park_byr_state === "PENDING" &&
                       statusHardCopyComplate && (
                         <button
                           type="button"
@@ -1506,16 +1529,16 @@ function ItemContractBKB(props) {
                     <span className="col-sm-5">: {bkbData?.miro_number}</span>
                   </div>
                 </div>
-                  <div className="row border-bottom">
-                    <div className="col-sm-12 row">
-                      <span className="col-sm-7">
-                        <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
-                      </span>
-                      <span className="col-sm-5">
-                        : {bkbData?.doc_park_ap_no}
-                      </span>
-                    </div>
+                <div className="row border-bottom">
+                  <div className="col-sm-12 row">
+                    <span className="col-sm-7">
+                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park AP
+                    </span>
+                    <span className="col-sm-5">
+                      : {bkbData?.doc_park_ap_no}
+                    </span>
                   </div>
+                </div>
                 {/* {(!bkbData?.doc_park_ap_no ||
                   bkbData?.doc_park_ap_state === "REJECTED") &&
                   bkbData &&
@@ -1571,16 +1594,16 @@ function ItemContractBKB(props) {
                       </div>
                     </div>
                   )} */}
-                  <div className="row border-bottom">
-                    <div className="col-sm-12 row">
-                      <span className="col-sm-7">
-                        <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
-                      </span>
-                      <span className="col-sm-5">
-                        : {bkbData?.doc_park_byr_no}
-                      </span>
-                    </div>
+                <div className="row border-bottom">
+                  <div className="col-sm-12 row">
+                    <span className="col-sm-7">
+                      <FormattedMessage id="TITLE.NO_DOCUMENT" /> Park BYR
+                    </span>
+                    <span className="col-sm-5">
+                      : {bkbData?.doc_park_byr_no}
+                    </span>
                   </div>
+                </div>
                 {/* {((!bkbData?.doc_park_byr_no &&
                   bkbData?.doc_park_ap_state === "APPROVED") ||
                   (bkbData?.doc_park_byr_state === "REJECTED" && bkbData)) &&
@@ -1648,9 +1671,7 @@ function ItemContractBKB(props) {
                 </div>
                 <div className="row p-3">
                   {bkbData?.desc?.split(";").map((row) => {
-                    return (
-                      <span className="col-sm-12 p-0">{row}</span>
-                    )
+                    return <span className="col-sm-12 p-0">{row}</span>;
                   })}
                 </div>
               </div>
@@ -1818,86 +1839,97 @@ function ItemContractBKB(props) {
               </div> */}
               <div className="col-sm-12 border">
                 <div className="text-center">
-                  <span>
-                    <FormattedMessage id="TITLE.APPROVED_CEK_OR_GIRO" />
-                  </span>
+                  <b>
+                    {hasInternetBanking ? (
+                      "Internet Banking"
+                    ) : (
+                      <FormattedMessage id="TITLE.APPROVED_CEK_OR_GIRO" />
+                    )}
+                  </b>
                 </div>
-                <div className="row border-top">
-                  {bkbData?.giro_signed_data?.map((row, key) => {
-                    return (
-                      <div className="col-sm border text-center px-0" key={key}>
-                        <span style={{ fontSize: 10 }}>{row.name}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="row">
-                  {bkbData?.giro_signed_data?.map((row, key) => {
-                    return (
-                      <div
-                        className="col-sm border-right"
-                        style={{ height: styleCustom.heightAppvDiv }}
-                        key={key}
-                      >
-                        <div
-                          className="text-center"
-                          style={{
-                            height: styleCustom.minHeightAppv,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                          }}
-                        >
-                          {monitoring_role?.includes(row.name) &&
-                            !row.approved_id &&
-                            bkbData?.approved_bkb_id &&
-                            statusHardCopyComplate.length > 0 && (
-                              <button
-                                type="button"
-                                className="btn btn-primary btn-sm mx-2"
-                                style={{ fontSize: 10, marginTop: 20 }}
-                                onClick={() => {
-                                  setModalApproved({
-                                    ...modalApproved,
-                                    statusDialog: true,
-                                    data: "approveSignedGiro",
-                                    role_id: row.id,
-                                  });
-                                }}
-                              >
-                                <i
-                                  className="fas fa-check-circle"
-                                  style={{ fontSize: 8 }}
-                                ></i>
-                                <FormattedMessage id="TITLE.APPROVE" />
-                              </button>
-                            )}
-                          {/* {row.approved_id && (
+                {!hasInternetBanking && (
+                  <>
+                    <div className="row border-top">
+                      {bkbData?.giro_signed_data?.map((row, key) => {
+                        return (
+                          <div
+                            className="col-sm border text-center px-0"
+                            key={key}
+                          >
+                            <span style={{ fontSize: 10 }}>{row.name}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="row">
+                      {bkbData?.giro_signed_data?.map((row, key) => {
+                        return (
+                          <div
+                            className="col-sm border-right"
+                            style={{ height: styleCustom.heightAppvDiv }}
+                            key={key}
+                          >
+                            <div
+                              className="text-center"
+                              style={{
+                                height: styleCustom.minHeightAppv,
+                                paddingTop: 5,
+                                paddingBottom: 5,
+                              }}
+                            >
+                              {monitoring_role?.includes(row.name) &&
+                                !row.approved_id &&
+                                bkbData?.approved_bkb_id &&
+                                statusHardCopyComplate && (
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary btn-sm mx-2"
+                                    style={{ fontSize: 10, marginTop: 20 }}
+                                    onClick={() => {
+                                      setModalApproved({
+                                        ...modalApproved,
+                                        statusDialog: true,
+                                        data: "approveSignedGiro",
+                                        role_id: row.id,
+                                      });
+                                    }}
+                                  >
+                                    <i
+                                      className="fas fa-check-circle"
+                                      style={{ fontSize: 8 }}
+                                    ></i>
+                                    <FormattedMessage id="TITLE.APPROVE" />
+                                  </button>
+                                )}
+                              {/* {row.approved_id && (
                             <QRCodeG
                               value={`${window.location.origin}/qrcode?term_id=${termin}&role_id=${row.id}&type=SIGNED_GIRO`}
                             />
                           )} */}
-                        </div>
-                        <div className="d-flex align-items-end">
-                          <div>
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.NAME" />:
-                              {row.approved_name}
-                            </span>
-                            <br />
-                            <span style={{ fontSize: 8 }}>
-                              <FormattedMessage id="TITLE.DATE" />:
-                              {row.approved_at
-                                ? window
-                                    .moment(new Date(row.approved_at))
-                                    .format("DD MMMM YYYY")
-                                : "-"}
-                            </span>
+                            </div>
+                            <div className="d-flex align-items-end">
+                              <div>
+                                <span style={{ fontSize: 8 }}>
+                                  <FormattedMessage id="TITLE.NAME" />:
+                                  {row.approved_name}
+                                </span>
+                                <br />
+                                <span style={{ fontSize: 8 }}>
+                                  <FormattedMessage id="TITLE.DATE" />:
+                                  {row.approved_at
+                                    ? window
+                                        .moment(new Date(row.approved_at))
+                                        .format("DD MMMM YYYY")
+                                    : "-"}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

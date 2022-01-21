@@ -257,10 +257,10 @@ function ContractInvoicePage(props) {
         getHistoryInvoiceData(invoiceData.id);
         softcopy_save(data_1);
         getTerminProgress(termin).then((result) => {
-            if (result.data.data.data) {
+          if (result.data.data.data) {
             setProgressTermin(result.data.data?.progress_type);
             setDataProgress(result.data.data?.data);
-            }
+          }
         });
         SOCKET.emit("send_notif");
       })
@@ -456,7 +456,7 @@ function ContractInvoicePage(props) {
                       <i
                         className={`fas fa-chevron-left ${
                           pageNumber === 1 ? "" : "text-secondary"
-                          }`}
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -476,7 +476,7 @@ function ContractInvoicePage(props) {
                       <i
                         className={`fas fa-chevron-right ${
                           pageNumber === numPages ? "" : "text-secondary"
-                          }`}
+                        }`}
                       ></i>
                     </span>
                   </button>
@@ -575,11 +575,11 @@ function ContractInvoicePage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                      "YYYY-MM-DD HH:mm:ss"
-                    )
+                        "YYYY-MM-DD HH:mm:ss"
+                      )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                      "YYYY-MM-DD HH:mm:ss"
-                    )}
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
                 </span>
               </div>
             </div>
@@ -683,7 +683,7 @@ function ContractInvoicePage(props) {
                       </td>
                       <td>
                         <NumberFormat
-                            id="NumberFormat-text"
+                          id="NumberFormat-text"
                           // id={
                           //   isSubmit ||
                           //   invoiceData?.state === "REJECTED" ||
@@ -694,7 +694,7 @@ function ContractInvoicePage(props) {
                           //     : "NumberFormat-input"
                           // }
                           value={item.value}
-                          displayType = "text"
+                          displayType="text"
                           // displayType={
                           //   isSubmit ||
                           //   invoiceData?.state === "REJECTED" ||
@@ -766,46 +766,46 @@ function ContractInvoicePage(props) {
               {rupiah(totalAddtionalPayment())}
             </div>
             <div>
-            <button
+              <button
                 className="btn btn-secondary mx-1"
-              onClick={() => {
-                setModalAddtionalPayment(false);
-                setAddtionalPayment(
-                  cloneDeep(
-                    invoiceData?.invoice_additional_value_data
-                      ? invoiceData?.invoice_additional_value_data
-                      : []
-                  )
-                );
-              }}
-              disabled={loading}
-              type="button"
-            >
-              <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
-            </button>
-            <button
+                onClick={() => {
+                  setModalAddtionalPayment(false);
+                  setAddtionalPayment(
+                    cloneDeep(
+                      invoiceData?.invoice_additional_value_data
+                        ? invoiceData?.invoice_additional_value_data
+                        : []
+                    )
+                  );
+                }}
+                disabled={loading}
+                type="button"
+              >
+                <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
+              </button>
+              <button
                 className="btn btn-primary mx-1"
                 disabled
-              // disabled={
-              //   isSubmit ||
-              //   invoiceData?.state === "REJECTED" ||
-              //   invoiceData?.state === "APPROVED" ||
-              //   invoiceData === null ||
-              //   !props.billingStaffStatus ||
-              //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-              // }
-              type="submit"
-            >
-              <span>
-                <FormattedMessage id="TITLE.SAVE" />
-              </span>
-              {loading && (
-                <span
-                  className="spinner-border spinner-border-sm ml-1"
-                  aria-hidden="true"
-                ></span>
-              )}
-            </button>
+                // disabled={
+                //   isSubmit ||
+                //   invoiceData?.state === "REJECTED" ||
+                //   invoiceData?.state === "APPROVED" ||
+                //   invoiceData === null ||
+                //   !props.billingStaffStatus ||
+                //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                // }
+                type="submit"
+              >
+                <span>
+                  <FormattedMessage id="TITLE.SAVE" />
+                </span>
+                {loading && (
+                  <span
+                    className="spinner-border spinner-border-sm ml-1"
+                    aria-hidden="true"
+                  ></span>
+                )}
+              </button>
             </div>
           </DialogActions>
         </form>
@@ -985,24 +985,28 @@ function ContractInvoicePage(props) {
                   <NumberFormat
                     id={
                       isSubmit ||
-                        invoiceData?.state === "REJECTED" ||
-                        invoiceData?.state === "APPROVED" ||
-                        invoiceData === null ||
-                        !props.billingStaffStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                      invoiceData?.state === "REJECTED" ||
+                      invoiceData?.state === "APPROVED" ||
+                      invoiceData === null ||
+                      !props.billingStaffStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY"
                         ? "NumberFormat-text"
                         : "NumberFormat-input"
                     }
                     value={invoiceData?.penalty}
                     displayType={
                       isSubmit ||
-                        invoiceData?.state === "REJECTED" ||
-                        invoiceData?.state === "APPROVED" ||
-                        invoiceData === null ||
-                        !props.billingStaffStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                      invoiceData?.state === "REJECTED" ||
+                      invoiceData?.state === "APPROVED" ||
+                      invoiceData === null ||
+                      !props.billingStaffStatus ||
+                      progressTermin?.ident_name !== "BILLING_SOFTCOPY"
                         ? "text"
                         : "input"
+                    }
+                    isAllowed={({ floatValue }) =>
+                      floatValue <=
+                      contractData["termin_value"] + totalAddtionalPayment()
                     }
                     className="form-control"
                     thousandSeparator={"."}
@@ -1024,7 +1028,7 @@ function ContractInvoicePage(props) {
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.LATE_DESC" />
                 </label>
                 <div className="col-sm-8">
-                <input
+                  <input
                     type="text"
                     className="form-control"
                     id="priceStep1"
@@ -1130,7 +1134,7 @@ function ContractInvoicePage(props) {
                         item.state === "REJECTED"
                           ? "text-danger"
                           : "text-success"
-                        } pointer font-weight-bold`}
+                      } pointer font-weight-bold`}
                       onClick={() => handleHistory(index)}
                     >
                       {item.state === "REJECTED" ? (

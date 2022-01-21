@@ -288,6 +288,7 @@ const ListTermContract = (props) => {
           {data &&
             data?.data_termin &&
             data?.data_termin.map((value, index) => {
+              console.log(`value`, value);
               return (
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
@@ -320,7 +321,9 @@ const ListTermContract = (props) => {
                   <TableCell>{rupiah(value?.prices || 0)}</TableCell>
                   <TableCell>{value?.progress}</TableCell>
                   {/* <TableCell>Doc Progress</TableCell> */}
-                  <TableCell>{value?.name}</TableCell>
+                  <TableCell>{`${value?.name} ${
+                    value?.plant ? `(${value?.plant})` : ``
+                  }`}</TableCell>
                 </TableRow>
               );
             })}

@@ -150,15 +150,17 @@ const Documents = ({
           amIWarehouse ? "-warehouse" : ""
         }`,
         onSuccess: () => {
-          fetchData();
-          func.onRefresh();
-          handleLoading(type, false);
-          handleVisible(type);
+          if (!amIWarehouse) {
+            fetchData();
+            func.onRefresh();
+            handleLoading(type, false);
+            handleVisible(type);
+          }
           if (typeof callback === "function") callback();
         },
       });
     },
-    [open]
+    [open, fetch_api_sg, handleVisible, handleLoading, func, fetchData]
   );
   const rejectDoc = React.useCallback(
     ({ type, amIWarehouse, callback, params }) => {

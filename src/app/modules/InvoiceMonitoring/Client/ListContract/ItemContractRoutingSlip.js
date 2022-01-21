@@ -24,6 +24,11 @@ import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { getRoutingSlip } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { rupiah } from "../../../../libs/currency";
+import {
+  dateNullable,
+  dateToHourNullable,
+  getDuration,
+} from "../../../../service/helper/dateHelper";
 
 // const Transition = React.forwardRef(function Transition(props, ref) {
 //     return <Slide direction="up" ref={ref} {...props} />;
@@ -101,26 +106,26 @@ function ItemContractRoutingSlip(props) {
             <div className="row mt-5">
               <div className="col-sm-12">
                 <div className="row">
-                  <div className="col-sm-2">
+                  <div className="col-sm-3">
                     <span>Nama Supplier</span>
                   </div>
-                  <div className="col-sm-10">
+                  <div className="col-sm-9">
                     <span>{slipData?.vendor?.party?.full_name}</span>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-sm-2">
+                  <div className="col-sm-3">
                     <span>No. Invoice</span>
                   </div>
-                  <div className="col-sm-10">
+                  <div className="col-sm-9">
                     <span>{slipData?.invoice_no}</span>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-sm-2">
+                  <div className="col-sm-3">
                     <span>Tanggal Invoice</span>
                   </div>
-                  <div className="col-sm-10">
+                  <div className="col-sm-9">
                     <span>
                       {slipData?.invoice_date
                         ? window
@@ -128,6 +133,14 @@ function ItemContractRoutingSlip(props) {
                             .format("DD MMM YYYY")
                         : ""}
                     </span>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-3">
+                    <span>Jangka Waktu Pembayaran</span>
+                  </div>
+                  <div className="col-sm-9">
+                    <span>{getDuration(slipData?.selisih_paid_to_tax)}</span>
                   </div>
                 </div>
               </div>
@@ -151,733 +164,26 @@ function ItemContractRoutingSlip(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    <tr>
-                      <td>1</td>
-                      <td>-</td>
-                      <td>{slipData?.sa_gr_creator?.party?.full_name}</td>
-                      <td className="text-center">-</td>
-                      <td className="text-center">-</td>
+                  {slipData?.final_output?.map((el, idx) => (
+                    <tr key={idx}>
+                      <td>{idx + 1}</td>
+                      <td>{el?.document_status}</td>
+                      <td>{el?.pejabat_keuangan}</td>
                       <td className="text-center">
-                        {slipData?.sa_gr_date_out
-                          ? window
-                              .moment(new Date(slipData?.sa_gr_date_out))
-                              .format("DD MMM YYYY")
-                          : "-"}
+                        {dateNullable(el?.tanggal_masuk)}
                       </td>
                       <td className="text-center">
-                        {slipData?.sa_gr_date_out
-                          ? window
-                              .moment(new Date(slipData?.sa_gr_date_out))
-                              .format("HH:mm")
-                          : "-"}
+                        {dateToHourNullable(el?.tanggal_masuk)}
                       </td>
-                      {/*<td className="text-center">-</td>*/}
-                      <td>SA / GR Terbit</td>
+                      <td className="text-center">
+                        {dateNullable(el?.tanggal_keluar)}
+                      </td>
+                      <td className="text-center">
+                        {dateToHourNullable(el?.tanggal_keluar)}
+                      </td>
+                      <td>{el?.keterangan}</td>
                     </tr>
-                  }
-                  {(slipData?.support_deliverables_document_softcopy_date_out ||
-                    slipData?.support_deliverables_document_softcopy_date_in) && (
-                    <tr>
-                      <td>2</td>
-                      <td>Verification Process</td>
-                      <td>
-                        {
-                          slipData?.support_deliverbables_creator?.party
-                            ?.full_name
-                        }
-                      </td>
-                      <td className="text-center">
-                        {slipData?.support_deliverables_document_softcopy_date_in
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_in
-                                )
-                              )
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.support_deliverables_document_softcopy_date_in
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_in
-                                )
-                              )
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.support_deliverables_document_softcopy_date_out
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_out
-                                )
-                              )
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.support_deliverables_document_softcopy_date_out
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_out
-                                )
-                              )
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {/*{(() => {*/}
-                      {/*  var duration = window.moment.duration(*/}
-                      {/*    window*/}
-                      {/*      .moment(*/}
-                      {/*        new Date(*/}
-                      {/*          slipData?.support_deliverables_document_softcopy_date_out*/}
-                      {/*        )*/}
-                      {/*      )*/}
-                      {/*      .diff(*/}
-                      {/*        window.moment(*/}
-                      {/*          new Date(*/}
-                      {/*            slipData?.support_deliverables_document_softcopy_date_in*/}
-                      {/*          )*/}
-                      {/*        )*/}
-                      {/*      )*/}
-                      {/*  );*/}
-                      {/*  const days = Math.floor(duration.asDays());*/}
-                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
-                      {/*  const hours = duration.hours();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(hours, "hours")*/}
-                      {/*  );*/}
-                      {/*  const minutes = duration.minutes();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(minutes, "minutes")*/}
-                      {/*  );*/}
-                      {/*  return (*/}
-                      {/*    <td className="text-center">*/}
-                      {/*      {slipData?.support_deliverables_document_softcopy_date_in &&*/}
-                      {/*      slipData?.support_deliverables_document_softcopy_date_out ? (*/}
-                      {/*        <div>*/}
-                      {/*          {days > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          {hours > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          <span>*/}
-                      {/*            {minutes}{" "}*/}
-                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
-                      {/*          </span>*/}
-                      {/*        </div>*/}
-                      {/*      ) : (*/}
-                      {/*        "-"*/}
-                      {/*      )}*/}
-                      {/*    </td>*/}
-                      {/*  );*/}
-                      {/*})()}*/}
-                      <td>Softcopy Dokumen Pendukung</td>
-                    </tr>
-                  )}
-                  {(slipData?.support_deliverables_document_softcopy_date_out ||
-                    slipData?.support_deliverables_document_softcopy_date_in) && (
-                    <tr>
-                      <td>3</td>
-                      <td>Verification Process</td>
-                      <td>
-                        {
-                          slipData?.support_deliverbables_creator?.party
-                            ?.full_name
-                        }
-                      </td>
-                      <td className="text-center">
-                        {slipData?.support_deliverables_document_softcopy_date_in
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_in
-                                )
-                              )
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.support_deliverables_document_softcopy_date_in
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_in
-                                )
-                              )
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.support_deliverables_document_softcopy_date_out
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_out
-                                )
-                              )
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.support_deliverables_document_softcopy_date_out
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.support_deliverables_document_softcopy_date_out
-                                )
-                              )
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {/*{(() => {*/}
-                      {/*  var duration = window.moment.duration(*/}
-                      {/*    window*/}
-                      {/*      .moment(*/}
-                      {/*        new Date(*/}
-                      {/*          slipData?.support_deliverables_document_softcopy_date_out*/}
-                      {/*        )*/}
-                      {/*      )*/}
-                      {/*      .diff(*/}
-                      {/*        window.moment(*/}
-                      {/*          new Date(*/}
-                      {/*            slipData?.support_deliverables_document_softcopy_date_in*/}
-                      {/*          )*/}
-                      {/*        )*/}
-                      {/*      )*/}
-                      {/*  );*/}
-                      {/*  const days = Math.floor(duration.asDays());*/}
-                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
-                      {/*  const hours = duration.hours();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(hours, "hours")*/}
-                      {/*  );*/}
-                      {/*  const minutes = duration.minutes();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(minutes, "minutes")*/}
-                      {/*  );*/}
-                      {/*  return (*/}
-                      {/*    <td className="text-center">*/}
-                      {/*      {slipData?.support_deliverables_document_softcopy_date_in &&*/}
-                      {/*      slipData?.support_deliverables_document_softcopy_date_out ? (*/}
-                      {/*        <div>*/}
-                      {/*          {days > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          {hours > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          <span>*/}
-                      {/*            {minutes}{" "}*/}
-                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
-                      {/*          </span>*/}
-                      {/*        </div>*/}
-                      {/*      ) : (*/}
-                      {/*        "-"*/}
-                      {/*      )}*/}
-                      {/*    </td>*/}
-                      {/*  );*/}
-                      {/*})()}*/}
-                      <td>Softcopy Dokumen Deliverables</td>
-                    </tr>
-                  )}
-                  {slipData?.billing_document_softcopy_date_in && (
-                    <tr>
-                      <td>4</td>
-                      <td>Tax Process</td>
-                      <td>{slipData?.billing_creator?.party?.full_name}</td>
-                      <td className="text-center">
-                        {window
-                          .moment(
-                            new Date(
-                              slipData?.billing_document_softcopy_date_in
-                            )
-                          )
-                          .format("DD MMM YYYY")}
-                      </td>
-                      <td className="text-center">
-                        {window
-                          .moment(
-                            new Date(
-                              slipData?.billing_document_softcopy_date_in
-                            )
-                          )
-                          .format("HH:mm")}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.billing_document_softcopy_date_out
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.billing_document_softcopy_date_out
-                                )
-                              )
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.billing_document_softcopy_date_out
-                          ? window
-                              .moment(
-                                new Date(
-                                  slipData?.billing_document_softcopy_date_out
-                                )
-                              )
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {/*{(() => {*/}
-                      {/*  var duration = window.moment.duration(*/}
-                      {/*    window*/}
-                      {/*      .moment(*/}
-                      {/*        new Date(*/}
-                      {/*          slipData?.billing_document_softcopy_date_out*/}
-                      {/*        )*/}
-                      {/*      )*/}
-                      {/*      .diff(*/}
-                      {/*        window.moment(*/}
-                      {/*          new Date(*/}
-                      {/*            slipData?.billing_document_softcopy_date_in*/}
-                      {/*          )*/}
-                      {/*        )*/}
-                      {/*      )*/}
-                      {/*  );*/}
-                      {/*  const days = Math.floor(duration.asDays());*/}
-                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
-                      {/*  const hours = duration.hours();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(hours, "hours")*/}
-                      {/*  );*/}
-                      {/*  const minutes = duration.minutes();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(minutes, "minutes")*/}
-                      {/*  );*/}
-                      {/*  return (*/}
-                      {/*    <td className="text-center">*/}
-                      {/*      {slipData?.billing_document_softcopy_date_in &&*/}
-                      {/*      slipData?.billing_document_softcopy_date_out ? (*/}
-                      {/*        <div>*/}
-                      {/*          {days > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          {hours > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          <span>*/}
-                      {/*            {minutes}{" "}*/}
-                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
-                      {/*          </span>*/}
-                      {/*        </div>*/}
-                      {/*      ) : (*/}
-                      {/*        "-"*/}
-                      {/*      )}*/}
-                      {/*    </td>*/}
-                      {/*  );*/}
-                      {/*})()}*/}
-                      <td>Tax Verification</td>
-                    </tr>
-                  )}
-                  {slipData?.hardcopy_date_in && (
-                    <tr>
-                      <td>5</td>
-                      <td>Verification Process</td>
-                      <td>{slipData?.hardcopy_creator?.party?.full_name}</td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.hardcopy_date_in))
-                          .format("DD MMM YYYY")}
-                      </td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.hardcopy_date_in))
-                          .format("HH:mm")}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.hardcopy_date_out
-                          ? window
-                              .moment(new Date(slipData?.hardcopy_date_out))
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.hardcopy_date_out
-                          ? window
-                              .moment(new Date(slipData?.hardcopy_date_out))
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {/*{(() => {*/}
-                      {/*  var duration = window.moment.duration(*/}
-                      {/*    window*/}
-                      {/*      .moment(new Date(slipData?.hardcopy_date_out))*/}
-                      {/*      .diff(*/}
-                      {/*        window.moment(*/}
-                      {/*          new Date(slipData?.hardcopy_date_in)*/}
-                      {/*        )*/}
-                      {/*      )*/}
-                      {/*  );*/}
-                      {/*  const days = Math.floor(duration.asDays());*/}
-                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
-                      {/*  const hours = duration.hours();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(hours, "hours")*/}
-                      {/*  );*/}
-                      {/*  const minutes = duration.minutes();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(minutes, "minutes")*/}
-                      {/*  );*/}
-                      {/*  return (*/}
-                      {/*    <td className="text-center">*/}
-                      {/*      {slipData?.hardcopy_date_in &&*/}
-                      {/*      slipData?.hardcopy_date_out ? (*/}
-                      {/*        <div>*/}
-                      {/*          {days > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          {hours > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          <span>*/}
-                      {/*            {minutes}{" "}*/}
-                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
-                      {/*          </span>*/}
-                      {/*        </div>*/}
-                      {/*      ) : (*/}
-                      {/*        "-"*/}
-                      {/*      )}*/}
-                      {/*    </td>*/}
-                      {/*  );*/}
-                      {/*})()}*/}
-                      <td>Hardcopy Dokumen</td>
-                    </tr>
-                  )}
-                  {slipData?.park_ap_date_in && (
-                    <tr>
-                      <td>6</td>
-                      <td>Accounting Process</td>
-                      <td>{slipData?.park_ap_creator?.party?.full_name}</td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.park_ap_date_in))
-                          .format("DD MMM YYYY")}
-                      </td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.park_ap_date_in))
-                          .format("HH:mm")}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.park_ap_date_out
-                          ? window
-                              .moment(new Date(slipData?.park_ap_date_out))
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.park_ap_date_out
-                          ? window
-                              .moment(new Date(slipData?.park_ap_date_out))
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {/*{(() => {*/}
-                      {/*  var duration = window.moment.duration(*/}
-                      {/*    window*/}
-                      {/*      .moment(new Date(slipData?.park_ap_date_out))*/}
-                      {/*      .diff(*/}
-                      {/*        window.moment(new Date(slipData?.park_ap_date_in))*/}
-                      {/*      )*/}
-                      {/*  );*/}
-                      {/*  const days = Math.floor(duration.asDays());*/}
-                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
-                      {/*  const hours = duration.hours();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(hours, "hours")*/}
-                      {/*  );*/}
-                      {/*  const minutes = duration.minutes();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(minutes, "minutes")*/}
-                      {/*  );*/}
-                      {/*  return (*/}
-                      {/*    <td className="text-center">*/}
-                      {/*      {slipData?.park_ap_date_in &&*/}
-                      {/*      slipData?.park_ap_date_out ? (*/}
-                      {/*        <div>*/}
-                      {/*          {days > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          {hours > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          <span>*/}
-                      {/*            {minutes}{" "}*/}
-                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
-                      {/*          </span>*/}
-                      {/*        </div>*/}
-                      {/*      ) : (*/}
-                      {/*        "-"*/}
-                      {/*      )}*/}
-                      {/*    </td>*/}
-                      {/*  );*/}
-                      {/*})()}*/}
-                      <td>Approve Park AP Dokumen</td>
-                    </tr>
-                  )}
-                  {slipData?.park_byr_date_in && (
-                    <tr>
-                      <td>7</td>
-                      <td>Treasury Process</td>
-                      <td>{slipData?.park_byr_creator?.party?.full_name}</td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.park_byr_date_in))
-                          .format("DD MMM YYYY")}
-                      </td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.park_byr_date_in))
-                          .format("HH:mm")}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.park_byr_date_out
-                          ? window
-                              .moment(new Date(slipData?.park_byr_date_out))
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.park_byr_date_out
-                          ? window
-                              .moment(new Date(slipData?.park_byr_date_out))
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {/*{(() => {*/}
-                      {/*  var duration = window.moment.duration(*/}
-                      {/*    window*/}
-                      {/*      .moment(new Date(slipData?.park_byr_date_out))*/}
-                      {/*      .diff(*/}
-                      {/*        window.moment(*/}
-                      {/*          new Date(slipData?.park_byr_date_in)*/}
-                      {/*        )*/}
-                      {/*      )*/}
-                      {/*  );*/}
-                      {/*  const days = Math.floor(duration.asDays());*/}
-                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
-                      {/*  const hours = duration.hours();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(hours, "hours")*/}
-                      {/*  );*/}
-                      {/*  const minutes = duration.minutes();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(minutes, "minutes")*/}
-                      {/*  );*/}
-                      {/*  return (*/}
-                      {/*    <td className="text-center">*/}
-                      {/*      {slipData?.park_byr_date_in &&*/}
-                      {/*      slipData?.park_byr_date_out ? (*/}
-                      {/*        <div>*/}
-                      {/*          {days > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          {hours > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          <span>*/}
-                      {/*            {minutes}{" "}*/}
-                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
-                      {/*          </span>*/}
-                      {/*        </div>*/}
-                      {/*      ) : (*/}
-                      {/*        "-"*/}
-                      {/*      )}*/}
-                      {/*    </td>*/}
-                      {/*  );*/}
-                      {/*})()}*/}
-                      <td>Approve Park BYR Dokumen</td>
-                    </tr>
-                  )}
-                  {slipData?.spt_date_in && (
-                    <tr>
-                      <td>8</td>
-                      <td>Treasury Process</td>
-                      <td>{slipData?.spt_creator?.party?.full_name}</td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.spt_date_in))
-                          .format("DD MMM YYYY")}
-                      </td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.spt_date_in))
-                          .format("HH:mm")}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.spt_date_out
-                          ? window
-                              .moment(new Date(slipData?.spt_date_out))
-                              .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.spt_date_out
-                          ? window
-                              .moment(new Date(slipData?.spt_date_out))
-                              .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {/*{(() => {*/}
-                      {/*  var duration = window.moment.duration(*/}
-                      {/*    window*/}
-                      {/*      .moment(new Date(slipData?.spt_date_out))*/}
-                      {/*      .diff(*/}
-                      {/*        window.moment(new Date(slipData?.spt_date_in))*/}
-                      {/*      )*/}
-                      {/*  );*/}
-                      {/*  const days = Math.floor(duration.asDays());*/}
-                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
-                      {/*  const hours = duration.hours();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(hours, "hours")*/}
-                      {/*  );*/}
-                      {/*  const minutes = duration.minutes();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(minutes, "minutes")*/}
-                      {/*  );*/}
-                      {/*  return (*/}
-                      {/*    <td className="text-center">*/}
-                      {/*      {slipData?.spt_date_in && slipData?.spt_date_out ? (*/}
-                      {/*        <div>*/}
-                      {/*          {days !== 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          {hours > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          <span>*/}
-                      {/*            {minutes}{" "}*/}
-                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
-                      {/*          </span>*/}
-                      {/*        </div>*/}
-                      {/*      ) : (*/}
-                      {/*        "-"*/}
-                      {/*      )}*/}
-                      {/*    </td>*/}
-                      {/*  );*/}
-                      {/*})()}*/}
-                      <td>SPT Dokumen</td>
-                    </tr>
-                  )}
-                  {slipData?.spt_date_in && (
-                    <tr>
-                      <td>9</td>
-                      <td>Finished</td>
-                      <td>{slipData?.paid?.spt_creator?.party?.full_name}</td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.spt_date_in))
-                          .format("DD MMM YYYY")}
-                      </td>
-                      <td className="text-center">
-                        {window
-                          .moment(new Date(slipData?.spt_date_in))
-                          .format("HH:mm")}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.paid?.created_at
-                          ? window
-                            .moment(new Date(slipData?.paid?.created_at))
-                            .format("DD MMM YYYY")
-                          : "-"}
-                      </td>
-                      <td className="text-center">
-                        {slipData?.paid?.created_at
-                          ? window
-                            .moment(new Date(slipData?.paid?.created_at))
-                            .format("HH:mm")
-                          : "-"}
-                      </td>
-                      {/*{(() => {*/}
-                      {/*  var duration = window.moment.duration(*/}
-                      {/*    window*/}
-                      {/*      .moment(new Date(slipData?.paid?.created_at))*/}
-                      {/*      .diff(*/}
-                      {/*        window.moment(new Date(slipData?.spt_date_in))*/}
-                      {/*      )*/}
-                      {/*  );*/}
-                      {/*  const days = Math.floor(duration.asDays());*/}
-                      {/*  duration.subtract(window.moment.duration(days, "days"));*/}
-                      {/*  const hours = duration.hours();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(hours, "hours")*/}
-                      {/*  );*/}
-                      {/*  const minutes = duration.minutes();*/}
-                      {/*  duration.subtract(*/}
-                      {/*    window.moment.duration(minutes, "minutes")*/}
-                      {/*  );*/}
-                      {/*  return (*/}
-                      {/*    <td className="text-center">*/}
-                      {/*      {slipData?.spt_date_in && slipData?.paid?.created_at ? (*/}
-                      {/*        <div>*/}
-                      {/*          {days !== 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {days} <FormattedMessage id="SPAN.DAYS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          {hours > 0 && (*/}
-                      {/*            <span>*/}
-                      {/*              {hours} <FormattedMessage id="SPAN.HOURS" />*/}
-                      {/*            </span>*/}
-                      {/*          )}*/}
-                      {/*          <span>*/}
-                      {/*            {minutes}{" "}*/}
-                      {/*            <FormattedMessage id="SPAN.MINUTES" />*/}
-                      {/*          </span>*/}
-                      {/*        </div>*/}
-                      {/*      ) : (*/}
-                      {/*        "-"*/}
-                      {/*      )}*/}
-                      {/*    </td>*/}
-                      {/*  );*/}
-                      {/*})()}*/}
-                      <td>Paid Dokumen</td>
-                    </tr>
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
