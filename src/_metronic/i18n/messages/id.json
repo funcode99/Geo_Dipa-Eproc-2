@@ -434,6 +434,7 @@
   "TITLE.DOCUMENT_CONTRACT": "Dokumen Kontrak",
   "TITLE.DOCUMENT_BILLING": "Dokumen Tagihan",
   "TITLE.DESCRIPTION": "Deskripsi",
+  "TITLE.DESTINATION_UNIT": "Unit Tujuan",
   "TITLE.UNIT_PRICE": "Harga per Unit",
   "TITLE.DESC_IS_REQUIRE": "Deskripsi wajib diisi.",
   "TITLE.MODAL_DELETE.TITLE": "Yakin ingin menghapus data ini?",
@@ -493,7 +494,7 @@
   "TITLE.SUMMARY.PIC.MODAL_DELETE.TITLE": "Batalkan PIC",
   "TITLE.SUMMARY.PIC.MODAL_DELETE.BODY": "Apakah anda akan membatalkan PIC dengan Email",
   "TITLE.SUMMARY.PIC.MODAL_DELETE.SUBMIT": "Batalkan",
-  "TITLE.SUMMARY.PIC.MODAL_EDIT.TITLE": "Daftar Email PIC / ",
+  "TITLE.SUMMARY.PIC.MODAL_EDIT.TITLE": "Daftar Email PIC Vendor / ",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.UPDATE": "Ubah",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.NEW": "Tambah",
   "TITLE.SUMMARY.PIC.MODAL_EDIT.BODY": "Register:",
@@ -547,7 +548,7 @@
   "TITLE.PURCHASE_GROUPS": "Purchase Groups",
   "TITLE.FROM_DATE": "Dari Tanggal",
   "TITLE.THRU_DATE": "Sampai Tanggal",
-  "TITLE.CONTRACT_TYPE": "Tipe Kontrak",
+  "TITLE.CONTRACT_TYPE": "Tipe Kontrak*",
   "TITLE.STATUS_REMARKS": "Komentar Status",
   "TITLE.CHANGE_ITEM_STATUS": "Ubah status item",
   "TITLE.QUANTITY_TOTAL": "Total Kuantitas",
@@ -581,7 +582,7 @@
   "TITLE.PAYMENT_RECEIPT": "Tanda Terima Dokumen Pembayaran",
   "TITLE.ATTACHMENT_DOC": "Lampiran Dokumen",
   "TITLE.SPESIFICATION": "Spesifikasi",
-  "TITLE.PO_DOCUMENT": "Dokumen PO",
+  "TITLE.PO_DOCUMENT": "Dokumen PO*",
   "TITLE.CHOOSE_PO_DOCUMENT": "Pilih dokumen PO",
   "TITLE.SELECT_CONTRACT_TYPE": "Pilih tipe kontrak",
   "TITLE.I_APPROVED": "Dengan ini saya menyetujui termin {termTitle}",
@@ -612,5 +613,7 @@
   "TITLE.ADDTIONAL_PAYMENT": "Pembayaran Tambahan",
   "TITLE.DATE_PAID": "Tanggal Bayar:",
   "TITLE.VERIFICATION_AND_TAX_DATE": "Tanggal Verifikasi dan Pajak",
-  "TITLE.VERIFICATION_HARDCOPY_DATE": "Tanggal Verifikasi Hardcopy"
+  "TITLE.VERIFICATION_HARDCOPY_DATE": "Tanggal Verifikasi Hardcopy",
+  "LABEL.OPEN_FILE": "Lihat file",
+  "LABEL.FILE_UNAVAILABLE": "File tidak tersedia"
 }

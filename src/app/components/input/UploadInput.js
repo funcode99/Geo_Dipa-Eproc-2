@@ -46,6 +46,13 @@ const UploadInput = ({
               <i
                 className={`fas fa-${value.path_preview ? "eye" : "eye-slash"}`}
               ></i>
+              <FormattedMessage
+                id={
+                  value.path_preview
+                    ? "LABEL.OPEN_FILE"
+                    : "LABEL.FILE_UNAVAILABLE"
+                }
+              />
             </button>
           </div>
         )}

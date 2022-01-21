@@ -90,7 +90,7 @@ function UserNotificationsDropdown(props) {
                   >
                     <SVG
                       src={toAbsoluteUrl(
-                        "/media/svg/icons/All/bell-regular.svg"
+                        "/media/svg/icons/All/invoice.svg"
                       )}
                     />
                   </Badge>

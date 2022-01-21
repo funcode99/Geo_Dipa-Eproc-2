@@ -28,7 +28,7 @@ const TableItemNew = ({
     <TablePaginationCustom
       headerRows={tableHeader}
       rows={dataRows}
-      // width={1207}
+      width={1200}
       loading={loading}
       withSearch={false}
       withPagination={withPagination}

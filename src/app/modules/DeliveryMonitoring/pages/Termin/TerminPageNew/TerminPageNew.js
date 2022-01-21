@@ -117,6 +117,16 @@ export class TerminPageNew extends PureComponent {
         });
 
         break;
+      case KEYS_TERMIN.p_t_edit_termin:
+        fetch_api_sg({
+          key,
+          url: `/delivery/task/${task_id}`,
+          onSuccess,
+          type: "post",
+          alertAppear: "both",
+          ...other,
+        });
+        break;
       default:
         break;
     }
@@ -172,6 +182,10 @@ const mapState = (state) => {
         [KEYS_TERMIN.p_t_upload_do]: getLoading(
           state,
           KEYS_TERMIN.p_t_upload_do
+        ),
+        [KEYS_TERMIN.p_t_edit_termin]: getLoading(
+          state,
+          KEYS_TERMIN.p_t_edit_termin
         ),
       },
       authStatus: state.auth.user.data.status,

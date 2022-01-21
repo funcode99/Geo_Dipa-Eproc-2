@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent, IconButton } from "@material-ui/core";
 import React, { createContext } from "react";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
@@ -30,13 +30,16 @@ import { tblHeadDlvItem } from "./components/fieldData";
 import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 import { MODAL } from "../../../../../../service/modalSession/ModalService";
 import StatusRemarks from "../../../../../components/StatusRemarks";
+import { NavLink } from "react-router-dom";
+import { Search } from "@material-ui/icons";
+import { DemoOnly } from "../../../../../../_metronic/_partials/dashboards/DemoOnly";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required(<FormattedMessage id="TITLE.DESC_IS_REQUIRE" />),
   date: Yup.date()
     .required(<FormattedMessage id="TITLE.DATE_IS_REQUIRE" />)
     .nullable(),
-  remarks: Yup.string(),
+  remarks: Yup.string().required("Remarks harus diisi"),
 });
 
 const initialValues = {
@@ -45,6 +48,7 @@ const initialValues = {
   remarks: "",
   status: 4,
   status_remarks: "",
+  destination: "",
 };
 
 const addClassToOptions = (data) => {
@@ -300,7 +304,7 @@ const DeliveryOrder = ({
         onSuccess: (res) => {
           getTask();
           func.onRefresh();
-          submitItemRef.current.close();
+          // submitItemRef.current.close();
           handleVisible("confirm", {}, []);
           if (typeof callback === "function") callback();
         },
@@ -436,7 +440,7 @@ const DeliveryOrder = ({
 
         setTimeout(() => {
           handleVisible("confirm", data, dataArr);
-          submitItemRef.current.open();
+          // submitItemRef.current.open();
         }, 200);
         break;
 
@@ -451,9 +455,20 @@ const DeliveryOrder = ({
     data
       ? data.forEach((item, index) => {
           console.log(`item`, item);
+          const isApproved = item?.approve_status?.code === "approved";
           let objData = {
             no: (index += 1),
-            desc: item?.name || "",
+            // desc: item?.name || "",
+            desc: isApproved ? (
+              <NavLink
+                to={`#`}
+                onClick={() => handleAction("change_status", item)}
+              >
+                {item?.name || ""}
+              </NavLink>
+            ) : (
+              item?.name || ""
+            ),
             date: item?.date !== null ? formatDate(new Date(item?.date)) : null,
             remarks: item.remarks || "",
             // approve_status: item?.approve_status?.name,
@@ -466,7 +481,7 @@ const DeliveryOrder = ({
               />
             ),
             history: item?.task_delivery_histories,
-            action: (
+            action: isVendor ? (
               <BtnAction
                 isVendor={isVendor}
                 status={item?.approve_status?.code}
@@ -480,15 +495,15 @@ const DeliveryOrder = ({
                     icon: "fas fa-search text-info",
                     type: "detail",
                   },
-                  {
-                    label: isVendor
-                      ? "TITLE.DETAIL_ITEMS"
-                      : "TITLE.CHANGE_ITEM_STATUS",
-                    icon: isVendor
-                      ? "fas fa-eye text-grey"
-                      : "fas fa-edit text-primary",
-                    type: "change_status",
-                  },
+                  //   {
+                  //     label: isVendor
+                  //       ? "TITLE.DETAIL_ITEMS"
+                  //       : "TITLE.CHANGE_ITEM_STATUS",
+                  //     icon: isVendor
+                  //       ? "fas fa-eye text-grey"
+                  //       : "fas fa-edit text-primary",
+                  //     type: "change_status",
+                  //   },
                   {
                     label: "TITLE.EDIT_DATA",
                     icon: "fas fa-edit text-primary",
@@ -501,6 +516,15 @@ const DeliveryOrder = ({
                   },
                 ]}
               />
+            ) : (
+              <IconButton
+                aria-label="More"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={() => handleAction("detail", item)}
+              >
+                <Search />
+              </IconButton>
             ),
           };
           dataArr.push(objData);
@@ -558,6 +582,8 @@ const DeliveryOrder = ({
     // setDataOrderItem({});
     // setTimeout(() => setDataOrderItem(tempData), 350);
   };
+
+  console.log(`formik`, formik);
 
   return (
     <React.Fragment>
@@ -654,6 +680,7 @@ const DeliveryOrder = ({
           // handleSubmit={() => handleAction("confirm", null)}
         />
       )}
+      {/* <DemoOnly /> */}
     </React.Fragment>
   );
 };

@@ -21,6 +21,7 @@ class DashboardDM extends Component {
       onprogress_list: [],
       success_list: [],
       selected_contract: "onprogress_list",
+      pie_chart_datas: [],
     };
   }
 
@@ -33,6 +34,7 @@ class DashboardDM extends Component {
     this.fetchSummaryStats();
     this.fetchContOnProgress();
     this.fetchPlantData();
+    this.fetchPieChartData();
   }
 
   fetchOverdueContract = () => {
@@ -129,6 +131,19 @@ class DashboardDM extends Component {
       },
     });
   };
+  fetchPieChartData = () => {
+    this.props.fetchApiSg({
+      key: keys.get_pie_charts,
+      type: "get",
+      url: "/delivery/dashboard/pie-chart-price",
+      onSuccess: (res) => {
+        console.log("res" + keys.get_pie_charts, res);
+        this.setState({
+          pie_chart_datas: res?.data,
+        });
+      },
+    });
+  };
 
   openModal = (type) => {
     this.modalRef.current.open();
@@ -142,6 +157,7 @@ class DashboardDM extends Component {
       plant_datas,
       contract_prices,
       selected_contract,
+      pie_chart_datas,
     } = this.state;
     const { authStatus, plant_data, loadings } = this.props;
     return (
@@ -157,6 +173,7 @@ class DashboardDM extends Component {
             <SummaryStatsDM
               className="card-stretch gutter-b"
               data={summary_stat}
+              pie_chart_datas={pie_chart_datas}
               authStatus={authStatus}
               openModal={this.openModal}
             />
@@ -209,6 +226,7 @@ const keys = {
   sum_stats: "get-summary-stats",
   cont_on_progress: "get-delivery-progress",
   get_plants: "get-all-plants",
+  get_pie_charts: "get-pie-chart-data",
 };
 
 const mapState = (state) => {
@@ -224,6 +242,7 @@ const mapState = (state) => {
       sum_stats: getLoading(state, keys.sum_stats),
       cont_on_progress: getLoading(state, keys.cont_on_progress),
       get_plants: getLoading(state, keys.get_plants),
+      get_pie_charts: getLoading(state, keys.get_pie_charts),
     },
   };
 };

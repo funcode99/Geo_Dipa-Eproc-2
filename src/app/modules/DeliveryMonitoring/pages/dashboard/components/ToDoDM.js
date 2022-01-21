@@ -1,18 +1,19 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
 import Skeleton from "@material-ui/lab/Skeleton";
-import { ceil } from "lodash";
+import { ceil, debounce } from "lodash";
 import React from "react";
 import { injectIntl } from "react-intl";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { isEmpty } from "lodash";
-import { DEV_NODE2 } from "../../../../../../redux/BaseHost";
+import { DEV_NODE2, SOCKET_DM } from "../../../../../../redux/BaseHost";
 import {
   fetch_api_sg,
   getLoading,
 } from "../../../../../../redux/globalReducer";
 import PaginationNotif from "../../../../../../_metronic/layout/components/extras/dropdowns/PaginationNotif";
+import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
 
 const perfectScrollbarOptions = {
   wheelSpeed: 2,
@@ -39,8 +40,21 @@ const termin_pages = {
   checkIsApprovedUploadedSignedBAPP: 3,
 };
 
+const sort = (data) => {
+  return data.sort(function(a, b) {
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+};
+
 const ToDoDM = (props) => {
-  const { className, fetch_api_sg, intl, status, loading } = props;
+  const {
+    className,
+    fetchApiSg,
+    intl,
+    status,
+    loading,
+    saveContractById,
+  } = props;
   const [dataTodo, setDataTodo] = React.useState({
     list: [],
     meta: {
@@ -51,12 +65,13 @@ const ToDoDM = (props) => {
       total_page: 1,
     },
   });
+  const history = useHistory();
 
   const callApiTodo = ({ refresh, page }) => {
     const current_page = !!refresh ? 1 : page;
     const limit = 10;
     const offset = (current_page - 1) * limit;
-    fetch_api_sg({
+    fetchApiSg({
       key,
       type: "getParams",
       url: DEV_NODE2 + "/todo",
@@ -89,12 +104,41 @@ const ToDoDM = (props) => {
     //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
     //   });
   };
-  React.useEffect(() => callApiTodo({ refresh: true }), []);
+
+  // re-fetch if there is changes. will fetch new notif after 10 seconds
+  const reFetchTodo = debounce(() => callApiTodo({ refresh: true }), 10000);
+
+  React.useEffect(() => {
+    callApiTodo({ refresh: true });
+    SOCKET_DM.on("deliveryMonitoring", function(node_payload) {
+      console.log("ini_web_socket dari todo", node_payload);
+      // callApiTodo({ refresh: true });
+      reFetchTodo();
+    });
+  }, []);
 
   const getColor = () => {
     var randomColor = Math.floor(Math.random() * 16777215).toString(16);
     return randomColor;
   };
+
+  const getContractById = React.useCallback(
+    (contractId, link) => {
+      fetchApiSg({
+        keys: "key_contract",
+        type: "get",
+        url: `/delivery/contract/${contractId}`,
+        onSuccess: (res) => {
+          console.log(`res`, res?.data);
+          saveContractById(res?.data);
+          history.push(link);
+        },
+      });
+    },
+    [saveContractById, fetchApiSg, history]
+  );
+
+  console.log(`dataTodo`, dataTodo);
   return (
     <>
       <div className={`card card-custom ${className}`}>
@@ -143,6 +187,52 @@ const ToDoDM = (props) => {
                 const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
                 const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
                 return (
+                  <div className="d-flex align-items-center flex-grow-1">
+                    <label className="checkbox checkbox-lg checkbox-lg checkbox-single flex-shrink-0 mr-4">
+                      <input
+                        type="checkbox"
+                        value={item.is_finished ? "1" : "0"}
+                        disabled
+                      />
+                      <span></span>
+                    </label>
+
+                    <div className="d-flex flex-wrap align-items-center justify-content-between w-100">
+                      <div className="d-flex flex-column align-items-cente py-2 w-75">
+                        <Link
+                          //   to={!!isContractPage ? linkContract : linkTermin}
+                          to={"#"}
+                          onClick={() => {
+                            getContractById(
+                              item?.data?.contract_id,
+                              !!isContractPage ? linkContract : linkTermin
+                            );
+
+                            //   tabInvoice.tab = item.menu_tab || 0;
+                            //   tabInvoice.tabInvoice = item.sub_menu_tab || 0;
+                            //   props.set_data_tab_invaoice(tabInvoice);
+                          }}
+                          className="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1"
+                        >
+                          {item.title}
+                        </Link>
+
+                        <span className="text-muted font-weight-bold">
+                          {`${item?.data?.contract_name} ${
+                            item?.data?.task_name
+                              ? "- " + item?.data?.task_name
+                              : ""
+                          }`}
+                        </span>
+                      </div>
+
+                      <span className="label label-lg label-light-primary label-inline font-weight-bold py-4">
+                        {`${item?.data?.contract_no}`}
+                      </span>
+                    </div>
+                  </div>
+                );
+                return (
                   <div
                     className="d-flex align-items-center mb-10"
                     key={index.toString()}
@@ -168,6 +258,8 @@ const ToDoDM = (props) => {
                         to={!!isContractPage ? linkContract : linkTermin}
                         className="text-dark-75 text-hover-primary font-weight-bold font-size-sm mb-1"
                         onClick={() => {
+                          getContractById(item?.data?.contract_id);
+
                           //   tabInvoice.tab = item.menu_tab || 0;
                           //   tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                           //   props.set_data_tab_invaoice(tabInvoice);
@@ -197,8 +289,24 @@ const mapState = (state) => ({
   user_id: state.auth.user.data.user_id,
 });
 
-const mapDispatch = {
-  fetch_api_sg,
-};
+// const mapDispatch = {
+//   fetch_api_sg,
+//   saveContractById: (payload) => {
+//     dispatch({
+//       type: actionTypes.SetContractById,
+//       payload,
+//     });
+//   },
+// };
+
+const mapDispatch = (dispatch) => ({
+  saveContractById: (payload) => {
+    dispatch({
+      type: actionTypes.SetContractById,
+      payload,
+    });
+  },
+  fetchApiSg: (payload) => dispatch(fetch_api_sg(payload)),
+});
 
 export default injectIntl(connect(mapState, mapDispatch)(ToDoDM));

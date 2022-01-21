@@ -4,8 +4,9 @@ import { useParams } from "react-router-dom";
 import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
 import DetailGR from "../Termin/ServiceAccGR/components/DetailGR";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
-import { Paper } from "@material-ui/core";
+import { CircularProgress, Paper } from "@material-ui/core";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import DetailGoodRcpt from "../Termin/ServiceAccGR/components/GoodReceipt/DetailGoodRcpt";
 
 const tblHeadGRItems = [
   { id: "line", label: "Line" },
@@ -19,16 +20,16 @@ const tblHeadGRItems = [
 ];
 
 const key = "fetch-gr";
-const DetailGRPage = ({ fetch_api_sg, loading }) => {
+const DetailGRPage = ({ fetch_api_sg, loading, authStatus }) => {
   const { task_id, gr_id } = useParams();
   const [content, setContent] = React.useState();
+  const isClient = authStatus === "client";
   const handleRefresh = () => {
     fetch_api_sg({
       key,
       url: `/delivery/gr/${gr_id}`,
       type: "get",
       onSuccess: (res) => {
-        console.log(`res`, res);
         setContent(res.data);
       },
     });
@@ -36,11 +37,28 @@ const DetailGRPage = ({ fetch_api_sg, loading }) => {
   React.useEffect(() => {
     handleRefresh();
   }, []);
-
+  console.log(`contensst`, content);
   return (
     <Card>
       <CardBody>
-        <DetailGR data={content?.gr_header} item={content} fullData={{}} />
+        {loading ? (
+          <CircularProgress size="0.875rem" className="mr-3" color="inherit" />
+        ) : (
+          <DetailGoodRcpt
+            header={content?.gr_header}
+            fullData={content?.task}
+            items={content?.gr_items}
+            dataGR={content}
+            isClient={isClient}
+            signProps={{
+              name:
+                content?.task?.contract?.contract_party
+                  ?.party_1_director_position_full_name,
+              date: content?.createdAt,
+            }}
+          />
+        )}
+        {/* <DetailGR data={content?.gr_header} item={content} fullData={{}} />
         <TablePaginationCustom
           headerRows={tblHeadGRItems}
           // width={1210}
@@ -56,7 +74,7 @@ const DetailGRPage = ({ fetch_api_sg, loading }) => {
             sloc: el?.stge_loc,
             stor_bin: "",
           }))}
-        />
+        /> */}
       </CardBody>
     </Card>
   );
@@ -64,6 +82,7 @@ const DetailGRPage = ({ fetch_api_sg, loading }) => {
 
 const mapState = (state) => ({
   loading: getLoading(state, key),
+  authStatus: state.auth.user.data.status,
 });
 
 const mapDispatch = {

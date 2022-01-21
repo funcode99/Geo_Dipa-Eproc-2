@@ -22,6 +22,7 @@ import { MODAL } from "../../../../../../../service/modalSession/ModalService";
 import StatusRemarks from "../../../../../../components/StatusRemarks";
 import { Button } from "react-bootstrap";
 import apiHelper from "../../../../../../service/helper/apiHelper";
+import GRAccord from "../../../Termin/ServiceAccGR/components/GRAccord";
 
 const tableHeaderTerminNew = [
   {
@@ -601,9 +602,17 @@ const DetailPage = ({
         loading={loadings.delete}
       />
       {showForm && <FormDetail contractId={contractId} />}
-      <Item handleClick={() => handleModal("create")} />
-      <Container>
-        <ExpansionBox title={"TITLE.TERM_TABLE"}>
+      <div className="p-8">
+        <GRAccord
+          id={"title.termtable"}
+          label={<FormattedMessage id="TITLE.ITEM_TABLE" />}
+        >
+          <Item handleClick={() => handleModal("create")} />
+        </GRAccord>
+        <GRAccord
+          id={"title.termtable"}
+          label={<FormattedMessage id="TITLE.TERM_TABLE" />}
+        >
           <TablePaginationCustom
             headerRows={tableHeaderTerminNew}
             rows={newContent}
@@ -611,8 +620,12 @@ const DetailPage = ({
             loading={loadings.fetch}
             withSearch={false}
           />
+        </GRAccord>
+      </div>
+      {/* <Container>
+        <ExpansionBox title={"TITLE.TERM_TABLE"}>
         </ExpansionBox>
-      </Container>
+      </Container> */}
     </React.Fragment>
   ) : (
     <div />

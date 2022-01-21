@@ -100,7 +100,7 @@ const ContractSumTable = ({ data, loading, status }) => {
       rows={newContent}
       width={1000}
       loading={loading}
-      withPagination={false}
+      withPagination={true}
       withSearch={false}
     />
   );

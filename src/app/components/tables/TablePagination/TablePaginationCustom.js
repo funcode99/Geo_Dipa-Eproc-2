@@ -134,6 +134,7 @@ export default function TablePaginationCustom({
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [query, setQuery] = React.useState("");
+  const showAllData = !withPagination;
 
   function handleRequestSort(event, property) {
     const isDesc = orderBy === property && order === "desc";
@@ -182,14 +183,9 @@ export default function TablePaginationCustom({
     setQuery(event.target.value);
   }
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  // console.log(
-  //   `rows`,
-  //   searchFind(stableSort(rows, getSorting(order, orderBy)), query)
-  // );
-
-  const emptyRows = 0;
+  React.useEffect(() => {
+    setRowsPerPage(rows?.length || 5);
+  }, [showAllData]);
   return (
     <div className={classes.root}>
       {withSearch && <SearchBox onChange={handleChangeQuery} />}
@@ -237,8 +233,8 @@ export default function TablePaginationCustom({
                 {searchFind(stableSort(rows, getSorting(order, orderBy)), query)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                    // const isItemSelected = isSelected(row.name);
+                    // const labelId = `enhanced-table-checkbox-${index}`;
                     if (typeof renderRows === "function") {
                       return renderRows({ item: row, index });
                     }

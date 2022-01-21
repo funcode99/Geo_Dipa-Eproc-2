@@ -7,14 +7,14 @@ import { injectIntl } from "react-intl";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { connect, shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Badge from "@material-ui/core/Badge";
 import { makeStyles } from "@material-ui/core/styles";
-import { ceil, isEmpty } from "lodash";
+import { ceil, debounce, isEmpty } from "lodash";
 import objectPath from "object-path";
 import { store_notif_dm_rd } from "../../../../../app/modules/DeliveryMonitoring/_redux/deliveryMonitoringSlice";
 import * as reducer from "../../../../../app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringSlice";
-import { DEV_NODE2 } from "../../../../../redux/BaseHost";
+import { DEV_NODE2, SOCKET_DM } from "../../../../../redux/BaseHost";
 import { fetch_api_sg } from "../../../../../redux/globalReducer";
 import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
@@ -61,6 +61,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
   const uiService = useHtmlClassService();
   const location = useLocation();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const layoutProps = useMemo(() => {
     return {
@@ -134,7 +135,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
   );
 
   const getContractById = React.useCallback(
-    (contractId) => {
+    (contractId, link) => {
       dispatch(
         fetch_api_sg({
           keys: key_contract,
@@ -143,16 +144,25 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
           onSuccess: (res) => {
             console.log(`res`, res?.data);
             saveContractById(res?.data);
+            history.push(link);
           },
         })
       );
     },
-    [saveContractById, fetch_api_sg]
+    [saveContractById, fetch_api_sg, history]
   );
+
+  // re-fetch if there is changes. will fetch new notif after 10 seconds
+  const reFetchNotif = debounce(() => fetchNotif({ refresh: true }), 10000);
 
   React.useEffect(() => {
     fetchNotif({ refresh: true });
-  }, [location]);
+    SOCKET_DM.on("deliveryMonitoring", function(node_payload) {
+      console.log("ini_web_socket dari notif", node_payload);
+      reFetchNotif();
+      // fetchNotif({ refresh: true });
+    });
+  }, []);
 
   return (
     <>
@@ -200,9 +210,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                     color="primary"
                   >
                     <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/delivery-notif.svg"
-                      )}
+                      src={toAbsoluteUrl("/media/svg/icons/All/delivery.svg")}
                     />
                   </Badge>
                 </span>
@@ -246,12 +254,16 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                       }
                       return (
                         <Link
-                          to={!!isContractPage ? linkContract : linkTermin}
+                          //   to={!!isContractPage ? linkContract : linkTermin}
+                          to={"#"}
                           className="navi-item"
                           key={index.toString()}
                           onClick={() => {
                             // fetchDetailNotif({ id: item?._id });
-                            getContractById(item?.data?.contract_id);
+                            getContractById(
+                              item?.data?.contract_id,
+                              !!isContractPage ? linkContract : linkTermin
+                            );
                             // tabInvoice.tab = item.menu_tab || 0;
                             // tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                             // props.set_data_tab_invaoice(tabInvoice);

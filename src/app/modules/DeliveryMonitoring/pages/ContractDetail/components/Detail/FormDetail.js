@@ -338,7 +338,7 @@ const FormDetail = (props) => {
         fullWidth={true}
       >
         <DialogTitle id="alert-dialog-slide-title">
-          Daftar Email PIC / {editEmail ? "Ubah" : "Tambah"}
+          Daftar Email PIC Vendor / {editEmail ? "Ubah" : "Tambah"}
         </DialogTitle>
         <DialogContent>
           <div ref={updateEmailRef}>
@@ -544,7 +544,9 @@ const FormDetail = (props) => {
                     required
                     type="text"
                     placeholder="Kewenangan"
-                    defaultValue={dataContractById?.authority_group?.alias_name}
+                    defaultValue={
+                      dataContractById?.authority_group?.party?.full_name
+                    }
                     disabled
                   />
                 </Col>
@@ -558,7 +560,9 @@ const FormDetail = (props) => {
                     required
                     type="text"
                     placeholder="User"
-                    defaultValue={dataContractById?.user_group?.alias_name}
+                    defaultValue={
+                      dataContractById?.user_group?.party?.full_name
+                    }
                     disabled
                   />
                 </Col>
@@ -582,7 +586,8 @@ const FormDetail = (props) => {
               </Form.Group>
               <Form.Group as={Row}>
                 <Form.Label column md="4">
-                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NAME" />
+                  {/* <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NAME" /> */}
+                  PO Header Text
                 </Form.Label>
                 <Col md="8">
                   <Form.Control
@@ -596,7 +601,8 @@ const FormDetail = (props) => {
               </Form.Group>
               <Form.Group as={Row}>
                 <Form.Label column sm="4">
-                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PRICE" />
+                  <FormattedMessage id="CONTRACT_DETAIL.LABEL.PRICE" /> (exc
+                  PPN)
                 </Form.Label>
                 <Col md="8">
                   <Form.Control
@@ -626,7 +632,7 @@ const FormDetail = (props) => {
               </Form.Group>
               <Form.Group as={Row}>
                 <Form.Label column md="4">
-                  PIC
+                  PIC Vendor
                 </Form.Label>
                 <Col md="8" className="input-group">
                   <StyledSelect

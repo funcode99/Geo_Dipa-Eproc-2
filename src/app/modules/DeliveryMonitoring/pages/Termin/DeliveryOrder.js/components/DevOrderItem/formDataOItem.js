@@ -78,7 +78,7 @@ export const form_gr = [
 
   {
     name: "gr_receipt",
-    label: "GR Receipt",
+    label: "Goods Recipient",
   },
 
   {

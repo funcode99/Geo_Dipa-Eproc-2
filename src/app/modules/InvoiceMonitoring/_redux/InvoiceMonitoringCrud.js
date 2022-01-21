@@ -392,8 +392,8 @@ export async function approveInvPosting(data) {
 export async function getAllMismatch(params) {
   return axios.get(`invoice/mismatch_all${params ? "?" + params : ""}`);
 }
-export async function getAllBkb(params) {
-  return axios.get(`invoice/get_all_bkb${params ? "?" + params : ""}`);
+export async function getAllBkb(params, plant, user_id, is_finance) {
+  return axios.get(`invoice/get_all_bkb?plant=${plant}&is_finance=${is_finance}&user_id=${user_id}${params ? "&" + params : ""}`);
 }
 export async function getAllInvoice(params, plant, user_id, is_finance) {
   return axios.get(`invoice/get_invoice_list?plant=${plant}&is_finance=${is_finance}&user_id=${user_id}${params ? "&" + params : ""}`);

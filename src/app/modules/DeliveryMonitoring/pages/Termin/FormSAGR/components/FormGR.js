@@ -12,20 +12,20 @@ import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
   post_date: validation.require("Header Text"),
-  gr_receipt: validation.require("GR Receipt"),
-  // ref_doc_no: validation.require("Ref Doc No"),
-  ref_doc_no: number()
-    // .max(16, "Maksimal 16 karakter")
-    .test("len", "Maksimal 16 karakter", (val) => {
-      if (val) {
-        if (val.toString().length <= 16) return true;
-        else return false;
-      } else {
-        return false;
-      }
-    })
-    .required("Ref Doc No harus diisi")
-    .typeError("Masukkan harus berupa angka"),
+  gr_receipt: validation.require("Goods Recipient"),
+  ref_doc_no: validation.require("Ref Doc No"),
+  // ref_doc_no: number()
+  //   // .max(16, "Maksimal 16 karakter")
+  //   .test("len", "Maksimal 16 karakter", (val) => {
+  //     if (val) {
+  //       if (val.toString().length <= 16) return true;
+  //       else return false;
+  //     } else {
+  //       return false;
+  //     }
+  //   })
+  //   .required("Ref Doc No harus diisi")
+  //   .typeError("Masukkan harus berupa angka"),
   bill_of_lading: validation.require("Bill of Lading"),
   unload_pt: validation.require("Unloading"),
 });
@@ -105,26 +105,26 @@ const FormGR = ({
             // readOnly: grExist,
           }
         }
-        btnChildren={
-          <React.Fragment>
-            {dataSAGR?.gr_status?.gr_101 == true && (
-              <button
-                onClick={() => refModal.current.open()}
-                className={`btn btn-sm btn-label-warning btn-bold mr-3`}
-              >
-                Post GR 101
-              </button>
-            )}
-            {dataSAGR?.gr_status?.gr_103 == true && (
-              <button
-                onClick={() => refModal2.current.open()}
-                className={`btn btn-sm btn-label-success btn-bold mr-3`}
-              >
-                Post GR 103
-              </button>
-            )}
-          </React.Fragment>
-        }
+        // btnChildren={
+        //   <React.Fragment>
+        //     {dataSAGR?.gr_status?.gr_101 == true && (
+        //       <button
+        //         onClick={() => refModal.current.open()}
+        //         className={`btn btn-sm btn-label-warning btn-bold mr-3`}
+        //       >
+        //         Post GR 101
+        //       </button>
+        //     )}
+        //     {dataSAGR?.gr_status?.gr_103 == true && (
+        //       <button
+        //         onClick={() => refModal2.current.open()}
+        //         className={`btn btn-sm btn-label-success btn-bold mr-3`}
+        //       >
+        //         Post GR 103
+        //       </button>
+        //     )}
+        //   </React.Fragment>
+        // }
       />
       <ModalApproveGR
         innerRef={refModal}

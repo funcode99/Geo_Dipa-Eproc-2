@@ -14,7 +14,14 @@ import {
   Send,
 } from "@material-ui/icons";
 
-const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
+const RowAccordion = ({
+  id,
+  data,
+  dataAll,
+  classBtn,
+  children,
+  initialState = false,
+}) => {
   const [visible, setVisible] = React.useState(false);
   const handleVisible = React.useCallback(() => setVisible((prev) => !prev), [
     setVisible,
@@ -22,6 +29,9 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
   const isChildExist = typeof children === "function";
   const sticky = [0, 1];
   const rightSticky = 7;
+  React.useEffect(() => {
+    setVisible(initialState);
+  }, [initialState]);
   return (
     <React.Fragment>
       <TableRow hover onClick={handleVisible}>

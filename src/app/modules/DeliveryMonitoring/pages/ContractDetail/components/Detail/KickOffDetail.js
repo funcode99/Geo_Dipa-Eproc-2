@@ -17,6 +17,7 @@ import { FormattedMessage } from "react-intl";
 import * as Yup from "yup";
 import { set_contract_id } from "../../../../_redux/deliveryMonitoringSlice";
 import { DEV_NODE } from "../../../../../../../redux/BaseHost";
+import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 
 const formValidation = Yup.object().shape({
   // po_document: validation.string(
@@ -46,6 +47,7 @@ const KickOffDetail = ({
   contractId,
   contractStart,
   status,
+  saveContractById,
 }) => {
   const isClient = status === "client";
 
@@ -100,6 +102,7 @@ const KickOffDetail = ({
       },
       onSuccess: () => {
         handleRefresh();
+        getContractById();
       },
     });
   };
@@ -116,26 +119,35 @@ const KickOffDetail = ({
     });
   };
 
+  const getContractById = React.useCallback(() => {
+    fetch_api_sg({
+      keys: "key_contract",
+      type: "get",
+      url: `/delivery/contract/${contractId}`,
+      onSuccess: (res) => {
+        // console.log(`res`, res?.data);
+        saveContractById(res?.data);
+      },
+    });
+  }, [saveContractById, fetch_api_sg, contractId]);
+
   return (
     <Card>
       <CardBody>
-        <FormBuilder
-          loading={loadings.post}
-          onSubmit={
-            _handleSubmit
-            //   () => {
-            //   MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
-            // }
-          }
-          validation={formValidation}
-          formData={fieldKickOff}
-          initial={initValues}
-          fieldProps={{
-            listOptions: docOptions,
-            readOnly: !isClient,
-          }}
-          withSubmit={isClient}
-        />
+        {!loadings.post && (
+          <FormBuilder
+            loading={loadings.post}
+            onSubmit={_handleSubmit}
+            validation={formValidation}
+            formData={fieldKickOff}
+            initial={initValues}
+            fieldProps={{
+              listOptions: docOptions,
+              readOnly: !isClient,
+            }}
+            withSubmit={isClient}
+          />
+        )}
       </CardBody>
     </Card>
   );
@@ -156,9 +168,15 @@ const mapState = (state) => ({
   status: state.auth.user.data.status,
 });
 
-const mapDispatch = {
-  fetch_api_sg,
-  set_contract_id,
-};
+const mapDispatch = (dispatch) => ({
+  saveContractById: (payload) => {
+    dispatch({
+      type: actionTypes.SetContractById,
+      payload,
+    });
+  },
+  fetch_api_sg: (payload) => dispatch(fetch_api_sg(payload)),
+  set_contract_id: (payload) => dispatch(set_contract_id, payload),
+});
 
 export default connect(mapState, mapDispatch)(KickOffDetail);

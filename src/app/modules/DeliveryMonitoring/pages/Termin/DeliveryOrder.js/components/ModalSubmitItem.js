@@ -80,6 +80,7 @@ const ModalSubmitItem = ({
         className: checked ? "bg-primary text-light" : "bg-secondary",
         disabled: !checked,
       }}
+      onClose={onClose}
     >
       {data.length > 0 && (
         <React.Fragment>
@@ -98,6 +99,7 @@ const ModalSubmitItem = ({
                 {tHeadSubmitItems.map((item, index) => (
                   <TableCell
                     key={index}
+                    className="bg-white text-dark"
                     // align={index > 1 ? "right" : "left"}
                   >
                     {"item"}
@@ -109,7 +111,7 @@ const ModalSubmitItem = ({
               {data.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell>{(index += 1)}</TableCell>
-                  <TableCell>{item.spec}</TableCell>
+                  <TableCell>{item.name}</TableCell>
                   <TableCell>{item.qty}</TableCell>
                   <TableCell>{item.qty_approved}</TableCell>
                   <TableCell>{item.approve_status}</TableCell>

@@ -10,6 +10,8 @@ import {
   InputLabel,
   CircularProgress,
   Button,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import { rupiah } from "../../../../../../libs/currency";
@@ -19,6 +21,7 @@ import { Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
+import { isEmpty } from "lodash";
 
 const tableHeader = [
   "",
@@ -27,6 +30,19 @@ const tableHeader = [
   <FormattedMessage id="TITLE.QUANTITY" />,
   <FormattedMessage id="TITLE.UNIT_PRICE" />,
 ];
+
+const hasMaterialItem = (data) => {
+  const filteredData = data?.filter(
+    ({ item }, id) =>
+      !(
+        isEmpty(item?.material) ||
+        item?.material === "undefined" ||
+        item?.material === "null"
+      )
+  );
+  console.log(`filteredData`, filteredData);
+  return !!filteredData?.length;
+};
 
 const ModalSubmit = ({
   innerRef,
@@ -41,6 +57,9 @@ const ModalSubmit = ({
   updateData,
 }) => {
   const isUpdate = Object.keys(updateData).length > 0;
+  const hasMaterial = React.useMemo(() => hasMaterialItem(tempOrderItems), [
+    tempOrderItems,
+  ]);
 
   const handleChecklist = (data, index) => {
     handleError("item", false);
@@ -58,6 +77,7 @@ const ModalSubmit = ({
     setTempOrderItems(dataArr);
   };
 
+  console.log(`tempOrderItems`, tempOrderItems, hasMaterial);
   return (
     <React.Fragment>
       <DialogGlobal
@@ -101,7 +121,7 @@ const ModalSubmit = ({
           <TableHead>
             <TableRow>
               {tableHeader.map((item, index) => (
-                <TableCell className="bg-white" key={index}>
+                <TableCell className="bg-white text-dark" key={index}>
                   {item}
                 </TableCell>
               ))}
@@ -174,6 +194,34 @@ const ModalSubmit = ({
               ? formik.errors.name
               : null}
           </span>
+
+          {hasMaterial && false && (
+            <React.Fragment>
+              <InputLabel id="destination" className="mt-6">
+                <FormattedMessage id="TITLE.DESTINATION_UNIT" />
+              </InputLabel>
+              <Select
+                // labelId="demo-simple-select-label"
+                // id="demo-simple-select"
+                // value={10}
+                name={"destination"}
+                label="Age"
+                onChange={() => {}}
+                variant="outlined"
+                style={{ height: 37 }}
+                {...formik.getFieldProps("destination")}
+              >
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+              <span className="text-danger">
+                {formik.touched.destination && formik.errors.destination
+                  ? formik.errors.destination
+                  : null}
+              </span>
+            </React.Fragment>
+          )}
 
           <InputLabel id="date" className="mt-6">
             <FormattedMessage id="TITLE.DATE" />

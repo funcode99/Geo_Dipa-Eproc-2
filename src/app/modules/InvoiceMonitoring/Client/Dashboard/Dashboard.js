@@ -584,8 +584,138 @@ function Dashboard(props) {
             </div>
           </div>
           <div className="row my-4">
+<<<<<<< HEAD
             <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "95vh" }}>
             <ListsWidget4 className="card-stretch gutter-b" />
+=======
+            <div className="col-md-8 p-1">
+              {/* <Card className="border">
+                <CardBody className="p-1">
+                  <div className={`card card-custom card-stretch`}>
+
+                    <div className="card-header border-0 pt-5">
+                      <h3 className="card-title align-items-start flex-column">
+                        <span className="card-label font-weight-bolder text-dark">
+                          Invoice Milestone
+                        </span>
+                      </h3>
+                      <div className="card-toolbar"></div>
+                    </div>
+
+                    <div className="card-body pt-3 pb-0">
+                      <div className="table-responsive">
+                        <table className="table table-borderless table-vertical-center">
+                          <thead>
+                            <tr>
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "150px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "150px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "150px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "150px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "200px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "150px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "150px" }}
+                              />
+                              <th
+                                className="p-0"
+                                style={{ minWidth: "150px" }}
+                              />
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="pl-0 py-4">
+                                {
+                                  //<div className="symbol symbol-50 symbol-light mr-1">
+                                  //<span className="symbol-label">
+                                  //  <h1 className="h-50 align-self-center">
+                                  //    P
+                                  //  </h1>
+                                  //</span>
+                                  //</div>
+                                }
+                                PT ABC
+                              </td>
+                              <td className="pl-0">
+                                <span className="">PST-GA Manager</span>
+                              </td>
+                              <td className="pl-0">
+                                <span className="">Termin 1</span>
+                              </td>
+                              <td className="pl-0">
+                                <span className="">Rp. 1.000.000</span>
+                              </td>
+                              <td className="text-left">
+                                <span
+                                  className=""
+                                  onClick={() => {
+                                    // setPoService(true);
+                                  }}
+                                >
+                                  Document Softcopy Keluar
+                                </span>
+                              </td>
+                              <td className="text-left pr-0">
+                                <span
+                                  className=""
+                                  onClick={() => {
+                                    // stateErrSync("service");
+                                    // setPoAsync(true);
+                                  }}
+                                >
+                                  Pembayaran
+                                </span>
+                              </td>
+                              <td className="text-left pr-0">
+                                <span
+                                  className=""
+                                  onClick={() => {
+                                    // stateErrSync("service");
+                                    // setPoAsync(true);
+                                  }}
+                                >
+                                  20 Hari
+                                </span>
+                              </td>
+                              <td className="text-left pr-0">
+                                <span
+                                  className="btn btn-light btn-sm text-primary"
+                                  onClick={() => {
+                                    // stateErrSync("service");
+                                    // setPoAsync(true);
+                                  }}
+                                >
+                                  Send Reminder
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card> */}
+>>>>>>> c1dc54b480433689535aae6017c5795ec4fb79e0
             </div>
             <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "95vh" }}>
               <ListsWidget9 className="card-stretch gutter-b" />
@@ -597,4 +727,10 @@ function Dashboard(props) {
   );
 }
 
-export default injectIntl(connect(null, null)(Dashboard));
+const mapState = (state) => {
+  return {
+    plant_data: state.auth.user.data.plant_data,
+  };
+};
+
+export default injectIntl(connect(mapState, null)(Dashboard));

@@ -180,6 +180,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
         handleSubmit={handleSubmitPreview}
         loading={loadings[KEYS_TERMIN.p_t_approve_do_doc]}
         file={data.file}
+        data={data}
         isClient={authStatus === "client"}
         isFileApproved={isFileApproved}
       />
@@ -201,7 +202,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
                 <div className="kt-widget31__progress">
                   <p className="kt-widget31__stats">
                     <span>Progress</span>
-                    <span>{`${data?.percentage}%`}</span>
+                    <span>{`${parseFloat(data?.percentage).toFixed(2)}%`}</span>
                   </p>
                   <div className="progress progress-sm">
                     <div
@@ -256,7 +257,7 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
             {/* <Row> */}
             {data?.task_delivery_items.map((el, id) => (
               <CardOrderItem
-                key={id}
+                key={el.id}
                 data={el}
                 isVendor={isVendor}
                 {...other}

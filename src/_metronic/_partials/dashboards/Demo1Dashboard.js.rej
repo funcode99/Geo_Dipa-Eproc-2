@@ -1,0 +1,9 @@
+diff a/src/_metronic/_partials/dashboards/Demo1Dashboard.js b/src/_metronic/_partials/dashboards/Demo1Dashboard.js	(rejected hunks)
+@@ -17,7 +17,6 @@
+   return (
+     <>
+       <div className="row">
+-        <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "95vh" }}>
+         <div className="col-lg-6 col-xxl-4" style={{ maxHeight: "60vh" }}>
+           <ListsWidget4 className="card-stretch gutter-b" />
+         </div>

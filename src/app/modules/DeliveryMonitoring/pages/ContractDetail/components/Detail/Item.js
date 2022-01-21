@@ -247,308 +247,193 @@ const Item = ({ handleClick, status }) => {
   };
 
   return (
-    <React.Fragment>
+    <div style={{ width: "100%" }}>
       <Toast />
 
-      <Container>
-        <ExpansionBox title={"TITLE.ITEM_TABLE"}>
-          <div className="mb-5">
-            <Navs
-              navLists={navLists}
-              handleSelect={(selectedKey) => setNavActive(selectedKey)}
-            />
-          </div>
+      {/* <Container>
+        <ExpansionBox title={"TITLE.ITEM_TABLE"}> */}
+      <div className="mb-5">
+        <Navs
+          navLists={navLists}
+          handleSelect={(selectedKey) => setNavActive(selectedKey)}
+        />
+      </div>
 
-          {navActive === "link-jasa" && (
-            <TableItemNew
-              withPagination={false}
-              tableHeader={theadService}
-              dataRows={dataContractById.services}
-              loading={loading}
-              renderRows={({ item, index }) => {
-                let el = item;
-                return (
-                  <RowAccordion
-                    key={el.id}
-                    data={["accordIcon", el.desc, "", "", "", "", "", ""]}
-                    dataAll={el.item_services}
-                  >
-                    {(item) => {
-                      return item?.map((item2) => {
-                        console.log("iterm", item, item2);
-                        return (
-                          <TableRow
-                            hover
-                            // onClick={
-                            //   (e) =>
-                            //     handleChecklist(e, item2, {
-                            //       id: el.id,
-                            //       type: "jasa",
-                            //     })
-                            //   // console.log(e)
-                            // }
-                            key={item2?.id}
-                          >
-                            <TableCell>
-                              <Checkbox
-                                name={`checkbox-${item2.id}`}
-                                id={`checkbox-${item2.id}`}
-                                color="secondary"
-                                onChange={
-                                  (e) =>
-                                    handleChecklist(e, item2, {
-                                      id: el.id,
-                                      type: "jasa",
-                                    })
-                                  // console.log(e)
-                                }
-                                size="small"
-                                checked={item2.checked}
-                                disabled={
-                                  item2.qty_available === 0 ? true : false
-                                }
-                              />
-                            </TableCell>
-                            <TableCell>{item2?.short_text}</TableCell>
-                            <TableCell></TableCell>
-                            <TableCell>{item2?.quantity}</TableCell>
-                            <TableCell>
-                              {isClient ? (
-                                <Form.Control
-                                  type="number"
-                                  size="sm"
-                                  min="0.1"
-                                  step="0.1"
-                                  style={{
-                                    width: 80,
-                                    flex: "none",
-                                  }}
-                                  max={item2?.qty_available}
-                                  disabled={!item2.checked ? true : false}
-                                  defaultValue={parseFloat(
-                                    item2.qty_available
-                                  ).toFixed(1)}
-                                  onChange={(e) =>
-                                    handleInputQty(
-                                      e.target.value,
-                                      item2,
-                                      "jasa"
-                                    )
-                                  }
-                                />
-                              ) : (
-                                parseFloat(item2.qty_available).toFixed(1)
-                              )}
-                              {qtyErrors.find((el) => el === item2.id) && (
-                                <span className="text-danger">
-                                  Max qty{" "}
-                                  {parseFloat(item2.qty_available).toFixed(1)}
-                                </span>
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              {el?.measurement_unit?.ident_name}
-                            </TableCell>
-                            <TableCell>{rupiah(item2?.gr_price)}</TableCell>
-                            <TableCell>{rupiah(item2?.net_value)}</TableCell>
-                          </TableRow>
-                        );
-                      });
-                    }}
-                  </RowAccordion>
-                );
-              }}
-            />
-          )}
-          {navActive === "link-barang" && (
-            <TableItemNew
-              withPagination={true}
-              tableHeader={theadItem}
-              dataRows={dataContractById.items}
-              loading={loading}
-              renderRows={({ item, index }) => {
-                return (
-                  <TableRow hover key={item?.id}>
-                    <TableCell>
-                      <Checkbox
-                        name={`checkbox-${item.id}`}
-                        id={`checkbox-${item.id}`}
-                        color="secondary"
-                        onChange={(e) =>
-                          handleChecklist(e, item, {
-                            id: item.id,
-                            type: "barang",
-                          })
-                        }
-                        size="small"
-                        checked={item.checked}
-                        disabled={item.qty_available === 0 ? true : false}
-                      />
-                    </TableCell>
-                    <TableCell>{item?.desc}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{item?.qty}</TableCell>
-                    <TableCell>
-                      {isClient ? (
-                        <Form.Control
-                          type="number"
-                          size="sm"
-                          min="0.1"
-                          step="0.1"
-                          style={{
-                            width: 80,
-                            flex: "none",
-                          }}
-                          max={item?.qty_available}
-                          disabled={!item.checked ? true : false}
-                          defaultValue={parseFloat(item.qty_available).toFixed(
-                            1
-                          )}
-                          onChange={(e) =>
-                            handleInputQty(e.target.value, item, "barang")
-                          }
-                        />
-                      ) : (
-                        parseFloat(item.qty_available).toFixed(1)
-                      )}
-                      {qtyErrors.find((el) => el === item.id) ? (
-                        <span className="text-danger">
-                          Max qty {parseFloat(item.qty_available).toFixed(1)}
-                        </span>
-                      ) : null}
-                    </TableCell>
-                    <TableCell>{item?.measurement_unit?.ident_name}</TableCell>
-                    <TableCell>{rupiah(item?.unit_price)}</TableCell>
-                  </TableRow>
-                );
-              }}
-            />
-          )}
-
-          {/* {navActive === "link-jasa" && (
-            <TableItem data={dataContractById.services} loading={loading}>
-              {dataContractById.services?.map((el) => {
-                return (
-                  <RowAccordion
-                    key={el.id}
-                    data={["accordIcon", el.desc, "", "", "", ""]}
-                    dataAll={el.item_services}
-                  >
-                    {(item) => {
-                      return item?.map((item2) => {
-                        return (
-                          <StyledTableRow key={item2?.id}>
-                            <TableCell>
-                              <Checkbox
-                                name={`checkbox-${item2.id}`}
-                                id={`checkbox-${item2.id}`}
-                                color="secondary"
-                                onChange={
-                                  (e) =>
-                                    handleChecklist(e, item2, {
-                                      id: el.id,
-                                      type: "jasa",
-                                    })
-                                  // console.log(e)
-                                }
-                                size="small"
-                                checked={item2.checked}
-                                disabled={
-                                  item2.qty_available === 0 ? true : false
-                                }
-                              />
-                            </TableCell>
-                            <TableCell>{item2?.short_text}</TableCell>
-                            <TableCell></TableCell>
-                            <TableCell>
-                              <Form.Control
-                                type="number"
-                                size="sm"
-                                min="0.1"
-                                step="0.1"
-                                max={item2?.qty_available}
-                                disabled={!item2.checked ? true : false}
-                                defaultValue={item2.qty_available}
-                                onChange={(e) =>
-                                  handleInputQty(e.target.value, item2, "jasa")
-                                }
-                              />
-                            </TableCell>
-                            <TableCell></TableCell>
-                            <TableCell>{rupiah(item2?.net_value)}</TableCell>
-                          </StyledTableRow>
-                        );
-                      });
-                    }}
-                  </RowAccordion>
-                );
-              })}
-            </TableItem>
-          )} */}
-
-          {/* {navActive === "link-barang" && (
-            <TableItem data={dataContractById.items} loading={loading}>
-              {dataContractById.items?.map((item) => {
-                return (
-                  <StyledTableRow key={item?.id}>
-                    <TableCell>
-                      <Checkbox
-                        name={`checkbox-${item.id}`}
-                        id={`checkbox-${item.id}`}
-                        color="secondary"
-                        onChange={(e) =>
-                          handleChecklist(e, item, {
-                            id: item.id,
-                            type: "barang",
-                          })
-                        }
-                        size="small"
-                        checked={item.checked}
-                        disabled={item.qty_available === 0 ? true : false}
-                      />
-                    </TableCell>
-                    <TableCell>{item?.desc}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>
-                      <Form.Control
-                        type="number"
-                        size="sm"
-                        min="1"
-                        step="1"
-                        max={item?.qty_available}
-                        disabled={!item.checked ? true : false}
-                        defaultValue={item.qty_available}
-                        onChange={(e) =>
-                          handleInputQty(e.target.value, item, "barang")
-                        }
-                      />
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{rupiah(item?.unit_price)}</TableCell>
-                  </StyledTableRow>
-                );
-              })}
-            </TableItem>
-          )} */}
-
-          {isClient && (
-            <div className="d-flex justify-content-end w-100 mt-4">
-              <Button
-                variant="contained"
-                color="secondary"
-                size="medium"
-                onClick={handleClick}
+      {navActive === "link-jasa" && (
+        <TableItemNew
+          withPagination={false}
+          tableHeader={theadService}
+          dataRows={dataContractById.services}
+          loading={loading}
+          renderRows={({ item, index }) => {
+            let el = item;
+            return (
+              <RowAccordion
+                key={el.id}
+                data={["accordIcon", el.desc, "", "", "", "", "", ""]}
+                dataAll={el.item_services}
               >
-                <span className="mr-1">
-                  <FormattedMessage id="BUTTON.SUBMIT" />
-                </span>
-                <Send />
-              </Button>
-            </div>
-          )}
-        </ExpansionBox>
-      </Container>
-    </React.Fragment>
+                {(item) => {
+                  return item?.map((item2) => {
+                    console.log("iterm", item, item2);
+                    return (
+                      <TableRow
+                        hover
+                        // onClick={
+                        //   (e) =>
+                        //     handleChecklist(e, item2, {
+                        //       id: el.id,
+                        //       type: "jasa",
+                        //     })
+                        //   // console.log(e)
+                        // }
+                        key={item2?.id}
+                      >
+                        <TableCell>
+                          <Checkbox
+                            name={`checkbox-${item2.id}`}
+                            id={`checkbox-${item2.id}`}
+                            color="secondary"
+                            onChange={
+                              (e) =>
+                                handleChecklist(e, item2, {
+                                  id: el.id,
+                                  type: "jasa",
+                                })
+                              // console.log(e)
+                            }
+                            size="small"
+                            checked={item2.checked}
+                            disabled={item2.qty_available === 0 ? true : false}
+                          />
+                        </TableCell>
+                        <TableCell>{item2?.short_text}</TableCell>
+                        <TableCell></TableCell>
+                        <TableCell>{item2?.quantity}</TableCell>
+                        <TableCell>
+                          {isClient ? (
+                            <Form.Control
+                              type="number"
+                              size="sm"
+                              min="0.1"
+                              step="0.1"
+                              style={{
+                                width: 80,
+                                flex: "none",
+                              }}
+                              max={item2?.qty_available}
+                              disabled={!item2.checked ? true : false}
+                              defaultValue={parseFloat(
+                                item2.qty_available
+                              ).toFixed(1)}
+                              onChange={(e) =>
+                                handleInputQty(e.target.value, item2, "jasa")
+                              }
+                            />
+                          ) : (
+                            parseFloat(item2.qty_available).toFixed(1)
+                          )}
+                          {qtyErrors.find((el) => el === item2.id) && (
+                            <span className="text-danger">
+                              Max qty{" "}
+                              {parseFloat(item2.qty_available).toFixed(1)}
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {el?.measurement_unit?.ident_name}
+                        </TableCell>
+                        <TableCell>{rupiah(item2?.gr_price)}</TableCell>
+                        <TableCell>{rupiah(item2?.net_value)}</TableCell>
+                      </TableRow>
+                    );
+                  });
+                }}
+              </RowAccordion>
+            );
+          }}
+        />
+      )}
+      {navActive === "link-barang" && (
+        <TableItemNew
+          withPagination={true}
+          tableHeader={theadItem}
+          dataRows={dataContractById.items}
+          loading={loading}
+          renderRows={({ item, index }) => {
+            return (
+              <TableRow hover key={item?.id}>
+                <TableCell>
+                  <Checkbox
+                    name={`checkbox-${item.id}`}
+                    id={`checkbox-${item.id}`}
+                    color="secondary"
+                    onChange={(e) =>
+                      handleChecklist(e, item, {
+                        id: item.id,
+                        type: "barang",
+                      })
+                    }
+                    size="small"
+                    checked={item.checked}
+                    disabled={item.qty_available === 0 ? true : false}
+                  />
+                </TableCell>
+                <TableCell>{item?.desc}</TableCell>
+                <TableCell></TableCell>
+                <TableCell>{item?.qty}</TableCell>
+                <TableCell>
+                  {isClient ? (
+                    <Form.Control
+                      type="number"
+                      size="sm"
+                      min="0.1"
+                      step="0.1"
+                      style={{
+                        width: 80,
+                        flex: "none",
+                      }}
+                      max={item?.qty_available}
+                      disabled={!item.checked ? true : false}
+                      defaultValue={parseFloat(item.qty_available).toFixed(1)}
+                      onChange={(e) =>
+                        handleInputQty(e.target.value, item, "barang")
+                      }
+                    />
+                  ) : (
+                    parseFloat(item.qty_available).toFixed(1)
+                  )}
+                  {qtyErrors.find((el) => el === item.id) ? (
+                    <span className="text-danger">
+                      Max qty {parseFloat(item.qty_available).toFixed(1)}
+                    </span>
+                  ) : null}
+                </TableCell>
+                <TableCell>{item?.measurement_unit?.ident_name}</TableCell>
+                <TableCell>{rupiah(item?.unit_price)}</TableCell>
+              </TableRow>
+            );
+          }}
+        />
+      )}
+      {isClient && (
+        <div className="d-flex justify-content-end w-100 mt-4">
+          <Button
+            variant="contained"
+            color="secondary"
+            size="medium"
+            onClick={handleClick}
+          >
+            <span className="mr-1">
+              <FormattedMessage id="BUTTON.SUBMIT" />
+            </span>
+            <Send />
+          </Button>
+        </div>
+      )}
+      {/* </ExpansionBox>
+      </Container> */}
+    </div>
   );
 };
 
