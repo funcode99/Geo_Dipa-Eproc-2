@@ -43,6 +43,7 @@ function ContractSprPage(props) {
   const { intl, classes, supportedFormats, progressTermin } = props;
 
   const [loading, setLoading] = useState(false);
+  const [loadingSpp, setLoadingSpp] = useState(false);
   const [contractData, setContractData] = useState({});
   const [sppData, setSppData] = useState({});
   const [uploadFilename, setUploadFilename] = useState(
@@ -302,6 +303,7 @@ function ContractSprPage(props) {
   }, [contract_id, formik, intl, setToast, user_id]);
 
   const getSppData = useCallback(() => {
+    setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
         if (!response["data"]["data"]) {
@@ -391,11 +393,13 @@ function ContractSprPage(props) {
             setSppData(response["data"]["data"]);
           }
         }
+        setLoadingSpp(false);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoadingSpp(false);
       });
-  }, [contract_id, termin, formik, intl, setToast, user_id]);
+  }, [contract_id, termin, formik, intl, setToast, user_id, setLoadingSpp]);
 
   const getHistorySppData = useCallback(
     (spp_id) => {
@@ -902,6 +906,12 @@ function ContractSprPage(props) {
       <Card>
         <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
           <CardBody>
+            {loadingSpp && (
+              <span>
+                <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+                <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+              </span>
+            )}
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group row">
