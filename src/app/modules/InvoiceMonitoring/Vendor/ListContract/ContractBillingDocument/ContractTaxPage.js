@@ -40,6 +40,7 @@ import { SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
+  const [loadingTax, setLoadingTax] = useState(false);
   const [contractData, setContractData] = useState({});
   const [uploadFilename, setUploadFilename] = useState("Pilih File");
   const [taxStatus, setTaxStatus] = useState(false);
@@ -276,6 +277,7 @@ function ContractTaxPage(props) {
   }, [contract_id, termin, formik, intl, setToast, user_id]);
 
   const getTaxData = useCallback(() => {
+    setLoadingTax(true);
     getTax(contract_id, termin)
       .then((response) => {
         if (!response["data"]["data"]) {
@@ -347,9 +349,11 @@ function ContractTaxPage(props) {
             setTaxData(response["data"]["data"]);
           }
         }
+        setLoadingTax(false);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoadingTax(false);
       });
   }, [contract_id, termin, getHistoryTaxData, formik, intl, setToast]);
 
@@ -638,6 +642,12 @@ function ContractTaxPage(props) {
       <Card>
         <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
           <CardBody>
+            {loadingTax && (
+              <span>
+                <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+                <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+              </span>
+            )}
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group row">
@@ -655,8 +665,8 @@ function ContractTaxPage(props) {
                         taxStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
-                            ? "NumberFormat-text"
-                            : "NumberFormat-input"
+                          ? "NumberFormat-text"
+                          : "NumberFormat-input"
                       }
                       value={formik.values.tax_no}
                       displayType={
@@ -664,8 +674,8 @@ function ContractTaxPage(props) {
                         taxStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                         !invoicePeriodsStatus
-                            ? "text"
-                            : "input"
+                          ? "text"
+                          : "input"
                       }
                       className="form-control"
                       format="###.###-##.########"
@@ -945,8 +955,8 @@ function ContractTaxPage(props) {
               disabled={
                 (formik.touched && !formik.isValid) ||
                 loading ||
-                  taxStatus ||
-                  progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                taxStatus ||
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                 !invoicePeriodsStatus
               }
             >

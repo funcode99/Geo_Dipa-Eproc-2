@@ -82,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
+  const [loadingTax, setLoadingTax] = useState(false);
   const [contractData, setContractData] = useState({});
   const [taxData, setTaxData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -316,6 +317,7 @@ function ContractTaxPage(props) {
   };
 
   const getTaxData = useCallback(() => {
+    setLoadingTax(true);
     getTax(contract_id, termin)
       .then((response) => {
         if (response.data.data !== null) {
@@ -345,9 +347,11 @@ function ContractTaxPage(props) {
             );
           }
         }
+        setLoadingTax(false);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoadingTax(false);
       });
   }, [contract_id, formik, intl, setToast, listTaxPpn]);
 
@@ -1283,6 +1287,12 @@ function ContractTaxPage(props) {
       </Dialog>
       <Card>
         <CardBody>
+          {loadingTax && (
+            <span>
+              <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+              <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+            </span>
+          )}
           <div className="row">
             <div className="col-md-6">
               <div className="form-group row">
