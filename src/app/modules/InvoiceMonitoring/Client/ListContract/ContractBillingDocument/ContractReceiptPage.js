@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ContractReceiptPage(props) {
   const [loading, setLoading] = useState(false);
+  const [loadingRcpt, setLoadingRcpt] = useState(false);
   const [contractData, setContractData] = useState({});
   const [receiptData, setReceiptData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -191,14 +192,17 @@ function ContractReceiptPage(props) {
   }, [contract_id, formik, intl, setToast, user_id]);
 
   const getReceiptData = useCallback(() => {
+    setLoadingRcpt(true);
     getReceipt(contract_id, termin)
       .then((response) => {
         setReceiptData(response.data.data);
         if (response.data.data) {
           getHistoryReceiptData(response["data"]["data"]["id"]);
         }
+        setLoadingRcpt(false);
       })
       .catch((error) => {
+        setLoadingRcpt(false);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [contract_id, formik, intl, setToast]);
@@ -719,6 +723,12 @@ function ContractReceiptPage(props) {
       </Dialog>
       <Card>
         <CardBody>
+          {loadingRcpt && (
+            <span>
+              <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+              <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+            </span>
+          )}
           <div className="row">
             <div className="col-md-6">
               <div className="form-group row">
