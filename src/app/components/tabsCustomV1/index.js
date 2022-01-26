@@ -63,6 +63,7 @@ export default function Tabs({
   handleChange,
   handleChangeTwo,
   auditStaff,
+  isPaid,
   ...other
 }) {
   const classes = useStyles();
@@ -97,27 +98,34 @@ export default function Tabs({
       </MuiTabs>
       {!auditStaff && (
         <div>
-        <MuiTabs
-          value={99}
-          onChange={handleChangeTwo}
-          indicatorColor="secondary"
-          textColor="secondary"
-          variant="standard"
-          classes={{
-            root: classes.root,
-            indicator: classes.customIndicatorColorTwo,
-          }}
-          {...other}
-        >
-          <MuiTab
+          <MuiTabs
             value={99}
-            icon={<i className="fas fa-pause-circle text-danger fa-2x"></i>}
+            onChange={handleChangeTwo}
+            indicatorColor="secondary"
+            textColor="secondary"
+            variant="standard"
             classes={{
-              root: classes.tabRoot,
-              wrapper: classes.tabWrapper,
+              root: classes.root,
+              indicator: classes.customIndicatorColorTwo,
             }}
-          />
-        </MuiTabs>
+            {...other}
+          >
+            <MuiTab
+              value={99}
+              disabled={isPaid}
+              icon={
+                <i
+                  className={`fas fa-pause-circle ${
+                    isPaid ? "text-dark" : "text-danger"
+                  }  fa-2x`}
+                ></i>
+              }
+              classes={{
+                root: classes.tabRoot,
+                wrapper: classes.tabWrapper,
+              }}
+            />
+          </MuiTabs>
         </div>
       )}
     </div>
