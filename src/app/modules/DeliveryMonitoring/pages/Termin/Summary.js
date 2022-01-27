@@ -803,9 +803,7 @@ function Summary({}) {
                                   {/* 31/01/2021 */}
                                 </TableCell>
                                 <TableCell>{service?.quantity}</TableCell>
-                                <TableCell>
-                                  -{/* {service?.qty_available} */}
-                                </TableCell>
+                                <TableCell>{service?.qty_available}</TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
                                   {isClient ? (
