@@ -256,9 +256,12 @@ function ItemContractInvoice(props) {
 
   const user_id = useSelector((state) => state.auth.user.data.user_id);
   const dataUser = useSelector((state) => state.auth.user.data);
-  let status = useSelector(
-    (state) => state.auth.user.data.status,
-    shallowEqual
+  let authStatus = useSelector((state) => state.auth.user.data.status);
+  const showAddBtn = Boolean(
+    dataUser.monitoring_role?.find(
+      (role) =>
+        role === "Verification Staff" || role === "Finance & Treasury Staff"
+    )
   );
   let monitoring_role = dataUser.monitoring_role
     ? dataUser.monitoring_role
@@ -1694,7 +1697,7 @@ function ItemContractInvoice(props) {
         <ExpansionPanelDetails className={classes.details}>
           <div style={{ width: "100%" }}>
             <div className="d-flex justify-content-end align-items-center w-100 mb-5">
-              {status === "client" && (
+              {authStatus === "client" && showAddBtn && (
                 <button
                   className="btn btn-outline-success btn-sm"
                   onClick={() => {
