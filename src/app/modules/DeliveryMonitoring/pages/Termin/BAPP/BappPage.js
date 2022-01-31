@@ -69,6 +69,7 @@ const BappPage = ({
   loadings,
   handleChangeTab,
   userAuth,
+  dataTask,
 }) => {
   const { func, task_id, task_sa, task_gr } = React.useContext(
     TerminPageContext
@@ -487,7 +488,7 @@ const BappPage = ({
     });
   };
 
-  console.log(`plant_data`, taskNews, contract, userAuth);
+  console.log(`plant_data`, taskNews, contract, userAuth, dataTask);
 
   return (
     <React.Fragment>
@@ -667,6 +668,7 @@ const BappPage = ({
                       <ApproveRejectBtn
                         ref={onTimeRef}
                         isDisabled={isDisabled}
+                        initialValue={dataTask?.is_on_time}
                       />
                       <AlertLate dataLate={lateData} />
                     </Col>
@@ -886,6 +888,7 @@ const mapState = (state) => {
       fetch: getLoading(state, keys.fetch),
       submit: getLoading(state, keys.submit),
     },
+    dataTask: deliveryMonitoring.dataTask,
   };
 };
 
