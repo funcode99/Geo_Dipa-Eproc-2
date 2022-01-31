@@ -89,7 +89,7 @@ const ModalTerm = ({
                     {["No", "Name", "Quantity", "Unit Price"].map(
                       (item, index) => (
                         <TableCell
-                          className="bg-white"
+                          className="bg-white text-dark "
                           key={index}
                           align={index > 1 ? "right" : "left"}
                         >
@@ -129,7 +129,7 @@ const ModalTerm = ({
                     {["No", "Name", "Quantity", "Unit Price"].map(
                       (item, index) => (
                         <TableCell
-                          className="bg-white"
+                          className="bg-white text-dark"
                           key={index}
                           align={index > 1 ? "right" : "left"}
                         >
