@@ -102,7 +102,7 @@ const ModalSubmitItem = ({
                     className="bg-white text-dark"
                     // align={index > 1 ? "right" : "left"}
                   >
-                    {"item"}
+                    {item}
                   </TableCell>
                 ))}
               </TableRow>

@@ -30,6 +30,7 @@ const RenderInput = ({
   formInputSize = 8,
   onFocus,
   onBlur,
+  onChange,
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom";
@@ -44,6 +45,10 @@ const RenderInput = ({
   const _handleBlur = (e) => {
     setTouched({});
     if (typeof onBlur === "function") onBlur(e);
+  };
+  const _handleChange = (val) => {
+    setFieldValue(name, val, true);
+    if (typeof onChange === "function") onChange(val);
   };
 
   // const _onChange = (val) => {
@@ -64,7 +69,7 @@ const RenderInput = ({
                 value={values[name] || ""}
                 name={name}
                 // onChange={handleChange(name)}
-                onChange={(val) => setFieldValue(name, val, true)}
+                onChange={_handleChange}
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
                 disabled={readOnly || disabledFields.includes(name)}

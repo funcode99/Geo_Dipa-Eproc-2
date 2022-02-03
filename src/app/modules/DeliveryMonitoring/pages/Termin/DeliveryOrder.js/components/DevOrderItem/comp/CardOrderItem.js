@@ -151,6 +151,9 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
             // console.log("blur");
             getValue();
           },
+          onChange: () => {
+            setComponentIndex(null);
+          },
         }}
       />
       <Divider />
