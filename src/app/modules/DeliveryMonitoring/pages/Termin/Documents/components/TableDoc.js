@@ -91,11 +91,16 @@ const BtnLihat = ({ url }) => {
 };
 
 const TableDoc = ({ loading }) => {
-  const { content, handleAction, isWarehouse } = React.useContext(
-    DocumentsContext
-  );
+  const {
+    content,
+    handleAction,
+    isWarehouse,
+    dataJasa,
+    dataBarang,
+  } = React.useContext(DocumentsContext);
   const warehouseText = isWarehouse ? "WAREHOUSE" : "USER";
-  console.log(`content`, content);
+  const hasBarang = !!dataBarang.length;
+  console.log(`content hasBarang`, content, dataBarang, hasBarang);
 
   return (
     <TablePaginationCustom
@@ -160,20 +165,24 @@ const TableDoc = ({ loading }) => {
                                   approvedBy={
                                     els?.approved_by?.party?.full_name ?? "N/A"
                                   }
-                                  role={warehouseText}
+                                  role={"USER"}
+                                  // role={warehouseText}
                                 />
-                                <StatusRemarks
-                                  className={"mt-1"}
-                                  status={els?.wr_document_status?.name}
-                                  remarks={els?.wr_remarks}
-                                  url={els?.url}
-                                  withFile={true}
-                                  approvedBy={
-                                    els?.wr_approved_by?.party?.full_name ??
-                                    "N/A"
-                                  }
-                                  role={warehouseText}
-                                />
+                                {hasBarang && (
+                                  <StatusRemarks
+                                    className={"mt-1"}
+                                    status={els?.wr_document_status?.name}
+                                    remarks={els?.wr_remarks}
+                                    url={els?.url}
+                                    withFile={true}
+                                    approvedBy={
+                                      els?.wr_approved_by?.party?.full_name ??
+                                      "N/A"
+                                    }
+                                    role={"WAREHOUSE"}
+                                    // role={warehouseText}
+                                  />
+                                )}
                               </div>,
                               els?.percentage && els?.percentage + "%",
                               <BtnLihat url={els?.url} />,
@@ -208,19 +217,23 @@ const TableDoc = ({ loading }) => {
                             approvedBy={
                               el?.approved_by?.party?.full_name ?? "N/A"
                             }
-                            role={warehouseText}
+                            role={"USER"}
+                            // role={warehouseText}
                           />
-                          <StatusRemarks
-                            className={"mt-1"}
-                            status={el?.wr_document_status?.name}
-                            remarks={el?.wr_remarks}
-                            url={el?.url}
-                            withFile={true}
-                            approvedBy={
-                              el?.wr_approved_by?.party?.full_name ?? "N/A"
-                            }
-                            role={warehouseText}
-                          />
+                          {hasBarang && (
+                            <StatusRemarks
+                              className={"mt-1"}
+                              status={el?.wr_document_status?.name}
+                              remarks={el?.wr_remarks}
+                              url={el?.url}
+                              withFile={true}
+                              approvedBy={
+                                el?.wr_approved_by?.party?.full_name ?? "N/A"
+                              }
+                              role={"WAREHOUSE"}
+                              // role={warehouseText}
+                            />
+                          )}
                         </div>,
                         // el?.percentage && el?.percentage + "%",
                         "-",

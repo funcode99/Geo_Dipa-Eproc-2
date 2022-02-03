@@ -42,6 +42,8 @@ const Documents = ({
   set_loading_done_rd,
   fetch_api_sg,
   isAlsoClient,
+  dataJasa,
+  dataBarang,
   // loadStepper,
 }) => {
   const { func, task_id } = React.useContext(TerminPageContext);
@@ -348,6 +350,8 @@ const Documents = ({
         open,
         handleApi,
         isWarehouse,
+        dataBarang,
+        dataJasa,
       }}
     >
       <Toast />
@@ -413,6 +417,8 @@ const mapState = (state) => ({
     resend: getLoading(state, keys.resend),
   },
   isAlsoClient: getClientStatus(state),
+  dataJasa: state.deliveryMonitoring.dataJasa,
+  dataBarang: state.deliveryMonitoring.dataBarang,
 });
 
 const mapDispatch = {
