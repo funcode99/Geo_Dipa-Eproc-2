@@ -90,3 +90,6 @@ package-lock.json
 /config/config.json
 /dump.rdb
 temp
+
+# build folder
+build/
