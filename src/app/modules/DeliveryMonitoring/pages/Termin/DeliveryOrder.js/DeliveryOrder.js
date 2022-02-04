@@ -670,6 +670,7 @@ const DeliveryOrder = ({
         userStatus={status}
         options={options}
         loading={loadings.detail}
+        listPlants={allPlants}
       />
 
       <Card>

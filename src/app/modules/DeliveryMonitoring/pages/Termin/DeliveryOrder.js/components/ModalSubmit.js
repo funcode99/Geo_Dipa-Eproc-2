@@ -31,7 +31,7 @@ const tableHeader = [
   <FormattedMessage id="TITLE.UNIT_PRICE" />,
 ];
 
-const hasMaterialItem = (data) => {
+export const hasMaterialItem = (data) => {
   const filteredData = data?.filter(
     ({ item }, id) =>
       !(
