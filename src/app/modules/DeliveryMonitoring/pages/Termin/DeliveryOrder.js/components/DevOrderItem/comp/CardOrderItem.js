@@ -94,7 +94,7 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
         ...prev,
         [formRef?.current?.values?.id]: formRef?.current?.values,
       }));
-  }, 350);
+  }, 150);
 
   React.useEffect(() => {
     options.forEach((item, index) => {
