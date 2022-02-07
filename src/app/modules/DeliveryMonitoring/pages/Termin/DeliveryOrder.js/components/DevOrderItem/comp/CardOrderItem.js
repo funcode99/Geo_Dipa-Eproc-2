@@ -1,4 +1,5 @@
 import { Divider } from "@material-ui/core";
+import { debounce } from "lodash";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import ExpansionBox from "../../../../../../../../components/boxes/ExpansionBox";
@@ -86,14 +87,14 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
     [data]
   );
 
-  const getValue = () => {
+  const getValue = debounce(() => {
     // console.log(`formRef`, formRef?.current?.values);
     if (setItem)
       setItem((prev) => ({
         ...prev,
         [formRef?.current?.values?.id]: formRef?.current?.values,
       }));
-  };
+  }, 150);
 
   React.useEffect(() => {
     options.forEach((item, index) => {
@@ -150,6 +151,10 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
           onBlur: () => {
             // console.log("blur");
             getValue();
+          },
+          onChange: () => {
+            getValue();
+            // setComponentIndex(null);
           },
         }}
       />

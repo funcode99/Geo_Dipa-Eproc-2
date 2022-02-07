@@ -243,7 +243,9 @@ export function ListsWidget9({ className }) {
         {/* Header */}
         <div className="card-header align-items-center border-0 mt-4">
           <h3 className="card-title align-items-start flex-column">
-            <span className="font-weight-bolder text-dark">Activity</span>
+            <span className="font-weight-bolder text-dark">
+              Invoice Activity
+            </span>
             {/* <span className="text-muted mt-3 font-weight-bold font-size-sm">
               890,344 Sales
             </span> */}

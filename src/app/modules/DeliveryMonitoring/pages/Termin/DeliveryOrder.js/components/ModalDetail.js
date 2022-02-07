@@ -20,6 +20,7 @@ import { Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Send } from "@material-ui/icons";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
+import { hasMaterialItem } from "./ModalSubmit";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -47,10 +48,16 @@ const ModalDetail = ({
   userStatus,
   loading,
   options,
+  tempOrderItems,
+  listPlants,
 }) => {
   const classes = useStyles();
   const isClient = userStatus === "client";
   const isVendor = userStatus === "vendor";
+
+  const hasMaterial = React.useMemo(() => hasMaterialItem(tempOrderItems), [
+    tempOrderItems,
+  ]);
 
   return (
     <React.Fragment>
@@ -120,6 +127,38 @@ const ModalDetail = ({
             classes={{ root: classes.textField }}
             {...formik.getFieldProps("name")}
           />
+
+          {hasMaterial && (
+            <React.Fragment>
+              <InputLabel id="destination" className="mt-6">
+                <FormattedMessage id="TITLE.DESTINATION_UNIT" />
+              </InputLabel>
+              <Select
+                // labelId="demo-simple-select-label"
+                // id="demo-simple-select"
+                // value={10}
+                name={"destination"}
+                label="Age"
+                onChange={() => {}}
+                variant="outlined"
+                style={{ height: 37 }}
+                {...formik.getFieldProps("destination")}
+              >
+                {listPlants?.map((plant, id) => (
+                  <MenuItem key={plant.id} value={plant.id}>
+                    {plant?.facility?.name}
+                  </MenuItem>
+                ))}
+                {/* <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem> */}
+              </Select>
+              <span className="text-danger">
+                {formik.touched.destination && formik.errors.destination
+                  ? formik.errors.destination
+                  : null}
+              </span>
+            </React.Fragment>
+          )}
 
           <InputLabel id="date" className="mt-6 text-dark">
             <FormattedMessage id="TITLE.DATE" />
@@ -237,6 +276,7 @@ const ModalDetail = ({
 
 const mapState = ({ deliveryMonitoring }) => ({
   // updateOrderItems: deliveryMonitoring.dataUpdateOrderItems,
+  tempOrderItems: deliveryMonitoring.dataTempOrderItems,
 });
 
 const mapDispatch = (dispatch) => ({});

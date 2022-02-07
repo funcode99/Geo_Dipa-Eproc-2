@@ -1,10 +1,10 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect } from "react";
 import { Button, ButtonGroup } from "@material-ui/core";
 import { Form } from "react-bootstrap";
 import BasicInput from "../../../../../../components/input/BasicInput";
 import TextAreaInput from "../../../../../../components/input/TextAreaInput";
 
-const ApproveRejectBtn = forwardRef(({ isDisabled }, ref) => {
+const ApproveRejectBtn = forwardRef(({ isDisabled, initialValue }, ref) => {
   const [action, setAction] = React.useState("approve");
   const [remarks, setRemarks] = React.useState();
   const isReject = action === "reject";
@@ -16,6 +16,10 @@ const ApproveRejectBtn = forwardRef(({ isDisabled }, ref) => {
     setRemarks(e);
   };
   React.useImperativeHandle(ref, () => ({ isApprove, remarks }));
+  useEffect(() => {
+    setAction(Boolean(initialValue) ? "approve" : "reject");
+  }, [initialValue]);
+
   return (
     <div>
       <ButtonGroup

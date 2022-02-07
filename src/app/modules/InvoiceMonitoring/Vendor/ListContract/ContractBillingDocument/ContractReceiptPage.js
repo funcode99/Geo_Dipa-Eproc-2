@@ -38,6 +38,7 @@ import { SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractReceiptPage(props) {
   const [loading, setLoading] = useState(false);
+  const [loadingRcpt, setLoadingRcpt] = useState(false);
   const [contractData, setContractData] = useState({});
   const [uploadFilename, setUploadFilename] = useState("Pilih File");
   const [receiptStatus, setReceiptStatus] = useState(false);
@@ -175,6 +176,7 @@ function ContractReceiptPage(props) {
   );
 
   const getReceiptData = useCallback(() => {
+    setLoadingRcpt(true);
     getReceipt(contract_id, termin)
       .then((response) => {
         if (!response["data"]["data"]) {
@@ -247,9 +249,11 @@ function ContractReceiptPage(props) {
             setReceiptData(response["data"]["data"]);
           }
         }
+        setLoadingRcpt(false);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoadingRcpt(false);
       });
   }, [contract_id, termin, getHistoryReceiptData, formik, intl, setToast]);
 
@@ -586,6 +590,12 @@ function ContractReceiptPage(props) {
       <Card>
         <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
           <CardBody>
+            {loadingRcpt && (
+              <span>
+                <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+                <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+              </span>
+            )}
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group row">
@@ -848,7 +858,7 @@ function ContractReceiptPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 receiptStatus ||
-                  progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
                 !invoicePeriodsStatus
               }
             >

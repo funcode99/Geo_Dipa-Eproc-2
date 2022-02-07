@@ -115,6 +115,7 @@ function ContractSprPage(props) {
     setDataProgress,
   } = props;
   const [loading, setLoading] = useState(false);
+  const [loadingSpp, setLoadingSpp] = useState(false);
   const [contractData, setContractData] = useState({});
   const [dialogState, setDialogState] = useState(false);
   const [dialogStateBank, setDialogStateBank] = useState(false);
@@ -246,17 +247,20 @@ function ContractSprPage(props) {
   }, [contract_id, formik, intl, setToast, user_id]);
 
   const getSppData = useCallback(() => {
+    setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
         setSppData(response["data"]["data"]);
         if (response["data"]["data"]) {
           getHistorySppData(response["data"]["data"]["id"]);
         }
+        setLoadingSpp(false);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoadingSpp(false);
       });
-  }, [contract_id, termin, formik, intl, setToast, user_id]);
+  }, [contract_id, termin, formik, intl, setToast, user_id, setLoadingSpp]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -934,6 +938,12 @@ function ContractSprPage(props) {
       </Dialog>
       <Card>
         <CardBody>
+          {loadingSpp && (
+            <span>
+              <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+              <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+            </span>
+          )}
           <div className="row">
             <div className="col-md-6">
               <div className="form-group row">

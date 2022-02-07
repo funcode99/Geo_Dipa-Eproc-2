@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useCallback } from "react"; // useState
+import React, { useEffect, useLayoutEffect, useCallback, useMemo } from "react"; // useState
 import { connect, useSelector, shallowEqual } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import Tabs from "../../../../components/tabsCustomV1";
@@ -179,6 +179,11 @@ const ItemContract = (props) => {
     : [];
   const [onSubmit, setOnSubmit] = React.useState(false);
   const [statusSubmit, setStatusSubmit] = React.useState(false);
+  const isPaid = useMemo(
+    () =>
+      dataProgress?.find((el) => el.label === "Paid")?.status === "COMPLETE",
+    [dataProgress]
+  );
 
   useLayoutEffect(() => {
     suhbeader.setTitle(
@@ -504,6 +509,7 @@ const ItemContract = (props) => {
             tabLists={TabLists}
             handleChangeTwo={handleChangeTabTwo}
             auditStaff={auditStaff}
+            isPaid={isPaid}
           />
         </Container>
         <hr className="p-0 m-0" />

@@ -377,7 +377,7 @@ const DeliveryOrder = ({
     }
   };
 
-  const processingData = (oldItems, itemForm) => {
+  const processingData = async (oldItems, itemForm) => {
     let olds = [...oldItems];
     let news = [...itemForm];
     let result = [];
@@ -422,7 +422,7 @@ const DeliveryOrder = ({
     return result;
   };
 
-  const handleAction = (type, data) => {
+  const handleAction = async (type, data) => {
     // console.log(`type`, type);
     // console.log(`data`, data);
     switch (type) {
@@ -459,17 +459,24 @@ const DeliveryOrder = ({
 
         if (Object.keys(itemForm).length === 0) {
           dataArr = createItemForm(data?.task_delivery_items);
+          setTimeout(() => {
+            handleVisible("confirm", data, dataArr);
+            // submitItemRef.current.open();
+          }, 350);
         } else {
-          dataArr = processingData(
-            data?.task_delivery_items,
-            Object.values(itemForm)
-          );
+          processingData(data?.task_delivery_items, Object.values(itemForm))
+            .then((item) => {
+              dataArr = item;
+            })
+            .catch((e) => console.log(e))
+            .finally(() => {
+              setTimeout(() => {
+                handleVisible("confirm", data, dataArr);
+                // submitItemRef.current.open();
+              }, 150);
+            });
         }
 
-        setTimeout(() => {
-          handleVisible("confirm", data, dataArr);
-          // submitItemRef.current.open();
-        }, 200);
         break;
 
       default:
@@ -670,6 +677,7 @@ const DeliveryOrder = ({
         userStatus={status}
         options={options}
         loading={loadings.detail}
+        listPlants={allPlants}
       />
 
       <Card>

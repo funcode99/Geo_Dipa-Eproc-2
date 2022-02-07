@@ -124,7 +124,7 @@ function ItemContractFormVerification(props) {
               ) : (
                 <i className="fas fa-print"></i>
               )}
-              <FormattedMessage id="TITLE.PRINT" /> From Verifikasi
+              <FormattedMessage id="TITLE.PRINT" /> form verifikasi
             </button>
           </CardHeaderToolbar>
         </CardHeader>

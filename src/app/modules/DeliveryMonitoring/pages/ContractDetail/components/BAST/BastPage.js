@@ -315,7 +315,7 @@ const BastPage = ({
           key: keys.upload_s,
           type: "postForm",
           alertAppear: "both",
-          url: `/delivery/task-news/${taskNews.id}/upload`,
+          url: `/delivery/task-news/${taskNews?.id}/upload`,
           params: { file: params.data },
           onSuccess: () => {
             uploadRef.current.close();
@@ -328,7 +328,7 @@ const BastPage = ({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews.id}/status-bast`,
+          url: `delivery/task-news/${taskNews?.id}/status-bast`,
           params: {
             approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
           },
@@ -345,7 +345,7 @@ const BastPage = ({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews.id}/status`,
+          url: `delivery/task-news/${taskNews?.id}/status`,
           params: {
             approve_status_id: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
             reject_text: params?.remarks,

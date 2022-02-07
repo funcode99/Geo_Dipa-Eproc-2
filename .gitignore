@@ -63,7 +63,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+!!.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -90,4 +90,10 @@ package-lock.json
 /config/config.json
 /dump.rdb
 temp
+<<<<<<< HEAD
 D:\03. PROJECT\Eproc V2\program\eProc-deliveryinvoice web\src\redux\BaseHost.js
+=======
+
+# build folder
+build/
+>>>>>>> 9402856a4de984566e11a350d7d6693350637d91

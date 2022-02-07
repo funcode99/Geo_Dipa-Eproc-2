@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ContractInvoicePage(props) {
   const [loading, setLoading] = useState(false);
+  const [loadingInvoice, setLoadingInvoice] = useState(false);
   const [contractData, setContractData] = useState({});
   const [invoiceData, setInvoiceData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -201,6 +202,7 @@ function ContractInvoicePage(props) {
   }, [invoiceName, setInvoiceBillingId, formik, intl, setToast]);
 
   const getInvoiceData = useCallback(() => {
+    setLoadingInvoice(true);
     getInvoice(contract_id, termin)
       .then((response) => {
         setInvoiceData(response.data.data);
@@ -212,9 +214,11 @@ function ContractInvoicePage(props) {
               : []
           );
         }
+        setLoadingInvoice(false);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+        setLoadingInvoice(false);
       });
   }, [
     contract_id,
@@ -223,6 +227,7 @@ function ContractInvoicePage(props) {
     formik,
     intl,
     setToast,
+    setLoadingInvoice,
   ]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -812,6 +817,12 @@ function ContractInvoicePage(props) {
       </Dialog>
       <Card>
         <CardBody>
+          {loadingInvoice && (
+            <span>
+              <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
+              <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+            </span>
+          )}
           <div className="row">
             <div className="col-md-6">
               <div className="form-group row">

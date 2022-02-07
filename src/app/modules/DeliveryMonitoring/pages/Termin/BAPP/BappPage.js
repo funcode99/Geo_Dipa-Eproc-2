@@ -69,12 +69,13 @@ const BappPage = ({
   loadings,
   handleChangeTab,
   userAuth,
+  dataTask,
 }) => {
   const { func, task_id, task_sa, task_gr } = React.useContext(
     TerminPageContext
   );
   const [Toast, setToast] = useToast();
-  // const [taskNews, setTaskNews] = React.useState({});
+  // const [taskNews, settaskNews] = React.useState({});
   const isReject = taskNews?.approve_status?.code === "rejected";
   const uploadRef = React.useRef();
   const approveRef = React.useRef();
@@ -410,7 +411,7 @@ const BappPage = ({
           key: keys.upload_s,
           type: "postForm",
           alertAppear: "both",
-          url: `/delivery/task-news/${taskNews.id}/upload`,
+          url: `/delivery/task-news/${taskNews?.id}/upload`,
           params: { file: params.data },
           onSuccess: () => {
             uploadRef.current.close();
@@ -423,7 +424,7 @@ const BappPage = ({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews.id}/status`,
+          url: `delivery/task-news/${taskNews?.id}/status`,
           params: {
             approve_status_id: apiHelper.approveId,
           },
@@ -440,7 +441,7 @@ const BappPage = ({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews.id}/status`,
+          url: `delivery/task-news/${taskNews?.id}/status`,
           params: {
             approve_status_id: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
             reject_text: params?.remarks,
@@ -487,7 +488,7 @@ const BappPage = ({
     });
   };
 
-  console.log(`plant_data`, taskNews, contract, userAuth);
+  console.log(`plant_data`, taskNews, contract, userAuth, dataTask);
 
   return (
     <React.Fragment>
@@ -667,6 +668,7 @@ const BappPage = ({
                       <ApproveRejectBtn
                         ref={onTimeRef}
                         isDisabled={isDisabled}
+                        initialValue={dataTask?.is_on_time}
                       />
                       <AlertLate dataLate={lateData} />
                     </Col>
@@ -886,6 +888,7 @@ const mapState = (state) => {
       fetch: getLoading(state, keys.fetch),
       submit: getLoading(state, keys.submit),
     },
+    dataTask: deliveryMonitoring.dataTask,
   };
 };
 

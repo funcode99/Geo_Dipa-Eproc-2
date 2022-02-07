@@ -322,7 +322,7 @@ const ItemSpt = (props) => {
                 className="btn btn-sm btn-primary mx-1"
               >
                 <i className="fas fa-print"></i>
-                <FormattedMessage id="TITLE.PRINT" /> From Verifikasi
+                <FormattedMessage id="TITLE.PRINT" /> form verifikasi
               </button>
             </CardHeaderToolbar>
           </CardHeader>

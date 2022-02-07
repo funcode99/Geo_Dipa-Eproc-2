@@ -331,7 +331,7 @@ function DashboardListSpt(props) {
               className="btn btn-sm btn-primary"
             >
               <i className="fas fa-sync-alt p-0"></i>
-              <span className="ml-2">Syncronice</span>
+              <span className="ml-2">Synchronize</span>
             </button>
           </CardHeaderToolbar>
         </CardHeader>

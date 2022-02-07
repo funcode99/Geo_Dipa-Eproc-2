@@ -65,6 +65,8 @@ import {
   GoodReceipt,
 } from "../../../DeliveryMonitoring/pages/Termin/ServiceAccGR/components";
 import * as reducer from "../../_redux/InvoiceMonitoringSlice";
+import * as deliveryMonitoring from "../../../DeliveryMonitoring/service/DeliveryMonitoringCrud";
+import ModalAddDeliverables from "../../../DeliveryMonitoring/pages/Termin/Documents/components/ModalAddDeliverables";
 
 const styles = (theme) => ({
   root: {
@@ -220,6 +222,8 @@ function ItemContractInvoice(props) {
   const classes = useStyles();
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
+  const [modalAddDeliv, setModalAddDeliv] = useState(false);
+  const [loadingAddDeliv, setLoadingAddDeliv] = useState(false);
   const [loading, setLoading] = useState(false);
   const [billingStaffStatus, setBillingStaffStatus] = useState(false);
   const [taxStaffStatus, setTaxStaffStatus] = useState(false);
@@ -249,8 +253,16 @@ function ItemContractInvoice(props) {
     loading: false,
     statusReq: false,
   });
+
   const user_id = useSelector((state) => state.auth.user.data.user_id);
   const dataUser = useSelector((state) => state.auth.user.data);
+  let authStatus = useSelector((state) => state.auth.user.data.status);
+  const showAddBtn = Boolean(
+    dataUser.monitoring_role?.find(
+      (role) =>
+        role === "Verification Staff" || role === "Finance & Treasury Staff"
+    )
+  );
   let monitoring_role = dataUser.monitoring_role
     ? dataUser.monitoring_role
     : [];
@@ -1029,11 +1041,6 @@ function ItemContractInvoice(props) {
       dataBillingSoftCopy[indexBillingSoftCopy].status === "NO STARTED";
   }
 
-  useEffect(callApi, []);
-  useEffect(callApiContractSoftCopy, []);
-  useEffect(getContractAuthorityData, []);
-  useEffect(getRolesAuditData, []);
-
   const callApiSaGr = () => {
     getSaGr(termin)
       .then((result) => {
@@ -1046,7 +1053,62 @@ function ItemContractInvoice(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
+  useEffect(callApi, []);
+  useEffect(callApiContractSoftCopy, []);
+  useEffect(getContractAuthorityData, []);
+  useEffect(getRolesAuditData, []);
   useEffect(callApiSaGr, []);
+
+  const handleError = React.useCallback(
+    (err) => {
+      console.log(`err`, err);
+      setToast("Error API, please contact developer!");
+    },
+    [setToast]
+  );
+  const handleSuccess = React.useCallback(
+    (res) => {
+      if (res?.data?.status === true) {
+        callApi();
+        setToast(res?.data?.message);
+      }
+    },
+    [setToast, callApi]
+  );
+
+  const onAddDeliverable = (params) => {
+    // console.log(`params`, params);
+    // handle multi create document
+    if (Array.isArray(params)) {
+      let mappedParams = params?.map((el) => {
+        let val = JSON.parse(el.value);
+        return { document_id: val.id };
+      });
+      // console.log(params, mappedParams);
+      deliveryMonitoring
+        .postCreateDocArr(termin, mappedParams)
+        .then(handleSuccess)
+        .catch(handleError)
+        .finally(() => {
+          setLoadingAddDeliv(false);
+          setModalAddDeliv(false);
+        });
+    } else {
+      // handle single create document
+      let val = JSON.parse(params.value);
+      deliveryMonitoring
+        .postCreateDoc(termin, {
+          document_id: val.id,
+          document_custom_name: params.remarks,
+        })
+        .then(handleSuccess)
+        .catch(handleError)
+        .finally(() => {
+          setLoadingAddDeliv(false);
+          setModalAddDeliv(false);
+        });
+    }
+  };
 
   const print = (id) => {
     var printContents = window.$(`#${id}`).html();
@@ -1069,6 +1131,12 @@ function ItemContractInvoice(props) {
       </div>
       <Toast />
       {loading && <LinearProgress color="secondary" className="rounded" />}
+      <ModalAddDeliverables
+        visible={modalAddDeliv}
+        onClose={() => setModalAddDeliv(false)}
+        onSubmit={(params) => onAddDeliverable(params)}
+        loading={loadingAddDeliv}
+      />
       <Dialog
         open={dialogConfirm}
         TransitionComponent={Transition}
@@ -1628,6 +1696,22 @@ function ItemContractInvoice(props) {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
           <div style={{ width: "100%" }}>
+            <div className="d-flex justify-content-end align-items-center w-100 mb-5">
+              {authStatus === "client" && showAddBtn && (
+                <button
+                  className="btn btn-outline-success btn-sm"
+                  onClick={() => {
+                    console.log("nengsss");
+                    setModalAddDeliv(!modalAddDeliv);
+                  }}
+                >
+                  <span className="nav-icon">
+                    <i className="flaticon2-plus"></i>
+                  </span>
+                  <span className="nav-text">Deliverables</span>
+                </button>
+              )}
+            </div>
             <TableOnly
               dataHeader={headerTableDeliverables}
               loading={loadingDeliverables}
