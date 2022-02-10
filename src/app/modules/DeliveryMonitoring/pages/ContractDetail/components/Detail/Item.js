@@ -259,163 +259,162 @@ const Item = ({ handleClick, status }) => {
         />
       </div>
 
-      {navActive === "link-jasa" && (
-        <TableItemNew
-          withPagination={false}
-          tableHeader={theadService}
-          dataRows={dataContractById.services}
-          loading={loading}
-          renderRows={({ item, index }) => {
-            let el = item;
-            return (
-              <RowAccordion
-                key={el.id}
-                data={["accordIcon", el.desc, "", "", "", "", "", ""]}
-                dataAll={el.item_services}
-              >
-                {(item) => {
-                  return item?.map((item2) => {
-                    console.log("iterm", item, item2);
-                    return (
-                      <TableRow
-                        hover
-                        // onClick={
-                        //   (e) =>
-                        //     handleChecklist(e, item2, {
-                        //       id: el.id,
-                        //       type: "jasa",
-                        //     })
-                        //   // console.log(e)
-                        // }
-                        key={item2?.id}
-                      >
-                        <TableCell>
-                          <Checkbox
-                            name={`checkbox-${item2.id}`}
-                            id={`checkbox-${item2.id}`}
-                            color="secondary"
-                            onChange={
-                              (e) =>
-                                handleChecklist(e, item2, {
-                                  id: el.id,
-                                  type: "jasa",
-                                })
-                              // console.log(e)
+      {/* {navActive === "link-jasa" && ( */}
+      <TableItemNew
+        classContainer={navActive !== "link-jasa" ? "d-none" : ""}
+        withPagination={false}
+        tableHeader={theadService}
+        dataRows={dataContractById.services}
+        loading={loading}
+        renderRows={({ item, index }) => {
+          let el = item;
+          return (
+            <RowAccordion
+              key={el.id}
+              data={["accordIcon", el.desc, "", "", "", "", "", ""]}
+              dataAll={el.item_services}
+            >
+              {(item) => {
+                return item?.map((item2) => {
+                  console.log("iterm", item, item2);
+                  return (
+                    <TableRow
+                      hover
+                      // onClick={
+                      //   (e) =>
+                      //     handleChecklist(e, item2, {
+                      //       id: el.id,
+                      //       type: "jasa",
+                      //     })
+                      //   // console.log(e)
+                      // }
+                      key={item2?.id}
+                    >
+                      <TableCell>
+                        <Checkbox
+                          name={`checkbox-${item2.id}`}
+                          id={`checkbox-${item2.id}`}
+                          color="secondary"
+                          onChange={
+                            (e) =>
+                              handleChecklist(e, item2, {
+                                id: el.id,
+                                type: "jasa",
+                              })
+                            // console.log(e)
+                          }
+                          size="small"
+                          checked={item2.checked}
+                          disabled={item2.qty_available === 0 ? true : false}
+                        />
+                      </TableCell>
+                      <TableCell>{item2?.short_text}</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>{item2?.quantity}</TableCell>
+                      <TableCell>
+                        {isClient ? (
+                          <Form.Control
+                            type="number"
+                            size="sm"
+                            min="0.1"
+                            step="0.1"
+                            style={{
+                              width: 80,
+                              flex: "none",
+                            }}
+                            max={item2?.qty_available}
+                            disabled={!item2.checked ? true : false}
+                            defaultValue={parseFloat(
+                              item2.qty_available
+                            ).toFixed(1)}
+                            onChange={(e) =>
+                              handleInputQty(e.target.value, item2, "jasa")
                             }
-                            size="small"
-                            checked={item2.checked}
-                            disabled={item2.qty_available === 0 ? true : false}
                           />
-                        </TableCell>
-                        <TableCell>{item2?.short_text}</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell>{item2?.quantity}</TableCell>
-                        <TableCell>
-                          {isClient ? (
-                            <Form.Control
-                              type="number"
-                              size="sm"
-                              min="0.1"
-                              step="0.1"
-                              style={{
-                                width: 80,
-                                flex: "none",
-                              }}
-                              max={item2?.qty_available}
-                              disabled={!item2.checked ? true : false}
-                              defaultValue={parseFloat(
-                                item2.qty_available
-                              ).toFixed(1)}
-                              onChange={(e) =>
-                                handleInputQty(e.target.value, item2, "jasa")
-                              }
-                            />
-                          ) : (
-                            parseFloat(item2.qty_available).toFixed(1)
-                          )}
-                          {qtyErrors.find((el) => el === item2.id) && (
-                            <span className="text-danger">
-                              Max qty{" "}
-                              {parseFloat(item2.qty_available).toFixed(1)}
-                            </span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {el?.measurement_unit?.ident_name}
-                        </TableCell>
-                        <TableCell>{rupiah(item2?.gr_price)}</TableCell>
-                        <TableCell>{rupiah(item2?.net_value)}</TableCell>
-                      </TableRow>
-                    );
-                  });
-                }}
-              </RowAccordion>
-            );
-          }}
-        />
-      )}
-      {navActive === "link-barang" && (
-        <TableItemNew
-          withPagination={true}
-          tableHeader={theadItem}
-          dataRows={dataContractById.items}
-          loading={loading}
-          renderRows={({ item, index }) => {
-            return (
-              <TableRow hover key={item?.id}>
-                <TableCell>
-                  <Checkbox
-                    name={`checkbox-${item.id}`}
-                    id={`checkbox-${item.id}`}
-                    color="secondary"
+                        ) : (
+                          parseFloat(item2.qty_available).toFixed(1)
+                        )}
+                        {qtyErrors.find((el) => el === item2.id) && (
+                          <span className="text-danger">
+                            Max qty {parseFloat(item2.qty_available).toFixed(1)}
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell>{el?.measurement_unit?.ident_name}</TableCell>
+                      <TableCell>{rupiah(item2?.gr_price)}</TableCell>
+                      <TableCell>{rupiah(item2?.net_value)}</TableCell>
+                    </TableRow>
+                  );
+                });
+              }}
+            </RowAccordion>
+          );
+        }}
+      />
+      {/* )} */}
+      {/* {navActive === "link-barang" && ( */}
+      <TableItemNew
+        classContainer={navActive !== "link-barang" ? "d-none" : ""}
+        withPagination={true}
+        tableHeader={theadItem}
+        dataRows={dataContractById.items}
+        loading={loading}
+        renderRows={({ item, index }) => {
+          return (
+            <TableRow hover key={item?.id}>
+              <TableCell>
+                <Checkbox
+                  name={`checkbox-${item.id}`}
+                  id={`checkbox-${item.id}`}
+                  color="secondary"
+                  onChange={(e) =>
+                    handleChecklist(e, item, {
+                      id: item.id,
+                      type: "barang",
+                    })
+                  }
+                  size="small"
+                  checked={item.checked}
+                  disabled={item.qty_available === 0 ? true : false}
+                />
+              </TableCell>
+              <TableCell>{item?.desc}</TableCell>
+              <TableCell></TableCell>
+              <TableCell>{item?.qty}</TableCell>
+              <TableCell>
+                {isClient ? (
+                  <Form.Control
+                    type="number"
+                    size="sm"
+                    min="0.1"
+                    step="0.1"
+                    style={{
+                      width: 80,
+                      flex: "none",
+                    }}
+                    max={item?.qty_available}
+                    disabled={!item.checked ? true : false}
+                    defaultValue={parseFloat(item.qty_available).toFixed(1)}
                     onChange={(e) =>
-                      handleChecklist(e, item, {
-                        id: item.id,
-                        type: "barang",
-                      })
+                      handleInputQty(e.target.value, item, "barang")
                     }
-                    size="small"
-                    checked={item.checked}
-                    disabled={item.qty_available === 0 ? true : false}
                   />
-                </TableCell>
-                <TableCell>{item?.desc}</TableCell>
-                <TableCell></TableCell>
-                <TableCell>{item?.qty}</TableCell>
-                <TableCell>
-                  {isClient ? (
-                    <Form.Control
-                      type="number"
-                      size="sm"
-                      min="0.1"
-                      step="0.1"
-                      style={{
-                        width: 80,
-                        flex: "none",
-                      }}
-                      max={item?.qty_available}
-                      disabled={!item.checked ? true : false}
-                      defaultValue={parseFloat(item.qty_available).toFixed(1)}
-                      onChange={(e) =>
-                        handleInputQty(e.target.value, item, "barang")
-                      }
-                    />
-                  ) : (
-                    parseFloat(item.qty_available).toFixed(1)
-                  )}
-                  {qtyErrors.find((el) => el === item.id) ? (
-                    <span className="text-danger">
-                      Max qty {parseFloat(item.qty_available).toFixed(1)}
-                    </span>
-                  ) : null}
-                </TableCell>
-                <TableCell>{item?.measurement_unit?.ident_name}</TableCell>
-                <TableCell>{rupiah(item?.unit_price)}</TableCell>
-              </TableRow>
-            );
-          }}
-        />
-      )}
+                ) : (
+                  parseFloat(item.qty_available).toFixed(1)
+                )}
+                {qtyErrors.find((el) => el === item.id) ? (
+                  <span className="text-danger">
+                    Max qty {parseFloat(item.qty_available).toFixed(1)}
+                  </span>
+                ) : null}
+              </TableCell>
+              <TableCell>{item?.measurement_unit?.ident_name}</TableCell>
+              <TableCell>{rupiah(item?.unit_price)}</TableCell>
+            </TableRow>
+          );
+        }}
+      />
+      {/* )} */}
       {isClient && (
         <div className="d-flex justify-content-end w-100 mt-4">
           <Button
