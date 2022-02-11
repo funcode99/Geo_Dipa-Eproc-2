@@ -892,7 +892,9 @@ function Summary({}) {
                                 </TableCell>
                                 <TableCell>{service?.qty}</TableCell>
                                 <TableCell>
-                                  -{/* {service?.service?.qty_available} */}
+                                  {parseFloat(
+                                    service?.service?.qty_available
+                                  ).toFixed(1)}
                                 </TableCell>
                                 <TableCell className="align-middle">
                                   {/* {service.quantity} */}
