@@ -235,36 +235,13 @@ const BappPage = ({
         url: `/delivery/task/${taskId}/news`,
         onSuccess: (res) => {
           // handleLoading("get", false);
-          console.log(`res`, res);
           saveTask({ task_gr, task_sa, ...res.data });
           generateTableContent(res?.data?.news?.news_histories);
-
           updateExclude();
-
-          // uploadRef.current.close();
-          // fetchData({ visible: false, message: "" });
         },
       });
-      // console.log();
-      // deliveryMonitoring
-      //   .getTaskById(taskId)
-      //   .then((res) => {
-      //     // console.log(`res`, res);
-      //     handleLoading("get", false);
-      //     if (res.data.status === true) {
-      //       saveTask(res?.data?.data);
-      //       generateTableContent(res?.data?.data?.news?.news_histories);
-
-      //       updateExclude();
-
-      //       if (toast.visible === true) {
-      //         setToast(toast.message, 5000);
-      //       }
-      //     }
-      //   })
-      //   .catch((err) => console.log("err", err));
     },
-    [taskId, handleLoading, saveTask, setToast]
+    [taskId, saveTask, task_gr, task_sa]
   );
 
   const handleSuccess = React.useCallback(

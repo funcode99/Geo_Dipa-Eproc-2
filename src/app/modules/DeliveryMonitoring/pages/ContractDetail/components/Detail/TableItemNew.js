@@ -23,6 +23,7 @@ const TableItemNew = ({
   renderRows,
   tableHeader = theadItems,
   withPagination = false,
+  classContainer,
 }) => {
   return (
     <TablePaginationCustom
@@ -33,6 +34,7 @@ const TableItemNew = ({
       withSearch={false}
       withPagination={withPagination}
       renderRows={renderRows}
+      classContainer={classContainer}
     />
   );
 };

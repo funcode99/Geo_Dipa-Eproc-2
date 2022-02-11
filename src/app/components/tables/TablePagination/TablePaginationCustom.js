@@ -126,6 +126,7 @@ export default function TablePaginationCustom({
   footerComponent,
   maxHeight,
   headerProps,
+  classContainer,
 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -187,7 +188,7 @@ export default function TablePaginationCustom({
     setRowsPerPage(rows?.length || 5);
   }, [showAllData]);
   return (
-    <div className={classes.root}>
+    <div className={clsx(classes.root, classContainer)}>
       {withSearch && <SearchBox onChange={handleChangeQuery} />}
       <Paper className={classes.paper}>
         <div className={classes.tableBox}>

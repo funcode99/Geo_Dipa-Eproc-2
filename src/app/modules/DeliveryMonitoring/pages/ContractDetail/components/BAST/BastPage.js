@@ -125,7 +125,6 @@ const BastPage = ({
 
   const fetchData = React.useCallback(
     (toast = { visible: false, message: "" }) => {
-      console.log(`aja`);
       fetchApi({
         key: keys.fetch,
         type: "get",
@@ -150,7 +149,7 @@ const BastPage = ({
       //   },
       // });
     },
-    []
+    [task_gr, task_sa, task_id]
   );
 
   const handleError = React.useCallback(
@@ -324,11 +323,13 @@ const BastPage = ({
         });
         break;
       case "approve":
+        console.log("taskNews?.id", taskNews?.id);
+
         fetchApi({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews?.id}/status-bast`,
+          url: `delivery/task-news/${"taskNews?.id"}/status-bast`,
           params: {
             approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
           },
