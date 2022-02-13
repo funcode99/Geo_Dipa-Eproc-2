@@ -13,7 +13,10 @@ const urlHelper = {
 export const openLinkTab = (link) => {
   // console.log(`link2`, link);
   if (_.isEmpty(link)) MODAL.showSnackbar("Link tidak Tersedia");
-  else window.open(urlHelper.addBaseURL(link), "_blank");
+  else {
+    if (link.includes("http")) window.open(link, "_blank");
+    else window.open(urlHelper.addBaseURL(link), "_blank");
+  }
 };
 
 export default urlHelper;
