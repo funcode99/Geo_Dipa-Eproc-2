@@ -1,5 +1,5 @@
-import React, {useMemo} from "react";
-import {useHtmlClassService} from "../../_core/MetronicLayout";
+import React, { useMemo } from "react";
+import { useHtmlClassService } from "../../_core/MetronicLayout";
 
 export function Footer() {
   const today = new Date().getFullYear();
@@ -8,7 +8,7 @@ export function Footer() {
   const layoutProps = useMemo(() => {
     return {
       footerClasses: uiService.getClasses("footer", true),
-      footerContainerClasses: uiService.getClasses("footer_container", true)
+      footerContainerClasses: uiService.getClasses("footer_container", true),
     };
   }, [uiService]);
 
@@ -21,7 +21,10 @@ export function Footer() {
         className={`${layoutProps.footerContainerClasses} d-flex flex-column flex-md-row align-items-center justify-content-between`}
       >
         <div className="text-dark order-2 order-md-1">
-          <span className="text-muted font-weight-bold mr-2">{today.toString()}</span> &copy;{" "}
+          <span className="text-muted font-weight-bold mr-2">{`${today.toString()} v${
+            process.env.REACT_APP_VERSION
+          }`}</span>{" "}
+          &copy;{" "}
           <a
             href="https://www.geodipa.co.id/"
             target="_blank"
