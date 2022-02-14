@@ -1,18 +1,21 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React, {useMemo, useLayoutEffect, useEffect} from "react";
+import React, { useMemo, useLayoutEffect, useEffect } from "react";
 import objectPath from "object-path";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 // import {QuickActions} from "./components/QuickActions";
-import {BreadCrumbs} from "./components/BreadCrumbs";
-import {getBreadcrumbsAndTitle, useSubheader} from "../../_core/MetronicSubheader";
-import {useHtmlClassService} from "../../_core/MetronicLayout";
-import { 
-  FormattedMessage, 
-  // injectIntl 
+import { BreadCrumbs } from "./components/BreadCrumbs";
+import {
+  getBreadcrumbsAndTitle,
+  useSubheader,
+} from "../../_core/MetronicSubheader";
+import { useHtmlClassService } from "../../_core/MetronicLayout";
+import {
+  FormattedMessage,
+  // injectIntl
 } from "react-intl";
-import { 
-  useLang, 
-  // setLanguage 
+import {
+  useLang,
+  // setLanguage
 } from "../../../i18n";
 
 export function SubHeader() {
@@ -32,16 +35,23 @@ export function SubHeader() {
       subheaderContainerCssClasses: uiService.getClasses(
           "subheader_container",
           true
-      )
+      ),
     };
   }, [uiService]);
 
   useLayoutEffect(() => {
     const aside = getBreadcrumbsAndTitle("kt_aside_menu", location.pathname);
     const header = getBreadcrumbsAndTitle("kt_header_menu", location.pathname);
-    const breadcrumbs = (aside && aside.breadcrumbs.length > 0) ? aside.breadcrumbs : header.breadcrumbs;
+    const breadcrumbs =
+      aside && aside.breadcrumbs.length > 0
+        ? aside.breadcrumbs
+        : header.breadcrumbs;
     subheader.setBreadcrumbs(breadcrumbs);
-    subheader.setTitle((aside && aside.title && aside.title.length > 0) ? aside.title : header.title);
+    subheader.setTitle(
+      aside && aside.title && aside.title.length > 0
+        ? aside.title
+        : header.title
+    );
     // eslint-disable-next-line
   }, [location.pathname]);
 
@@ -63,30 +73,43 @@ export function SubHeader() {
                     className="burger-icon burger-icon-left mr-4 d-inline-block d-lg-none"
                     id="kt_subheader_mobile_toggle"
                 >
-                  <span/>
+              <span />
                 </button>
             )}
 
             <div className="d-flex align-items-baseline mr-5">
               <h5 className="text-dark font-weight-bold my-2 mr-5">
-                <>
-                  {subheader.title}
-                </>
+              <>{subheader.title}</>
                 {/*<small></small>*/}
               </h5>
-
             </div>
-
 
             <BreadCrumbs items={subheader.breadcrumbs} />
           </div>
 
           {/* Toolbar */}
           <div className="d-flex align-items-center">
-            <div className="btn btn-light btn-sm font-weight-bold" id="kt_dashboard_daterangepicker"
-               data-toggle="tooltip" data-placement="left">
-              <span className="text-muted font-weight-bold mr-2" id="kt_dashboard_daterangepicker_title"><FormattedMessage id="TITLE.TODAY" /></span>
-              <span className="text-primary font-weight-bold" id="kt_dashboard_daterangepicker_date">{window.moment(new Date()).locale(lang).format("DD MMMM YYYY")}</span>
+          <div
+            className="btn btn-light btn-sm font-weight-bold"
+            id="kt_dashboard_daterangepicker"
+            data-toggle="tooltip"
+            data-placement="left"
+          >
+            <span
+              className="text-muted font-weight-bold mr-2"
+              id="kt_dashboard_daterangepicker_title"
+            >
+              <FormattedMessage id="TITLE.TODAY" />
+            </span>
+            <span
+              className="text-primary font-weight-bold"
+              id="kt_dashboard_daterangepicker_date"
+            >
+              {window
+                .moment(new Date())
+                .locale(lang)
+                .format("DD MMMM YYYY")}
+            </span>
             </div>
             {/* <QuickActions/> */}
           </div>

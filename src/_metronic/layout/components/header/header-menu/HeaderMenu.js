@@ -1,20 +1,37 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React from "react";
-// import { useLocation } from "react-router";
-// import { NavLink } from "react-router-dom";
-// import SVG from "react-inlinesvg";
-// import { 
-//     toAbsoluteUrl, 
-//     checkIsActive 
-// } from "../../../../_helpers";
+import React, { useLayoutEffect, useEffect } from "react";
+import { useLocation } from "react-router";
+import {
+  getBreadcrumbsAndTitle,
+  useSubheader,
+} from "../../../_core/MetronicSubheader";
+import { Link } from "react-router-dom";
 
 export function HeaderMenu({ layoutProps }) {
-    // const location = useLocation();
-    // const getMenuItemActive = (url) => {
-    //     return checkIsActive(location, url) ? "menu-item-active" : "";
-    // }
+  const location = useLocation();
+  const subheader = useSubheader();
 
-    return <div
+  useLayoutEffect(() => {
+    const aside = getBreadcrumbsAndTitle("kt_aside_menu", location.pathname);
+    const header = getBreadcrumbsAndTitle("kt_header_menu", location.pathname);
+    const breadcrumbs =
+      aside && aside.breadcrumbs.length > 0
+        ? aside.breadcrumbs
+        : header.breadcrumbs;
+    subheader.setBreadcrumbs(breadcrumbs);
+    subheader.setTitle(
+      aside && aside.title && aside.title.length > 0
+        ? aside.title
+        : header.title
+    );
+    // eslint-disable-next-line
+  }, [location.pathname]);
+
+  // Do not remove this useEffect, need from update title/breadcrumbs outside (from the page)
+  useEffect(() => {}, [subheader]);
+
+  return (
+    <div
         id="kt_header_menu"
         className={`header-menu header-menu-mobile ${layoutProps.ktMenuClasses}`}
         {...layoutProps.headerMenuAttributes}
@@ -22,12 +39,42 @@ export function HeaderMenu({ layoutProps }) {
         {/*begin::Header Nav*/}
         <ul className={`menu-nav ${layoutProps.ulClasses}`}>
             {/*begin::1 Level*/}
-            {/* <li className={`menu-item menu-item-rel ${getMenuItemActive('/dashboard')}`}>
-                <NavLink className="menu-link" to="/dashboard">
+        <li className={`menu-item menu-item-rel`}>
+          <div className="d-flex align-items-baseline mr-5">
+            <h6 className="text-dark font-weight-bold my-2 mr-5">
+              <>{subheader.title}</>
+              {/*<small></small>*/}
+            </h6>
+          </div>
+          <ul className="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2">
+            <li className="breadcrumb-item font-size-sm">
+              <Link to="/client/dashboard">
+                <i className="flaticon2-shelter text-muted icon-1x" />
+              </Link>
+            </li>
+            {/* [
+              {
+                pathname: "/client/invoice_monitoring",
+                title: "Invoice Monitoring",
+              },
+              {
+                pathname: "/client/invoice_monitoring/contract",
+                title: "List of Contracts and PO",
+              },
+            ] */}
+            {subheader.breadcrumbs.map((item, index) => (
+              <li key={`bc${index}`} className="breadcrumb-item font-size-sm">
+                <Link className="text-muted" to={{ pathname: item.pathname }}>
+                  {item.title.toString()}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {/* <NavLink className="menu-link" to="/dashboard">
                     <span className="menu-text">Dashboard</span>
-                    {layoutProps.rootArrowEnabled && (<i className="menu-arrow" />)}
-                </NavLink>
-            </li> */}
+            {layoutProps.rootArrowEnabled && <i className="menu-arrow" />}
+          </NavLink> */}
+        </li>
             {/*end::1 Level*/}
 
             {/*Classic submenu*/}
@@ -741,5 +788,6 @@ export function HeaderMenu({ layoutProps }) {
             {/*end::1 Level*/}
         </ul>
         {/*end::Header Nav*/}
-    </div>;
+    </div>
+  );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -6,6 +6,10 @@ import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
+import { openLinkTab } from "../../../service/helper/urlHelper";
+import { IconButton } from "@material-ui/core";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 /*
   INTL (i18n) docs:
@@ -18,38 +22,44 @@ import { login } from "../_redux/authCrud";
 */
 
 const initialValues = {
-  username: "adyt",
-  password: "Test1234",
+  username: "",
+  password: "",
 };
 
 function Login(props) {
   const { intl } = props;
   const [loading, setLoading] = useState(false);
+  const [seePassword, setSeePassword] = useState(false);
   const LoginSchema = Yup.object().shape({
     username: Yup.string()
-      .min(3, intl.formatMessage({
-        id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
-      }, {length: 3}))
-      .max(50, intl.formatMessage({
-        id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
-      }, {length: 50}))
+      .min(
+        3,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
+          },
+          { length: 3 }
+        )
+      )
+      .max(
+        50,
+        intl.formatMessage(
+          {
+            id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
+          },
+          { length: 50 }
+        )
+      )
       .required(
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
       ),
-    password: Yup.string()
-      .min(8, intl.formatMessage({
-        id: "AUTH.VALIDATION.MIN_LENGTH_FIELD",
-      }, {length: 8}))
-      .max(50, intl.formatMessage({
-        id: "AUTH.VALIDATION.MAX_LENGTH_FIELD",
-      }, {length: 50}))
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      ),
+    password: Yup.string().required(
+      intl.formatMessage({
+        id: "AUTH.VALIDATION.REQUIRED_FIELD",
+      })
+    ),
   });
 
   const enableLoading = () => {
@@ -72,6 +82,10 @@ function Login(props) {
     return "";
   };
 
+  const handleVisiblePassword = useCallback(() => {
+    setSeePassword((e) => !e);
+  }, [setSeePassword]);
+
   const formik = useFormik({
     initialValues,
     validationSchema: LoginSchema,
@@ -81,7 +95,7 @@ function Login(props) {
         login(values.username, values.password)
           .then(({ data: { data } }) => {
             disableLoading();
-            props.login(data.authn_token);
+            props.login(data.token);
           })
           .catch((e) => {
             // console.log(e.response);
@@ -98,21 +112,14 @@ function Login(props) {
   });
 
   return (
-    
     <div className="login-form login-signin" id="kt_login_signin_form">
       {/* begin::Head */}
       <div className="text-center mb-10 mb-lg-20">
-
-      <img src="/media/logos/logo-eprocurement.png" alt="Logo"/> 
-      
+        <img src="/media/logos/logo_geodipa.png" alt="Logo" />
       </div>
       <div className="text-center mb-10 mb-lg-20">
-     
         <h3 className="font-size-h2">
-          <span>
-            {/* <FormattedMessage id="AUTH.LOGIN.TITLE" /> */}
-          </span>
-
+          <span>{/* <FormattedMessage id="AUTH.LOGIN.TITLE" /> */}</span>
         </h3>
         <p className="text-muted font-weight-bold">
           {/* Enter your username and password */}
@@ -150,13 +157,31 @@ function Login(props) {
         <div className="form-group fv-plugins-icon-container">
           <input
             placeholder="Password"
-            type="password"
-            className={`form-control form-control-solid border border-info h-auto py-3 px-6 ${getInputClasses(
-              "password"
-            )}`}
+            type={seePassword ? "text" : "password"}
+            // className={`form-control form-control-solid border border-info h-auto py-3 px-6 ${getInputClasses(
+            //   "password"
+            // )}`}
+            className={`form-control form-control-solid border border-info h-auto py-3 px-6 pr-15`}
             name="password"
             {...formik.getFieldProps("password")}
           />
+          <div style={{ height: 1 }}>
+            <IconButton
+              style={{
+                position: "absolute",
+                right: "1.9rem",
+                zIndex: 2,
+                marginTop: -42,
+              }}
+              color="dark"
+              aria-label="visible password"
+              component="span"
+              onClick={handleVisiblePassword}
+            >
+              {seePassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </IconButton>
+          </div>
+
           {formik.touched.password && formik.errors.password ? (
             <div className="fv-plugins-message-container">
               <div className="fv-help-block">{formik.errors.password}</div>
@@ -173,24 +198,30 @@ function Login(props) {
           </Link>
         </div>
         <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
-
           <button
             id="kt_login_signin_submit"
             type="submit"
             disabled={formik.isSubmitting}
             className={`btn btn-primary font-weight-bold form-control h-auto py-3 px-6`}
           >
-            <span><FormattedMessage id="AUTH.LOGIN.BUTTON" /></span>
+            <span>
+              <FormattedMessage id="AUTH.LOGIN.BUTTON" />
+            </span>
             {loading && <span className="ml-3 spinner spinner-white"></span>}
           </button>
         </div>
 
         <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
           <div className="mx-auto mb-2 col-md-12 text-primary">
-           <p className="text-center mb-0">
-              <i className="fa fa-headphones text-primary font-16" aria-hidden="true"></i>
+            <p className="text-center mb-0">
+              <i
+                className="fa fa-headphones text-primary font-16"
+                aria-hidden="true"
+              ></i>
               <span>&nbsp;</span>
-              <span className="font-16"><b>Support</b></span>
+              <span className="font-16">
+                <b>Support</b>
+              </span>
             </p>
           </div>
           <div className="mx-auto mb-2 col-md-12">
@@ -200,16 +231,37 @@ function Login(props) {
           <div className="mx-auto mb-2 col-md-12 text-primary">
             <p className="text-center mb-0">Gedung Aldevco Octagon 2th Floor</p>
             <p className="text-center mb-0">Jalan Warung Jati Barat No. 75</p>
-            <p className="text-center mb-0">Jakarta Selatan 12740 - Indonesia</p>
+            <p className="text-center mb-0">
+              Jakarta Selatan 12740 - Indonesia
+            </p>
             <p className="text-center mb-0">E.procurement@geodipa.co.id</p>
             <p className="text-center mb-0">T. +62 21 7982925</p>
             <p className="text-center mb-0">F. +62 21 7982930</p>
+          </div>
+          <div className="mx-auto mb-2 col-md-12 text-primary">
+            <Link
+              onClick={() => {
+                openLinkTab(
+                  "http://192.168.0.168:5000/user-manual-delivery-monitoring.pdf"
+                );
+              }}
+            >
+              <p className="text-center mb-0">
+                <i
+                  className="fas fa-file-word text-primary font-16"
+                  aria-hidden="true"
+                ></i>
+                <span>&nbsp;</span>
+                <span className="font-16">
+                  <b>Manual Book</b>
+                </span>
+              </p>
+            </Link>
           </div>
         </div>
       </form>
       {/*end::Form*/}
     </div>
-
   );
 }
 

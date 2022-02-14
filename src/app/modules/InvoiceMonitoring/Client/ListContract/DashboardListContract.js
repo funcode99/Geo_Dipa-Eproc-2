@@ -1,258 +1,330 @@
-import React from 'react';
+import React, { useState, useLayoutEffect } from "react";
+import { connect, shallowEqual, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
+import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import {
-    connect 
-} from "react-redux";
-import { 
-    // FormattedMessage, 
-    injectIntl 
-} from "react-intl";
-import {
-  Card,
-  CardBody,
-} from "../../../../../_metronic/_partials/controls";
-import { Table, Pagination } from "react-bootstrap";
-import SVG from "react-inlinesvg";
-import { toAbsoluteUrl } from "../../../../../_metronic/_helpers/AssetsHelpers";
+  getContractMainFinance,
+  getContractUnitFinance,
+  getContractUser,
+} from "../../_redux/InvoiceMonitoringCrud";
+import useToast from "../../../../components/toast";
+import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import Tables from "../../../../components/tableCustomV1/table";
+import { rupiah } from "../../../../libs/currency";
+import { useSubheader } from "../../../../../_metronic/layout";
+import { getRolesAudit } from "../../../Master/service/MasterCrud";
 
-class DashboardListContract extends React.Component {
-    constructor(props) {
-        super()
-        this.state = {
-            nameStateFilter: "",
-            filterTable: {}
+function DashboardListContract(props) {
+  const user_id = useSelector(
+    (state) => state.auth.user.data.user_id,
+    shallowEqual
+  );
+  const is_finance = useSelector(
+    (state) => state.auth.user.data.is_finance,
+    shallowEqual
+  );
+  const is_main = useSelector(
+    (state) => state.auth.user.data.is_main,
+    shallowEqual
+  );
+
+  const { intl } = props;
+  const [Toast, setToast] = useToast();
+  const [loading, setLoading] = useState(true);
+  const [auditStaff, setAuditStaff] = useState(false);
+  const [data, setData] = useState({
+    data: [],
+    count: 0,
+  });
+  const [paramsTable, setParamsTable] = useState("");
+  const [err, setErr] = useState(false);
+  const dataUser = useSelector((state) => state.auth.user.data);
+  let monitoring_role = dataUser.monitoring_role
+    ? dataUser.monitoring_role
+    : [];
+
+  const headerTable = [
+    {
+      title: intl.formatMessage({
+        id: "TITLE.NO",
+      }),
+      name: "no",
+      order: {
+        active: false,
+        status: false,
+      },
+      filter: {
+        active: false,
+        type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER",
+      }),
+      name: "contract_no",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.PO_NUMBER" }),
+      name: "po_no",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE",
+      }),
+      name: "procurement_title",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({
+        id: "TITLE.TOTAL_AMOUNT",
+      }),
+      name: "amount",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "currency",
+      },
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.PO_DATE" }),
+      name: "po_date",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "date",
+      },
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.CONTRACT_DATE" }),
+      name: "contract_date",
+      order: {
+        active: true,
+        status: true,
+        type: true,
+      },
+      filter: {
+        active: true,
+        type: "date",
+      },
+    },
+    {
+      title: intl.formatMessage({ id: "TITLE.CONTRACT_END_DATE" }),
+      name: "end_date",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "date",
+      },
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.LABEL.GROUP" }),
+      name: "group",
+      order: {
+        active: false,
+        status: false,
+      },
+      filter: {
+        active: false,
+        type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({
+        id: "CONTRACT_DETAIL.LABEL.VENDOR",
+      }),
+      name: "vendor_name",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({ id: "CONTRACT_DETAIL.TABLE_HEAD.STATUS" }),
+      name: "status",
+      order: {
+        active: false,
+        status: false,
+      },
+      filter: {
+        active: false,
+        type: "text",
+      },
+    },
+  ];
+  const suhbeader = useSubheader();
+
+  useLayoutEffect(() => {
+    suhbeader.setBreadcrumbs([
+      {
+        pathname: `/client/invoice_monitoring/contract`,
+        title: intl.formatMessage({
+          id: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+        }),
+      },
+    ]);
+  }, []);
+
+  const requestApi = (params) => {
+    setLoading(true);
+    setData({
+      ...data,
+      count: 0,
+      data: [],
+    });
+    setErr(false);
+    setParamsTable(params);
+    var audit = false;
+    getRolesAudit().then((responseRoles) => {
+      responseRoles["data"]["data"].map((item, index) => {
+        if (
+          monitoring_role.findIndex((element) => element === item.name) >= 0
+        ) {
+          audit = true;
         }
-    }
-
-    //Life Circle pada React JS Component
-    componentDidMount() {
-    }
-
-    // Setiap ada Perubahan data pada redux akan terlihat pada componentDidUpdate
-    componentDidUpdate(prevProps, prevState) {
-    }
-
-    openFilterTable(index){
-        let idFilter = "filter-" + index;
-        let idInputFilter = "loop-value-" + index;
-        let status = document.getElementById(idFilter).getAttribute("status");
-        let { nameStateFilter, filterTable } = this.state;
-        if(nameStateFilter === ""){
-            nameStateFilter = idFilter;
-            this.setState({nameStateFilter}, () => {
-                document.getElementById(idFilter).setAttribute("status", "open");
-                document.getElementById(idFilter).classList.add("open");
+      });
+      if ((is_finance && is_main) || audit) {
+        getContractMainFinance(params)
+          .then((result) => {
+            setLoading(false);
+            setData({
+              ...data,
+              count: result.data.count || 0,
+              data: result.data.data,
             });
-        }else if(nameStateFilter === idFilter){
-            if(status === "closed"){
-                document.getElementById(idFilter).setAttribute("status", "open");
-                document.getElementById(idFilter).classList.add("open");
-            }else{
-                document.getElementById(idFilter).setAttribute("status", "closed");
-                document.getElementById(idFilter).classList.remove("open");
-                document.getElementById(idInputFilter).value = filterTable[idInputFilter] || "";
-            }
-        }else{
-            document.getElementById(nameStateFilter).setAttribute("status", "closed");
-            document.getElementById(nameStateFilter).classList.remove("open");
-            nameStateFilter = idFilter;
-            this.setState({nameStateFilter}, () => {
-                document.getElementById(idFilter).setAttribute("status", "open");
-                document.getElementById(idFilter).classList.add("open");
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      } else if (is_finance) {
+        getContractUnitFinance(user_id, params)
+          .then((result) => {
+            setLoading(false);
+            setData({
+              ...data,
+              count: result.data.count || 0,
+              data: result.data.data,
             });
-        }
-    }
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      } else {
+        getContractUser(user_id, params)
+          .then((result) => {
+            setLoading(false);
+            setData({
+              ...data,
+              count: result.data.count || 0,
+              data: result.data.data,
+            });
+          })
+          .catch((err) => {
+            setErr(true);
+            setLoading(false);
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          });
+      }
+    });
+  };
 
-    updateValueFilter(property){
-        let filterTable = this.state.filterTable;
-        filterTable[property] = document.getElementById(property).value;
-        this.setState({filterTable});
-    }
-
-    resetValueFilter(property){
-        let filterTable = this.state.filterTable;
-        filterTable[property] = "";
-        document.getElementById(property).value = ""
-        this.setState({filterTable});
-    }
-
-    resetFilter(){
-        let filterTable = {};
-        this.setState({filterTable});
-    }
-
-    render() {
-        const { filterTable } = this.state;
-        return (
-            <React.Fragment>
-                <Card>
-                    <CardBody>
-                        <div className="panel-filter-table mb-1">
-                            <span className="mr-2 mt-2 float-left">Filter By:</span>
-                            <div className="d-block">
-                                <div className="float-left">
-                                    {
-                                        [...Array(5)].map((item, index) => {
-                                            return (
-                                                <div key={index.toString()} className="btn-group hover-filter-table" status="closed" id={"filter-" + index}>
-                                                    <div className="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" onClick={this.openFilterTable.bind(this, index)}>
-                                                        <span>Nomor PO: </span>
-                                                        <strong style={{paddingRight: 1, paddingLeft: 1}}>
-                                                            <span className="filter-label" id={"filter-span-" + index}>{filterTable["loop-value-" + index]}</span>
-                                                        </strong>
-                                                        {
-                                                            filterTable["loop-value-" + index] ?
-                                                            null
-                                                            : 
-                                                            <span style={{color: "#777777"}}>
-                                                                semua
-                                                            </span>
-                                                        }
-                                                        
-                                                    </div>
-                                                    <ul role="menu" className="dropdown-menu" style={{zIndex: 90}}>
-                                                        <li style={{width: 350, padding: 5}}>
-                                                            <form className="clearfix">
-                                                                <div className="float-left">
-                                                                    <input type="text" className="form-control form-control-sm" name={"loop-value-" + index} id={"loop-value-" + index} defaultValue={filterTable["loop-value-" + index] || ""} placeholder="semua" />
-                                                                </div>
-                                                                <button type="button" className="ml-2 float-left btn btn-sm btn-primary" onClick={this.updateValueFilter.bind(this, "loop-value-" + index )}>Perbaharui</button>
-                                                                <button type="button" className="float-right btn btn-sm btn-light" onClick={this.resetValueFilter.bind(this, "loop-value-" + index )}>
-                                                                    <i className="fas fa-redo fa-right"></i>
-                                                                    <span>Reset</span>
-                                                                </button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                    
-                                </div>
-                            </div>
-                            <button type="button" className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit float-left" onClick={this.resetFilter.bind(this)}>
-                                Reset
-                            </button>
-                        </div>
-
-                        <div className="table-wrapper-scroll-y my-custom-scrollbar">
-                            <div className="segment-table">
-                                <div className="hecto-10">
-                                    <Table className="overflow-auto">
-                                <thead>
-                                    <tr>
-                                        <th className="text-primary align-middle">
-                                            <span className="svg-icon svg-icon-sm svg-icon-primary ml-1">
-                                                <SVG src={toAbsoluteUrl("/media/svg/icons/Navigation/Down-2.svg")}/>
-                                            </span>
-                                            Nomor Kontrak
-                                            <span className="svg-icon svg-icon-sm svg-icon-primary ml-1">
-                                                <SVG src={toAbsoluteUrl("/media/svg/icons/Navigation/Up-2.svg")}/>
-                                            </span>
-                                        </th>
-                                        <th className="text-muted align-middle">
-                                            Judul Pengadaan
-                                        </th>
-                                        <th className="text-muted align-middle">
-                                            Nomor PO
-                                        </th>
-                                        <th className="text-muted align-middle">
-                                            Termin
-                                        </th>
-                                        <th className="text-muted align-middle">
-                                            Nomor SA
-                                        </th>
-                                        <th className="text-muted align-middle">
-                                            Nomor Invoice
-                                        </th>
-                                        <th className="text-muted align-middle">
-                                            Status
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                            [...Array(100)].map((item, index) => {
-                                                return (
-                                                    <tr key={index.toString()}>
-                                                        <td><Link to="/client/invoice_monitoring/item">249710</Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">234.PJ/PST-001/I/2021</Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">Pengadaan Test 1</Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">
-                                                        {
-                                                                index === 0 ?
-                                                                1
-                                                                :
-                                                                index === 1 ?
-                                                                2
-                                                                :
-                                                                index === 2 ?
-                                                                3
-                                                                :
-                                                                index === 3 ?
-                                                                4
-                                                                :
-                                                                5
-                                                        }
-                                                        </Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">04/01/2020</Link></td>
-                                                        <td><Link to="/client/invoice_monitoring/item">PT. JayaJaya</Link></td>
-                                                        <td>
-                                                            {
-                                                                index === 1 ?
-                                                                <label className="font-weight-bold font-italic text-white bg-info rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Waiting SA</label>
-                                                                :
-                                                                index === 2 ?
-                                                                <label className="font-weight-bold font-italic text-white bg-warning rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Waiting Invoice</label>
-                                                                :
-                                                                index === 3 ?
-                                                                <label className="font-weight-bold font-italic text-white bg-primary rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Waiting Document</label>
-                                                                :
-                                                                index === 4 ?
-                                                                <label className="font-weight-bold font-italic text-white bg-danger rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Document Rejected</label>
-                                                                :
-                                                                <label className="font-weight-bold font-italic text-white bg-success rounded px-3 py-1 text-center text-uppercase" style={{width: 160}}>Paid</label>
-                                                            }
-                                                        </td>
-                                                    </tr>
-                                                )
-                                            })
-                                        }
-                                </tbody>
-                            </Table>
-                        </div>
-                            </div>
-                        </div>
-                        <div className="mt-3">
-                            <span>Total Data: 5/5</span>
-                        </div>
-                        <div className="d-flex mt-4">
-                            <select className="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light mr-1" style={{width: 75}} defaultValue={5}>
-                                {
-                                    ["5", "10", "20", "50", "100"].map((item, index) => {
-                                        return (
-                                            <option key={index.toString()} value={item}>{item}</option>
-                                        )
-                                    })
-                                }
-                            </select>
-                            <Pagination>
-                                <Pagination.First />
-                                <Pagination.Prev />
-
-                                <Pagination.Item>{11}</Pagination.Item>
-                                <Pagination.Item active>{12}</Pagination.Item>
-                                <Pagination.Item disabled>{13}</Pagination.Item>
-
-                                <Pagination.Next disabled />
-                                <Pagination.Last disabled />
-                            </Pagination>
-                        </div>
-                    </CardBody>
-                </Card>
-            </React.Fragment>
-        )
-    }
+  return (
+    <React.Fragment>
+      <Toast />
+      <Card>
+        <CardBody>
+          <Tables
+            dataHeader={headerTable}
+            handleParams={requestApi}
+            loading={loading}
+            err={err}
+            countData={data.count}
+            hecto={20}
+          >
+            {data.data.map((item, index) => {
+              return (
+                <TableRow key={index.toString()}>
+                  <TableCell>{index + 1}.</TableCell>
+                  <TableCell>
+                    <Link
+                      to={
+                        "/client/invoice_monitoring/contract/" +
+                        item.contract_id
+                      }
+                    >
+                      {item.contract_no}
+                    </Link>
+                  </TableCell>
+                  <TableCell>{item.purch_order_no}</TableCell>
+                  <TableCell>{item.contract_name}</TableCell>
+                  <TableCell>{rupiah(item.contract_value || 0)}</TableCell>
+                  <TableCell>
+                    {window
+                      .moment(new Date(item.po_date))
+                      .format("DD MMM YYYY")}
+                  </TableCell>
+                  <TableCell>
+                    {window
+                      .moment(new Date(new Date(item.contract_date)))
+                      .format("DD MMM YYYY")}
+                  </TableCell>
+                  <TableCell>
+                    {window
+                      .moment(new Date(new Date(item.contract_end_date)))
+                      .format("DD MMM YYYY")}
+                  </TableCell>
+                  <TableCell>{item.purch_group_name}</TableCell>
+                  <TableCell>{item.vendor_name}</TableCell>
+                  <TableCell>----------</TableCell>
+                </TableRow>
+              );
+            })}
+          </Tables>
+        </CardBody>
+      </Card>
+    </React.Fragment>
+  );
 }
+
 export default injectIntl(connect(null, null)(DashboardListContract));

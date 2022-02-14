@@ -5,13 +5,25 @@
  * components (e.g: `src/app/modules/Auth/pages/AuthPage`, `src/app/BasePage`).
  */
 
-import React from "react";
+import React, { lazy } from "react";
 import { Redirect, Switch, Route } from "react-router-dom";
 import { shallowEqual, useSelector } from "react-redux";
 import { Layout } from "../_metronic/layout";
 import BasePage from "./BasePage";
 import { Logout, AuthPage } from "./modules/Auth";
 import ErrorsPage from "./modules/ErrorsExamples/ErrorsPage";
+import VerificationQrCodeDM from "./modules/VerificationQrCode/VerificationQrCodeDM";
+
+const UserNewAccountHomePage = lazy(() =>
+  import("./modules/UserCreate/CreateNewAccountHome")
+);
+
+const VerificationQrCode = lazy(() =>
+  import("./modules/VerificationQrCode/VerificationQrCode")
+);
+const DeliveryOrderStatusPg = lazy(() =>
+  import("./modules/DeliveryMonitoring/pages/DeliveryOrderStatusPg")
+);
 
 export function Routes() {
   const { isAuthorized } = useSelector(
@@ -23,6 +35,10 @@ export function Routes() {
 
   return (
     <Switch>
+      <Route path="/create-account" component={UserNewAccountHomePage} />
+      <Route path="/qrcode" component={VerificationQrCode} />
+      <Route path="/qrcode-dm" component={VerificationQrCodeDM} />
+      <Route path="/update-do-status" component={DeliveryOrderStatusPg} />
       {!isAuthorized ? (
         /*Render auth page when user at `/auth` and not authorized.*/
         <Route>

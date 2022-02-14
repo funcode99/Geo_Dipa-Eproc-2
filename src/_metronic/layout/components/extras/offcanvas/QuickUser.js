@@ -51,7 +51,7 @@ export function QuickUser() {
               href="#"
               className="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"
             >
-              {user.party.full_name}
+              {user.data.full_name}
             </a>
             <div className="text-muted mt-1">{user.occupation}</div>
             <div className="navi mt-2">
@@ -87,7 +87,7 @@ export function QuickUser() {
         <div className="separator separator-dashed mt-8 mb-5" />
 
         <div className="navi navi-spacer-x-0 p-0">
-          <Link to="/user-profile" className="navi-item">
+          <Link to="/client/user-profile" className="navi-item">
             <div className="navi-link">
               <div className="symbol symbol-40 bg-light mr-3">
                 <div className="symbol-label">
@@ -112,7 +112,7 @@ export function QuickUser() {
             </div>
           </Link>
 
-          <Link to="/user-profile" className="navi-item">
+          <Link to="/client/user-profile" className="navi-item">
             <div className="navi-link">
               <div className="symbol symbol-40 bg-light mr-3">
                 <div className="symbol-label">

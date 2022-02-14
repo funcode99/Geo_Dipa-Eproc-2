@@ -23,3 +23,9 @@ export function I18nProvider({ children }) {
     </IntlProvider>
   );
 }
+
+export function multiLang() {
+  const messages = allMessages;
+
+  return messages;
+}

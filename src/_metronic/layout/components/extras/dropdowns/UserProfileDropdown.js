@@ -1,21 +1,22 @@
 /* eslint-disable no-restricted-imports */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import objectPath from "object-path";
 import { useHtmlClassService } from "../../../_core/MetronicLayout";
 import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
-import { 
-  FormattedMessage, 
-  // injectIntl 
+import {
+  FormattedMessage,
+  // injectIntl
 } from "react-intl";
 
-export function UserProfileDropdown() {
+export function UserProfileDropdown(props) {
   const { user } = useSelector((state) => state.auth);
   const uiService = useHtmlClassService();
+  const [count, setCount] = useState(0);
   const layoutProps = useMemo(() => {
     return {
       light:
@@ -39,11 +40,11 @@ export function UserProfileDropdown() {
             Hi,
           </span>{" "}
           <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-            {user.party.full_name}
+            {user.data.full_name}
           </span>
           <span className="symbol symbol-35 symbol-light-success">
             <span className="symbol-label font-size-h5 font-weight-bold">
-              {user.party.full_name[0]}
+              {user.data.full_name[0]}
             </span>
           </span>
         </div>
@@ -58,11 +59,11 @@ export function UserProfileDropdown() {
                   <img src={toAbsoluteUrl("/media/users/300_21.jpg")} alt="" />
                 </div>
                 <div className="text-dark m-0 flex-grow-1 mr-3 font-size-h5">
-                  {user.party.full_name}
+                  {user.data.full_name}
                 </div>
-                <span className="label label-light-success label-lg font-weight-bold label-inline">
-                  3 messages
-                </span>
+                {/* <span className="label label-light-success label-lg font-weight-bold label-inline">
+                  {props?.countMessage || 0} messages
+                </span> */}
               </div>
               <div className="separator separator-solid"></div>
             </>
@@ -79,22 +80,25 @@ export function UserProfileDropdown() {
             >
               <div className="symbol bg-white-o-15 mr-3">
                 <span className="symbol-label text-success font-weight-bold font-size-h4">
-                  {user.party.full_name[0]}
+                  {user.data.full_name[0]}
                 </span>
                 {/*<img alt="Pic" className="hidden" src={user.pic} />*/}
               </div>
               <div className="text-white m-0 flex-grow-1 mr-3 font-size-h5">
-                {user.party.full_name}
+                {user.data.full_name}
               </div>
-              <span className="label label-success label-lg font-weight-bold label-inline">
-                3 messages
-              </span>
+              {/* <span className="label label-success label-lg font-weight-bold label-inline">
+                {props?.countMessage || 0} messages
+              </span> */}
             </div>
           )}
         </>
 
         <div className="navi navi-spacer-x-0 pt-5">
-          <Link to="/user-profile" className="navi-item px-8 cursor-pointer">
+          <Link
+            to={`/${user.data.status}/user-profile`}
+            className="navi-item px-8 cursor-pointer"
+          >
             <div className="navi-link">
               <div className="navi-icon mr-2">
                 <i className="flaticon2-calendar-3 text-success" />

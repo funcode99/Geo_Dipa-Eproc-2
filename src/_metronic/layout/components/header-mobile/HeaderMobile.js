@@ -1,9 +1,9 @@
-import React, {useMemo} from "react";
-import {Link} from "react-router-dom";
+import React, { useMemo } from "react";
+import { Link } from "react-router-dom";
 import objectPath from "object-path";
 import SVG from "react-inlinesvg";
-import {toAbsoluteUrl} from "../../../_helpers";
-import {useHtmlClassService} from "../../_core/MetronicLayout";
+import { toAbsoluteUrl } from "../../../_helpers";
+import { useHtmlClassService } from "../../_core/MetronicLayout";
 
 export function HeaderMobile() {
   const uiService = useHtmlClassService();
@@ -15,7 +15,7 @@ export function HeaderMobile() {
       headerMenuSelfDisplay:
           objectPath.get(uiService.config, "header.menu.self.display") === true,
       headerMobileCssClasses: uiService.getClasses("header_mobile", true),
-      headerMobileAttributes: uiService.getAttributes("header_mobile")
+      headerMobileAttributes: uiService.getAttributes("header_mobile"),
     };
   }, [uiService]);
 
@@ -29,7 +29,11 @@ export function HeaderMobile() {
         >
           {/*begin::Logo*/}
           <Link to="/">
-            <img alt="logo" src={layoutProps.headerLogo} style={{width: '60%'}}/>
+          <img
+            alt="logo"
+            src={layoutProps.headerLogo}
+            style={{ width: "60%" }}
+          />
           </Link>
           {/*end::Logo*/}
 
@@ -38,22 +42,23 @@ export function HeaderMobile() {
             {layoutProps.asideDisplay && (
                 <>
                   {/*begin::Aside Mobile Toggle*/}
-                  <button className="btn p-0 burger-icon burger-icon-left" id="kt_aside_mobile_toggle">
-                    <span/>
+              <button
+                className="btn p-0 burger-icon burger-icon-left"
+                id="kt_aside_mobile_toggle"
+              >
+                <span />
                   </button>
                   {/*end::Aside Mobile Toggle*/}
                 </>
             )}
 
-            {layoutProps.headerMenuSelfDisplay && (
+          {/* {layoutProps.headerMenuSelfDisplay && (
                 <>
-                  {/*begin::Header Menu Mobile Toggle*/}
                   <button className="btn p-0 burger-icon ml-4" id="kt_header_mobile_toggle">
                     <span/>
                   </button>
-                  {/*end::Header Menu Mobile Toggle*/}
                 </>
-            )}
+            )} */}
 
             {/*begin::Topbar Mobile Toggle*/}
             <button
