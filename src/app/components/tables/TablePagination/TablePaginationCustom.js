@@ -74,8 +74,8 @@ export function searchFindMulti(rows, queryAll) {
         return queries.reduce((acc, key) => {
           if (column === key.substr(7)) {
             return (
-              row[column]
-                .toString()
+              row?.[column]
+                ?.toString()
                 .toLowerCase()
                 .indexOf(queryAll[key].toString().toLowerCase()) > -1
             );
