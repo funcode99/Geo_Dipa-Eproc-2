@@ -59,7 +59,7 @@ const theadItems = [
   { id: "action", label: "" },
   { id: "keterangan", label: "Keterangan" },
   { id: "due-date", label: "Due Date" },
-  { id: "qty", label: "Qty" },
+  { id: "qty", label: "Qty Total" },
   { id: "qty_avail", label: "Qty Available" },
   { id: "qty_selected", label: "Qty Selected" },
   { id: "uom", label: "Uom" },
@@ -760,6 +760,7 @@ function Summary({}) {
 
                     {item.item_services.length !== 0 && item.show
                       ? item.item_services.map((service) => {
+                          console.log("service", service);
                           // Check if already submit
                           if (service.service === undefined) {
                             return (
@@ -890,7 +891,9 @@ function Summary({}) {
                                 <TableCell className="align-middle">
                                   {/* 31/01/2021 */}
                                 </TableCell>
-                                <TableCell>{service?.qty}</TableCell>
+                                <TableCell>
+                                  {service?.service?.quantity}
+                                </TableCell>
                                 <TableCell>
                                   {parseFloat(
                                     service?.service?.qty_available
