@@ -46,6 +46,10 @@ export default function SumaryStatsDM({
         uiService.config,
         "js.colors.theme.base.success"
       ),
+      colorsThemeBasePrimary: objectPath.get(
+        uiService.config,
+        "js.colors.theme.base.primary"
+      ),
       colorsThemeBaseWarning: objectPath.get(
         uiService.config,
         "js.colors.theme.base.warning"
@@ -70,7 +74,8 @@ export default function SumaryStatsDM({
 
     const height = parseInt(KTUtil.css(element, "height"));
     const options = getChartOptions(layoutProps, height, [
-      parseInt(pie_chart_datas.sagr),
+      parseInt(pie_chart_datas.sagr), // success on time
+      parseInt(pie_chart_datas.sagr), // success late
       parseInt(pie_chart_datas.on_progress),
       parseInt(pie_chart_datas.overdue),
       // 12,
@@ -123,7 +128,15 @@ export default function SumaryStatsDM({
               className="text-success font-weight-bold font-size-h6"
               onClick={() => openModal("success")}
             >
-              {data?.sagr} Success
+              {data?.sagr} Success On Time
+            </Link>
+          </div>
+          <div className=" bg-light-primary px-8 py-3 rounded-xl mb-7">
+            <Link
+              className="text-primary font-weight-bold font-size-h6"
+              onClick={() => openModal("primary")}
+            >
+              {data?.sagr} Success On Time
             </Link>
           </div>
           <div className=" bg-light-warning px-8 py-3 rounded-xl mb-7">
@@ -162,6 +175,7 @@ function getChartOptions(layoutProps, height, series) {
     // colors: ["#1ab7ea", "#0084ff", "#39539E", "#0077B5"],
     colors: [
       layoutProps.colorsThemeBaseSuccess,
+      layoutProps.colorsThemeBasePrimary,
       layoutProps.colorsThemeBaseWarning,
       layoutProps.colorsThemeBaseDanger,
     ],
