@@ -95,11 +95,11 @@ const TabLists = [
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />,
     icon: <Error className="mb-0 mr-2" />,
   },
-  {
-    id: "para-pihak2",
-    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
-    icon: <PeopleAlt className="mb-0 mr-2" />,
-  },
+  //   {
+  //     id: "para-pihak2",
+  //     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
+  //     icon: <PeopleAlt className="mb-0 mr-2" />,
+  //   },
   // {
   //   id: "bast",
   //   label: <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />,
