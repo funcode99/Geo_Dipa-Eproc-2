@@ -239,6 +239,8 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
     }
   }, [location]);
 
+  console.log("dataContractById", dataContractById);
+
   return (
     <React.Fragment>
       <Toast />
@@ -305,13 +307,17 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
           refresh={old.needRefresh}
           contractId={contract_id}
         />
-        {tabActive === 2 && <ParaPihak />}
+        {tabActive === 2 && dataContractById?.contract_status === "PO" && (
+          <ParaPihak />
+        )}
         {tabActive === 3 && <DokContract />}
         {tabActive === 4 && <HargaPekerjaan />}
         {tabActive === 5 && <JangkaWaktu />}
         {tabActive === 6 && <Jaminan />}
         {tabActive === 7 && <Denda />}
-        {/* {tabActive === 8 && <ParaPihak2 />} */}
+        {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
+          <ParaPihak2 />
+        )}
         {/* {tabActive === 8 && <BAST />} */}
       </Paper>
     </React.Fragment>
