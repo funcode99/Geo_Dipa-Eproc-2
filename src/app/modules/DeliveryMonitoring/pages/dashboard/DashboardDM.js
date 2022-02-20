@@ -17,49 +17,24 @@ class DashboardDM extends Component {
       summary_stat: {},
       plant_datas: [],
       contract_prices: [],
+      on_progress_list: [],
       overdue_list: [],
-      onprogress_list: [],
-      success_list: [],
-      selected_contract: "onprogress_list",
+      finished_list: [],
+      finished_late_list: [],
+      selected_contract: "on_progress_list",
       pie_chart_datas: [],
     };
   }
 
   componentDidMount() {
-    this.fetchOverdueContract();
-    this.fetchSAGR();
-    // this.fetchPrice();
-    this.fetchContProgress();
-    this.fetchDeliveryProgress();
     this.fetchSummaryStats();
+    this.fetchContFinished();
+    this.fetchContFinishedLate();
     this.fetchContOnProgress();
+    this.fetchContOnProgressLate();
     this.fetchPlantData();
     this.fetchPieChartData();
   }
-
-  fetchOverdueContract = () => {
-    this.props.fetchApiSg({
-      key: keys.overdue,
-      type: "get",
-      url: "/delivery/dashboard/overdue-contract",
-      onSuccess: (res) => {
-        console.log("res" + keys.overdue, res);
-        this.setState({ overdue_list: res?.data });
-      },
-    });
-  };
-
-  fetchSAGR = () => {
-    this.props.fetchApiSg({
-      key: keys.sa_gr,
-      type: "get",
-      url: "/delivery/dashboard/sa-gr-contract",
-      onSuccess: (res) => {
-        console.log("res" + keys.sa_gr, res);
-        this.setState({ success_list: res?.data });
-      },
-    });
-  };
 
   fetchPrice = (group_id) => {
     const params = { group_id };
@@ -75,27 +50,6 @@ class DashboardDM extends Component {
     });
   };
 
-  fetchContProgress = () => {
-    this.props.fetchApiSg({
-      key: keys.cont_progress,
-      type: "get",
-      url: "/delivery/dashboard/contract-progress",
-      onSuccess: (res) => {
-        console.log("res" + keys.cont_progress, res);
-      },
-    });
-  };
-
-  fetchDeliveryProgress = () => {
-    this.props.fetchApiSg({
-      key: keys.dev_progress,
-      type: "get",
-      url: "/delivery/dashboard/delivery-progress",
-      onSuccess: (res) => {
-        console.log("res" + keys.dev_progress, res);
-      },
-    });
-  };
   fetchSummaryStats = () => {
     this.props.fetchApiSg({
       key: keys.sum_stats,
@@ -107,6 +61,30 @@ class DashboardDM extends Component {
       },
     });
   };
+
+  // data inside modal start
+  fetchContFinished = () => {
+    this.props.fetchApiSg({
+      key: keys.cont_finished,
+      type: "get",
+      url: "/delivery/dashboard/finished-contract",
+      onSuccess: (res) => {
+        console.log("res" + keys.cont_finished, res);
+        this.setState({ finished_list: res?.data });
+      },
+    });
+  };
+  fetchContFinishedLate = () => {
+    this.props.fetchApiSg({
+      key: keys.cont_finished_late,
+      type: "get",
+      url: "/delivery/dashboard/finished-contract-late",
+      onSuccess: (res) => {
+        console.log("res" + keys.cont_finished_late, res);
+        this.setState({ finished_late_list: res?.data });
+      },
+    });
+  };
   fetchContOnProgress = () => {
     this.props.fetchApiSg({
       key: keys.cont_on_progress,
@@ -114,10 +92,23 @@ class DashboardDM extends Component {
       url: "/delivery/dashboard/contract-on-progress",
       onSuccess: (res) => {
         console.log("res" + keys.cont_on_progress, res);
-        this.setState({ onprogress_list: res?.data });
+        this.setState({ on_progress_list: res?.data });
       },
     });
   };
+  fetchContOnProgressLate = () => {
+    this.props.fetchApiSg({
+      key: keys.cont_overdue,
+      type: "get",
+      url: "/delivery/dashboard/contract-on-progress-late",
+      onSuccess: (res) => {
+        console.log("res" + keys.cont_overdue, res);
+        this.setState({ overdue_list: res?.data });
+      },
+    });
+  };
+  //data inside modal end
+
   fetchPlantData = () => {
     this.props.fetchApiSg({
       key: keys.get_plants,
@@ -203,7 +194,7 @@ class DashboardDM extends Component {
           // textNo={
           //   <FormattedMessage id="TITLE.MODAL_CREATE.LABEL.BUTTON_FAILED" />
           // }
-          title={`Contract ${selected_contract}`}
+          title={`Contract ${selected_contract.replace(/_/g, " ")}`}
         >
           <ContractSumTable
             status={authStatus}
@@ -225,6 +216,9 @@ const keys = {
   dev_progress: "get-delivery-progress",
   sum_stats: "get-summary-stats",
   cont_on_progress: "get-delivery-progress",
+  cont_overdue: "get-delivery-progress-late",
+  cont_finished: "get-delivery-finished",
+  cont_finished_late: "get-delivery-finished-late",
   get_plants: "get-all-plants",
   get_pie_charts: "get-pie-chart-data",
 };

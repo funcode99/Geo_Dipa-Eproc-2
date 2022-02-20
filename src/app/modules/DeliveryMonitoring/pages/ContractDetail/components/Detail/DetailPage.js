@@ -223,10 +223,12 @@ const DetailPage = ({
         let totalPrice = 0;
 
         tempSubmitItems.task_services.forEach((item) => {
+          console.log("item task_services", item);
           totalPrice += parseFloat(item?.price * item.qty);
         });
 
         tempSubmitItems.task_items.forEach((item) => {
+          console.log("item task_items", item);
           totalPrice += parseFloat(item?.price * item.qty);
         });
 

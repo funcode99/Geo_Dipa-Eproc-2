@@ -234,7 +234,7 @@ function Login(props) {
             <p className="text-center mb-0">
               Jakarta Selatan 12740 - Indonesia
             </p>
-            <p className="text-center mb-0">E.procurement@geodipa.co.id</p>
+            <p className="text-center mb-0">e-procurement@geodipa.co.id</p>
             <p className="text-center mb-0">T. +62 21 7982925</p>
             <p className="text-center mb-0">F. +62 21 7982930</p>
           </div>

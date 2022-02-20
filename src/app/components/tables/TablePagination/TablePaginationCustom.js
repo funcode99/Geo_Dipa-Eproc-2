@@ -81,7 +81,7 @@ export function searchFindMulti(rows, queryAll) {
             );
           }
         }, false);
-      });
+      }, false);
     // console.log(`apa`, row, apa);
     return apa;
   });

@@ -32,6 +32,7 @@ import {
 } from "../../../../../../../redux/globalReducer";
 import { TerminPageContext } from "../../../Termin/TerminPageNew/TerminPageNew";
 import _ from "lodash";
+import CheckboxBAST from "./components/CheckboxBAST";
 
 const tableHeader = [
   {
@@ -98,6 +99,7 @@ const BastPage = ({
     post: false,
   });
   const [stepActive, setStepActive] = React.useState(null);
+  const [checkboxState, setCheckboxState] = React.useState(false);
   const isReject = taskNews?.approve_status?.code === "rejected";
 
   const handleLoading = React.useCallback(
@@ -202,18 +204,8 @@ const BastPage = ({
       // url: `delivery/task-news/${contract?.id}/bast`,
       no: data.nomor_bast,
       date: data.tanggal_bast,
+      is_finished: checkboxState,
     };
-    //     break;
-    //   case "client":
-    //     url = `delivery/task-news/${contract?.news?.id}/review`;
-    //     params = {
-    //       // url: `delivery/task-news/${contract?.news?.id}/review`,
-    //       review_text: data.hasil_pekerjaan,
-    //     };
-    //     break;
-    //   default:
-    //     break;
-    // }
 
     fetchApi({
       key: keys.submit,
@@ -460,6 +452,7 @@ const BastPage = ({
                   </Dropdown>
                 )
               }
+              disabledButton={!checkboxState}
             >
               {({ fieldProps }) => (
                 <Row>
@@ -468,6 +461,10 @@ const BastPage = ({
                   </Col>
                   <Col>
                     <FieldBuilder formData={formData2} {...fieldProps} />
+                    <CheckboxBAST
+                      checked={checkboxState}
+                      onCheck={setCheckboxState}
+                    />
                   </Col>
                 </Row>
               )}
