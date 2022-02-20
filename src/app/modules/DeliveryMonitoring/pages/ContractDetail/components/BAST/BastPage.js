@@ -204,7 +204,7 @@ const BastPage = ({
       // url: `delivery/task-news/${contract?.id}/bast`,
       no: data.nomor_bast,
       date: data.tanggal_bast,
-      //   checked_approve: checkboxState,
+      is_finished: checkboxState,
     };
 
     fetchApi({
