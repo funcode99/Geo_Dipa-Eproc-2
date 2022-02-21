@@ -5,7 +5,7 @@ import { Dropdown } from "react-bootstrap";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { Link } from "react-router-dom";
 import { DropdownMenu2 } from "../../../../../../_metronic/_partials/dropdowns";
-import { rupiah } from "../../../../../libs/currency";
+import { printMoney, rupiah } from "../../../../../libs/currency";
 
 const ContractPriceTable = ({
   data,
@@ -32,6 +32,7 @@ const ContractPriceTable = ({
     },
     [onFetch, setSelected]
   );
+  console.log("data ContractPriceTable", data);
   return (
     <>
       {/* begin::Advance Table Widget 9 */}
@@ -119,7 +120,11 @@ const ContractPriceTable = ({
                       </td>
                       <td>
                         <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                          {rupiah(parseInt(item?.contract_value))}
+                          {/* {rupiah(parseInt(item?.contract_value))} */}
+                          {printMoney(
+                            parseInt(item?.contract_value),
+                            item?.currency?.code
+                          )}
                         </span>
                       </td>
                       <td className="pr-0 text-right">
