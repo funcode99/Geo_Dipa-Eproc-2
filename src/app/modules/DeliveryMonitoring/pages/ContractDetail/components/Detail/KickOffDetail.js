@@ -86,6 +86,30 @@ const KickOffDetail = ({
     [contractStart]
   );
 
+  const handleRefresh = () => {
+    fetch_api_sg({
+      key: keys.get,
+      type: "get",
+      url: `/delivery/contract/${contractId}`,
+      onSuccess: (res) => {
+        // console.log(`res`, res);
+        set_contract_id(res.data);
+      },
+    });
+  };
+
+  const getContractById = React.useCallback(() => {
+    fetch_api_sg({
+      key: keys.get_cont,
+      type: "get",
+      url: `/delivery/contract/${contractId}`,
+      onSuccess: (res) => {
+        // console.log(`res`, res?.data);
+        saveContractById(res?.data);
+      },
+    });
+  }, [saveContractById, fetch_api_sg, contractId]);
+
   const _handleSubmit = (data) => {
     fetch_api_sg({
       key: keys.post,
@@ -107,34 +131,10 @@ const KickOffDetail = ({
     });
   };
 
-  const handleRefresh = () => {
-    fetch_api_sg({
-      key: keys.get,
-      type: "get",
-      url: `/delivery/contract/${contractId}`,
-      onSuccess: (res) => {
-        // console.log(`res`, res);
-        set_contract_id(res.data);
-      },
-    });
-  };
-
-  const getContractById = React.useCallback(() => {
-    fetch_api_sg({
-      keys: "key_contract",
-      type: "get",
-      url: `/delivery/contract/${contractId}`,
-      onSuccess: (res) => {
-        // console.log(`res`, res?.data);
-        saveContractById(res?.data);
-      },
-    });
-  }, [saveContractById, fetch_api_sg, contractId]);
-
   return (
     <Card>
       <CardBody>
-        {!loadings.post && (
+        {!loadings.cont && (
           <FormBuilder
             loading={loadings.post}
             onSubmit={_handleSubmit}
@@ -156,12 +156,14 @@ const KickOffDetail = ({
 const keys = {
   post: "post-contract_start",
   get: "contract-by-id",
+  get_cont: "key-contract",
 };
 
 const mapState = (state) => ({
   loadings: {
     post: getLoading(state, keys.post),
     get: getLoading(state, keys.get),
+    cont: getLoading(state, keys.get_cont),
   },
   contractId: state.deliveryMonitoring.dataContractById.id,
   contractStart: state.deliveryMonitoring.dataContractById.contract_start,
@@ -169,12 +171,11 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
-  saveContractById: (payload) => {
+  saveContractById: (payload) =>
     dispatch({
       type: actionTypes.SetContractById,
       payload,
-    });
-  },
+    }),
   fetch_api_sg: (payload) => dispatch(fetch_api_sg(payload)),
   set_contract_id: (payload) => dispatch(set_contract_id, payload),
 });
