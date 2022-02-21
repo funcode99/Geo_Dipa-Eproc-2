@@ -137,9 +137,9 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
         withSubmit={false}
         fieldProps={{
           listOptions: {
-            wbs1: listWBS.map(({ id, work_breakdown_ap }) => ({
+            wbs1: listWBS.map(({ id, work_breakdown_ap, name }) => ({
               value: id,
-              label: work_breakdown_ap,
+              label: `${work_breakdown_ap} - ${name}`,
             })),
             wbs2: listWBSMapped,
             wbs3: listWBSMapped,

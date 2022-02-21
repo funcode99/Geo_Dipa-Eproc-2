@@ -120,9 +120,9 @@ const RowTableSA = ({ item, index }) => {
                 // readOnly={readOnly}
                 listOptions={{
                   dist_type: option_dist_type,
-                  wbs: listWBS.map(({ id, work_breakdown_ap }) => ({
+                  wbs: listWBS.map(({ id, work_breakdown_ap, name }) => ({
                     value: id,
-                    label: work_breakdown_ap,
+                    label: `${work_breakdown_ap} - ${name}`,
                   })),
                   gl_account: options.optGL,
                   cost_center: options.optCost,
