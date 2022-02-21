@@ -258,6 +258,8 @@ const BastPage = ({
         setStepActive(1);
       }
     }
+
+    setCheckboxState(Boolean(taskNews?.is_checked));
   }, [taskNews]);
 
   let disabledInput = Object.keys(initialValues);
@@ -357,6 +359,8 @@ const BastPage = ({
     }
   };
 
+  //   console.log("taskNews", taskNews);
+
   return (
     <React.Fragment>
       <Toast />
@@ -452,7 +456,6 @@ const BastPage = ({
                   </Dropdown>
                 )
               }
-              disabledButton={!checkboxState}
             >
               {({ fieldProps }) => (
                 <Row>
