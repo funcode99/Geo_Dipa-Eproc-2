@@ -259,7 +259,7 @@ const BastPage = ({
       }
     }
 
-    setCheckboxState(Boolean(taskNews?.is_checked));
+    setCheckboxState(Boolean(taskNews?.is_finished));
   }, [taskNews]);
 
   let disabledInput = Object.keys(initialValues);
@@ -359,7 +359,7 @@ const BastPage = ({
     }
   };
 
-  //   console.log("taskNews", taskNews);
+  console.log("taskNews", taskNews);
 
   return (
     <React.Fragment>
