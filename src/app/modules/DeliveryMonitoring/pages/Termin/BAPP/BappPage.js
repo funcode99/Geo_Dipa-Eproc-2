@@ -646,6 +646,7 @@ const BappPage = ({
                         ref={onTimeRef}
                         isDisabled={isDisabled}
                         initialValue={dataTask?.is_on_time}
+                        initialRemarks={dataTask?.remarks}
                       />
                       <AlertLate dataLate={lateData} />
                     </Col>
