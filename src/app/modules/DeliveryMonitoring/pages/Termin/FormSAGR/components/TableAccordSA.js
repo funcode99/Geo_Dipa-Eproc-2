@@ -32,11 +32,14 @@ const TableAccordSA = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  // console.log(`itemJasa`, itemJasa, dataSA, saExist);
   const saUsed = saExist ? dataSA : itemJasa;
   return (
     <div className={classes.root}>
       {saUsed.map((item, id) => {
+        const itemSAUsed = itemJasa?.filter(
+          (el) => el?.pckg_no === item?.services?.[0]?.service?.start_pckg_no
+        )?.[0];
+        console.log(`itemJasa`, itemJasa, dataSA, itemSAUsed);
         // console.log("item", item);
         const itemUsed = saExist ? item.services : item.item_services;
 
@@ -58,7 +61,7 @@ const TableAccordSA = () => {
               className={classes.expansionPanelHeader}
             >
               <Typography className={classes.heading}>
-                {itemJasa[id]?.desc}
+                {saExist ? itemSAUsed?.desc : saUsed?.[id]?.desc}
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
