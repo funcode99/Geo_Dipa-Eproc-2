@@ -30,14 +30,14 @@ const TableSA = ({ itemJasa, itemSA }) => {
       )?.[0],
     [baseSA, itemSA]
   );
-  console.log(
-    `dataUsed`,
-    itemSA,
-    dataUsed,
-    baseSA,
-    baseSA?.po_account_assignment,
-    poUsed
-  );
+  // console.log(
+  //   `dataUsed`,
+  //   itemSA,
+  //   dataUsed,
+  //   baseSA,
+  //   baseSA?.po_account_assignment,
+  //   poUsed
+  // );
 
   return (
     <TablePaginationCustom
@@ -48,9 +48,11 @@ const TableSA = ({ itemJasa, itemSA }) => {
         qty: el?.qty,
         wbsdata: saExist ? el?.wbs : [{ name: poUsed?.wbs_elem_e, value: 1 }],
         // wbsdata: saExist ? el?.wbs : baseSA?.wbs,
-        dist_type: option_dist_type.filter(
-          (els) => els.value === el?.distribution_type
-        )[0],
+        dist_type: saExist
+          ? option_dist_type.filter(
+              (els) => els.value === el?.distribution_type
+            )?.[0]
+          : option_dist_type?.[0],
         bus_area: saExist ? el?.bus_area : poUsed?.bus_area,
         gl_account: saExist ? el?.gl_account : poUsed?.g_l_acct,
         cost_center: saExist ? el?.costcenter : poUsed?.cost_ctr,

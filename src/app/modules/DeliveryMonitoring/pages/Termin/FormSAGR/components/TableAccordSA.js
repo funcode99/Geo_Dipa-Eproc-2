@@ -32,7 +32,7 @@ const TableAccordSA = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  console.log(`itemJasa`, itemJasa, dataSA, saExist);
+  // console.log(`itemJasa`, itemJasa, dataSA, saExist);
   const saUsed = saExist ? dataSA : itemJasa;
   return (
     <div className={classes.root}>
