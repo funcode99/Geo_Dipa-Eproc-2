@@ -63,7 +63,7 @@ const TableAccordSA = () => {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               {dataItemJasa.length > 0 ? (
-                <TableSA itemJasa={dataItemJasa} />
+                <TableSA itemJasa={dataItemJasa} itemSA={item} />
               ) : (
                 "Item tidak tersedia"
               )}
