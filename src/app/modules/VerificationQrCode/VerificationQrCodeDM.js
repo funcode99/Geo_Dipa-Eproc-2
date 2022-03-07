@@ -3,14 +3,9 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../_metronic/_partials/controls";
 import { toAbsoluteUrl } from "../../../_metronic/_helpers/AssetsHelpers";
-import {
-  // useHistory,
-  useLocation,
-} from "react-router-dom";
-// import useToast from "../../components/toast";
+import { useLocation } from "react-router-dom";
 import { LayoutSplashScreen } from "../../../_metronic/layout";
 import { Container } from "@material-ui/core";
-import { verificationQr } from "./_redux/VerificationQrCodeCrud";
 import { fetch_api_sg } from "../../../redux/globalReducer";
 
 const renderRow = ({ label, labelEN, value, styles }) => {
@@ -232,11 +227,9 @@ function VerificationQrCodeDM({ fetch_api_sg }) {
                                 Waktu/Time:
                               </small>
                               <h6 className="text-uppercase">
-                                {data?.signed_at
-                                  ? window.moment
-                                      .utc(new Date(data?.signed_at))
-                                      .format("DD-MM-YYYY HH:mm:ss")
-                                  : ""}
+                                {window
+                                  .moment(new Date(data?.signed_at))
+                                  .format("DD-MM-YYYY HH:mm:ss")}
                               </h6>
                             </div>
                           </div>
