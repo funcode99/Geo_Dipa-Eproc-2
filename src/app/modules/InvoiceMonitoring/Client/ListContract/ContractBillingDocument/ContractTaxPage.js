@@ -289,10 +289,8 @@ function ContractTaxPage(props) {
               witht: element.witht,
               wt_withcd: element.wt_withcd,
               text40: element.text40,
-              wi_tax_base:
-                (element.qsatz *
-                  (contractData["termin_value"] + totalAddtionalPayment())) /
-                100,
+              // wi_tax_base: (element.qsatz *(contractData["termin_value"] + totalAddtionalPayment())) / 100,
+              wi_tax_base: (contractData['termin_value'] + totalAddtionalPayment()),
               qsatz: element.qsatz,
               checked: false,
             });
