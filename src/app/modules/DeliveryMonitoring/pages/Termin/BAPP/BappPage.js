@@ -52,6 +52,11 @@ const tableHeader = [
 
 const validationClient = object().shape({
   hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
+  nomor_contract: validation.require("Dasar Pelaksanaan"),
+  party1_name: validation.require("Direksi Pekerjaan"),
+  party2_name: validation.require("Pejabat Berwenang"),
+  party1_jabatan: validation.require("Pihak 1 Jabatan"),
+  party2_jabatan: validation.require("Pihak 2 Jabatan"),
 });
 
 const validationVendor = object().shape({
@@ -110,6 +115,11 @@ const BappPage = ({
       nomor_contract: contract?.contract_no,
       nomor_po: contract?.purch_order_no,
       hasil_pekerjaan: taskNews?.review_text || "",
+      party1_name:
+        contract?.contract_party?.party_1_director_position_full_name,
+      party1_jabatan: contract?.contract_party?.party_1_director_position,
+      party2_name: contract?.contract_party?.party_2_autorize_name,
+      party2_jabatan: contract?.contract_party?.party_2_position,
     }),
     [taskNews, contract]
   );
@@ -256,7 +266,6 @@ const BappPage = ({
 
   const _handleSubmit = (data) => {
     // handleLoading("submit", true);
-    console.log(`onTimeRef`, onTimeRef.current);
     const { isApprove, remarks } = onTimeRef.current;
     let params = {};
     let url = ``;
@@ -270,19 +279,14 @@ const BappPage = ({
       review_text: data.hasil_pekerjaan,
       is_on_time: isApprove,
       remarks,
+      contract_no: data.nomor_contract,
+      party_1_director_position_full_name: data?.party1_name,
+      party_1_director_position: data?.party1_jabatan,
+      party_2_autorize_name: data?.party2_name,
+      party_2_position: data?.party2_jabatan,
+      // party_1_name:
     };
-
-    //     break;
-    //   case "client":
-    //     url = `delivery/task-news/${taskNews?.id}/review`;
-    //     params = {
-    //       // url: `delivery/task-news/${taskNews?.id}/review`,
-    //       review_text: data.hasil_pekerjaan,
-    //     };
-    //     break;
-    //   default:
-    //     break;
-    // }
+    // console.log(`onTimeRef`, onTimeRef.current, data, "params", params);
 
     fetchApi({
       key: keys.submit,
@@ -297,12 +301,6 @@ const BappPage = ({
       },
       onFail: (err) => console.log("err baru", err),
     });
-
-    // deliveryMonitoring
-    //   .postCreateBAPP(params)
-    //   .then((res) => handleSuccess(res))
-    //   .catch((err) => handleError(err))
-    //   .finally(handleLoading("submit", false));
   };
 
   React.useEffect(() => {
@@ -332,7 +330,16 @@ const BappPage = ({
   // console.log(`taskNews`, taskNews, loadings);
 
   let disabledInput = Object.keys(initialValues);
-  let allowedClient = ["hasil_pekerjaan", "nomor_bapp", "tanggal_bapp"];
+  let allowedClient = [
+    "hasil_pekerjaan",
+    "nomor_bapp",
+    "tanggal_bapp",
+    "nomor_contract",
+    "party1_name",
+    "party1_jabatan",
+    "party2_name",
+    "party2_jabatan",
+  ];
   let allowedVendor = [];
 
   // const handleVisible = (key, tempParams = {}) => {

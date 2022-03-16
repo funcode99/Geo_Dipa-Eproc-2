@@ -78,9 +78,9 @@ const tableHeader2 = [
 const detailSA = {
   client: {
     name: "PT. GEO DIPA ENERGI",
-    address1: "Plant Bandung",
-    address2: "Jl. Aditiawarman Kv.55",
-    address3: "Jaksel",
+    address1: "Plant Pusat",
+    address2: "Aldevco Octagon, Jl. Warung Jati",
+    address3: "Barat 75",
   },
   document: {
     number: "1000006788",
@@ -107,9 +107,9 @@ const detailSA = {
 const detailGR = {
   client: {
     name: "PT. GEO DIPA ENERGI",
-    address1: "Plant Bandung",
-    address2: "Jl. Aditiawarman Kv.55",
-    address3: "Jaksel",
+    address1: "Plant Pusat",
+    address2: "Aldevco Octagon, Jl. Warung Jati",
+    address3: "Barat 75",
   },
   document: {
     number: "1000006788",

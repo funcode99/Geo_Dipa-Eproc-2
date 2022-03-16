@@ -10,6 +10,7 @@ import { openLinkTab } from "../../../service/helper/urlHelper";
 import { IconButton } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import { DEV_NODE } from "../../../../redux/BaseHost";
 
 /*
   INTL (i18n) docs:
@@ -241,9 +242,10 @@ function Login(props) {
           <div className="mx-auto mb-2 col-md-12 text-primary">
             <Link
               onClick={() => {
-                openLinkTab(
-                  "http://192.168.0.168:5000/user-manual-delivery-monitoring.pdf"
-                );
+                // openLinkTab(
+                //   "http://192.168.0.168:5000/user-manual-delivery-monitoring.pdf"
+                // );
+                openLinkTab(DEV_NODE + `/user-manual-delivery-monitoring.pdf`);
               }}
             >
               <p className="text-center mb-0">

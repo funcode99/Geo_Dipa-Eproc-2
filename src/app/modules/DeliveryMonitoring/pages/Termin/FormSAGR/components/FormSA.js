@@ -43,12 +43,12 @@ const FormSA = ({
       onSuccess: (res) => {
         console.log(`resss`, res);
         const tempDataJasa = res.data.task_item_services;
-        let tempSubmitJasa = [];
-        tempDataJasa.forEach((item) => {
-          tempSubmitJasa = item.item_services.filter(
-            (service) => service.service
-          );
-        });
+        // let tempSubmitJasa = [];
+        // tempDataJasa.forEach((item) => {
+        //   tempSubmitJasa = item.item_services.filter(
+        //     (service) => service.service
+        //   );
+        // });
         setItemJasa(tempDataJasa);
       },
     });

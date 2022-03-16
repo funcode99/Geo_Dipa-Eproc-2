@@ -5,7 +5,7 @@ import RowTableSA from "./RowTableSA";
 import { FormSAContext } from "./FormSA";
 import { isEmpty } from "lodash";
 
-const TableSA = ({ itemJasa }) => {
+const TableSA = ({ itemJasa, itemSA }) => {
   const dataRow = useMemo(
     () => [
       {
@@ -21,8 +21,23 @@ const TableSA = ({ itemJasa }) => {
     []
   );
   const { readOnly, dataSA, baseSA, saExist } = React.useContext(FormSAContext);
+
   const dataUsed = readOnly ? dataSA.services : itemJasa;
-  // console.log(`dataUsed`, dataUsed, baseSA);
+  const poUsed = useMemo(
+    () =>
+      baseSA?.po_account_assignment?.filter(
+        (el) => el.po_item === itemSA.po_item
+      )?.[0],
+    [baseSA, itemSA]
+  );
+  // console.log(
+  //   `dataUsed`,
+  //   itemSA,
+  //   dataUsed,
+  //   baseSA,
+  //   baseSA?.po_account_assignment,
+  //   poUsed
+  // );
 
   return (
     <TablePaginationCustom
@@ -31,13 +46,16 @@ const TableSA = ({ itemJasa }) => {
         name_service: el?.service?.short_text || "",
         service_id: el?.service?.id || "",
         qty: el?.qty,
-        wbsdata: saExist ? el?.wbs : baseSA?.wbs,
-        dist_type: option_dist_type.filter(
-          (els) => els.value === el?.distribution_type
-        )[0],
-        bus_area: saExist ? el?.bus_area : baseSA?.bus_area,
-        gl_account: saExist ? el?.gl_account : baseSA?.gl_account,
-        cost_center: saExist ? el?.costcenter : baseSA?.cost_center,
+        wbsdata: saExist ? el?.wbs : [{ name: poUsed?.wbs_elem_e, value: 1 }],
+        // wbsdata: saExist ? el?.wbs : baseSA?.wbs,
+        dist_type: saExist
+          ? option_dist_type.filter(
+              (els) => els.value === el?.distribution_type
+            )?.[0]
+          : option_dist_type?.[0],
+        bus_area: saExist ? el?.bus_area : poUsed?.bus_area,
+        gl_account: saExist ? el?.gl_account : poUsed?.g_l_acct,
+        cost_center: saExist ? el?.costcenter : poUsed?.cost_ctr,
         ...el,
       }))}
       // rows={dataRow}

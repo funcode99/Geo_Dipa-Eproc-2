@@ -57,6 +57,11 @@ const validationClient = object().shape({
   // hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
   nomor_bast: validation.require("Nomor BAPP"),
   tanggal_bast: validation.require("Tanggal BAPP"),
+  nomor_contract: validation.require("Dasar Pelaksanaan"),
+  party1_name: validation.require("Direksi Pekerjaan"),
+  party2_name: validation.require("Pejabat Berwenang"),
+  party1_jabatan: validation.require("Pihak 1 Jabatan"),
+  party2_jabatan: validation.require("Pihak 2 Jabatan"),
 });
 
 const validationVendor = object().shape({
@@ -205,6 +210,11 @@ const BastPage = ({
       no: data.nomor_bast,
       date: data.tanggal_bast,
       is_finished: checkboxState,
+      // contract_no: data.nomor_contract,
+      // party_1_director_position_full_name: data?.party1_name,
+      // party_1_director_position: data?.party1_jabatan,
+      // party_2_autorize_name: data?.party2_name,
+      // party_2_position: data?.party2_jabatan,
     };
 
     fetchApi({
@@ -263,7 +273,16 @@ const BastPage = ({
   }, [taskNews]);
 
   let disabledInput = Object.keys(initialValues);
-  let allowedClient = ["hasil_pekerjaan", "nomor_bast", "tanggal_bast"];
+  let allowedClient = [
+    "hasil_pekerjaan",
+    "nomor_bast",
+    "tanggal_bast",
+    "nomor_contract",
+    "party1_name",
+    "party1_jabatan",
+    "party2_name",
+    "party2_jabatan",
+  ];
   let allowedVendor = [];
 
   const handleAction = (type, params) => {
@@ -308,7 +327,7 @@ const BastPage = ({
           key: keys.upload_s,
           type: "postForm",
           alertAppear: "both",
-          url: `/delivery/task-news/${taskNews?.id}/upload`,
+          url: `/delivery/task-news/$taskNews?.id/upload`,
           params: { file: params.data },
           onSuccess: () => {
             uploadRef.current.close();
@@ -317,13 +336,11 @@ const BastPage = ({
         });
         break;
       case "approve":
-        console.log("taskNews?.id", taskNews?.id);
-
         fetchApi({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${"taskNews?.id"}/status-bast`,
+          url: `delivery/task-news/${taskNews?.id}/status-bast`,
           params: {
             approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
           },
@@ -340,7 +357,7 @@ const BastPage = ({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews?.id}/status`,
+          url: `delivery/task-news/$taskNews?.id/status`,
           params: {
             approve_status_id: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
             reject_text: params?.remarks,
