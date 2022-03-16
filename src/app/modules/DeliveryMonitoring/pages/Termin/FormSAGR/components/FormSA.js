@@ -72,18 +72,18 @@ const FormSA = ({
         })),
       };
       console.log(`data`, params, data, arrService);
-      fetch_api_sg({
-        key: keys.upload_sa,
-        type: "post",
-        url: `delivery/task-sa/${task_id}`,
-        alertAppear: "both",
-        params,
-        onSuccess: (res) => {
-          console.log("post sa", res);
-          onRefresh();
-          // setlistWBS(res.data);
-        },
-      });
+      // fetch_api_sg({
+      //   key: keys.upload_sa,
+      //   type: "post",
+      //   url: `delivery/task-sa/${task_id}`,
+      //   alertAppear: "both",
+      //   params,
+      //   onSuccess: (res) => {
+      //     console.log("post sa", res);
+      //     onRefresh();
+      //     // setlistWBS(res.data);
+      //   },
+      // });
     },
     [arrService]
   );
