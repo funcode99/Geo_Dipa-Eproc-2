@@ -2,11 +2,11 @@ const formData = [
   [
     {
       name: "party1_name",
-      label: "Pejabat Berwenang Pihak 1",
+      label: "Direksi Pekerjaan",
     },
     {
       name: "party2_name",
-      label: "Pejabat Berwenang Pihak 2",
+      label: "Pejabat Berwenang",
     },
   ],
   [
@@ -80,11 +80,11 @@ export const formData1 = [
   },
   {
     name: "party1_name",
-    label: "Pihak 1 Pejabat Berwenang",
+    label: "Direksi Pekerjaan",
   },
   {
     name: "party1_jabatan",
-    label: "Pihak 1 Jabatan",
+    label: "Jabatan Direksi Pekerjaan",
   },
   {
     name: "jenis",
@@ -113,11 +113,11 @@ export const formData2 = [
   },
   {
     name: "party2_name",
-    label: "Pihak 2 Pejabat Berwenang",
+    label: "Pejabat Berwenang",
   },
   {
     name: "party2_jabatan",
-    label: "Pihak 2 Jabatan",
+    label: "Jabatan Pejabat Berwenang",
   },
   {
     name: "pelaksana",

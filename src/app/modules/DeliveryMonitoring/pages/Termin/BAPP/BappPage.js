@@ -53,8 +53,8 @@ const tableHeader = [
 const validationClient = object().shape({
   hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
   nomor_contract: validation.require("Dasar Pelaksanaan"),
-  party1_name: validation.require("Pihak 1 Pejabat Berwenang"),
-  party2_name: validation.require("Pihak 2 Pejabat Berwenang"),
+  party1_name: validation.require("Direksi Pekerjaan"),
+  party2_name: validation.require("Pejabat Berwenang"),
   party1_jabatan: validation.require("Pihak 1 Jabatan"),
   party2_jabatan: validation.require("Pihak 2 Jabatan"),
 });
