@@ -21,6 +21,7 @@ import { useFormik } from "formik";
 import { getRolesParkBYR } from "../../../Master/service/MasterCrud";
 import { DEV_NODE } from "../../../../../redux/BaseHost";
 import { makeStyles } from "@material-ui/core/styles";
+import { isEmpty } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   textDisabled: {
@@ -77,7 +78,7 @@ function ItemContractPaid(props) {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       var data_new = new FormData();
-      data_new.append('created_by_id', user_id)
+      data_new.append("created_by_id", user_id);
       for (var key in values) {
         data_new.append(key, values[key]);
       }
@@ -95,18 +96,18 @@ function ItemContractPaid(props) {
             setLoading(false);
           });
       } else {
-      createTerminPaid(data_new)
-        .then((response) => {
+        createTerminPaid(data_new)
+          .then((response) => {
             getTerminProgress(termin).then((result) => {
               setDataProgress(result.data.data?.data);
             });
-          setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
-          setLoading(false);
-        });
+            setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+            setLoading(false);
+          })
+          .catch((error) => {
+            setToast(intl.formatMessage({ id: "REQ.UPDATE_FAILED" }), 10000);
+            setLoading(false);
+          });
       }
     },
   });
@@ -379,7 +380,7 @@ function ItemContractPaid(props) {
                     type="file"
                     className="d-none"
                     id="upload"
-                    disabled={contractData?.file}
+                    disabled={!isEmpty(contractData?.file)}
                     onChange={(e) => handleUpload(e)}
                   />
                 </div>
@@ -396,7 +397,7 @@ function ItemContractPaid(props) {
                 (formik.touched && !formik.isValid) ||
                 !taxStaffStatus ||
                 statusPaidNoStarted > 0 ||
-                contractData?.file
+                !isEmpty(contractData?.file)
               }
             >
               Simpan
