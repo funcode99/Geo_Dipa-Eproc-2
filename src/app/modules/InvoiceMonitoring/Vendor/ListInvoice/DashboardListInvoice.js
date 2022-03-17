@@ -165,6 +165,20 @@ function DashboardListInvoice(props) {
     },
     {
       title: intl.formatMessage({
+        id: "TITLE.HARDCOPY_RECEIVE",
+      }),
+      name: "hardcopy_received",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "date",
+      },
+    },
+    {
+      title: intl.formatMessage({
         id: "TITLE.PAYMENT_DEADLINE",
       }),
       name: "payment_deadline",
@@ -235,11 +249,11 @@ function DashboardListInvoice(props) {
           {
             value: "SUMMARY",
             label: "Summary",
-    },
-    {
+          },
+          {
             value: "BILLING_SOFTCOPY",
             label: "Billing Softcopy",
-      },
+          },
           {
             value: "SUPPORT_DELIVERABLES_SOFTCOPY",
             label: "Support & Deliverables Softcopy",
@@ -362,6 +376,7 @@ function DashboardListInvoice(props) {
             hecto={25}
           >
             {data.data.map((item, index) => {
+              console.log("itemsss", item);
               return (
                 <TableRow key={index.toString()}>
                   <TableCell>
@@ -392,6 +407,13 @@ function DashboardListInvoice(props) {
                     {item.invoice_date
                       ? window
                           .moment(new Date(item.invoice_date))
+                          .format("DD MMM YYYY")
+                      : ""}
+                  </TableCell>
+                  <TableCell>
+                    {item.hardcopy_received
+                      ? window
+                          .moment(new Date(item.hardcopy_received))
                           .format("DD MMM YYYY")
                       : ""}
                   </TableCell>
