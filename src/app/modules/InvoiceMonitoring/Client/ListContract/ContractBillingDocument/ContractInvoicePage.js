@@ -316,6 +316,17 @@ function ContractInvoicePage(props) {
     return total;
   };
 
+  console.log(
+    "coba apa ini",
+    isSubmit,
+    invoiceData?.state === "REJECTED",
+    invoiceData?.state === "APPROVED",
+    invoiceData === null,
+    !props.billingStaffStatus,
+    progressTermin?.ident_name !== "BILLING_SOFTCOPY",
+    progressTermin
+  );
+
   return (
     <React.Fragment>
       <Toast />
@@ -999,9 +1010,10 @@ function ContractInvoicePage(props) {
                       invoiceData?.state === "REJECTED" ||
                       invoiceData?.state === "APPROVED" ||
                       invoiceData === null ||
-                      !props.billingStaffStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                        ? "NumberFormat-text"
+                      !props.billingStaffStatus
+                        ? //   ||
+                          //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          "NumberFormat-text"
                         : "NumberFormat-input"
                     }
                     value={invoiceData?.penalty}
@@ -1010,9 +1022,10 @@ function ContractInvoicePage(props) {
                       invoiceData?.state === "REJECTED" ||
                       invoiceData?.state === "APPROVED" ||
                       invoiceData === null ||
-                      !props.billingStaffStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                        ? "text"
+                      !props.billingStaffStatus
+                        ? //   ||
+                          //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          "text"
                         : "input"
                     }
                     isAllowed={({ floatValue }) =>
@@ -1063,8 +1076,9 @@ function ContractInvoicePage(props) {
                       invoiceData?.state === "REJECTED" ||
                       invoiceData?.state === "APPROVED" ||
                       invoiceData === null ||
-                      !props.billingStaffStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                      !props.billingStaffStatus
+                      //   ||
+                      //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
                     }
                     onChange={(e) => {
                       setInvoiceData({
@@ -1088,8 +1102,9 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
-              !props.billingStaffStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              !props.billingStaffStatus
+              //   ||
+              //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -1103,8 +1118,9 @@ function ContractInvoicePage(props) {
               invoiceData?.state === "REJECTED" ||
               invoiceData?.state === "APPROVED" ||
               invoiceData === null ||
-              !props.billingStaffStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              !props.billingStaffStatus
+              //   ||
+              //   progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >
