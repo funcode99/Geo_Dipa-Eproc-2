@@ -126,6 +126,10 @@ const BastPage = ({
         label: "isi",
         value: "value",
       },
+      party1_name: contract?.contract_party?.party_1_position_of_autorize,
+      party1_jabatan: contract?.contract_party?.party_1_contract_signature_name,
+      party2_name: contract?.contract_party?.party_2_autorize_name,
+      party2_jabatan: contract?.contract_party?.party_2_position,
     }),
     [taskNews, contract_name, vendor, contract_no, purch_order_no]
   );
@@ -210,6 +214,11 @@ const BastPage = ({
       no: data.nomor_bast,
       date: data.tanggal_bast,
       is_finished: checkboxState,
+      contract_no: data.nomor_contract,
+      party_1_position_of_autorize: data?.party1_name,
+      party_1_contract_signature_name: data?.party1_jabatan,
+      party_2_autorize_name: data?.party2_name,
+      party_2_position: data?.party2_jabatan,
       // contract_no: data.nomor_contract,
       // party_1_director_position_full_name: data?.party1_name,
       // party_1_director_position: data?.party1_jabatan,
