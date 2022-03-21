@@ -322,7 +322,9 @@ const ListTermContract = (props) => {
                   <TableCell>{value?.progress}</TableCell>
                   {/* <TableCell>Doc Progress</TableCell> */}
                   <TableCell>{`${value?.name} ${
-                    value?.plant ? `(${value?.plant})` : ``
+                    data?.plant_name && value?.name === "Paid"
+                      ? `(${data?.plant_name})`
+                      : ``
                   }`}</TableCell>
                 </TableRow>
               );
