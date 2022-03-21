@@ -6,9 +6,7 @@ import React, {
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
-import {
-  getAllMismatch,
-} from "../../_redux/InvoiceMonitoringCrud";
+import { getAllMismatch } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -171,6 +169,20 @@ function DashboardListMismatch(props) {
       },
     },
     {
+      title: intl.formatMessage({
+        id: "TITLE.STATUS",
+      }),
+      name: "status",
+      order: {
+        active: false,
+        status: false,
+      },
+      filter: {
+        active: false,
+        type: "text",
+      },
+    },
+    {
       title: intl.formatMessage({ id: "TITLE.TABLE_HEADER.ACTION" }),
       name: "action",
       order: {
@@ -209,6 +221,8 @@ function DashboardListMismatch(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
+
+  console.log("dataxxx", data.data);
 
   return (
     <React.Fragment>
@@ -304,7 +318,7 @@ function DashboardListMismatch(props) {
             loading={loading}
             err={err}
             countData={data.count}
-            hecto={10}
+            hecto={16}
           >
             {data.data.map((item, index) => {
               return (
@@ -324,6 +338,17 @@ function DashboardListMismatch(props) {
                   <TableCell>{item.contract_name}</TableCell>
                   <TableCell>{item.user_created}</TableCell>
                   <TableCell>{item.vendor_name}</TableCell>
+                  <TableCell>
+                    {!!item.complete ? (
+                      <span className="label label-lg label-light-success label-inline font-weight-bold py-4">
+                        {`COMPLETED`}
+                      </span>
+                    ) : (
+                      <span className="label label-lg label-light-warning label-inline font-weight-bold py-4">
+                        {`ON PROGRESS`}
+                      </span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <button
                       type="buuton"
