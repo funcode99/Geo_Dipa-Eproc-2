@@ -100,7 +100,7 @@ const HargaPekerjaan = () => {
                 Nilai Perjanjian
               </label>
               <InputGroup className="col-sm-8 mb-3">
-                {/* <DropdownButton
+                <DropdownButton
                   as={InputGroup.Prepend}
                   variant="outline-secondary"
                   title="IDR"
@@ -109,10 +109,10 @@ const HargaPekerjaan = () => {
                 >
                   <Dropdown.Item href="#">IDR</Dropdown.Item>
                   <Dropdown.Item href="#">USD</Dropdown.Item>
-                </DropdownButton> */}
+                </DropdownButton>
                 <FormControl
                   disabled
-                  defaultValue={printMoney(contract_value)}
+                  defaultValue={printMoney(contract_value).substring(3)}
                   aria-describedby="basic-addon1"
                 />
               </InputGroup>
