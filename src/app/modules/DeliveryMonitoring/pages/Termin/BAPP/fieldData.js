@@ -48,6 +48,7 @@ const formData = [
   ],
   [
     {
+      label: "Nomor PO",
       name: "nomor_po",
     },
   ],
@@ -96,6 +97,7 @@ export const formData1 = [
     label: "Dasar Pelaksanaan",
   },
   {
+    label: "Nomor PO",
     name: "nomor_po",
   },
   {
