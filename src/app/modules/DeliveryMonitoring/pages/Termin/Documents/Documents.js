@@ -140,14 +140,14 @@ const Documents = ({
   }, [taskId]);
 
   const approveDoc = React.useCallback(
-    ({ type, amIWarehouse, callback }) => {
+    ({ type, amIWarehouse, callback, params }) => {
       const { isPeriodic, percentage } = open?.tempParams;
       const usedParams = isPeriodic ? { percentage } : {};
       fetch_api_sg({
         key: keys.accept,
         type: "post",
         alertAppear: "both",
-        params: usedParams,
+        params: Object.assign({}, usedParams, params),
         url: `delivery/task-document/${open?.tempParams?.accept_id}/approve${
           amIWarehouse ? "-warehouse" : ""
         }`,
@@ -277,10 +277,11 @@ const Documents = ({
                 // todo, liat dulu warehousenya client juga bukan
                 if (isAlsoClient) approveDoc({ type, amIWarehouse: false });
               },
+              params,
               type,
             });
           } else {
-            approveDoc({ type, amIWarehouse: false });
+            approveDoc({ type, amIWarehouse: false, params });
           }
           break;
         case "reject":
