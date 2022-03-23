@@ -266,7 +266,7 @@ const BappPage = ({
 
   const _handleSubmit = (data) => {
     // handleLoading("submit", true);
-    const { isApprove, remarks } = onTimeRef.current;
+    const { isApprove, remarks, BAK } = onTimeRef.current;
     let params = {};
     let url = ``;
     // switch (status) {
@@ -284,9 +284,10 @@ const BappPage = ({
       party_1_director_position: data?.party1_jabatan,
       party_2_autorize_name: data?.party2_name,
       party_2_position: data?.party2_jabatan,
+      bak_file: BAK.data,
       // party_1_name:
     };
-    // console.log(`onTimeRef`, onTimeRef.current, data, "params", params);
+    console.log(`onTimeRef`, onTimeRef.current, data, "params", params);
 
     fetchApi({
       key: keys.submit,
