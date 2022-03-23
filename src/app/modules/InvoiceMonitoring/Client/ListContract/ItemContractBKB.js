@@ -1012,7 +1012,12 @@ function ItemContractBKB(props) {
                             <td>
                               <div className="d-flex justify-content-between">
                                 <span>{bkbData?.symbol}</span>
-                                <span>{rupiah(item.wi_tax_base).slice(3)}</span>
+                                <span>
+                                  {rupiah(
+                                    item.wi_tax_base *
+                                      (parseFloat(item.qsatz) / 100)
+                                  ).slice(3)}
+                                </span>
                               </div>
                             </td>
                           </tr>
