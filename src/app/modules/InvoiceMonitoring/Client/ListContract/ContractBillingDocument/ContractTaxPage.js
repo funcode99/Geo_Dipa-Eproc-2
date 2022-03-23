@@ -290,7 +290,8 @@ function ContractTaxPage(props) {
               wt_withcd: element.wt_withcd,
               text40: element.text40,
               // wi_tax_base: (element.qsatz *(contractData["termin_value"] + totalAddtionalPayment())) / 100,
-              wi_tax_base: (contractData['termin_value'] + totalAddtionalPayment()),
+              wi_tax_base:
+                contractData["termin_value"] + totalAddtionalPayment(),
               qsatz: element.qsatz,
               checked: false,
             });
@@ -888,7 +889,10 @@ function ContractTaxPage(props) {
                   <th style={{ width: "40%" }}>
                     <FormattedMessage id="TITLE.DESCRIPTION" />
                   </th>
-                  <th style={{ width: "50%" }}>
+                  <th style={{ width: "25%" }}>
+                    <FormattedMessage id="TITLE.TOTAL_AMOUNT" />
+                  </th>
+                  <th style={{ width: "25%" }}>
                     <FormattedMessage id="TITLE.VALUE" />
                   </th>
                 </tr>
@@ -1035,6 +1039,27 @@ function ContractTaxPage(props) {
                               </small>
                             </div>
                           )}
+                      </td>
+                      <td>
+                        <NumberFormat
+                          id={"NumberFormat-text"}
+                          value={
+                            formikPph.values.optionSelectedPph[index]
+                              ?.wi_tax_base *
+                            (parseFloat(
+                              formikPph.values.optionSelectedPph[index]?.qsatz
+                            ) /
+                              100)
+                          }
+                          displayType={"text"}
+                          className="form-control"
+                          thousandSeparator={"."}
+                          decimalSeparator={","}
+                          allowEmptyFormatting={true}
+                          allowLeadingZeros={true}
+                          prefix={"Rp "}
+                          disabled
+                        />
                       </td>
                     </tr>
                   );
