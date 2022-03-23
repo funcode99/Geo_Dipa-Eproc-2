@@ -3,11 +3,13 @@ import { Button, ButtonGroup } from "@material-ui/core";
 import { Form } from "react-bootstrap";
 import BasicInput from "../../../../../../components/input/BasicInput";
 import TextAreaInput from "../../../../../../components/input/TextAreaInput";
+import UploadInput from "../../../../../../components/input/UploadInput";
 
 const ApproveRejectBtn = forwardRef(
   ({ isDisabled, initialValue, initialRemarks }, ref) => {
     const [action, setAction] = React.useState("approve");
     const [remarks, setRemarks] = React.useState();
+    const [BAK, setBAK] = React.useState();
     const isReject = action === "reject";
     const isApprove = action === "approve";
     const _changeAction = (type) => {
@@ -16,7 +18,10 @@ const ApproveRejectBtn = forwardRef(
     const handleRemarksChange = (e) => {
       setRemarks(e);
     };
-    React.useImperativeHandle(ref, () => ({ isApprove, remarks }));
+    const handleBAKChange = (e) => {
+      setBAK(e);
+    };
+    React.useImperativeHandle(ref, () => ({ isApprove, remarks, BAK }));
     useEffect(() => {
       setAction(Boolean(initialValue) ? "approve" : "reject");
     }, [initialValue]);
@@ -52,21 +57,35 @@ const ApproveRejectBtn = forwardRef(
           </Button>
         </ButtonGroup>
         {isReject && (
-          <div className="form-group row">
-            <label className={`col-sm-4 col-form-label`}>remarks</label>
-            <div className={`col-sm-8`}>
-              <TextAreaInput
-                name={"remarks"}
-                label={"Remarks"}
-                onChange={handleRemarksChange}
-                typeInput={"TextAreaInput"}
-                value={remarks}
-                // value={remarks}
-                // disabled
-                //   defaultValue={remarks}
-              />
+          <>
+            <div className="form-group row">
+              <label className={`col-sm-4 col-form-label`}>
+                Berkas Berita Acara Kesepakatan
+              </label>
+              <div className={`col-sm-8`}>
+                <UploadInput
+                  value={BAK}
+                  onChange={(eve) => handleBAKChange(eve)}
+                  //   classLabel={Boolean(!active) && "d-none"}
+                />
+              </div>
             </div>
-          </div>
+            <div className="form-group row">
+              <label className={`col-sm-4 col-form-label`}>remarks</label>
+              <div className={`col-sm-8`}>
+                <TextAreaInput
+                  name={"remarks"}
+                  label={"Remarks"}
+                  onChange={handleRemarksChange}
+                  typeInput={"TextAreaInput"}
+                  value={remarks}
+                  // value={remarks}
+                  // disabled
+                  //   defaultValue={remarks}
+                />
+              </div>
+            </div>
+          </>
         )}
         {/* {isReject && (
         <Form.Group
