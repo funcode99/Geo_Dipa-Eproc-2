@@ -1,3 +1,4 @@
+import React from "react";
 const formData = [
   [
     {
@@ -100,11 +101,16 @@ export const formData1 = [
     label: "Nomor PO",
     name: "nomor_po",
   },
-  {
-    name: "hasil_pekerjaan",
-    label: "Hasil pelaksanaan pekerjaan yang telah diselesaikan",
-    typeInput: "TextAreaInput",
-  },
+  // {
+  //   children: (
+  //     <div className="row">
+  //       <div className="col-4"> </div>
+  //       <div className="col-8">
+  //         *Jika kontrak memiliki addendum, maka tambahkan kolom untuk addendum
+  //       </div>
+  //     </div>
+  //   ),
+  // },
 ];
 
 export const formData2 = [
@@ -124,6 +130,11 @@ export const formData2 = [
   {
     name: "pelaksana",
     label: "Pelaksana Pekerjaan",
+  },
+  {
+    name: "hasil_pekerjaan",
+    label: "Hasil pelaksanaan pekerjaan yang telah diselesaikan",
+    typeInput: "TextAreaInput",
   },
 ];
 

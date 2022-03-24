@@ -29,6 +29,7 @@ import FieldBuilder from "../../../../../components/builder/FieldBuilder";
 import ApproveRejectBtn from "./components/ApproveRejectBtn";
 import AlertLate from "./components/AlertLate";
 import apiHelper from "../../../../../service/helper/apiHelper";
+import AdendumInput from "./components/AdendumInput";
 // import ModalConfirmation from "../../../../../components/modals/ModalConfirmation";
 
 const tableHeader = [
@@ -87,6 +88,7 @@ const BappPage = ({
   const rejectRef = React.useRef();
   const onTimeRef = React.useRef();
   const postGRRef = React.useRef();
+  const adendumRef = React.useRef();
   const [lateData, setLateData] = React.useState([]);
   const [stepActive, setStepActive] = React.useState(null);
   const [loading, setLoading] = React.useState({
@@ -267,6 +269,7 @@ const BappPage = ({
   const _handleSubmit = (data) => {
     // handleLoading("submit", true);
     const { isApprove, remarks, BAK } = onTimeRef.current;
+    const { dataAdendum } = adendumRef.current;
     let params = {};
     let url = ``;
     // switch (status) {
@@ -284,14 +287,15 @@ const BappPage = ({
       party_1_director_position: data?.party1_jabatan,
       party_2_autorize_name: data?.party2_name,
       party_2_position: data?.party2_jabatan,
-      bak_file: BAK.data,
+      // bak: _.isEmpty(BAK) ? undefined : BAK.data,
+      // addendum_no: dataAdendum,
       // party_1_name:
     };
-    console.log(`onTimeRef`, onTimeRef.current, data, "params", params);
+    console.log(`onTimeRef`, adendumRef.current, data, "params", params);
 
     fetchApi({
       key: keys.submit,
-      type: "post",
+      type: "postForm",
       params,
       url,
       alertAppear: "both",
@@ -647,6 +651,7 @@ const BappPage = ({
                   <Row>
                     <Col>
                       <FieldBuilder formData={formData1} {...fieldProps} />
+                      <AdendumInput ref={adendumRef} />
                     </Col>
                     <Col>
                       <FieldBuilder formData={formData2} {...fieldProps} />
