@@ -13,7 +13,6 @@ const BASE_MODAL_CONF = [
     type: "accept",
     title: "Yakin ingin mengkonfirmasi dokumen ini ?",
     subTitle: "Pastikan dokumen yang dikirimkan telah sesuai !",
-    isReject: true,
   },
   {
     type: "reject",
