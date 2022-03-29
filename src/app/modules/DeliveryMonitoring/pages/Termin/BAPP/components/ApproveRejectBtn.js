@@ -62,7 +62,7 @@ const ApproveRejectBtn = forwardRef(
           <>
             <div className="form-group row">
               <label className={`col-sm-4 col-form-label`}>
-                Berkas Berita Acara Kesepakatan
+                Berkas Berita Acara Kesepakatan Terlambat Pekerjaan
               </label>
               <div className={`col-sm-8`}>
                 <UploadInput
@@ -78,7 +78,7 @@ const ApproveRejectBtn = forwardRef(
               </div>
             </div>
             <div className="form-group row">
-              <label className={`col-sm-4 col-form-label`}>remarks</label>
+              <label className={`col-sm-4 col-form-label`}>Remarks</label>
               <div className={`col-sm-8`}>
                 <TextAreaInput
                   name={"remarks"}
