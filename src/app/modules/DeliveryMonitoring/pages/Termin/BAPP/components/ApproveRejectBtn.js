@@ -1,17 +1,19 @@
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef, useEffect, useMemo } from "react";
 import { Button, ButtonGroup } from "@material-ui/core";
 import { Form } from "react-bootstrap";
 import BasicInput from "../../../../../../components/input/BasicInput";
 import TextAreaInput from "../../../../../../components/input/TextAreaInput";
 import UploadInput from "../../../../../../components/input/UploadInput";
+import { isEmpty } from "lodash";
 
 const ApproveRejectBtn = forwardRef(
-  ({ isDisabled, initialValue, initialRemarks }, ref) => {
+  ({ isDisabled, initialValue, initialRemarks, urlBAK }, ref) => {
     const [action, setAction] = React.useState("approve");
     const [remarks, setRemarks] = React.useState();
     const [BAK, setBAK] = React.useState();
     const isReject = action === "reject";
     const isApprove = action === "approve";
+    const isBAKAvailable = useMemo(() => !isEmpty(urlBAK), [urlBAK]);
     const _changeAction = (type) => {
       setAction(type);
     };
@@ -64,8 +66,13 @@ const ApproveRejectBtn = forwardRef(
               </label>
               <div className={`col-sm-8`}>
                 <UploadInput
-                  value={BAK}
+                  value={
+                    isBAKAvailable && isEmpty(BAK)
+                      ? { path_preview: urlBAK }
+                      : BAK
+                  }
                   onChange={(eve) => handleBAKChange(eve)}
+                  isPreview={isBAKAvailable}
                   //   classLabel={Boolean(!active) && "d-none"}
                 />
               </div>

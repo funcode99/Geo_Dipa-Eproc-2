@@ -18,7 +18,11 @@ const apiHelper = {
       case "postForm":
         let newParams = new FormData();
         Object.keys(params).forEach((element) => {
-          newParams.append(element, params[element]);
+          if (Array.isArray(params[element])) {
+            newParams.append(element, JSON.stringify(params[element]));
+          } else {
+            newParams.append(element, params[element]);
+          }
         });
         return axios.post(url, newParams);
       case "get":

@@ -5,7 +5,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import clsx from "clsx";
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import React, { forwardRef, useRef, useState } from "react";
 import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 import ModalAdendum from "./ModalAdendum";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AdendumInput = forwardRef(({ innerRef }, ref) => {
+const AdendumInput = forwardRef(({ initAdendum }, ref) => {
   const classes = useStyles();
 
   const [checked, setChecked] = useState(false);
@@ -40,6 +40,13 @@ const AdendumInput = forwardRef(({ innerRef }, ref) => {
   };
 
   React.useImperativeHandle(ref, () => ({ dataAdendum }));
+
+  React.useEffect(() => {
+    if (!isEmpty(initAdendum)) {
+      setDataAdendum(initAdendum.map((el) => el?.text));
+      setChecked(true);
+    }
+  }, [initAdendum]);
 
   return (
     <div>

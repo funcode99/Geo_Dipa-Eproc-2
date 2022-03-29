@@ -287,11 +287,10 @@ const BappPage = ({
       party_1_director_position: data?.party1_jabatan,
       party_2_autorize_name: data?.party2_name,
       party_2_position: data?.party2_jabatan,
-      // bak: _.isEmpty(BAK) ? undefined : BAK.data,
-      // addendum_no: dataAdendum,
-      // party_1_name:
+      bak: _.isEmpty(BAK) ? undefined : BAK.data,
+      addendum_no: dataAdendum,
     };
-    console.log(`onTimeRef`, adendumRef.current, data, "params", params);
+    // console.log(`onTimeRef`, adendumRef.current, data, "params", params);
 
     fetchApi({
       key: keys.submit,
@@ -651,7 +650,10 @@ const BappPage = ({
                   <Row>
                     <Col>
                       <FieldBuilder formData={formData1} {...fieldProps} />
-                      <AdendumInput ref={adendumRef} />
+                      <AdendumInput
+                        ref={adendumRef}
+                        initAdendum={taskNews?.news_addendums}
+                      />
                     </Col>
                     <Col>
                       <FieldBuilder formData={formData2} {...fieldProps} />
@@ -660,6 +662,7 @@ const BappPage = ({
                         isDisabled={isDisabled}
                         initialValue={dataTask?.is_on_time}
                         initialRemarks={dataTask?.remarks}
+                        urlBAK={taskNews?.bak_file}
                       />
                       <AlertLate dataLate={lateData} />
                     </Col>
