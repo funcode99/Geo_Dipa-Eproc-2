@@ -179,10 +179,7 @@ const BappPage = ({
   // const saExist = _.isEmpty(dataSAGR?.sa);
   // const grExist = _.isEmpty(dataSAGR?.gr);
 
-  const isDisabled = React.useMemo(
-    () => isClient && !userAuth && !isEmpty(taskNews?.file),
-    [taskNews?.file, isClient]
-  );
+  const isDisabled = React.useMemo(() => isClient && !userAuth, [isClient]);
 
   const getDataSAGRForm = () => {
     fetchApi({
