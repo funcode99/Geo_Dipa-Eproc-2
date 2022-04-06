@@ -13,7 +13,7 @@ export const formData1 = [
   },
   {
     name: "party1_jabatan",
-    label: "Jabatan Pihak 1",
+    label: "Jabatan Pejabat Berwenang Pihak 1",
   },
   {
     name: "jenis",
@@ -45,7 +45,7 @@ export const formData2 = [
   },
   {
     name: "party2_jabatan",
-    label: "Jabatan Pihak 2",
+    label: "Jabatan Pejabat Berwenang Pihak 2 ",
   },
   {
     name: "pelaksana",
