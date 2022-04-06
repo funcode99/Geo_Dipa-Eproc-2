@@ -54,6 +54,7 @@ const tableHeader = [
 const validationClient = object().shape({
   hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
   nomor_contract: validation.require("Dasar Pelaksanaan"),
+  jenis: validation.require("Jenis Pekerjaan"),
   party1_name: validation.require("Direksi Pekerjaan"),
   party2_name: validation.require("Pejabat Berwenang"),
   party1_jabatan: validation.require("Pihak 1 Jabatan"),
@@ -335,6 +336,7 @@ const BappPage = ({
     "hasil_pekerjaan",
     "nomor_bapp",
     "tanggal_bapp",
+    "jenis",
     "nomor_contract",
     "party1_name",
     "party1_jabatan",

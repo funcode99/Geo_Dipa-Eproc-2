@@ -60,6 +60,7 @@ import {
   ServiceAcceptance,
   GoodReceipt,
 } from "../../../DeliveryMonitoring/pages/Termin/ServiceAccGR/components";
+import { openLinkTab } from "../../../../service/helper/urlHelper";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -320,7 +321,7 @@ function ContractHardCopyDoc(props) {
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
-      window.open(url, "_blank");
+      openLinkTab(url);
     }, [url]);
     return (
       <div className={"d-flex flex-row align-items-center"}>
