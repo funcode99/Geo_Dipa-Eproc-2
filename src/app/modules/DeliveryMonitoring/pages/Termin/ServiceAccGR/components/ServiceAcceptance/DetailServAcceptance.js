@@ -58,7 +58,11 @@ const DetailServAcceptance = (props) => {
     <Card>
       <CardHeader
         title={
-          <StatusRemarks status={"CANCELED"} remarks={dataSA?.canceled_at} />
+          dataSA?.canceled_at ? (
+            <StatusRemarks status={"CANCELED"} remarks={dataSA?.canceled_at} />
+          ) : (
+            ""
+          )
         }
       >
         <CardHeaderToolbar>
