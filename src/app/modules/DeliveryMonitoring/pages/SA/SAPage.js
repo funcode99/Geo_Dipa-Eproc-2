@@ -9,6 +9,7 @@ import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
 import { useHistory } from "react-router-dom";
+import StatusRemarks from "../../../../components/StatusRemarks";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +32,8 @@ const tableHeaderContractsNew = [
     id: "po_number",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
   },
+  { id: "status", label: "Status" },
+
   {
     id: "action",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
@@ -48,9 +51,15 @@ export const SAPage = ({ fetch_api_sg, loadings, status }) => {
   const history = useHistory();
 
   const generateTableContent = (data) => {
+    console.log("datanya", data);
     let dataArr = data.map((item, id) => ({
       material_document: item?.material_document,
       po_number: item?.po_number,
+      status: item?.canceled_at ? (
+        <StatusRemarks status={"CANCELED"} remarks={item?.canceled_at} />
+      ) : (
+        "-"
+      ),
       action: (
         <ButtonAction
           hoverLabel="More"
