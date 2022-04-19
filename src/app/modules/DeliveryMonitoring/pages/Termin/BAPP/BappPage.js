@@ -1,5 +1,5 @@
 import { Button } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import { Col, Dropdown, Row } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
@@ -97,9 +97,7 @@ const BappPage = ({
     submit: false,
   });
   const [dataSAGR, setDataSAGR] = React.useState({});
-  const [open, setOpen] = React.useState({
-    uploadSign: false,
-  });
+  const [taskNewsId, setTaskNewsId] = useState(null);
   const [exclude, setExclude] = React.useState([]);
   // const [open, setOpen] = React.useState({
   //   submit: false,
@@ -245,13 +243,14 @@ const BappPage = ({
         url: `/delivery/task/${taskId}/news`,
         onSuccess: (res) => {
           // handleLoading("get", false);
+          setTaskNewsId(res.data?.news?.id);
           saveTask({ task_gr, task_sa, ...res.data });
           generateTableContent(res?.data?.news?.news_histories);
           updateExclude();
         },
       });
     },
-    [taskId, saveTask, task_gr, task_sa]
+    [taskId, saveTask, setTaskNewsId, task_gr, task_sa]
   );
 
   const handleSuccess = React.useCallback(
@@ -398,7 +397,7 @@ const BappPage = ({
           key: keys.upload_s,
           type: "postForm",
           alertAppear: "both",
-          url: `/delivery/task-news/${taskNews?.id}/upload`,
+          url: `/delivery/task-news/${taskNews?.id || taskNewsId}/upload`,
           params: { file: params.data },
           onSuccess: () => {
             uploadRef.current.close();
@@ -411,7 +410,7 @@ const BappPage = ({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews?.id}/status`,
+          url: `delivery/task-news/${taskNews?.id || taskNewsId}/status`,
           params: {
             approve_status_id: apiHelper.approveId,
           },
@@ -428,7 +427,7 @@ const BappPage = ({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${taskNews?.id}/status`,
+          url: `delivery/task-news/${taskNews?.id || taskNewsId}/status`,
           params: {
             approve_status_id: "f11b1105-c234-45f9-a2e8-2b2f12e5ac8f",
             reject_text: params?.remarks,
