@@ -9,7 +9,7 @@ const StatusRemarks = ({
   className,
   role,
 }) => {
-  const isRejected = status === "REJECTED";
+  const isRejected = status === "REJECTED" || status === "CANCELED";
   const isApproved = status === "APPROVED";
   const isWaiting = status === "WAITING";
   const approvedText = isApproved ? `by ${approvedBy}` : "";
