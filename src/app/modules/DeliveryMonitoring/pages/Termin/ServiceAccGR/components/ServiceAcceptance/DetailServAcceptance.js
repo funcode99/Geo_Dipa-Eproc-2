@@ -13,6 +13,7 @@ import {
   CardHeaderToolbar,
 } from "../../../../../../../../_metronic/_partials/controls";
 import NoDataBox from "../../../../../../../components/boxes/NoDataBox/NoDataBox";
+import StatusRemarks from "../../../../../../../components/StatusRemarks";
 import BoxSignSA from "../BoxSignSA";
 import SectionHeader from "./components/SectionHeader";
 import SectionSummary from "./components/SectionSummary";
@@ -55,7 +56,11 @@ const DetailServAcceptance = (props) => {
   console.log(`props`, props);
   return (
     <Card>
-      <CardHeader title="">
+      <CardHeader
+        title={
+          <StatusRemarks status={"CANCELED"} remarks={dataSA?.canceled_at} />
+        }
+      >
         <CardHeaderToolbar>
           <div className="kt-widget19__action">
             <button
