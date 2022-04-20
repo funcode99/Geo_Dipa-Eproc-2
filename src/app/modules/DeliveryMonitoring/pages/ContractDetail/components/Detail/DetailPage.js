@@ -439,7 +439,7 @@ const DetailPage = ({
       // enableLoading();
 
       fetch_api_sg({
-        keys: keys.fetch,
+        key: keys.fetch,
         type: "get",
         url: `/delivery/contract/${contractId}`,
         onSuccess: (res) => {
