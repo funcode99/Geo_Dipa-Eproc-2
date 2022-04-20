@@ -10,6 +10,7 @@ import {
 
 export const KEYS_TERMIN = {
   // fetch
+  f_contract: "fetch-contract",
   f_termin: "fetch-termin",
   f_summary_item: "fetch-summary_item",
   f_deliverable: "fetch-deliverable",
