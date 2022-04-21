@@ -1,3 +1,4 @@
+import { debounce } from "lodash";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -46,11 +47,14 @@ export class TerminPageNew extends PureComponent {
       prevProps.map_state.dataContractById.id !==
       this.props.map_state.dataTask.contract_id
     ) {
-      this.handleApiCenter({ key: KEYS_TERMIN.f_contract });
-
+      this.handleFetchContract();
       return;
     }
   }
+
+  handleFetchContract = debounce(() => {
+    this.handleApiCenter({ key: KEYS_TERMIN.f_contract });
+  }, 500);
 
   handleRefresh = () => {
     this.handleApiCenter({ key: KEYS_TERMIN.f_termin });
