@@ -67,14 +67,20 @@ export class TerminPageNew extends PureComponent {
     const { task_id } = this.props.match.params;
     switch (key) {
       case KEYS_TERMIN.f_contract:
-        fetch_api_sg({
-          key,
-          type: "get",
-          url: `/delivery/contract/${map_state.dataTask.contract_id}`,
-          onSuccess: (res) => {
-            set_contract_id(res?.data);
-          },
-        });
+        if (
+          map_state?.dataTask?.contract_id ||
+          map_state?.dataContractById?.id
+        ) {
+          fetch_api_sg({
+            key,
+            type: "get",
+            url: `/delivery/contract/${map_state?.dataTask?.contract_id ||
+              map_state?.dataContractById?.id}`,
+            onSuccess: (res) => {
+              set_contract_id(res?.data);
+            },
+          });
+        }
         break;
       case KEYS_TERMIN.f_termin:
         fetch_api_sg({
