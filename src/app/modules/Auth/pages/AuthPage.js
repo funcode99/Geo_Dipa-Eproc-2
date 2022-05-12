@@ -21,7 +21,9 @@ export function AuthPage() {
           <div
             className="login-aside d-flex flex-row-auto bgi-size-cover bgi-no-repeat p-10 p-lg-10"
             style={{
-              backgroundImage: `url(${toAbsoluteUrl("/media/bg/background.jpg")})`,
+              backgroundImage: `url(${toAbsoluteUrl(
+                "/media/bg/background.jpeg"
+              )})`,
             }}
           >
             {/*begin: Aside Container*/}
