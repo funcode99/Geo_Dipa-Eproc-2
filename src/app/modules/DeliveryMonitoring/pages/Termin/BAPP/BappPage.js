@@ -112,7 +112,8 @@ const BappPage = ({
       nomor_bapp: taskNews?.no || "",
       tanggal_bapp: taskNews?.date || formatInitialDate(),
       jenis: contract?.contract_name,
-      pelaksana: contract?.vendor?.party?.full_name,
+      pelaksana:
+        contract?.vendor_legal?.name + " " + contract?.vendor?.party?.full_name,
       nomor_contract: contract?.contract_no,
       nomor_po: contract?.purch_order_no,
       hasil_pekerjaan: taskNews?.review_text || "",
