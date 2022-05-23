@@ -113,13 +113,20 @@ const BastPage = ({
     [setLoadings]
   );
   const [content, setContent] = React.useState([]);
-  const { news, contract_name, vendor, contract_no, purch_order_no } = contract;
+  const {
+    news,
+    contract_name,
+    vendor,
+    contract_no,
+    purch_order_no,
+    vendor_legal,
+  } = contract;
   const initialValues = React.useMemo(
     () => ({
       nomor_bast: taskNews?.no || "",
       tanggal_bast: taskNews?.date,
       jenis: contract_name,
-      pelaksana: vendor?.party?.full_name,
+      pelaksana: vendor_legal?.name + " " + vendor?.party?.full_name,
       nomor_contract: contract_no,
       nomor_po: purch_order_no,
       hasil_pekerjaan: "",
@@ -132,7 +139,7 @@ const BastPage = ({
       party2_name: contract?.contract_party?.party_2_autorize_name,
       party2_jabatan: contract?.contract_party?.party_2_position,
     }),
-    [taskNews, contract_name, vendor, contract_no, purch_order_no]
+    [taskNews, contract_name, vendor, contract_no, purch_order_no, vendor_legal]
   );
 
   const fetchData = React.useCallback(
