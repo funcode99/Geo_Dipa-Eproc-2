@@ -9,7 +9,7 @@ const client = {
   address3: "Barat 75",
 };
 
-const SectionHeader = ({ header }) => {
+const SectionHeader = ({ header, fullData }) => {
   const tab1 = useMemo(
     () => [
       { value: client?.name },
@@ -18,6 +18,10 @@ const SectionHeader = ({ header }) => {
       { value: client?.address3 },
     ],
     [client]
+  );
+  const address = useMemo(
+    () => fullData?.contract?.plant_authority?.sap_address.split("-"),
+    [fullData]
   );
   const tab2 = useMemo(
     () => [
@@ -52,9 +56,11 @@ const SectionHeader = ({ header }) => {
         <div className="row mr-0">
           <div className="col-sm-6 border mr-3">
             <div className="d-flex flex-column">
-              {tab1.map((el, id) => (
-                <span key={id}>{el.value}</span>
-              ))}
+              {address?.length &&
+                address?.map((el, id) => <span key={id}>{el}</span>)}
+              {!address?.length &&
+                tab1?.map((el, id) => <span key={id}>{el.value}</span>)}
+              {/* <span>{address}</span> */}
             </div>
           </div>
           <div className="row col-sm-6 mr-0">
