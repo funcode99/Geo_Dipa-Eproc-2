@@ -109,6 +109,7 @@ function ContractTaxPage(props) {
   const [contractAuthority, setContractAuthority] = useState("");
   const [approveHardCopyRole, setApproveHardCopyRole] = useState(false);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
+  const [postingDate, setPostingDate] = useState("");
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -405,62 +406,58 @@ function ContractTaxPage(props) {
       created_by_id: user_id,
       updated_by_id: user_id,
       authority: contractAuthority,
+      posting_date: postingDate,
     };
-    approveTax(taxData.id, {
-      approved_by_id: user_id,
-      contract_id: contract_id,
-      term_id: termin,
-      tax_selected:
-        saveTaxPph && saveTaxPph.optionSelectedPph
-          ? saveTaxPph.optionSelectedPph
-          : listTaxPph,
-      tax_vat: optionSelectedPpn,
-      progress_data: dataProgress,
-    })
-      .then((response) => {
-        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-        setLoading(false);
-        setModalApprove(false);
-        setIsSubmit(true);
-        getHistoryTaxData(taxData.id);
-        softcopy_save(data_1);
-        getTerminProgress(termin).then((result) => {
-          if (result.data.data.data) {
-            setProgressTermin(result.data.data?.progress_type);
-            setDataProgress(result.data.data?.data);
-          }
-        });
-        if (invoiceBkbExist) {
-          setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
-        } else {
-          createBkb(data_2)
+    if (invoiceBkbExist) {
+      setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
+    } else {
+      createBkb(data_2)
+        .then((response) => {
+          approveTax(taxData.id, {
+            approved_by_id: user_id,
+            contract_id: contract_id,
+            term_id: termin,
+            tax_selected:
+              saveTaxPph && saveTaxPph.optionSelectedPph
+                ? saveTaxPph.optionSelectedPph
+                : listTaxPph,
+            tax_vat: optionSelectedPpn,
+            progress_data: dataProgress,
+          })
             .then((response) => {
-              setInvoiceBkbExist(true);
-              setToast(
-                intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
-                10000
-              );
+              setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+              setLoading(false);
+              setModalApprove(false);
+              setIsSubmit(true);
+              getHistoryTaxData(taxData.id);
+              softcopy_save(data_1);
               getTerminProgress(termin).then((result) => {
-                setDataProgress(result.data.data?.data);
+                if (result.data.data.data) {
+                  setProgressTermin(result.data.data?.progress_type);
+                  setDataProgress(result.data.data?.data);
+                }
               });
+
+              SOCKET.emit("send_notif");
             })
             .catch((error) => {
-              if (error.response?.data && error.response?.data.message) {
-                setToast(error.response?.data.message, 10000);
-              } else {
-                setToast(
-                  intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
-                  10000
-                );
-              }
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+              setLoading(false);
             });
-        }
-        SOCKET.emit("send_notif");
-      })
-      .catch((error) => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-        setLoading(false);
-      });
+          setInvoiceBkbExist(true);
+          setToast(intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }), 10000);
+          getTerminProgress(termin).then((result) => {
+            setDataProgress(result.data.data?.data);
+          });
+        })
+        .catch((error) => {
+          if (error.response?.data && error.response?.data.message) {
+            setToast(error.response?.data.message, 10000);
+          } else {
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          }
+        });
+    }
   };
 
   const getBillingDocumentIdData = useCallback(() => {
@@ -552,6 +549,11 @@ function ContractTaxPage(props) {
       total += element.value;
     });
     return total;
+  };
+
+  const handlePostingDateSelected = (e) => {
+    const newDate = moment(new Date(e.target.value)).format("YYYY-MM-DD");
+    setPostingDate(newDate);
   };
 
   return (
@@ -1436,6 +1438,24 @@ function ContractTaxPage(props) {
                     </span>
                   </div>
                 </label>
+              </div>
+              <div className="form-group row">
+                <label
+                  htmlFor="postingDate"
+                  className="col-sm-4 col-form-label"
+                >
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.POSTING_DATE" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="postingDate"
+                    onChange={handlePostingDateSelected}
+                    // disabled
+                    // defaultValue={taxData?.tax_date}
+                  />
+                </div>
               </div>
             </div>
             <div className="col-md-6">
