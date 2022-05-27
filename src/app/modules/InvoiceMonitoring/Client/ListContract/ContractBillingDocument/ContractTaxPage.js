@@ -408,61 +408,56 @@ function ContractTaxPage(props) {
       authority: contractAuthority,
       posting_date: postingDate,
     };
-    approveTax(taxData.id, {
-      approved_by_id: user_id,
-      contract_id: contract_id,
-      term_id: termin,
-      tax_selected:
-        saveTaxPph && saveTaxPph.optionSelectedPph
-          ? saveTaxPph.optionSelectedPph
-          : listTaxPph,
-      tax_vat: optionSelectedPpn,
-      progress_data: dataProgress,
-    })
-      .then((response) => {
-        setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
-        setLoading(false);
-        setModalApprove(false);
-        setIsSubmit(true);
-        getHistoryTaxData(taxData.id);
-        softcopy_save(data_1);
-        getTerminProgress(termin).then((result) => {
-          if (result.data.data.data) {
-            setProgressTermin(result.data.data?.progress_type);
-            setDataProgress(result.data.data?.data);
-          }
-        });
-        if (invoiceBkbExist) {
-          setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
-        } else {
-          createBkb(data_2)
+    if (invoiceBkbExist) {
+      setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
+    } else {
+      createBkb(data_2)
+        .then((response) => {
+          approveTax(taxData.id, {
+            approved_by_id: user_id,
+            contract_id: contract_id,
+            term_id: termin,
+            tax_selected:
+              saveTaxPph && saveTaxPph.optionSelectedPph
+                ? saveTaxPph.optionSelectedPph
+                : listTaxPph,
+            tax_vat: optionSelectedPpn,
+            progress_data: dataProgress,
+          })
             .then((response) => {
-              setInvoiceBkbExist(true);
-              setToast(
-                intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
-                10000
-              );
+              setToast(intl.formatMessage({ id: "REQ.UPDATE_SUCCESS" }), 10000);
+              setLoading(false);
+              setModalApprove(false);
+              setIsSubmit(true);
+              getHistoryTaxData(taxData.id);
+              softcopy_save(data_1);
               getTerminProgress(termin).then((result) => {
-                setDataProgress(result.data.data?.data);
+                if (result.data.data.data) {
+                  setProgressTermin(result.data.data?.progress_type);
+                  setDataProgress(result.data.data?.data);
+                }
               });
+
+              SOCKET.emit("send_notif");
             })
             .catch((error) => {
-              if (error.response?.data && error.response?.data.message) {
-                setToast(error.response?.data.message, 10000);
-              } else {
-                setToast(
-                  intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
-                  10000
-                );
-              }
+              setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+              setLoading(false);
             });
-        }
-        SOCKET.emit("send_notif");
-      })
-      .catch((error) => {
-        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
-        setLoading(false);
-      });
+          setInvoiceBkbExist(true);
+          setToast(intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }), 10000);
+          getTerminProgress(termin).then((result) => {
+            setDataProgress(result.data.data?.data);
+          });
+        })
+        .catch((error) => {
+          if (error.response?.data && error.response?.data.message) {
+            setToast(error.response?.data.message, 10000);
+          } else {
+            setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+          }
+        });
+    }
   };
 
   const getBillingDocumentIdData = useCallback(() => {
