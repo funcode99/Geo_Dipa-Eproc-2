@@ -109,6 +109,7 @@ function ContractTaxPage(props) {
   const [contractAuthority, setContractAuthority] = useState("");
   const [approveHardCopyRole, setApproveHardCopyRole] = useState(false);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
+  const [postingDate, setPostingDate] = useState("");
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -405,6 +406,7 @@ function ContractTaxPage(props) {
       created_by_id: user_id,
       updated_by_id: user_id,
       authority: contractAuthority,
+      posting_date: postingDate,
     };
     approveTax(taxData.id, {
       approved_by_id: user_id,
@@ -552,6 +554,11 @@ function ContractTaxPage(props) {
       total += element.value;
     });
     return total;
+  };
+
+  const handlePostingDateSelected = (e) => {
+    const newDate = moment(new Date(e.target.value)).format("YYYY-MM-DD");
+    setPostingDate(newDate);
   };
 
   return (
@@ -1436,6 +1443,24 @@ function ContractTaxPage(props) {
                     </span>
                   </div>
                 </label>
+              </div>
+              <div className="form-group row">
+                <label
+                  htmlFor="postingDate"
+                  className="col-sm-4 col-form-label"
+                >
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.POSTING_DATE" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="postingDate"
+                    onChange={handlePostingDateSelected}
+                    // disabled
+                    // defaultValue={taxData?.tax_date}
+                  />
+                </div>
               </div>
             </div>
             <div className="col-md-6">
