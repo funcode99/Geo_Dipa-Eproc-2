@@ -575,7 +575,7 @@ function Dashboard(props) {
                       </div>
                       <div className="text-center font-size-xs">
                         <span className="font-weight-bold text-secondary">
-                          SLA Avarage
+                          SLA Average
                         </span>
                       </div>
                     </div>
