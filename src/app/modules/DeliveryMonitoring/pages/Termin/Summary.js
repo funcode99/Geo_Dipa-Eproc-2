@@ -252,8 +252,6 @@ function Summary({}) {
     // eslint-disable-next-line
   }, []);
 
-  console.log(`dataTask`, dataTask);
-
   const handleExpand = (event, itemId) => {
     let tempJasa = dataJasa;
 

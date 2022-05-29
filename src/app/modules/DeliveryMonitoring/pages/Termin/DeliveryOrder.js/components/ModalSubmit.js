@@ -40,7 +40,6 @@ export const hasMaterialItem = (data) => {
         item?.material === "null"
       )
   );
-  console.log(`filteredData`, filteredData);
   return !!filteredData?.length;
 };
 
