@@ -475,8 +475,6 @@ const BappPage = ({
     });
   };
 
-  console.log(`plant_data`, taskNews, contract, userAuth, dataTask);
-
   return (
     <React.Fragment>
       <Toast />
