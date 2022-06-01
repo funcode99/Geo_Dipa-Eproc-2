@@ -26,6 +26,7 @@ export class TerminPageNew extends PureComponent {
       },
       summary: {},
       deliverable: {},
+      showForm: true,
     };
   }
 
@@ -98,8 +99,12 @@ export class TerminPageNew extends PureComponent {
               label: el.label,
               status: STATE_STEPPER[el.state],
             }));
+            const findSAGR = mappedStepper.filter(
+              (el) => el.label === "SA / GR"
+            )[0];
             this.setState((prev) => ({
               ...prev,
+              showForm: !findSAGR.status === "COMPLETE",
               termin: {
                 ...prev.termin,
                 stepper: mappedStepper,
@@ -170,7 +175,6 @@ export class TerminPageNew extends PureComponent {
   };
 
   render() {
-    console.log(`this.props`, this.props, this.state);
     const { history, map_state, match } = this.props;
     const { task_id, tab } = match.params;
 

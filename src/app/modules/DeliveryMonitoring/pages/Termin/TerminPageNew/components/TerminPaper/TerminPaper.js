@@ -48,7 +48,7 @@ const TerminPaper = () => {
     return Array.isArray(items) && items.length > 0 && Boolean(find);
   };
   const isItemExists = checkDataBarang();
-  const tabUsed = isItemExists
+  let tabUsed = isItemExists
     ? isClient
       ? TERMIN_TAB_LIST
       : TERMIN_TAB_LIST.map((el) =>
@@ -63,6 +63,13 @@ const TerminPaper = () => {
           ? { ...el, display: "none" }
           : { ...el }
       );
+  // remove form sa gr after sa/gr created
+  tabUsed = tabUsed.map((el) =>
+    el.id === "form-sa-gr" && states.showForm === false
+      ? { ...el, display: "none" }
+      : { ...el }
+  );
+
   const getTask = React.useCallback(() => {
     const task = dataContractById?.tasks?.find((item) => item.id === task_id);
     // return task?.name ?? "";
@@ -111,11 +118,6 @@ const TerminPaper = () => {
     }
   }, [states, forceTabActive, firstTime, task_id]);
 
-  // React.useEffect(() => {
-  //   if (firstTime === 1) setfirstTime(0);
-  // }, [states]);
-
-  console.log(`states`, states.termin.summary, tabActive);
   return (
     <Container>
       <StyledSubheader
@@ -158,7 +160,9 @@ const TerminPaper = () => {
           {tabActive === 0 && <Summary />}
           {tabActive === 0 && <Documents />}
           {tabActive === 1 && <DeliveryOrder />}
-          {tabActive === 2 && <BeritaAcara handleChangeTab={() => handleChangeTab(null, 3)} />}
+          {tabActive === 2 && (
+            <BeritaAcara handleChangeTab={() => handleChangeTab(null, 3)} />
+          )}
           {tabActive === 3 && <FormSAGR isItemExists={isItemExists} />}
           {tabActive === 4 && <SAGRPage />}
           {/* {isItemExists && tabActive === 1 && <DeliveryOrder />}
