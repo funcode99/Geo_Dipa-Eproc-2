@@ -145,8 +145,8 @@ const HargaPekerjaan = () => {
                 value={printMoney(total_amount)}
               />
               <RowAdditional
-                label={"PPN 10%"}
-                value={printMoney(total_amount / 10)}
+                label={"PPN 11%"}
+                value={printMoney(total_amount / 11)}
               />
               <RowAdditional
                 label={"Grand Total"}
