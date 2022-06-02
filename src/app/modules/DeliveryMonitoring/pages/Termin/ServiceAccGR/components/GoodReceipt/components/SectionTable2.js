@@ -50,14 +50,14 @@ const SectionTable2 = ({ items }) => {
         <td>
           <div className="d-flex flex-column">
             <span>Total Value Excl. Fax</span>
-            <span>VAT 10%</span>
+            <span>VAT 11%</span>
             <span>Total Value Inc. Fax</span>
           </div>
         </td>
         <td colSpan="3">
           <div className="d-flex flex-column">
             <span>{rupiah(subTotal)}</span>
-            <span>{"10%"}</span>
+            <span>{"11%"}</span>
             <span>{rupiah(total)}</span>
           </div>
         </td>
@@ -77,7 +77,7 @@ const getSubTotal = (data) => {
 
 const getTotal = (subTotal = 0) => {
   // if (_.isEmpty(subTotal)) return 0;
-  let ppn = parseFloat(10 / 100);
+  let ppn = parseFloat(11 / 100);
   let extra = parseFloat(subTotal * ppn);
   // console.log(`subTotal`, subTotal, ppn, extra);
   return parseFloat(subTotal + extra);
