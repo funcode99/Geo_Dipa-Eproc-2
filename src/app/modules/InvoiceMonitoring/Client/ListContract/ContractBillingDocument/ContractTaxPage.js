@@ -1662,8 +1662,8 @@ function ContractTaxPage(props) {
             onClick={() => setModalApprove(true)}
             disabled={
               isSubmit ||
-              // taxData?.state === "REJECTED" ||
-              // taxData?.state === "APPROVED" ||
+              taxData?.state === "REJECTED" ||
+              taxData?.state === "APPROVED" ||
               taxData === null ||
               !props.setTaxStaffStatus ||
               progressTermin?.ident_name !== "TAX" ||
@@ -1678,8 +1678,8 @@ function ContractTaxPage(props) {
             onClick={() => setModalReject(true)}
             disabled={
               isSubmit ||
-              // taxData?.state === "REJECTED" ||
-              // taxData?.state === "APPROVED" ||
+              taxData?.state === "REJECTED" ||
+              taxData?.state === "APPROVED" ||
               taxData === null ||
               !props.setTaxStaffStatus ||
               progressTermin?.ident_name !== "TAX"
