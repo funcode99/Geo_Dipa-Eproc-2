@@ -683,9 +683,9 @@ function ContractTaxPage(props) {
                       allowEmptyFormatting={true}
                       allowLeadingZeros={true}
                       onValueChange={(e) => {
-                        dataFormTaxVendor.tax_no = e.floatValue;
+                        dataFormTaxVendor.tax_no = e.formattedValue;
                         props.set_data_tax_vendor(dataFormTaxVendor);
-                        formik.setFieldValue("tax_no", e.floatValue);
+                        formik.setFieldValue("tax_no", e.formattedValue);
                       }}
                     />
                   </div>
@@ -763,9 +763,9 @@ function ContractTaxPage(props) {
                       allowEmptyFormatting={true}
                       allowLeadingZeros={true}
                       onValueChange={(e) => {
-                        dataFormTaxVendor.npwp = e.floatValue;
+                        dataFormTaxVendor.npwp = e.formattedValue;
                         props.set_data_tax_vendor(dataFormTaxVendor);
-                        formik.setFieldValue("npwp", e.floatValue);
+                        formik.setFieldValue("npwp", e.formattedValue);
                       }}
                     />
                   </div>
