@@ -146,7 +146,7 @@ const HargaPekerjaan = () => {
               />
               <RowAdditional
                 label={"PPN 11%"}
-                value={printMoney(total_amount / 11)}
+                value={printMoney(total_amount * (11 / 100))}
               />
               <RowAdditional
                 label={"Grand Total"}
