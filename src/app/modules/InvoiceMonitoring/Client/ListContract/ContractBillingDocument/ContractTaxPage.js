@@ -1660,15 +1660,15 @@ function ContractTaxPage(props) {
           <button
             type="button"
             onClick={() => setModalApprove(true)}
-            disabled={
-              isSubmit ||
-              taxData?.state === "REJECTED" ||
-              taxData?.state === "APPROVED" ||
-              taxData === null ||
-              !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "TAX" ||
-              window.$.isEmptyObject(optionSelectedPpn)
-            }
+            // disabled={
+            //   isSubmit ||
+            //   taxData?.state === "REJECTED" ||
+            //   taxData?.state === "APPROVED" ||
+            //   taxData === null ||
+            //   !props.setTaxStaffStatus ||
+            //   progressTermin?.ident_name !== "TAX" ||
+            //   window.$.isEmptyObject(optionSelectedPpn)
+            // }
             className="btn btn-primary mx-1"
           >
             <FormattedMessage id="TITLE.ACCEPT_DOCUMENT" />
@@ -1676,14 +1676,14 @@ function ContractTaxPage(props) {
           <button
             type="button"
             onClick={() => setModalReject(true)}
-            disabled={
-              isSubmit ||
-              taxData?.state === "REJECTED" ||
-              taxData?.state === "APPROVED" ||
-              taxData === null ||
-              !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "TAX"
-            }
+            // disabled={
+            //   isSubmit ||
+            //   taxData?.state === "REJECTED" ||
+            //   taxData?.state === "APPROVED" ||
+            //   taxData === null ||
+            //   !props.setTaxStaffStatus ||
+            //   progressTermin?.ident_name !== "TAX"
+            // }
             className="btn btn-danger mx-1"
           >
             <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
