@@ -166,7 +166,7 @@ function DashboardListContract(props) {
         .catch((err) => {
           setErr(true);
           setLoading(false);
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          setToast(err.response?.data.message, 5000);
         });
     } else {
       getContractPic(dataUser.user_id, params)
@@ -181,7 +181,7 @@ function DashboardListContract(props) {
         .catch((err) => {
           setErr(true);
           setLoading(false);
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+          setToast(err.response?.data.message, 5000);
         });
     }
   };

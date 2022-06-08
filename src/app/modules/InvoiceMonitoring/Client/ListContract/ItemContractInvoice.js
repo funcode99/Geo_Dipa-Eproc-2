@@ -1533,7 +1533,7 @@ function ItemContractInvoice(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
-        defaultExpanded={false}
+        defaultExpanded={true}
         className={classes.ExpansionPanelCard}
       >
         <ExpansionPanelSummary
@@ -1681,7 +1681,7 @@ function ItemContractInvoice(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
-        defaultExpanded={false}
+        defaultExpanded={true}
         className={classes.ExpansionPanelCard}
       >
         <ExpansionPanelSummary
