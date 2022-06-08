@@ -99,12 +99,17 @@ export class TerminPageNew extends PureComponent {
               label: el.label,
               status: STATE_STEPPER[el.state],
             }));
-            const findSAGR = mappedStepper.filter(
-              (el) => el.label === "SA / GR"
-            )[0];
+            const isSAGRCompleted = mappedStepper.reduce(
+              (acc, el, idx) =>
+                !!el.label === "SA / GR" && !el.status === "COMPLETE"
+                  ? false
+                  : acc,
+              true
+            );
+
             this.setState((prev) => ({
               ...prev,
-              showForm: !findSAGR.status === "COMPLETE",
+              showForm: isSAGRCompleted,
               termin: {
                 ...prev.termin,
                 stepper: mappedStepper,
