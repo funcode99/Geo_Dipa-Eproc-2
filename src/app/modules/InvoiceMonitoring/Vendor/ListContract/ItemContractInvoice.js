@@ -338,7 +338,7 @@ function ItemContractInvoice(props) {
                   allowLeadingZeros={true}
                   onValueChange={(e) => {
                     let data_ = Object.assign({}, modalUpload);
-                    data_.npwp = e.floatValue;
+                    data_.npwp = e.formattedValue;
                     setModalUpload({
                       ...modalUpload,
                       npwp: data_.npwp,
