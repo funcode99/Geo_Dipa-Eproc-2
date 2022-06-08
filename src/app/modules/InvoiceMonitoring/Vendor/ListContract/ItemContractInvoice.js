@@ -438,7 +438,7 @@ function ItemContractInvoice(props) {
         </form>
       </Dialog>
       <ExpansionPanel
-        defaultExpanded={false}
+        defaultExpanded={true}
         className={classes.ExpansionPanelCard}
       >
         <ExpansionPanelSummary
