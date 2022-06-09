@@ -665,6 +665,7 @@ function ItemContractInvoice(props) {
       softcopy_state: "APPROVED",
       deliverables_id: modalApproved.data.id,
       document_no: modalApproved.data.document.name,
+      document_id: modalApproved.data.document_id,
       created_by_id: user_id,
     };
     var data_2 = {
@@ -849,6 +850,7 @@ function ItemContractInvoice(props) {
       contract_id: contract,
       term_id: termin,
       softcopy_state: "REJECTED",
+      document_id: modalReject.data.document_id,
       deliverables_id: modalReject.data.id,
       document_no: modalReject.data.document.name,
       created_by_id: user_id,
@@ -859,6 +861,7 @@ function ItemContractInvoice(props) {
       term_id: termin,
       deliverables_id: modalReject.data.id,
       document_no: modalReject.data.document.name,
+      document_id: modalReject.data.document_id,
       created_at: window.moment(new Date()).format("YYYY-MM-DD"),
       created_by_id: user_id,
       rejected_by_id: user_id,
