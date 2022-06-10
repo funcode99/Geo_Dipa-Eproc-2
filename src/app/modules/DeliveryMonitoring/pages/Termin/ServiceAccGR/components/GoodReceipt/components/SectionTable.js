@@ -46,14 +46,14 @@ const SectionTable = ({ items }) => {
         <td>
           <div className="d-flex flex-column">
             <span>Total Value Excl. Fax</span>
-            <span>VAT 11%</span>
+            <span>Tax 11%</span>
             <span>Total Value Inc. Fax</span>
           </div>
         </td>
         <td>
           <div className="d-flex flex-column">
             <span>{rupiah(subTotal)}</span>
-            <span>{"11%"}</span>
+            <span>{rupiah(subTotal * 0.11)}</span>
             <span>{rupiah(total)}</span>
           </div>
         </td>

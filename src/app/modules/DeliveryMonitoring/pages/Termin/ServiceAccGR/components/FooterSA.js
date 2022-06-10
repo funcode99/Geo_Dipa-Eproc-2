@@ -29,7 +29,7 @@ const FooterSA = ({ data }) => {
   return (
     <React.Fragment>
       <RowAdditional label={"Total value Excl. Tax"} value={rupiah(subTotal)} />
-      <RowAdditional label={"VAT 11%"} value={`11%`} />
+      <RowAdditional label={"Tax 11%"} value={rupiah(subTotal * 0.11)} />
       <RowAdditional label={"Total value Inc. Tax"} value={rupiah(total)} />
     </React.Fragment>
   );
