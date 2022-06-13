@@ -8,13 +8,16 @@ import { gr_field } from "./DUMMY_DATA";
 import ModalApproveGR from "./ModalApproveGR";
 import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 import ModalStorageLoc from "./ModalStorageLoc";
+import { string, date } from "yup";
 import { Col, Row } from "react-bootstrap";
 import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 
 const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
   post_date: validation.require("Header Text"),
-  gr_receipt: validation.require("Goods Recipient"),
+  gr_receipt: string()
+    .max(12)
+    .required("Goods Recipient harus diisi."),
   ref_doc_no: validation.require("Ref Doc No"),
   // ref_doc_no: number()
   //   // .max(16, "Maksimal 16 karakter")
