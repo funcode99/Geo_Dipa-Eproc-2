@@ -458,7 +458,7 @@ function ItemContractInvoice(props) {
               </span>
             </button>
             <button
-              className="btn btn-danger"
+              className="btn btn-success"
               type="submit"
               disabled={
                 modalUpload.loading ||
