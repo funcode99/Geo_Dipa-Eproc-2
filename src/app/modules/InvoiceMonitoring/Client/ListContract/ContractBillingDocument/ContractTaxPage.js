@@ -445,6 +445,7 @@ function ContractTaxPage(props) {
               getTerminProgress(termin).then((result) => {
                 setDataProgress(result.data.data?.data);
               });
+              getTaxData();
             })
             .catch((error) => {
               if (error.response?.data && error.response?.data.message) {
@@ -1458,7 +1459,7 @@ function ContractTaxPage(props) {
                     id="postingDate"
                     onChange={handlePostingDateSelected}
                     // disabled
-                    // defaultValue={taxData?.tax_date}
+                    defaultValue={taxData?.posting_date}
                   />
                 </div>
               </div>
