@@ -51,7 +51,7 @@ import {
   getSaGr,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { DEV_NODE, DEV_RUBY, API_EPROC } from "../../../../../redux/BaseHost";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import { SOCKET } from "../../../../../redux/BaseHost";
@@ -222,6 +222,7 @@ function ItemContractInvoice(props) {
   const classes = useStyles();
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
+  const history = useHistory();
   const [modalAddDeliv, setModalAddDeliv] = useState(false);
   const [loadingAddDeliv, setLoadingAddDeliv] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -1114,21 +1115,28 @@ function ItemContractInvoice(props) {
   };
 
   const print = (id) => {
-    var printContents = window.$(`#${id}`).html();
-    window.$("#root").css("display", "none");
-    window.$("#print-content").addClass("p-5");
-    window.$("#print-content").html(printContents);
-    window.print();
-    window.$("#root").removeAttr("style");
-    window.$("#print-content").removeClass("p-5");
-    window.$("#print-content").html("");
+    // var printContents = window.$(`#${id}`).html();
+    // window.$("#root").css("display", "none");
+    // window.$("#print-content").addClass("p-5");
+    // window.$("#print-content").html(printContents);
+    // window.print();
+    // window.$("#root").removeAttr("style");
+    // window.$("#print-content").removeClass("p-5");
+    // window.$("#print-content").html("");
+    // console.log("history", window.location.origin, id);
+    window
+      .open(
+        `${window.location.origin}/client/invoice_monitoring/contract/${contract}/${termin}/${id}`,
+        "_blank"
+      )
+      .focus();
   };
 
   return (
     <React.Fragment>
-      <div id="GOODS" className="d-none">
+      {/* <div id="GOODS" className="d-none">
         <GoodReceipt data={content} loading={false} />
-      </div>
+      </div> */}
       <div id="SA" className="d-none">
         <ServiceAcceptance data={content} loading={false} />
       </div>
