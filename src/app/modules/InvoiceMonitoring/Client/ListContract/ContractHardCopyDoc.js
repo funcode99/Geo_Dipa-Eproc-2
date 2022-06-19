@@ -435,33 +435,33 @@ function ContractHardCopyDoc(props) {
     })
       .then((response) => {
         setLoading(false);
-        if (invoiceBkbExist) {
-          setDialogConfirm(false);
-          setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
-        } else {
-          createBkb(data)
-            .then((response) => {
-              setInvoiceBkbExist(true);
-              setDialogConfirm(false);
-              setToast(
-                intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
-                10000
-              );
-              getTerminProgress(termin).then((result) => {
-                setDataProgress(result.data.data?.data);
-              });
-            })
-            .catch((error) => {
-              if (error.response?.data && error.response?.data.message) {
-                setToast(error.response?.data.message, 10000);
-              } else {
-                setToast(
-                  intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
-                  10000
-                );
-              }
-            });
-        }
+        // if (invoiceBkbExist) {
+        //   setDialogConfirm(false);
+        //   setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
+        // } else {
+        //   createBkb(data)
+        //     .then((response) => {
+        //       setInvoiceBkbExist(true);
+        //       setDialogConfirm(false);
+        //       setToast(
+        //         intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
+        //         10000
+        //       );
+        //       getTerminProgress(termin).then((result) => {
+        //         setDataProgress(result.data.data?.data);
+        //       });
+        //     })
+        //     .catch((error) => {
+        //       if (error.response?.data && error.response?.data.message) {
+        //         setToast(error.response?.data.message, 10000);
+        //       } else {
+        //         setToast(
+        //           intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+        //           10000
+        //         );
+        //       }
+        //     });
+        // }
         SOCKET.emit("send_notif");
       })
       .catch((error) => {
