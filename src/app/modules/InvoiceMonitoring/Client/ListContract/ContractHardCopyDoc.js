@@ -687,14 +687,20 @@ function ContractHardCopyDoc(props) {
   useEffect(callApiSaGr, []);
 
   const printSaGr = (ident_name) => {
-    var printContents = window.$(`#${ident_name}`).html();
-    window.$("#root").css("display", "none");
-    window.$("#print-content").addClass("p-5");
-    window.$("#print-content").html(printContents);
-    window.print();
-    window.$("#root").removeAttr("style");
-    window.$("#print-content").removeClass("p-5");
-    window.$("#print-content").html("");
+    // var printContents = window.$(`#${ident_name}`).html();
+    // window.$("#root").css("display", "none");
+    // window.$("#print-content").addClass("p-5");
+    // window.$("#print-content").html(printContents);
+    // window.print();
+    // window.$("#root").removeAttr("style");
+    // window.$("#print-content").removeClass("p-5");
+    // window.$("#print-content").html("");
+    window
+      .open(
+        `${window.location.origin}/client/invoice_monitoring/contract/${contract_id}/${termin}/${ident_name}`,
+        "_blank"
+      )
+      .focus();
   };
 
   return (

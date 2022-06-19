@@ -1095,6 +1095,7 @@ function ItemContractBKB(props) {
               </div>
             </div>
             <div className="row">
+              {/* <FormattedMessage id="TITLE.ARCHIVED_BY" />: */}
               <div className="col-sm border" style={{ height: 125 }}>
                 <div
                   className="text-center"
@@ -1123,6 +1124,7 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
               </div>
+              {/* <FormattedMessage id="TITLE.ACCOUNTING" />: */}
               <div className="col-sm border" style={{ height: 125 }}>
                 <div
                   className="text-center"
@@ -1203,6 +1205,7 @@ function ItemContractBKB(props) {
                   </div>
                 </div>
               </div>
+              {/* <FormattedMessage id="TITLE.FINANCE" />: */}
               <div
                 className="col-sm border text-center"
                 style={{ height: 125 }}
@@ -1292,6 +1295,7 @@ function ItemContractBKB(props) {
                   }
                 })}
               </div>
+              {/* <span>Treasury :</span> */}
               <div
                 className="col-sm border text-center"
                 style={{ height: 125 }}

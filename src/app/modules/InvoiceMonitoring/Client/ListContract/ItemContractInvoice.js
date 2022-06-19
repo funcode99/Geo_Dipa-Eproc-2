@@ -1141,9 +1141,9 @@ function ItemContractInvoice(props) {
 
   return (
     <React.Fragment>
-      {/* <div id="GOODS" className="d-none">
+      <div id="GOODS" className="d-none">
         <GoodReceipt data={content} loading={false} />
-      </div> */}
+      </div>
       <div id="SA" className="d-none">
         <ServiceAcceptance data={content} loading={false} />
       </div>
