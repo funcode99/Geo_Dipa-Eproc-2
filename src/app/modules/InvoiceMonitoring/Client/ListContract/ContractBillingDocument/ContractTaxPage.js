@@ -47,7 +47,7 @@ import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
 import { SOCKET } from "../../../../../../redux/BaseHost";
 import { API_EPROC } from "../../../../../../redux/BaseHost";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import { getRolesAcceptance } from "../../../../Master/service/MasterCrud";
 
@@ -408,6 +408,14 @@ function ContractTaxPage(props) {
       authority: contractAuthority,
       posting_date: postingDate,
     };
+
+    if (isEmpty(postingDate)) {
+      setToast("Posting date is required.", 10000);
+      setLoading(false);
+      setModalApprove(false);
+      return;
+    }
+
     approveTax(taxData.id, {
       approved_by_id: user_id,
       contract_id: contract_id,
@@ -528,6 +536,13 @@ function ContractTaxPage(props) {
   useEffect(checkBkb, []);
   useEffect(getInvoiceData, []);
   useEffect(getContractAuthorityData, []);
+  useEffect(
+    function handleInitialPostDate() {
+      if (!isEmpty(taxData?.posting_date))
+        setPostingDate(taxData?.posting_date);
+    },
+    [taxData?.posting_date]
+  );
 
   const formatGroupLabel = (data) => (
     <div style={groupStyles}>
@@ -561,6 +576,20 @@ function ContractTaxPage(props) {
     const newDate = moment(new Date(e.target.value)).format("YYYY-MM-DD");
     setPostingDate(newDate);
   };
+
+  const isApprovedDisabled = invoiceBkbExist && taxData?.state === "APPROVED";
+
+  // console.log(
+  //   "diosabled",
+  //   isSubmit,
+  //   taxData?.state === "REJECTED",
+  //   isApprovedDisabled,
+  //   taxData === null,
+  //   !props.setTaxStaffStatus,
+  //   progressTermin?.ident_name !== "TAX",
+  //   window.$.isEmptyObject(optionSelectedPpn),
+  //   progressTermin?.ident_name
+  // );
 
   return (
     <React.Fragment>
@@ -919,7 +948,7 @@ function ContractTaxPage(props) {
                                 !(
                                   isSubmit ||
                                   taxData?.state === "REJECTED" ||
-                                  taxData?.state === "APPROVED" ||
+                                  isApprovedDisabled ||
                                   taxData === null ||
                                   !props.setTaxStaffStatus ||
                                   progressTermin?.ident_name !== "TAX"
@@ -936,7 +965,7 @@ function ContractTaxPage(props) {
                                 !(
                                   isSubmit ||
                                   taxData?.state === "REJECTED" ||
-                                  taxData?.state === "APPROVED" ||
+                                  isApprovedDisabled ||
                                   taxData === null ||
                                   !props.setTaxStaffStatus ||
                                   progressTermin?.ident_name !== "TAX"
@@ -955,7 +984,7 @@ function ContractTaxPage(props) {
                               !(
                                 isSubmit ||
                                 taxData?.state === "REJECTED" ||
-                                taxData?.state === "APPROVED" ||
+                                isApprovedDisabled ||
                                 taxData === null ||
                                 !props.setTaxStaffStatus ||
                                 progressTermin?.ident_name !== "TAX"
@@ -973,7 +1002,7 @@ function ContractTaxPage(props) {
                             !(
                               isSubmit ||
                               taxData?.state === "REJECTED" ||
-                              taxData?.state === "APPROVED" ||
+                              isApprovedDisabled ||
                               taxData === null ||
                               !props.setTaxStaffStatus ||
                               progressTermin?.ident_name !== "TAX"
@@ -993,7 +1022,7 @@ function ContractTaxPage(props) {
                             !(
                               isSubmit ||
                               taxData?.state === "REJECTED" ||
-                              taxData?.state === "APPROVED" ||
+                              isApprovedDisabled ||
                               taxData === null ||
                               !props.setTaxStaffStatus ||
                               progressTermin?.ident_name !== "TAX"
@@ -1019,7 +1048,7 @@ function ContractTaxPage(props) {
                               !(
                                 isSubmit ||
                                 taxData?.state === "REJECTED" ||
-                                taxData?.state === "APPROVED" ||
+                                isApprovedDisabled ||
                                 taxData === null ||
                                 !props.setTaxStaffStatus ||
                                 progressTermin?.ident_name !== "TAX"
@@ -1103,7 +1132,7 @@ function ContractTaxPage(props) {
                 !formikPph.dirty ||
                 isSubmit ||
                 taxData?.state === "REJECTED" ||
-                taxData?.state === "APPROVED" ||
+                isApprovedDisabled ||
                 taxData === null ||
                 !props.setTaxStaffStatus ||
                 progressTermin?.ident_name !== "TAX"
@@ -1560,7 +1589,7 @@ function ContractTaxPage(props) {
                     isDisabled={
                       isSubmit ||
                       taxData?.state === "REJECTED" ||
-                      taxData?.state === "APPROVED" ||
+                      isApprovedDisabled ||
                       taxData === null ||
                       !props.setTaxStaffStatus ||
                       progressTermin?.ident_name !== "TAX"
@@ -1628,7 +1657,7 @@ function ContractTaxPage(props) {
                         isDisabled={
                           isSubmit ||
                           taxData?.state === "REJECTED" ||
-                          taxData?.state === "APPROVED" ||
+                          isApprovedDisabled ||
                           taxData === null ||
                           !props.setTaxStaffStatus
                         }
@@ -1658,37 +1687,49 @@ function ContractTaxPage(props) {
           </div>
         </CardBody>
         <CardFooter className="text-right">
-          <button
-            type="button"
-            onClick={() => setModalApprove(true)}
-            disabled={
-              isSubmit ||
-              taxData?.state === "REJECTED" ||
-              taxData?.state === "APPROVED" ||
-              taxData === null ||
-              !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "TAX" ||
-              window.$.isEmptyObject(optionSelectedPpn)
-            }
-            className="btn btn-primary mx-1"
-          >
-            <FormattedMessage id="TITLE.ACCEPT_DOCUMENT" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setModalReject(true)}
-            disabled={
-              isSubmit ||
-              taxData?.state === "REJECTED" ||
-              taxData?.state === "APPROVED" ||
-              taxData === null ||
-              !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "TAX"
-            }
-            className="btn btn-danger mx-1"
-          >
-            <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
-          </button>
+          {!invoiceBkbExist && taxData?.state === "APPROVED" ? (
+            <button
+              type="button"
+              onClick={() => setModalApprove(true)}
+              className="btn btn-primary mx-1"
+            >
+              Create BKB
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => setModalApprove(true)}
+                disabled={
+                  isSubmit ||
+                  taxData?.state === "REJECTED" ||
+                  isApprovedDisabled ||
+                  taxData === null ||
+                  !props.setTaxStaffStatus ||
+                  progressTermin?.ident_name !== "TAX" ||
+                  window.$.isEmptyObject(optionSelectedPpn)
+                }
+                className="btn btn-primary mx-1"
+              >
+                <FormattedMessage id="TITLE.ACCEPT_DOCUMENT" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalReject(true)}
+                disabled={
+                  isSubmit ||
+                  taxData?.state === "REJECTED" ||
+                  isApprovedDisabled ||
+                  taxData === null ||
+                  !props.setTaxStaffStatus ||
+                  progressTermin?.ident_name !== "TAX"
+                }
+                className="btn btn-danger mx-1"
+              >
+                <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
+              </button>
+            </>
+          )}
           <div className="my-5 text-center">
             <h6>
               <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.HISTORY" />
