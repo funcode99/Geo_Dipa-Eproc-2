@@ -436,8 +436,8 @@ function ContractHardCopyDoc(props) {
       .then((response) => {
         setLoading(false);
         // if (invoiceBkbExist) {
-        //   setDialogConfirm(false);
-        //   setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
+        setDialogConfirm(false);
+        setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
         // } else {
         //   createBkb(data)
         //     .then((response) => {
