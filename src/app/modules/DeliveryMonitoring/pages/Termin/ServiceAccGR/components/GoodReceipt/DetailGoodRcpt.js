@@ -22,7 +22,7 @@ const key = "cancelling-gr";
 const DetailGoodRcpt = (props) => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => getLoading(state, key));
-  const { fullData, dataGR, isClient } = props;
+  const { fullData, dataGR, isClient, showCancel } = props;
   const print = () => {
     var printContents = window.$("#printSA").html();
     window.$("#root").css("display", "none");
@@ -58,22 +58,24 @@ const DetailGoodRcpt = (props) => {
       {/* <Card> */}
       <CardHeader title="">
         <CardHeaderToolbar>
-          <div className="kt-widget19__action">
-            <button
-              onClick={onCancelGR}
-              disabled={loading}
-              className={`btn btn-sm btn-label-danger btn-bold mr-3`}
-            >
-              {loading && (
-                <CircularProgress
-                  className={"mr-2"}
-                  size="0.875rem"
-                  color="inherit"
-                />
-              )}
-              Cancel GR
-            </button>
-          </div>
+          {showCancel && (
+            <div className="kt-widget19__action">
+              <button
+                onClick={onCancelGR}
+                disabled={loading}
+                className={`btn btn-sm btn-label-danger btn-bold mr-3`}
+              >
+                {loading && (
+                  <CircularProgress
+                    className={"mr-2"}
+                    size="0.875rem"
+                    color="inherit"
+                  />
+                )}
+                Cancel GR
+              </button>
+            </div>
+          )}
           <button
             type="button"
             onClick={print}

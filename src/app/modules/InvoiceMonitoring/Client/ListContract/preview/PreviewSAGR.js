@@ -38,11 +38,15 @@ const PreviewSAGR = ({ intl }) => {
       )} */}
       {type === "SA" ? (
         <div id="SA">
-          <ServiceAcceptance data={contentSAGR} loading={false} />
+          <ServiceAcceptance
+            data={contentSAGR}
+            loading={false}
+            showCancel={false}
+          />
         </div>
       ) : (
         <div id="GOODS">
-          <GoodReceipt data={contentSAGR} loading={false} />
+          <GoodReceipt data={contentSAGR} loading={false} showCancel={false} />
         </div>
       )}
     </>

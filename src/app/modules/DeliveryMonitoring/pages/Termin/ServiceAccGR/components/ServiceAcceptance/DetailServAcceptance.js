@@ -24,7 +24,7 @@ const key = "cancelling-sa";
 const DetailServAcceptance = (props) => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => getLoading(state, key));
-  const { fullData, dataSA, isClient } = props;
+  const { fullData, dataSA, isClient, showCancel } = props;
   const print = () => {
     var printContents = window.$("#printSA").html();
     window.$("#root").css("display", "none");
@@ -67,20 +67,22 @@ const DetailServAcceptance = (props) => {
       >
         <CardHeaderToolbar>
           <div className="kt-widget19__action">
-            <button
-              onClick={onCancelSA}
-              disabled={loading}
-              className={`btn btn-sm btn-label-danger btn-bold mr-3`}
-            >
-              {loading && (
-                <CircularProgress
-                  className={"mr-2"}
-                  size="0.875rem"
-                  color="inherit"
-                />
-              )}
-              Cancel SA
-            </button>
+            {showCancel && (
+              <button
+                onClick={onCancelSA}
+                disabled={loading}
+                className={`btn btn-sm btn-label-danger btn-bold mr-3`}
+              >
+                {loading && (
+                  <CircularProgress
+                    className={"mr-2"}
+                    size="0.875rem"
+                    color="inherit"
+                  />
+                )}
+                Cancel SA
+              </button>
+            )}
           </div>
           <button
             type="button"
