@@ -26,6 +26,21 @@ const DetailServAcceptance = (props) => {
   const loading = useSelector((state) => getLoading(state, key));
   const { fullData, dataSA, isClient, showCancel } = props;
   const print = () => {
+    var css = "@page { size: landscape; }",
+      head = document.head || document.getElementsByTagName("head")[0],
+      style = document.createElement("style");
+
+    style.type = "text/css";
+    style.media = "print";
+
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    head.appendChild(style);
+
     var printContents = window.$("#printSA").html();
     window.$("#root").css("display", "none");
     window.$("#print-content").addClass("p-5");
