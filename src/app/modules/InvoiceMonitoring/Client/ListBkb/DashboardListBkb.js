@@ -14,6 +14,7 @@ import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
+import * as reducer from "../../_redux/InvoiceMonitoringSlice";
 
 function DashboardListBkb(props) {
   const user_id = useSelector(
@@ -129,6 +130,9 @@ function DashboardListBkb(props) {
                 <TableRow key={index.toString()}>
                   <TableCell>
                     <Link
+                      onClick={() => {
+                        props.set_data_tab_invaoice({ tab: 3 });
+                      }}
                       to={
                         "/client/invoice_monitoring/contract/" +
                         item.contract_id +
@@ -153,4 +157,4 @@ function DashboardListBkb(props) {
   );
 }
 
-export default injectIntl(connect(null, null)(DashboardListBkb));
+export default injectIntl(connect(null, reducer.actions)(DashboardListBkb));

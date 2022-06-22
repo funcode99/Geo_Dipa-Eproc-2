@@ -154,7 +154,7 @@ function ItemContractRoutingSlip(props) {
                   <tr>
                     <td className="td-1">No</td>
                     <td className="td-16 text-center">Dokument Status</td>
-                    <td className="td-18 text-center">Pejabat Keuangan</td>
+                    <td className="td-18 text-center">User/Pejabat Keuangan</td>
                     <td className="td-11 text-center">Tanggal Masuk</td>
                     <td className="td-6 text-center">Jam Masuk</td>
                     <td className="td-11 text-center">Tanggal Keluar</td>
