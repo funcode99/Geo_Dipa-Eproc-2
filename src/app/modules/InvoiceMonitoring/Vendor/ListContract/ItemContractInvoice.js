@@ -322,7 +322,9 @@ function ItemContractInvoice(props) {
     getListDocSoftCopy(contract, termin, "SOFTCOPY")
       .then((result) => {
         setLoading(false);
-        setDataDocSoftCopy(result.data.data);
+        setDataDocSoftCopy(
+          result.data.data.filter((el) => el.seq === 1 || el.seq === 5)
+        );
       })
       .catch((err) => {
         setLoading(false);
@@ -640,80 +642,78 @@ function ItemContractInvoice(props) {
             >
               {dataDocSoftCopy.map((item, index) => {
                 return (
-                  (item.seq === 1 || item.seq === 5) && (
-                    <TableRow key={index.toString()}>
-                      <TableCell>{1}</TableCell>
-                      <TableCell>{item.document_name}</TableCell>
-                      {item.doc_no ? (
-                        item.doc_file ? (
-                          <TableCell>
-                            <a
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                getFileContract(
-                                  item.doc_file,
-                                  item.doc_status,
-                                  item.ident_name
-                                );
-                              }}
-                            >
-                              {item.doc_no}
-                            </a>
-                          </TableCell>
-                        ) : (
-                          <TableCell>
-                            {item.doc_no} (file tidak tersedia)
-                          </TableCell>
-                        )
+                  <TableRow key={index.toString()}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.document_name}</TableCell>
+                    {item.doc_no ? (
+                      item.doc_file ? (
+                        <TableCell>
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              getFileContract(
+                                item.doc_file,
+                                item.doc_status,
+                                item.ident_name
+                              );
+                            }}
+                          >
+                            {item.doc_no}
+                          </a>
+                        </TableCell>
                       ) : (
-                        <TableCell></TableCell>
-                      )}
-                      <TableCell>
-                        {item.softcopy_approved_at
-                          ? window
-                              .moment(new Date(item.softcopy_approved_at))
-                              .format("DD MMM YYYY")
-                          : ""}
-                      </TableCell>
-                      <TableCell>
-                        {(item.softcopy_state === "PENDING" ||
-                          item.softcopy_state === null) &&
-                        item.doc_file
-                          ? "WAITING TO APPROVE"
-                          : item.softcopy_state === "REJECTED"
-                          ? "REJECTED"
-                          : item.softcopy_state === "APPROVED"
-                          ? "APPROVED"
-                          : "WAITING"}
-                      </TableCell>
-                      <TableCell>
-                        {item.softcopy_state === "APPROVED"
-                          ? item.approved_by
-                          : null}
-                      </TableCell>
-                      <TableCell>
-                        {item.softcopy_state === "REJECTED" &&
-                          item.doc_no &&
-                          item.seq === 5 && (
-                            <ButtonAction
-                              data={Object.assign({}, item)}
-                              handleAction={handleAction}
-                              ops={data_ops}
-                            />
-                          )}
-                        {item.softcopy_state === "REJECTED" &&
-                          item.doc_no &&
-                          item.seq === 1 && (
-                            <ButtonAction
-                              data={Object.assign({}, item)}
-                              handleAction={handleActionUploadContract}
-                              ops={data_ops}
-                            />
-                          )}
-                      </TableCell>
-                    </TableRow>
-                  )
+                        <TableCell>
+                          {item.doc_no} (file tidak tersedia)
+                        </TableCell>
+                      )
+                    ) : (
+                      <TableCell></TableCell>
+                    )}
+                    <TableCell>
+                      {item.softcopy_approved_at
+                        ? window
+                            .moment(new Date(item.softcopy_approved_at))
+                            .format("DD MMM YYYY")
+                        : ""}
+                    </TableCell>
+                    <TableCell>
+                      {(item.softcopy_state === "PENDING" ||
+                        item.softcopy_state === null) &&
+                      item.doc_file
+                        ? "WAITING TO APPROVE"
+                        : item.softcopy_state === "REJECTED"
+                        ? "REJECTED"
+                        : item.softcopy_state === "APPROVED"
+                        ? "APPROVED"
+                        : "WAITING"}
+                    </TableCell>
+                    <TableCell>
+                      {item.softcopy_state === "APPROVED"
+                        ? item.approved_by
+                        : null}
+                    </TableCell>
+                    <TableCell>
+                      {item.softcopy_state === "REJECTED" &&
+                        item.doc_no &&
+                        item.seq === 5 && (
+                          <ButtonAction
+                            data={Object.assign({}, item)}
+                            handleAction={handleAction}
+                            ops={data_ops}
+                          />
+                        )}
+                      {item.softcopy_state === "REJECTED" &&
+                        item.doc_no &&
+                        item.seq === 1 && (
+                          <ButtonAction
+                            data={Object.assign({}, item)}
+                            handleAction={handleActionUploadContract}
+                            ops={data_ops}
+                          />
+                        )}
+                    </TableCell>
+                  </TableRow>
                 );
               })}
             </TableOnly>
