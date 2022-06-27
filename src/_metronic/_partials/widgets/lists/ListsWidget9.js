@@ -273,7 +273,7 @@ export function ListsWidget9({ className }) {
             options={perfectScrollbarOptions}
             className="scroll pr-7 mr-n7"
             style={{
-              maxHeight: "calc(100% - 25px)",
+              maxHeight: "calc(100%)",
               position: "relative",
             }}
           >
