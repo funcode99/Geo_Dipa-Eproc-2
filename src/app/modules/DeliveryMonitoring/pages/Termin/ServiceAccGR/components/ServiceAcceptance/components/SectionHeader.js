@@ -9,7 +9,7 @@ const client = {
   address3: "Barat 75",
 };
 
-const SectionHeader = ({ header, fullData }) => {
+const SectionHeader = ({ header, fullData, hideLogo }) => {
   const tab1 = useMemo(
     () => [
       { value: client?.name },
@@ -41,10 +41,12 @@ const SectionHeader = ({ header, fullData }) => {
   return (
     <div className={"row"}>
       <div className="col-sm-4 d-flex align-items-center">
-        <img
-          src={toAbsoluteUrl("/media/logos/logo-eprocurement.png")}
-          alt="IconGde"
-        />
+        {!hideLogo && (
+          <img
+            src={toAbsoluteUrl("/media/logos/logo-eprocurement.png")}
+            alt="IconGde"
+          />
+        )}
       </div>
       <div className="col-sm-8">
         <div className="row d-flex justify-content-end">

@@ -1,5 +1,5 @@
 import { CircularProgress, Grid } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,32 +23,37 @@ const key = "cancelling-sa";
 
 const DetailServAcceptance = (props) => {
   const dispatch = useDispatch();
+  const [hideLogo, setHideLogo] = useState(false);
   const loading = useSelector((state) => getLoading(state, key));
   const { fullData, dataSA, isClient, showCancel } = props;
   const print = () => {
-    var css = "@page { size: landscape; }",
-      head = document.head || document.getElementsByTagName("head")[0],
-      style = document.createElement("style");
+    setHideLogo(true);
+    setTimeout(() => {
+      var css = "@page { size: landscape; }",
+        head = document.head || document.getElementsByTagName("head")[0],
+        style = document.createElement("style");
 
-    style.type = "text/css";
-    style.media = "print";
+      style.type = "text/css";
+      style.media = "print";
 
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
+      if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
 
-    head.appendChild(style);
+      head.appendChild(style);
 
-    var printContents = window.$("#printSA").html();
-    window.$("#root").css("display", "none");
-    window.$("#print-content").addClass("p-5");
-    window.$("#print-content").html(printContents);
-    window.print();
-    window.$("#root").removeAttr("style");
-    window.$("#print-content").removeClass("p-5");
-    window.$("#print-content").html("");
+      var printContents = window.$("#printSA").html();
+      window.$("#root").css("display", "none");
+      window.$("#print-content").addClass("p-5");
+      window.$("#print-content").html(printContents);
+      window.print();
+      window.$("#root").removeAttr("style");
+      window.$("#print-content").removeClass("p-5");
+      window.$("#print-content").html("");
+      setHideLogo(false);
+    }, 150);
   };
   const qr_params = React.useMemo(
     () => ({
@@ -110,7 +115,7 @@ const DetailServAcceptance = (props) => {
         </CardHeaderToolbar>
       </CardHeader>
       <CardBody id="printSA">
-        <SectionHeader {...props} />
+        <SectionHeader hideLogo={hideLogo} {...props} />
         <SectionSummary {...props} />
         <SectionTable {...props} />
         <Grid container spacing={1} className={"mt-3"}>
