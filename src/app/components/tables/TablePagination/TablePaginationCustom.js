@@ -201,9 +201,6 @@ export default function TablePaginationCustom({
             <Table
               stickyHeader
               // className={"table-bordered"}
-              style={{
-                width: width ? width : undefined,
-              }}
               aria-labelledby="tableTitle"
               style={{ width: width ? width : undefined }}
               size={"small"}
