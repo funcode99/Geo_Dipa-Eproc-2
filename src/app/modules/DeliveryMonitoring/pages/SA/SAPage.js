@@ -8,7 +8,7 @@ import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
-import { useHistory } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import StatusRemarks from "../../../../components/StatusRemarks";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,9 +51,15 @@ export const SAPage = ({ fetch_api_sg, loadings, status }) => {
   const history = useHistory();
 
   const generateTableContent = (data) => {
-    console.log("datanya", data);
     let dataArr = data.map((item, id) => ({
-      material_document: item?.material_document,
+      // material_document: item?.material_document,
+      material_document: (
+        <NavLink
+          to={`/${status}/delivery-monitoring/sa/${item?.task_id}/${item?.id}`}
+        >
+          {item?.material_document}
+        </NavLink>
+      ),
       po_number: item?.po_number,
       status: item?.canceled_at ? (
         <StatusRemarks status={"CANCELED"} remarks={item?.canceled_at} />

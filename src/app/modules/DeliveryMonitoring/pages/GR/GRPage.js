@@ -8,7 +8,7 @@ import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
-import { useHistory } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,7 +49,14 @@ export const GRPage = ({ fetch_api_sg, loadings, status }) => {
 
   const generateTableContent = (data) => {
     let dataArr = data.map((item, id) => ({
-      material_document: item?.material_document,
+      // material_document: item?.material_document,
+      material_document: (
+        <NavLink
+          to={`/${status}/delivery-monitoring/gr/${item?.task_id}/${item?.id}`}
+        >
+          {item?.material_document}
+        </NavLink>
+      ),
       po_number: item?.po_number,
       action: (
         <ButtonAction
