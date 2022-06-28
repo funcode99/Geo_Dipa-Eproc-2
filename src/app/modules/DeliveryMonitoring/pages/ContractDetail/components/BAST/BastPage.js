@@ -55,8 +55,8 @@ const tableHeader = [
 
 const validationClient = object().shape({
   // hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
-  nomor_bast: validation.require("Nomor BAPP"),
-  tanggal_bast: validation.require("Tanggal BAPP"),
+  nomor_bast: validation.require("Nomor BAST"),
+  tanggal_bast: validation.require("Tanggal BAST"),
   jenis: validation.require("Jenis Pekerjaan"),
   nomor_contract: validation.require("Dasar Pelaksanaan"),
   party1_name: validation.require("Direksi Pekerjaan"),
@@ -66,8 +66,8 @@ const validationClient = object().shape({
 });
 
 const validationVendor = object().shape({
-  nomor_bast: validation.require("Nomor BAPP"),
-  tanggal_bast: validation.require("Tanggal BAPP"),
+  nomor_bast: validation.require("Nomor BAST"),
+  tanggal_bast: validation.require("Tanggal BAST"),
 });
 
 const RowNormal = ({ data }) => {
@@ -410,6 +410,7 @@ const BastPage = ({
         handleSubmit={(e) => handleApi("approve", e)}
         loading={loadings_sg.approve_s}
         file={taskNews?.file_upload}
+        isBAST={true}
       />
       <ModalPreview
         innerRef={rejectRef}
