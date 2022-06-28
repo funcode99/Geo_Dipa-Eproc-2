@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import { connect } from "react-redux";
 import {
   Dialog,
@@ -22,6 +22,8 @@ import {
 import useToast from "../../../components/toast";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSubheader } from "../../../../_metronic/layout";
+import ModalAsyncSAInfo from "./components/modals-async/ModalAsyncSAInfo";
+import ModalAsyncSA from "./components/modals-async/ModalAsyncSA";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -36,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
 const AsyncData = (props) => {
   const { intl } = props;
   const classes = useStyles();
+  const modalSAInfoRef = useRef(null);
+  const modalSASyncRef = useRef(null);
   const [Toast, setToast] = useToast();
   const [poService, setPoService] = useState(false);
   const [poSchedule, setPoSchedule] = useState(false);
@@ -633,6 +637,8 @@ const AsyncData = (props) => {
           </DialogActions>
         </Form>
       </Dialog>
+      <ModalAsyncSAInfo innerRef={modalSAInfoRef} />
+      <ModalAsyncSA innerRef={modalSASyncRef} />
       <div className="d-flex align-items-center flex-wrap mr-1">
         <SubWrap className="mr-2 iconWrap">
           <span className="svg-icon menu-icon">
@@ -874,6 +880,47 @@ const AsyncData = (props) => {
                       onClick={() => {
                         stateErrSync("po");
                         setPoAsync_(true);
+                      }}
+                    >
+                      <i className="fas fa-sync text-primary"></i>
+                      <FormattedMessage id="TITLE.SYNCHRONIZE_DATA" />
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="pl-0 py-4">
+                    <div className="symbol symbol-50 symbol-light mr-1">
+                      <span className="symbol-label">
+                        <h1 className="h-50 align-self-center">S</h1>
+                      </span>
+                    </div>
+                  </td>
+                  <td className="pl-0">
+                    <span className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg user-select-none">
+                      <FormattedMessage id="TITLE.SERVICE_ACCEPTANCE" />
+                    </span>
+                    <div>
+                      <span className="font-weight-bolder text-muted font-size-xs">
+                        By entrysheet and termin id
+                      </span>
+                    </div>
+                  </td>
+                  <td className="text-left">
+                    <span
+                      className="btn btn-light btn-sm text-warning"
+                      onClick={() => {
+                        modalSAInfoRef.current.open();
+                      }}
+                    >
+                      <i className="fas fa-info-circle text-warning"></i>
+                      <FormattedMessage id="TITLE.FEATURES" />
+                    </span>
+                  </td>
+                  <td className="text-left pr-0">
+                    <span
+                      className="btn btn-light btn-sm text-primary"
+                      onClick={() => {
+                        modalSASyncRef.current.open();
                       }}
                     >
                       <i className="fas fa-sync text-primary"></i>
