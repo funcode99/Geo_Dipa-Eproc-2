@@ -9,6 +9,7 @@ import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
 import { NavLink, useHistory } from "react-router-dom";
+import { formatDate } from "../../../../libs/date";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,10 @@ const tableHeaderContractsNew = [
   {
     id: "po_number",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
+  },
+  {
+    id: "release_date",
+    label: "Release Date",
   },
   {
     id: "action",
@@ -58,6 +63,7 @@ export const GRPage = ({ fetch_api_sg, loadings, status }) => {
         </NavLink>
       ),
       po_number: item?.po_number,
+      release_date: formatDate(new Date(item?.gr_header?.pstng_date)),
       action: (
         <ButtonAction
           hoverLabel="More"
