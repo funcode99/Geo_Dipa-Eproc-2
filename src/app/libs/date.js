@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash";
 
 const formatDate = (date) => {
+  if (isEmpty(date)) return "";
   return format(date, "d MMM yyy");
 };
 
@@ -25,10 +26,16 @@ const formatSADate = (date) => {
   return format(new Date(date), "dd.MM.yyyy");
 };
 
+const toNewDate = (date) => {
+  if (isEmpty(date)) return "";
+  return new Date(date);
+};
+
 export {
   formatDate,
   formatInitialDate,
   formatUpdateDate,
   formatDateWTime,
   formatSADate,
+  toNewDate,
 };

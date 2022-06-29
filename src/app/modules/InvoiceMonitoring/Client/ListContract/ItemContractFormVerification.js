@@ -29,6 +29,7 @@ import {
   getHardcopyBillingDocument,
   getContractSummary,
 } from "../../_redux/InvoiceMonitoringCrud";
+import { formatDate, toNewDate } from "../../../../libs/date";
 
 // const Transition = React.forwardRef(function Transition(props, ref) {
 //     return <Slide direction="up" ref={ref} {...props} />;
@@ -181,6 +182,21 @@ function ItemContractFormVerification(props) {
                       className="form-control"
                       value={rupiah(contractData?.termin_value)}
                       onChange={(e) => {}}
+                      readOnly
+                    />
+                  </div>
+                </div>
+                <div className="form-group row mb-1">
+                  <label className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.VERIFICATION_SOFTCOPY_DATE" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      defaultValue={formatDate(
+                        toNewDate(contractData?.sofcopy_date)
+                      )}
                       readOnly
                     />
                   </div>

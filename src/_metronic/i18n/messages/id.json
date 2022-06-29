@@ -617,6 +617,7 @@
   "TITLE.DATE_PAID": "Tanggal Bayar",
   "TITLE.VERIFICATION_AND_TAX_DATE": "Tanggal Verifikasi dan Pajak",
   "TITLE.VERIFICATION_HARDCOPY_DATE": "Tanggal Verifikasi Hardcopy",
+  "TITLE.VERIFICATION_SOFTCOPY_DATE": "Tanggal Verifikasi Softcopy",
   "LABEL.OPEN_FILE": "Lihat file",
   "LABEL.FILE_UNAVAILABLE": "File tidak tersedia"
 }

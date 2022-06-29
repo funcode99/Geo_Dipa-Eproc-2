@@ -10,6 +10,7 @@ import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
 import { NavLink, useHistory } from "react-router-dom";
 import StatusRemarks from "../../../../components/StatusRemarks";
+import { formatDate, toNewDate } from "../../../../libs/date";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,8 +33,11 @@ const tableHeaderContractsNew = [
     id: "po_number",
     label: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
   },
+  {
+    id: "release_date",
+    label: "Release Date",
+  },
   { id: "status", label: "Status" },
-
   {
     id: "action",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
@@ -61,6 +65,7 @@ export const SAPage = ({ fetch_api_sg, loadings, status }) => {
         </NavLink>
       ),
       po_number: item?.po_number,
+      release_date: formatDate(toNewDate(item?.sa_header?.post_date)),
       status: item?.canceled_at ? (
         <StatusRemarks status={"CANCELED"} remarks={item?.canceled_at} />
       ) : (

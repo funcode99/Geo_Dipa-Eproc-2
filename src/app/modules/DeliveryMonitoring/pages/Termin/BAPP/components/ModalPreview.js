@@ -15,6 +15,7 @@ const ModalPreview = ({
   withRemarks,
   handleSubmit,
   file,
+  isBAST = false,
 }) => {
   function onDocumentLoadSuccess({ numPages }) {
     // setNumPages(numPages);
@@ -101,7 +102,9 @@ const ModalPreview = ({
             color="primary"
           />
         }
-        label="Saya telah meninjau ulang dokumen BAPP dengan seksama."
+        label={`Saya telah meninjau ulang dokumen ${
+          isBAST ? "BAST" : "BAPP"
+        } dengan seksama.`}
       />
     </DialogGlobal>
   );
