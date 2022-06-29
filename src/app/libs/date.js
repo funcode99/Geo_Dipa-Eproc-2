@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash";
 
 const formatDate = (date) => {
-  if (!date) return "Invalid date";
+  if (isEmpty(date)) return "";
   return format(date, "d MMM yyy");
 };
 
