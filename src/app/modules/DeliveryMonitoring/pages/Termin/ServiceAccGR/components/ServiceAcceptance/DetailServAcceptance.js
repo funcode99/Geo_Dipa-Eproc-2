@@ -24,10 +24,18 @@ const key = "cancelling-sa";
 const DetailServAcceptance = (props) => {
   const dispatch = useDispatch();
   const [hideLogo, setHideLogo] = useState(false);
+  const [addPaddingTop, setAddPaddingTop] = useState(0);
   const loading = useSelector((state) => getLoading(state, key));
   const { fullData, dataSA, isClient, showCancel } = props;
   const print = () => {
     setHideLogo(true);
+    var clientHeight = document.getElementById("printSA").clientHeight;
+    // tinggi paper landscape normal 828
+    const pageHeight = 828;
+    const pageFullHeight = Math.floor(clientHeight / pageHeight) * pageHeight;
+    const heightDifference = clientHeight - pageFullHeight;
+    const needAddDummyHeight = heightDifference < 150;
+    if (needAddDummyHeight) setAddPaddingTop(heightDifference);
     setTimeout(() => {
       var css = "@page { size: landscape; }",
         head = document.head || document.getElementsByTagName("head")[0],
@@ -118,6 +126,7 @@ const DetailServAcceptance = (props) => {
         <SectionHeader hideLogo={hideLogo} {...props} />
         <SectionSummary {...props} />
         <SectionTable {...props} />
+        <div style={{ height: addPaddingTop }} />
         <Grid container spacing={1} className={"mt-3"}>
           <Grid item xs={8}></Grid>
           <BoxSignSA
