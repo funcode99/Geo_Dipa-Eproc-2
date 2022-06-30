@@ -13,6 +13,7 @@ import { LanguageSelectorDropdown } from "../extras/dropdowns/LanguageSelectorDr
 import { QuickUserToggler } from "../extras/QuiclUserToggler";
 import { SOCKET, SOCKET2 } from "../../../../redux/BaseHost";
 import UserNotificationDeliveryDropdown from "../extras/dropdowns/UserNotificationDeliveryDropdown";
+import { ManualBookDropdown } from "../extras/dropdowns/ManualBookDropdown";
 
 export function Topbar() {
   const uiService = useHtmlClassService();
@@ -103,6 +104,7 @@ export function Topbar() {
       {layoutProps.viewLanguagesDisplay && <LanguageSelectorDropdown />}
 
       {layoutProps.viewUserDisplay && <QuickUserToggler countMessage={count} />}
+      <ManualBookDropdown />
     </div>
   );
 }
