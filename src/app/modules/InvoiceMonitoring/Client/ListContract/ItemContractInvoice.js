@@ -1666,7 +1666,15 @@ function ItemContractInvoice(props) {
                           <ButtonAction
                             data={item}
                             handleAction={handleAction}
-                            ops={data_ops}
+                            ops={
+                              // remove reject button on SA / GR
+                              item?.ident_name === "SA" ||
+                              item?.ident_name === "GOODS"
+                                ? data_ops.filter(
+                                    (el) => el.type === "approved"
+                                  )
+                                : data_ops
+                            }
                           />
                         )}
                       {billingStaffStatus &&
