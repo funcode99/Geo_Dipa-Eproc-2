@@ -106,17 +106,17 @@ function ItemContractBKB(props) {
   const statusHardCopyComplate =
     !!dataProgress?.filter(
       (row) => row.ident_name === "HARDCOPY" && row.status === "COMPLETE"
-    ).length > 0;
+    )?.length > 0;
 
   const hasInternetBanking = !!bkbData?.giro_signed_data?.filter(
     (giro) => giro?.ident_name === "INTERNET_BANKING"
-  ).length;
+  )?.length;
 
   const getBkbData = useCallback(() => {
     getBkb(termin)
       .then((response) => {
-        if (response["data"]["data"]) {
-          console.log(`bkbData`, response);
+        console.log(`bkbData`, response);
+        if (response?.["data"]?.["data"]) {
           setBkbData(response["data"]["data"]);
           setParkApInput(response["data"]["data"]["doc_park_ap_no"]);
           setParkByrInput(response["data"]["data"]["doc_park_byr_no"]);
@@ -994,13 +994,14 @@ function ItemContractBKB(props) {
                         <div className="d-flex justify-content-between">
                           <span>Rp.</span>
                           <span>
-                            {rupiah(bkbData?.ppn?.tax_amount).slice(3)}
+                            {bkbData?.ppn?.tax_amount &&
+                              rupiah(bkbData?.ppn?.tax_amount).slice(3)}
                           </span>
                         </div>
                       </td>
                     </tr>
                   ) : null}
-                  {bkbData?.tax_selected.length > 0 &&
+                  {bkbData?.tax_selected?.length > 0 &&
                     bkbData?.tax_selected
                       .filter((value) => value.checked === true)
                       .map((item, indexs) => {

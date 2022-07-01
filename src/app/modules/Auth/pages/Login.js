@@ -239,7 +239,7 @@ function Login(props) {
             <p className="text-center mb-0">T. +62 21 7982925</p>
             <p className="text-center mb-0">F. +62 21 7982930</p>
           </div>
-          <div className="mx-auto mb-2 col-md-12 text-primary">
+          {/* <div className="mx-auto mb-2 col-md-12 text-primary">
             <Link
               onClick={() => {
                 // openLinkTab(
@@ -259,7 +259,7 @@ function Login(props) {
                 </span>
               </p>
             </Link>
-          </div>
+          </div> */}
         </div>
       </form>
       {/*end::Form*/}

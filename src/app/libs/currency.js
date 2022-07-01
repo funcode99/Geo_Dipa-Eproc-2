@@ -1,3 +1,5 @@
+import { isEmpty } from "lodash";
+
 const format = (countryCode, currency, number) => {
   const options = {
     currency,
@@ -8,7 +10,10 @@ const format = (countryCode, currency, number) => {
   return new Intl.NumberFormat(countryCode, options).format(number);
 };
 
-export const rupiah = (number) => format("id-ID", "IDR", number);
+export const rupiah = (number) => {
+  if (isEmpty(number)) return "";
+  return format("id-ID", "IDR", number);
+};
 
 export const printMoney = (value, currentType) => {
   let options = {};
