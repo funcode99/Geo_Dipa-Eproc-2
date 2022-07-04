@@ -106,6 +106,8 @@ function ItemContractFormVerification(props) {
     window.$("#print-content").html("");
   };
 
+  console.log("contractData", contractData);
+
   return (
     <React.Fragment>
       <Toast />
@@ -194,9 +196,13 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue={formatDate(
-                        toNewDate(contractData?.sofcopy_date)
-                      )}
+                      defaultValue={
+                        contractData?.sofcopy_date
+                          ? window
+                              .moment(new Date(contractData?.sofcopy_date))
+                              .format("DD/MM/YYYY")
+                          : ""
+                      }
                       readOnly
                     />
                   </div>
