@@ -45,7 +45,7 @@ import moment from "moment";
 import Select from "react-select";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 import { API_EPROC } from "../../../../../../redux/BaseHost";
 import { cloneDeep, isEmpty } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
@@ -1430,7 +1430,16 @@ function ContractTaxPage(props) {
                   </span>
                   <div className="input-group-append pointer">
                     <span className={`input-group-text ${classes.textHover}`}>
-                      <a download={taxData?.file_name} href={taxData?.file}>
+                      <a
+                        onClick={() => {
+                          window.open(
+                            DEV_NODE + "/tax/" + taxData?.file_name,
+                            "_blank"
+                          );
+                        }}
+                        href={"#"}
+                        // download={taxData?.file_name} href={taxData?.file}
+                      >
                         <i className="fas fa-download"></i>
                       </a>
                     </span>
@@ -1749,7 +1758,18 @@ function ContractTaxPage(props) {
                   <TableCell>{item.tax_no}</TableCell>
                   <TableCell>{item.tax_date}</TableCell>
                   <TableCell>
-                    <a href={getFileTax + item.file_name}>{item.file_name}</a>
+                    <a
+                      onClick={() => {
+                        window.open(
+                          DEV_NODE + "/tax/" + item?.file_name,
+                          "_blank"
+                        );
+                      }}
+                      href={"#"}
+                      // href={getFileTax + item.file_name}
+                    >
+                      {item.file_name}
+                    </a>
                   </TableCell>
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>

@@ -1001,7 +1001,15 @@ function ContractSprPage(props) {
                   </span>
                   <div className="input-group-append pointer">
                     <span className={`input-group-text ${classes.textHover}`}>
-                      <a download={sppData?.file_name} href={sppData?.file}>
+                      <a
+                        onClick={() => {
+                          window.open(
+                            DEV_NODE + "/spp/" + sppData?.file_name,
+                            "_blank"
+                          );
+                        }}
+                        href={"#"}
+                      >
                         <i className="fas fa-download"></i>
                       </a>
                     </span>

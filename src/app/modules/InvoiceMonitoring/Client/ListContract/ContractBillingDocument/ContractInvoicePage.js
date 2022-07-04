@@ -40,7 +40,7 @@ import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 import { cloneDeep } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -898,8 +898,15 @@ function ContractInvoicePage(props) {
                   <div className="input-group-append pointer">
                     <span className={`input-group-text ${classes.textHover}`}>
                       <a
-                        download={invoiceData?.file_name}
-                        href={invoiceData?.file}
+                        // download={invoiceData?.file_name}
+                        // href={invoiceData?.file}
+                        onClick={() => {
+                          window.open(
+                            DEV_NODE + "/invoice/" + invoiceData?.file_name,
+                            "_blank"
+                          );
+                        }}
+                        href={"#"}
                       >
                         <i className="fas fa-download"></i>
                       </a>
@@ -1145,7 +1152,16 @@ function ContractInvoicePage(props) {
                   <TableCell>{item.invoice_no}</TableCell>
                   <TableCell>{item.from_time}</TableCell>
                   <TableCell>
-                    <a href={getFileInvoice + item.file_name}>
+                    <a
+                      onClick={() => {
+                        window.open(
+                          DEV_NODE + "/invoice/" + item?.file_name,
+                          "_blank"
+                        );
+                      }}
+                      href={"#"}
+                      // href={getFileInvoice + item.file_name}
+                    >
                       {item.file_name}
                     </a>
                   </TableCell>
