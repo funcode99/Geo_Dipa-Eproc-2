@@ -38,7 +38,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 import NumberFormat from "react-number-format";
 import { cloneDeep } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
@@ -793,8 +793,15 @@ function ContractReceiptPage(props) {
                   <div className="input-group-append pointer">
                     <span className={`input-group-text ${classes.textHover}`}>
                       <a
-                        download={receiptData?.file_name}
-                        href={receiptData?.file}
+                        onClick={() => {
+                          window.open(
+                            DEV_NODE + "/receipt/" + receiptData?.file_name,
+                            "_blank"
+                          );
+                        }}
+                        href={"#"}
+                        // download={receiptData?.file_name}
+                        // href={receiptData?.file}
                       >
                         <i className="fas fa-download"></i>
                       </a>
@@ -944,7 +951,16 @@ function ContractReceiptPage(props) {
                   <TableCell>{item.receipt_no}</TableCell>
                   <TableCell>{item.receipt_date}</TableCell>
                   <TableCell>
-                    <a href={getFileReceipt + item.file_name}>
+                    <a
+                      onClick={() => {
+                        window.open(
+                          DEV_NODE + "/receipt/" + item?.file_name,
+                          "_blank"
+                        );
+                      }}
+                      href={"#"}
+                      // href={getFileReceipt + item.file_name}
+                    >
                       {item.file_name}
                     </a>
                   </TableCell>

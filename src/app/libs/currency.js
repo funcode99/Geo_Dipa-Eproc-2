@@ -11,7 +11,7 @@ const format = (countryCode, currency, number) => {
 };
 
 export const rupiah = (number) => {
-  if (isEmpty(number)) return "";
+  // if (isEmpty(number)) return "";
   return format("id-ID", "IDR", number);
 };
 

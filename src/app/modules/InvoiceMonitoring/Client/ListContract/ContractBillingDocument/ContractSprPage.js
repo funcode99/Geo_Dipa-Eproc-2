@@ -44,7 +44,7 @@ import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 import { cloneDeep } from "lodash";
 import NumberFormat from "react-number-format";
 
@@ -1001,7 +1001,15 @@ function ContractSprPage(props) {
                   </span>
                   <div className="input-group-append pointer">
                     <span className={`input-group-text ${classes.textHover}`}>
-                      <a download={sppData?.file_name} href={sppData?.file}>
+                      <a
+                        onClick={() => {
+                          window.open(
+                            DEV_NODE + "/spp/" + sppData?.file_name,
+                            "_blank"
+                          );
+                        }}
+                        href={"#"}
+                      >
                         <i className="fas fa-download"></i>
                       </a>
                     </span>
@@ -1286,7 +1294,19 @@ function ContractSprPage(props) {
                   <TableCell>{item.spr_no}</TableCell>
                   <TableCell>{item.spr_date}</TableCell>
                   <TableCell>
-                    <a href={getFileSpp + item.file_name}>{item.file_name}</a>
+                    <a
+                      onClick={() => {
+                        window.open(
+                          DEV_NODE + "/spp/" + item.file_name,
+                          "_blank"
+                        );
+                      }}
+                      href={`#`}
+                      // old ways
+                      // href={getFileSpp + item.file_name}
+                    >
+                      {item.file_name}
+                    </a>
                   </TableCell>
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
