@@ -926,15 +926,37 @@ function ContractHardCopyDoc(props) {
                           item.doc_file ? (
                             <TableCell>
                               <a
-                                href={
-                                  item.doc_status == "INVOICE"
-                                    ? getFileInvoice + item.doc_file
-                                    : item.doc_status == "SPP"
-                                    ? getFileSpp + item.doc_file
-                                    : item.doc_status == "RECEIPT"
-                                    ? getFileReceipt + item.doc_file
-                                    : getFileTax + item.doc_file
-                                }
+                                // href={
+                                //   item.doc_status == "INVOICE"
+                                //     ? getFileInvoice + item.doc_file
+                                //     : item.doc_status == "SPP"
+                                //     ? getFileSpp + item.doc_file
+                                //     : item.doc_status == "RECEIPT"
+                                //     ? getFileReceipt + item.doc_file
+                                //     : getFileTax + item.doc_file
+                                // }
+                                href={"#"}
+                                onClick={() => {
+                                  let path = "";
+                                  switch (item.doc_status) {
+                                    case "INVOICE":
+                                      path = "invoice";
+                                      break;
+                                    case "SPP":
+                                      path = "spp";
+                                      break;
+                                    case "RECEIPT":
+                                      path = "receipt";
+                                      break;
+                                    default:
+                                      path = "tax";
+                                      break;
+                                  }
+                                  window.open(
+                                    DEV_NODE + `/${path}/` + item.doc_file,
+                                    "_blank"
+                                  );
+                                }}
                               >
                                 {item.doc_no}
                               </a>
