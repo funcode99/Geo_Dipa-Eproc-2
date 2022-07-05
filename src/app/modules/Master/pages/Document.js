@@ -160,7 +160,7 @@ export const Documents = ({ typeId }) => {
       }
       setOptions(data);
     } catch (error) {
-      setToast("Error API, please contact developer!");
+      setToast(error?.message ?? "Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -183,7 +183,7 @@ export const Documents = ({ typeId }) => {
       // setData(data);
       generateTableContent(data);
     } catch (error) {
-      setToast("Error API, please contact developer!");
+      setToast(error?.message ?? "Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -227,7 +227,7 @@ export const Documents = ({ typeId }) => {
           updateCreateRef.current.close();
         }
       } catch (error) {
-        setToast("Error API, Please contact developer!");
+        setToast(error?.message ?? "Error API, Please contact developer!");
         setSubmitting(false);
         setStatus("Failed Submit Data");
       } finally {

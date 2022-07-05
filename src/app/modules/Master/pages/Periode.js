@@ -122,7 +122,7 @@ export const Periode = () => {
       setNewContent(data);
       // setData(data);
     } catch (error) {
-      setToast("Error API, please contact developer!");
+      setToast(error?.message ?? "Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -160,7 +160,7 @@ export const Periode = () => {
           setModals(false);
         }
       } catch (error) {
-        setToast("Error API, Please contact developer!");
+        setToast(error?.message ?? "Error API, Please contact developer!");
         setSubmitting(false);
         setStatus("Failed Submit Data");
       } finally {

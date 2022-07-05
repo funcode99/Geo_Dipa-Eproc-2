@@ -1073,7 +1073,7 @@ function ItemContractInvoice(props) {
   const handleError = React.useCallback(
     (err) => {
       console.log(`err`, err);
-      setToast("Error API, please contact developer!");
+      setToast(err?.message ?? "Error API, please contact developer!");
     },
     [setToast]
   );
