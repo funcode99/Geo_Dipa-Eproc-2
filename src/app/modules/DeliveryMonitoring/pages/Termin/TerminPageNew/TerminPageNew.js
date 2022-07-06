@@ -54,6 +54,9 @@ export class TerminPageNew extends PureComponent {
   }
 
   handleFetchContract = debounce(() => {
+    let isFetching = this.props.map_state.loadings[KEYS_TERMIN.f_contract];
+    // no need to refetch if it is already fetching
+    if (isFetching) return;
     this.handleApiCenter({ key: KEYS_TERMIN.f_contract });
   }, 500);
 
