@@ -128,12 +128,14 @@ export function* saga() {
         // UDAH DI HANDLE DI setupAxios, gausah nampil apa2
       } else if (err.hasOwnProperty("response")) {
         console.log(`err gloReducer2`, err);
+        if (alertAppear === "never") return;
         if (typeof onFail === "function") onFail(err.response?.data);
         MODAL.showSnackbar(
           err.response?.data?.message ?? "Error API, please contact developer!"
         );
       } else {
         console.log(`err gloReducer3`, err);
+        if (alertAppear === "never") return;
         if (typeof onFail === "function") onFail(err);
         MODAL.showSnackbar(
           err?.message ?? "Error API, please contact developer!"
