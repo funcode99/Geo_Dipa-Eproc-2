@@ -40,7 +40,7 @@ import {
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
-import { DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
+import { API_EPROC, DEV_NODE, DEV_RUBY } from "../../../../../redux/BaseHost";
 import moment from "moment";
 import { getInvoicePeriods } from "../../../Master/service/MasterCrud";
 import NumberFormat from "react-number-format";
@@ -293,17 +293,18 @@ function ItemContractInvoice(props) {
 
   const getFileContract = (name, status, ident_name) => {
     if (status === "eproc") {
-      getFileEproc({ filename: name })
-        .then((result) => {
-          var a = document.createElement("a");
-          a.href = result.data.data.items.respons;
-          a.download = name;
-          a.click();
-          a.remove();
-        })
-        .catch((error) => {
-          setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-        });
+      // getFileEproc({ filename: name })
+      //   .then((result) => {
+      //     var a = document.createElement("a");
+      //     a.href = result.data.data.items.respons;
+      //     a.download = name;
+      //     a.click();
+      //     a.remove();
+      //   })
+      //   .catch((error) => {
+      //     setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      //   });
+      window.open(API_EPROC + "/" + name, "_blank");
     } else if (status === "ruby") {
       window.open(DEV_RUBY + name, "_blank");
     } else if (status === "monitoring") {
