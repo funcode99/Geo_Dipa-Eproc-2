@@ -34,7 +34,7 @@ import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import { getInvoicePeriods } from "../../../../Master/service/MasterCrud";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractReceiptPage(props) {
   const [loading, setLoading] = useState(false);
@@ -741,8 +741,15 @@ function ContractReceiptPage(props) {
                           className={`input-group-text ${classes.textHover}`}
                         >
                           <a
-                            download={receiptData?.file_name}
-                            href={receiptData?.file}
+                            // download={receiptData?.file_name}
+                            // href={receiptData?.file}
+                            onClick={() => {
+                              window.open(
+                                DEV_NODE + "/receipt/" + receiptData?.file_name,
+                                "_blank"
+                              );
+                            }}
+                            href={"#"}
                           >
                             <i className="fas fa-download"></i>
                           </a>
