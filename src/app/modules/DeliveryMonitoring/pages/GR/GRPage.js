@@ -10,6 +10,7 @@ import Subheader from "../../../../components/subheader";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
 import { NavLink, useHistory } from "react-router-dom";
 import { formatDate } from "../../../../libs/date";
+import StatusRemarks from "../../../../components/StatusRemarks";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +37,7 @@ const tableHeaderContractsNew = [
     id: "release_date",
     label: "Release Date",
   },
+  { id: "status", label: "Status" },
   {
     id: "action",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
@@ -64,6 +66,11 @@ export const GRPage = ({ fetch_api_sg, loadings, status }) => {
       ),
       po_number: item?.po_number,
       release_date: formatDate(new Date(item?.gr_header?.pstng_date)),
+      status: item?.canceled_at ? (
+        <StatusRemarks status={"CANCELED"} remarks={item?.canceled_at} />
+      ) : (
+        "-"
+      ),
       action: (
         <ButtonAction
           hoverLabel="More"
