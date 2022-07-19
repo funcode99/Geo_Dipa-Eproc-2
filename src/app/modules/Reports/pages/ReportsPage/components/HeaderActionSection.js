@@ -1,5 +1,5 @@
 import React from "react";
-import { DownloadExcel, FilterUnit } from "./buttons";
+import { DownloadExcel, FilterDate, FilterUnit } from "./buttons";
 
 const HeaderActionSection = ({ downloadProps }) => {
   return (
@@ -8,6 +8,7 @@ const HeaderActionSection = ({ downloadProps }) => {
         <h3 className="font-weight-bolder text-dark">Reports Table</h3>
       </div>
       <div className="d-flex flex-row">
+        <FilterDate />
         <FilterUnit />
         <DownloadExcel {...downloadProps} />
       </div>
