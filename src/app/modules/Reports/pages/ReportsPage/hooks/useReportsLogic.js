@@ -39,8 +39,6 @@ export const useReportsLogic = () => {
     });
   }, [query, content]);
 
-  console.log("filteredData", filteredData, query);
-
   const fetchReports = useCallback((refresh) => {
     dispatch(
       fetch_api_sg({

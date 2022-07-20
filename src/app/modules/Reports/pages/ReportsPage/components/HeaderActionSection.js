@@ -10,7 +10,7 @@ const HeaderActionSection = ({ downloadProps, data, setQuery, query }) => {
       <div className="d-flex flex-row">
         <FilterDate setQuery={setQuery} query={query} />
         <FilterUnit setQuery={setQuery} />
-        <DownloadExcel {...downloadProps} data={data} />
+        <DownloadExcel {...downloadProps} data={data} query={query} />
       </div>
     </div>
   );
