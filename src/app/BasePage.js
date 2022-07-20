@@ -14,8 +14,8 @@ import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DashboardPageVendor } from "./pages/DashboardPageVendor";
 import { useSelector, shallowEqual } from "react-redux";
-import RootClientDelivery from "./modules/DeliveryMonitoring/Client/RootClientDelivery";
-import RootVendorDelivery from "./modules/DeliveryMonitoring/Vendor/RootVendorDelivery";
+// import RootClientDelivery from "./modules/DeliveryMonitoring/Client/RootClientDelivery";
+// import RootVendorDelivery from "./modules/DeliveryMonitoring/Vendor/RootVendorDelivery";
 
 // Page Guide Metronic
 // const GoogleMaterialPage = lazy(() =>
@@ -41,8 +41,12 @@ const UserProfilePageVendor = lazy(() =>
   import("./modules/UserProfile/Vendor/UserProfilePage")
 );
 
-const RootDeliveryMonitoring = lazy(() =>
-  import("./modules/DeliveryMonitoring/RootDeliveryMonitoring")
+const RootClientDelivery = lazy(() =>
+  import("./modules/DeliveryMonitoring/Client/RootClientDelivery")
+);
+
+const RootVendorDelivery = lazy(() =>
+  import("./modules/DeliveryMonitoring/Vendor/RootVendorDelivery")
 );
 
 const RootClientInvoiceMonitoring = lazy(() =>
@@ -54,6 +58,7 @@ const RootVendorInvoiceMonitoring = lazy(() =>
 );
 
 const MasterData = lazy(() => import("./modules/Master/RootMasterData"));
+const RootReports = lazy(() => import("./modules/Reports/RootReports"));
 
 export default function BasePage() {
   let status = useSelector(
@@ -122,6 +127,7 @@ export default function BasePage() {
           path="/vendor/delivery-monitoring"
           component={RootVendorDelivery}
         />
+        <Route path="/client/reports" component={RootReports} />
         <Redirect to="/error" />
       </Switch>
     </Suspense>
