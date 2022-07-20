@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { isEmpty } from "lodash";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useExcelDownloder } from "react-xls";
 import { fetch_api_sg } from "../../../../../../redux/globalReducer";
 import { useStyleReport } from "../styles";
 
 const baseQuery = {
-  query: "",
   unit: "",
   start_date: "",
   end_date: "",
@@ -17,9 +17,29 @@ const url_report = `delivery/report`;
 export const useReportsLogic = () => {
   const classes = useStyleReport();
   const dispatch = useDispatch();
-  const [query, setQuery] = useState(baseQuery);
+  const [query, setQuery] = useState(null);
   const [content, setContent] = useState([]);
   const { ExcelDownloder, Type } = useExcelDownloder();
+  let filteredData = useMemo(() => {
+    if (isEmpty(query)) return content;
+    if (isEmpty(content)) return content;
+    let tempData = [...content];
+
+    return tempData.filter((item) => {
+      let checkUnit = isEmpty(query.unit) ? true : query.unit === item.name;
+      let checkStartDate = isEmpty(query.start_date)
+        ? true
+        : item.tanggal_kontrak > query.start_date;
+      let checkEndDate = isEmpty(query.end_date)
+        ? true
+        : query.end_date > item.tanggal_kontrak;
+
+      return checkUnit && checkStartDate && checkEndDate;
+      // return checkStartDate;
+    });
+  }, [query, content]);
+
+  console.log("filteredData", filteredData, query);
 
   const fetchReports = useCallback((refresh) => {
     dispatch(
@@ -54,6 +74,8 @@ export const useReportsLogic = () => {
             "Park BYR ": item.park_byr_number,
             "SPT Date": item.spt_date,
             "Payment Date": item.payment_date,
+            name: item.name,
+            tanggal_kontrak: item.tanggal_kontrak,
           }));
           setContent(dataMapped);
         },
@@ -69,7 +91,9 @@ export const useReportsLogic = () => {
     ExcelDownloder,
     Type,
     classes,
-    content,
+    content: filteredData,
+    setQuery,
+    query,
   };
 };
 

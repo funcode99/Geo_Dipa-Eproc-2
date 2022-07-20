@@ -1,18 +1,25 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-const FilterUnit = (onFetch) => {
+const FilterUnit = ({ setQuery }) => {
   const options = useSelector((state) => state.auth.user.data.plant_data);
   const [selected, setSelected] = useState(options?.[0]?.name);
 
   const handleSelect = useCallback(
     (item) => {
-      //   onFetch(item?.id);
+      setQuery((e) => ({ ...e, unit: item?.name }));
       setSelected(item?.name);
     },
-    [onFetch, setSelected]
+    [setQuery, setSelected]
   );
+
+  useEffect(() => {
+    if (!!options) {
+      handleSelect(options?.[0]);
+    }
+  }, [options]);
+
   return (
     <Dropdown className="dropdown-inline ml-3" drop="down" alignRight>
       <Dropdown.Toggle

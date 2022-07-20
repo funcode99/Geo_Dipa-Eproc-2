@@ -6,7 +6,14 @@ import { tableLabel } from "./constants";
 import { useReportsLogic } from "./hooks";
 
 const ReportsPage = () => {
-  const { ExcelDownloder, Type, classes, content } = useReportsLogic();
+  const {
+    ExcelDownloder,
+    Type,
+    classes,
+    content,
+    setQuery,
+    query,
+  } = useReportsLogic();
 
   return (
     <Paper className={classes.root}>
@@ -16,6 +23,8 @@ const ReportsPage = () => {
           type: Type.Button,
         }}
         data={content}
+        setQuery={setQuery}
+        query={query}
       />
       <TablePaginationCustom
         headerRows={tableLabel.map((label) => ({
