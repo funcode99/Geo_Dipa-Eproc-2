@@ -1,7 +1,7 @@
 import React from "react";
 import { DownloadExcel, FilterDate, FilterUnit } from "./buttons";
 
-const HeaderActionSection = ({ downloadProps }) => {
+const HeaderActionSection = ({ downloadProps, data }) => {
   return (
     <div className="d-flex flex-row align-items-center">
       <div style={{ flex: 1 }}>
@@ -10,7 +10,7 @@ const HeaderActionSection = ({ downloadProps }) => {
       <div className="d-flex flex-row">
         <FilterDate />
         <FilterUnit />
-        <DownloadExcel {...downloadProps} />
+        <DownloadExcel {...downloadProps} data={data} />
       </div>
     </div>
   );

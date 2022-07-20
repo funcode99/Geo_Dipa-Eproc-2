@@ -1,34 +1,31 @@
-import React from "react";
 import { Paper } from "@material-ui/core";
+import React from "react";
 import TablePaginationCustom from "../../../../components/tables/TablePagination";
-import { tableHeaderReports, TEMP_DUMMY_DATA_TABLE } from "./constants";
-import { useReportsLogic } from "./hooks";
 import { HeaderActionSection } from "./components";
+import { tableLabel } from "./constants";
+import { useReportsLogic } from "./hooks";
 
 const ReportsPage = () => {
-  const { ExcelDownloder, Type, classes } = useReportsLogic();
+  const { ExcelDownloder, Type, classes, content } = useReportsLogic();
 
   return (
     <Paper className={classes.root}>
       <HeaderActionSection
         downloadProps={{
           ExcelDownloder,
-          data: TEMP_DUMMY_DATA_TABLE,
           type: Type.Button,
         }}
+        data={content}
       />
-      {/* <ExcelDownloder
-        data={TEMP_DUMMY_DATA_TABLE}
-        filename={"book"}
-        type={Type.Link} // or type={'button'}
-      >
-        Download
-      </ExcelDownloder> */}
       <TablePaginationCustom
-        headerRows={tableHeaderReports}
-        rows={TEMP_DUMMY_DATA_TABLE?.animals}
+        headerRows={tableLabel.map((label) => ({
+          id: label,
+          label: label,
+        }))}
+        rows={content}
         withSearch={false}
-        withPagination={false}
+        initialRowsPerPage={10}
+        width={4700}
       />
     </Paper>
   );

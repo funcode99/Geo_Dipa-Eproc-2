@@ -1,3 +1,30 @@
+export const tableLabel = [
+  "No. Kontrak",
+  "No. PO",
+  "Judul Pengadaan",
+  "Scope of Work",
+  "Nilai Kontrak/PO (exc PPN) ",
+  "Tanggal Kontrak/PO",
+  "Due Date",
+  "Group/Cost Center",
+  "Vendor",
+  "Nomor Vendor",
+  "Material Document (SA) ",
+  "SA Released Date",
+  "Material Document (GR 101/GR 105) ",
+  "GR Released Date",
+  "SPP Number",
+  "Receipt Number",
+  "Invoice Number ",
+  "Tax Number",
+  "Tax Posting Date ",
+  "BKB Number",
+  "Park AP",
+  "Park BYR ",
+  "SPT Date",
+  "Payment Date",
+];
+
 const tableHeaderReports = [
   {
     id: "No",
