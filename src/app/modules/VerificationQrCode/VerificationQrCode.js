@@ -32,7 +32,11 @@ function VerificationQrCode(props) {
       setLoading(false);
       setTokenStatus(false);
     } else {
-      verificationQr(query.get("term_id"), query.get("role_id"), query.get("type"))
+      verificationQr(
+        query.get("term_id"),
+        query.get("role_id"),
+        query.get("type")
+      )
         .then((result) => {
           setData(result.data.data);
           setLoading(false);
@@ -286,13 +290,14 @@ function VerificationQrCode(props) {
                     <div className="text-center my-5 pt-5">
                       <h6>
                         <i className="far fa-check-circle text-success mr-2"></i>
-                        Adalah benar dan tercatat dalam audit trail kami.
+                        Adalah benar dan tercatat dalam aplikasi e-procurement.
                       </h6>
                       <span
                         className="font-italic"
                         style={{ fontSize: styles.fontSizeItalicHeader }}
                       >
-                        That is true and it is recorded in our audit trail.
+                        That is true and it is recorded in e-procurement
+                        application.
                       </span>
                     </div>
                     <div className="text-center my-5 pb-5">

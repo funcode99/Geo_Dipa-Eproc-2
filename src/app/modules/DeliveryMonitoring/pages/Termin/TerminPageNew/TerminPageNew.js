@@ -1,3 +1,4 @@
+import { debounce } from "lodash";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -6,7 +7,10 @@ import {
   fetch_api_sg,
   getLoading,
 } from "../../../../../../redux/globalReducer";
-import { save_data_task } from "../../../_redux/deliveryMonitoringAction";
+import {
+  save_data_task,
+  set_contract_id,
+} from "../../../_redux/deliveryMonitoringAction";
 import TerminPaper from "./components/TerminPaper";
 import { KEYS_TERMIN, STATE_STEPPER } from "./STATIC_DATA";
 
@@ -22,6 +26,7 @@ export class TerminPageNew extends PureComponent {
       },
       summary: {},
       deliverable: {},
+      showForm: true,
     };
   }
 
@@ -37,8 +42,23 @@ export class TerminPageNew extends PureComponent {
     console.log(`thispprops`, this.props, prevProps);
     if (this.props.location.pathname !== prevProps.location.pathname) {
       this.handleRefresh();
+      return;
+    }
+    if (
+      prevProps.map_state.dataContractById.id !==
+      this.props.map_state.dataTask.contract_id
+    ) {
+      this.handleFetchContract();
+      return;
     }
   }
+
+  handleFetchContract = debounce(() => {
+    let isFetching = this.props.map_state.loadings[KEYS_TERMIN.f_contract];
+    // no need to refetch if it is already fetching
+    if (isFetching) return;
+    this.handleApiCenter({ key: KEYS_TERMIN.f_contract });
+  }, 500);
 
   handleRefresh = () => {
     this.handleApiCenter({ key: KEYS_TERMIN.f_termin });
@@ -46,9 +66,30 @@ export class TerminPageNew extends PureComponent {
 
   handleApiCenter = ({ key, onSuccess, ...other }) => {
     // other termasuk : params, onFail, alertAppear
-    const { fetch_api_sg, save_data_task } = this.props;
+    const {
+      fetch_api_sg,
+      save_data_task,
+      set_contract_id,
+      map_state,
+    } = this.props;
     const { task_id } = this.props.match.params;
     switch (key) {
+      case KEYS_TERMIN.f_contract:
+        if (
+          map_state?.dataTask?.contract_id ||
+          map_state?.dataContractById?.id
+        ) {
+          fetch_api_sg({
+            key,
+            type: "get",
+            url: `/delivery/contract/${map_state?.dataTask?.contract_id ||
+              map_state?.dataContractById?.id}`,
+            onSuccess: (res) => {
+              set_contract_id(res?.data);
+            },
+          });
+        }
+        break;
       case KEYS_TERMIN.f_termin:
         fetch_api_sg({
           key,
@@ -61,8 +102,17 @@ export class TerminPageNew extends PureComponent {
               label: el.label,
               status: STATE_STEPPER[el.state],
             }));
+            const isSAGRCompleted = mappedStepper.reduce(
+              (acc, el, idx) =>
+                !!el.label === "SA / GR" && !el.status === "COMPLETE"
+                  ? false
+                  : acc,
+              true
+            );
+
             this.setState((prev) => ({
               ...prev,
+              showForm: isSAGRCompleted,
               termin: {
                 ...prev.termin,
                 stepper: mappedStepper,
@@ -133,7 +183,6 @@ export class TerminPageNew extends PureComponent {
   };
 
   render() {
-    console.log(`this.props`, this.props, this.state);
     const { history, map_state, match } = this.props;
     const { task_id, tab } = match.params;
 
@@ -173,6 +222,7 @@ const mapState = (state) => {
   return {
     map_state: {
       loadings: {
+        [KEYS_TERMIN.f_contract]: getLoading(state, KEYS_TERMIN.f_contract),
         [KEYS_TERMIN.f_termin]: getLoading(state, KEYS_TERMIN.f_termin),
         [KEYS_TERMIN.f_sa_gr]: getLoading(state, KEYS_TERMIN.f_sa_gr),
         [KEYS_TERMIN.p_t_approve_do_doc]: getLoading(
@@ -205,6 +255,7 @@ const mapState = (state) => {
 const mapDispatch = {
   fetch_api_sg,
   save_data_task,
+  set_contract_id,
 };
 
 export default compose(

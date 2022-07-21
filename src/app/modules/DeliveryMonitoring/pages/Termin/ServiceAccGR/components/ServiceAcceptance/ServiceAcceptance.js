@@ -15,7 +15,7 @@ import SectionSummary from "./components/SectionSummary";
 import SectionTable from "./components/SectionTable";
 import DetailServAcceptance from "./DetailServAcceptance";
 
-const ServiceAcceptance = ({ data, isClient }) => {
+const ServiceAcceptance = ({ data, isClient, showCancel = true }) => {
   const task_sa = data?.task_sa;
   const task_sa_array = data?.task_sa_array;
   const qr_params = React.useMemo(
@@ -46,6 +46,7 @@ const ServiceAcceptance = ({ data, isClient }) => {
               items={els?.sa_items}
               dataSA={els}
               isClient={isClient}
+              showCancel={showCancel}
             />
           </>
         </GRAccord>

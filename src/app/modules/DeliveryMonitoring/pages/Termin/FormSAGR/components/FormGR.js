@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { object } from "yup";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import { formatUpdateDate } from "../../../../../../libs/date";
@@ -6,13 +6,18 @@ import validation from "../../../../../../service/helper/validationHelper";
 import { TerminPageContext } from "../../TerminPageNew/TerminPageNew";
 import { gr_field } from "./DUMMY_DATA";
 import ModalApproveGR from "./ModalApproveGR";
-import { number } from "yup";
 import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
+import ModalStorageLoc from "./ModalStorageLoc";
+import { string, date } from "yup";
+import { Col, Row } from "react-bootstrap";
+import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 
 const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
   post_date: validation.require("Header Text"),
-  gr_receipt: validation.require("Goods Recipient"),
+  gr_receipt: string()
+    .max(12)
+    .required("Goods Recipient harus diisi."),
   ref_doc_no: validation.require("Ref Doc No"),
   // ref_doc_no: number()
   //   // .max(16, "Maksimal 16 karakter")
@@ -40,9 +45,13 @@ const FormGR = ({
 }) => {
   const refModal = React.useRef();
   const refModal2 = React.useRef();
+  const refModal3 = React.useRef();
+  const formRef = React.useRef();
   const { task_id } = React.useContext(TerminPageContext);
   const grExist = Boolean(dataSAGR.gr);
   const dataGR = dataSAGR?.gr;
+  const [storageLoc, setStorageLoc] = useState([]);
+
   const _handleSubmit = (data) => {
     const params = {
       gr_receipt: data.gr_receipt,
@@ -51,8 +60,12 @@ const FormGR = ({
       ref_doc_no: data.ref_doc_no,
       bill_of_lading: data.bill_of_lading,
       posting_date: data.post_date,
+      items: data?.stge_loc?.map((el) => ({
+        id: el?.id,
+        stge_loc: el?.value,
+      })),
     };
-    console.log(`data`, params);
+
     fetch_api_sg({
       key: keys.upload_gr,
       type: "post",
@@ -84,47 +97,82 @@ const FormGR = ({
     () => ({
       header_tx: dataGR?.header_txt,
       post_date: formatUpdateDate(dataGR?.posting_date),
+      stge_loc: dataSAGR?.task_items?.reduce(
+        (acc, item, index) => [
+          ...acc,
+          {
+            id: item?.id,
+            stge_loc: item?.stge_loc,
+            label: `Item ${index + 1} (${item?.stge_loc})`,
+            value: item?.stge_loc,
+          },
+        ],
+        []
+      ),
       ...dataGR,
     }),
     [dataGR]
   );
+
   if (!isItemExists) {
     return <NoDataBox text={"Form Good Receipt not Available"} />;
   }
 
+  const openStorageLoc = () => {
+    refModal3.current.open();
+  };
+
+  const _submitStgeLoc = (data) => {
+    formRef.current.setFieldValue("stge_loc", data);
+  };
+
   return (
     <div>
       <FormBuilder
+        ref={formRef}
         loading={loadings_sg[keys.upload_gr]}
         onSubmit={_handleSubmit}
         formData={gr_field}
         validation={validationSchema}
         initial={initial}
-        fieldProps={
-          {
-            // readOnly: grExist,
-          }
+        fieldProps={{
+          listOptions: {
+            stge_loc: dataSAGR?.delivery_locations?.map((el) => ({
+              ...el,
+              value: el?.id,
+              label: el?.name,
+            })),
+          },
+        }}
+        // fieldProps={{
+        //   readOnly: grExist,
+        // }}
+        btnChildren={
+          <React.Fragment>
+            {/* {dataSAGR?.gr_status?.gr_101 == true && (
+              <button
+                onClick={() => refModal.current.open()}
+                className={`btn btn-sm btn-label-warning btn-bold mr-3`}
+              >
+                Post GR 101
+              </button>
+            )}
+            {dataSAGR?.gr_status?.gr_103 == true && (
+              <button
+                onClick={() => refModal2.current.open()}
+                className={`btn btn-sm btn-label-success btn-bold mr-3`}
+              >
+                Post GR 103
+              </button>
+            )} */}
+            <button
+              onClick={openStorageLoc}
+              className={`btn btn-sm btn-label-success btn-bold mr-3`}
+            >
+              Edit Storage Location
+            </button>
+          </React.Fragment>
         }
-        // btnChildren={
-        //   <React.Fragment>
-        //     {dataSAGR?.gr_status?.gr_101 == true && (
-        //       <button
-        //         onClick={() => refModal.current.open()}
-        //         className={`btn btn-sm btn-label-warning btn-bold mr-3`}
-        //       >
-        //         Post GR 101
-        //       </button>
-        //     )}
-        //     {dataSAGR?.gr_status?.gr_103 == true && (
-        //       <button
-        //         onClick={() => refModal2.current.open()}
-        //         className={`btn btn-sm btn-label-success btn-bold mr-3`}
-        //       >
-        //         Post GR 103
-        //       </button>
-        //     )}
-        //   </React.Fragment>
-        // }
       />
       <ModalApproveGR
         innerRef={refModal}
@@ -135,6 +183,12 @@ const FormGR = ({
         innerRef={refModal2}
         gr={"GR 103"}
         onSubmit={() => _fetchToSAP("gr-103")}
+      />
+      <ModalStorageLoc
+        innerRef={refModal3}
+        items={dataSAGR?.task_items}
+        options={dataSAGR?.delivery_locations}
+        onSubmit={_submitStgeLoc}
       />
     </div>
   );

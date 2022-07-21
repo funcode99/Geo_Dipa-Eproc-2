@@ -118,12 +118,6 @@ const SectionSummary = ({ header, fullData, dataSA }) => {
           </span>
           <span className={classes.txtValue}>{dataSA?.ref_doc_no || "-"}</span>
         </p>
-        {/* <div className="d-flex flex-column">
-          <span>PT. GEO DIPA ENERGI</span>
-          <span>Plant Bandung</span>
-          <span>Jl. Aditiawan Kv. 55</span>
-          <span>Jaksel</span>
-        </div> */}
       </div>
     </div>
   );

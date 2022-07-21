@@ -107,7 +107,7 @@ const Item = ({ handleClick, status }) => {
                     service_id: items.id,
                     qty: items.qty_available,
                     name: items.short_text,
-                    price: items.net_value,
+                    price: items.gr_price,
                   },
                   "jasa"
                 );
@@ -225,7 +225,7 @@ const Item = ({ handleClick, status }) => {
           service_id: items.id,
           qty: qtyValue,
           name: items.short_text,
-          price: items.net_value,
+          price: items.gr_price,
         },
         "jasa"
       );

@@ -1,5 +1,5 @@
 import { CircularProgress, Grid } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -21,17 +21,45 @@ const key = "cancelling-gr";
 
 const DetailGoodRcpt = (props) => {
   const dispatch = useDispatch();
+  const [hideLogo, setHideLogo] = useState(false);
+  const [addPaddingTop, setAddPaddingTop] = useState(0);
   const loading = useSelector((state) => getLoading(state, key));
-  const { fullData, dataGR, isClient } = props;
+  const { fullData, dataGR, isClient, showCancel } = props;
   const print = () => {
-    var printContents = window.$("#printSA").html();
-    window.$("#root").css("display", "none");
-    window.$("#print-content").addClass("p-5");
-    window.$("#print-content").html(printContents);
-    window.print();
-    window.$("#root").removeAttr("style");
-    window.$("#print-content").removeClass("p-5");
-    window.$("#print-content").html("");
+    setHideLogo(true);
+    var clientHeight = document.getElementById("printSA").clientHeight;
+    // tinggi paper landscape normal 828
+    const pageHeight = 828;
+    const pageFullHeight = Math.floor(clientHeight / pageHeight) * pageHeight;
+    const heightDifference = clientHeight - pageFullHeight;
+    const needAddDummyHeight = heightDifference < 150;
+    if (needAddDummyHeight) setAddPaddingTop(heightDifference);
+    setTimeout(() => {
+      var css = "@page { size: landscape; }",
+        head = document.head || document.getElementsByTagName("head")[0],
+        style = document.createElement("style");
+
+      style.type = "text/css";
+      style.media = "print";
+
+      if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+
+      head.appendChild(style);
+
+      var printContents = window.$("#printSA").html();
+      window.$("#root").css("display", "none");
+      window.$("#print-content").addClass("p-5");
+      window.$("#print-content").html(printContents);
+      window.print();
+      window.$("#root").removeAttr("style");
+      window.$("#print-content").removeClass("p-5");
+      window.$("#print-content").html("");
+      setHideLogo(false);
+    }, 150);
   };
   const qr_params = React.useMemo(
     () => ({
@@ -58,22 +86,24 @@ const DetailGoodRcpt = (props) => {
       {/* <Card> */}
       <CardHeader title="">
         <CardHeaderToolbar>
-          <div className="kt-widget19__action">
-            <button
-              onClick={onCancelGR}
-              disabled={loading}
-              className={`btn btn-sm btn-label-danger btn-bold mr-3`}
-            >
-              {loading && (
-                <CircularProgress
-                  className={"mr-2"}
-                  size="0.875rem"
-                  color="inherit"
-                />
-              )}
-              Cancel GR
-            </button>
-          </div>
+          {showCancel && (
+            <div className="kt-widget19__action">
+              <button
+                onClick={onCancelGR}
+                disabled={loading}
+                className={`btn btn-sm btn-label-danger btn-bold mr-3`}
+              >
+                {loading && (
+                  <CircularProgress
+                    className={"mr-2"}
+                    size="0.875rem"
+                    color="inherit"
+                  />
+                )}
+                Cancel GR
+              </button>
+            </div>
+          )}
           <button
             type="button"
             onClick={print}
@@ -85,10 +115,11 @@ const DetailGoodRcpt = (props) => {
         </CardHeaderToolbar>
       </CardHeader>
       <CardBody id="printSA">
-        <SectionHeader {...props} />
+        <SectionHeader hideLogo={hideLogo} {...props} />
         <SectionSummary {...props} />
         {/* <SectionTable {...props} /> */}
         <SectionTable2 {...props} />
+        <div style={{ height: addPaddingTop }} />
         <Grid container spacing={1} className={"mt-3"}>
           <Grid item xs={8}></Grid>
           <BoxSignSA

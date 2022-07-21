@@ -4,12 +4,12 @@ import { formatSADate } from "../../../../../../../../libs/date";
 
 const client = {
   name: "PT. GEO DIPA ENERGI",
-  address1: "Plant Bandung",
-  address2: "Jl. Aditiawarman Kv.55",
-  address3: "Jaksel",
+  address1: "Plant Pusat",
+  address2: "Aldevco Octagon, Jl. Warung Jati",
+  address3: "Barat 75",
 };
 
-const SectionHeader = ({ header }) => {
+const SectionHeader = ({ header, fullData, hideLogo }) => {
   const tab1 = useMemo(
     () => [
       { value: client?.name },
@@ -18,6 +18,10 @@ const SectionHeader = ({ header }) => {
       { value: client?.address3 },
     ],
     [client]
+  );
+  const address = useMemo(
+    () => fullData?.contract?.plant_authority?.sap_address.split("-"),
+    [fullData]
   );
   const tab2 = useMemo(
     () => [
@@ -37,10 +41,12 @@ const SectionHeader = ({ header }) => {
   return (
     <div className={"row"}>
       <div className="col-sm-4 d-flex align-items-center">
-        <img
-          src={toAbsoluteUrl("/media/logos/logo-eprocurement.png")}
-          alt="IconGde"
-        />
+        {!hideLogo && (
+          <img
+            src={toAbsoluteUrl("/media/logos/logo-eprocurement.png")}
+            alt="IconGde"
+          />
+        )}
       </div>
       <div className="col-sm-8">
         <div className="row d-flex justify-content-end">
@@ -52,9 +58,11 @@ const SectionHeader = ({ header }) => {
         <div className="row mr-0">
           <div className="col-sm-6 border mr-3">
             <div className="d-flex flex-column">
-              {tab1.map((el, id) => (
-                <span key={id}>{el.value}</span>
-              ))}
+              {address?.length &&
+                address?.map((el, id) => <span key={id}>{el}</span>)}
+              {!address?.length &&
+                tab1?.map((el, id) => <span key={id}>{el.value}</span>)}
+              {/* <span>{address}</span> */}
             </div>
           </div>
           <div className="row col-sm-6 mr-0">

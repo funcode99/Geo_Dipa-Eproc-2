@@ -12,6 +12,7 @@ import Dashboard from "./Dashboard/Dashboard";
 import DashboardListInvoice from "./ListInvoice/DashboardListInvoice";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
+import PreviewSAGR from "./ListContract/preview/PreviewSAGR";
 
 function RootClientInvoiceMonitoring(props) {
   // const suhbeader = useSubheader();
@@ -25,6 +26,11 @@ function RootClientInvoiceMonitoring(props) {
         exact
         from="/client/invoice_monitoring"
         to="/client/invoice_monitoring/dashboard"
+      />
+      <Route
+        path="/client/invoice_monitoring/contract/:contract/:termin/:type"
+        component={(props) => <PreviewSAGR {...props} />}
+        exact={true}
       />
       <Route
         path="/client/invoice_monitoring/contract/:contract/:termin"

@@ -45,9 +45,9 @@ import moment from "moment";
 import Select from "react-select";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 import { API_EPROC } from "../../../../../../redux/BaseHost";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import { getRolesAcceptance } from "../../../../Master/service/MasterCrud";
 
@@ -109,6 +109,7 @@ function ContractTaxPage(props) {
   const [contractAuthority, setContractAuthority] = useState("");
   const [approveHardCopyRole, setApproveHardCopyRole] = useState(false);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
+  const [postingDate, setPostingDate] = useState("");
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -289,10 +290,9 @@ function ContractTaxPage(props) {
               witht: element.witht,
               wt_withcd: element.wt_withcd,
               text40: element.text40,
+              // wi_tax_base: (element.qsatz *(contractData["termin_value"] + totalAddtionalPayment())) / 100,
               wi_tax_base:
-                (element.qsatz *
-                  (contractData["termin_value"] + totalAddtionalPayment())) /
-                100,
+                contractData["termin_value"] + totalAddtionalPayment(),
               qsatz: element.qsatz,
               checked: false,
             });
@@ -406,7 +406,16 @@ function ContractTaxPage(props) {
       created_by_id: user_id,
       updated_by_id: user_id,
       authority: contractAuthority,
+      posting_date: postingDate,
     };
+
+    if (isEmpty(postingDate)) {
+      setToast("Posting date is required.", 10000);
+      setLoading(false);
+      setModalApprove(false);
+      return;
+    }
+
     approveTax(taxData.id, {
       approved_by_id: user_id,
       contract_id: contract_id,
@@ -444,6 +453,7 @@ function ContractTaxPage(props) {
               getTerminProgress(termin).then((result) => {
                 setDataProgress(result.data.data?.data);
               });
+              getTaxData();
             })
             .catch((error) => {
               if (error.response?.data && error.response?.data.message) {
@@ -526,6 +536,13 @@ function ContractTaxPage(props) {
   useEffect(checkBkb, []);
   useEffect(getInvoiceData, []);
   useEffect(getContractAuthorityData, []);
+  useEffect(
+    function handleInitialPostDate() {
+      if (!isEmpty(taxData?.posting_date))
+        setPostingDate(taxData?.posting_date);
+    },
+    [taxData?.posting_date]
+  );
 
   const formatGroupLabel = (data) => (
     <div style={groupStyles}>
@@ -554,6 +571,25 @@ function ContractTaxPage(props) {
     });
     return total;
   };
+
+  const handlePostingDateSelected = (e) => {
+    const newDate = moment(new Date(e.target.value)).format("YYYY-MM-DD");
+    setPostingDate(newDate);
+  };
+
+  const isApprovedDisabled = invoiceBkbExist && taxData?.state === "APPROVED";
+
+  // console.log(
+  //   "diosabled",
+  //   isSubmit,
+  //   taxData?.state === "REJECTED",
+  //   isApprovedDisabled,
+  //   taxData === null,
+  //   !props.setTaxStaffStatus,
+  //   progressTermin?.ident_name !== "TAX",
+  //   window.$.isEmptyObject(optionSelectedPpn),
+  //   progressTermin?.ident_name
+  // );
 
   return (
     <React.Fragment>
@@ -890,7 +926,10 @@ function ContractTaxPage(props) {
                   <th style={{ width: "40%" }}>
                     <FormattedMessage id="TITLE.DESCRIPTION" />
                   </th>
-                  <th style={{ width: "50%" }}>
+                  <th style={{ width: "25%" }}>
+                    <FormattedMessage id="TITLE.TOTAL_AMOUNT" />
+                  </th>
+                  <th style={{ width: "25%" }}>
                     <FormattedMessage id="TITLE.VALUE" />
                   </th>
                 </tr>
@@ -909,7 +948,7 @@ function ContractTaxPage(props) {
                                 !(
                                   isSubmit ||
                                   taxData?.state === "REJECTED" ||
-                                  taxData?.state === "APPROVED" ||
+                                  isApprovedDisabled ||
                                   taxData === null ||
                                   !props.setTaxStaffStatus ||
                                   progressTermin?.ident_name !== "TAX"
@@ -926,7 +965,7 @@ function ContractTaxPage(props) {
                                 !(
                                   isSubmit ||
                                   taxData?.state === "REJECTED" ||
-                                  taxData?.state === "APPROVED" ||
+                                  isApprovedDisabled ||
                                   taxData === null ||
                                   !props.setTaxStaffStatus ||
                                   progressTermin?.ident_name !== "TAX"
@@ -945,7 +984,7 @@ function ContractTaxPage(props) {
                               !(
                                 isSubmit ||
                                 taxData?.state === "REJECTED" ||
-                                taxData?.state === "APPROVED" ||
+                                isApprovedDisabled ||
                                 taxData === null ||
                                 !props.setTaxStaffStatus ||
                                 progressTermin?.ident_name !== "TAX"
@@ -963,7 +1002,7 @@ function ContractTaxPage(props) {
                             !(
                               isSubmit ||
                               taxData?.state === "REJECTED" ||
-                              taxData?.state === "APPROVED" ||
+                              isApprovedDisabled ||
                               taxData === null ||
                               !props.setTaxStaffStatus ||
                               progressTermin?.ident_name !== "TAX"
@@ -983,7 +1022,7 @@ function ContractTaxPage(props) {
                             !(
                               isSubmit ||
                               taxData?.state === "REJECTED" ||
-                              taxData?.state === "APPROVED" ||
+                              isApprovedDisabled ||
                               taxData === null ||
                               !props.setTaxStaffStatus ||
                               progressTermin?.ident_name !== "TAX"
@@ -1009,7 +1048,7 @@ function ContractTaxPage(props) {
                               !(
                                 isSubmit ||
                                 taxData?.state === "REJECTED" ||
-                                taxData?.state === "APPROVED" ||
+                                isApprovedDisabled ||
                                 taxData === null ||
                                 !props.setTaxStaffStatus ||
                                 progressTermin?.ident_name !== "TAX"
@@ -1037,6 +1076,27 @@ function ContractTaxPage(props) {
                               </small>
                             </div>
                           )}
+                      </td>
+                      <td>
+                        <NumberFormat
+                          id={"NumberFormat-text"}
+                          value={
+                            formikPph.values.optionSelectedPph[index]
+                              ?.wi_tax_base *
+                            (parseFloat(
+                              formikPph.values.optionSelectedPph[index]?.qsatz
+                            ) /
+                              100)
+                          }
+                          displayType={"text"}
+                          className="form-control"
+                          thousandSeparator={"."}
+                          decimalSeparator={","}
+                          allowEmptyFormatting={true}
+                          allowLeadingZeros={true}
+                          prefix={"Rp "}
+                          disabled
+                        />
                       </td>
                     </tr>
                   );
@@ -1072,7 +1132,7 @@ function ContractTaxPage(props) {
                 !formikPph.dirty ||
                 isSubmit ||
                 taxData?.state === "REJECTED" ||
-                taxData?.state === "APPROVED" ||
+                isApprovedDisabled ||
                 taxData === null ||
                 !props.setTaxStaffStatus ||
                 progressTermin?.ident_name !== "TAX"
@@ -1370,7 +1430,16 @@ function ContractTaxPage(props) {
                   </span>
                   <div className="input-group-append pointer">
                     <span className={`input-group-text ${classes.textHover}`}>
-                      <a download={taxData?.file_name} href={taxData?.file}>
+                      <a
+                        onClick={() => {
+                          window.open(
+                            DEV_NODE + "/tax/" + taxData?.file_name,
+                            "_blank"
+                          );
+                        }}
+                        href={"#"}
+                        // download={taxData?.file_name} href={taxData?.file}
+                      >
                         <i className="fas fa-download"></i>
                       </a>
                     </span>
@@ -1413,6 +1482,24 @@ function ContractTaxPage(props) {
                     </span>
                   </div>
                 </label>
+              </div>
+              <div className="form-group row">
+                <label
+                  htmlFor="postingDate"
+                  className="col-sm-4 col-form-label"
+                >
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.POSTING_DATE" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="postingDate"
+                    onChange={handlePostingDateSelected}
+                    // disabled
+                    defaultValue={taxData?.posting_date}
+                  />
+                </div>
               </div>
             </div>
             <div className="col-md-6">
@@ -1511,7 +1598,7 @@ function ContractTaxPage(props) {
                     isDisabled={
                       isSubmit ||
                       taxData?.state === "REJECTED" ||
-                      taxData?.state === "APPROVED" ||
+                      isApprovedDisabled ||
                       taxData === null ||
                       !props.setTaxStaffStatus ||
                       progressTermin?.ident_name !== "TAX"
@@ -1579,7 +1666,7 @@ function ContractTaxPage(props) {
                         isDisabled={
                           isSubmit ||
                           taxData?.state === "REJECTED" ||
-                          taxData?.state === "APPROVED" ||
+                          isApprovedDisabled ||
                           taxData === null ||
                           !props.setTaxStaffStatus
                         }
@@ -1609,37 +1696,49 @@ function ContractTaxPage(props) {
           </div>
         </CardBody>
         <CardFooter className="text-right">
-          <button
-            type="button"
-            onClick={() => setModalApprove(true)}
-            disabled={
-              isSubmit ||
-              taxData?.state === "REJECTED" ||
-              taxData?.state === "APPROVED" ||
-              taxData === null ||
-              !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "TAX" ||
-              window.$.isEmptyObject(optionSelectedPpn)
-            }
-            className="btn btn-primary mx-1"
-          >
-            <FormattedMessage id="TITLE.ACCEPT_DOCUMENT" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setModalReject(true)}
-            disabled={
-              isSubmit ||
-              taxData?.state === "REJECTED" ||
-              taxData?.state === "APPROVED" ||
-              taxData === null ||
-              !props.setTaxStaffStatus ||
-              progressTermin?.ident_name !== "TAX"
-            }
-            className="btn btn-danger mx-1"
-          >
-            <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
-          </button>
+          {!invoiceBkbExist && taxData?.state === "APPROVED" ? (
+            <button
+              type="button"
+              onClick={() => setModalApprove(true)}
+              className="btn btn-primary mx-1"
+            >
+              Create BKB
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => setModalApprove(true)}
+                disabled={
+                  isSubmit ||
+                  taxData?.state === "REJECTED" ||
+                  isApprovedDisabled ||
+                  taxData === null ||
+                  !props.setTaxStaffStatus ||
+                  progressTermin?.ident_name !== "TAX" ||
+                  window.$.isEmptyObject(optionSelectedPpn)
+                }
+                className="btn btn-primary mx-1"
+              >
+                <FormattedMessage id="TITLE.ACCEPT_DOCUMENT" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalReject(true)}
+                disabled={
+                  isSubmit ||
+                  taxData?.state === "REJECTED" ||
+                  isApprovedDisabled ||
+                  taxData === null ||
+                  !props.setTaxStaffStatus ||
+                  progressTermin?.ident_name !== "TAX"
+                }
+                className="btn btn-danger mx-1"
+              >
+                <FormattedMessage id="TITLE.REJECT_DOCUMENT" />
+              </button>
+            </>
+          )}
           <div className="my-5 text-center">
             <h6>
               <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TAX_DOCUMENT.HISTORY" />
@@ -1659,7 +1758,18 @@ function ContractTaxPage(props) {
                   <TableCell>{item.tax_no}</TableCell>
                   <TableCell>{item.tax_date}</TableCell>
                   <TableCell>
-                    <a href={getFileTax + item.file_name}>{item.file_name}</a>
+                    <a
+                      onClick={() => {
+                        window.open(
+                          DEV_NODE + "/tax/" + item?.file_name,
+                          "_blank"
+                        );
+                      }}
+                      href={"#"}
+                      // href={getFileTax + item.file_name}
+                    >
+                      {item.file_name}
+                    </a>
                   </TableCell>
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>

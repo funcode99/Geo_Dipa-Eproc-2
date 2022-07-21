@@ -343,12 +343,7 @@ const ItemContract = (props) => {
       })
       .catch((err) => {
         setOnSubmit(false);
-        setToast(
-          intl.formatMessage({
-            id: "REQ.REQUEST_FAILED",
-          }),
-          5000
-        );
+        setToast(err.response?.data.message, 5000);
       });
   };
 

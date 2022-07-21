@@ -51,7 +51,7 @@ import {
   getSaGr,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { DEV_NODE, DEV_RUBY, API_EPROC } from "../../../../../redux/BaseHost";
 import TableOnly from "../../../../components/tableCustomV1/tableOnly";
 import { SOCKET } from "../../../../../redux/BaseHost";
@@ -219,9 +219,11 @@ function ItemContractInvoice(props) {
   );
   const [navActive, setNavActive] = useState(tabInvoice.tabInvoice);
   const [dataDeliverables, setDataDeliverables] = useState([]);
+  const [hasBarang, setHasBarang] = useState(false);
   const classes = useStyles();
   const { contract, termin } = useParams();
   const [Toast, setToast] = useToast();
+  const history = useHistory();
   const [modalAddDeliv, setModalAddDeliv] = useState(false);
   const [loadingAddDeliv, setLoadingAddDeliv] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -257,6 +259,9 @@ function ItemContractInvoice(props) {
   const user_id = useSelector((state) => state.auth.user.data.user_id);
   const dataUser = useSelector((state) => state.auth.user.data);
   let authStatus = useSelector((state) => state.auth.user.data.status);
+  const dataBarang = useSelector(
+    (state) => state.deliveryMonitoring.dataBarang
+  );
   const showAddBtn = Boolean(
     dataUser.monitoring_role?.find(
       (role) =>
@@ -452,8 +457,10 @@ function ItemContractInvoice(props) {
     setLoadingDeliverables(true);
     getDeliverableInInvoive(termin)
       .then((result) => {
+        console.log("resultdatadeliv", result);
         setLoadingDeliverables(false);
         setDataDeliverables(result.data.data.task_documents);
+        setHasBarang(result.data.data.has_item);
       })
       .catch((error) => {
         setLoadingDeliverables(false);
@@ -665,11 +672,13 @@ function ItemContractInvoice(props) {
       softcopy_state: "APPROVED",
       deliverables_id: modalApproved.data.id,
       document_no: modalApproved.data.document.name,
+      document_id: modalApproved.data.document_id,
       created_by_id: user_id,
     };
     var data_2 = {
       softcopy_approved_by_id: user_id,
       term_id: termin,
+      contract_id: contract,
     };
     if (modalApproved.data.document_monitoring === null) {
       softcopy_save(data_1)
@@ -849,6 +858,7 @@ function ItemContractInvoice(props) {
       contract_id: contract,
       term_id: termin,
       softcopy_state: "REJECTED",
+      document_id: modalReject.data.document_id,
       deliverables_id: modalReject.data.id,
       document_no: modalReject.data.document.name,
       created_by_id: user_id,
@@ -859,6 +869,7 @@ function ItemContractInvoice(props) {
       term_id: termin,
       deliverables_id: modalReject.data.id,
       document_no: modalReject.data.document.name,
+      document_id: modalReject.data.document_id,
       created_at: window.moment(new Date()).format("YYYY-MM-DD"),
       created_by_id: user_id,
       rejected_by_id: user_id,
@@ -1062,7 +1073,7 @@ function ItemContractInvoice(props) {
   const handleError = React.useCallback(
     (err) => {
       console.log(`err`, err);
-      setToast("Error API, please contact developer!");
+      setToast(err?.message ?? "Error API, please contact developer!");
     },
     [setToast]
   );
@@ -1111,14 +1122,21 @@ function ItemContractInvoice(props) {
   };
 
   const print = (id) => {
-    var printContents = window.$(`#${id}`).html();
-    window.$("#root").css("display", "none");
-    window.$("#print-content").addClass("p-5");
-    window.$("#print-content").html(printContents);
-    window.print();
-    window.$("#root").removeAttr("style");
-    window.$("#print-content").removeClass("p-5");
-    window.$("#print-content").html("");
+    // var printContents = window.$(`#${id}`).html();
+    // window.$("#root").css("display", "none");
+    // window.$("#print-content").addClass("p-5");
+    // window.$("#print-content").html(printContents);
+    // window.print();
+    // window.$("#root").removeAttr("style");
+    // window.$("#print-content").removeClass("p-5");
+    // window.$("#print-content").html("");
+    // console.log("history", window.location.origin, id);
+    window
+      .open(
+        `${window.location.origin}/client/invoice_monitoring/contract/${contract}/${termin}/${id}`,
+        "_blank"
+      )
+      .focus();
   };
 
   return (
@@ -1533,7 +1551,7 @@ function ItemContractInvoice(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
-        defaultExpanded={false}
+        defaultExpanded={true}
         className={classes.ExpansionPanelCard}
       >
         <ExpansionPanelSummary
@@ -1648,7 +1666,15 @@ function ItemContractInvoice(props) {
                           <ButtonAction
                             data={item}
                             handleAction={handleAction}
-                            ops={data_ops}
+                            ops={
+                              // remove reject button on SA / GR
+                              item?.ident_name === "SA" ||
+                              item?.ident_name === "GOODS"
+                                ? data_ops.filter(
+                                    (el) => el.type === "approved"
+                                  )
+                                : data_ops
+                            }
                           />
                         )}
                       {billingStaffStatus &&
@@ -1681,7 +1707,7 @@ function ItemContractInvoice(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
-        defaultExpanded={false}
+        defaultExpanded={true}
         className={classes.ExpansionPanelCard}
       >
         <ExpansionPanelSummary
@@ -1748,116 +1774,190 @@ function ItemContractInvoice(props) {
                             >
                               {/* Dokumen */}
                               {(item2) =>
-                                item2?.documents?.map((els, idx) => (
-                                  <RowAccordion
-                                    key={idx}
-                                    classBtn={"pl-13"}
-                                    data={[
-                                      "accordIcon",
-                                      els?.document_custom_name ??
-                                        els?.document?.name,
-                                      formatDate(new Date(els?.due_date)),
-                                      <StatusRemarks
-                                        status={
-                                          els?.document_status?.name ===
-                                            "APPROVED" &&
-                                          (els?.document_monitoring === null ||
-                                            els?.document_monitoring
-                                              ?.softcopy_state === "PENDING")
-                                            ? "WAITING TO APPROVE"
-                                            : els?.document_status?.name
-                                        }
-                                        remarks={els?.remarks_status}
-                                      />,
-                                      els?.percentage && els?.percentage + "%",
-                                      <BtnLihat url={els?.url} />,
-                                      els?.remarks,
-                                      els?.url &&
-                                      (els.document_monitoring === null ||
-                                        (els.document_monitoring
-                                          ?.softcopy_state !== "REJECTED" &&
-                                          els.document_monitoring
-                                            ?.softcopy_state !== "APPROVED")) &&
-                                      els.document_status?.name ===
-                                        "APPROVED" &&
-                                      !loading &&
-                                      billingStaffStatus &&
-                                      !ApproveSoftcopyStatus ? (
-                                        <ButtonAction
-                                          data={els}
-                                          handleAction={handleActionDeliverable}
-                                          ops={data_opsDeliverable}
-                                        />
-                                      ) : els.document_status?.name !==
+                                item2?.documents?.map((els, idx) => {
+                                  const itemHasBarang = hasBarang;
+                                  const isDocStatusApproved =
+                                    els?.document_status?.name === "APPROVED";
+                                  const isWrDocStatusApproved =
+                                    els?.wr_document_status?.name ===
+                                    "APPROVED";
+                                  const isInvoiceStatePending =
+                                    els?.document_monitoring === null ||
+                                    els?.document_monitoring?.softcopy_state ===
+                                      "PENDING";
+                                  return (
+                                    <RowAccordion
+                                      key={idx}
+                                      classBtn={"pl-13"}
+                                      data={[
+                                        "accordIcon",
+                                        els?.document_custom_name ??
+                                          els?.document?.name,
+                                        formatDate(new Date(els?.due_date)),
+                                        <StatusRemarks
+                                          status={
+                                            itemHasBarang
+                                              ? isDocStatusApproved &&
+                                                isWrDocStatusApproved
+                                                ? isInvoiceStatePending
+                                                  ? "WAITING TO APPROVE"
+                                                  : els?.document_status?.name
+                                                : "PENDING"
+                                              : isDocStatusApproved &&
+                                                isInvoiceStatePending
+                                              ? "WAITING TO APPROVE"
+                                              : els?.document_status?.name
+                                          }
+                                          // status={
+                                          //   els?.document_status?.name ===
+                                          //     "APPROVED" && els?.wr_document_status?.name ===
+                                          //     "APPROVED" &&
+                                          //   (els?.document_monitoring === null ||
+                                          //     els?.document_monitoring
+                                          //       ?.softcopy_state === "PENDING")
+                                          //     ? "WAITING TO APPROVE"
+                                          //     : els?.document_status?.name
+                                          // }
+                                          remarks={els?.remarks_status}
+                                        />,
+                                        els?.percentage &&
+                                          els?.percentage + "%",
+                                        <BtnLihat url={els?.url} />,
+                                        els?.remarks,
+                                        els?.url &&
+                                        (els.document_monitoring === null ||
+                                          (els.document_monitoring
+                                            ?.softcopy_state !== "REJECTED" &&
+                                            els.document_monitoring
+                                              ?.softcopy_state !==
+                                              "APPROVED")) &&
+                                        els.document_status?.name ===
                                           "APPROVED" &&
+                                        !loading &&
                                         billingStaffStatus &&
                                         !ApproveSoftcopyStatus ? (
-                                        <ButtonAction
-                                          data={els}
-                                          handleAction={() =>
-                                            handleActionDeliverableEmail(els)
-                                          }
-                                          ops={data_ops_send_email}
-                                        />
-                                      ) : null,
-                                    ]}
-                                  />
-                                ))
+                                          <ButtonAction
+                                            data={els}
+                                            handleAction={
+                                              handleActionDeliverable
+                                            }
+                                            ops={data_opsDeliverable}
+                                          />
+                                        ) : els.document_status?.name !==
+                                            "APPROVED" &&
+                                          billingStaffStatus &&
+                                          !ApproveSoftcopyStatus ? (
+                                          <ButtonAction
+                                            data={els}
+                                            handleAction={() =>
+                                              handleActionDeliverableEmail(els)
+                                            }
+                                            ops={data_ops_send_email}
+                                          />
+                                        ) : null,
+                                      ]}
+                                    />
+                                  );
+                                })
                               }
                             </RowAccordion>
                           ))
-                        : item?.documents?.map((el, id) => (
-                            <RowAccordion
-                              //  Dokumen
-                              key={id}
-                              classBtn={"pl-13"}
-                              data={[
-                                "accordIcon",
-                                el?.document_custom_name ?? el?.document?.name,
-                                formatDate(new Date(el?.due_date)),
-                                <StatusRemarks
-                                  status={
-                                    el?.document_status?.name === "APPROVED" &&
-                                    (el?.document_monitoring === null ||
-                                      el?.document_monitoring
-                                        ?.softcopy_state === "PENDING")
-                                      ? "WAITING TO APPROVE"
-                                      : el?.document_status?.name
-                                  }
-                                  remarks={el?.remarks_status}
-                                />,
-                                // el?.percentage && el?.percentage + "%",
-                                "-",
-                                <BtnLihat url={el?.url} />,
-                                el?.remarks,
-                                el?.url &&
-                                (el.document_monitoring === null ||
-                                  (el.document_monitoring?.softcopy_state !==
-                                    "REJECTED" &&
+                        : item?.documents?.map((el, id) => {
+                            const itemHasBarang = hasBarang;
+                            const isDocStatusApproved =
+                              el?.document_status?.name === "APPROVED";
+                            const isWrDocStatusApproved =
+                              el?.wr_document_status?.name === "APPROVED";
+                            const isInvoiceStatePending =
+                              el?.document_monitoring === null ||
+                              el?.document_monitoring?.softcopy_state ===
+                                "PENDING";
+                            const isInvoiceStateReject =
+                              el?.document_monitoring === null ||
+                              el?.document_monitoring?.softcopy_state ===
+                                "REJECTED";
+
+                            const isRejectByInvoice =
+                              el?.document_monitoring === null ||
+                              el?.document_monitoring?.softcopy_state ===
+                                "REJECTED";
+                            const isDocHasUploaded =
+                              el?.document_monitoring === null;
+                            const isApprovalDMisDone = itemHasBarang
+                              ? isDocStatusApproved && isWrDocStatusApproved
+                              : isDocStatusApproved;
+                            // REJECT = pertama kali reject di invoice / belum upload / belum approve DM
+                            // PENDING | WAITING = reject invoice / udah upload / belum approve DM
+                            // WAITING TO APPROVE = reject | pending invocie / udah upload / udah approve DM
+                            // APPROVE = approve di invoice
+
+                            return (
+                              <RowAccordion
+                                //  Dokumen
+                                key={id}
+                                classBtn={"pl-13"}
+                                data={[
+                                  "accordIcon",
+                                  el?.document_custom_name ??
+                                    el?.document?.name,
+                                  formatDate(new Date(el?.due_date)),
+                                  <StatusRemarks
+                                    status={
+                                      itemHasBarang
+                                        ? isDocStatusApproved &&
+                                          isWrDocStatusApproved
+                                          ? isInvoiceStatePending ||
+                                            isInvoiceStateReject
+                                            ? "WAITING TO APPROVE"
+                                            : el?.document_status?.name
+                                          : "PENDING"
+                                        : isDocStatusApproved &&
+                                          isInvoiceStatePending
+                                        ? "WAITING TO APPROVE"
+                                        : el?.document_status?.name
+                                    }
+                                    // status={
+                                    //   el?.document_status?.name ===
+                                    //     "APPROVED" &&
+                                    //   (el?.document_monitoring === null ||
+                                    //     el?.document_monitoring
+                                    //       ?.softcopy_state === "PENDING")
+                                    //     ? "WAITING TO APPROVE"
+                                    //     : el?.document_status?.name
+                                    // }
+                                    remarks={el?.remarks_status}
+                                  />,
+                                  // el?.percentage && el?.percentage + "%",
+                                  "-",
+                                  <BtnLihat url={el?.url} />,
+                                  el?.remarks,
+                                  el?.url &&
+                                  (el.document_monitoring === null ||
                                     el.document_monitoring?.softcopy_state !==
-                                      "APPROVED")) &&
-                                el.document_status?.name === "APPROVED" &&
-                                billingStaffStatus &&
-                                !ApproveSoftcopyStatus ? (
-                                  <ButtonAction
-                                    data={el}
-                                    handleAction={handleActionDeliverable}
-                                    ops={data_opsDeliverable}
-                                  />
-                                ) : el.document_status?.name !== "APPROVED" &&
+                                      "APPROVED") &&
+                                  el.document_status?.name === "APPROVED" &&
                                   billingStaffStatus &&
                                   !ApproveSoftcopyStatus ? (
-                                  <ButtonAction
-                                    data={el}
-                                    handleAction={() =>
-                                      handleActionDeliverableEmail(el)
-                                    }
-                                    ops={data_ops_send_email}
-                                  />
-                                ) : null,
-                              ]}
-                            />
-                          ));
+                                    <ButtonAction
+                                      data={el}
+                                      handleAction={handleActionDeliverable}
+                                      ops={data_opsDeliverable}
+                                    />
+                                  ) : el.document_status?.name !== "APPROVED" &&
+                                    billingStaffStatus &&
+                                    !ApproveSoftcopyStatus ? (
+                                    <ButtonAction
+                                      data={el}
+                                      handleAction={() =>
+                                        handleActionDeliverableEmail(el)
+                                      }
+                                      ops={data_ops_send_email}
+                                    />
+                                  ) : null,
+                                ]}
+                              />
+                            );
+                          });
                     }}
                   </RowAccordion>
                 );

@@ -119,16 +119,15 @@ export const gr_field = [
       label: "Unloading",
     },
   ],
-  //   [
-  //     {
-  //       name: "doc-date",
-  //       label: "Document Date",
-  //     },
-  //     {
-  //       name: "post-date",
-  //       label: "Post Date",
-  //     },
-  //   ],
+  [
+    {
+      name: "stge_loc",
+      label: "Storage Location",
+      typeInput: "SelectInputCustom",
+      isMulti: true,
+      disabled: true,
+    },
+  ],
 ];
 
 export const headerTableSA = [
@@ -179,6 +178,7 @@ export const rowTableSA_field = [
     name: "gl_account",
     label: "GL Account",
     typeInput: "SelectInputCustom",
+    isMulti: true,
   },
   {
     name: "bus_area",

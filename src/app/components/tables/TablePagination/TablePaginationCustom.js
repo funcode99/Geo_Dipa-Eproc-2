@@ -74,14 +74,14 @@ export function searchFindMulti(rows, queryAll) {
         return queries.reduce((acc, key) => {
           if (column === key.substr(7)) {
             return (
-              row[column]
-                .toString()
+              row?.[column]
+                ?.toString()
                 .toLowerCase()
                 .indexOf(queryAll[key].toString().toLowerCase()) > -1
             );
           }
         }, false);
-      });
+      }, false);
     // console.log(`apa`, row, apa);
     return apa;
   });
@@ -127,13 +127,14 @@ export default function TablePaginationCustom({
   maxHeight,
   headerProps,
   classContainer,
+  initialRowsPerPage,
 }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(initialRowsPerPage || 5);
   const [query, setQuery] = React.useState("");
   const showAllData = !withPagination;
 
@@ -185,8 +186,8 @@ export default function TablePaginationCustom({
   }
 
   React.useEffect(() => {
-    setRowsPerPage(rows?.length || 5);
-  }, [showAllData]);
+    setRowsPerPage(rows?.length || initialRowsPerPage || 5);
+  }, [showAllData, initialRowsPerPage]);
   return (
     <div className={clsx(classes.root, classContainer)}>
       {withSearch && <SearchBox onChange={handleChangeQuery} />}
@@ -201,9 +202,6 @@ export default function TablePaginationCustom({
             <Table
               stickyHeader
               // className={"table-bordered"}
-              style={{
-                width: width ? width : undefined,
-              }}
               aria-labelledby="tableTitle"
               style={{ width: width ? width : undefined }}
               size={"small"}

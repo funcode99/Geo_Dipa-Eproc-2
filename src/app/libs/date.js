@@ -25,10 +25,16 @@ const formatSADate = (date) => {
   return format(new Date(date), "dd.MM.yyyy");
 };
 
+const toNewDate = (date) => {
+  if (isEmpty(date)) return "";
+  return new Date(date);
+};
+
 export {
   formatDate,
   formatInitialDate,
   formatUpdateDate,
   formatDateWTime,
   formatSADate,
+  toNewDate,
 };

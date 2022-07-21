@@ -29,6 +29,7 @@ import {
   getHardcopyBillingDocument,
   getContractSummary,
 } from "../../_redux/InvoiceMonitoringCrud";
+import { formatDate, toNewDate } from "../../../../libs/date";
 
 // const Transition = React.forwardRef(function Transition(props, ref) {
 //     return <Slide direction="up" ref={ref} {...props} />;
@@ -104,6 +105,8 @@ function ItemContractFormVerification(props) {
     window.$("#print-content").removeClass("p-5");
     window.$("#print-content").html("");
   };
+
+  console.log("contractData", contractData);
 
   return (
     <React.Fragment>
@@ -181,6 +184,25 @@ function ItemContractFormVerification(props) {
                       className="form-control"
                       value={rupiah(contractData?.termin_value)}
                       onChange={(e) => {}}
+                      readOnly
+                    />
+                  </div>
+                </div>
+                <div className="form-group row mb-1">
+                  <label className="col-sm-4 col-form-label">
+                    <FormattedMessage id="TITLE.VERIFICATION_SOFTCOPY_DATE" />
+                  </label>
+                  <div className="col-sm-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      defaultValue={
+                        contractData?.sofcopy_date
+                          ? window
+                              .moment(new Date(contractData?.sofcopy_date))
+                              .format("DD/MM/YYYY")
+                          : ""
+                      }
                       readOnly
                     />
                   </div>
@@ -446,7 +468,10 @@ function ItemContractFormVerification(props) {
                                 />
                                 <span></span>
                               </label>
-                              <span className="ml-2">{`${item?.name} : ${el.document.name}`}</span>
+                              <span className="ml-2">{`${
+                                item?.name
+                              } : ${el?.document_custom_name ??
+                                el?.document?.name}`}</span>
                             </div>
                             <div className="col-sm-3 border-bottom">
                               <span>

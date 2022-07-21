@@ -60,6 +60,7 @@ import {
   ServiceAcceptance,
   GoodReceipt,
 } from "../../../DeliveryMonitoring/pages/Termin/ServiceAccGR/components";
+import { openLinkTab } from "../../../../service/helper/urlHelper";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -320,7 +321,7 @@ function ContractHardCopyDoc(props) {
 
   const BtnLihat = ({ url }) => {
     const handleOpen = React.useCallback(() => {
-      window.open(url, "_blank");
+      openLinkTab(url);
     }, [url]);
     return (
       <div className={"d-flex flex-row align-items-center"}>
@@ -434,33 +435,33 @@ function ContractHardCopyDoc(props) {
     })
       .then((response) => {
         setLoading(false);
-        if (invoiceBkbExist) {
-          setDialogConfirm(false);
-          setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
-        } else {
-          createBkb(data)
-            .then((response) => {
-              setInvoiceBkbExist(true);
-              setDialogConfirm(false);
-              setToast(
-                intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
-                10000
-              );
-              getTerminProgress(termin).then((result) => {
-                setDataProgress(result.data.data?.data);
-              });
-            })
-            .catch((error) => {
-              if (error.response?.data && error.response?.data.message) {
-                setToast(error.response?.data.message, 10000);
-              } else {
-                setToast(
-                  intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
-                  10000
-                );
-              }
-            });
-        }
+        // if (invoiceBkbExist) {
+        setDialogConfirm(false);
+        setToast(intl.formatMessage({ id: "REQ.SOFTCOPY_SUCCESS" }), 10000);
+        // } else {
+        //   createBkb(data)
+        //     .then((response) => {
+        //       setInvoiceBkbExist(true);
+        //       setDialogConfirm(false);
+        //       setToast(
+        //         intl.formatMessage({ id: "REQ.HARDCOPY_SUCCESS" }),
+        //         10000
+        //       );
+        //       getTerminProgress(termin).then((result) => {
+        //         setDataProgress(result.data.data?.data);
+        //       });
+        //     })
+        //     .catch((error) => {
+        //       if (error.response?.data && error.response?.data.message) {
+        //         setToast(error.response?.data.message, 10000);
+        //       } else {
+        //         setToast(
+        //           intl.formatMessage({ id: "REQ.REQUEST_FAILED" }),
+        //           10000
+        //         );
+        //       }
+        //     });
+        // }
         SOCKET.emit("send_notif");
       })
       .catch((error) => {
@@ -686,14 +687,20 @@ function ContractHardCopyDoc(props) {
   useEffect(callApiSaGr, []);
 
   const printSaGr = (ident_name) => {
-    var printContents = window.$(`#${ident_name}`).html();
-    window.$("#root").css("display", "none");
-    window.$("#print-content").addClass("p-5");
-    window.$("#print-content").html(printContents);
-    window.print();
-    window.$("#root").removeAttr("style");
-    window.$("#print-content").removeClass("p-5");
-    window.$("#print-content").html("");
+    // var printContents = window.$(`#${ident_name}`).html();
+    // window.$("#root").css("display", "none");
+    // window.$("#print-content").addClass("p-5");
+    // window.$("#print-content").html(printContents);
+    // window.print();
+    // window.$("#root").removeAttr("style");
+    // window.$("#print-content").removeClass("p-5");
+    // window.$("#print-content").html("");
+    window
+      .open(
+        `${window.location.origin}/client/invoice_monitoring/contract/${contract_id}/${termin}/${ident_name}`,
+        "_blank"
+      )
+      .focus();
   };
 
   return (
@@ -919,15 +926,37 @@ function ContractHardCopyDoc(props) {
                           item.doc_file ? (
                             <TableCell>
                               <a
-                                href={
-                                  item.doc_status == "INVOICE"
-                                    ? getFileInvoice + item.doc_file
-                                    : item.doc_status == "SPP"
-                                    ? getFileSpp + item.doc_file
-                                    : item.doc_status == "RECEIPT"
-                                    ? getFileReceipt + item.doc_file
-                                    : getFileTax + item.doc_file
-                                }
+                                // href={
+                                //   item.doc_status == "INVOICE"
+                                //     ? getFileInvoice + item.doc_file
+                                //     : item.doc_status == "SPP"
+                                //     ? getFileSpp + item.doc_file
+                                //     : item.doc_status == "RECEIPT"
+                                //     ? getFileReceipt + item.doc_file
+                                //     : getFileTax + item.doc_file
+                                // }
+                                href={"#"}
+                                onClick={() => {
+                                  let path = "";
+                                  switch (item.doc_status) {
+                                    case "INVOICE":
+                                      path = "invoice";
+                                      break;
+                                    case "SPP":
+                                      path = "spp";
+                                      break;
+                                    case "RECEIPT":
+                                      path = "receipt";
+                                      break;
+                                    default:
+                                      path = "tax";
+                                      break;
+                                  }
+                                  window.open(
+                                    DEV_NODE + `/${path}/` + item.doc_file,
+                                    "_blank"
+                                  );
+                                }}
                               >
                                 {item.doc_no}
                               </a>

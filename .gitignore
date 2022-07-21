@@ -90,5 +90,12 @@ package-lock.json
 /config/config.json
 /dump.rdb
 temp
+<<<<<<< HEAD
 yarn.lock
 D:\03. PROJECT\Eproc V2\program\eProc-deliveryinvoice web\src\redux\BaseHost.js
+=======
+
+# build folder
+build/
+build.zip
+>>>>>>> 3ae1795534a97ddcd1df7da15721b351ca677759

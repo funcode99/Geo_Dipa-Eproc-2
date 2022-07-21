@@ -147,7 +147,7 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
                 ? formatDate(new Date(item?.issued_date))
                 : null,
             group: item?.user_group?.party?.full_name,
-            vendor: item?.vendor.party?.full_name,
+            vendor: item?.vendor?.party?.full_name,
             status: item?.state,
             action: (
               <ButtonAction
@@ -170,19 +170,6 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
             ),
           }))
         );
-      },
-    });
-
-    fetch_api_sg({
-      key: "tes notif",
-      type: "getParams",
-      url: DEV_NODE2 + "/notification",
-      params: { limit: 5, offset: 0 },
-      onSuccess: (res) => {
-        console.log("resnotif", res);
-      },
-      onFail: (err) => {
-        console.log("resnotiferr", err);
       },
     });
   };
@@ -238,7 +225,7 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
                 <TableCell>{item.po_date}</TableCell>
                 <TableCell>{item.contract_date}</TableCell>
                 <TableCell>{item.group}</TableCell>
-                <TableCell>{item.vendor}</TableCell>
+                <TableCell>{item?.vendor}</TableCell>
                 <TableCell>{item.status}</TableCell>
                 <TableCell>{item.action}</TableCell>
               </TableRow>

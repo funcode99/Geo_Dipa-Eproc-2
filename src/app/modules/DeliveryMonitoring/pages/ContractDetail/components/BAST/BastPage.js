@@ -32,6 +32,7 @@ import {
 } from "../../../../../../../redux/globalReducer";
 import { TerminPageContext } from "../../../Termin/TerminPageNew/TerminPageNew";
 import _ from "lodash";
+import CheckboxBAST from "./components/CheckboxBAST";
 
 const tableHeader = [
   {
@@ -54,13 +55,19 @@ const tableHeader = [
 
 const validationClient = object().shape({
   // hasil_pekerjaan: validation.require("Hasil Pekerjaan"),
-  nomor_bast: validation.require("Nomor BAPP"),
-  tanggal_bast: validation.require("Tanggal BAPP"),
+  nomor_bast: validation.require("Nomor BAST"),
+  tanggal_bast: validation.require("Tanggal BAST"),
+  jenis: validation.require("Jenis Pekerjaan"),
+  nomor_contract: validation.require("Dasar Pelaksanaan"),
+  party1_name: validation.require("Direksi Pekerjaan"),
+  party2_name: validation.require("Pejabat Berwenang"),
+  party1_jabatan: validation.require("Pihak 1 Jabatan"),
+  party2_jabatan: validation.require("Pihak 2 Jabatan"),
 });
 
 const validationVendor = object().shape({
-  nomor_bast: validation.require("Nomor BAPP"),
-  tanggal_bast: validation.require("Tanggal BAPP"),
+  nomor_bast: validation.require("Nomor BAST"),
+  tanggal_bast: validation.require("Tanggal BAST"),
 });
 
 const RowNormal = ({ data }) => {
@@ -98,6 +105,7 @@ const BastPage = ({
     post: false,
   });
   const [stepActive, setStepActive] = React.useState(null);
+  const [checkboxState, setCheckboxState] = React.useState(false);
   const isReject = taskNews?.approve_status?.code === "rejected";
 
   const handleLoading = React.useCallback(
@@ -105,13 +113,20 @@ const BastPage = ({
     [setLoadings]
   );
   const [content, setContent] = React.useState([]);
-  const { news, contract_name, vendor, contract_no, purch_order_no } = contract;
+  const {
+    news,
+    contract_name,
+    vendor,
+    contract_no,
+    purch_order_no,
+    vendor_legal,
+  } = contract;
   const initialValues = React.useMemo(
     () => ({
       nomor_bast: taskNews?.no || "",
       tanggal_bast: taskNews?.date,
       jenis: contract_name,
-      pelaksana: vendor?.party?.full_name,
+      pelaksana: vendor_legal?.name + " " + vendor?.party?.full_name,
       nomor_contract: contract_no,
       nomor_po: purch_order_no,
       hasil_pekerjaan: "",
@@ -119,8 +134,12 @@ const BastPage = ({
         label: "isi",
         value: "value",
       },
+      party1_name: contract?.contract_party?.party_1_position_of_autorize,
+      party1_jabatan: contract?.contract_party?.party_1_contract_signature_name,
+      party2_name: contract?.contract_party?.party_2_autorize_name,
+      party2_jabatan: contract?.contract_party?.party_2_position,
     }),
-    [taskNews, contract_name, vendor, contract_no, purch_order_no]
+    [taskNews, contract_name, vendor, contract_no, purch_order_no, vendor_legal]
   );
 
   const fetchData = React.useCallback(
@@ -202,18 +221,18 @@ const BastPage = ({
       // url: `delivery/task-news/${contract?.id}/bast`,
       no: data.nomor_bast,
       date: data.tanggal_bast,
+      is_finished: checkboxState,
+      contract_no: data.nomor_contract,
+      party_1_position_of_autorize: data?.party1_name,
+      party_1_contract_signature_name: data?.party1_jabatan,
+      party_2_autorize_name: data?.party2_name,
+      party_2_position: data?.party2_jabatan,
+      // contract_no: data.nomor_contract,
+      // party_1_director_position_full_name: data?.party1_name,
+      // party_1_director_position: data?.party1_jabatan,
+      // party_2_autorize_name: data?.party2_name,
+      // party_2_position: data?.party2_jabatan,
     };
-    //     break;
-    //   case "client":
-    //     url = `delivery/task-news/${contract?.news?.id}/review`;
-    //     params = {
-    //       // url: `delivery/task-news/${contract?.news?.id}/review`,
-    //       review_text: data.hasil_pekerjaan,
-    //     };
-    //     break;
-    //   default:
-    //     break;
-    // }
 
     fetchApi({
       key: keys.submit,
@@ -266,10 +285,22 @@ const BastPage = ({
         setStepActive(1);
       }
     }
+
+    setCheckboxState(Boolean(taskNews?.is_finished));
   }, [taskNews]);
 
   let disabledInput = Object.keys(initialValues);
-  let allowedClient = ["hasil_pekerjaan", "nomor_bast", "tanggal_bast"];
+  let allowedClient = [
+    "hasil_pekerjaan",
+    "nomor_bast",
+    "tanggal_bast",
+    "jenis",
+    "nomor_contract",
+    "party1_name",
+    "party1_jabatan",
+    "party2_name",
+    "party2_jabatan",
+  ];
   let allowedVendor = [];
 
   const handleAction = (type, params) => {
@@ -323,13 +354,11 @@ const BastPage = ({
         });
         break;
       case "approve":
-        console.log("taskNews?.id", taskNews?.id);
-
         fetchApi({
           key: keys.approve_s,
           type: "post",
           alertAppear: "both",
-          url: `delivery/task-news/${"taskNews?.id"}/status-bast`,
+          url: `delivery/task-news/${taskNews?.id}/status-bast`,
           params: {
             approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
           },
@@ -365,6 +394,8 @@ const BastPage = ({
     }
   };
 
+  console.log("taskNews", taskNews);
+
   return (
     <React.Fragment>
       <Toast />
@@ -379,6 +410,7 @@ const BastPage = ({
         handleSubmit={(e) => handleApi("approve", e)}
         loading={loadings_sg.approve_s}
         file={taskNews?.file_upload}
+        isBAST={true}
       />
       <ModalPreview
         innerRef={rejectRef}
@@ -468,6 +500,10 @@ const BastPage = ({
                   </Col>
                   <Col>
                     <FieldBuilder formData={formData2} {...fieldProps} />
+                    <CheckboxBAST
+                      checked={checkboxState}
+                      onCheck={setCheckboxState}
+                    />
                   </Col>
                 </Row>
               )}

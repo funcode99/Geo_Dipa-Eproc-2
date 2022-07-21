@@ -14,7 +14,7 @@ const getSubTotal = (data) => {
 
 const getTotal = (subTotal = 0) => {
   // if (_.isEmpty(subTotal)) return 0;
-  let ppn = parseFloat(10 / 100);
+  let ppn = parseFloat(11 / 100);
   let extra = parseFloat(subTotal * ppn);
   console.log(`subTotal`, subTotal, ppn, extra);
   return parseFloat(subTotal + extra);
@@ -29,7 +29,7 @@ const FooterSA = ({ data }) => {
   return (
     <React.Fragment>
       <RowAdditional label={"Total value Excl. Tax"} value={rupiah(subTotal)} />
-      <RowAdditional label={"VAT 10%"} value={`10%`} />
+      <RowAdditional label={"Tax 11%"} value={rupiah(subTotal * 0.11)} />
       <RowAdditional label={"Total value Inc. Tax"} value={rupiah(total)} />
     </React.Fragment>
   );

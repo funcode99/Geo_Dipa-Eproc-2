@@ -36,7 +36,7 @@ import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import NumberFormat from "react-number-format";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import { getInvoicePeriods } from "../../../../Master/service/MasterCrud";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
@@ -683,9 +683,9 @@ function ContractTaxPage(props) {
                       allowEmptyFormatting={true}
                       allowLeadingZeros={true}
                       onValueChange={(e) => {
-                        dataFormTaxVendor.tax_no = e.floatValue;
+                        dataFormTaxVendor.tax_no = e.formattedValue;
                         props.set_data_tax_vendor(dataFormTaxVendor);
-                        formik.setFieldValue("tax_no", e.floatValue);
+                        formik.setFieldValue("tax_no", e.formattedValue);
                       }}
                     />
                   </div>
@@ -763,9 +763,9 @@ function ContractTaxPage(props) {
                       allowEmptyFormatting={true}
                       allowLeadingZeros={true}
                       onValueChange={(e) => {
-                        dataFormTaxVendor.npwp = e.floatValue;
+                        dataFormTaxVendor.npwp = e.formattedValue;
                         props.set_data_tax_vendor(dataFormTaxVendor);
-                        formik.setFieldValue("npwp", e.floatValue);
+                        formik.setFieldValue("npwp", e.formattedValue);
                       }}
                     />
                   </div>
@@ -844,7 +844,16 @@ function ContractTaxPage(props) {
                         <span
                           className={`input-group-text ${classes.textHover}`}
                         >
-                          <a download={taxData?.file_name} href={taxData?.file}>
+                          <a
+                            onClick={() => {
+                              window.open(
+                                DEV_NODE + "/tax/" + taxData?.file_name,
+                                "_blank"
+                              );
+                            }}
+                            href={"#"}
+                            // download={taxData?.file_name} href={taxData?.file}
+                          >
                             <i className="fas fa-download"></i>
                           </a>
                         </span>

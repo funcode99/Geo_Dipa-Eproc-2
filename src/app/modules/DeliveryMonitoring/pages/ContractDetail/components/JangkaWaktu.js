@@ -168,29 +168,60 @@ const JangkaWaktu = () => {
   const {
     from_time,
     thru_time,
+    contract_period_range_day,
+    contract_period_range_month,
     worked_start_date,
     worked_end_date,
+    work_implement_period_day,
+    work_implement_period_month,
     maintenance_end_date,
     maintenance_start_date,
+    maintenance_period_day,
+    maintenance_period_month,
     guarantee_end_date,
     guarantee_start_date,
+    guarantee_period_day,
+    guarantee_period_month,
   } = useSelector((state) => state.deliveryMonitoring.dataContractById);
   return (
     <Card>
       <CardBody>
         {/* <FieldBuilder formData={formData1} /> */}
-        <Item title={"Jangka Waktu Perjanjian"} data={[from_time, thru_time]} />
+        <Item
+          title={"Jangka Waktu Perjanjian"}
+          data={[
+            from_time,
+            thru_time,
+            contract_period_range_month,
+            contract_period_range_day,
+          ]}
+        />
         <Item
           title={"Jangka Waktu Pelaksanaan Pekerjaan"}
-          data={[worked_start_date, worked_end_date]}
+          data={[
+            worked_start_date,
+            worked_end_date,
+            work_implement_period_month,
+            work_implement_period_day,
+          ]}
         />
         <Item
           title={"Jangka Waktu Masa Garansi"}
-          data={[guarantee_start_date, guarantee_end_date]}
+          data={[
+            guarantee_start_date,
+            guarantee_end_date,
+            guarantee_period_month,
+            guarantee_period_day,
+          ]}
         />
         <Item
           title={"Jangka Waktu Masa Pemeliharaan"}
-          data={[maintenance_start_date, maintenance_end_date]}
+          data={[
+            maintenance_start_date,
+            maintenance_end_date,
+            maintenance_period_month,
+            maintenance_period_day,
+          ]}
         />
       </CardBody>
     </Card>

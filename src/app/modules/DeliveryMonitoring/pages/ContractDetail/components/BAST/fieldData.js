@@ -8,6 +8,14 @@ export const formData1 = [
     label: "Nomor BAST",
   },
   {
+    name: "party1_name",
+    label: "Pejabat Berwenang Pihak 1",
+  },
+  {
+    name: "party1_jabatan",
+    label: "Jabatan Pejabat Berwenang Pihak 1",
+  },
+  {
     name: "jenis",
     label: "Jenis Pekerjaan",
     // placeholder: "ada placeholder",
@@ -30,6 +38,14 @@ export const formData2 = [
     name: "tanggal_bast",
     label: "Tanggal BAST",
     typeInput: "SelectDateInput",
+  },
+  {
+    name: "party2_name",
+    label: "Pejabat Berwenang Pihak 2",
+  },
+  {
+    name: "party2_jabatan",
+    label: "Jabatan Pejabat Berwenang Pihak 2 ",
   },
   {
     name: "pelaksana",

@@ -42,14 +42,14 @@ const RowTableSA = ({ item, index }) => {
   const _open = () => {
     wbsRef.current.open();
   };
-  console.log(`readOnly`, readOnly, item);
+  // console.log(`readOnly`, readOnly, item);
   // console.log(`data row`, formikRef.current);
   const _handleSelected = (data) => {
-    // console.log(`data`, data);
+    // console.log(`data_handleSelected`, data);
     const dataArr = Array(data.length)
       .fill()
       .map((_, i) => ({
-        name: data[`wbs${i + 1}`].label,
+        name: data[`wbs${i + 1}`].wbs_id,
         value: data[`value${i + 1}`],
       }));
     // console.log(`datasss`, dataArr);
@@ -120,9 +120,10 @@ const RowTableSA = ({ item, index }) => {
                 // readOnly={readOnly}
                 listOptions={{
                   dist_type: option_dist_type,
-                  wbs: listWBS.map(({ id, work_breakdown_ap }) => ({
+                  wbs: listWBS.map(({ id, work_breakdown_ap, name }) => ({
                     value: id,
-                    label: work_breakdown_ap,
+                    label: `${work_breakdown_ap} - ${name}`,
+                    wbs_id: work_breakdown_ap,
                   })),
                   gl_account: options.optGL,
                   cost_center: options.optCost,

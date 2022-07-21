@@ -24,7 +24,7 @@ const navLists = [
 const ParaPihak = () => {
   const [navActive, setNavActive] = React.useState(navLists[0].id);
 
-  const { contract_party } = useSelector(
+  const { contract_party, vendor } = useSelector(
     (state) => state.deliveryMonitoring.dataContractById
   );
 
@@ -74,7 +74,8 @@ const ParaPihak = () => {
       fax_pengawas: contract_party?.party_1_job_supervisor?.fax,
 
       // PIHAK KEDUA
-      nama_penyedia: contract_party?.party_2_employer_name,
+      //   nama_penyedia: contract_party?.party_2_employer_name,
+      nama_penyedia: vendor?.party?.full_name,
       nama_notaris_2: contract_party?.party_2_deed_of_establishment_name,
       akta_2: contract_party?.party_2_deed_of_establishment_no,
       tgl_akta_2: contract_party?.party_2_deed_of_establishment_date,
@@ -117,7 +118,7 @@ const ParaPihak = () => {
       alamat_pengawas_2: contract_party?.party_2_job_supervisor?.address,
       fax_pengawas_2: contract_party?.party_2_job_supervisor?.fax,
     }),
-    [contract_party]
+    [contract_party, vendor]
   );
 
   return (

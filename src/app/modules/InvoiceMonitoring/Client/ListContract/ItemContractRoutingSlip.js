@@ -110,7 +110,7 @@ function ItemContractRoutingSlip(props) {
                     <span>Nama Supplier</span>
                   </div>
                   <div className="col-sm-9">
-                    <span>{slipData?.vendor?.party?.full_name}</span>
+                    <span>{slipData?.[`vendor.party.full_name`]}</span>
                   </div>
                 </div>
                 <div className="row">
@@ -154,7 +154,7 @@ function ItemContractRoutingSlip(props) {
                   <tr>
                     <td className="td-1">No</td>
                     <td className="td-16 text-center">Dokument Status</td>
-                    <td className="td-18 text-center">Pejabat Keuangan</td>
+                    <td className="td-18 text-center">User/Pejabat Keuangan</td>
                     <td className="td-11 text-center">Tanggal Masuk</td>
                     <td className="td-6 text-center">Jam Masuk</td>
                     <td className="td-11 text-center">Tanggal Keluar</td>

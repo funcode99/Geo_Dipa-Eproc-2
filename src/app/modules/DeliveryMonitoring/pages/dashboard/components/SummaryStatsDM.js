@@ -46,6 +46,10 @@ export default function SumaryStatsDM({
         uiService.config,
         "js.colors.theme.base.success"
       ),
+      colorsThemeBasePrimary: objectPath.get(
+        uiService.config,
+        "js.colors.theme.base.primary"
+      ),
       colorsThemeBaseWarning: objectPath.get(
         uiService.config,
         "js.colors.theme.base.warning"
@@ -70,12 +74,13 @@ export default function SumaryStatsDM({
 
     const height = parseInt(KTUtil.css(element, "height"));
     const options = getChartOptions(layoutProps, height, [
-      parseInt(pie_chart_datas.sagr),
-      parseInt(pie_chart_datas.on_progress),
-      parseInt(pie_chart_datas.overdue),
-      // 12,
-      // 32,
-      // 55,
+      parseInt(pie_chart_datas?.finished ?? 0), // success on time
+      parseInt(pie_chart_datas?.finished_late ?? 0), // success late
+      parseInt(pie_chart_datas?.on_progress ?? 0),
+      parseInt(pie_chart_datas?.on_progress_contract_late ?? 0),
+      //   12,
+      //   32,
+      //   55,
     ]);
 
     const chart = new ApexCharts(element, options);
@@ -121,15 +126,23 @@ export default function SumaryStatsDM({
           <div className=" bg-light-success px-8 py-3 rounded-xl mb-7">
             <Link
               className="text-success font-weight-bold font-size-h6"
-              onClick={() => openModal("success")}
+              onClick={() => openModal("finished")}
             >
-              {data?.sagr} Success
+              {data?.finished} Finished
+            </Link>
+          </div>
+          <div className=" bg-light-primary px-8 py-3 rounded-xl mb-7">
+            <Link
+              className="text-primary font-weight-bold font-size-h6"
+              onClick={() => openModal("finished_late")}
+            >
+              {data?.finished_late} Finished Late
             </Link>
           </div>
           <div className=" bg-light-warning px-8 py-3 rounded-xl mb-7">
             <Link
               className="text-warning font-weight-bold font-size-h6"
-              onClick={() => openModal("onprogress")}
+              onClick={() => openModal("on_progress")}
             >
               {data?.on_progress} On Progress
             </Link>
@@ -139,7 +152,7 @@ export default function SumaryStatsDM({
               className="text-danger font-weight-bold font-size-h6"
               onClick={() => openModal("overdue")}
             >
-              {data?.overdue} Overdue
+              {data?.on_progress_contract_late} Overdue
             </Link>
           </div>
         </div>
@@ -149,7 +162,12 @@ export default function SumaryStatsDM({
   );
 }
 
-let series_labels = ["Success", "On Progress", "Overdue"];
+let series_labels = [
+  "Success On Time",
+  "Success Late",
+  "On Progress",
+  "Overdue",
+];
 
 function getChartOptions(layoutProps, height, series) {
   var options = {
@@ -162,6 +180,7 @@ function getChartOptions(layoutProps, height, series) {
     // colors: ["#1ab7ea", "#0084ff", "#39539E", "#0077B5"],
     colors: [
       layoutProps.colorsThemeBaseSuccess,
+      layoutProps.colorsThemeBasePrimary,
       layoutProps.colorsThemeBaseWarning,
       layoutProps.colorsThemeBaseDanger,
     ],

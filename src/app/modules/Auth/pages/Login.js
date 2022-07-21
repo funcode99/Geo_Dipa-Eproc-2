@@ -10,6 +10,7 @@ import { openLinkTab } from "../../../service/helper/urlHelper";
 import { IconButton } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import { DEV_NODE } from "../../../../redux/BaseHost";
 
 /*
   INTL (i18n) docs:
@@ -234,16 +235,17 @@ function Login(props) {
             <p className="text-center mb-0">
               Jakarta Selatan 12740 - Indonesia
             </p>
-            <p className="text-center mb-0">E.procurement@geodipa.co.id</p>
+            <p className="text-center mb-0">e-procurement@geodipa.co.id</p>
             <p className="text-center mb-0">T. +62 21 7982925</p>
             <p className="text-center mb-0">F. +62 21 7982930</p>
           </div>
-          <div className="mx-auto mb-2 col-md-12 text-primary">
+          {/* <div className="mx-auto mb-2 col-md-12 text-primary">
             <Link
               onClick={() => {
-                openLinkTab(
-                  "http://192.168.0.168:5000/user-manual-delivery-monitoring.pdf"
-                );
+                // openLinkTab(
+                //   "http://192.168.0.168:5000/user-manual-delivery-monitoring.pdf"
+                // );
+                openLinkTab(DEV_NODE + `/user-manual-delivery-monitoring.pdf`);
               }}
             >
               <p className="text-center mb-0">
@@ -257,7 +259,7 @@ function Login(props) {
                 </span>
               </p>
             </Link>
-          </div>
+          </div> */}
         </div>
       </form>
       {/*end::Form*/}

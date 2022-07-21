@@ -50,7 +50,7 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit, loading }) => {
       } = await documentOption.getDocTypeOptions();
       setContent({ data: data.document_types, loading: false });
     } catch (error) {
-      setToast("Error API, please contact developer!");
+      setToast(error?.message ?? "Error API, please contact developer!");
     } finally {
       setContent((prev) => ({ ...prev, loading: false }));
     }

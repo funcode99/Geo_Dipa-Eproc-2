@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Form, Row, Col, Container } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import { rupiah } from "../../../../../../libs/currency";
+import { printMoney, rupiah } from "../../../../../../libs/currency";
 import { useSelector, shallowEqual, connect } from "react-redux";
 import StyledSelect from "../../../../../../components/select-multiple";
 import {
@@ -609,9 +609,13 @@ const FormDetail = (props) => {
                     required
                     type="text"
                     placeholder="Harga Pekerjaan"
-                    defaultValue={rupiah(
-                      parseInt(dataContractById?.total_amount)
+                    defaultValue={printMoney(
+                      parseInt(dataContractById?.total_amount),
+                      dataContractById?.currency?.code
                     )}
+                    // defaultValue={rupiah(
+                    //   parseInt(dataContractById?.total_amount)
+                    // )}
                     disabled
                   />
                 </Col>

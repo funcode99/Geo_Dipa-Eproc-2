@@ -17,6 +17,7 @@ import RenderInput from "../../../../../components/input/RenderInput";
 import TitleField from "../../../../../components/input/TitleField";
 import Navs from "../../../../../components/navs";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
+import { printMoney } from "../../../../../libs/currency";
 import { StyledTableRow } from "../../Termin/style";
 import withBox from "./withBox";
 
@@ -70,6 +71,7 @@ const HargaPekerjaan = () => {
     data_bank,
     contract_items,
     payment_method,
+    total_amount,
   } = useSelector((state) => state.deliveryMonitoring.dataContractById);
 
   const initValues = React.useMemo(() => {
@@ -110,7 +112,7 @@ const HargaPekerjaan = () => {
                 </DropdownButton>
                 <FormControl
                   disabled
-                  defaultValue={contract_value}
+                  defaultValue={printMoney(contract_value).substring(3)}
                   aria-describedby="basic-addon1"
                 />
               </InputGroup>
@@ -132,15 +134,24 @@ const HargaPekerjaan = () => {
             desc: el?.product_name,
             qty: el?.qty,
             satuan: el?.uom,
-            harga_satuan: el?.unit_price,
-            sum: el?.subtotal,
+            harga_satuan: printMoney(el?.unit_price),
+            sum: printMoney(el?.subtotal),
             ket: "",
           }))}
           footerComponent={
             <React.Fragment>
-              <RowAdditional label={"Subtotal"} value={contract_value} />
-              <RowAdditional label={"PPN 10%"} />
-              <RowAdditional label={"Grand Total"} value={contract_value} />
+              <RowAdditional
+                label={"Subtotal"}
+                value={printMoney(total_amount)}
+              />
+              <RowAdditional
+                label={"PPN 11%"}
+                value={printMoney(total_amount * (11 / 100))}
+              />
+              <RowAdditional
+                label={"Grand Total"}
+                value={printMoney(contract_value)}
+              />
             </React.Fragment>
           }
         />

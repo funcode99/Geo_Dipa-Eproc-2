@@ -37,7 +37,7 @@ import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import { getInvoicePeriods } from "../../../../Master/service/MasterCrud";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 
 function ContractSprPage(props) {
   const { intl, classes, supportedFormats, progressTermin } = props;
@@ -1053,7 +1053,15 @@ function ContractSprPage(props) {
                         <span
                           className={`input-group-text ${classes.textHover}`}
                         >
-                          <a download={sppData?.file_name} href={sppData?.file}>
+                          <a
+                            onClick={() => {
+                              window.open(
+                                DEV_NODE + "/spp/" + sppData?.file_name,
+                                "_blank"
+                              );
+                            }}
+                            href={"#"}
+                          >
                             <i className="fas fa-download"></i>
                           </a>
                         </span>

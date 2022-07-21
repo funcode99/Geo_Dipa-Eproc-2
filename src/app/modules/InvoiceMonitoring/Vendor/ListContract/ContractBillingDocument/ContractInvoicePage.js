@@ -38,7 +38,7 @@ import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import { getInvoicePeriods } from "../../../../Master/service/MasterCrud";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 import NumberFormat from "react-number-format";
 import { cloneDeep } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
@@ -1092,8 +1092,15 @@ function ContractInvoicePage(props) {
                           className={`input-group-text ${classes.textHover}`}
                         >
                           <a
-                            download={invoiceData?.file_name}
-                            href={invoiceData?.file}
+                            // download={invoiceData?.file_name}
+                            // href={invoiceData?.file}
+                            onClick={() => {
+                              window.open(
+                                DEV_NODE + "/invoice/" + invoiceData?.file_name,
+                                "_blank"
+                              );
+                            }}
+                            href={"#"}
                           >
                             <i className="fas fa-download"></i>
                           </a>

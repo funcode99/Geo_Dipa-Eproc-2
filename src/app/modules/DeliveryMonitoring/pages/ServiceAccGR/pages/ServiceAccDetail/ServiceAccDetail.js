@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 import {
   InputLabel,
   Button,
   Container,
   CircularProgress,
   Input as Files,
-} from '@material-ui/core';
-import { useFormik } from 'formik';
+} from "@material-ui/core";
+import { useFormik } from "formik";
 // import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
-import * as Yup from 'yup';
+import * as Yup from "yup";
 // import * as master from '../service/MasterCrud';
 // import http from '../../libs/http';
 import {
@@ -20,25 +20,25 @@ import {
   InputSeparator,
   FlexCol,
   ErrorText,
-} from './style';
+} from "./style";
 
-import { StyledModal } from '../../../../../../components/modals';
-import useToast from '../../../../../../components/toast';
-import CustomTable from '../../../../../../components/tables';
+import { StyledModal } from "../../../../../../components/modals";
+import useToast from "../../../../../../components/toast";
+import CustomTable from "../../../../../../components/tables";
 
 export const ServiceAccDetail = () => {
   const [Toast, setToast] = useToast();
   // const [data, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
-  const [confirm, setConfirm] = React.useState({ show: false, id: '' });
-  const [update, setUpdate] = React.useState({ id: '', update: false });
+  const [confirm, setConfirm] = React.useState({ show: false, id: "" });
+  const [update, setUpdate] = React.useState({ id: "", update: false });
   const [loading, setLoading] = React.useState(false);
 
   const FormSchema = Yup.object().shape({
     periode_name: Yup.string()
-      .min(3, 'Input minimal 3 karakter')
-      .required('Field ini wajib diisi'),
-    periode_value: Yup.string().required('Field ini wajib diisi'),
+      .min(3, "Input minimal 3 karakter")
+      .required("Field ini wajib diisi"),
+    periode_value: Yup.string().required("Field ini wajib diisi"),
   });
 
   const enableLoading = () => {
@@ -49,20 +49,20 @@ export const ServiceAccDetail = () => {
     setLoading(false);
   };
   const initialValues = {
-    periode_name: '',
+    periode_name: "",
     periode_value: 0,
   };
 
   const getList = async () => {
     try {
       setLoading(true);
-      console.log('tes');
+      console.log("tes");
       // const {
       //   data: { data },
       // } = await master.getPeriodeList();
       // setData(data);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -96,9 +96,9 @@ export const ServiceAccDetail = () => {
         //   setModals(false);
         // }
       } catch (error) {
-        setToast('Error API, Please contact developer!');
+        setToast("Error API, Please contact developer!");
         setSubmitting(false);
-        setStatus('Failed Submit Data');
+        setStatus("Failed Submit Data");
       } finally {
         disableLoading();
       }
@@ -133,7 +133,7 @@ export const ServiceAccDetail = () => {
       // setConfirm({ ...confirm, show: false });
       getList();
     } catch (error) {
-      setToast('Error with API, please contact Developer!');
+      setToast("Error with API, please contact Developer!");
       // console.error(error);
     } finally {
       setLoading(false);
@@ -149,55 +149,55 @@ export const ServiceAccDetail = () => {
         hideCloseIcon={false}
         disableBackdrop
       >
-        <FlexCol style={{ justifyContent: 'center' }}>
+        <FlexCol style={{ justifyContent: "center" }}>
           <form
             noValidate
             autoComplete="off"
             // onSubmit={handleSubmit(formSubmit)}
             onSubmit={formik.handleSubmit}
           >
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
               <h3>Input Form</h3>
             </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
-              <div style={{ width: '70%', alignSelf: 'center' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
+              <div style={{ width: "70%", alignSelf: "center" }}>
                 <Input
                   label="Nama Periode"
                   variant="outlined"
                   name="periode_name"
-                  {...formik.getFieldProps('periode_name')}
+                  {...formik.getFieldProps("periode_name")}
                 />
-                <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
+                <p style={{ textAlign: "center", color: "red", margin: 5 }}>
                   {formik.touched.periode_name && formik.errors.periode_name
                     ? formik.errors.periode_name
                     : null}
                 </p>
               </div>
-              <div style={{ width: '70%', alignSelf: 'center' }}>
+              <div style={{ width: "70%", alignSelf: "center" }}>
                 <Input
                   label="Durasi (dalam hari)"
                   type="number"
                   variant="outlined"
                   name="periode_value"
-                  {...formik.getFieldProps('periode_value')}
+                  {...formik.getFieldProps("periode_value")}
                 />
-                <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
+                <p style={{ textAlign: "center", color: "red", margin: 5 }}>
                   {formik.touched.periode_value && formik.errors.periode_value
                     ? formik.errors.periode_value
                     : null}
                 </p>
               </div>
             </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
               <Button
                 disabled={loading}
                 type="submit"
                 color="secondary"
                 variant="contained"
-                style={{ width: '50%' }}
+                style={{ width: "50%" }}
               >
                 {loading ? <CircularProgress /> : null}&nbsp;
-                {update.update ? 'Update' : 'Create'}
+                {update.update ? "Update" : "Create"}
               </Button>
             </div>
           </form>
@@ -219,9 +219,9 @@ export const ServiceAccDetail = () => {
               variant="contained"
               disabled={loading}
               style={{
-                width: '40%',
-                background: 'red',
-                color: 'white',
+                width: "40%",
+                background: "red",
+                color: "white",
                 marginInline: 10,
               }}
               onClick={() => handleDelete()}
@@ -231,7 +231,7 @@ export const ServiceAccDetail = () => {
             <Button
               variant="contained"
               disabled={loading}
-              style={{ width: '40%', marginInline: 10 }}
+              style={{ width: "40%", marginInline: 10 }}
               onClick={() => setConfirm({ ...confirm, show: false })}
             >
               Cancel
@@ -476,52 +476,52 @@ export const ServiceAccDetail = () => {
         </Flex>
         <CustomTable
           tableHeader={[
-            { label: 'No' },
-            { label: 'Service' },
-            { label: 'Quantity' },
-            { label: 'UoM' },
-            { label: 'Unit Price' },
-            { label: 'Net Value' },
+            { label: "No" },
+            { label: "Service" },
+            { label: "Quantity" },
+            { label: "UoM" },
+            { label: "Unit Price" },
+            { label: "Net Value" },
           ]}
           tableContent={[
             [
-              { content: '0001' },
-              { content: 'Mobilisasi&Demobilisasi' },
-              { content: '1', props: { width: '5%' } },
-              { content: 'AU', props: { width: '5%' } },
-              { content: 'Rp. 20.000.000' },
-              { content: 'Rp. 20.000.000' },
+              { content: "0001" },
+              { content: "Mobilisasi&Demobilisasi" },
+              { content: "1", props: { width: "5%" } },
+              { content: "AU", props: { width: "5%" } },
+              { content: "Rp. 20.000.000" },
+              { content: "Rp. 20.000.000" },
             ],
             [
-              { content: '', props: { rowSpan: 3, colSpan: 3 } },
-              { content: 'Sub Total', props: { colSpan: 2 } },
-              { content: 'Rp. 20.000.000' },
+              { content: "", props: { rowSpan: 3, colSpan: 3 } },
+              { content: "Sub Total", props: { colSpan: 2 } },
+              { content: "Rp. 20.000.000" },
             ],
-            [{ content: 'PPN', props: { colSpan: 2 } }, { content: '10%' }],
+            [{ content: "PPN", props: { colSpan: 2 } }, { content: "11%" }],
             [
-              { content: 'Total', props: { colSpan: 2 } },
-              { content: 'Rp. 21.000.000' },
+              { content: "Total", props: { colSpan: 2 } },
+              { content: "Rp. 21.000.000" },
             ],
           ]}
         />
 
         <CustomTable
           tableHeader={[
-            { label: 'Nama' },
-            { label: 'Posisi' },
-            { label: 'Aktifitas' },
-            { label: 'Tanggal Mulai' },
-            { label: 'Tanggal Selesai' },
-            { label: 'Komentar' },
+            { label: "Nama" },
+            { label: "Posisi" },
+            { label: "Aktifitas" },
+            { label: "Tanggal Mulai" },
+            { label: "Tanggal Selesai" },
+            { label: "Komentar" },
           ]}
           tableContent={[
             [
-              { content: 'Dian PS' },
-              { content: 'IT Asman' },
-              { content: 'Create GR' },
-              { content: '30 Jan 2021' },
-              { content: '29 Feb 2021' },
-              { content: 'Sesuai ketentuan', props: { width: '30%' } },
+              { content: "Dian PS" },
+              { content: "IT Asman" },
+              { content: "Create GR" },
+              { content: "30 Jan 2021" },
+              { content: "29 Feb 2021" },
+              { content: "Sesuai ketentuan", props: { width: "30%" } },
             ],
           ]}
         />

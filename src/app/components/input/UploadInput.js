@@ -25,12 +25,20 @@ const UploadInput = ({
             <i className="fas fa-file-upload"></i>
           </span>
         </div>
-        <span
+        <div
           className="form-control"
-          style={{ backgroundColor: other.disabled ? "#ebebeb" : undefined }}
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "auto",
+            overflowY: "hidden",
+          }}
         >
-          {value?.path ?? <FormattedMessage id="TITLE.CHOOSE_FILE" />}
-        </span>
+          <span
+            style={{ backgroundColor: other.disabled ? "#ebebeb" : undefined }}
+          >
+            {value?.path ?? <FormattedMessage id="TITLE.CHOOSE_FILE" />}
+          </span>
+        </div>
         {isPreview && (
           <div className="input-group-append" style={{ zIndex: 1 }}>
             <button
