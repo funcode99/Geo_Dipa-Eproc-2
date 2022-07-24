@@ -1,23 +1,16 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 
-const ModalStorageLoc = ({ innerRef, items, options, onSubmit }) => {
+const ModalStorageLoc = ({
+  innerRef,
+  items,
+  options,
+  onSubmit,
+  defaultValue = [],
+}) => {
   const formRef = React.useRef();
   const [dataForm, setDataForm] = useState([]);
-  // [
-  //   {
-  // 	name: "item1",
-  // 	label: "WBS 1",
-  // 	disable: true,
-  //   },
-  //   {
-  // 	name: "stge_loc_1",
-  // 	label: "Storage Location 1",
-  // 	typeInput: "SelectInputCustom",
-  // 	isMulti: true,
-  //   },
-  // ],
 
   const _handleSubmit = useCallback(
     (data) => {
@@ -26,11 +19,14 @@ const ModalStorageLoc = ({ innerRef, items, options, onSubmit }) => {
           ...acc,
           {
             id: item?.id,
-            stge_loc: data?.[`stge_loc_${index + 1}`]?.name,
-            label: `Item ${index + 1} (${
-              data?.[`stge_loc_${index + 1}`]?.name
-            })`,
-            value: data?.[`stge_loc_${index + 1}`]?.name,
+            stge_loc:
+              data?.[`stge_loc_${index + 1}`]?.name || defaultValue?.[item.id],
+            label: `Item ${index + 1} (${data?.[`stge_loc_${index + 1}`]
+              ?.name || defaultValue?.[item.id]})`,
+            value:
+              data?.[`stge_loc_${index + 1}`]?.name || defaultValue?.[item.id],
+            name:
+              data?.[`stge_loc_${index + 1}`]?.name || defaultValue?.[item.id],
           },
         ],
         []
@@ -83,13 +79,13 @@ const ModalStorageLoc = ({ innerRef, items, options, onSubmit }) => {
           ...acc,
           [`item${index + 1}`]: item?.item?.desc,
           [`stge_loc_${index + 1}`]: {
-            value: item?.stge_loc,
-            label: item?.stge_loc,
+            value: defaultValue?.[item.id] || item?.stge_loc,
+            label: defaultValue?.[item.id] || item?.stge_loc,
           },
         }),
         {}
       ),
-    [items]
+    [items, defaultValue]
   );
 
   return (
@@ -133,28 +129,6 @@ const ModalStorageLoc = ({ innerRef, items, options, onSubmit }) => {
           },
         }}
       />
-
-      {/* <div className="d-flex justify-content-end">
-        {dataForm.length > 1 && (
-          <ButtonContained
-            className="mr-2"
-            baseColor="danger"
-            disabled={dataForm.length === 1}
-            onClick={subField}
-          >
-            Minus a row
-          </ButtonContained>
-        )}
-        {!(dataForm.length == 10 || dist_value?.value === "") && (
-          <ButtonContained
-            disabled={dataForm.length == 10 || dist_value?.value === ""}
-            baseColor="success"
-            onClick={addField}
-          >
-            Add a row
-          </ButtonContained>
-        )}
-      </div> */}
     </DialogGlobal>
   );
 };
