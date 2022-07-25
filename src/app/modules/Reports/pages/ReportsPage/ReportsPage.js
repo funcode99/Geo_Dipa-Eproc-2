@@ -22,7 +22,9 @@ const ReportsPage = () => {
           ExcelDownloder,
           type: Type.Button,
         }}
-        data={content}
+        data={content.map(({ name, tanggal_kontrak, due_date, ...rest }) => ({
+          ...rest,
+        }))}
         setQuery={setQuery}
         query={query}
       />
