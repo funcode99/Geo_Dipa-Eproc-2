@@ -184,25 +184,7 @@ function ContractInvoicePage(props) {
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
-      )
-      .when("tax_bool", {
-        is: true,
-        then: Yup.date()
-          .min(
-            Yup.ref("tax_date_yesterday"),
-            intl.formatMessage({
-              id:
-                "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
-            })
-          )
-          .max(
-            Yup.ref("tax_date"),
-            intl.formatMessage({
-              id:
-                "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
-            })
-          ),
-      }),
+      ),
     invoice_no: Yup.string().required(
       intl.formatMessage({
         id: "AUTH.VALIDATION.REQUIRED_FIELD",
