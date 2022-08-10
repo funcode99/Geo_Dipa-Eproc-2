@@ -94,3 +94,6 @@ temp
 # build folder
 build/
 build.zip
+
+#tool JetBrains
+.idea/
