@@ -32,7 +32,7 @@ export const useReportsLogic = () => {
         : item.tanggal_kontrak > query.start_date;
       let checkEndDate = isEmpty(query.end_date)
         ? true
-        : query.end_date > item.tanggal_kontrak;
+        : query.end_date > item.due_date;
 
       return checkUnit && checkStartDate && checkEndDate;
       // return checkStartDate;
@@ -74,6 +74,7 @@ export const useReportsLogic = () => {
             "Payment Date": item.payment_date,
             name: item.name,
             tanggal_kontrak: item.tanggal_kontrak,
+            due_date: item.due_date,
           }));
           setContent(dataMapped);
         },
