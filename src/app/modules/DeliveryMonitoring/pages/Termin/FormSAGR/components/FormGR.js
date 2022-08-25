@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { object } from "yup";
+import React, { useState } from "react";
+import { object, string } from "yup";
+import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
 import { formatUpdateDate } from "../../../../../../libs/date";
 import validation from "../../../../../../service/helper/validationHelper";
 import { TerminPageContext } from "../../TerminPageNew/TerminPageNew";
 import { gr_field } from "./DUMMY_DATA";
 import ModalApproveGR from "./ModalApproveGR";
-import NoDataBox from "../../../../../../components/boxes/NoDataBox/NoDataBox";
 import ModalStorageLoc from "./ModalStorageLoc";
-import { string, date } from "yup";
-import { Col, Row } from "react-bootstrap";
-import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 
 const validationSchema = object().shape({
   header_tx: validation.require("Header Text"),
@@ -50,7 +47,7 @@ const FormGR = ({
   const { task_id } = React.useContext(TerminPageContext);
   const grExist = Boolean(dataSAGR.gr);
   const dataGR = dataSAGR?.gr;
-  const [storageLoc, setStorageLoc] = useState([]);
+  const [initialSLoc, setInitialSLoc] = useState([]);
 
   const _handleSubmit = (data) => {
     const params = {
@@ -124,6 +121,7 @@ const FormGR = ({
 
   const _submitStgeLoc = (data) => {
     formRef.current.setFieldValue("stge_loc", data);
+    setInitialSLoc(data);
   };
 
   return (
@@ -189,6 +187,13 @@ const FormGR = ({
         items={dataSAGR?.task_items}
         options={dataSAGR?.delivery_locations}
         onSubmit={_submitStgeLoc}
+        defaultValue={initialSLoc.reduce(
+          (acc, item) => ({
+            ...acc,
+            [item?.id]: item?.name,
+          }),
+          {}
+        )}
       />
     </div>
   );

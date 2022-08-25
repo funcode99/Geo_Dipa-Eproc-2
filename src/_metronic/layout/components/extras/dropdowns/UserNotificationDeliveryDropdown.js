@@ -94,6 +94,7 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
         type: "getParams",
         url: DEV_NODE2 + "/todo",
         params: { limit, offset },
+        alertAppear: "never",
         onSuccess: (res) => {
           //   if (isEmpty(res.result.data)) return;
           //   const { data, total_data, total_unread } = res?.result;

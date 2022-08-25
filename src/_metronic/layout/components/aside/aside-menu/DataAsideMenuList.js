@@ -95,6 +95,12 @@ export const DataAsideMenuListClient = [
     subMenu: null,
   },
   {
+    rootPath: "/client/reports",
+    icon: "/Communication/Archive.svg",
+    title: "MENU.REPORTS",
+    subMenu: null,
+  },
+  {
     rootPath: "/client/user-management",
     icon: "/All/users-solid.svg",
     title: "MENU.USER_MANAGEMENT",

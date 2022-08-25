@@ -38,7 +38,7 @@ import moment from "moment";
 import TableOnly from "../../../../../components/tableCustomV1/tableOnly";
 import * as invoice from "../../../_redux/InvoiceMonitoringSlice";
 import { getInvoicePeriods } from "../../../../Master/service/MasterCrud";
-import { SOCKET } from "../../../../../../redux/BaseHost";
+import { DEV_NODE, SOCKET } from "../../../../../../redux/BaseHost";
 import NumberFormat from "react-number-format";
 import { cloneDeep } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
@@ -184,25 +184,7 @@ function ContractInvoicePage(props) {
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
-      )
-      .when("tax_bool", {
-        is: true,
-        then: Yup.date()
-          .min(
-            Yup.ref("tax_date_yesterday"),
-            intl.formatMessage({
-              id:
-                "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
-            })
-          )
-          .max(
-            Yup.ref("tax_date"),
-            intl.formatMessage({
-              id:
-                "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.DATE_VALIDATION",
-            })
-          ),
-      }),
+      ),
     invoice_no: Yup.string().required(
       intl.formatMessage({
         id: "AUTH.VALIDATION.REQUIRED_FIELD",
@@ -1092,8 +1074,15 @@ function ContractInvoicePage(props) {
                           className={`input-group-text ${classes.textHover}`}
                         >
                           <a
-                            download={invoiceData?.file_name}
-                            href={invoiceData?.file}
+                            // download={invoiceData?.file_name}
+                            // href={invoiceData?.file}
+                            onClick={() => {
+                              window.open(
+                                DEV_NODE + "/invoice/" + invoiceData?.file_name,
+                                "_blank"
+                              );
+                            }}
+                            href={"#"}
                           >
                             <i className="fas fa-download"></i>
                           </a>

@@ -895,7 +895,7 @@ function ContractHardCopyDoc(props) {
       <Card>
         <CardBody>
           <ExpansionPanel
-            defaultExpanded={false}
+            defaultExpanded={true}
             className={classes.ExpansionPanelCard}
           >
             <ExpansionPanelSummary
@@ -1021,7 +1021,7 @@ function ContractHardCopyDoc(props) {
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel
-            defaultExpanded={false}
+            defaultExpanded={true}
             className={classes.ExpansionPanelCard}
           >
             <ExpansionPanelSummary
@@ -1156,7 +1156,7 @@ function ContractHardCopyDoc(props) {
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel
-            defaultExpanded={false}
+            defaultExpanded={true}
             className={classes.ExpansionPanelCard}
           >
             <ExpansionPanelSummary

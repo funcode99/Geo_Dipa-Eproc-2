@@ -113,7 +113,7 @@ export default function BtnAksi({ item, isPeriodic, handleAction }) {
   React.useEffect(() => {
     if (item?.url === null)
       setExclude(["accept", "reject", "submit", "resend"]);
-    else if (item?.url !== null) setExclude(["upload"]);
+    else if (item?.url !== null) setExclude(["upload", "submit"]);
     else setExclude([]);
   }, [item]);
   return (
