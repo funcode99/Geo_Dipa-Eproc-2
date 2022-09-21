@@ -706,7 +706,8 @@ const BappPage = ({
                 case 1:
                   return (
                     <div className="mt-2">
-                      {!isClient && (
+                      {/* {!isClient  && */}
+                      {(  
                         <Button
                           variant="contained"
                           color="secondary"
