@@ -117,9 +117,8 @@ const BappPage = ({
       nomor_contract: contract?.contract_no,
       nomor_po: contract?.purch_order_no,
       hasil_pekerjaan: taskNews?.review_text || "",
-      party1_name:
-        contract?.contract_party?.party_1_director_position_full_name,
-      party1_jabatan: contract?.contract_party?.party_1_director_position,
+      party1_name : taskNews?.bapp_authorize_officer,
+      party1_jabatan: taskNews?.bapp_authorize_position,
       party2_name: contract?.contract_party?.party_2_autorize_name,
       party2_jabatan: contract?.contract_party?.party_2_position,
     }),
@@ -706,7 +705,8 @@ const BappPage = ({
                 case 1:
                   return (
                     <div className="mt-2">
-                      {!isClient && (
+                      {/* {!isClient  && */}
+                      {(  
                         <Button
                           variant="contained"
                           color="secondary"
