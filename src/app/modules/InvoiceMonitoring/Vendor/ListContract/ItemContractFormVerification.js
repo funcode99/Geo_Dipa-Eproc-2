@@ -193,7 +193,13 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue="25 Maret 2020"
+                      defaultValue={
+                        contractData?.approved_at_tax
+                            ? window
+                                .moment(new Date(contractData?.approved_at_tax))
+                                .format("DD/MM/YYYY")
+                            : ""
+                      }
                       readOnly
                     />
                   </div>
@@ -206,7 +212,13 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      defaultValue="25 Maret 2020 - 30 Maret 2020"
+                      defaultValue={
+                        contractData?.hardcopy_date_out
+                            ? window
+                                .moment(new Date(contractData?.hardcopy_date_out))
+                                .format("DD/MM/YYYY")
+                            : ""
+                      }
                       readOnly
                     />
                   </div>
