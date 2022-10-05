@@ -419,6 +419,7 @@ const BastPage = ({
         withRemarks
         title={"Reject Signed Document"}
         file={taskNews?.file_upload}
+        isBAST={true}
       />
       {/* <Card>
         <CardBody> */}
