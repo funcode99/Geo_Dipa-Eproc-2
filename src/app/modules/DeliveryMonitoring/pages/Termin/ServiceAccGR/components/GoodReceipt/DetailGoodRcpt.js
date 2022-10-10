@@ -24,10 +24,10 @@ const DetailGoodRcpt = (props) => {
   const [hideLogo, setHideLogo] = useState(false);
   const [addPaddingTop, setAddPaddingTop] = useState(0);
   const loading = useSelector((state) => getLoading(state, key));
-  const { fullData, dataGR, isClient, showCancel } = props;
+  const { id, fullData, dataGR, isClient, showCancel } = props;
   const print = () => {
     setHideLogo(true);
-    var clientHeight = document.getElementById("printSA").clientHeight;
+    var clientHeight = document.getElementById(`${id}`).clientHeight;
     // tinggi paper landscape normal 828
     const pageHeight = 828;
     const pageFullHeight = Math.floor(clientHeight / pageHeight) * pageHeight;
@@ -50,7 +50,7 @@ const DetailGoodRcpt = (props) => {
 
       head.appendChild(style);
 
-      var printContents = window.$("#printSA").html();
+      var printContents = window.$(`#${id}`).html();
       window.$("#root").css("display", "none");
       window.$("#print-content").addClass("p-5");
       window.$("#print-content").html(printContents);
@@ -114,7 +114,7 @@ const DetailGoodRcpt = (props) => {
           </button>
         </CardHeaderToolbar>
       </CardHeader>
-      <CardBody id="printSA">
+      <CardBody id={fullData?.task_gr_new?.material_document}>
         <SectionHeader hideLogo={hideLogo} {...props} />
         <SectionSummary {...props} />
         {/* <SectionTable {...props} /> */}

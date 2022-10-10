@@ -36,11 +36,12 @@ const ServiceAcceptance = ({ data, isClient, showCancel = true }) => {
       {task_sa_array.map((els, id) => (
         <GRAccord
           key={id}
-          id={"els.material_document"}
+          id={id}
           label={`SA ${els.po_number}`}
         >
           <>
             <DetailServAcceptance
+              id={id}
               header={els?.sa_header}
               fullData={data}
               items={els?.sa_items}
