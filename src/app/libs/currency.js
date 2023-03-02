@@ -15,6 +15,11 @@ export const rupiah = (number) => {
   return format("id-ID", "IDR", number);
 };
 
+export const code_currency = (currency, number) => {
+  // if (isEmpty(number)) return "";
+  return format("id-ID", currency, number);
+};
+
 export const printMoney = (value, currentType) => {
   let options = {};
   switch (currentType) {

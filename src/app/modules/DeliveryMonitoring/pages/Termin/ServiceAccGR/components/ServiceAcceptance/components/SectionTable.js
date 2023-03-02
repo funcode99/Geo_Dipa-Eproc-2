@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
-import { rupiah } from "../../../../../../../../libs/currency";
+import { code_currency } from "../../../../../../../../libs/currency";
 import _ from "lodash";
 
-const SectionTable = ({ items }) => {
+const SectionTable = ({ header, items }) => {
   const subTotal = useMemo(() => getSubTotal(items), [items]);
   const total = useMemo(() => getTotal(subTotal), [subTotal]);
   return (
@@ -29,8 +29,8 @@ const SectionTable = ({ items }) => {
           <td>{el?.short_text}</td>
           <td>{el?.quantity}</td>
           <td>{el?.base_uom}</td>
-          <td>{rupiah(el?.gr_price)}</td>
-          <td>{rupiah(el?.net_value)}</td>
+          <td>{code_currency(header?.currency, el?.gr_price)}</td>
+          <td>{code_currency(header?.currency, el?.net_value)}</td>
         </tr>
       ))}
       {/* <tr>
@@ -52,9 +52,9 @@ const SectionTable = ({ items }) => {
         </td>
         <td>
           <div className="d-flex flex-column">
-            <span>{rupiah(subTotal)}</span>
-            <span>{rupiah(subTotal * 0.11)}</span>
-            <span>{rupiah(total)}</span>
+            <span>{code_currency(header?.currency, subTotal)}</span>
+            <span>{code_currency(header?.currency, subTotal * 0.11)}</span>
+            <span>{code_currency(header?.currency, total)}</span>
           </div>
         </td>
       </tr>
