@@ -223,8 +223,8 @@ const BastPage = ({
       date: data.tanggal_bast,
       is_finished: checkboxState,
       contract_no: data.nomor_contract,
-      party_1_position_of_autorize: data?.party1_name,
-      party_1_contract_signature_name: data?.party1_jabatan,
+      party_1_position_of_autorize: data?.party1_jabatan,
+      party_1_contract_signature_name: data?.party1_name,
       party_2_autorize_name: data?.party2_name,
       party_2_position: data?.party2_jabatan,
       // contract_no: data.nomor_contract,
@@ -241,14 +241,11 @@ const BastPage = ({
       alertAppear: "both",
       url,
       onSuccess: (res) => {
-        // handleLoading("get", false);
-        // console.log(`res`, res);
+
         fetchData();
       },
       onFail: (err) => console.log("err baru", err),
     });
-    // console.log(`params`, params);
-    // handleLoading("post", true);
 
     // deliveryMonitoring
     //   .postCreateBAST(params)

@@ -117,8 +117,8 @@ const BappPage = ({
       nomor_contract: contract?.contract_no,
       nomor_po: contract?.purch_order_no,
       hasil_pekerjaan: taskNews?.review_text || "",
-      party1_name : taskNews?.bapp_authorize_officer,
-      party1_jabatan: taskNews?.bapp_authorize_position,
+      party1_name : taskNews?.bapp_authorize_officer || "",
+      party1_jabatan: taskNews?.bapp_authorize_position || "",
       party2_name: contract?.contract_party?.party_2_autorize_name,
       party2_jabatan: contract?.contract_party?.party_2_position,
     }),
@@ -178,7 +178,7 @@ const BappPage = ({
   // const saExist = _.isEmpty(dataSAGR?.sa);
   // const grExist = _.isEmpty(dataSAGR?.gr);
 
-  const isDisabled = React.useMemo(() => isClient && !userAuth, [isClient]);
+  const isDisabled = React.useMemo(() => !isClient, [isClient]);
 
   const getDataSAGRForm = () => {
     fetchApi({
