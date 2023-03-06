@@ -128,9 +128,11 @@ const DetailServAcceptance = (props) => {
         <Grid container spacing={1} className={"mt-3"}>
           <Grid item xs={8}></Grid>
           <BoxSignSA
+          
             name={
-              fullData?.contract?.contract_party
-                ?.party_1_director_position_full_name
+              // fullData?.contract?.contract_party
+              //   ?.party_1_director_position_full_name              
+              fullData?.news_bast?.is_finished ?  fullData?.news_bast?.bapp_authorize_officer : fullData?.news?.bapp_authorize_officer
             }
             date={fullData?.task_sa_array?.[0]?.createdAt}
             {...props.signProps}
