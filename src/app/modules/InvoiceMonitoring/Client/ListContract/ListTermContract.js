@@ -10,6 +10,7 @@ import {
   TableCell,
 } from "@material-ui/core";
 import { rupiah } from "../../../../libs/currency";
+import { printMoney } from "../../../../libs/currency";
 import Subheader from "../../../../components/subheader";
 import { useSubheader } from "../../../../../_metronic/layout";
 import { Form, Row, Col } from "react-bootstrap";
@@ -252,9 +253,7 @@ const ListTermContract = (props) => {
                     placeholder={intl.formatMessage({
                       id: "CONTRACT_DETAIL.LABEL.PRICE",
                     })}
-                    value={rupiah(
-                      parseInt(data?.contract_value ? data?.contract_value : 0)
-                    )}
+                    value={printMoney(parseInt(data?.contract_value ? data?.contract_value : 0, data?.code))}
                     disabled
                   />
                 </Col>
@@ -318,7 +317,7 @@ const ListTermContract = (props) => {
                       .format("DD MMM YYYY")}
                   </TableCell>
                   <TableCell>{value?.bobot + "%"}</TableCell>
-                  <TableCell>{rupiah(value?.prices || 0)}</TableCell>
+                  <TableCell>{printMoney(value?.prices || 0, value?.code)}</TableCell>
                   <TableCell>{value?.progress}</TableCell>
                   {/* <TableCell>Doc Progress</TableCell> */}
                   <TableCell>{`${value?.name} ${
