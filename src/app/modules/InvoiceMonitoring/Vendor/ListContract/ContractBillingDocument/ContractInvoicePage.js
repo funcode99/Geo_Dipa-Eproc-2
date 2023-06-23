@@ -761,8 +761,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyInvoiceData)
                       }
                     >
                       <FormattedMessage id="TITLE.ADD" />
@@ -788,8 +787,7 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                            !invoicePeriodsStatus
+                            (!invoicePeriodsStatus && !historyInvoiceData)
                           }
                           required={true}
                         />
@@ -799,19 +797,17 @@ function ContractInvoicePage(props) {
                           id={
                             loading ||
                             invoiceStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                            !invoicePeriodsStatus
+                            (!invoicePeriodsStatus
                               ? "NumberFormat-text"
-                              : "NumberFormat-input"
+                              : "NumberFormat-input" && !historyInvoiceData)
                           }
                           value={item.value}
                           displayType={
                             loading ||
                             invoiceStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                            !invoicePeriodsStatus
+                            (!invoicePeriodsStatus
                               ? "text"
-                              : "input"
+                              : "input" && !historyInvoiceData)
                           }
                           className="form-control"
                           thousandSeparator={"."}
@@ -831,9 +827,7 @@ function ContractInvoicePage(props) {
                               !(
                                 loading ||
                                 invoiceStatus ||
-                                progressTermin?.ident_name !==
-                                  "BILLING_SOFTCOPY" ||
-                                !invoicePeriodsStatus
+                                  (!invoicePeriodsStatus && !historyInvoiceData)
                               )
                             )
                               e.target.select();
@@ -853,8 +847,7 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                            !invoicePeriodsStatus
+                            (!invoicePeriodsStatus && !historyInvoiceData)
                           }
                         >
                           <FormattedMessage id="BUTTON.DELETE" />
@@ -895,8 +888,7 @@ function ContractInvoicePage(props) {
                 disabled={
                   loading ||
                   invoiceStatus ||
-                  progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                  !invoicePeriodsStatus
+                  (!invoicePeriodsStatus && !historyInvoiceData)
                 }
               >
                 <span>
@@ -940,8 +932,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyInvoiceData)
                       }
                       defaultValue={
                         invoiceData ? invoiceData["invoice_no"] : null
@@ -976,8 +967,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyInvoiceData)
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("from_time")}
@@ -1015,8 +1005,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyInvoiceData)
                       }
                       defaultValue={
                         invoiceData ? invoiceData["description"] : null
@@ -1044,10 +1033,9 @@ function ContractInvoicePage(props) {
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
                       invoiceStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus
                         ? ""
-                        : "pointer"
+                        : "pointer" && !historyInvoiceData)
                     }`}
                   >
                     {!invoiceStatus && (
@@ -1060,10 +1048,9 @@ function ContractInvoicePage(props) {
                     <span
                       className={`form-control text-truncate ${
                         invoiceStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus
                           ? classes.textDisabled
-                          : ""
+                          : "" && !historyInvoiceData)
                       }`}
                     >
                       {uploadFilename}
@@ -1108,8 +1095,7 @@ function ContractInvoicePage(props) {
                     disabled={
                       loading ||
                       invoiceStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus && !historyInvoiceData)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -1221,10 +1207,7 @@ function ContractInvoicePage(props) {
                         invoiceData?.state === "REJECTED" ||
                         invoiceData?.state === "APPROVED" ||
                         invoiceData === null ||
-                        !props.billingStaffStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                          ? "NumberFormat-text"
-                          : "NumberFormat-input"
+                        !props.billingStaffStatus
                       }
                       value={invoiceData?.penalty}
                       displayType={
@@ -1232,10 +1215,7 @@ function ContractInvoicePage(props) {
                         invoiceData?.state === "REJECTED" ||
                         invoiceData?.state === "APPROVED" ||
                         invoiceData === null ||
-                        !props.billingStaffStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
-                          ? "text"
-                          : "input"
+                        !props.billingStaffStatus
                       }
                       className="form-control"
                       thousandSeparator={"."}
@@ -1281,8 +1261,7 @@ function ContractInvoicePage(props) {
                         invoiceData?.state === "REJECTED" ||
                         invoiceData?.state === "APPROVED" ||
                         invoiceData === null ||
-                        !props.billingStaffStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                        !props.billingStaffStatus
                       }
                       onChange={(e) => {
                         setInvoiceData({
@@ -1325,8 +1304,7 @@ function ContractInvoicePage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 invoiceStatus ||
-                progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                !invoicePeriodsStatus
+                (!invoicePeriodsStatus && !historyInvoiceData)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
