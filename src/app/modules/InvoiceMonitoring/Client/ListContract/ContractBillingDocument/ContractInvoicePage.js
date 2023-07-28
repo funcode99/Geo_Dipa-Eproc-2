@@ -31,7 +31,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { formatCurrency, rupiah } from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -71,6 +71,7 @@ function ContractInvoicePage(props) {
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
   const [addtionalPayment, setAddtionalPayment] = useState([]);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
+  const [currencyCode, setCurrencyCode] = useState("");
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -82,6 +83,7 @@ function ContractInvoicePage(props) {
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
   const invoiceName = "INVOICE";
+
   const {
     intl,
     classes,
@@ -184,7 +186,8 @@ function ContractInvoicePage(props) {
         response["data"]["data"]["termin_value_ppn_new"] = rupiah(
           response["data"]["data"]["termin_value"] * 1.1
         );
-        setContractData(response.data.data);
+        
+        setContractData(response["data"]["data"]);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -205,6 +208,9 @@ function ContractInvoicePage(props) {
     setLoadingInvoice(true);
     getInvoice(contract_id, termin)
       .then((response) => {
+        
+        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
+
         setInvoiceData(response.data.data);
         if (response.data.data) {
           getHistoryInvoiceData(response["data"]["data"]["id"]);
@@ -346,7 +352,7 @@ function ContractInvoicePage(props) {
           <div>
             <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
             <span className="text-danger">
-              {rupiah(invoiceData?.penalty || 0)}
+              {formatCurrency(currencyCode, invoiceData["penalty"])}
             </span>
           </div>
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.APPROVED.APPROVE_BODY" />
@@ -725,7 +731,7 @@ function ContractInvoicePage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={`${currencyCode} `}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue
@@ -779,7 +785,7 @@ function ContractInvoicePage(props) {
           <DialogActions className={classes_.MuiDialogActionsPosistion}>
             <div>
               <FormattedMessage id="TITLE.TOTAL_PRICE_IS" />:{" "}
-              {rupiah(totalAddtionalPayment())}
+              {formatCurrency(currencyCode, totalAddtionalPayment())}
             </div>
             <div>
               <button
@@ -948,7 +954,7 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={contractData["contract_value_new"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                     disabled
                   />
                 </div>
@@ -965,7 +971,7 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={contractData["termin_value_new"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                     disabled
                   />
                 </div>
@@ -995,9 +1001,7 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={rupiah(
-                      contractData["termin_value"] + totalAddtionalPayment()
-                    )}
+                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />
@@ -1044,7 +1048,7 @@ function ContractInvoicePage(props) {
                     decimalSeparator={","}
                     allowEmptyFormatting={true}
                     allowLeadingZeros={true}
-                    prefix={"Rp "}
+                    prefix={`${currencyCode} `}
                     onValueChange={(e) => {
                       setInvoiceData({
                         ...invoiceData,

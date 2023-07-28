@@ -35,7 +35,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -127,6 +127,7 @@ function ContractSprPage(props) {
   const [modalApprove, setModalApprove] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [sppData, setSppData] = useState(null);
+  const [currencyCode, setCurrencyCode] = useState(null);
   const [historySppData, setHistorySppData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
@@ -239,7 +240,7 @@ function ContractSprPage(props) {
         response["data"]["data"]["termin_value_ppn_new"] = rupiah(
           response["data"]["data"]["termin_value"] * 1.1
         );
-        setContractData(response.data.data);
+        setContractData(response["data"]["data"]);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -250,6 +251,7 @@ function ContractSprPage(props) {
     setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
+        setCurrencyCode( response["data"]["data"]["currency"]["code"]);
         setSppData(response["data"]["data"]);
         if (response["data"]["data"]) {
           getHistorySppData(response["data"]["data"]["id"]);
@@ -912,7 +914,7 @@ function ContractSprPage(props) {
           <DialogActions className={classes_.MuiDialogActionsPosistion}>
             <div>
               <FormattedMessage id="TITLE.TOTAL_PRICE_IS" />:{" "}
-              {rupiah(totalAddtionalPayment())}
+              {formatCurrency(currencyCode, totalAddtionalPayment())}
             </div>
             <div>
               <button
@@ -1172,7 +1174,7 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={contractData["contract_value_new"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                     disabled
                   />
                 </div>
@@ -1203,7 +1205,7 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={contractData["termin_value_new"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                     disabled
                   />
                 </div>
@@ -1233,9 +1235,7 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={rupiah(
-                      contractData["termin_value"] + totalAddtionalPayment()
-                    )}
+                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />
@@ -1268,7 +1268,7 @@ function ContractSprPage(props) {
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
               sppData === null ||
-              !props.billingStaffStatus ||
+              !props.billingStaffStatus||
               progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
