@@ -330,6 +330,15 @@ function ContractReceiptPage(props) {
     return total;
   };
 
+  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
+  // console.log(isSubmit,
+  //   receiptData?.state === "REJECTED",
+  //   receiptData?.state === "APPROVED",
+  //   receiptData === null,
+  //   !props.billingStaffStatus,
+  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY", "<<<<<");
+  
+
   return (
     <React.Fragment>
       <Toast />
@@ -912,8 +921,9 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              !props.billingStaffStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              !props.billingStaffStatus 
+              // ||
+              // progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -927,8 +937,9 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              !props.billingStaffStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              !props.billingStaffStatus
+              // ||
+              // progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

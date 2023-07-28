@@ -441,7 +441,16 @@ function ContractTaxPage(props) {
   useEffect(getInvoiceData, []);
   useEffect(getInvoicePeriodsData, []);
 
-  console.log(formik.touched);
+  // console.log(formik.touched);
+
+  // console.log(
+  //   loading,
+  //   taxStatus,
+  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY",
+  //   !historyTaxData,
+  //   !invoicePeriodsStatus, //problem with invoice periods (add history)
+  //   "<<<<<"
+  // )
 
   return (
     <React.Fragment>
@@ -663,8 +672,8 @@ function ContractTaxPage(props) {
                       id={
                         loading ||
                         taxStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        // progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        (!invoicePeriodsStatus && !historyTaxData)
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
@@ -672,8 +681,8 @@ function ContractTaxPage(props) {
                       displayType={
                         loading ||
                         taxStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        // progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        (!invoicePeriodsStatus && !historyTaxData)
                           ? "text"
                           : "input"
                       }
@@ -709,7 +718,7 @@ function ContractTaxPage(props) {
                         loading ||
                         taxStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyTaxData)
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("tax_date")}
@@ -743,8 +752,8 @@ function ContractTaxPage(props) {
                       id={
                         loading ||
                         taxStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        // progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        (!invoicePeriodsStatus && !historyTaxData)
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
@@ -752,8 +761,8 @@ function ContractTaxPage(props) {
                       displayType={
                         loading ||
                         taxStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        // progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        (!invoicePeriodsStatus && !historyTaxData)
                           ? "text"
                           : "input"
                       }
@@ -790,7 +799,7 @@ function ContractTaxPage(props) {
                         loading ||
                         taxStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyTaxData)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -879,7 +888,7 @@ function ContractTaxPage(props) {
                       loading ||
                       taxStatus ||
                       progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus && !historyTaxData)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -966,7 +975,7 @@ function ContractTaxPage(props) {
                 loading ||
                 taxStatus ||
                 progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                !invoicePeriodsStatus
+                (!invoicePeriodsStatus && !historyTaxData)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />

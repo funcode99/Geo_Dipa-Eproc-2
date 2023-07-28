@@ -598,6 +598,15 @@ function ContractTaxPage(props) {
   //   progressTermin?.ident_name
   // );
 
+  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
+  // console.log(isSubmit,
+  //   taxData?.state === "REJECTED",
+  //   isApprovedDisabled,
+  //   taxData === null,
+  //   !props.setTaxStaffStatus,
+  //   progressTermin?.ident_name !== "TAX",
+  //   window.$.isEmptyObject(optionSelectedPpn), "<<<<<");
+
   return (
     <React.Fragment>
       <Toast />
@@ -1720,7 +1729,7 @@ function ContractTaxPage(props) {
                   isApprovedDisabled ||
                   taxData === null ||
                   !props.setTaxStaffStatus ||
-                  progressTermin?.ident_name !== "TAX" ||
+                  // progressTermin?.ident_name !== "TAX" ||
                   window.$.isEmptyObject(optionSelectedPpn)
                 }
                 className="btn btn-primary mx-1"
@@ -1735,8 +1744,9 @@ function ContractTaxPage(props) {
                   taxData?.state === "REJECTED" ||
                   isApprovedDisabled ||
                   taxData === null ||
-                  !props.setTaxStaffStatus ||
-                  progressTermin?.ident_name !== "TAX"
+                  !props.setTaxStaffStatus 
+                  // ||
+                  // progressTermin?.ident_name !== "TAX"
                 }
                 className="btn btn-danger mx-1"
               >

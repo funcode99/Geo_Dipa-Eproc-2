@@ -322,16 +322,24 @@ function ContractInvoicePage(props) {
     return total;
   };
 
-  console.log(
-    "coba apa ini",
-    isSubmit,
-    invoiceData?.state === "REJECTED",
-    invoiceData?.state === "APPROVED",
-    invoiceData === null,
-    !props.billingStaffStatus,
-    progressTermin?.ident_name !== "BILLING_SOFTCOPY",
-    progressTermin
-  );
+  // console.log(
+  //   "coba apa ini",
+  //   isSubmit,
+  //   invoiceData?.state === "REJECTED",
+  //   invoiceData?.state === "APPROVED",
+  //   invoiceData === null,
+  //   !props.billingStaffStatus,
+  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY",
+  //   progressTermin
+  // );
+
+  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
+  // console.log(isSubmit,
+  //   invoiceData?.state === "REJECTED",
+  //   invoiceData?.state === "APPROVED",
+  //   invoiceData === null,
+  //   !props.billingStaffStatus,
+  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY", "<<<<<");
 
   return (
     <React.Fragment>
