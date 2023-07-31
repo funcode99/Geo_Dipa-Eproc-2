@@ -26,15 +26,16 @@ const DetailServAcceptance = (props) => {
   const [hideLogo, setHideLogo] = useState(false);
   const [addPaddingTop, setAddPaddingTop] = useState(0);
   const loading = useSelector((state) => getLoading(state, key));
-  const { fullData, dataSA, isClient, showCancel } = props;
+  const { id,fullData, dataSA, isClient, showCancel } = props;
   const print = () => {
     setHideLogo(true);
-    var clientHeight = document.getElementById("printSA").clientHeight;
+    var clientHeight = document.getElementById(`${id}`).clientHeight;
     // tinggi paper landscape normal 828
     const pageHeight = 828;
     const pageFullHeight = Math.floor(clientHeight / pageHeight) * pageHeight;
     const heightDifference = clientHeight - pageFullHeight;
     const needAddDummyHeight = heightDifference < 150;
+
     if (needAddDummyHeight) setAddPaddingTop(heightDifference);
     setTimeout(() => {
       var css = "@page { size: landscape; }",
@@ -52,7 +53,7 @@ const DetailServAcceptance = (props) => {
 
       head.appendChild(style);
 
-      var printContents = window.$("#printSA").html();
+      var printContents = window.$(`#${id}`).html();
       window.$("#root").css("display", "none");
       window.$("#print-content").addClass("p-5");
       window.$("#print-content").html(printContents);
@@ -81,7 +82,6 @@ const DetailServAcceptance = (props) => {
       })
     );
   }, [dispatch, dataSA]);
-  console.log(`props`, props);
   return (
     <Card>
       <CardHeader
@@ -90,9 +90,7 @@ const DetailServAcceptance = (props) => {
             <StatusRemarks status={"CANCELED"} remarks={dataSA?.canceled_at} />
           ) : (
             ""
-          )
-        }
-      >
+          )}>
         <CardHeaderToolbar>
           <div className="kt-widget19__action">
             {showCancel && (
@@ -122,7 +120,7 @@ const DetailServAcceptance = (props) => {
           </button>
         </CardHeaderToolbar>
       </CardHeader>
-      <CardBody id="printSA">
+      <CardBody id={dataSA?.sa_header.sheet_no}>
         <SectionHeader hideLogo={hideLogo} {...props} />
         <SectionSummary {...props} />
         <SectionTable {...props} />
@@ -130,9 +128,11 @@ const DetailServAcceptance = (props) => {
         <Grid container spacing={1} className={"mt-3"}>
           <Grid item xs={8}></Grid>
           <BoxSignSA
+          
             name={
-              fullData?.contract?.contract_party
-                ?.party_1_director_position_full_name
+              // fullData?.contract?.contract_party
+              //   ?.party_1_director_position_full_name              
+              fullData?.news_bast?.is_finished ?  fullData?.news_bast?.bapp_authorize_officer : fullData?.news?.bapp_authorize_officer
             }
             date={fullData?.task_sa_array?.[0]?.createdAt}
             {...props.signProps}

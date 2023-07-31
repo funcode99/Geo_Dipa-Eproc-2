@@ -992,7 +992,7 @@ function ItemContractBKB(props) {
                       </td>
                       <td>
                         <div className="d-flex justify-content-between">
-                          <span>Rp.</span>
+                          <span>{bkbData?.symbol}</span>
                           <span>
                             {bkbData?.ppn?.tax_amount &&
                               rupiah(bkbData?.ppn?.tax_amount).slice(3)}
@@ -1211,90 +1211,89 @@ function ItemContractBKB(props) {
                 className="col-sm border text-center"
                 style={{ height: 125 }}
               >
-                {rolesBKBData?.map((row, key) => {
-                  if (
-                    parseFloat(bkbData?.sub_total) >= row?.min_value &&
-                    parseFloat(bkbData?.sub_total) <= row?.max_value
-                  ) {
-                    return (
-                      <div
-                        className="text-center"
-                        style={{
-                          height: styleCustom.minHeightAppv,
-                          paddingTop: 10,
-                          paddingBottom: 10,
-                        }}
-                        key={key}
-                      >
-                        {monitoring_role.findIndex(
-                          (element) => element === row.name
-                        ) >= 0 &&
-                          bkbData?.inv_approved_state === "PENDING" && (
-                            <button
-                              type="button"
-                              className="btn btn-primary btn-sm mx-2"
-                              style={{ fontSize: 10, marginTop: 20 }}
-                              onClick={() => {
-                                setModalApproved({
-                                  ...modalApproved,
-                                  statusDialog: true,
-                                  data: "monitoringApproveInvPosting",
-                                });
-                              }}
-                            >
-                              <i
-                                className="fas fa-check-circle"
-                                style={{ fontSize: 8 }}
-                              ></i>
-                              <FormattedMessage id="TITLE.APPROVE" />
-                            </button>
-                          )}
-                        {monitoring_role.findIndex(
-                          (element) => element === row.name
-                        ) >= 0 &&
-                          bkbData?.inv_approved_state === "PENDING" && (
-                            <button
-                              type="button"
-                              className="btn btn-danger btn-sm mx-2"
-                              style={{ fontSize: 10, marginTop: 20 }}
-                              onClick={() => {
-                                setModalRejected({
-                                  ...modalRejected,
-                                  statusDialog: true,
-                                  data: "rejectInvPosting",
-                                });
-                              }}
-                            >
-                              <i
-                                className="fas fa-times-circle"
-                                style={{ fontSize: 8 }}
-                              ></i>
-                              <FormattedMessage id="TITLE.REJECT" />
-                            </button>
-                          )}
-                        {bkbData?.inv_approved_state === "APPROVED" && (
-                          <QRCodeG
-                            value={`${window.location.origin}/qrcode?term_id=${termin}&type=APPROVED_INV`}
-                          />
-                        )}
-                        {bkbData?.inv_approved_state === "APPROVED" && (
-                          <div className="d-flex align-items-end">
-                            <span className="mx-auto">
-                              {bkbData?.inv_approved_data?.approved_by}
-                            </span>
-                          </div>
-                        )}
-                        {bkbData?.inv_approved_state === "APPROVED" && (
-                          <div className="d-flex align-items-end">
-                            <span className="mx-auto">
-                              {bkbData?.inv_approved_data?.role_name}
-                            </span>
-                          </div>
-                        )}
+                <div
+                  className="text-center"
+                  style={{
+                    height: styleCustom.minHeightAppv,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                  }}
+                >
+                  {rolesBKBData?.map((row, key) => {
+                    if (
+                      parseFloat(bkbData?.sub_total) >= row?.min_value &&
+                      parseFloat(bkbData?.sub_total) <= row?.max_value
+                    ) {
+                      return (
+                        <div>
+                          {monitoring_role.findIndex(
+                            (element) => element === row.name
+                          ) >= 0 &&
+                            bkbData?.inv_approved_state === "PENDING" && (
+                              <button
+                                type="button"
+                                className="btn btn-primary btn-sm mx-2"
+                                style={{ fontSize: 10, marginTop: 20 }}
+                                onClick={() => {
+                                  setModalApproved({
+                                    ...modalApproved,
+                                    statusDialog: true,
+                                    data: "monitoringApproveInvPosting",
+                                  });
+                                }}
+                              >
+                                <i
+                                  className="fas fa-check-circle"
+                                  style={{ fontSize: 8 }}
+                                ></i>
+                                <FormattedMessage id="TITLE.APPROVE" />
+                              </button>
+                            )}
+                          {monitoring_role.findIndex(
+                            (element) => element === row.name
+                          ) >= 0 &&
+                            bkbData?.inv_approved_state === "PENDING" && (
+                              <button
+                                type="button"
+                                className="btn btn-danger btn-sm mx-2"
+                                style={{ fontSize: 10, marginTop: 20 }}
+                                onClick={() => {
+                                  setModalRejected({
+                                    ...modalRejected,
+                                    statusDialog: true,
+                                    data: "rejectInvPosting",
+                                  });
+                                }}
+                              >
+                                <i
+                                  className="fas fa-times-circle"
+                                  style={{ fontSize: 8 }}
+                                ></i>
+                                <FormattedMessage id="TITLE.REJECT" />
+                              </button>
+                            )}
+                        </div>
+                      );
+                    }
+                  })}
+                  {bkbData?.inv_approved_state === "APPROVED" && (
+                    <>
+                      <QRCodeG
+                        value={`${window.location.origin}/qrcode?term_id=${termin}&type=APPROVED_INV`}
+                      />
+                      <div className="d-flex align-items-end">
+                        <span className="mx-auto">
+                          {bkbData?.inv_approved_data?.approved_by}
+                        </span>
                       </div>
-                    );
-                  }
-                })}
+                      <div className="d-flex align-items-end">
+                        <span className="mx-auto">
+                          {bkbData?.inv_approved_data?.role_name}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
               {/* <span>Treasury :</span> */}
               <div

@@ -32,7 +32,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { rupiah,formatCurrency } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -70,6 +70,7 @@ function ContractReceiptPage(props) {
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
   const [addtionalPayment, setAddtionalPayment] = useState([]);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
+  const [currencyCode, setCurrencyCode] = useState(null);
   const [invoiceData, setInvoiceData] = useState({});
 
   const classes_ = useStyles();
@@ -81,6 +82,7 @@ function ContractReceiptPage(props) {
   );
   const contract_id = props.match.params.contract;
   const termin = props.match.params.termin;
+
   const {
     intl,
     classes,
@@ -184,7 +186,8 @@ function ContractReceiptPage(props) {
         response["data"]["data"]["termin_value_ppn_new"] = rupiah(
           response["data"]["data"]["termin_value"] * 1.1
         );
-        setContractData(response.data.data);
+
+        setContractData(response["data"]["data"]);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -195,6 +198,7 @@ function ContractReceiptPage(props) {
     setLoadingRcpt(true);
     getReceipt(contract_id, termin)
       .then((response) => {
+        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         setReceiptData(response.data.data);
         if (response.data.data) {
           getHistoryReceiptData(response["data"]["data"]["id"]);
@@ -325,6 +329,15 @@ function ContractReceiptPage(props) {
     });
     return total;
   };
+
+  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
+  // console.log(isSubmit,
+  //   receiptData?.state === "REJECTED",
+  //   receiptData?.state === "APPROVED",
+  //   receiptData === null,
+  //   !props.billingStaffStatus,
+  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY", "<<<<<");
+  
 
   return (
     <React.Fragment>
@@ -697,7 +710,7 @@ function ContractReceiptPage(props) {
           <DialogActions className={classes_.MuiDialogActionsPosistion}>
             <div>
               <FormattedMessage id="TITLE.TOTAL_PRICE_IS" />:{" "}
-              {rupiah(totalAddtionalPayment())}
+              {formatCurrency(currencyCode, totalAddtionalPayment())}
             </div>
             <div>
               <button
@@ -829,7 +842,7 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={contractData["contract_value_new"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                     disabled
                   />
                 </div>
@@ -860,7 +873,7 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={contractData["termin_value_new"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                     disabled
                   />
                 </div>
@@ -890,9 +903,7 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={rupiah(
-                      contractData["termin_value"] + totalAddtionalPayment()
-                    )}
+                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />
@@ -910,8 +921,9 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              !props.billingStaffStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              !props.billingStaffStatus 
+              // ||
+              // progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-primary mx-1"
           >
@@ -925,8 +937,9 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              !props.billingStaffStatus ||
-              progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+              !props.billingStaffStatus
+              // ||
+              // progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
             className="btn btn-danger mx-1"
           >

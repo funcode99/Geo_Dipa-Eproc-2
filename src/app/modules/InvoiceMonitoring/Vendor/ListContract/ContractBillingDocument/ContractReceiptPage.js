@@ -614,8 +614,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyReceiptData)
                       }
                       {...formik.getFieldProps("receipt_no")}
                       onChange={(e) => {
@@ -647,8 +646,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyReceiptData)
                       }
                       {...formik.getFieldProps("receipt_date")}
                       onChange={(e) => {
@@ -685,8 +683,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyReceiptData)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -711,10 +708,9 @@ function ContractReceiptPage(props) {
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
                       receiptStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus
                         ? ""
-                        : "pointer"
+                        : "pointer" && !historyReceiptData)
                     }`}
                   >
                     {!receiptStatus && (
@@ -727,10 +723,9 @@ function ContractReceiptPage(props) {
                     <span
                       className={`form-control text-truncate ${
                         receiptStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus
                           ? classes.textDisabled
-                          : ""
+                          : "" && !historyReceiptData)
                       }`}
                     >
                       {uploadFilename}
@@ -775,8 +770,7 @@ function ContractReceiptPage(props) {
                     disabled={
                       loading ||
                       receiptStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus && !historyReceiptData)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -865,8 +859,7 @@ function ContractReceiptPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 receiptStatus ||
-                progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                !invoicePeriodsStatus
+                (!invoicePeriodsStatus && !historyReceiptData)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />

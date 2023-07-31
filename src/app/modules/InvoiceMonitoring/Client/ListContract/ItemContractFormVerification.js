@@ -22,7 +22,7 @@ import // Dialog,
 "@material-ui/core";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import useToast from "../../../../components/toast";
-import { rupiah } from "../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../libs/currency";
 import {
   getListDocSoftCopy,
   getDeliverableInInvoive,
@@ -34,6 +34,8 @@ import { formatDate, toNewDate } from "../../../../libs/date";
 // const Transition = React.forwardRef(function Transition(props, ref) {
 //     return <Slide direction="up" ref={ref} {...props} />;
 // });
+
+let currencyCode = null;
 
 function ItemContractFormVerification(props) {
   const { intl } = props;
@@ -62,7 +64,14 @@ function ItemContractFormVerification(props) {
 
     getContractSummary(contract_id, termin)
       .then((result) => {
-        setContractData(result.data.data);
+        currencyCode = result["data"]["data"]["currency_code"]; 
+
+        const data = result["data"]["data"];
+        const terminValue = data["termin_value"];
+
+        data["termin_value_new"] = formatCurrency(currencyCode,terminValue);
+
+        setContractData(data);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -182,7 +191,8 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      value={rupiah(contractData?.termin_value)}
+                      // value={rupiah(contractData?.termin_value)}
+                      value={contractData["termin_value_new"]}
                       onChange={(e) => {}}
                       readOnly
                     />
