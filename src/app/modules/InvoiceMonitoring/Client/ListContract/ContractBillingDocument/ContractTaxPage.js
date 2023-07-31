@@ -37,7 +37,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { rupiah,formatCurrency } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -110,6 +110,7 @@ function ContractTaxPage(props) {
   const [approveHardCopyRole, setApproveHardCopyRole] = useState(false);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const [postingDate, setPostingDate] = useState("");
+  const [currencyCode, setCurrencyCode] = useState(null);
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -252,9 +253,11 @@ function ContractTaxPage(props) {
         response["data"]["data"]["termin_value_ppn_new"] = rupiah(
           response["data"]["data"]["termin_value"] * 1.1
         );
-        setContractData(response.data.data);
+
+        setContractData(response["data"]["data"]);
       })
       .catch((error) => {
+
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [contract_id, formik, intl, setToast, user_id]);
@@ -320,7 +323,11 @@ function ContractTaxPage(props) {
     setLoadingTax(true);
     getTax(contract_id, termin)
       .then((response) => {
+        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
+
+        console.log(response["data"]["data"]["currency"], "CURRENCY");
         if (response.data.data !== null) {
+          
           if (response.data.data.tax_selected)
             setSaveTaxPph({
               optionSelectedPph: cloneDeep(response.data.data.tax_selected),
@@ -591,6 +598,15 @@ function ContractTaxPage(props) {
   //   progressTermin?.ident_name
   // );
 
+  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
+  // console.log(isSubmit,
+  //   taxData?.state === "REJECTED",
+  //   isApprovedDisabled,
+  //   taxData === null,
+  //   !props.setTaxStaffStatus,
+  //   progressTermin?.ident_name !== "TAX",
+  //   window.$.isEmptyObject(optionSelectedPpn), "<<<<<");
+
   return (
     <React.Fragment>
       <Toast />
@@ -684,7 +700,7 @@ function ContractTaxPage(props) {
           <DialogActions className={classes_.MuiDialogActionsPosistion}>
             <div>
               <FormattedMessage id="TITLE.TOTAL_PRICE_IS" />:{" "}
-              {rupiah(totalAddtionalPayment())}
+              {formatCurrency(currencyCode, totalAddtionalPayment())}
             </div>
             <div>
               <button
@@ -1515,7 +1531,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={contractData["contract_value_new"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                     disabled
                   />
                 </div>
@@ -1546,7 +1562,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={contractData["termin_value_new"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                     disabled
                   />
                 </div>
@@ -1576,9 +1592,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={rupiah(
-                      contractData["termin_value"] + totalAddtionalPayment()
-                    )}
+                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />
@@ -1715,7 +1729,7 @@ function ContractTaxPage(props) {
                   isApprovedDisabled ||
                   taxData === null ||
                   !props.setTaxStaffStatus ||
-                  progressTermin?.ident_name !== "TAX" ||
+                  // progressTermin?.ident_name !== "TAX" ||
                   window.$.isEmptyObject(optionSelectedPpn)
                 }
                 className="btn btn-primary mx-1"
@@ -1730,8 +1744,9 @@ function ContractTaxPage(props) {
                   taxData?.state === "REJECTED" ||
                   isApprovedDisabled ||
                   taxData === null ||
-                  !props.setTaxStaffStatus ||
-                  progressTermin?.ident_name !== "TAX"
+                  !props.setTaxStaffStatus 
+                  // ||
+                  // progressTermin?.ident_name !== "TAX"
                 }
                 className="btn btn-danger mx-1"
               >
