@@ -1141,6 +1141,7 @@ function ItemContractInvoice(props) {
   };
 
   return (
+    
     <React.Fragment>
       <div id="GOODS" className="d-none">
         <GoodReceipt data={content} loading={false} />

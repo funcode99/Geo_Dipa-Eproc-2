@@ -28,7 +28,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { rupiah,formatCurrency } from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -71,6 +71,7 @@ function ContractInvoicePage(props) {
 
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const [addtionalPayment, setAddtionalPayment] = useState([]);
+  const [currencyCode, setCurrencyCode] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
   const classes_ = useStyles();
 
@@ -339,6 +340,7 @@ function ContractInvoicePage(props) {
 
     getInvoice(contract_id, termin)
       .then((response) => {
+        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "invoice_no",
@@ -814,7 +816,7 @@ function ContractInvoicePage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={`${currencyCode} `}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue
@@ -862,7 +864,7 @@ function ContractInvoicePage(props) {
           <DialogActions className={classes_.MuiDialogActionsPosistion}>
             <div>
               <FormattedMessage id="TITLE.TOTAL_PRICE_IS" />:{" "}
-              {rupiah(totalAddtionalPayment())}
+              {formatCurrency(currencyCode, totalAddtionalPayment())}
             </div>
             <div>
               <button
@@ -1114,7 +1116,7 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={contractData["contract_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                       disabled
                     />
                   </div>
@@ -1148,12 +1150,12 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={contractData["termin_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                       disabled
                     />
+                    {}
                   </div>
                 </div>
-
                 <div className="form-group row">
                   <label
                     htmlFor="priceStep1"
@@ -1185,9 +1187,7 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={rupiah(
-                        contractData["termin_value"] + totalAddtionalPayment()
-                      )}
+                      value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
                       onChange={() => {}}
                       disabled
                     />
@@ -1222,7 +1222,7 @@ function ContractInvoicePage(props) {
                       decimalSeparator={","}
                       allowEmptyFormatting={true}
                       allowLeadingZeros={true}
-                      prefix={"Rp "}
+                      prefix={`${currencyCode} `}
                       onValueChange={(e) => {
                         setInvoiceData({
                           ...invoiceData,
@@ -1288,7 +1288,7 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceTaxInvoice"
-                      defaultValue={contractData["termin_value_ppn_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value_ppn"]}
                       disabled
                     />
                   </div>
