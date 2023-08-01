@@ -267,7 +267,11 @@ function DashboardListContract(props) {
           });
       }
     });
+
+    console.log(data, ">>>>");
   };
+
+  console.log(data.data);
 
   return (
     <React.Fragment>

@@ -27,7 +27,7 @@ export const formatCurrency = (code, ...amounts) => {
 
   options["currency"] = code;
   options["style"] = "currency";
-  options["currencyDisplay"] = "code";
+  options["currencyDisplay"] = "symbol";
 
   amounts.forEach((amount) => {
     if(typeof(amount) === "undefined") amount = 0;
