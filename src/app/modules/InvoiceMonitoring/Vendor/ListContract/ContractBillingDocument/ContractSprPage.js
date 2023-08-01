@@ -27,7 +27,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -69,6 +69,7 @@ function ContractSprPage(props) {
   const [historySppData, setHistorySppData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
+  const [currencyCode, setCurrencyCode] = useState(null);
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
 
   const headerTable = [
@@ -306,6 +307,7 @@ function ContractSprPage(props) {
     setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
+        setCurrencyCode( response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "spr_no",
@@ -930,8 +932,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historySppData)
                       }
                       {...formik.getFieldProps("spr_no")}
                       onChange={(e) => {
@@ -960,8 +961,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historySppData)
                       }
                       {...formik.getFieldProps("spr_date")}
                       onChange={(e) => {
@@ -998,8 +998,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historySppData)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -1024,10 +1023,9 @@ function ContractSprPage(props) {
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
                       sppStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus
                         ? ""
-                        : "pointer"
+                        : "pointer" && !historySppData)
                     }`}
                   >
                     {!sppStatus && (
@@ -1040,10 +1038,9 @@ function ContractSprPage(props) {
                     <span
                       className={`form-control text-truncate ${
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus
                           ? classes.textDisabled
-                          : ""
+                          : "" && !historySppData)
                       }`}
                     >
                       {uploadFilename}
@@ -1081,8 +1078,7 @@ function ContractSprPage(props) {
                     disabled={
                       loading ||
                       sppStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus && !historySppData)
                     }
                     onBlur={formik.handleBlur}
                     onChange={(e) => handleUpload(e)}
@@ -1111,8 +1107,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                          !invoicePeriodsStatus
+                          (!invoicePeriodsStatus && !historySppData)
                         }
                         onChange={handleRadio}
                         checked={bankReference}
@@ -1131,8 +1126,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                          !invoicePeriodsStatus
+                          (!invoicePeriodsStatus && !historySppData)
                         }
                         onChange={handleRadio}
                         checked={!bankReference}
@@ -1159,8 +1153,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                          !invoicePeriodsStatus
+                          (!invoicePeriodsStatus && !historySppData)
                         }
                         className="custom-select custom-select-sm"
                         value={sppData.bank_account_no}
@@ -1193,8 +1186,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                          !invoicePeriodsStatus
+                          (!invoicePeriodsStatus && !historySppData)
                         }
                         {...formik.getFieldProps("bank_account_no")}
                       />
@@ -1224,8 +1216,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historySppData)
                       }
                       defaultValue={sppData.bank_account_name}
                       {...formik.getFieldProps("bank_account_name")}
@@ -1255,8 +1246,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historySppData)
                       }
                       {...formik.getFieldProps("bank_name")}
                     />
@@ -1284,8 +1274,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historySppData)
                       }
                       {...formik.getFieldProps("bank_address")}
                     ></textarea>
@@ -1309,10 +1298,9 @@ function ContractSprPage(props) {
                       htmlFor="upload_bank"
                       className={`input-group mb-3 col-sm-8 ${
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus
                           ? ""
-                          : "pointer"
+                          : "pointer" && !historySppData)
                       }`}
                     >
                       {!sppStatus && (
@@ -1325,10 +1313,9 @@ function ContractSprPage(props) {
                       <span
                         className={`form-control text-truncate h-100 ${
                           sppStatus ||
-                          progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                          !invoicePeriodsStatus
+                          (!invoicePeriodsStatus
                             ? classes.textDisabled
-                            : ""
+                            : "" && !historySppData)
                         }`}
                       >
                         {uploadFilenameBank}
@@ -1366,8 +1353,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historySppData)
                       }
                       onChange={(e) => handleUploadBank(e)}
                     />
@@ -1387,7 +1373,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={contractData["contract_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                       disabled
                     />
                   </div>
@@ -1421,7 +1407,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={contractData["termin_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                       disabled
                     />
                   </div>
@@ -1441,7 +1427,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceTaxSpp"
-                      defaultValue={contractData["termin_value_ppn_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value_ppn"])}
                       disabled
                     />
                   </div>
@@ -1457,8 +1443,7 @@ function ContractSprPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 sppStatus ||
-                progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                !invoicePeriodsStatus
+                (!invoicePeriodsStatus && !historySppData)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />

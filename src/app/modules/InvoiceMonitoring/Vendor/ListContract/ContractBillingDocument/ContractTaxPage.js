@@ -27,7 +27,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { rupiah,formatCurrency } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -54,6 +54,7 @@ function ContractTaxPage(props) {
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
+  const [currencyCode, setCurrencyCode] = useState(null);
 
   const [Toast, setToast] = useToast();
 
@@ -280,6 +281,7 @@ function ContractTaxPage(props) {
     setLoadingTax(true);
     getTax(contract_id, termin)
       .then((response) => {
+        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "tax_no",
@@ -441,7 +443,16 @@ function ContractTaxPage(props) {
   useEffect(getInvoiceData, []);
   useEffect(getInvoicePeriodsData, []);
 
-  console.log(formik.touched);
+  // console.log(formik.touched);
+
+  // console.log(
+  //   loading,
+  //   taxStatus,
+  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY",
+  //   !historyTaxData,
+  //   !invoicePeriodsStatus, //problem with invoice periods (add history)
+  //   "<<<<<"
+  // )
 
   return (
     <React.Fragment>
@@ -663,8 +674,8 @@ function ContractTaxPage(props) {
                       id={
                         loading ||
                         taxStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        // progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        (!invoicePeriodsStatus && !historyTaxData)
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
@@ -672,8 +683,8 @@ function ContractTaxPage(props) {
                       displayType={
                         loading ||
                         taxStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        // progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        (!invoicePeriodsStatus && !historyTaxData)
                           ? "text"
                           : "input"
                       }
@@ -709,7 +720,7 @@ function ContractTaxPage(props) {
                         loading ||
                         taxStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyTaxData)
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("tax_date")}
@@ -743,8 +754,8 @@ function ContractTaxPage(props) {
                       id={
                         loading ||
                         taxStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        // progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        (!invoicePeriodsStatus && !historyTaxData)
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
@@ -752,8 +763,8 @@ function ContractTaxPage(props) {
                       displayType={
                         loading ||
                         taxStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        // progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
+                        (!invoicePeriodsStatus && !historyTaxData)
                           ? "text"
                           : "input"
                       }
@@ -790,7 +801,7 @@ function ContractTaxPage(props) {
                         loading ||
                         taxStatus ||
                         progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyTaxData)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -879,7 +890,7 @@ function ContractTaxPage(props) {
                       loading ||
                       taxStatus ||
                       progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus && !historyTaxData)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -898,7 +909,7 @@ function ContractTaxPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={contractData["contract_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                       disabled
                     />
                   </div>
@@ -932,7 +943,7 @@ function ContractTaxPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={contractData["termin_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                       disabled
                     />
                   </div>
@@ -949,7 +960,7 @@ function ContractTaxPage(props) {
                       type="text"
                       className="form-control"
                       id="priceTax"
-                      defaultValue={contractData["termin_value_ppn_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value_ppn"])}
                       disabled
                     />
                   </div>
@@ -966,7 +977,7 @@ function ContractTaxPage(props) {
                 loading ||
                 taxStatus ||
                 progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                !invoicePeriodsStatus
+                (!invoicePeriodsStatus && !historyTaxData)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />

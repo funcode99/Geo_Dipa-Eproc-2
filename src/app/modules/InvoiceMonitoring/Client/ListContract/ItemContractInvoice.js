@@ -543,6 +543,7 @@ function ItemContractInvoice(props) {
           );
           getRolesAcceptanceTax(response["data"]["data"]["authority"]).then(
             (responseRoles) => {
+              // console.log(responseRoles, "responseRoles");
               responseRoles["data"]["data"].map((item, index) => {
                 if (
                   monitoring_role.findIndex(
@@ -1140,6 +1141,7 @@ function ItemContractInvoice(props) {
   };
 
   return (
+    
     <React.Fragment>
       <div id="GOODS" className="d-none">
         <GoodReceipt data={content} loading={false} />

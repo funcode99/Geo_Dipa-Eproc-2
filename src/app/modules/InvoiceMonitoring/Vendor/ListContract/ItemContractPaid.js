@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector, shallowEqual } from "react-redux";
-import { rupiah } from "../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../libs/currency";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Card,
@@ -43,6 +43,7 @@ function ItemContractPaid(props) {
     })
   );
   const [data, setData] = useState({});
+  const [currencyCode, setCurrencyCode] = useState(null);
   const [taxStaffStatus, setTaxStaffStatus] = useState(false);
   const classes = useStyles();
 
@@ -143,6 +144,7 @@ function ItemContractPaid(props) {
   const getContractData = useCallback(() => {
     getTerminPaid(termin)
       .then((response) => {
+        setCurrencyCode(response["data"]["data"]["currency_code"]);
         setContractData(response.data.data);
         if (response.data.data?.paid_date) {
           formik.setFieldValue("paid_date", response.data.data.paid_date);
@@ -242,7 +244,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={rupiah(contractData?.total_amount || 0)}
+                      value={formatCurrency(currencyCode, contractData["total_amount"])}
                       disabled
                     />
                   </div>
@@ -259,7 +261,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      value={rupiah(contractData?.termin_value || 0)}
+                      value={formatCurrency(currencyCode, contractData["termin_value"])}
                       disabled
                     />
                   </div>
@@ -297,7 +299,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={rupiah(contractData?.penalty || 0)}
+                      value={formatCurrency(currencyCode, contractData["penalty"])}
                       disabled
                     />
                   </div>
@@ -315,7 +317,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={rupiah(contractData?.tax_value || 0)}
+                      value={formatCurrency(currencyCode, contractData["tax_value"])}
                       disabled
                     />
                   </div>

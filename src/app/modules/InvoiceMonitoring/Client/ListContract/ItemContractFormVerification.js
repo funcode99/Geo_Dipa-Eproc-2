@@ -22,7 +22,7 @@ import // Dialog,
 "@material-ui/core";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import useToast from "../../../../components/toast";
-import { rupiah } from "../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../libs/currency";
 import {
   getListDocSoftCopy,
   getDeliverableInInvoive,
@@ -44,6 +44,7 @@ function ItemContractFormVerification(props) {
   const [billingHardCopy, setBillingHardCopy] = useState(true);
   const [deliverableHardCopy, setDeliverableHardCopy] = useState(true);
   const [contractHardCopy, setContractHardCopy] = useState(true);
+  const [currencyCode, setCurrencyCode] = useState(null);
   const [Toast, setToast] = useToast();
 
   const contract_id = props.match.params.contract;
@@ -62,7 +63,8 @@ function ItemContractFormVerification(props) {
 
     getContractSummary(contract_id, termin)
       .then((result) => {
-        setContractData(result.data.data);
+        setCurrencyCode(result["data"]["data"]["currency_code"]);
+        setContractData(result["data"]["data"]);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -182,7 +184,7 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      value={rupiah(contractData?.termin_value)}
+                      value={formatCurrency(currencyCode, contractData["termin_value"])}
                       onChange={(e) => {}}
                       readOnly
                     />

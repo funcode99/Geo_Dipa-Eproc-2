@@ -992,7 +992,7 @@ function ItemContractBKB(props) {
                       </td>
                       <td>
                         <div className="d-flex justify-content-between">
-                          <span>Rp.</span>
+                          <span>{bkbData?.symbol}</span>
                           <span>
                             {bkbData?.ppn?.tax_amount &&
                               rupiah(bkbData?.ppn?.tax_amount).slice(3)}

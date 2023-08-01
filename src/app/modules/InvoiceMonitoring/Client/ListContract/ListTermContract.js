@@ -9,7 +9,8 @@ import {
   TableRow,
   TableCell,
 } from "@material-ui/core";
-import { rupiah } from "../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../libs/currency";
+import { printMoney } from "../../../../libs/currency";
 import Subheader from "../../../../components/subheader";
 import { useSubheader } from "../../../../../_metronic/layout";
 import { Form, Row, Col } from "react-bootstrap";
@@ -40,6 +41,7 @@ const ListTermContract = (props) => {
   const classes = useStyles();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [currencyCode, setCurrencyCode] = useState(null);
   const [Toast, setToast] = useToast();
   let tabInvoice = useSelector(
     (state) => state.invoiceMonitoring.tabInvoice,
@@ -72,6 +74,8 @@ const ListTermContract = (props) => {
     setLoading(true);
     getTermContract(contract)
       .then((result) => {
+        setCurrencyCode(result["data"]["data"]["code"]);
+        console.log(result, ">>>>>");
         setLoading(false);
         var data = result.data.data;
         if (data && data.data_termin) {
@@ -252,9 +256,7 @@ const ListTermContract = (props) => {
                     placeholder={intl.formatMessage({
                       id: "CONTRACT_DETAIL.LABEL.PRICE",
                     })}
-                    value={rupiah(
-                      parseInt(data?.contract_value ? data?.contract_value : 0)
-                    )}
+                    value={printMoney(parseInt(data?.contract_value ? data?.contract_value : 0, data?.code))}
                     disabled
                   />
                 </Col>
@@ -318,7 +320,7 @@ const ListTermContract = (props) => {
                       .format("DD MMM YYYY")}
                   </TableCell>
                   <TableCell>{value?.bobot + "%"}</TableCell>
-                  <TableCell>{rupiah(value?.prices || 0)}</TableCell>
+                  <TableCell>{formatCurrency(currencyCode, value["prices"])}</TableCell>
                   <TableCell>{value?.progress}</TableCell>
                   {/* <TableCell>Doc Progress</TableCell> */}
                   <TableCell>{`${value?.name} ${

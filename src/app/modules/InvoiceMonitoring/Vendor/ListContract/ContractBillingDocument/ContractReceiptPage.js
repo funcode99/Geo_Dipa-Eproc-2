@@ -26,7 +26,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -52,6 +52,7 @@ function ContractReceiptPage(props) {
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
+  const [currencyCode, setCurrencyCode] = useState(null);
 
   const [Toast, setToast] = useToast();
 
@@ -179,6 +180,7 @@ function ContractReceiptPage(props) {
     setLoadingRcpt(true);
     getReceipt(contract_id, termin)
       .then((response) => {
+        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "receipt_no",
@@ -614,8 +616,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyReceiptData)
                       }
                       {...formik.getFieldProps("receipt_no")}
                       onChange={(e) => {
@@ -647,8 +648,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyReceiptData)
                       }
                       {...formik.getFieldProps("receipt_date")}
                       onChange={(e) => {
@@ -685,8 +685,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !historyReceiptData)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -711,10 +710,9 @@ function ContractReceiptPage(props) {
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
                       receiptStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus
                         ? ""
-                        : "pointer"
+                        : "pointer" && !historyReceiptData)
                     }`}
                   >
                     {!receiptStatus && (
@@ -727,10 +725,9 @@ function ContractReceiptPage(props) {
                     <span
                       className={`form-control text-truncate ${
                         receiptStatus ||
-                        progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus
                           ? classes.textDisabled
-                          : ""
+                          : "" && !historyReceiptData)
                       }`}
                     >
                       {uploadFilename}
@@ -775,8 +772,7 @@ function ContractReceiptPage(props) {
                     disabled={
                       loading ||
                       receiptStatus ||
-                      progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus && !historyReceiptData)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -795,7 +791,7 @@ function ContractReceiptPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={contractData["contract_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                       disabled
                     />
                   </div>
@@ -829,7 +825,7 @@ function ContractReceiptPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={contractData["termin_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                       disabled
                     />
                   </div>
@@ -849,7 +845,7 @@ function ContractReceiptPage(props) {
                       type="text"
                       className="form-control"
                       id="priceTaxReceipt"
-                      defaultValue={contractData["termin_value_ppn_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value_ppn"])}
                       disabled
                     />
                   </div>
@@ -865,8 +861,7 @@ function ContractReceiptPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 receiptStatus ||
-                progressTermin?.ident_name !== "BILLING_SOFTCOPY" ||
-                !invoicePeriodsStatus
+                (!invoicePeriodsStatus && !historyReceiptData)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />

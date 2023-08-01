@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { connect, useSelector, shallowEqual } from "react-redux";
-import { rupiah } from "../../../../libs/currency";
+import { formatCurrency, rupiah } from "../../../../libs/currency";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Card,
@@ -114,6 +114,7 @@ function ItemContractSummary(props) {
   const [contractAuthority, setContractAuthority] = useState(0);
   const [contractAuthorityExist, setContractAuthorityExist] = useState(false);
   const [count, setCount] = useState(0);
+  const [currencyCode, setCurrencyCode] = useState(null);
 
   const [Toast, setToast] = useToast();
   const user_id = useSelector(
@@ -167,12 +168,16 @@ function ItemContractSummary(props) {
   const getContractData = useCallback(() => {
     getContractSummary(contract_id, termin)
       .then((response) => {
-        response["data"]["data"]["contract_value"] = rupiah(
-          response["data"]["data"]["contract_value"]
-        );
-        response["data"]["data"]["termin_value"] = rupiah(
-          response["data"]["data"]["termin_value"]
-        );
+        setCurrencyCode(response["data"]["data"]["currency_code"]);
+
+        // response["data"]["data"]["contract_value"] = rupiah(
+        //   response["data"]["data"]["contract_value"]
+        // );
+        // response["data"]["data"]["termin_value"] = rupiah(
+        //   response["data"]["data"]["termin_value"]
+        // );
+
+        
         response["data"]["data"]["authorize"] = response["data"]["data"][
           "party_1_contract_signature_name"
         ].concat(
@@ -322,6 +327,7 @@ function ItemContractSummary(props) {
   const getDatas = () => {
     getTermContract(contract)
       .then((result) => {
+        console.log({result});
         var data = result.data.data;
         if (data && data.data_termin) {
           data.data_termin = data.data_termin.sort((a, b) =>
@@ -408,7 +414,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={contractData["contract_value"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                     disabled
                   />
                 </div>
@@ -450,7 +456,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={contractData["termin_value"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                     disabled
                   />
                 </div>
