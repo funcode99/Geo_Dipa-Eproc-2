@@ -1630,6 +1630,7 @@ function ContractTaxPage(props) {
                   </button>
                 </div>
               </div>
+              
               {/* app/modules/DeliveryMonitoring/pages/Termin/Documents/component/ModalAddDeliverables.js */}
               {/* {listTax.map((item, index) => {
                 return (

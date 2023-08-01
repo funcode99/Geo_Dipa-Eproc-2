@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
-import { rupiah } from "../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../libs/currency";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
   Card,
@@ -131,6 +131,7 @@ function ItemContractSummary(props) {
   const [tempPic, setTempPic] = useState([]);
   const [contractData, setContractData] = useState({});
   const [role, setRole] = useState({});
+  const [currencyCode, setCurrencyCode] = useState(null);
 
   const [Toast, setToast] = useToast();
   const updateEmailRef = useRef(null);
@@ -196,9 +197,11 @@ function ItemContractSummary(props) {
   const getContractData = useCallback(() => {
     getContractSummary(contract_id, termin)
       .then((response) => {
-        response["data"]["data"]["contract_value"] = rupiah(
-          response["data"]["data"]["contract_value"]
-        );
+        setCurrencyCode(response["data"]["data"]["currency_code"]);
+
+        // response["data"]["data"]["contract_value"] = rupiah(
+        //   response["data"]["data"]["contract_value"]
+        // );
         response["data"]["data"]["authorize"] = response["data"]["data"][
           "party_1_contract_signature_name"
         ].concat(
@@ -828,7 +831,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={contractData["contract_value"]}
+                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                     disabled
                   />
                 </div>
