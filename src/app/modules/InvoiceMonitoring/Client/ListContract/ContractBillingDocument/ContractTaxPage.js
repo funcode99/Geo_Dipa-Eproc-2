@@ -18,6 +18,7 @@ import {
 import {
   getContractSummary,
   getTax,
+  syncTaxVendor,
   getFileTax,
   approveTax,
   getAllRejectedTax,
@@ -83,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
 function ContractTaxPage(props) {
   const [loading, setLoading] = useState(false);
   const [loadingTax, setLoadingTax] = useState(false);
+  const [loadingSync, setLoadingSync] = useState(false);
   const [contractData, setContractData] = useState({});
   const [taxData, setTaxData] = useState({});
   const [dialogState, setDialogState] = useState(false);
@@ -535,6 +537,18 @@ function ContractTaxPage(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   }, [termin, intl, setToast]);
+
+  const syncTaxVendorData = useCallback(() => {
+    setLoadingSync(true);
+    syncTaxVendor().then((response) => {
+      setToast(response["data"]["data"]["message"], 5000);
+    })
+    .catch((error) => {
+      console.log(error, "<<<<<<<>>");
+      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+    });
+    setLoadingSync(false);
+  }, [intl, setToast]);
 
   useEffect(getContractData, []);
   useEffect(getListTaxs, [contractData, addtionalPayment]);
@@ -1627,6 +1641,19 @@ function ContractTaxPage(props) {
                     }}
                   >
                     <FormattedMessage id="TITLE.CHOOSE_PPH_TAX" />
+                  </button>
+                </div>
+              </div>
+              <div className="form-group row justify-content-end mt-4">
+                <div className="col-sm-8">
+                  <button
+                    type="button"
+                    className="btn btn-primary w-100"
+                    onClick={syncTaxVendorData}
+                    disabled={loadingSync}
+                  >
+                    <i className={`fas fa-sync ${loadingSync ? "fa-spin" : ""}`}></i>
+                    <FormattedMessage id="TITLE.SYNC_TAX" />
                   </button>
                 </div>
               </div>
