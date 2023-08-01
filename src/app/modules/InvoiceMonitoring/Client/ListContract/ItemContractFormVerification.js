@@ -35,8 +35,6 @@ import { formatDate, toNewDate } from "../../../../libs/date";
 //     return <Slide direction="up" ref={ref} {...props} />;
 // });
 
-let currencyCode = null;
-
 function ItemContractFormVerification(props) {
   const { intl } = props;
   const [contractData, setContractData] = useState({});
@@ -46,6 +44,7 @@ function ItemContractFormVerification(props) {
   const [billingHardCopy, setBillingHardCopy] = useState(true);
   const [deliverableHardCopy, setDeliverableHardCopy] = useState(true);
   const [contractHardCopy, setContractHardCopy] = useState(true);
+  const [currencyCode, setCurrencyCode] = useState(null);
   const [Toast, setToast] = useToast();
 
   const contract_id = props.match.params.contract;
@@ -64,14 +63,8 @@ function ItemContractFormVerification(props) {
 
     getContractSummary(contract_id, termin)
       .then((result) => {
-        currencyCode = result["data"]["data"]["currency_code"]; 
-
-        const data = result["data"]["data"];
-        const terminValue = data["termin_value"];
-
-        data["termin_value_new"] = formatCurrency(currencyCode,terminValue);
-
-        setContractData(data);
+        setCurrencyCode(result["data"]["data"]["currency_code"]);
+        setContractData(result["data"]["data"]);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -191,8 +184,7 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      // value={rupiah(contractData?.termin_value)}
-                      value={contractData["termin_value_new"]}
+                      value={formatCurrency(currencyCode, contractData["termin_value"])}
                       onChange={(e) => {}}
                       readOnly
                     />

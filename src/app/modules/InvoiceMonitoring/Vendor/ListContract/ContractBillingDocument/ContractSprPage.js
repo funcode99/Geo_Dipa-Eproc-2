@@ -27,7 +27,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah } from "../../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -69,6 +69,7 @@ function ContractSprPage(props) {
   const [historySppData, setHistorySppData] = useState([]);
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
+  const [currencyCode, setCurrencyCode] = useState(null);
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
 
   const headerTable = [
@@ -306,6 +307,7 @@ function ContractSprPage(props) {
     setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
+        setCurrencyCode( response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "spr_no",
@@ -1371,7 +1373,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={contractData["contract_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
                       disabled
                     />
                   </div>
@@ -1405,7 +1407,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={contractData["termin_value_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
                       disabled
                     />
                   </div>
@@ -1425,7 +1427,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceTaxSpp"
-                      defaultValue={contractData["termin_value_ppn_new"]}
+                      defaultValue={formatCurrency(currencyCode, contractData["termin_value_ppn"])}
                       disabled
                     />
                   </div>
