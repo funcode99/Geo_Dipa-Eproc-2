@@ -31,7 +31,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { formatCurrency, rupiah } from "../../../../../libs/currency";
+import { formatCurrency, rupiah,currencySign } from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -739,7 +739,7 @@ function ContractInvoicePage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={`${currencyCode} `}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue
@@ -1056,7 +1056,7 @@ function ContractInvoicePage(props) {
                     decimalSeparator={","}
                     allowEmptyFormatting={true}
                     allowLeadingZeros={true}
-                    prefix={`${currencyCode} `}
+                    prefix={currencySign(currencyCode)}
                     onValueChange={(e) => {
                       setInvoiceData({
                         ...invoiceData,
