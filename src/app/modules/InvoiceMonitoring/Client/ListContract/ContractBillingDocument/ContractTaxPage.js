@@ -541,13 +541,15 @@ function ContractTaxPage(props) {
   const syncTaxVendorData = useCallback(() => {
     setLoadingSync(true);
     syncTaxVendor().then((response) => {
+      setLoadingSync(false);
       setToast(response["data"]["data"]["message"], 5000);
     })
     .catch((error) => {
-      console.log(error, "<<<<<<<>>");
+      setLoadingSync(false);
+      console.log(error);
       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
     });
-    setLoadingSync(false);
+    
   }, [intl, setToast]);
 
   useEffect(getContractData, []);
