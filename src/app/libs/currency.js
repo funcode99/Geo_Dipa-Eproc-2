@@ -23,6 +23,7 @@ export const code_currency = (currency, number) => {
 export const formatCurrency = (code, ...amounts) => {
   if(!code || code.isEmpty) return;
   let total = 0;
+  let locale;
   const options = {};
 
   options["currency"] = code;
@@ -35,7 +36,19 @@ export const formatCurrency = (code, ...amounts) => {
     total += amount;
   });
 
-  return new Intl.NumberFormat("id-ID", options).format(total);
+  switch(code) {
+    case "IDR":
+      locale = "id-ID"; 
+      break;
+    case "USD":
+      locale = "en-US"; 
+      break;
+    default: 
+      locale = "en-US"; 
+      break;
+  }
+
+  return new Intl.NumberFormat(locale, options).format(total);
 }
 
 export const printMoney = (value, currentType) => {

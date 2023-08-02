@@ -11,7 +11,7 @@ import useToast from "../../../../components/toast";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Tables from "../../../../components/tableCustomV1/table";
-import { rupiah } from "../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../libs/currency";
 import { useSubheader } from "../../../../../_metronic/layout";
 import { getRolesAudit } from "../../../Master/service/MasterCrud";
 
@@ -209,6 +209,7 @@ function DashboardListContract(props) {
       count: 0,
       data: [],
     });
+    
     setErr(false);
     setParamsTable(params);
     var audit = false;
@@ -267,11 +268,8 @@ function DashboardListContract(props) {
           });
       }
     });
-
-    console.log(data, ">>>>");
+    
   };
-
-  console.log(data.data);
 
   return (
     <React.Fragment>
@@ -302,7 +300,7 @@ function DashboardListContract(props) {
                   </TableCell>
                   <TableCell>{item.purch_order_no}</TableCell>
                   <TableCell>{item.contract_name}</TableCell>
-                  <TableCell>{rupiah(item.contract_value || 0)}</TableCell>
+                  <TableCell>{formatCurrency(item.currency_code, item["contract_value"])}</TableCell>
                   <TableCell>
                     {window
                       .moment(new Date(item.po_date))

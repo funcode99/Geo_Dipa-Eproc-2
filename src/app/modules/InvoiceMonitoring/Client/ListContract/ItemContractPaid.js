@@ -145,6 +145,7 @@ function ItemContractPaid(props) {
   const getContractData = useCallback(() => {
     getTerminPaid(termin)
       .then((response) => {
+        if(!response["data"]["data"]["currency_code"]) return;
         setCurrencyCode(response["data"]["data"]["currency_code"]);
 
         setContractData(response["data"]["data"]);
@@ -178,6 +179,7 @@ function ItemContractPaid(props) {
         }
       })
       .catch((error) => {
+        
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   }, [termin, intl, setToast]);

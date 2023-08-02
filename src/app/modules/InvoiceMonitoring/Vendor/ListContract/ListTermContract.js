@@ -253,8 +253,7 @@ const ListTermContract = (props) => {
                     placeholder={intl.formatMessage({
                       id: "CONTRACT_DETAIL.LABEL.PRICE",
                     })}
-                    value={printMoney(parseInt(data?.contract_value ? data?.contract_value : 0, data?.code)
-                    )}
+                    value={formatCurrency(currencyCode, data["contract_value"])}
                     disabled
                   />
                 </Col>
