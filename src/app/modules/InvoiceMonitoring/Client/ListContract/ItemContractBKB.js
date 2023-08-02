@@ -30,7 +30,7 @@ import {
   approveInvPosting,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
-import { rupiah } from "../../../../libs/currency";
+import { rupiah,currencySign, extractAmount, formatCurrency } from "../../../../libs/currency";
 import {
   ExpansionPanel,
   ExpansionPanelDetails,
@@ -950,8 +950,8 @@ function ItemContractBKB(props) {
                         <td className="text-justify">{row.desc}</td>
                         <td>
                           <div className="d-flex justify-content-between">
-                            <span>{bkbData?.symbol}</span>
-                            <span>{rupiah(row.price).slice(3)}</span>
+                            <span>{currencySign(bkbData["symbol"])}</span>
+                            <span>{extractAmount(formatCurrency(bkbData["symbol"], row.price))}</span>
                           </div>
                         </td>
                       </tr>
@@ -972,8 +972,8 @@ function ItemContractBKB(props) {
                         <td className="text-justify">{row.description}</td>
                         <td>
                           <div className="d-flex justify-content-between">
-                            <span>{bkbData?.symbol}</span>
-                            <span>{rupiah(row.value).slice(3)}</span>
+                            <span>{currencySign(bkbData["symbol"])}</span>
+                            <span>{extractAmount(formatCurrency(bkbData["symbol"], row.value))}</span>
                           </div>
                         </td>
                       </tr>
@@ -992,10 +992,9 @@ function ItemContractBKB(props) {
                       </td>
                       <td>
                         <div className="d-flex justify-content-between">
-                          <span>{bkbData?.symbol}</span>
+                          <span>{currencySign(bkbData["symbol"])}</span>
                           <span>
-                            {bkbData?.ppn?.tax_amount &&
-                              rupiah(bkbData?.ppn?.tax_amount).slice(3)}
+                          {extractAmount(formatCurrency(bkbData["symbol"], bkbData?.ppn?.tax_amount))}
                           </span>
                         </div>
                       </td>
@@ -1012,12 +1011,9 @@ function ItemContractBKB(props) {
                             </td>
                             <td>
                               <div className="d-flex justify-content-between">
-                                <span>{bkbData?.symbol}</span>
+                                <span>{currencySign(bkbData["symbol"])}</span>
                                 <span>
-                                  {rupiah(
-                                    item.wi_tax_base *
-                                      (parseFloat(item.qsatz) / 100)
-                                  ).slice(3)}
+                                  {extractAmount(formatCurrency(bkbData["symbol"], item.wi_tax_base * (parseFloat(item.qsatz) / 100)))}
                                 </span>
                               </div>
                             </td>
@@ -1033,11 +1029,9 @@ function ItemContractBKB(props) {
                           </td>
                           <td>
                             <div className="d-flex justify-content-between">
-                              <span>{bkbData?.symbol}</span>
+                              <span>{currencySign(bkbData["symbol"])}</span>
                               <span>
-                                {rupiah(
-                                  (item.wi_tax_base * item.qsatz) / 100
-                                ).slice(3)}
+                                {extractAmount(formatCurrency(bkbData["symbol"], (item.wi_tax_base * item.qsatz) / 100))}
                               </span>
                             </div>
                           </td>
@@ -1050,9 +1044,9 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>{bkbData?.symbol}</span>
+                        <span>{bkbData && currencySign(bkbData["symbol"])}</span>
                         <span>
-                          {bkbData ? rupiah(bkbData?.penalty).slice(3) : "0"}
+                        {bkbData &&  extractAmount(formatCurrency(bkbData["symbol"], bkbData?.penalty))}
                         </span>
                       </div>
                     </td>
@@ -1063,10 +1057,10 @@ function ItemContractBKB(props) {
                     </td>
                     <td>
                       <div className="d-flex justify-content-between">
-                        <span>{bkbData?.symbol}</span>
+                        <span>{bkbData && currencySign(bkbData["symbol"])}</span>
                         <span>
                           {bkbData
-                            ? rupiah(bkbData?.total_amount).slice(3)
+                            ?  extractAmount(formatCurrency(bkbData["symbol"], bkbData?.total_amount))
                             : "-"}
                         </span>
                       </div>
