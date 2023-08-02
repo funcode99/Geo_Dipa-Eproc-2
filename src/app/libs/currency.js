@@ -51,6 +51,31 @@ export const formatCurrency = (code, ...amounts) => {
   return new Intl.NumberFormat(locale, options).format(total);
 }
 
+export const currencySign = (code) => {
+  if(!code || code.isEmpty) return;
+  const regex = /[0-9]+([,.][0-9]+)?/;
+  const options = {};
+
+  options["currency"] = code;
+  options["style"] = "currency";
+  options["currencyDisplay"] = "symbol";
+
+  const result = new Intl.NumberFormat("id-ID", options).format(0);
+
+  return result.replace(regex, "");
+}
+
+export const extractAmount = (value) => {
+  if(!value || value.isEmpty) return;
+  const regex = /^\D+/g;
+  return value.replace(regex, "");
+}
+
+// export const extractAmount = (value) => {
+//   const regex = /[0-9]+([,.][0-9]+)?/;
+//   return value.replace(regex, "");
+// }
+
 export const printMoney = (value, currentType) => {
   let options = {};
   switch (currentType) {
