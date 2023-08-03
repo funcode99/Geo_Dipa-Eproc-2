@@ -38,7 +38,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency } from "../../../../../libs/currency";
+import { rupiah,formatCurrency, currencySign } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -325,9 +325,6 @@ function ContractTaxPage(props) {
     setLoadingTax(true);
     getTax(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
-
-        console.log(response["data"]["data"]["currency"], "CURRENCY");
         if (response.data.data !== null) {
           
           if (response.data.data.tax_selected)
@@ -356,6 +353,7 @@ function ContractTaxPage(props) {
             );
           }
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingTax(false);
       })
       .catch((error) => {
@@ -688,7 +686,7 @@ function ContractTaxPage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue
@@ -1071,7 +1069,7 @@ function ContractTaxPage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             handleSourceText(e.floatValue, index);
                           }}
@@ -1126,7 +1124,7 @@ function ContractTaxPage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={currencySign(currencyCode)}
                           disabled
                         />
                       </td>

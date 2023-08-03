@@ -197,7 +197,6 @@ function ItemContractSummary(props) {
   const getContractData = useCallback(() => {
     getContractSummary(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency_code"]);
 
         // response["data"]["data"]["contract_value"] = rupiah(
         //   response["data"]["data"]["contract_value"]
@@ -260,6 +259,7 @@ function ItemContractSummary(props) {
         getPicVendorData();
         getRole();
         getData(response.data.data);
+        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);

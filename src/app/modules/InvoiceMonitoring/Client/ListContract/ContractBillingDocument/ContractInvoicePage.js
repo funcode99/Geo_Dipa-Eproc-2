@@ -208,8 +208,6 @@ function ContractInvoicePage(props) {
     setLoadingInvoice(true);
     getInvoice(contract_id, termin)
       .then((response) => {
-        
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
 
         setInvoiceData(response.data.data);
         if (response.data.data) {
@@ -220,6 +218,7 @@ function ContractInvoicePage(props) {
               : []
           );
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingInvoice(false);
       })
       .catch((error) => {
