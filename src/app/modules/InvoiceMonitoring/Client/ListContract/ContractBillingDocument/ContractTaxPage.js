@@ -542,7 +542,7 @@ function ContractTaxPage(props) {
     setLoadingSync(true);
     syncTaxVendor().then((response) => {
       setLoadingSync(false);
-      setToast(response["data"]["data"]["message"], 5000);
+      setToast(response["data"]["message"], 5000);
     })
     .catch((error) => {
       setLoadingSync(false);
