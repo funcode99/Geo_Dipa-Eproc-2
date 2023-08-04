@@ -281,7 +281,6 @@ function ContractTaxPage(props) {
     setLoadingTax(true);
     getTax(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "tax_no",
@@ -351,6 +350,7 @@ function ContractTaxPage(props) {
             setTaxData(response["data"]["data"]);
           }
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingTax(false);
       })
       .catch((error) => {

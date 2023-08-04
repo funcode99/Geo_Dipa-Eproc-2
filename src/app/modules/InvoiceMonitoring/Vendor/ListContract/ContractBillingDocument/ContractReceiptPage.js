@@ -180,7 +180,6 @@ function ContractReceiptPage(props) {
     setLoadingRcpt(true);
     getReceipt(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "receipt_no",
@@ -251,6 +250,7 @@ function ContractReceiptPage(props) {
             setReceiptData(response["data"]["data"]);
           }
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingRcpt(false);
       })
       .catch((error) => {
