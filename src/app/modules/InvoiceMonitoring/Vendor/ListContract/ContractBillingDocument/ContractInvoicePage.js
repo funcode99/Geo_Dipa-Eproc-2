@@ -340,7 +340,6 @@ function ContractInvoicePage(props) {
 
     getInvoice(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "invoice_no",
@@ -416,6 +415,7 @@ function ContractInvoicePage(props) {
             );
           }
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingInvoice(false);
       })
       .catch((error) => {

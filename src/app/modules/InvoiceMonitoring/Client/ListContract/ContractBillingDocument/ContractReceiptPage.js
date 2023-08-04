@@ -32,7 +32,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency } from "../../../../../libs/currency";
+import { rupiah,formatCurrency, currencySign } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -198,11 +198,11 @@ function ContractReceiptPage(props) {
     setLoadingRcpt(true);
     getReceipt(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         setReceiptData(response.data.data);
         if (response.data.data) {
           getHistoryReceiptData(response["data"]["data"]["id"]);
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingRcpt(false);
       })
       .catch((error) => {
@@ -691,7 +691,7 @@ function ContractReceiptPage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue

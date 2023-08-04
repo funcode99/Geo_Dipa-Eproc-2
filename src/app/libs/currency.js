@@ -55,12 +55,25 @@ export const currencySign = (code) => {
   if(!code || code.isEmpty) return;
   const regex = /[0-9]+([,.][0-9]+)?/;
   const options = {};
+  let locale;
 
   options["currency"] = code;
   options["style"] = "currency";
   options["currencyDisplay"] = "symbol";
 
-  const result = new Intl.NumberFormat("id-ID", options).format(0);
+  switch(code) {
+    case "IDR":
+      locale = "id-ID"; 
+      break;
+    case "USD":
+      locale = "en-US"; 
+      break;
+    default: 
+      locale = "en-US"; 
+      break;
+  }
+
+  const result = new Intl.NumberFormat(locale, options).format(0);
 
   return result.replace(regex, "");
 }
