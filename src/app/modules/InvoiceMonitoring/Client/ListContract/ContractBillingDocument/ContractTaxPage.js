@@ -579,9 +579,8 @@ function ContractTaxPage(props) {
   };
 
   const handleSourceText = (e, index) => {
-    if(!e) return; 
     const temp = formikPph.values.optionSelectedPph;
-    temp[index].wi_tax_base = e ? e : "";
+    if(temp[index]) temp[index].wi_tax_base = e ? e : "";
     formikPph.setFieldValue("optionSelectedPph", temp);
   };
 
