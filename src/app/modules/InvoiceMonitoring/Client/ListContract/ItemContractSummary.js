@@ -415,7 +415,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                     disabled
                   />
                 </div>
@@ -457,7 +457,7 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                     disabled
                   />
                 </div>

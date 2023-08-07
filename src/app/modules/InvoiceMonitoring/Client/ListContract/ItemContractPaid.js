@@ -146,7 +146,7 @@ function ItemContractPaid(props) {
     getTerminPaid(termin)
       .then((response) => {
 
-        setContractData(response["data"]["data"]);
+        setContractData(response.data.data);
         if (response.data.data?.paid_date) {
           formik.setFieldValue("paid_date", response.data.data.paid_date);
           formik.setTouched({ ...formik.touched, paid_date: true });
@@ -248,7 +248,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData["total_amount"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.total_amount || 0)}
                       disabled
                     />
                   </div>
@@ -265,7 +265,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value || 0)}
                       disabled
                     />
                   </div>
@@ -283,7 +283,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData["termin_net_value"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.termin_net_value || 0)}
                       disabled
                     />
                   </div>
@@ -303,7 +303,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={formatCurrency(currencyCode, contractData["penalty"])}
+                      value={formatCurrency(currencyCode, contractData?.penalty || 0)}
                       disabled
                     />
                   </div>
@@ -321,7 +321,7 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={formatCurrency(currencyCode, contractData["tax_value"])}
+                      value={formatCurrency(currencyCode, contractData?.tax_value || 0)}
                       disabled
                     />
                   </div>
