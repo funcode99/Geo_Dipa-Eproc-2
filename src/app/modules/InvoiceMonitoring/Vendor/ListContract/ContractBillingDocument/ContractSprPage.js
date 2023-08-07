@@ -1373,7 +1373,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                       disabled
                     />
                   </div>
@@ -1407,7 +1407,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                       disabled
                     />
                   </div>
@@ -1427,7 +1427,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceTaxSpp"
-                      defaultValue={formatCurrency(currencyCode, contractData["termin_value_ppn"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value * 1.1)}
                       disabled
                     />
                   </div>

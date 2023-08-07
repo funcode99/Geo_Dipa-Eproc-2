@@ -256,7 +256,7 @@ function ContractTaxPage(props) {
           response["data"]["data"]["termin_value"] * 1.1
         );
 
-        setContractData(response["data"]["data"]);
+        setContractData(response.data.data);
       })
       .catch((error) => {
 
@@ -579,6 +579,7 @@ function ContractTaxPage(props) {
   };
 
   const handleSourceText = (e, index) => {
+    if(!e) return; 
     const temp = formikPph.values.optionSelectedPph;
     temp[index].wi_tax_base = e ? e : "";
     formikPph.setFieldValue("optionSelectedPph", temp);
@@ -1545,7 +1546,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                     disabled
                   />
                 </div>
@@ -1576,7 +1577,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                     disabled
                   />
                 </div>
@@ -1606,7 +1607,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
+                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />
