@@ -260,8 +260,8 @@ export async function createBkb(data) {
 export async function getBkb(id) {
   return axios.get(`/invoice/get_bkb/${id}`);
 }
-export async function getInvoiceProgress(id) {
-  return axios.get(`/invoice//invoice_progress/${id}`);
+export async function getInvoiceProgress(termId) {
+  return axios.get(`/invoice/invoice_progress/${termId}`);
 }
 export async function tax_manager_approve_bkb(
     id,
