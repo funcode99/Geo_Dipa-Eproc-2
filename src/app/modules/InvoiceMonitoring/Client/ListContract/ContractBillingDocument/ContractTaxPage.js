@@ -34,6 +34,7 @@ import {
   createBkb,
   getInvoice,
   getContractAuthority,
+  getInvoiceProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -113,6 +114,7 @@ function ContractTaxPage(props) {
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const [postingDate, setPostingDate] = useState("");
   const [currencyCode, setCurrencyCode] = useState(null);
+  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -550,6 +552,22 @@ function ContractTaxPage(props) {
     
   }, [intl, setToast]);
 
+  const getInvoiceProgressData = useCallback(() => {
+    getInvoiceProgress(termin).then((response) => {
+      const data = response?.data?.data;
+
+      if(data) {
+        setIsInvoiceComplete(true);
+      }
+      else {
+        setIsInvoiceComplete(false);
+      }
+    }).catch((err) => {
+      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+    })
+  }, [termin, intl, setToast]);
+
+  // useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
   useEffect(getListTaxs, [contractData, addtionalPayment]);
   useEffect(getTaxData, []);

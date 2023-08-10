@@ -13,6 +13,7 @@ import {
   updateTerminPaid,
   getContractAuthority,
   getTerminProgress,
+  getInvoiceProgress,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useParams } from "react-router-dom";
@@ -46,6 +47,7 @@ function ItemContractPaid(props) {
   const [data, setData] = useState({});
   const [currencyCode, setCurrencyCode] = useState(null);
   const [taxStaffStatus, setTaxStaffStatus] = useState(false);
+  const [payedStatus, setpayedStatus] = useState(false);
   const classes = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -184,6 +186,21 @@ function ItemContractPaid(props) {
       });
   }, [termin, intl, setToast]);
 
+  const getInvoiceProgressData = useCallback(() => {
+    getInvoiceProgress(termin).then((response) => {
+      if(!response?.data?.data) return;
+
+      const responseData = response?.data?.data;
+      const parkByr = responseData.data.find((item) => item.ident_name === "PARK_BAYAR");
+      // const paid = responseData.data.find((item) => item.ident_name === "PAID");
+
+      setpayedStatus(parkByr?.status === "COMPLETE");
+    }).catch((err) => {
+      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+    })
+  }, [termin, intl, setToast]);
+
+  useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
   useEffect(getContractAuthorityData, []);
 
@@ -192,7 +209,6 @@ function ItemContractPaid(props) {
       window.open(DEV_NODE + "/" + contractData.folder, "_blank");
     }
   };
-
   return (
     <React.Fragment>
       <Toast />
@@ -402,7 +418,8 @@ function ItemContractPaid(props) {
                 (formik.touched && !formik.isValid) ||
                 !taxStaffStatus ||
                 statusPaidNoStarted > 0 ||
-                !isEmpty(contractData?.file)
+                !isEmpty(contractData?.file) || 
+                !payedStatus
               }
             >
               Simpan

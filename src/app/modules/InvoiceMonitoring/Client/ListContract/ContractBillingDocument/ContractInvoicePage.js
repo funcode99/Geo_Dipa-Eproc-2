@@ -27,6 +27,7 @@ import {
   getBillingDocumentId,
   softcopy_save,
   getTerminProgress,
+  getInvoiceProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -72,6 +73,7 @@ function ContractInvoicePage(props) {
   const [addtionalPayment, setAddtionalPayment] = useState([]);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const [currencyCode, setCurrencyCode] = useState("");
+  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -303,14 +305,31 @@ function ContractInvoicePage(props) {
     [intl, setToast]
   );
 
+  const getInvoiceProgressData = useCallback(() => {
+    getInvoiceProgress(termin).then((response) => {
+      const data = response?.data?.data;
+
+      if(data) {
+        setIsInvoiceComplete(true);
+      }
+      else {
+        setIsInvoiceComplete(false);
+      }
+    }).catch((err) => {
+      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+    })
+  }, [termin, intl, setToast]);
+
   const handleHistory = (index) => {
     setModalHistoryData(historyInvoiceData[index]);
     setModalHistory(true);
   };
 
+  // useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
   useEffect(getInvoiceData, []);
   useEffect(getBillingDocumentIdData, []);
+
 
   const totalAddtionalPayment = () => {
     if (addtionalPayment && addtionalPayment.length === 0) return 0;
