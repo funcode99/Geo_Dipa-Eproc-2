@@ -724,6 +724,10 @@ function ItemContractInvoice(props) {
       <Card>
         <CardHeader>
           <CardHeaderToolbar>
+            <div className="alert alert-warning text-dark">
+              <span className="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </span>
             <FormattedMessage
               id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE"
               values={{
@@ -731,6 +735,7 @@ function ItemContractInvoice(props) {
                 end_day: invoicePeriodsData?.accepted_thru_day,
               }}
             />
+            </div>
           </CardHeaderToolbar>
         </CardHeader>
         <CardBody>

@@ -32,7 +32,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency } from "../../../../../libs/currency";
+import { rupiah,formatCurrency, currencySign } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -187,7 +187,7 @@ function ContractReceiptPage(props) {
           response["data"]["data"]["termin_value"] * 1.1
         );
 
-        setContractData(response["data"]["data"]);
+        setContractData(response.data.data);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -198,11 +198,11 @@ function ContractReceiptPage(props) {
     setLoadingRcpt(true);
     getReceipt(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         setReceiptData(response.data.data);
         if (response.data.data) {
           getHistoryReceiptData(response["data"]["data"]["id"]);
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingRcpt(false);
       })
       .catch((error) => {
@@ -691,7 +691,7 @@ function ContractReceiptPage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue
@@ -842,7 +842,7 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                     disabled
                   />
                 </div>
@@ -873,7 +873,7 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                     disabled
                   />
                 </div>
@@ -903,7 +903,7 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
+                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />

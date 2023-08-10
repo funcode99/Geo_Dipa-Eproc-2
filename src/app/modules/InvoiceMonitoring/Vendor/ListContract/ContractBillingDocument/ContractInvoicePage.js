@@ -28,7 +28,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency } from "../../../../../libs/currency";
+import { rupiah,formatCurrency, currencySign } from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -340,7 +340,6 @@ function ContractInvoicePage(props) {
 
     getInvoice(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "invoice_no",
@@ -416,6 +415,7 @@ function ContractInvoicePage(props) {
             );
           }
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingInvoice(false);
       })
       .catch((error) => {
@@ -816,7 +816,7 @@ function ContractInvoicePage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={`${currencyCode} `}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue
@@ -1116,7 +1116,7 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                       disabled
                     />
                   </div>
@@ -1150,7 +1150,7 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                       disabled
                     />
                     {}
@@ -1187,7 +1187,7 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
+                      value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
                       onChange={() => {}}
                       disabled
                     />
@@ -1222,7 +1222,7 @@ function ContractInvoicePage(props) {
                       decimalSeparator={","}
                       allowEmptyFormatting={true}
                       allowLeadingZeros={true}
-                      prefix={`${currencyCode} `}
+                      prefix={currencySign(currencyCode)}
                       onValueChange={(e) => {
                         setInvoiceData({
                           ...invoiceData,
@@ -1288,7 +1288,7 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceTaxInvoice"
-                      defaultValue={formatCurrency(currencyCode, contractData["termin_value_ppn"]}
+                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value * 1.1}
                       disabled
                     />
                   </div>

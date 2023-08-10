@@ -307,7 +307,6 @@ function ContractSprPage(props) {
     setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
-        setCurrencyCode( response["data"]["data"]["currency"]["code"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "spr_no",
@@ -395,6 +394,7 @@ function ContractSprPage(props) {
             setSppData(response["data"]["data"]);
           }
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingSpp(false);
       })
       .catch((error) => {
@@ -1373,7 +1373,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                       disabled
                     />
                   </div>
@@ -1407,7 +1407,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                       disabled
                     />
                   </div>
@@ -1427,7 +1427,7 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceTaxSpp"
-                      defaultValue={formatCurrency(currencyCode, contractData["termin_value_ppn"])}
+                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value * 1.1)}
                       disabled
                     />
                   </div>

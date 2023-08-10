@@ -38,7 +38,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency } from "../../../../../libs/currency";
+import { rupiah,formatCurrency, currencySign } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -256,7 +256,7 @@ function ContractTaxPage(props) {
           response["data"]["data"]["termin_value"] * 1.1
         );
 
-        setContractData(response["data"]["data"]);
+        setContractData(response.data.data);
       })
       .catch((error) => {
 
@@ -325,9 +325,6 @@ function ContractTaxPage(props) {
     setLoadingTax(true);
     getTax(contract_id, termin)
       .then((response) => {
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
-
-        console.log(response["data"]["data"]["currency"], "CURRENCY");
         if (response.data.data !== null) {
           
           if (response.data.data.tax_selected)
@@ -356,6 +353,7 @@ function ContractTaxPage(props) {
             );
           }
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingTax(false);
       })
       .catch((error) => {
@@ -541,13 +539,15 @@ function ContractTaxPage(props) {
   const syncTaxVendorData = useCallback(() => {
     setLoadingSync(true);
     syncTaxVendor().then((response) => {
-      setToast(response["data"]["data"]["message"], 5000);
+      setLoadingSync(false);
+      setToast(response["data"]["message"], 5000);
     })
     .catch((error) => {
-      console.log(error, "<<<<<<<>>");
+      setLoadingSync(false);
+      console.log(error);
       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
     });
-    setLoadingSync(false);
+    
   }, [intl, setToast]);
 
   useEffect(getContractData, []);
@@ -580,7 +580,7 @@ function ContractTaxPage(props) {
 
   const handleSourceText = (e, index) => {
     const temp = formikPph.values.optionSelectedPph;
-    temp[index].wi_tax_base = e ? e : "";
+    if(temp[index]) temp[index].wi_tax_base = e ? e : "";
     formikPph.setFieldValue("optionSelectedPph", temp);
   };
 
@@ -686,7 +686,7 @@ function ContractTaxPage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue
@@ -1069,7 +1069,7 @@ function ContractTaxPage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             handleSourceText(e.floatValue, index);
                           }}
@@ -1124,7 +1124,7 @@ function ContractTaxPage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={"Rp "}
+                          prefix={currencySign(currencyCode)}
                           disabled
                         />
                       </td>
@@ -1545,7 +1545,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                     disabled
                   />
                 </div>
@@ -1576,7 +1576,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                     disabled
                   />
                 </div>
@@ -1606,7 +1606,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
+                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />

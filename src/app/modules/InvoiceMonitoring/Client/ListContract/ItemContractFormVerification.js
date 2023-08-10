@@ -63,8 +63,9 @@ function ItemContractFormVerification(props) {
 
     getContractSummary(contract_id, termin)
       .then((result) => {
-        setCurrencyCode(result["data"]["data"]["currency_code"]);
-        setContractData(result["data"]["data"]);
+        
+        setContractData(result.data.data);
+        if(result?.data?.data?.currency_code) setCurrencyCode(result?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -184,7 +185,7 @@ function ItemContractFormVerification(props) {
                     <input
                       type="text"
                       className="form-control"
-                      value={formatCurrency(currencyCode, contractData["termin_value"])}
+                      value={formatCurrency(currencyCode, contractData?.termin_value)}
                       onChange={(e) => {}}
                       readOnly
                     />

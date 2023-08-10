@@ -109,7 +109,7 @@ const ListTermContract = (props) => {
     setLoading(true);
     getTermContract(contract)
       .then((result) => {
-        setCurrencyCode(result["data"]["data"]["code"]);
+        
         setLoading(false);
         var data = result.data.data;
         if (data && data.data_termin) {
@@ -122,6 +122,7 @@ const ListTermContract = (props) => {
           );
         }
         setData(data);
+        if(result?.data?.data?.code) setCurrencyCode(result?.data?.data?.code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -253,8 +254,7 @@ const ListTermContract = (props) => {
                     placeholder={intl.formatMessage({
                       id: "CONTRACT_DETAIL.LABEL.PRICE",
                     })}
-                    value={printMoney(parseInt(data?.contract_value ? data?.contract_value : 0, data?.code)
-                    )}
+                    value={formatCurrency(currencyCode, data["contract_value"])}
                     disabled
                   />
                 </Col>

@@ -23,6 +23,7 @@ export const code_currency = (currency, number) => {
 export const formatCurrency = (code, ...amounts) => {
   if(!code || code.isEmpty) return;
   let total = 0;
+  let locale;
   const options = {};
 
   options["currency"] = code;
@@ -35,8 +36,58 @@ export const formatCurrency = (code, ...amounts) => {
     total += amount;
   });
 
-  return new Intl.NumberFormat("id-ID", options).format(total);
+  switch(code) {
+    case "IDR":
+      locale = "id-ID"; 
+      break;
+    case "USD":
+      locale = "en-US"; 
+      break;
+    default: 
+      locale = "en-US"; 
+      break;
+  }
+
+  return new Intl.NumberFormat(locale, options).format(total);
 }
+
+export const currencySign = (code) => {
+  if(!code || code.isEmpty) return;
+  const regex = /[0-9]+([,.][0-9]+)?/;
+  const options = {};
+  let locale;
+
+  options["currency"] = code;
+  options["style"] = "currency";
+  options["currencyDisplay"] = "symbol";
+
+  switch(code) {
+    case "IDR":
+      locale = "id-ID"; 
+      break;
+    case "USD":
+      locale = "en-US"; 
+      break;
+    default: 
+      locale = "en-US"; 
+      break;
+  }
+
+  const result = new Intl.NumberFormat(locale, options).format(0);
+
+  return result.replace(regex, "");
+}
+
+export const extractAmount = (value) => {
+  if(!value || value.isEmpty) return;
+  const regex = /^\D+/g;
+  return value.replace(regex, "");
+}
+
+// export const extractAmount = (value) => {
+//   const regex = /[0-9]+([,.][0-9]+)?/;
+//   return value.replace(regex, "");
+// }
 
 export const printMoney = (value, currentType) => {
   let options = {};

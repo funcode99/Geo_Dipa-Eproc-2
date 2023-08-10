@@ -240,7 +240,7 @@ function ContractSprPage(props) {
         response["data"]["data"]["termin_value_ppn_new"] = rupiah(
           response["data"]["data"]["termin_value"] * 1.1
         );
-        setContractData(response["data"]["data"]);
+        setContractData(response.data.data);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -251,11 +251,11 @@ function ContractSprPage(props) {
     setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
-        setCurrencyCode( response["data"]["data"]["currency"]["code"]);
         setSppData(response["data"]["data"]);
         if (response["data"]["data"]) {
           getHistorySppData(response["data"]["data"]["id"]);
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingSpp(false);
       })
       .catch((error) => {
@@ -1182,7 +1182,7 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                     disabled
                   />
                 </div>
@@ -1213,7 +1213,7 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                     disabled
                   />
                 </div>
@@ -1243,7 +1243,7 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
+                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />

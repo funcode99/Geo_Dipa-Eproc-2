@@ -31,7 +31,7 @@ import {
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { formatCurrency, rupiah } from "../../../../../libs/currency";
+import { formatCurrency, rupiah,currencySign } from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -187,7 +187,7 @@ function ContractInvoicePage(props) {
           response["data"]["data"]["termin_value"] * 1.1
         );
         
-        setContractData(response["data"]["data"]);
+        setContractData(response.data.data);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -208,8 +208,6 @@ function ContractInvoicePage(props) {
     setLoadingInvoice(true);
     getInvoice(contract_id, termin)
       .then((response) => {
-        
-        setCurrencyCode(response["data"]["data"]["currency"]["code"]);
 
         setInvoiceData(response.data.data);
         if (response.data.data) {
@@ -220,6 +218,7 @@ function ContractInvoicePage(props) {
               : []
           );
         }
+        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingInvoice(false);
       })
       .catch((error) => {
@@ -360,7 +359,7 @@ function ContractInvoicePage(props) {
           <div>
             <FormattedMessage id="TITLE.FINE_ATTACHMENT" />
             <span className="text-danger">
-              {formatCurrency(currencyCode, invoiceData["penalty"])}
+              {formatCurrency(currencyCode, invoiceData?.penalty || 0)}
             </span>
           </div>
           <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.INVOICE_DOCUMENT.APPROVED.APPROVE_BODY" />
@@ -739,7 +738,7 @@ function ContractInvoicePage(props) {
                           decimalSeparator={","}
                           allowEmptyFormatting={true}
                           allowLeadingZeros={true}
-                          prefix={`${currencyCode} `}
+                          prefix={currencySign(currencyCode)}
                           onValueChange={(e) => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments[index].value = e.floatValue
@@ -962,7 +961,7 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData["contract_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
                     disabled
                   />
                 </div>
@@ -979,7 +978,7 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData["termin_value"])}
+                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
                     disabled
                   />
                 </div>
@@ -1009,7 +1008,7 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData["termin_value"], totalAddtionalPayment())}
+                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
                     onChange={() => {}}
                     disabled
                   />
@@ -1056,7 +1055,7 @@ function ContractInvoicePage(props) {
                     decimalSeparator={","}
                     allowEmptyFormatting={true}
                     allowLeadingZeros={true}
-                    prefix={`${currencyCode} `}
+                    prefix={currencySign(currencyCode)}
                     onValueChange={(e) => {
                       setInvoiceData({
                         ...invoiceData,
