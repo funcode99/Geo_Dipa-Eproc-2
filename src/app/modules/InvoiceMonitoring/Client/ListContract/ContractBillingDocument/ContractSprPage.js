@@ -31,6 +31,7 @@ import {
   softcopy_save,
   getTerminProgress,
   getInvoice,
+  getInvoiceProgress,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -133,6 +134,7 @@ function ContractSprPage(props) {
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoiceBillingId, setInvoiceBillingId] = useState("");
   const [addtionalPayment, setAddtionalPayment] = useState([]);
+  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const [invoiceData, setInvoiceData] = useState({});
 
@@ -373,6 +375,23 @@ function ContractSprPage(props) {
     setToast,
   ]);
 
+  const getInvoiceProgressData = () => {
+    getInvoiceProgress(termin).then((response) => {
+      const data = response?.data?.data;
+
+      if(data) {
+        setIsInvoiceComplete(true);
+      }
+      else {
+        setIsInvoiceComplete(false);
+      }
+    }).catch((err) => {
+      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+    })
+  }
+
+
+  // useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
   useEffect(getSppData, []);
   useEffect(getBillingDocumentIdData, []);
