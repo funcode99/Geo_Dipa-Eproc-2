@@ -375,7 +375,7 @@ function ContractSprPage(props) {
     setToast,
   ]);
 
-  const getInvoiceProgressData = () => {
+  const getInvoiceProgressData = useCallback(() => {
     getInvoiceProgress(termin).then((response) => {
       const data = response?.data?.data;
 
@@ -388,7 +388,7 @@ function ContractSprPage(props) {
     }).catch((err) => {
       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
     })
-  }
+  }, [termin, intl, setToast]);
 
 
   // useEffect(getInvoiceProgressData, []);

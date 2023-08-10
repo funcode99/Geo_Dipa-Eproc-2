@@ -440,7 +440,7 @@ function ContractTaxPage(props) {
     setNumPages(numPages);
   };
 
-  const getInvoiceProgressData = () => {
+  const getInvoiceProgressData = useCallback(() => {
     getInvoiceProgress(termin).then((response) => {
       const data = response?.data?.data;
 
@@ -453,7 +453,7 @@ function ContractTaxPage(props) {
     }).catch((err) => {
       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
     })
-  }
+  }, [termin, intl, setToast]);
 
   useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
