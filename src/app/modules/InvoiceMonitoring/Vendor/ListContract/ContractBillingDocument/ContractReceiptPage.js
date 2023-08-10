@@ -22,6 +22,7 @@ import {
   getAllApprovedReceipt,
   getAllRejectedReceipt,
   getFileReceipt,
+  getInvoiceProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -52,6 +53,7 @@ function ContractReceiptPage(props) {
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
+  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
   const [currencyCode, setCurrencyCode] = useState(null);
 
   const [Toast, setToast] = useToast();
@@ -389,6 +391,22 @@ function ContractReceiptPage(props) {
       });
   }, [intl, setToast]);
 
+  const getInvoiceProgressData = useCallback(() => {
+    getInvoiceProgress(termin).then((response) => {
+      const data = response?.data?.data;
+
+      if(data) {
+        setIsInvoiceComplete(true);
+      }
+      else {
+        setIsInvoiceComplete(false);
+      }
+    }).catch((err) => {
+      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+    })
+  }, [termin, intl, setToast]);
+
+  useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
   useEffect(getReceiptData, []);
   useEffect(getInvoicePeriodsData, []);
@@ -616,7 +634,8 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData)
+                        (!invoicePeriodsStatus && !historyReceiptData) ||
+                        isInvoiceComplete
                       }
                       {...formik.getFieldProps("receipt_no")}
                       onChange={(e) => {
@@ -648,7 +667,8 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData)
+                        (!invoicePeriodsStatus && !historyReceiptData) ||
+                        isInvoiceComplete
                       }
                       {...formik.getFieldProps("receipt_date")}
                       onChange={(e) => {
@@ -685,7 +705,8 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData)
+                        (!invoicePeriodsStatus && !historyReceiptData) ||
+                        isInvoiceComplete
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -772,7 +793,8 @@ function ContractReceiptPage(props) {
                     disabled={
                       loading ||
                       receiptStatus ||
-                      (!invoicePeriodsStatus && !historyReceiptData)
+                      (!invoicePeriodsStatus && !historyReceiptData) ||
+                      isInvoiceComplete
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -861,7 +883,8 @@ function ContractReceiptPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 receiptStatus ||
-                (!invoicePeriodsStatus && !historyReceiptData)
+                (!invoicePeriodsStatus && !historyReceiptData) ||
+                isInvoiceComplete
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
