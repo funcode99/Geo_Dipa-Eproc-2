@@ -172,6 +172,7 @@ function ContractReceiptPage(props) {
           // setHistoryReceiptData(response['data']['data'])
         })
         .catch((error) => {
+          console.error(error, "getAllRejectedReceipt");
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
         });
     },
@@ -252,10 +253,12 @@ function ContractReceiptPage(props) {
             setReceiptData(response["data"]["data"]);
           }
         }
+
         if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingRcpt(false);
       })
       .catch((error) => {
+        console.error(error, "getReceipt");
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
         setLoadingRcpt(false);
       });
@@ -331,6 +334,7 @@ function ContractReceiptPage(props) {
         );
       })
       .catch((error) => {
+        console.error(error, "getContractSummary");
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [contract_id, formik, intl, setToast, user_id]);
@@ -387,6 +391,7 @@ function ContractReceiptPage(props) {
         }
       })
       .catch((error) => {
+        console.error(error, "getInvoicePeriods");
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [intl, setToast]);
@@ -401,7 +406,8 @@ function ContractReceiptPage(props) {
       else {
         setIsInvoiceComplete(false);
       }
-    }).catch((err) => {
+    }).catch((error) => {
+      console.error(error, "getInvoiceProgressData");
       setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
     })
   }, [termin, intl, setToast]);
@@ -634,8 +640,9 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historyReceiptData)
+                        //  ||
+                        // isInvoiceComplete
                       }
                       {...formik.getFieldProps("receipt_no")}
                       onChange={(e) => {
@@ -667,8 +674,9 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historyReceiptData)
+                        // ||
+                        // isInvoiceComplete
                       }
                       {...formik.getFieldProps("receipt_date")}
                       onChange={(e) => {
@@ -705,8 +713,9 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historyReceiptData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -793,8 +802,9 @@ function ContractReceiptPage(props) {
                     disabled={
                       loading ||
                       receiptStatus ||
-                      (!invoicePeriodsStatus && !historyReceiptData) ||
-                      isInvoiceComplete
+                      (!invoicePeriodsStatus && !historyReceiptData)
+                      // ||
+                      // isInvoiceComplete
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -883,8 +893,9 @@ function ContractReceiptPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 receiptStatus ||
-                (!invoicePeriodsStatus && !historyReceiptData) ||
-                isInvoiceComplete
+                (!invoicePeriodsStatus && !historyReceiptData)
+                //  ||
+                // isInvoiceComplete
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
