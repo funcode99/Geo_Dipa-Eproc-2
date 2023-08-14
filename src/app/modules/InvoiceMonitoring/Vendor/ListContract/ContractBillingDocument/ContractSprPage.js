@@ -309,7 +309,10 @@ function ContractSprPage(props) {
     setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
+
+        
         if (!response["data"]["data"]) {
+          console.log(response, "response data");
           formik.setFieldValue(
             "spr_no",
             dataFormSprVendor.spr_no ? dataFormSprVendor.spr_no : ""
@@ -338,16 +341,21 @@ function ContractSprPage(props) {
           });
           setSppStatus(false);
         } else {
+          console.log(response, "response else");
           getHistorySppData(response["data"]["data"]["id"]);
           setSppId(response["data"]["data"]["id"]);
+          
           formik.setFieldValue(
             "draft_no",
             response["data"]["data"]["spr_draft_no"]
           );
+
           if (response["data"]["data"]["state"] === "REJECTED") {
+            console.log("response REJECTED");
             setSppStatus(false);
             setSppUpdate(true);
           } else {
+            console.log("response else in rejected");
             setSppStatus(true);
             setBankReference(response["data"]["data"]["bank_refference"]);
             formik.setFieldValue("spr_no", response["data"]["data"]["spr_no"]);
@@ -578,6 +586,11 @@ function ContractSprPage(props) {
   useEffect(getContractData, []);
   useEffect(getSppData, []);
   useEffect(getInvoicePeriodsData, []);
+
+  console.log({loading,
+    sppStatus,
+    invoicePeriodsStatus,
+    historySppData,});
 
   return (
     <React.Fragment>
@@ -950,8 +963,9 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historySppData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       {...formik.getFieldProps("spr_no")}
                       onChange={(e) => {
@@ -980,8 +994,9 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historySppData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       {...formik.getFieldProps("spr_date")}
                       onChange={(e) => {
@@ -1018,8 +1033,9 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historySppData)
+                        // ||
+                        // isInvoiceComplete
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -1099,8 +1115,9 @@ function ContractSprPage(props) {
                     disabled={
                       loading ||
                       sppStatus ||
-                      (!invoicePeriodsStatus && !historySppData) ||
-                      isInvoiceComplete
+                      (!invoicePeriodsStatus && !historySppData) 
+                      // ||
+                      // isInvoiceComplete
                     }
                     onBlur={formik.handleBlur}
                     onChange={(e) => handleUpload(e)}
@@ -1129,8 +1146,9 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !historySppData) ||
-                          isInvoiceComplete
+                          (!invoicePeriodsStatus && !historySppData) 
+                          // ||
+                          // isInvoiceComplete
                         }
                         onChange={handleRadio}
                         checked={bankReference}
@@ -1149,8 +1167,9 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !historySppData) ||
-                          isInvoiceComplete
+                          (!invoicePeriodsStatus && !historySppData) 
+                          // ||
+                          // isInvoiceComplete
                         }
                         onChange={handleRadio}
                         checked={!bankReference}
@@ -1177,8 +1196,9 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !historySppData) ||
-                          isInvoiceComplete
+                          (!invoicePeriodsStatus && !historySppData) 
+                          // ||
+                          // isInvoiceComplete
                         }
                         className="custom-select custom-select-sm"
                         value={sppData.bank_account_no}
@@ -1211,8 +1231,9 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !historySppData) ||
-                          isInvoiceComplete
+                          (!invoicePeriodsStatus && !historySppData) 
+                          // ||
+                          // isInvoiceComplete
                         }
                         {...formik.getFieldProps("bank_account_no")}
                       />
@@ -1242,8 +1263,9 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historySppData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       defaultValue={sppData.bank_account_name}
                       {...formik.getFieldProps("bank_account_name")}
@@ -1273,8 +1295,9 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historySppData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       {...formik.getFieldProps("bank_name")}
                     />
@@ -1302,8 +1325,9 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historySppData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       {...formik.getFieldProps("bank_address")}
                     ></textarea>
@@ -1382,8 +1406,9 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historySppData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       onChange={(e) => handleUploadBank(e)}
                     />
@@ -1473,8 +1498,9 @@ function ContractSprPage(props) {
                 loading ||
                 (formik.touched && !formik.isValid) ||
                 sppStatus ||
-                (!invoicePeriodsStatus && !historySppData) ||
-                isInvoiceComplete
+                (!invoicePeriodsStatus && !historySppData) 
+                // ||
+                // isInvoiceComplete
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
