@@ -519,6 +519,8 @@ function ContractInvoicePage(props) {
     getInvoiceProgress(termin).then((response) => {
       const data = response?.data?.data;
 
+      console.log(data, "Data");
+
       if(data) {
         setIsInvoiceComplete(true);
       }
@@ -780,8 +782,9 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !historyInvoiceData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historyInvoiceData)
+                        //  ||
+                        // isInvoiceComplete
                       }
                     >
                       <FormattedMessage id="TITLE.ADD" />
@@ -807,8 +810,9 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !historyInvoiceData) ||
-                            isInvoiceComplete
+                            (!invoicePeriodsStatus && !historyInvoiceData) 
+                            // ||
+                            // isInvoiceComplete
                           }
                           required={true}
                         />
@@ -868,8 +872,9 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !historyInvoiceData) ||
-                            isInvoiceComplete
+                            (!invoicePeriodsStatus && !historyInvoiceData) 
+                            // ||
+                            // isInvoiceComplete
                           }
                         >
                           <FormattedMessage id="BUTTON.DELETE" />
@@ -910,8 +915,9 @@ function ContractInvoicePage(props) {
                 disabled={
                   loading ||
                   invoiceStatus ||
-                  (!invoicePeriodsStatus && !historyInvoiceData) ||
-                  isInvoiceComplete
+                  (!invoicePeriodsStatus && !historyInvoiceData) 
+                  // ||
+                  // isInvoiceComplete
                 }
               >
                 <span>
@@ -955,8 +961,9 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !historyInvoiceData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historyInvoiceData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       defaultValue={
                         invoiceData ? invoiceData["invoice_no"] : null
@@ -991,8 +998,9 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !historyInvoiceData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historyInvoiceData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("from_time")}
@@ -1030,8 +1038,9 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !historyInvoiceData) ||
-                        isInvoiceComplete
+                        (!invoicePeriodsStatus && !historyInvoiceData) 
+                        // ||
+                        // isInvoiceComplete
                       }
                       defaultValue={
                         invoiceData ? invoiceData["description"] : null
@@ -1121,8 +1130,9 @@ function ContractInvoicePage(props) {
                     disabled={
                       loading ||
                       invoiceStatus ||
-                      (!invoicePeriodsStatus && !historyInvoiceData) ||
-                      isInvoiceComplete
+                      (!invoicePeriodsStatus && !historyInvoiceData) 
+                      // ||
+                      // isInvoiceComplete
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -1329,8 +1339,9 @@ function ContractInvoicePage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 invoiceStatus ||
-                (!invoicePeriodsStatus && !historyInvoiceData) ||
-                isInvoiceComplete
+                (!invoicePeriodsStatus && !historyInvoiceData) 
+                // ||
+                // isInvoiceComplete
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
