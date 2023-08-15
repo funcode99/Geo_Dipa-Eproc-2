@@ -253,8 +253,6 @@ function ContractReceiptPage(props) {
             setReceiptData(response["data"]["data"]);
           }
         }
-
-        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingRcpt(false);
       })
       .catch((error) => {
@@ -332,6 +330,8 @@ function ContractReceiptPage(props) {
           "payment_value",
           response["data"]["data"]["termin_value"]
         );
+
+        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         console.error(error, "getContractSummary");
