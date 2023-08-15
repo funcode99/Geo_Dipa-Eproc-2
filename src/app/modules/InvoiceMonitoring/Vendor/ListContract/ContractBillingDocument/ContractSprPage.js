@@ -299,6 +299,7 @@ function ContractSprPage(props) {
           "payment_value",
           response["data"]["data"]["termin_value"]
         );
+        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -404,7 +405,6 @@ function ContractSprPage(props) {
             setSppData(response["data"]["data"]);
           }
         }
-        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingSpp(false);
       })
       .catch((error) => {
