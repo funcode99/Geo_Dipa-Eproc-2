@@ -533,6 +533,7 @@ function ContractInvoicePage(props) {
   }, [termin, intl, setToast]);
 
   useEffect(getInvoiceProgressData, []);
+  useEffect(getContractData, []);
   useEffect(getInvoiceData, []);
   useEffect(getTaxData, []);
   useEffect(getInvoicePeriodsData, []);
