@@ -877,7 +877,7 @@ function ItemContractSummary(props) {
                     className="form-control"
                     id="priceStep1"
                     defaultValue={
-                      contractData ? contractData["termin_value"] : null
+                      contractData ? formatCurrency(currencyCode, contractData["termin_value"]) : null
                     }
                     disabled
                   />

@@ -308,6 +308,8 @@ function ContractInvoicePage(props) {
           "invoice_value",
           response["data"]["data"]["termin_value"]
         );
+
+        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -342,6 +344,7 @@ function ContractInvoicePage(props) {
 
     getInvoice(contract_id, termin)
       .then((response) => {
+        
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "invoice_no",
@@ -417,7 +420,6 @@ function ContractInvoicePage(props) {
             );
           }
         }
-        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingInvoice(false);
       })
       .catch((error) => {
@@ -533,6 +535,7 @@ function ContractInvoicePage(props) {
   }, [termin, intl, setToast]);
 
   useEffect(getInvoiceProgressData, []);
+  useEffect(getContractData, []);
   useEffect(getInvoiceData, []);
   useEffect(getTaxData, []);
   useEffect(getInvoicePeriodsData, []);
