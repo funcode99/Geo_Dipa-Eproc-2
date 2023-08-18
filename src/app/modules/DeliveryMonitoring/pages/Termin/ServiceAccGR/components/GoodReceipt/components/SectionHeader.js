@@ -9,7 +9,7 @@ const client = {
   address3: "Barat 75",
 };
 
-const SectionHeader = ({ header, fullData, hideLogo }) => {
+const SectionHeader = ({ news, header, fullData, hideLogo }) => {
   const tab1 = useMemo(
     () => [
       { value: client?.name },
@@ -33,7 +33,7 @@ const SectionHeader = ({ header, fullData, hideLogo }) => {
       },
       {
         label: "Document Date",
-        value: formatSADate(header?.doc_date) || "-",
+        value: formatSADate(news?.date) || "-",
       },
     ],
     [header]
