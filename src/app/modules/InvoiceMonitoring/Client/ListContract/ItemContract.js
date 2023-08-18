@@ -489,6 +489,7 @@ const ItemContract = (props) => {
         </form>
       </Dialog>
       <Subheader
+        subText={data.full_name}
         text={data.termin_name || ""}
         IconComponent={
           <i className="fas fa-file-invoice-dollar text-light mx-1"></i>
