@@ -1205,7 +1205,7 @@ function ContractSprPage(props) {
                       >
                         {contractData["data_bank"]?.map((item, index) => {
                           return (
-                            <option key={index} value={sppData.bank_account_no}>
+                            <option key={index} value={index}>
                               {item.account_number} - {item.account_holder_name}
                             </option>
                           );
