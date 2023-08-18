@@ -443,6 +443,8 @@
   "TITLE.MODAL_DELETE.TITLE": "Yakin ingin menghapus data ini?",
   "TITLE.MODAL_DELETE.SUBTITLE": "Setelah dihapus, data tidak akan ditampilkan lagi",
   "TITLE.SYNCHRONIZE_DATA": "Sinkronisasi Data",
+  "TITLE.SYNCHRONIZE_SERVICES": "Synchronize Services",
+  "TITLE.SYNCHRONIZE_ITEM": "Synchronize Item",
   "TITLE.FEATURES_SYNCHRONIZE_DATA": "Fitur Sinkronisasi Data",
   "TITLE.FEATURES": "Fitur",
   "TITLE.UNDERSTAND": "Mengerti",
