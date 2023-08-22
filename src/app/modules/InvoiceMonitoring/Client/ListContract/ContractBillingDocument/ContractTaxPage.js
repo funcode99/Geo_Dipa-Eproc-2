@@ -1500,7 +1500,7 @@ function ContractTaxPage(props) {
                   </div>
                 </label>
               </div>
-              <div className="form-group row">
+              {/* <div className="form-group row">
                 <label className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.BUSINESS_ENTITY" />
                 </label>
@@ -1530,7 +1530,7 @@ function ContractTaxPage(props) {
                     </span>
                   </div>
                 </label>
-              </div>
+              </div> */}
               <div className="form-group row">
                 <label
                   htmlFor="postingDate"
