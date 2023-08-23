@@ -65,8 +65,6 @@ const tableHeaderTerminNew = [
     label: (
       <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DOCUMENT_PROGRESS" />
     ),
-    rightSticky: true,
-    right: "31%",
   },
   {
     id: "termin_progress",
