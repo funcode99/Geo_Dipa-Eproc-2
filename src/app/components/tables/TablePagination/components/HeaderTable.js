@@ -59,7 +59,9 @@ function HeaderTable(props) {
           <TableCell
             key={row.id}
             align={"left"}
-            className={`bg-primary text-white`}
+            className={`bg-primary text-white ${
+              row?.sticky || row?.rightSticky ? "position-sticky" : null
+            }`}
             // align={row.numeric ? "right" : "left"}
             // padding={"default"}
             sortDirection={orderBy === row.id ? order : false}
@@ -67,11 +69,12 @@ function HeaderTable(props) {
             // style={[row?.id == 0 && { position: "sticky", left: 0 }]}
             style={
               row?.sticky === true
-                ? { zIndex: 12 }
+                ? {
+                    left: row?.left ?? 0,
+                  }
                 : row?.rightSticky
                 ? {
-                    right: 0,
-                    zIndex: 12,
+                    right: row?.right ?? 0,
                   }
                 : {}
             }
