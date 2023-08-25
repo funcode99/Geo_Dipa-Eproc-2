@@ -23,12 +23,12 @@ import {
   getAllRejectedTax,
   getFileTax,
   getInvoice,
-  getInvoiceProgress
+  getMismatchNotCompleted,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency } from "../../../../../libs/currency";
+import { rupiah, formatCurrency } from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -56,7 +56,7 @@ function ContractTaxPage(props) {
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
   const [currencyCode, setCurrencyCode] = useState(null);
-  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
+  const [isOnMismatch, setIsOnMismatch] = useState(false);
 
   const [Toast, setToast] = useToast();
 
@@ -273,7 +273,8 @@ function ContractTaxPage(props) {
           "payment_value",
           response["data"]["data"]["termin_value"]
         );
-        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
+        if (response?.data?.data?.currency_code)
+          setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -440,22 +441,27 @@ function ContractTaxPage(props) {
     setNumPages(numPages);
   };
 
-  const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      const data = response?.data?.data;
-      
-      if(data) {
-        setIsInvoiceComplete(true);
-      }
-      else {
-        setIsInvoiceComplete(false);
-      }
-    }).catch((err) => {
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
-  }, [termin, intl, setToast]);
+  const getMismatchNotCompletedData = useCallback(() => {
+    getMismatchNotCompleted(contract_id, termin)
+      .then((response) => {
+        const identName = "TAX";
+        const data = response?.data?.data;
 
-  useEffect(getInvoiceProgressData, []);
+        console.log(data, "mismatch data");
+
+        if (data && data.length > 0) {
+          const target = data.filter(
+            (item) => item.mismatch_data[0].value.ident_name === identName
+          );
+          setIsOnMismatch(target.length > 0);
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, termin, intl, setToast]);
+
+  useEffect(getMismatchNotCompletedData, []);
   useEffect(getContractData, []);
   useEffect(getTaxData, []);
   useEffect(getInvoiceData, []);
@@ -692,7 +698,7 @@ function ContractTaxPage(props) {
                       id={
                         loading ||
                         taxStatus ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !isOnMismatch)
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
@@ -700,7 +706,7 @@ function ContractTaxPage(props) {
                       displayType={
                         loading ||
                         taxStatus ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !isOnMismatch)
                           ? "text"
                           : "input"
                       }
@@ -735,7 +741,7 @@ function ContractTaxPage(props) {
                       disabled={
                         loading ||
                         taxStatus ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("tax_date")}
@@ -769,7 +775,7 @@ function ContractTaxPage(props) {
                       id={
                         loading ||
                         taxStatus ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !isOnMismatch)
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
@@ -777,7 +783,7 @@ function ContractTaxPage(props) {
                       displayType={
                         loading ||
                         taxStatus ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !isOnMismatch)
                           ? "text"
                           : "input"
                       }
@@ -813,7 +819,7 @@ function ContractTaxPage(props) {
                       disabled={
                         loading ||
                         taxStatus ||
-                        !invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -837,8 +843,7 @@ function ContractTaxPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      taxStatus ||
-                      !invoicePeriodsStatus
+                      taxStatus || (!invoicePeriodsStatus && !isOnMismatch)
                         ? ""
                         : "pointer"
                     }`}
@@ -852,8 +857,7 @@ function ContractTaxPage(props) {
                     )}
                     <span
                       className={`form-control text-truncate ${
-                        taxStatus ||
-                        !invoicePeriodsStatus
+                        taxStatus || (!invoicePeriodsStatus && !isOnMismatch)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -899,7 +903,7 @@ function ContractTaxPage(props) {
                     disabled={
                       loading ||
                       taxStatus ||
-                      !invoicePeriodsStatus
+                      (!invoicePeriodsStatus && !isOnMismatch)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -918,7 +922,10 @@ function ContractTaxPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.contract_value
+                      )}
                       disabled
                     />
                   </div>
@@ -952,7 +959,10 @@ function ContractTaxPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.termin_value
+                      )}
                       disabled
                     />
                   </div>
@@ -985,7 +995,7 @@ function ContractTaxPage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 taxStatus ||
-                !invoicePeriodsStatus
+                (!invoicePeriodsStatus && !isOnMismatch)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
