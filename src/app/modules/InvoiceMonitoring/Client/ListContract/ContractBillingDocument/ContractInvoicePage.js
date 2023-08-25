@@ -27,12 +27,15 @@ import {
   getBillingDocumentId,
   softcopy_save,
   getTerminProgress,
-  getInvoiceProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { formatCurrency, rupiah,currencySign } from "../../../../../libs/currency";
+import {
+  formatCurrency,
+  rupiah,
+  currencySign,
+} from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -73,7 +76,6 @@ function ContractInvoicePage(props) {
   const [addtionalPayment, setAddtionalPayment] = useState([]);
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const [currencyCode, setCurrencyCode] = useState("");
-  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -188,7 +190,7 @@ function ContractInvoicePage(props) {
         response["data"]["data"]["termin_value_ppn_new"] = rupiah(
           response["data"]["data"]["termin_value"] * 1.1
         );
-        
+
         setContractData(response.data.data);
       })
       .catch((error) => {
@@ -210,7 +212,6 @@ function ContractInvoicePage(props) {
     setLoadingInvoice(true);
     getInvoice(contract_id, termin)
       .then((response) => {
-
         setInvoiceData(response.data.data);
         if (response.data.data) {
           getHistoryInvoiceData(response["data"]["data"]["id"]);
@@ -220,7 +221,8 @@ function ContractInvoicePage(props) {
               : []
           );
         }
-        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
+        if (response?.data?.data?.currency?.code)
+          setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingInvoice(false);
       })
       .catch((error) => {
@@ -305,31 +307,14 @@ function ContractInvoicePage(props) {
     [intl, setToast]
   );
 
-  const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      const data = response?.data?.data;
-
-      if(data) {
-        setIsInvoiceComplete(true);
-      }
-      else {
-        setIsInvoiceComplete(false);
-      }
-    }).catch((err) => {
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
-  }, [termin, intl, setToast]);
 
   const handleHistory = (index) => {
     setModalHistoryData(historyInvoiceData[index]);
     setModalHistory(true);
   };
-
-  // useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
   useEffect(getInvoiceData, []);
   useEffect(getBillingDocumentIdData, []);
-
 
   const totalAddtionalPayment = () => {
     if (addtionalPayment && addtionalPayment.length === 0) return 0;
@@ -439,6 +424,7 @@ function ContractInvoicePage(props) {
           </DialogContent>
           <DialogActions>
             <button
+              type="button"
               className="btn btn-secondary"
               onClick={() => setModalReject(false)}
               disabled={loading}
@@ -446,6 +432,7 @@ function ContractInvoicePage(props) {
               <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
             </button>
             <button
+              type="submit"
               className="btn btn-danger"
               disabled={
                 loading || (formik.touched && !formik.isValid) || !formik.dirty
@@ -980,7 +967,10 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.contract_value
+                    )}
                     disabled
                   />
                 </div>
@@ -997,7 +987,10 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value
+                    )}
                     disabled
                   />
                 </div>
@@ -1027,7 +1020,11 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
+                    value={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value,
+                      totalAddtionalPayment()
+                    )}
                     onChange={() => {}}
                     disabled
                   />
