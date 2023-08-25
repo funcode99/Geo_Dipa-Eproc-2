@@ -22,7 +22,7 @@ import {
   getAllApprovedReceipt,
   getAllRejectedReceipt,
   getFileReceipt,
-  getInvoiceProgress
+  getMismatchNotCompleted,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -53,8 +53,8 @@ function ContractReceiptPage(props) {
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
-  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
   const [currencyCode, setCurrencyCode] = useState(null);
+  const [isOnMismatch, setIsOnMismatch] = useState(false);
 
   const [Toast, setToast] = useToast();
 
@@ -331,7 +331,8 @@ function ContractReceiptPage(props) {
           response["data"]["data"]["termin_value"]
         );
 
-        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
+        if (response?.data?.data?.currency_code)
+          setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         console.error(error, "getContractSummary");
@@ -396,23 +397,33 @@ function ContractReceiptPage(props) {
       });
   }, [intl, setToast]);
 
-  const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      const data = response?.data?.data;
+  const getMismatchNotCompletedData = useCallback(() => {
+    getMismatchNotCompleted(contract_id, termin)
+      .then((response) => {
+        const identName = "RECEIPT";
+        const data = response?.data?.data;
 
-      if(data) {
-        setIsInvoiceComplete(true);
-      }
-      else {
-        setIsInvoiceComplete(false);
-      }
-    }).catch((error) => {
-      console.error(error, "getInvoiceProgressData");
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
-  }, [termin, intl, setToast]);
+        if (data && data.length > 0) {
+          const target = data.filter(
+            (item) => item.mismatch_data[0].value.ident_name === identName
+          );
+          setIsOnMismatch(target.length > 0);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, termin, intl, setToast]);
 
-  useEffect(getInvoiceProgressData, []);
+  console.log({
+    loading,
+    receiptStatus,
+    invoicePeriodsStatus,
+    isOnMismatch,
+  });
+
+  useEffect(getMismatchNotCompletedData, []);
   useEffect(getContractData, []);
   useEffect(getReceiptData, []);
   useEffect(getInvoicePeriodsData, []);
@@ -640,9 +651,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData)
-                        //  ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("receipt_no")}
                       onChange={(e) => {
@@ -674,9 +683,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData)
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("receipt_date")}
                       onChange={(e) => {
@@ -713,9 +720,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !historyReceiptData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -739,10 +744,9 @@ function ContractReceiptPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      receiptStatus ||
-                      (!invoicePeriodsStatus
+                      receiptStatus || (!invoicePeriodsStatus && !isOnMismatch)
                         ? ""
-                        : "pointer" && !historyReceiptData)
+                        : "pointer"
                     }`}
                   >
                     {!receiptStatus && (
@@ -755,9 +759,9 @@ function ContractReceiptPage(props) {
                     <span
                       className={`form-control text-truncate ${
                         receiptStatus ||
-                        (!invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !isOnMismatch)
                           ? classes.textDisabled
-                          : "" && !historyReceiptData)
+                          : ""
                       }`}
                     >
                       {uploadFilename}
@@ -802,9 +806,7 @@ function ContractReceiptPage(props) {
                     disabled={
                       loading ||
                       receiptStatus ||
-                      (!invoicePeriodsStatus && !historyReceiptData)
-                      // ||
-                      // isInvoiceComplete
+                      (!invoicePeriodsStatus && !isOnMismatch)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -823,7 +825,10 @@ function ContractReceiptPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.contract_value
+                      )}
                       disabled
                     />
                   </div>
@@ -857,7 +862,10 @@ function ContractReceiptPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.termin_value
+                      )}
                       disabled
                     />
                   </div>
@@ -890,12 +898,10 @@ function ContractReceiptPage(props) {
               type="submit"
               className="btn btn-primary mx-1"
               disabled={
-                loading ||
                 (formik.touched && !formik.isValid) ||
+                loading ||
                 receiptStatus ||
-                (!invoicePeriodsStatus && !historyReceiptData)
-                //  ||
-                // isInvoiceComplete
+                (!invoicePeriodsStatus && !isOnMismatch)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />

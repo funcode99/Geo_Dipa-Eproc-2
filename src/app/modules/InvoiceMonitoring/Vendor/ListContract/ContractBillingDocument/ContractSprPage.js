@@ -23,7 +23,8 @@ import {
   getAllApprovedSpp,
   getFileSpp,
   getFileBank,
-  getInvoiceProgress
+  getInvoiceProgress,
+  getMismatchNotCompleted,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
@@ -72,7 +73,7 @@ function ContractSprPage(props) {
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [currencyCode, setCurrencyCode] = useState(null);
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
-  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
+  const [isOnMismatch, setIsOnMismatch] = useState(false);
 
   const headerTable = [
     {
@@ -299,7 +300,8 @@ function ContractSprPage(props) {
           "payment_value",
           response["data"]["data"]["termin_value"]
         );
-        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
+        if (response?.data?.data?.currency_code)
+          setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -310,8 +312,6 @@ function ContractSprPage(props) {
     setLoadingSpp(true);
     getSpp(contract_id, termin)
       .then((response) => {
-
-        
         if (!response["data"]["data"]) {
           console.log(response, "response data");
           formik.setFieldValue(
@@ -342,21 +342,18 @@ function ContractSprPage(props) {
           });
           setSppStatus(false);
         } else {
-          console.log(response, "response else");
           getHistorySppData(response["data"]["data"]["id"]);
           setSppId(response["data"]["data"]["id"]);
-          
+
           formik.setFieldValue(
             "draft_no",
             response["data"]["data"]["spr_draft_no"]
           );
 
           if (response["data"]["data"]["state"] === "REJECTED") {
-            console.log("response REJECTED");
             setSppStatus(false);
             setSppUpdate(true);
           } else {
-            console.log("response else in rejected");
             setSppStatus(true);
             setBankReference(response["data"]["data"]["bank_refference"]);
             formik.setFieldValue("spr_no", response["data"]["data"]["spr_no"]);
@@ -567,30 +564,27 @@ function ContractSprPage(props) {
       });
   }, [intl, setToast]);
 
-  const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      const data = response?.data?.data;
+  const getMismatchNotCompletedData = useCallback(() => {
+    getMismatchNotCompleted(contract_id, termin)
+      .then((response) => {
+        const identName = "SPP";
+        const data = response?.data?.data;
 
-      if(data) {
-        setIsInvoiceComplete(true);
-      }
-      else {
-        setIsInvoiceComplete(false);
-      }
-    }).catch((err) => {
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
-  }, [termin, intl, setToast]);
-
-  useEffect(getInvoiceProgressData, []);
+        if (data && data.length > 0) {
+          const target = data.filter(
+            (item) => item.mismatch_data[0].value.ident_name === identName
+          );
+          setIsOnMismatch(target.length > 0);
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, termin, intl, setToast]);
+  useEffect(getMismatchNotCompletedData, []);
   useEffect(getContractData, []);
   useEffect(getSppData, []);
   useEffect(getInvoicePeriodsData, []);
-
-  console.log({loading,
-    sppStatus,
-    invoicePeriodsStatus,
-    historySppData,});
 
   return (
     <React.Fragment>
@@ -963,9 +957,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("spr_no")}
                       onChange={(e) => {
@@ -994,9 +986,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("spr_date")}
                       onChange={(e) => {
@@ -1033,9 +1023,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData)
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -1059,10 +1047,9 @@ function ContractSprPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      sppStatus ||
-                      (!invoicePeriodsStatus
+                      sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
                         ? ""
-                        : "pointer" && !historySppData)
+                        : "pointer"
                     }`}
                   >
                     {!sppStatus && (
@@ -1074,10 +1061,9 @@ function ContractSprPage(props) {
                     )}
                     <span
                       className={`form-control text-truncate ${
-                        sppStatus ||
-                        (!invoicePeriodsStatus
+                        sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
                           ? classes.textDisabled
-                          : "" && !historySppData)
+                          : ""
                       }`}
                     >
                       {uploadFilename}
@@ -1115,9 +1101,7 @@ function ContractSprPage(props) {
                     disabled={
                       loading ||
                       sppStatus ||
-                      (!invoicePeriodsStatus && !historySppData) 
-                      // ||
-                      // isInvoiceComplete
+                      (!invoicePeriodsStatus && !isOnMismatch)
                     }
                     onBlur={formik.handleBlur}
                     onChange={(e) => handleUpload(e)}
@@ -1146,9 +1130,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !historySppData) 
-                          // ||
-                          // isInvoiceComplete
+                          (!invoicePeriodsStatus && !isOnMismatch)
                         }
                         onChange={handleRadio}
                         checked={bankReference}
@@ -1167,9 +1149,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !historySppData) 
-                          // ||
-                          // isInvoiceComplete
+                          (!invoicePeriodsStatus && !isOnMismatch)
                         }
                         onChange={handleRadio}
                         checked={!bankReference}
@@ -1196,9 +1176,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !historySppData) 
-                          // ||
-                          // isInvoiceComplete
+                          (!invoicePeriodsStatus && !isOnMismatch)
                         }
                         className="custom-select custom-select-sm"
                         value={sppData.bank_account_no}
@@ -1231,9 +1209,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !historySppData) 
-                          // ||
-                          // isInvoiceComplete
+                          (!invoicePeriodsStatus && !isOnMismatch)
                         }
                         {...formik.getFieldProps("bank_account_no")}
                       />
@@ -1263,9 +1239,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       defaultValue={sppData.bank_account_name}
                       {...formik.getFieldProps("bank_account_name")}
@@ -1295,9 +1269,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("bank_name")}
                     />
@@ -1325,9 +1297,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       {...formik.getFieldProps("bank_address")}
                     ></textarea>
@@ -1350,10 +1320,9 @@ function ContractSprPage(props) {
                     <label
                       htmlFor="upload_bank"
                       className={`input-group mb-3 col-sm-8 ${
-                        sppStatus ||
-                        (!invoicePeriodsStatus
+                        sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
                           ? ""
-                          : "pointer" && !historySppData)
+                          : "pointer"
                       }`}
                     >
                       {!sppStatus && (
@@ -1365,10 +1334,9 @@ function ContractSprPage(props) {
                       )}
                       <span
                         className={`form-control text-truncate h-100 ${
-                          sppStatus ||
-                          (!invoicePeriodsStatus
+                          sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
                             ? classes.textDisabled
-                            : "" && !historySppData)
+                            : ""
                         }`}
                       >
                         {uploadFilenameBank}
@@ -1406,9 +1374,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !historySppData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       onChange={(e) => handleUploadBank(e)}
                     />
@@ -1428,7 +1394,10 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.contract_value
+                      )}
                       disabled
                     />
                   </div>
@@ -1462,7 +1431,10 @@ function ContractSprPage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.termin_value
+                      )}
                       disabled
                     />
                   </div>
@@ -1495,12 +1467,8 @@ function ContractSprPage(props) {
               type="submit"
               className="btn btn-primary mx-1"
               disabled={
-                loading ||
                 (formik.touched && !formik.isValid) ||
-                sppStatus ||
-                (!invoicePeriodsStatus && !historySppData) 
-                // ||
-                // isInvoiceComplete
+                loading || sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
