@@ -34,12 +34,15 @@ import {
   createBkb,
   getInvoice,
   getContractAuthority,
-  getInvoiceProgress
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency, currencySign } from "../../../../../libs/currency";
+import {
+  rupiah,
+  formatCurrency,
+  currencySign,
+} from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -114,7 +117,6 @@ function ContractTaxPage(props) {
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const [postingDate, setPostingDate] = useState("");
   const [currencyCode, setCurrencyCode] = useState(null);
-  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
   const classes_ = useStyles();
 
   const [Toast, setToast] = useToast();
@@ -261,7 +263,6 @@ function ContractTaxPage(props) {
         setContractData(response.data.data);
       })
       .catch((error) => {
-
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [contract_id, formik, intl, setToast, user_id]);
@@ -328,7 +329,6 @@ function ContractTaxPage(props) {
     getTax(contract_id, termin)
       .then((response) => {
         if (response.data.data !== null) {
-          
           if (response.data.data.tax_selected)
             setSaveTaxPph({
               optionSelectedPph: cloneDeep(response.data.data.tax_selected),
@@ -355,7 +355,8 @@ function ContractTaxPage(props) {
             );
           }
         }
-        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
+        if (response?.data?.data?.currency?.code)
+          setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingTax(false);
       })
       .catch((error) => {
@@ -540,34 +541,18 @@ function ContractTaxPage(props) {
 
   const syncTaxVendorData = useCallback(() => {
     setLoadingSync(true);
-    syncTaxVendor().then((response) => {
-      setLoadingSync(false);
-      setToast(response["data"]["message"], 5000);
-    })
-    .catch((error) => {
-      setLoadingSync(false);
-      console.log(error);
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    });
-    
+    syncTaxVendor()
+      .then((response) => {
+        setLoadingSync(false);
+        setToast(response["data"]["message"], 5000);
+      })
+      .catch((error) => {
+        setLoadingSync(false);
+        console.log(error);
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   }, [intl, setToast]);
 
-  const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      const data = response?.data?.data;
-
-      if(data) {
-        setIsInvoiceComplete(true);
-      }
-      else {
-        setIsInvoiceComplete(false);
-      }
-    }).catch((err) => {
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
-  }, [termin, intl, setToast]);
-
-  // useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
   useEffect(getListTaxs, [contractData, addtionalPayment]);
   useEffect(getTaxData, []);
@@ -598,7 +583,7 @@ function ContractTaxPage(props) {
 
   const handleSourceText = (e, index) => {
     const temp = formikPph.values.optionSelectedPph;
-    if(temp[index]) temp[index].wi_tax_base = e ? e : "";
+    if (temp[index]) temp[index].wi_tax_base = e ? e : "";
     formikPph.setFieldValue("optionSelectedPph", temp);
   };
 
@@ -618,26 +603,16 @@ function ContractTaxPage(props) {
 
   const isApprovedDisabled = invoiceBkbExist && taxData?.state === "APPROVED";
 
-  // console.log(
-  //   "diosabled",
-  //   isSubmit,
-  //   taxData?.state === "REJECTED",
-  //   isApprovedDisabled,
-  //   taxData === null,
-  //   !props.setTaxStaffStatus,
-  //   progressTermin?.ident_name !== "TAX",
-  //   window.$.isEmptyObject(optionSelectedPpn),
-  //   progressTermin?.ident_name
-  // );
+  console.log(
+    isSubmit,
+    taxData?.state === "REJECTED",
+    isApprovedDisabled,
+    taxData === null,
+    !props.setTaxStaffStatus,
+    progressTermin?.ident_name !== "TAX"
+  );
 
-  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
-  // console.log(isSubmit,
-  //   taxData?.state === "REJECTED",
-  //   isApprovedDisabled,
-  //   taxData === null,
-  //   !props.setTaxStaffStatus,
-  //   progressTermin?.ident_name !== "TAX",
-  //   window.$.isEmptyObject(optionSelectedPpn), "<<<<<");
+  console.log({invoiceBkbExist, "taxData?.state" : taxData?.state});
 
   return (
     <React.Fragment>
@@ -998,8 +973,9 @@ function ContractTaxPage(props) {
                                   taxData?.state === "REJECTED" ||
                                   isApprovedDisabled ||
                                   taxData === null ||
-                                  !props.setTaxStaffStatus ||
-                                  progressTermin?.ident_name !== "TAX"
+                                  !props.setTaxStaffStatus
+                                  //  ||
+                                  // progressTermin?.ident_name !== "TAX"
                                 )
                               )
                                 handleChecked(index);
@@ -1015,8 +991,9 @@ function ContractTaxPage(props) {
                                   taxData?.state === "REJECTED" ||
                                   isApprovedDisabled ||
                                   taxData === null ||
-                                  !props.setTaxStaffStatus ||
-                                  progressTermin?.ident_name !== "TAX"
+                                  !props.setTaxStaffStatus
+                                  //  ||
+                                  // progressTermin?.ident_name !== "TAX"
                                 )
                               )
                                 handleChecked(index);
@@ -1034,8 +1011,9 @@ function ContractTaxPage(props) {
                                 taxData?.state === "REJECTED" ||
                                 isApprovedDisabled ||
                                 taxData === null ||
-                                !props.setTaxStaffStatus ||
-                                progressTermin?.ident_name !== "TAX"
+                                !props.setTaxStaffStatus
+                                //  ||
+                                // progressTermin?.ident_name !== "TAX"
                               )
                             )
                               handleChecked(index);
@@ -1052,8 +1030,9 @@ function ContractTaxPage(props) {
                               taxData?.state === "REJECTED" ||
                               isApprovedDisabled ||
                               taxData === null ||
-                              !props.setTaxStaffStatus ||
-                              progressTermin?.ident_name !== "TAX"
+                              !props.setTaxStaffStatus 
+                              // ||
+                              // progressTermin?.ident_name !== "TAX"
                             )
                               ? formikPph.values.optionSelectedPph[index] &&
                                 formikPph.values.optionSelectedPph[index]
@@ -1072,8 +1051,9 @@ function ContractTaxPage(props) {
                               taxData?.state === "REJECTED" ||
                               isApprovedDisabled ||
                               taxData === null ||
-                              !props.setTaxStaffStatus ||
-                              progressTermin?.ident_name !== "TAX"
+                              !props.setTaxStaffStatus 
+                              // ||
+                              // progressTermin?.ident_name !== "TAX"
                             )
                               ? formikPph.values.optionSelectedPph[index] &&
                                 formikPph.values.optionSelectedPph[index]
@@ -1098,8 +1078,9 @@ function ContractTaxPage(props) {
                                 taxData?.state === "REJECTED" ||
                                 isApprovedDisabled ||
                                 taxData === null ||
-                                !props.setTaxStaffStatus ||
-                                progressTermin?.ident_name !== "TAX"
+                                !props.setTaxStaffStatus 
+                                // ||
+                                // progressTermin?.ident_name !== "TAX"
                               )
                             ) {
                               if (
@@ -1182,8 +1163,9 @@ function ContractTaxPage(props) {
                 taxData?.state === "REJECTED" ||
                 isApprovedDisabled ||
                 taxData === null ||
-                !props.setTaxStaffStatus ||
-                progressTermin?.ident_name !== "TAX"
+                !props.setTaxStaffStatus 
+                // ||
+                // progressTermin?.ident_name !== "TAX"
               }
               type="submit"
             >
@@ -1563,7 +1545,10 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.contract_value
+                    )}
                     disabled
                   />
                 </div>
@@ -1594,7 +1579,10 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value
+                    )}
                     disabled
                   />
                 </div>
@@ -1624,7 +1612,11 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
+                    value={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value,
+                      totalAddtionalPayment()
+                    )}
                     onChange={() => {}}
                     disabled
                   />
@@ -1646,8 +1638,9 @@ function ContractTaxPage(props) {
                       taxData?.state === "REJECTED" ||
                       isApprovedDisabled ||
                       taxData === null ||
-                      !props.setTaxStaffStatus ||
-                      progressTermin?.ident_name !== "TAX"
+                      !props.setTaxStaffStatus 
+                      // ||
+                      // progressTermin?.ident_name !== "TAX"
                     }
                     options={listTaxPpn}
                     formatGroupLabel={formatGroupLabel}
@@ -1679,12 +1672,14 @@ function ContractTaxPage(props) {
                     onClick={syncTaxVendorData}
                     disabled={loadingSync}
                   >
-                    <i className={`fas fa-sync ${loadingSync ? "fa-spin" : ""}`}></i>
+                    <i
+                      className={`fas fa-sync ${loadingSync ? "fa-spin" : ""}`}
+                    ></i>
                     <FormattedMessage id="TITLE.SYNC_TAX" />
                   </button>
                 </div>
               </div>
-              
+
               {/* app/modules/DeliveryMonitoring/pages/Termin/Documents/component/ModalAddDeliverables.js */}
               {/* {listTax.map((item, index) => {
                 return (
@@ -1774,7 +1769,8 @@ function ContractTaxPage(props) {
                   taxData?.state === "REJECTED" ||
                   isApprovedDisabled ||
                   taxData === null ||
-                  !props.setTaxStaffStatus ||
+                  !props.setTaxStaffStatus
+                   ||
                   // progressTermin?.ident_name !== "TAX" ||
                   window.$.isEmptyObject(optionSelectedPpn)
                 }
@@ -1790,7 +1786,7 @@ function ContractTaxPage(props) {
                   taxData?.state === "REJECTED" ||
                   isApprovedDisabled ||
                   taxData === null ||
-                  !props.setTaxStaffStatus 
+                  !props.setTaxStaffStatus
                   // ||
                   // progressTermin?.ident_name !== "TAX"
                 }
