@@ -15,18 +15,22 @@ export const SubWrap = styled.div`
 // Note: please use icon from material-ui/icons or icon with component
 
 const StyledSubheader = ({
+  subText = "",
   text = "",
   IconComponent = <BookmarkBorderOutlined style={{ color: "white" }} />,
 }) => {
   return (
-    <div className="d-flex align-items-center flex-wrap mr-1">
+    <div className="d-flex align-items-center mb-2">
       <SubWrap className="mr-2 iconWrap">
         <span className="svg-icon menu-icon">
           {IconComponent ? IconComponent : null}
         </span>
       </SubWrap>
-      <div className="d-flex align-items-baseline mr-5 w-75">
-        <h2 className="text-dark font-weight-bold my-2 mr-5 text-truncate">
+      <div className="overflow-hidden flex-fill">
+        <span className="text-truncate overflow-hidden">
+          {subText}
+        </span>
+        <h2 className="font-weight-bold text-truncate overflow-hidden">
           {text}
         </h2>
       </div>

@@ -365,6 +365,9 @@ export async function getListMailTo() {
 export async function saveMismatch(data) {
   return axios.post(`invoice/save_mismatch`, data);
 }
+export async function getMismatchNotCompleted(contract_id, term_id) {
+  return axios.get(`invoice/mismatch-not-completed/${contract_id}/${term_id}`);
+}
 export async function submitParkAP(data) {
   return axios.post(`invoice/park_ap_submit`, data);
 }

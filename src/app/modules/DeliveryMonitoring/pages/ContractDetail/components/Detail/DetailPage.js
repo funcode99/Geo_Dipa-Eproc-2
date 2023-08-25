@@ -69,10 +69,14 @@ const tableHeaderTerminNew = [
   {
     id: "termin_progress",
     label: "Termin Progress",
+    rightSticky: true,
+    right: "18.5%",
   },
   {
     id: "status",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
+    rightSticky: true,
+    right: "5.5%",
   },
   // {
   //   id: "approve_status",
@@ -82,6 +86,7 @@ const tableHeaderTerminNew = [
     id: "action",
     label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
     sortable: false,
+    rightSticky: true,
   },
 ];
 

@@ -17,6 +17,7 @@ import DetailServAcceptance from "./DetailServAcceptance";
 
 const ServiceAcceptance = ({ data, isClient, showCancel = true }) => {
   const task_sa = data?.task_sa;
+  const newsObj = data?.news;
   const task_sa_array = data?.task_sa_array;
   const qr_params = React.useMemo(
     () => ({
@@ -42,6 +43,7 @@ const ServiceAcceptance = ({ data, isClient, showCancel = true }) => {
           <>
             <DetailServAcceptance
               id={id}
+              news={newsObj}
               header={els?.sa_header}
               fullData={data}
               items={els?.sa_items}

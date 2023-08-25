@@ -24,12 +24,16 @@ import {
   getFileInvoice,
   getAllApprovedInvoice,
   getTax,
-  getInvoiceProgress
+  getMismatchNotCompleted,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency, currencySign } from "../../../../../libs/currency";
+import {
+  rupiah,
+  formatCurrency,
+  currencySign,
+} from "../../../../../libs/currency";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Document, Page } from "react-pdf";
@@ -69,7 +73,7 @@ function ContractInvoicePage(props) {
   const [modalHistory, setModalHistory] = useState(false);
   const [modalHistoryData, setModalHistoryData] = useState({});
   const [invoicePeriodsStatus, setInvoicePeriodsStatus] = useState(false);
-  const [isInvoiceComplete, setIsInvoiceComplete] = useState(false);
+  const [isOnMismatch, setIsOnMismatch] = useState(false);
 
   const [modalAddtionalPayment, setModalAddtionalPayment] = useState(false);
   const [addtionalPayment, setAddtionalPayment] = useState([]);
@@ -124,6 +128,8 @@ function ContractInvoicePage(props) {
     tax_date: new Date(Date.now()),
     tax_date_yesterday: new Date(Date.now() - 86400000),
   };
+
+  console.log(progressTermin, "progressTermin");
 
   const headerTable = [
     {
@@ -182,12 +188,11 @@ function ContractInvoicePage(props) {
         id: "AUTH.VALIDATION.REQUIRED_FIELD",
       })
     ),
-    from_time: Yup.date()
-      .required(
-        intl.formatMessage({
-          id: "AUTH.VALIDATION.REQUIRED_FIELD",
-        })
-      ),
+    from_time: Yup.date().required(
+      intl.formatMessage({
+        id: "AUTH.VALIDATION.REQUIRED_FIELD",
+      })
+    ),
     invoice_no: Yup.string().required(
       intl.formatMessage({
         id: "AUTH.VALIDATION.REQUIRED_FIELD",
@@ -309,7 +314,8 @@ function ContractInvoicePage(props) {
           response["data"]["data"]["termin_value"]
         );
 
-        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
+        if (response?.data?.data?.currency_code)
+          setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
@@ -344,7 +350,6 @@ function ContractInvoicePage(props) {
 
     getInvoice(contract_id, termin)
       .then((response) => {
-        
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "invoice_no",
@@ -517,29 +522,31 @@ function ContractInvoicePage(props) {
     setModalHistory(true);
   };
 
-  const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      const data = response?.data?.data;
+  const getMismatchNotCompletedData = useCallback(() => {
+    getMismatchNotCompleted(contract_id, termin)
+      .then((response) => {
+        const identName = "INVOICE";
+        const data = response?.data?.data;
 
-      console.log(data, "Data");
+        if (data && data.length > 0) {
+          const target = data.filter(
+            (item) => item.mismatch_data[0].value.ident_name === identName
+          );
+          setIsOnMismatch(target.length > 0);
+        }
+      })
+      .catch((error) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
+      });
+  }, [contract_id, termin, intl, setToast]);
 
-      if(data) {
-        setIsInvoiceComplete(true);
-      }
-      else {
-        setIsInvoiceComplete(false);
-      }
-    }).catch((err) => {
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
-  }, [termin, intl, setToast]);
-
-  useEffect(getInvoiceProgressData, []);
+  useEffect(getMismatchNotCompletedData, []);
   useEffect(getContractData, []);
   useEffect(getInvoiceData, []);
   useEffect(getTaxData, []);
   useEffect(getInvoicePeriodsData, []);
 
+  console.log({ loading, invoiceStatus, invoicePeriodsStatus, isOnMismatch });
   return (
     <React.Fragment>
       <Toast />
@@ -785,9 +792,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !historyInvoiceData)
-                        //  ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                     >
                       <FormattedMessage id="TITLE.ADD" />
@@ -813,9 +818,7 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !historyInvoiceData) 
-                            // ||
-                            // isInvoiceComplete
+                            (!invoicePeriodsStatus && !isOnMismatch)
                           }
                           required={true}
                         />
@@ -825,17 +828,17 @@ function ContractInvoicePage(props) {
                           id={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus
+                            (!invoicePeriodsStatus && !isOnMismatch)
                               ? "NumberFormat-text"
-                              : "NumberFormat-input" && !historyInvoiceData)
+                              : "NumberFormat-input"
                           }
                           value={item.value}
                           displayType={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus
+                            (!invoicePeriodsStatus && !isOnMismatch)
                               ? "text"
-                              : "input" && !historyInvoiceData)
+                              : "input"
                           }
                           className="form-control"
                           thousandSeparator={"."}
@@ -855,7 +858,9 @@ function ContractInvoicePage(props) {
                               !(
                                 loading ||
                                 invoiceStatus ||
-                                  (!invoicePeriodsStatus && !historyInvoiceData)
+                                progressTermin?.ident_name !==
+                                  "BILLING_SOFTCOPY" ||
+                                !invoicePeriodsStatus
                               )
                             )
                               e.target.select();
@@ -875,9 +880,7 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !historyInvoiceData) 
-                            // ||
-                            // isInvoiceComplete
+                            (!invoicePeriodsStatus && !isOnMismatch)
                           }
                         >
                           <FormattedMessage id="BUTTON.DELETE" />
@@ -918,9 +921,7 @@ function ContractInvoicePage(props) {
                 disabled={
                   loading ||
                   invoiceStatus ||
-                  (!invoicePeriodsStatus && !historyInvoiceData) 
-                  // ||
-                  // isInvoiceComplete
+                  (!invoicePeriodsStatus && !isOnMismatch)
                 }
               >
                 <span>
@@ -964,9 +965,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !historyInvoiceData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       defaultValue={
                         invoiceData ? invoiceData["invoice_no"] : null
@@ -1001,9 +1000,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !historyInvoiceData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("from_time")}
@@ -1041,9 +1038,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !historyInvoiceData) 
-                        // ||
-                        // isInvoiceComplete
+                        (!invoicePeriodsStatus && !isOnMismatch)
                       }
                       defaultValue={
                         invoiceData ? invoiceData["description"] : null
@@ -1070,10 +1065,9 @@ function ContractInvoicePage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      invoiceStatus ||
-                      (!invoicePeriodsStatus
+                      invoiceStatus || (!invoicePeriodsStatus && !isOnMismatch)
                         ? ""
-                        : "pointer" && !historyInvoiceData)
+                        : "pointer"
                     }`}
                   >
                     {!invoiceStatus && (
@@ -1086,9 +1080,9 @@ function ContractInvoicePage(props) {
                     <span
                       className={`form-control text-truncate ${
                         invoiceStatus ||
-                        (!invoicePeriodsStatus
+                        (!invoicePeriodsStatus && !isOnMismatch)
                           ? classes.textDisabled
-                          : "" && !historyInvoiceData)
+                          : ""
                       }`}
                     >
                       {uploadFilename}
@@ -1133,9 +1127,7 @@ function ContractInvoicePage(props) {
                     disabled={
                       loading ||
                       invoiceStatus ||
-                      (!invoicePeriodsStatus && !historyInvoiceData) 
-                      // ||
-                      // isInvoiceComplete
+                      (!invoicePeriodsStatus && !isOnMismatch)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -1154,7 +1146,10 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.contract_value
+                      )}
                       disabled
                     />
                   </div>
@@ -1188,7 +1183,10 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.termin_value
+                      )}
                       disabled
                     />
                     {}
@@ -1225,7 +1223,11 @@ function ContractInvoicePage(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
+                      value={formatCurrency(
+                        currencyCode,
+                        contractData?.termin_value,
+                        totalAddtionalPayment()
+                      )}
                       onChange={() => {}}
                       disabled
                     />
@@ -1245,7 +1247,10 @@ function ContractInvoicePage(props) {
                         invoiceData?.state === "REJECTED" ||
                         invoiceData?.state === "APPROVED" ||
                         invoiceData === null ||
-                        !props.billingStaffStatus
+                        !props.billingStaffStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          ? "NumberFormat-text"
+                          : "NumberFormat-input"
                       }
                       value={invoiceData?.penalty}
                       displayType={
@@ -1253,7 +1258,10 @@ function ContractInvoicePage(props) {
                         invoiceData?.state === "REJECTED" ||
                         invoiceData?.state === "APPROVED" ||
                         invoiceData === null ||
-                        !props.billingStaffStatus
+                        !props.billingStaffStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
+                          ? "text"
+                          : "input"
                       }
                       className="form-control"
                       thousandSeparator={"."}
@@ -1299,7 +1307,8 @@ function ContractInvoicePage(props) {
                         invoiceData?.state === "REJECTED" ||
                         invoiceData?.state === "APPROVED" ||
                         invoiceData === null ||
-                        !props.billingStaffStatus
+                        !props.billingStaffStatus ||
+                        progressTermin?.ident_name !== "BILLING_SOFTCOPY"
                       }
                       onChange={(e) => {
                         setInvoiceData({
@@ -1342,9 +1351,7 @@ function ContractInvoicePage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 invoiceStatus ||
-                (!invoicePeriodsStatus && !historyInvoiceData) 
-                // ||
-                // isInvoiceComplete
+                (!invoicePeriodsStatus && !isOnMismatch)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
