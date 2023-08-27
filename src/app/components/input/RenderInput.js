@@ -31,6 +31,7 @@ const RenderInput = ({
   onFocus,
   onBlur,
   onChange,
+  fieldInfo,
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom";
@@ -81,6 +82,7 @@ const RenderInput = ({
                 {...selectProps}
                 {...otherProps}
               />
+              {fieldInfo}
               {/* <ErrorMessage name={name} /> */}
               {!!!touched[name] && (
                 <span className={"text-danger mt-2"}>{errors[name]}</span>

@@ -301,7 +301,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
           />
         </Container>
         <hr className="p-0 m-0" />
-        {tabActive === 0 && <KickOffDetail />}
+        {tabActive === 0 && <KickOffDetail setToast={setToast} />}
         <DetailPage
           show={tabActive === 1}
           refresh={old.needRefresh}

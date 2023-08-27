@@ -40,65 +40,82 @@ const docOptions = {
   ],
 };
 
-const fieldKickOff = [
-  {
-    name: "po_document",
-    typeInput: "UploadInput",
-    label: <FormattedMessage id="TITLE.PO_DOCUMENT" />,
-    labelSize: 2,
-    formInputSize: 10,
-    isPreview: true,
-  },
-  // {
-  //   name: "docType",
-  //   typeInput: "SelectInputCustom",
-  //   label: <FormattedMessage id="TITLE.DOCUMENT_TYPE" />,
-  //   labelSize: 2,
-  //   formInputSize: 10,
-  // },
-  // {
-  //   name: "docFile",
-  //   typeInput: "UploadInput",
-  //   label: <FormattedMessage id="TITLE.FILE" />,
-  // },
-  // {
-  //   name: "docDate",
-  //   typeInput: "SelectDateInput",
-  //   label: <FormattedMessage id="LABEL.DOCUMENT_DATE" />,
-  // },
-  [
-    {
-      name: "skpp_document",
-      typeInput: "UploadInput",
-      label: "SKPP",
-      isPreview: true,
-    },
-    {
-      name: "skpp_date",
-      typeInput: "SelectDateInput",
-      label: <FormattedMessage id="TITLE.DATE" />,
-    },
-  ],
-  [
-    {
-      name: "spmk_document",
-      typeInput: "UploadInput",
-      label: "SPMK",
-      isPreview: true,
-    },
-    {
-      name: "spmk_date",
-      typeInput: "SelectDateInput",
-      label: <FormattedMessage id="TITLE.DATE" />,
-    },
-  ],
-  {
-    name: "contract_type",
-    typeInput: "SelectInputCustom",
-    label: <FormattedMessage id="TITLE.CONTRACT_TYPE" />,
-    labelSize: 2,
-    formInputSize: 10,
-  },
-];
+const infoPO = <span className={"text-danger mt-2"}>Note : Silahkan upload file PO yang sudah ditanda tangani.</span>
 
-export { theadService, theadItem, fieldKickOff, docOptions };
+
+const fieldKickOff = (setToast) => {
+  const extPdfonly = (e) =>{
+    if(e){
+      const type = e.data.type
+      if(type != "application/pdf"){
+        e.path = null;
+        setToast(<FormattedMessage id="TITLE.UPLOAD_PDF_ONLY" />, 5000);
+      }
+      // setToast(<FormattedMessage id="TITLE.UPLOAD_PDF_ONLY" />, 5000);
+    }
+  }
+  return [
+    {
+      name: "po_document",
+      typeInput: "UploadInput",
+      label: <FormattedMessage id="TITLE.PO_DOCUMENT" />,
+      labelSize: 2,
+      formInputSize: 10,
+      isPreview: true,
+      onChange : extPdfonly,
+      fieldInfo : infoPO
+    },
+    // {
+    //   name: "docType",
+    //   typeInput: "SelectInputCustom",
+    //   label: <FormattedMessage id="TITLE.DOCUMENT_TYPE" />,
+    //   labelSize: 2,
+    //   formInputSize: 10,
+    // },
+    // {
+    //   name: "docFile",
+    //   typeInput: "UploadInput",
+    //   label: <FormattedMessage id="TITLE.FILE" />,
+    // },
+    // {
+    //   name: "docDate",
+    //   typeInput: "SelectDateInput",
+    //   label: <FormattedMessage id="LABEL.DOCUMENT_DATE" />,
+    // },
+    [
+      {
+        name: "skpp_document",
+        typeInput: "UploadInput",
+        label: "SKPP",
+        isPreview: true,
+      },
+      {
+        name: "skpp_date",
+        typeInput: "SelectDateInput",
+        label: <FormattedMessage id="TITLE.DATE" />,
+      },
+    ],
+    [
+      {
+        name: "spmk_document",
+        typeInput: "UploadInput",
+        label: "SPMK",
+        isPreview: true,
+      },
+      {
+        name: "spmk_date",
+        typeInput: "SelectDateInput",
+        label: <FormattedMessage id="TITLE.DATE" />,
+      },
+    ],
+    {
+      name: "contract_type",
+      typeInput: "SelectInputCustom",
+      label: <FormattedMessage id="TITLE.CONTRACT_TYPE" />,
+      labelSize: 2,
+      formInputSize: 10,
+    },
+  ];
+}
+
+export { theadService, theadItem, docOptions, fieldKickOff };
