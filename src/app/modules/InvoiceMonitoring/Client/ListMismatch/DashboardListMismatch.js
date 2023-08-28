@@ -170,6 +170,20 @@ function DashboardListMismatch(props) {
     },
     {
       title: intl.formatMessage({
+        id: "TITLE.DOCUMENT_NAME",
+      }),
+      name: "doc_name",
+      order: {
+        active: false,
+        status: false,
+      },
+      filter: {
+        active: false,
+        type: "text",
+      },
+    },
+    {
+      title: intl.formatMessage({
         id: "TITLE.STATUS",
       }),
       name: "status",
@@ -338,6 +352,7 @@ function DashboardListMismatch(props) {
                   <TableCell>{item.contract_name}</TableCell>
                   <TableCell>{item.user_created}</TableCell>
                   <TableCell>{item.vendor_name}</TableCell>
+                  <TableCell>{item.mismatch_data[0]?.label}</TableCell>
                   <TableCell>
                     {!!item.complete ? (
                       <span className="label label-lg label-light-success label-inline font-weight-bold py-4">
