@@ -46,11 +46,14 @@ const infoPO = <span className={"text-danger mt-2"}>Note : Silahkan upload file 
 const fieldKickOff = (setToast) => {
   const extPdfonly = (e) =>{
     if(e){
-      const type = e.data.type
-      if(type != "application/pdf"){
-        e.path = null;
-        setToast(<FormattedMessage id="TITLE.UPLOAD_PDF_ONLY" />, 5000);
-      }
+      if( e.data !== undefined){
+        const type = e.data.type
+        if(type != "application/pdf"){
+          e.path = null;
+          setToast(<FormattedMessage id="TITLE.UPLOAD_PDF_ONLY" />, 5000);
+        }
+      }else
+      e.path = null;
       // setToast(<FormattedMessage id="TITLE.UPLOAD_PDF_ONLY" />, 5000);
     }
   }
