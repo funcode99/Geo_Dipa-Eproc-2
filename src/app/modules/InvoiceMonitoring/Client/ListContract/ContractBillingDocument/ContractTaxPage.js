@@ -1531,6 +1531,20 @@ function ContractTaxPage(props) {
                   />
                 </div>
               </div>
+              <div className="form-group row">
+                <label htmlFor="createdAt" className="col-sm-4 col-form-label">
+                  <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SEND_DATE" />
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="createdAt"
+                    defaultValue={taxData?.created_at ? moment(taxData?.created_at).format('YYYY-MM-DD hh:mm:ss') : ""}
+                    disabled
+                  />
+                </div>
+              </div>
             </div>
             <div className="col-md-6">
               <div className="form-group row">
