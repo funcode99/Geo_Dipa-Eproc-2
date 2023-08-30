@@ -90,7 +90,7 @@ function ContractTaxPage(props) {
   const [loadingTax, setLoadingTax] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
   const [contractData, setContractData] = useState({});
-  const [taxData, setTaxData] = useState({});
+  const [taxData, setTaxData] = useState(null);
   const [dialogState, setDialogState] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [numPages, setNumPages] = useState(null);
@@ -603,16 +603,15 @@ function ContractTaxPage(props) {
 
   const isApprovedDisabled = invoiceBkbExist && taxData?.state === "APPROVED";
 
-  console.log(
-    isSubmit,
-    taxData?.state === "REJECTED",
-    isApprovedDisabled,
-    taxData === null,
-    !props.setTaxStaffStatus,
-    progressTermin?.ident_name !== "TAX"
-  );
+  // console.log(
+  //   isSubmit,
+  //   taxData?.state === "REJECTED",
+  //   isApprovedDisabled,
+  //   taxData === null,
+  //   !props.setTaxStaffStatus
+  // );
 
-  console.log({invoiceBkbExist, "taxData?.state" : taxData?.state});
+  // console.log({ invoiceBkbExist, "taxData?.state": taxData?.state });
 
   return (
     <React.Fragment>
@@ -969,11 +968,13 @@ function ContractTaxPage(props) {
                             onClick={() => {
                               if (
                                 !(
-                                  isSubmit ||
-                                  taxData?.state === "REJECTED" ||
-                                  isApprovedDisabled ||
-                                  taxData === null ||
-                                  !props.setTaxStaffStatus
+                                  (
+                                    isSubmit ||
+                                    taxData?.state === "REJECTED" ||
+                                    isApprovedDisabled ||
+                                    taxData === null ||
+                                    !props.setTaxStaffStatus
+                                  )
                                   //  ||
                                   // progressTermin?.ident_name !== "TAX"
                                 )
@@ -987,11 +988,13 @@ function ContractTaxPage(props) {
                             onClick={() => {
                               if (
                                 !(
-                                  isSubmit ||
-                                  taxData?.state === "REJECTED" ||
-                                  isApprovedDisabled ||
-                                  taxData === null ||
-                                  !props.setTaxStaffStatus
+                                  (
+                                    isSubmit ||
+                                    taxData?.state === "REJECTED" ||
+                                    isApprovedDisabled ||
+                                    taxData === null ||
+                                    !props.setTaxStaffStatus
+                                  )
                                   //  ||
                                   // progressTermin?.ident_name !== "TAX"
                                 )
@@ -1007,11 +1010,13 @@ function ContractTaxPage(props) {
                           onClick={() => {
                             if (
                               !(
-                                isSubmit ||
-                                taxData?.state === "REJECTED" ||
-                                isApprovedDisabled ||
-                                taxData === null ||
-                                !props.setTaxStaffStatus
+                                (
+                                  isSubmit ||
+                                  taxData?.state === "REJECTED" ||
+                                  isApprovedDisabled ||
+                                  taxData === null ||
+                                  !props.setTaxStaffStatus
+                                )
                                 //  ||
                                 // progressTermin?.ident_name !== "TAX"
                               )
@@ -1026,11 +1031,13 @@ function ContractTaxPage(props) {
                         <NumberFormat
                           id={
                             !(
-                              isSubmit ||
-                              taxData?.state === "REJECTED" ||
-                              isApprovedDisabled ||
-                              taxData === null ||
-                              !props.setTaxStaffStatus 
+                              (
+                                isSubmit ||
+                                taxData?.state === "REJECTED" ||
+                                isApprovedDisabled ||
+                                taxData === null ||
+                                !props.setTaxStaffStatus
+                              )
                               // ||
                               // progressTermin?.ident_name !== "TAX"
                             )
@@ -1047,11 +1054,13 @@ function ContractTaxPage(props) {
                           }
                           displayType={
                             !(
-                              isSubmit ||
-                              taxData?.state === "REJECTED" ||
-                              isApprovedDisabled ||
-                              taxData === null ||
-                              !props.setTaxStaffStatus 
+                              (
+                                isSubmit ||
+                                taxData?.state === "REJECTED" ||
+                                isApprovedDisabled ||
+                                taxData === null ||
+                                !props.setTaxStaffStatus
+                              )
                               // ||
                               // progressTermin?.ident_name !== "TAX"
                             )
@@ -1074,11 +1083,13 @@ function ContractTaxPage(props) {
                           onClick={(e) => {
                             if (
                               !(
-                                isSubmit ||
-                                taxData?.state === "REJECTED" ||
-                                isApprovedDisabled ||
-                                taxData === null ||
-                                !props.setTaxStaffStatus 
+                                (
+                                  isSubmit ||
+                                  taxData?.state === "REJECTED" ||
+                                  isApprovedDisabled ||
+                                  taxData === null ||
+                                  !props.setTaxStaffStatus
+                                )
                                 // ||
                                 // progressTermin?.ident_name !== "TAX"
                               )
@@ -1163,7 +1174,7 @@ function ContractTaxPage(props) {
                 taxData?.state === "REJECTED" ||
                 isApprovedDisabled ||
                 taxData === null ||
-                !props.setTaxStaffStatus 
+                !props.setTaxStaffStatus
                 // ||
                 // progressTermin?.ident_name !== "TAX"
               }
@@ -1652,7 +1663,7 @@ function ContractTaxPage(props) {
                       taxData?.state === "REJECTED" ||
                       isApprovedDisabled ||
                       taxData === null ||
-                      !props.setTaxStaffStatus 
+                      !props.setTaxStaffStatus
                       // ||
                       // progressTermin?.ident_name !== "TAX"
                     }
@@ -1783,8 +1794,7 @@ function ContractTaxPage(props) {
                   taxData?.state === "REJECTED" ||
                   isApprovedDisabled ||
                   taxData === null ||
-                  !props.setTaxStaffStatus
-                   ||
+                  !props.setTaxStaffStatus ||
                   // progressTermin?.ident_name !== "TAX" ||
                   window.$.isEmptyObject(optionSelectedPpn)
                 }
