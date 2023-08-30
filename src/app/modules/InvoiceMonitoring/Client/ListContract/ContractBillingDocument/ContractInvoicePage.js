@@ -552,7 +552,7 @@ function ContractInvoicePage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["from_time"])).format(
-                    "YYYY-MM-DD"
+                    "DD/MM/YYYY"
                   )}
                 </span>
               </div>
@@ -575,7 +575,7 @@ function ContractInvoicePage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "YYYY-MM-DD HH:mm:ss"
+                    "DD/MM/YYYY hh:mm:ss"
                   )}
                 </span>
               </div>
@@ -610,10 +610,10 @@ function ContractInvoicePage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD/MM/YYYY hh:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD/MM/YYYY hh:mm:ss"
                       )}
                 </span>
               </div>
@@ -962,7 +962,7 @@ function ContractInvoicePage(props) {
                     type="text"
                     className="form-control"
                     id="createdAt"
-                    defaultValue={invoiceData?.created_at ? moment(invoiceData?.created_at).format('YYYY-MM-DD hh:mm:ss') : ""}
+                    defaultValue={invoiceData?.created_at ? moment(invoiceData?.created_at).format('DD/MM/YYYY hh:mm:ss') : ""}
                     disabled
                   />
                 </div>
@@ -1209,7 +1209,7 @@ function ContractInvoicePage(props) {
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
                     {moment(new Date(item.created_at)).format(
-                      "YYYY-MM-DD HH:mm:ss"
+                      "DD/MM/YYYY hh:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>
