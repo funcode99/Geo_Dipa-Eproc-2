@@ -557,7 +557,7 @@ function ContractReceiptPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["receipt_date"])).format(
-                    "YYYY-MM-DD"
+                    "DD/MM/YYYY"
                   )}
                 </span>
               </div>
@@ -580,7 +580,7 @@ function ContractReceiptPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "YYYY-MM-DD HH:mm:ss"
+                    "DD/MM/YYYY hh:mm:ss"
                   )}
                 </span>
               </div>
@@ -615,10 +615,10 @@ function ContractReceiptPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD/MM/YYYY hh:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD/MM/YYYY hh:mm:ss"
                       )}
                 </span>
               </div>
@@ -855,7 +855,7 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="createdAt"
-                    defaultValue={receiptData?.created_at ? moment(receiptData?.created_at).format('YYYY-MM-DD hh:mm:ss') : ""}
+                    defaultValue={receiptData?.created_at ? moment(receiptData?.created_at).format('DD/MM/YYYY hh:mm:ss') : ""}
                     disabled
                   />
                 </div>
@@ -1012,7 +1012,7 @@ function ContractReceiptPage(props) {
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
                     {moment(new Date(item.created_at)).format(
-                      "YYYY-MM-DD HH:mm:ss"
+                      "DD/MM/YYYY hh:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>
