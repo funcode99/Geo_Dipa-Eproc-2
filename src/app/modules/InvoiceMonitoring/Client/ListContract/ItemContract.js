@@ -179,11 +179,15 @@ const ItemContract = (props) => {
     : [];
   const [onSubmit, setOnSubmit] = React.useState(false);
   const [statusSubmit, setStatusSubmit] = React.useState(false);
-  const isPaid = useMemo(
-    () =>
-      dataProgress?.find((el) => el.label === "Paid")?.status === "COMPLETE",
-    [dataProgress]
-  );
+  const isPaid = useMemo(() => {
+    const filter = dataProgress?.filter((el) => {
+      if (["PAID", "READY_TO_PAY"].includes(el.ident_name)) {
+        if (el?.status === "COMPLETE") return el;
+      }
+    });
+
+    return filter.length > 0;
+  }, [dataProgress]);
 
   useLayoutEffect(() => {
     suhbeader.setTitle(
