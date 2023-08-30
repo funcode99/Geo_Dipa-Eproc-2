@@ -1283,7 +1283,7 @@ function ContractTaxPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["tax_date"])).format(
-                    "YYYY-MM-DD"
+                    "DD/MM/YYYY hh:mm:ss"
                   )}
                 </span>
               </div>
@@ -1306,7 +1306,7 @@ function ContractTaxPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "YYYY-MM-DD HH:mm:ss"
+                    "DD/MM/YYYY hh:mm:ss"
                   )}
                 </span>
               </div>
@@ -1341,10 +1341,10 @@ function ContractTaxPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD/MM/YYYY hh:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD/MM/YYYY hh:mm:ss"
                       )}
                 </span>
               </div>
@@ -1540,7 +1540,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="createdAt"
-                    defaultValue={taxData?.created_at ? moment(taxData?.created_at).format('YYYY-MM-DD hh:mm:ss') : ""}
+                    defaultValue={taxData?.created_at ? moment(taxData?.created_at).format('DD/MM/YYYY hh:mm:ss') : ""}
                     disabled
                   />
                 </div>
@@ -1845,7 +1845,7 @@ function ContractTaxPage(props) {
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
                     {moment(new Date(item.created_at)).format(
-                      "YYYY-MM-DD HH:mm:ss"
+                      "DD/MM/YYYY hh:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>

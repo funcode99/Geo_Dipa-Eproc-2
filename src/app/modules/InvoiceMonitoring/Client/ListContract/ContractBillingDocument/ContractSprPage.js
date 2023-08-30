@@ -698,7 +698,7 @@ function ContractSprPage(props) {
                     <span className="form-control-plaintext">
                       :{" "}
                       {moment(new Date(modalHistoryData["spr_date"])).format(
-                        "YYYY-MM-DD"
+                        "DD/MM/YYYY hh:mm:ss"
                       )}
                     </span>
                   </div>
@@ -721,7 +721,7 @@ function ContractSprPage(props) {
                     <span className="form-control-plaintext">
                       :{" "}
                       {moment(new Date(modalHistoryData["created_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "YYDD/MM/YYYY hh:mm:ss"
                       )}
                     </span>
                   </div>
@@ -757,10 +757,10 @@ function ContractSprPage(props) {
                       {modalHistoryData["state"] === "REJECTED"
                         ? moment(
                             new Date(modalHistoryData["rejected_at"])
-                          ).format("YYYY-MM-DD HH:mm:ss")
+                          ).format("DD/MM/YYYY hh:mm:ss")
                         : moment(
                             new Date(modalHistoryData["approved_at"])
-                          ).format("YYYY-MM-DD HH:mm:ss")}
+                          ).format("DD/MM/YYYY hh:mm:ss")}
                     </span>
                   </div>
                 </div>
@@ -1196,7 +1196,7 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="createdAt"
-                    defaultValue={sppData?.created_at ? moment(sppData?.created_at).format('YYYY-MM-DD hh:mm:ss') : ""}
+                    defaultValue={sppData?.created_at ? moment(sppData?.created_at).format('DD/MM/YYYY hh:mm:ss') : ""}
                     disabled
                   />
                 </div>
@@ -1354,7 +1354,7 @@ function ContractSprPage(props) {
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
                     {moment(new Date(item.created_at)).format(
-                      "YYYY-MM-DD HH:mm:ss"
+                      "DD/MM/YYYY hh:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>
