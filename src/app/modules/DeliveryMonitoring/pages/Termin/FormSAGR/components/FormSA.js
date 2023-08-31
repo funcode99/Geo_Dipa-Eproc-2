@@ -18,6 +18,7 @@ const FormSA = ({
   loadings_sg,
   onRefresh,
   dataSAGR,
+  docDate,
 }) => {
   const [arrService, setArrService] = useState({});
   const [listWBS, setlistWBS] = useState([]);
@@ -151,8 +152,9 @@ const FormSA = ({
       enddate: dataSAGR?.base_sa?.task_due_date,
       ref_doc_no: dataSAGR?.base_sa?.no,
       ext_number: dataSAGR?.base_sa?.vendor_no,
+      doc_date: docDate,
     }),
-    [dataSAGR]
+    [dataSAGR, docDate]
   );
 
   console.log(`dataSA`, dataSAGR, dataSA);

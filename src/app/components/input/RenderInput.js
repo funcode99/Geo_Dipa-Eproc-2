@@ -81,6 +81,7 @@ const RenderInput = ({
                 {...selectProps}
                 {...otherProps}
               />
+              <small className="form-text text-muted">{fieldInfo}</small>
               {/* <ErrorMessage name={name} /> */}
               {!!!touched[name] && (
                 <span className={"text-danger mt-2"}>{errors[name]}</span>
