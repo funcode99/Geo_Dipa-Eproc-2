@@ -108,7 +108,7 @@ const FormGR = ({
         ],
         []
       ),
-      doc_date: dataGR?.doc_date ?? docDate,
+      doc_date: dataGR?.doc_date ? formatUpdateDate(dataGR?.doc_date) : formatUpdateDate(doc_date),
       ...dataGR,
     }),
     [dataGR, docDate, dataSAGR]
