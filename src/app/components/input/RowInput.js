@@ -34,24 +34,39 @@ const RowInput = ({
   onBlur,
   ...otherProps
 }) => {
-  const isSelect = typeInput === "SelectInputCustom";
-  const ThisComponent = inputs[typeInput || "BasicInput"];
-  const { values, errors, setFieldValue, touched, setTouched } = formik;
-  const selectProps = isSelect ? { listOptions } : {};
+
+  console.log('isi name', name)
+  console.log('isi child', Child)
+  console.log('isi childwithname', ChildWithName)
+  console.log('isi children', children)
+  console.log('isi childrenprops', ChildrenProps)
+  console.log('isi props lain di row input', otherProps)
+  
+  const isSelect = typeInput === "SelectInputCustom"
+  
+  const ThisComponent = inputs[typeInput || "BasicInput"]
+  
+  const { values, errors, setFieldValue, touched, setTouched } = formik
+  
+  const selectProps = isSelect ? { listOptions } : {}
+  
   const _handleFocus = (e) => {
-    setTouched({ [name]: true });
-    if (typeof onFocus === "function") onFocus(e);
-  };
+    setTouched({ [name]: true })
+    if (typeof onFocus === "function") onFocus(e)
+  }
+
   const _handleBlur = (e) => {
-    setTouched({});
-    if (typeof onBlur === "function") onBlur(e);
-  };
+    setTouched({})
+    if (typeof onBlur === "function") onBlur(e)
+  }
 
   // const _onChange = (val) => {
   //   setFieldValue(name, val, true)
   //   onChangeCustom()
   // }
-  console.log(`rowinput`, name, values[name], values);
+
+  // console.log(`rowinput`, name, values[name], values)
+
   const passedProps = {
     ...otherProps,
     onChange: (val) => setFieldValue(name, val, true),
@@ -63,38 +78,58 @@ const RowInput = ({
     ...selectProps,
     ...otherProps,
   };
+
   return (
     <div>
-      {name && ChildWithName ? (
-        <ChildWithName {...ChildrenProps} {...passedProps} />
-      ) : (
-        <div>
-          <ThisComponent
-            // value={values[name] || ""}
+
+      {name && ChildWithName ? 
+      
+        (
+          <ChildWithName {...ChildrenProps} {...passedProps} />
+        )
+
+      : 
+        (
+          <div>
+            
+            {/* // value={values[name] || ""}
             // name={name}
             // onChange={(val) => setFieldValue(name, val, true)}
             // onFocus={_handleFocus}
             // onBlur={_handleBlur}
             // disabled={readOnly || disabledFields.includes(name)}
-            {...passedProps}
             // {...selectProps}
-            // {...otherProps}
-          />
-          {/* <ErrorMessage name={name} /> */}
-          {!!!touched[name] && (
-            <span className={"text-danger mt-2"}>{errors[name]}</span>
-          )}
-        </div>
-      )}
-      {Child ? (
-        <Child {...ChildrenProps} {...passedProps} />
-      ) : typeof children === "function" ? (
-        children({ data: "dataToPass" })
-      ) : (
-        children
-      )}
-    </div>
-  );
-};
+            // {...otherProps} */}
+            {/* <ErrorMessage name={name} /> */}
 
-export default connect(RowInput);
+            <ThisComponent
+              {...passedProps}
+            />
+
+            {!!!touched[name] && (
+              <span className={"text-danger mt-2"}>{errors[name]}</span>
+            )}
+
+          </div>
+        )
+      }
+
+      {
+      Child ? 
+        (
+          <Child {...ChildrenProps} {...passedProps} />
+        ) 
+      : 
+      typeof children === "function" ? 
+        (
+          children({ data: "dataToPass" })
+        ) : 
+        (
+          children
+        )
+      }
+    </div>
+  )
+}
+
+export default connect(RowInput)

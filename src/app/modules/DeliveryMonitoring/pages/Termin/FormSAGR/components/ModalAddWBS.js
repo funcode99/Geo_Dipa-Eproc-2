@@ -8,9 +8,12 @@ import { FormSAContext } from "./FormSA";
 import _ from "lodash";
 
 const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
+
   const formRef = React.useRef();
   const { listWBS } = React.useContext(FormSAContext);
-  console.log(`dist_value`, dist_value);
+
+  // console.log(`dist_value`, dist_value);
+  console.log('ini isi onSelected', onSelected)
 
   const [dataForm, setDataForm] = useState([
     [
@@ -28,13 +31,14 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
         step: "0.1",
       },
     ],
-  ]);
+  ])
+
   const [validateScheme, setValidateScheme] = useState(
     object().shape({
       wbs1: validation.require("WBS 1"),
       value1: validation.require("Value 1"),
     })
-  );
+  )
 
   const addField = () => {
     setDataForm((e) =>
@@ -64,6 +68,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
       }, [])
     );
   };
+
   const initial = useMemo(() => {
     if (_.isEmpty(data)) return {};
     return data?.reduce((acc, el, idx, arr) => {
@@ -76,6 +81,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
       };
     }, {});
   }, [data]);
+
   const subField = () => {
     setDataForm((e) => {
       var arr = [...e];
@@ -87,9 +93,15 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
   };
 
   const _handleSubmit = (data) => {
+
+    console.log('ini isi data di _handleSubmit', data)
+
     if (typeof onSelected == "function")
+
       onSelected({ ...data, length: dataForm.length });
-    _cleanSubmit();
+      
+      _cleanSubmit();
+
   };
 
   const _cleanSubmit = () => {
@@ -114,9 +126,10 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
     ]);
   };
 
-  const listWBSMapped = listWBS.map(({ id, work_breakdown_ap }) => ({
+  const listWBSMapped = listWBS.map(({ id, work_breakdown_ap, name }) => ({
     value: id,
-    label: work_breakdown_ap,
+    label: `${work_breakdown_ap} - ${name}`,
+    wbs_id: work_breakdown_ap,
   }));
 
   return (
@@ -128,12 +141,14 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
       isCancel={false}
       maxWidth={"md"}
     >
+      
+      {/* // validation={validateScheme} */}
+      
       <FormBuilder
         ref={formRef}
         onSubmit={_handleSubmit}
         formData={dataForm}
         initial={initial}
-        // validation={validateScheme}
         withSubmit={false}
         fieldProps={{
           listOptions: {
@@ -155,17 +170,22 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
         }}
       />
 
+      {/* untuk menambah dan mengurangi row */}
       <div className="d-flex justify-content-end">
-        {dataForm.length > 1 && (
-          <ButtonContained
-            className="mr-2"
-            baseColor="danger"
-            disabled={dataForm.length === 1}
-            onClick={subField}
-          >
-            Minus a row
-          </ButtonContained>
-        )}
+        
+        {dataForm.length > 1 && 
+          (
+            <ButtonContained
+              className="mr-2"
+              baseColor="danger"
+              disabled={dataForm.length === 1}
+              onClick={subField}
+            >
+              Minus a row
+            </ButtonContained>
+          )
+        }
+
         {!(dataForm.length == 10 || dist_value?.value === "") && (
           <ButtonContained
             disabled={dataForm.length == 10 || dist_value?.value === ""}
@@ -175,7 +195,9 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
             Add a row
           </ButtonContained>
         )}
+
       </div>
+
     </DialogGlobal>
   );
 };

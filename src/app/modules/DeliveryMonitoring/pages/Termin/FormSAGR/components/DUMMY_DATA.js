@@ -168,11 +168,18 @@ export const rowTableSA_field = [
     label: "Header Text",
     typeInput: "SelectInputCustom",
   },
+  // typeInput: "SelectInputCustom",
   {
     name: "wbsdata",
     label: "Header Text",
-    // typeInput: "SelectInputCustom",
-    ChildWithName: (props) => <InputWBS {...props} />,
+    ChildWithName: (props) => {
+      console.log('isi props', props)
+      return(
+        <>
+          <InputWBS {...props} />
+        </>
+      )
+    }
   },
   {
     name: "gl_account",
