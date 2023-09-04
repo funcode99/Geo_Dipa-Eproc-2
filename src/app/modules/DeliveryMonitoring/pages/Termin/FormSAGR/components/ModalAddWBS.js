@@ -11,10 +11,6 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
 
   const formRef = React.useRef();
   const { listWBS } = React.useContext(FormSAContext);
-
-  // console.log(`dist_value`, dist_value);
-  console.log('ini isi onSelected', onSelected)
-
   const [dataForm, setDataForm] = useState([
     [
       {
@@ -86,23 +82,18 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
     setDataForm((e) => {
       var arr = [...e];
       var poped = [];
-      if (arr.length > 1) poped = arr.pop();
+      if (arr.length > 1) poped = arr.pop()
       // console.log(`poped`, poped, arr);
-      return arr;
-    });
-  };
+      return arr
+    })
+  }
 
   const _handleSubmit = (data) => {
-
     console.log('ini isi data di _handleSubmit', data)
-
     if (typeof onSelected == "function")
-
-      onSelected({ ...data, length: dataForm.length });
-      
+      onSelected({ ...data, length: dataForm.length })
       _cleanSubmit();
-
-  };
+  }
 
   const _cleanSubmit = () => {
     // onBlur();
@@ -123,14 +114,13 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
           step: "0.1",
         },
       ],
-    ]);
-  };
-
+    ])
+  }
   const listWBSMapped = listWBS.map(({ id, work_breakdown_ap, name }) => ({
     value: id,
     label: `${work_breakdown_ap} - ${name}`,
     wbs_id: work_breakdown_ap,
-  }));
+  }))
 
   return (
     <DialogGlobal
@@ -141,9 +131,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
       isCancel={false}
       maxWidth={"md"}
     >
-      
       {/* // validation={validateScheme} */}
-      
       <FormBuilder
         ref={formRef}
         onSubmit={_handleSubmit}
@@ -169,10 +157,8 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
           },
         }}
       />
-
       {/* untuk menambah dan mengurangi row */}
       <div className="d-flex justify-content-end">
-        
         {dataForm.length > 1 && 
           (
             <ButtonContained
@@ -185,7 +171,6 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
             </ButtonContained>
           )
         }
-
         {!(dataForm.length == 10 || dist_value?.value === "") && (
           <ButtonContained
             disabled={dataForm.length == 10 || dist_value?.value === ""}
@@ -195,9 +180,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
             Add a row
           </ButtonContained>
         )}
-
       </div>
-
     </DialogGlobal>
   );
 };
