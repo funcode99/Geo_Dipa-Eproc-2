@@ -25,11 +25,11 @@ const validationSchema = object().shape
 
 const RowTableSA = ({ item, index }) => {
 
-  const formikRef = React.useRef();
-  const wbsRef = React.useRef();
+  const formikRef = React.useRef()
+  const wbsRef = React.useRef()
   const { setArrService, listWBS, readOnly, options } = useContext(
     FormSAContext
-  );
+  )
 
   // const _handleSubmit = (data) => {
   //   console.log(`data`, data);
@@ -47,8 +47,8 @@ const RowTableSA = ({ item, index }) => {
   }
   
   const _open = () => {
-    wbsRef.current.open();
-  };
+    wbsRef.current.open()
+  }
   
   // console.log(`readOnly`, readOnly, item);
   // console.log(`data row`, formikRef.current);
@@ -93,11 +93,9 @@ const RowTableSA = ({ item, index }) => {
       },
     }),
     [item]
-  );
-
+  )
   {/* // onSubmit={_handleSubmit}
   // validateOnMount */}
-
   return (
     
     <React.Fragment key={item?.id}>
@@ -182,7 +180,7 @@ const RowTableSA = ({ item, index }) => {
 
     </React.Fragment>
 
-  );
-};
+  )
+}
 
-export default RowTableSA;
+export default RowTableSA

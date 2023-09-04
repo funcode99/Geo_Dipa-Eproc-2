@@ -33,40 +33,24 @@ const RowInput = ({
   onFocus,
   onBlur,
   ...otherProps
-}) => {
-
-  console.log('isi name', name)
-  console.log('isi child', Child)
-  console.log('isi childwithname', ChildWithName)
-  console.log('isi children', children)
-  console.log('isi childrenprops', ChildrenProps)
-  console.log('isi props lain di row input', otherProps)
-  
+}) => {  
   const isSelect = typeInput === "SelectInputCustom"
-  
   const ThisComponent = inputs[typeInput || "BasicInput"]
-  
   const { values, errors, setFieldValue, touched, setTouched } = formik
-  
   const selectProps = isSelect ? { listOptions } : {}
-  
   const _handleFocus = (e) => {
     setTouched({ [name]: true })
     if (typeof onFocus === "function") onFocus(e)
   }
-
   const _handleBlur = (e) => {
     setTouched({})
     if (typeof onBlur === "function") onBlur(e)
   }
-
   // const _onChange = (val) => {
   //   setFieldValue(name, val, true)
   //   onChangeCustom()
   // }
-
   // console.log(`rowinput`, name, values[name], values)
-
   const passedProps = {
     ...otherProps,
     onChange: (val) => setFieldValue(name, val, true),
@@ -78,20 +62,15 @@ const RowInput = ({
     ...selectProps,
     ...otherProps,
   };
-
   return (
     <div>
-
       {name && ChildWithName ? 
-      
         (
           <ChildWithName {...ChildrenProps} {...passedProps} />
         )
-
       : 
         (
           <div>
-            
             {/* // value={values[name] || ""}
             // name={name}
             // onChange={(val) => setFieldValue(name, val, true)}
@@ -101,11 +80,9 @@ const RowInput = ({
             // {...selectProps}
             // {...otherProps} */}
             {/* <ErrorMessage name={name} /> */}
-
             <ThisComponent
               {...passedProps}
             />
-
             {!!!touched[name] && (
               <span className={"text-danger mt-2"}>{errors[name]}</span>
             )}
@@ -113,7 +90,6 @@ const RowInput = ({
           </div>
         )
       }
-
       {
       Child ? 
         (

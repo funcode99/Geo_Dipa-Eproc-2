@@ -1,12 +1,12 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { FormSAContext } from "./FormSA";
-import TableSA from "./TableSA";
+import React from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import ExpansionPanel from "@material-ui/core/ExpansionPanel"
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails"
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary"
+import Typography from "@material-ui/core/Typography"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import { FormSAContext } from "./FormSA"
+import TableSA from "./TableSA"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,37 +22,26 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
-}));
+}))
 
 const TableAccordSA = () => {
-  const classes = useStyles();
-  const { itemJasa, saExist, dataSA } = React.useContext(FormSAContext);
-  const [expanded, setExpanded] = React.useState(false);
+  const classes = useStyles()
+  const { itemJasa, saExist, dataSA } = React.useContext(FormSAContext)
+  const [expanded, setExpanded] = React.useState(false)
   const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+    setExpanded(isExpanded ? panel : false)
+  }
 
-  const saUsed = saExist ? dataSA : itemJasa;
+  const saUsed = saExist ? dataSA : itemJasa
   return (
     <div className={classes.root}>
-
       {saUsed.map((item, id) => {
-        
         const itemSAUsed = itemJasa?.filter(
           (el) => el?.pckg_no === item?.services?.[0]?.service?.start_pckg_no
-        )?.[0];
-        
-        console.log(`itemJasa`, itemJasa, dataSA, itemSAUsed);
-        // console.log("item", item);
-        
-        const itemUsed = saExist ? item.services : item.item_services;
-
-        let dataItemJasa = itemUsed.filter((service) => service.service);
-        
-        {
-          /* dataItemJasa.length > 0 && ( */
-        }
-
+        )?.[0]
+        console.log(`itemJasa`, itemJasa, dataSA, itemSAUsed)
+        const itemUsed = saExist ? item.services : item.item_services
+        let dataItemJasa = itemUsed.filter((service) => service.service)
         return (
           <ExpansionPanel
             key={id}
@@ -78,12 +67,10 @@ const TableAccordSA = () => {
               )}
             </ExpansionPanelDetails>
           </ExpansionPanel>
-        );
-
+        )
       })}
-
     </div>
-  );
-};
+  )
+}
 
-export default TableAccordSA;
+export default TableAccordSA

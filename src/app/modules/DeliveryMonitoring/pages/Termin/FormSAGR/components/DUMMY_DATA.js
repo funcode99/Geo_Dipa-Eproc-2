@@ -86,8 +86,7 @@ export const sa_field = [
   //     label: "Score Time",
   //   },
   // ],
-];
-
+]
 export const gr_field = [
   [
     {
@@ -136,8 +135,7 @@ export const gr_field = [
       fieldInfo: "This date is based on the BAST or BAPP document date data that you have input. You can adjust and change it",
     },
   ],
-];
-
+]
 export const headerTableSA = [
   {
     id: "name_service",
@@ -168,8 +166,7 @@ export const headerTableSA = [
   //   id: "value",
   //   label: "Value",
   // },
-];
-
+]
 export const rowTableSA_field = [
   {
     name: "dist_type",
@@ -212,8 +209,7 @@ export const rowTableSA_field = [
   //   min: "0.1",
   //   step: "0.1",
   // },
-];
-
+]
 export const validationSchema_sa = object().shape({
   ext_number: validation.require("Extension Number"),
   // short_text: validation.require("Short Text"),
@@ -242,14 +238,12 @@ export const validationSchema_sa = object().shape({
   doc_date: validation.require("Document Date"),
   // score_qual: validation.require("Score Qual"),
   // score_time: validation.require("Score Time"),
-});
-
+})
 export const option_dist_type = [
   { value: "", label: "Full Payment" },
   { value: "1", label: "Gradual Payment (quantity)" },
   { value: "2", label: "Gradual Payment (percentage)" },
-];
-
+]
 export const BASE_MODAL_CONF = [
   {
     type: "gr101",
@@ -262,4 +256,4 @@ export const BASE_MODAL_CONF = [
     // subTitle: "Pastikan dokumen yang dikirimkan tidak sesuai !",
     // isReject: true,
   },
-];
+]

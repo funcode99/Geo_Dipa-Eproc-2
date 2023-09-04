@@ -16,31 +16,11 @@ const useStyles = makeStyles((theme) =>
     },
   })
 )
-
 const InputWBS = ({ onOpen, value, ...other }) => {
-
   const classes = useStyles();
-
   useEffect(() => {
     console.log('nilai value yang baru', value)
   }, [value])
-  
-  // other = 
-    // defaultValue = undefined
-    // disabled = false
-    // name = "wbsdata"
-    // onBlur = function _handleBlur(e)
-    // onChange = function _onChange(val)
-    // onFocus = function _handleFocus(e)
-  console.log('isi other', other)
-
-  // name = undefined 
-  // value = 1
-  console.log('isi value', value)
- 
-  // onOpen = function _open() => wbsref.current.open()
-  console.log('isi onOpen', onOpen)
-
   return (
     <div className="form-group mb-0">
 
@@ -59,13 +39,20 @@ const InputWBS = ({ onOpen, value, ...other }) => {
             value?.map
             (
               (el, id) => 
-              <Chip
-                  key={id}
-                  size={"small"}
-                  variant="outlined"
-                  label={`${el?.name === undefined ? `tidak ada` : `${el.name}`} (${el.value})`}
-                  className={classes.chip}
-              />
+              el.name !== undefined ? 
+                
+                <Chip
+                      key={id}
+                      size={"small"}
+                      variant="outlined"
+                      label={`${el?.name === undefined ? `tidak ada` : `${el.name}`} (${el.value})`}
+                      className={classes.chip}
+                /> : 
+
+                (<>
+                
+                </>)
+
             )
          } 
 
