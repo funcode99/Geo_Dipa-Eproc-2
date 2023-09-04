@@ -35,18 +35,24 @@ const TableAccordSA = () => {
   const saUsed = saExist ? dataSA : itemJasa;
   return (
     <div className={classes.root}>
+
       {saUsed.map((item, id) => {
+        
         const itemSAUsed = itemJasa?.filter(
           (el) => el?.pckg_no === item?.services?.[0]?.service?.start_pckg_no
         )?.[0];
+        
         console.log(`itemJasa`, itemJasa, dataSA, itemSAUsed);
         // console.log("item", item);
+        
         const itemUsed = saExist ? item.services : item.item_services;
 
         let dataItemJasa = itemUsed.filter((service) => service.service);
+        
         {
           /* dataItemJasa.length > 0 && ( */
         }
+
         return (
           <ExpansionPanel
             key={id}
@@ -73,7 +79,9 @@ const TableAccordSA = () => {
             </ExpansionPanelDetails>
           </ExpansionPanel>
         );
+
       })}
+
     </div>
   );
 };
