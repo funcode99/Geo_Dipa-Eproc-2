@@ -9,7 +9,6 @@ import DetailGoodRcpt from "./DetailGoodRcpt";
 
 const GoodReceipt = ({ data, loading, isClient, showCancel = true }) => {
   const task_gr = data?.task_gr;
-  const newsObj = data?.news;
   const task_gr_new = data?.task_gr_new;
   if (_.isEmpty(task_gr_new)) {
     return <NoDataBox text={"Good Receipt not Available"} />;
@@ -26,7 +25,6 @@ const GoodReceipt = ({ data, loading, isClient, showCancel = true }) => {
           <>
             <DetailGoodRcpt
                 id={id}
-                news={newsObj}
               header={els?.gr_header}
               fullData={data}
               items={els?.gr_items}

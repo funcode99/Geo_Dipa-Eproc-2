@@ -64,7 +64,7 @@ const FormSA = ({
         services: Object.values(arrService).map((item) => ({
           service_id: item.service_id,
           distribution_type: item.dist_type.value,
-          gl_account: item.gl_account.value,
+          gl_account: item.gl_account[0].value,
           bus_area: item.bus_area,
           costcenter: item.cost_center.value,
           // wbs_elem: item.wbs.label,
