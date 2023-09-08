@@ -1,17 +1,17 @@
-import React, { useMemo } from "react";
-import objectPath from "object-path";
+import React, { useMemo } from "react"
+import objectPath from "object-path"
 // LayoutContext
-import { useHtmlClassService } from "../_core/MetronicLayout";
+import { useHtmlClassService } from "_metronic/layout/_core/MetronicLayout"
 // Import Layout components
-import { Header } from "./header/Header";
-import { HeaderMobile } from "./header-mobile/HeaderMobile";
-import { Aside } from "./aside/Aside";
-import { Footer } from "./footer/Footer";
-import { LayoutInit } from "./LayoutInit";
-import { SubHeader } from "./subheader/SubHeader";
-import { QuickPanel } from "./extras/offcanvas/QuickPanel";
-import { QuickUser } from "./extras/offcanvas/QuickUser";
-import { ScrollTop } from "./extras/ScrollTop";
+import { Header } from "_metronic/layout/components/header/Header"
+import { HeaderMobile } from "_metronic/layout/components/header-mobile/HeaderMobile"
+import { Aside } from '_metronic/layout/components/aside/Aside'
+import { Footer } from "_metronic/layout/components/footer/Footer"
+import { LayoutInit } from "_metronic/layout/components/LayoutInit"
+// import { SubHeader } from "_metronic/layout/components/subheader/SubHeader"
+import { QuickPanel } from "_metronic/layout/components/extras/offcanvas/QuickPanel"
+import { QuickUser } from "_metronic/layout/components/extras/offcanvas/QuickUser"
+import { ScrollTop } from "_metronic/layout/components/extras/ScrollTop"
 // import {StickyToolbar} from "./extras/StickyToolbar";
 
 export function Layout({ children }) {

@@ -1,12 +1,12 @@
-import React, {useMemo} from "react";
-import {Link} from "react-router-dom";
-import objectPath from "object-path";
-import {Brand} from "../brand/Brand";
-import {AsideMenu} from "./aside-menu/AsideMenu";
-import {useHtmlClassService} from "../../_core/MetronicLayout";
+import React, {useMemo} from "react"
+import {Link} from "react-router-dom"
+import objectPath from "object-path"
+import {Brand} from "../brand/Brand"
+import { AsideMenu } from "_metronic/layout/components/aside/aside-menu/AsideMenu"
+import {useHtmlClassService} from "../../_core/MetronicLayout"
 
 export function Aside() {
-  const uiService = useHtmlClassService();
+  const uiService = useHtmlClassService()
 
   const layoutProps = useMemo(() => {
     return {

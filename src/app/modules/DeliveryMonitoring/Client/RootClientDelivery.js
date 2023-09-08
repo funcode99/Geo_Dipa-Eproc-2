@@ -1,12 +1,13 @@
-import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
-import { useSubheader } from "../../../../_metronic/layout";
+// FILE INI DIPAKAI
+import React from "react"
+import { Redirect, Route, Switch } from "react-router-dom"
+import { useSubheader } from '_metronic/layout'
 
 import {
   // FormattedMessage,
   injectIntl,
-} from "react-intl";
-import { connect } from "react-redux";
+} from "react-intl"
+import { connect } from "react-redux"
 
 import {
   ContractsPage,
@@ -18,13 +19,13 @@ import {
   SAPage,
   DetailSAPage,
   DashboardDM,
-} from "../pages";
+} from "../pages"
 
 function RootClientDelivery(props) {
   // const { user } = useSelector((state) => state.auth);
   // const { intl } = props;
-  const suhbeader = useSubheader();
-  suhbeader.setTitle("Delivery Monitoring");
+  const suhbeader = useSubheader()
+  suhbeader.setTitle("Delivery Monitoring")
   return (
     <Switch>
       <Redirect
@@ -65,9 +66,15 @@ function RootClientDelivery(props) {
       <Route
         path="/client/delivery-monitoring/contract"
         component={ContractsPage}
+        />
+      <Route 
+        path="/client/delivery-monitoring/gr" 
+        component={GRPage} 
       />
-      <Route path="/client/delivery-monitoring/gr" component={GRPage} />
-      <Route path="/client/delivery-monitoring/sa" component={SAPage} />
+      <Route 
+        path="/client/delivery-monitoring/sa" 
+        component={SAPage} 
+      />
     </Switch>
   );
 }

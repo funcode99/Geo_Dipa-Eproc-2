@@ -1,7 +1,7 @@
 import { isEmpty } from "lodash";
 import { persistReducer } from "redux-persist";
 import { call, delay, put, takeEvery } from "redux-saga/effects";
-import apiHelper from "../app/service/helper/apiHelper";
+import apiHelper from "app/service/helper/apiHelper";
 import { MODAL } from "../service/modalSession/ModalService";
 import { PERSIST_REDUCER } from "./BaseHost";
 
@@ -102,10 +102,11 @@ export const getFinanceUser = ({ auth }) => {
   onSuccess: optional,
   onFail: optional
  */
+
 export function* saga() {
   yield takeEvery(globalRedTypes.FETCH_API_SAGA, function* fetchApi(action) {
-    const { key, onSuccess, onFail, alertAppear = false } = action.payload;
-    if (key) yield put(set_loading_rd(key));
+    const { key, onSuccess, onFail, alertAppear = false } = action.payload
+    if (key) yield put(set_loading_rd(key))
     try {
       let { data } = yield call(apiHelper.fetchGlobalApi, action.payload);
       // let data = yield call(apiHelper.fetchGlobalApi, action.payload);
@@ -143,6 +144,6 @@ export function* saga() {
       }
     }
     // yield delay(1000);
-    if (key) yield put(set_loading_done_rd(key));
-  });
+    if (key) yield put(set_loading_done_rd(key))
+  })
 }
