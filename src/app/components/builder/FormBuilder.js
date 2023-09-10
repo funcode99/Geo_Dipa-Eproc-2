@@ -36,12 +36,16 @@ const FormBuilder = (
       validationSchema={validation}
     >
       {(formikProps) => {
-        const { handleSubmit, isValid } = formikProps;
+        const { handleSubmit, isValid } = formikProps
+        console.log('ini isi fungsi handleSubmit', handleSubmit)
         return (
           <React.Fragment>
-            {typeof children === "function" ? (
+            {typeof children === "function" ? 
+            (
               children({ ...formikProps, fieldProps })
-            ) : (
+            )
+            : 
+            (
               <FieldBuilder formData={formData} {...fieldProps} />
             )}
             <div className="d-flex justify-content-end w-100">
@@ -55,9 +59,11 @@ const FormBuilder = (
                   disabled={loading || disabledButton || !isValid}
                 >
                   <span className="mr-1">Submit</span>
-                  {loading ? (
+                  {loading ? 
+                  (
                     <CircularProgress size="0.875rem" color="inherit" />
-                  ) : (
+                  ) : 
+                  (
                     <Send />
                   )}
                 </Button>

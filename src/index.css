@@ -99,6 +99,16 @@ th {
   min-width: 9900px;
 }
 
+.abcd {
+  place-items: center;
+  column-gap: 10px;
+}
+
+.defg {
+  width: 20px;
+  height: 20px;
+}
+
 .hecto-98 {
   min-width: 9800px;
 }

@@ -541,6 +541,22 @@
   "LABEL.DM.PARTIES.BOARD_DIRECTOR": "Board of Director",
   "LABEL.DM.PARTIES.POS_DIRECTOR": "Position of Director",
   "LABEL.DM.PARTIES.JOB_SUPERV": "Job Supervisor",
+
+  "LABEL.AC.PARTIES.ADDENDUM_STATUS" : "Addendum Status",
+  "LABEL.AC.PARTIES.PARTIES_DATA" : "Data Para Pihak",
+  "LABEL.AC.PARTIES.JOB_PRICE" : "Harga Pekerjaan",
+  "LABEL.AC.PARTIES.TIME_PERIOD" : "Jangka Waktu",
+  "LABEL.AC.PARTIES.GUARANTEE" : "Jaminan",
+  "LABEL.AC.PARTIES.SCOPE_OF_WORK" : "Lingkup Pekerjaan",
+  "LABEL.AC.PARTIES.PAYMENT_METHOD" : "Metode Pembayaran",
+  "LABEL.AC.PARTIES.FINE" : "Denda",
+
+  "LABEL.AC.PARTIES.PRICE_CHANGE.TITLE": "Perubahan Harga Pekerjaan (Exc PPN)",
+  "LABEL.AC.PARTIES.PRICE_CHANGE.START_PRICE": "Harga Pekerjaan Awal",
+  "LABEL.AC.PARTIES.PRICE_CHANGE.END_PRICE_ADDENDUM": "Harga Pekerjaan Addendum Terakhir",
+  "LABEL.AC.PARTIES.PRICE_CHANGE.ADDITIONAL_PRICE": "Penambahan Harga Pekerjaan",
+  "LABEL.AC.PARTIES.PRICE_CHANGE.SUBTRACTION_PRICE": "Pengurangan Harga Pekerjaan",
+
   "TITLE.SERVICE_ACCEPTANCE": "Service Acceptance",
   "TITLE.GOOD_RECEIPT": "Good Receipt",
   "LABEL.SA_NUMBER": "SA Number",

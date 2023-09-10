@@ -13,16 +13,19 @@ import {
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
-import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { useLocation, useParams, withRouter } from "react-router-dom";
+import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
+
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import Tabs from "../../../../components/tabs";
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
 import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
+import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { FormattedMessage } from "react-intl";
+
 import ParaPihak from "./components/ParaPihak";
 import ParaPihak2 from "./components/ParaPihak/ParaPihak2";
 import DokContract from "./components/DokContract";
@@ -31,10 +34,11 @@ import JangkaWaktu from "./components/JangkaWaktu";
 import Jaminan from "./components/Jaminan";
 import Denda from "./components/Denda";
 import BAST from "./components/BAST";
-import DetailPage from "./components/Detail/DetailPage";
-import { compose } from "redux";
-import KickOffDetail from "./components/Detail/KickOffDetail";
 import Steppers from "../../../../components/steppersCustom/Steppers";
+import DetailPage from "./components/Detail/DetailPage";
+import KickOffDetail from "./components/Detail/KickOffDetail";
+
+import { compose } from "redux"
 import {
   DUMMY_STEPPER,
   DUMMY_STEPPER_CONTRACT,

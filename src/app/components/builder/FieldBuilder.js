@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import RenderInput from "../input/RenderInput";
+import RenderInput from 'app/components/input/RenderInput'
 
 const FieldBuilder = ({
   formData,
@@ -9,6 +9,7 @@ const FieldBuilder = ({
   // handleSubmit,
   ...other
 }) => {
+  console.log('isi formData', formData)
   const formProps = {
     // values,
     // errors,
@@ -18,6 +19,8 @@ const FieldBuilder = ({
     // disabled: readOnly,
     ...other,
   };
+
+  console.log('isi formProps', other)
 
   // console.log(`formProps`, formProps);
   return (
@@ -29,8 +32,11 @@ const FieldBuilder = ({
               <Col key={idx} md={12}>
                 <Row>
                   {item?.map((it, id) => (
-                    <Col key={id} md={6}>
-                      <RenderInput {...it} {...formProps} />
+                    <Col key={id} md={it.typeInput === 'CheckboxInput' ? 3 : 6}>
+                      <RenderInput 
+                        {...it}
+                        {...formProps}
+                      />
                     </Col>
                   ))}
                   {/* <label>apaa ini</label> */}

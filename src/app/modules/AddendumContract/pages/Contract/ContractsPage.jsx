@@ -244,7 +244,7 @@ const useStyles = makeStyles((theme) => ({
                   </TableCell>
                   <TableCell>
                     <NavLink
-                      to={`/${status}/delivery-monitoring/contract/${item.id}`}
+                      to={`/${status}/addendum-contract/contract/${item.id}`}
                     >
                       {item?.contract_no}
                     </NavLink>

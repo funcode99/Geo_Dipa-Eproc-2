@@ -7,7 +7,7 @@ const BasicInput = ({ placeholder, onChange, type = "text", ...other }) => {
       onChange(e.target.value);
     },
     [onChange]
-  );
+  )
   return (
     <input
       type={type}
