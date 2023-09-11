@@ -18,7 +18,7 @@ import { compose } from "redux";
 import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 
-import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import { toAbsoluteUrl } from "_metronic/_helpers";
 import Tabs from "../../../../components/tabs";
 import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";

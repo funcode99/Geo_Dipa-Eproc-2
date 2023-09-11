@@ -1,4 +1,3 @@
-// import TitleField from "../../../../../../components/input/TitleField";
 import React from "react"
 import TitleField from 'app/components/input/TitleField'
 import { object } from "yup"
@@ -63,13 +62,6 @@ export const formData1 = [
     //   label: <Ini text={"NAMA_PEMBERI"} />,
     // },
   ],
-  // Deed of Establishment
-  // {
-  //   Child: TitleField,
-  //   ChildrenProps: {
-  //     title: <Ini text={"DEED"} />,
-  //   },
-  // },
   {
     Child: TitleField,
     ChildrenProps: {
@@ -92,186 +84,71 @@ export const formData1 = [
     {
       name: "additional_price",
       label: <Ini2 text={"PRICE_CHANGE.ADDITIONAL_PRICE"} />,
-    },
-    // {
-    //   name: "tgl_akta",
-    //   label: <Ini text={"DEED_DATE"} />,
-    // },
+    }
   ],
   [
     {
       name: "subtraction_price",
       label: <Ini2 text={"PRICE_CHANGE.SUBTRACTION_PRICE"} />,
-    },
-    // {
-    //   name: "tgl_sk_kemenkum",
-    //   label: <Ini text={"SK_KUM_DATE"} />,
-    // },
-  ],
-  // Last Deed of Establishment
-  {
-    Child: TitleField,
-    ChildrenProps: {
-      title: <Ini text={"DEED_LAST"} />,
-    },
-  },
-  [
-    {
-      name: "nama_notaris_akhir",
-      label: <Ini text={"NAMA_NOTARIS"} />,
-    },
+    }
   ],
   [
     {
-      name: "akta_akhir",
-      label: <Ini text={"DEED_NO"} />,
-    },
-    {
-      name: "tgl_akta_akhir",
-      label: <Ini text={"DEED_DATE"} />,
-    },
+      name: "after_price_addendum",
+      label: <Ini2 text={"PRICE_CHANGE.AFTER_PRICE_ADDENDUM"} />
+    }
   ],
   [
     {
-      name: "sk_kemenkum_akhir",
-      label: <Ini text={"SK_KUM_NO"} />,
-    },
-    {
-      name: "tgl_sk_kemenkum_akhir",
-      label: <Ini text={"SK_KUM_DATE"} />,
-    },
+      name: "addendum_percentage",
+      label: <Ini2 text={"PRICE_CHANGE.PERCENTAGE_ADDENDUM"} />
+    }
   ],
   [
     {
-      name: "domisili_hukum",
-      label: <Ini text={"LEGAL_DOM"} />,
-      typeInput: "TextAreaInput",
-    },
+      name: "conclusion",
+      label: <Ini2 text={"PRICE_CHANGE.CONCLUSION"} />
+    }
   ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: <Ini text={"AUTH_OFC"} />,
-    },
+      title: <Ini2 text={"SUPPORTING_DOCUMENT.TITLE"} />
+    }
   },
-  [
-    {
-      name: "nama_pejabat",
-      label: <Ini text={"PLACEMAN_NAME"} />,
-    },
-    {
-      name: "telp_pejabat",
-      label: <Ini text={"PHONE"} />,
-    },
-  ],
-  [
-    {
-      name: "jabatan_pejabat",
-      label: <Ini text={"PLACEMAN_POSITION"} />,
-    },
-    {
-      name: "fax_pejabat",
-      label: <Ini text={"FAX"} />,
-    },
-  ],
-  [
-    {
-      name: "alamat_pejabat",
-      label: <Ini text={"ADDRESS"} />,
-      typeInput: "TextAreaInput",
-    },
-  ],
-  [
-    {
-      name: "nama_notaris_penugasan",
-      label: <Ini text={"NAMA_NOTARIS"} />,
-    },
-  ],
-  [
-    {
-      name: "sk_penugasan",
-      label: <Ini text={"SK_ASS_NO"} />,
-    },
-    {
-      name: "tgl_sk_penugasan",
-      label: <Ini text={"DATE_SK"} />,
-    },
-  ],
-  [
-    {
-      name: "akta_penugasan",
-      label: <Ini text={"DEED_NO"} />,
-    },
-    {
-      name: "tgl_akta_penugasan",
-      label: <Ini text={"DEED_DATE"} />,
-    },
-  ],
-  [
-    {
-      name: "sk_kemenkum_penugasan",
-      label: <Ini text={"SK_KUM_ASS_NO"} />,
-    },
-    {
-      name: "tgl_sk_kemenkum_penugasan",
-      label: <Ini text={"DATE_SK"} />,
-    },
-  ],
+
+]
+
+export const supportingDocumentDefault = [
   {
-    Child: TitleField,
-    ChildrenProps: {
-      title: <Ini text={"BOARD_DIRECTOR"} />,
-    },
+    name: "application_letter",
   },
-  [
-    {
-      name: "jabatan_direksi",
-      label: <Ini text={"PLACEMAN_POSITION"} />,
-    },
-    {
-      name: "telp_direksi",
-      label: <Ini text={"PHONE"} />,
-    },
-  ],
-  [
-    {
-      name: "alamat_direksi",
-      label: <Ini text={"ADDRESS"} />,
-      typeInput: "TextAreaInput",
-    },
-    {
-      name: "fax_direksi",
-      label: <Ini text={"FAX"} />,
-    },
-  ],
   {
-    Child: TitleField,
-    ChildrenProps: {
-      title: <Ini text={"JOB_SUPERV"} />,
-    },
+    name: "offer_detail",
   },
-  [
-    {
-      name: "jabatan_pengawas",
-      label: <Ini text={"PLACEMAN_POSITION"} />,
-    },
-    {
-      name: "telp_pengawas",
-      label: <Ini text={"PHONE"} />,
-    },
-  ],
-  [
-    {
-      name: "alamat_pengawas",
-      label: <Ini text={"ADDRESS"} />,
-      typeInput: "TextAreaInput",
-    },
-    {
-      name: "fax_pengawas",
-      label: <Ini text={"FAX"} />,
-    },
-  ],
-];
+  {
+    name: "minutes_of_agreement"
+  },
+  {
+    name: "special_power_of_attorney"
+  },
+  {
+    name: "justification"
+  },
+  {
+    name: "studies_of_functions"
+  },
+  {
+    name: "risk_management"
+  },
+  {
+    name: "director_decision"
+  },
+  {
+    name: "memo"
+  }
+]
+
 export const formData2 = [
   [
     {
@@ -480,7 +357,7 @@ export const formData2 = [
       label: <Ini text={"FAX"} />,
     },
   ],
-];
+]
 export const formData3 = [
   {
     Child: TitleField,
@@ -500,7 +377,7 @@ export const formData3 = [
     name: "nama_direksi",
     label: <Ini text={"BOARD_DIRECTOR"} />,
   },
-];
+]
 export const formData4 = [
   {
     Child: TitleField,
@@ -525,8 +402,8 @@ export const formData4 = [
     label: "Email PIC",
     // typeInput: "SelectInputCustom",
   },
-];
+]
 
 export const valSchemaPihakPertama = object().shape({
   nama_pemberi: validation.require("Nama Pemberi Kerja"),
-});
+})

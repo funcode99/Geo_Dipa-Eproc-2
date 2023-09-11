@@ -76,4 +76,4 @@ const FormBuilder = (
   );
 };
 
-export default React.forwardRef(FormBuilder);
+export default React.forwardRef(FormBuilder)

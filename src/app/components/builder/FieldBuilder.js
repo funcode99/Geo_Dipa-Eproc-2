@@ -1,22 +1,22 @@
-import React from "react";
-import { Col, Row } from "react-bootstrap";
+import React from "react"
+import { Col, Row } from "react-bootstrap"
 import RenderInput from 'app/components/input/RenderInput'
 
+// values = {},
+// errors,
+// handleSubmit,
 const FieldBuilder = ({
   formData,
-  // values = {},
-  // errors,
-  // handleSubmit,
   ...other
 }) => {
   console.log('isi formData', formData)
+  // values,
+  // errors,
+  // handleSubmit,
+  // readOnly,
+  // onChange: readOnly ? () => {} : undefined,
+  // disabled: readOnly,
   const formProps = {
-    // values,
-    // errors,
-    // handleSubmit,
-    // readOnly,
-    // onChange: readOnly ? () => {} : undefined,
-    // disabled: readOnly,
     ...other,
   };
 
@@ -32,7 +32,7 @@ const FieldBuilder = ({
               <Col key={idx} md={12}>
                 <Row>
                   {item?.map((it, id) => (
-                    <Col key={id} md={it.typeInput === 'CheckboxInput' ? 3 : 6}>
+                    <Col key={id} md={it.typeInput === 'CheckboxInput' ? 3 : 12}>
                       <RenderInput 
                         {...it}
                         {...formProps}

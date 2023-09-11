@@ -6,6 +6,7 @@ import SelectInputCustom from "app/components/input/SelectInputCustom"
 import TextAreaInput from "app/components/input/TextAreaInput"
 import UploadInput from "app/components/input/UploadInput"
 import CheckboxInput from "app/components/input/CheckboxInput"
+import SupportingDocumentInput from "app/components/input/SupportingDocumentInput.jsx"
 
 const inputs = {
   BasicInput,
@@ -81,7 +82,7 @@ const RenderInput = ({
                 onChange={_handleChange}
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
-                disabled={readOnly || disabledFields.includes(name)}
+                // disabled={readOnly || disabledFields.includes(name)}
                 {...selectProps}
                 {...otherProps}
               />
@@ -114,7 +115,7 @@ const RenderInput = ({
                 onChange={_handleChange}
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
-                disabled={readOnly || disabledFields.includes(name)}
+                // disabled={readOnly || disabledFields.includes(name)}
                 {...selectProps}
                 {...otherProps}
               />
