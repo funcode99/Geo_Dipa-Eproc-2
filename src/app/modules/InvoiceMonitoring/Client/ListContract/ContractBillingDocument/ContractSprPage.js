@@ -257,7 +257,8 @@ function ContractSprPage(props) {
         if (response["data"]["data"]) {
           getHistorySppData(response["data"]["data"]["id"]);
         }
-        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
+        if (response?.data?.data?.currency?.code)
+          setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingSpp(false);
       })
       .catch((error) => {
@@ -376,20 +377,20 @@ function ContractSprPage(props) {
   ]);
 
   const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      const data = response?.data?.data;
+    getInvoiceProgress(termin)
+      .then((response) => {
+        const data = response?.data?.data;
 
-      if(data) {
-        setIsInvoiceComplete(true);
-      }
-      else {
-        setIsInvoiceComplete(false);
-      }
-    }).catch((err) => {
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
+        if (data) {
+          setIsInvoiceComplete(true);
+        } else {
+          setIsInvoiceComplete(false);
+        }
+      })
+      .catch((err) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   }, [termin, intl, setToast]);
-
 
   // useEffect(getInvoiceProgressData, []);
   useEffect(getContractData, []);
@@ -1196,7 +1197,13 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="createdAt"
-                    defaultValue={sppData?.created_at ? moment(sppData?.created_at).format('DD/MM/YYYY hh:mm:ss') : ""}
+                    defaultValue={
+                      sppData?.created_at
+                        ? moment(sppData?.created_at).format(
+                            "DD/MM/YYYY hh:mm:ss"
+                          )
+                        : ""
+                    }
                     disabled
                   />
                 </div>
@@ -1215,7 +1222,10 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.contract_value
+                    )}
                     disabled
                   />
                 </div>
@@ -1246,7 +1256,10 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value
+                    )}
                     disabled
                   />
                 </div>
@@ -1256,7 +1269,37 @@ function ContractSprPage(props) {
                   <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
                 </label>
                 <div className="col-sm-8">
-                  <button
+                  {addtionalPayment.length > 0 ? (
+                    <table className="table table-sm mb-4">
+                      <thead>
+                        <tr>
+                          <th style={{ width: "10%" }}>#</th>
+                          <th style={{ width: "50%" }}>
+                            <FormattedMessage id="TITLE.DESCRIPTION" />
+                          </th>
+                          <th style={{ width: "30%" }}>
+                            <FormattedMessage id="TITLE.VALUE" />
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {addtionalPayment.map((item, index) => {
+                          return (
+                            <tr>
+                              <td>{index + 1}</td>
+                              <td>{item.description}</td>
+                              <td>
+                                {formatCurrency(currencyCode, item.value)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <FormattedMessage id="TITLE.TABLE.NO_DATA_AVAILABLE" />
+                  )}
+                  {/* <button
                     type="button"
                     className="btn btn-sm btn-primary w-100"
                     onClick={() => {
@@ -1264,7 +1307,7 @@ function ContractSprPage(props) {
                     }}
                   >
                     <FormattedMessage id="TITLE.SELECT" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
               <div className="form-group row">
@@ -1276,7 +1319,11 @@ function ContractSprPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
+                    value={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value,
+                      totalAddtionalPayment()
+                    )}
                     onChange={() => {}}
                     disabled
                   />
@@ -1294,7 +1341,7 @@ function ContractSprPage(props) {
               sppData?.state === "REJECTED" ||
               sppData?.state === "APPROVED" ||
               sppData === null ||
-              !props.billingStaffStatus 
+              !props.billingStaffStatus
               // ||
               // progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }
