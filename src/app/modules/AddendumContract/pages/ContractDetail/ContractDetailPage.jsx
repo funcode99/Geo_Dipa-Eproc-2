@@ -1,4 +1,5 @@
 import React from "react";
+import { Modal, Button } from "react-bootstrap"
 import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import {
   Assignment,
@@ -40,7 +41,7 @@ import {
   DUMMY_STEPPER,
   DUMMY_STEPPER_CONTRACT,
   STATE_STEPPER,
-} from "../Termin/TerminPageNew/STATIC_DATA";
+} from "../Termin/TerminPageNew/STATIC_DATA"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -294,31 +295,39 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
 
       <Paper className={classes.root}>
         <Container>
-          <Tabs
+
+          {/* <Tabs
             tabActive={tabActive}
             handleChange={handleChangeTab}
             tabLists={TabLists}
             variant="scrollable"
-          />
-        </Container>
+          /> */}
+
+        </Container>  
+
         <hr className="p-0 m-0" />
-        {tabActive === 0 && <KickOffDetail setToast={setToast} />}
-        <DetailPage
+
+        {/* {tabActive === 0 && <KickOffDetail setToast={setToast} />} */}
+
+        {/* <DetailPage
           show={tabActive === 1}
           refresh={old.needRefresh}
           contractId={contract_id}
-        />
-        {tabActive === 2 && dataContractById?.contract_status === "PO" && (
+        /> */}
+        
+        {dataContractById?.contract_status === "PO" && (
           <ParaPihak />
         )}
-        {tabActive === 3 && <DokContract />}
+
+        {dataContractById?.contract_status === "SPK" && (
+          <ParaPihak2 />
+        )}
+
+        {/* {tabActive === 3 && <DokContract />}
         {tabActive === 4 && <HargaPekerjaan />}
         {tabActive === 5 && <JangkaWaktu />}
         {tabActive === 6 && <Jaminan />}
-        {tabActive === 7 && <Denda />}
-        {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
-          <ParaPihak2 />
-        )}
+        {tabActive === 7 && <Denda />} */}
         {/* {tabActive === 8 && <BAST />} */}
       </Paper>
     </React.Fragment>

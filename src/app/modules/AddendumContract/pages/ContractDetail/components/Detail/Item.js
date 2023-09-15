@@ -33,29 +33,29 @@ const navLists = [
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
-});
+})
 
 const Item = ({ handleClick, status }) => {
   const { dataContractById, dataSubmitItems } = useSelector(
     (state) => state.deliveryMonitoring
-  );
-  const dispatch = useDispatch();
-  const [Toast, setToast] = useToast();
-  const [navActive, setNavActive] = React.useState(navLists[0].id);
-  const [loading, setLoading] = React.useState(false);
-  const [qtyErrors, setQtyErrors] = React.useState([]);
-  const isClient = status === "client";
-  const [stateSync, stateErrSync] = useState("");
-  const [poAsync, setPoAsync] = useState(false);
-  const [poAsync_, setPoAsync_] = useState(false);
-  const [statusSync, setStatusSync] = useState(false);
-  const [errSync, setErrSync] = useState({ status: false, message: "" });
-  const [loadingSync, setLoadingSync] = useState(false);
-  const [errLoadingSync, setErrLoadingSync] = useState(false);
-  const [titleSync, setTitleSync] = useState();
+  )
+  const dispatch = useDispatch()
+  const [Toast, setToast] = useToast()
+  const [navActive, setNavActive] = React.useState(navLists[0].id)
+  const [loading, setLoading] = React.useState(false)
+  const [qtyErrors, setQtyErrors] = React.useState([])
+  const isClient = status === "client"
+  const [stateSync, stateErrSync] = useState("")
+  const [poAsync, setPoAsync] = useState(false)
+  const [poAsync_, setPoAsync_] = useState(false)
+  const [statusSync, setStatusSync] = useState(false)
+  const [errSync, setErrSync] = useState({ status: false, message: "" })
+  const [loadingSync, setLoadingSync] = useState(false)
+  const [errLoadingSync, setErrLoadingSync] = useState(false)
+  const [titleSync, setTitleSync] = useState()
 
   const changeChecked = (item) => {
-    item.checked = !item.checked;
+    item.checked = !item.checked
   };
 
   const addSubmitItems = (items, type) => {
@@ -615,6 +615,7 @@ const Item = ({ handleClick, status }) => {
         }}
       />
       {/* )} */}
+      {/* disini button submit yang memunculkan modal */}
       {isClient && (
         <div className="d-flex justify-content-end w-100 mt-4">
           <Button

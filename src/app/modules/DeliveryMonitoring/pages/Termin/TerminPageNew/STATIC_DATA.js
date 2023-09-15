@@ -72,6 +72,7 @@ export const TERMIN_TAB_LIST = [
   },
 ];
 
+// gak jalan disini
 export const DUMMY_STEPPER = [
   {
     label: "Create Term",

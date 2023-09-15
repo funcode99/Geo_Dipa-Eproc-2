@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import { rupiah } from "../../../../../../libs/currency";
 import { connect } from "react-redux";
-import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
+import DialogGlobal from "app/components/modals/DialogGlobal";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -42,7 +42,7 @@ const ModalTerm = ({
         update.update ? (
           <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.UPDATE" />
         ) : (
-          <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.CREATE" />
+          <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.CREAT" />
         )
       }
       onClose={onClose}
@@ -62,13 +62,14 @@ const ModalTerm = ({
       minWidth="40vw"
       maxwidth="70vw"
     >
+
       {!update.update &&
         dataSubmitItems?.task_items?.length === 0 &&
         dataSubmitItems?.task_services?.length === 0 && (
           <p>
             <FormattedMessage id="CONTRACT_DETAIL.MODAL_CREATE.NO_ITEMS" />
           </p>
-        )}
+      )}
 
       {!update.update && (
         <div className="mb-5">
@@ -251,6 +252,7 @@ const ModalTerm = ({
           </React.Fragment>
         ) : null} */}
       </form>
+
     </DialogGlobal>
   );
 };

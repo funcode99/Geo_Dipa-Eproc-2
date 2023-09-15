@@ -571,6 +571,7 @@ const DetailPage = ({
 
   return show ? (
     <React.Fragment>
+      
       <ModalTerm
         innerRef={submitRef}
         visible={modals}
@@ -586,12 +587,14 @@ const DetailPage = ({
         loading={loadings.approve}
         onSubmit={(e) => handleApi("approve", e)}
       />
+
       <ModalApproveTermin
         ref={rejectRef}
         loading={loadings.reject}
         onSubmit={(e) => handleApi("reject", e)}
         isReject={true}
       />
+
       <ModalApproveTermin
         ref={revisionRef}
         loading={loadings.revision}
@@ -608,7 +611,9 @@ const DetailPage = ({
         onSubmit={() => handleDelete()}
         loading={loadings.delete}
       />
+
       {showForm && <FormDetail contractId={contractId} />}
+      
       <div className="p-8">
         <GRAccord
           id={"title.termtable"}
@@ -629,11 +634,14 @@ const DetailPage = ({
           />
         </GRAccord>
       </div>
+
       {/* <Container>
         <ExpansionBox title={"TITLE.TERM_TABLE"}>
         </ExpansionBox>
       </Container> */}
+
     </React.Fragment>
+
   ) : (
     <div />
   );

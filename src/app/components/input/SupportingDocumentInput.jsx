@@ -20,30 +20,63 @@ const inputs = {
 const SupportingDocumentInput = ({
     title
 }) => {
-    title.map((item) => {
-        console.log(item)
-    })
+    // title.map((item) => {
+    //     console.log(item)
+    // })
     return(
         <>
-            {title?.map((item) => (
+            {title ? title?.map((item) => (
                 <>
                     {item.name}
-                <Row>
-                    <Col md={4}>
-                        <BasicInput placeholder={"Masukan No Dokumen Anda"} />
-                    </Col>
-                    <Col md={3}>
-                        <SelectDateInput />
-                    </Col>
-                    <Col md={5}>
-                        <UploadInput />
-                    </Col>
-                </Row>
-                <Row className={"mb-9 mt-3"}>
-                    <TextAreaInput className={"border border-dark form-control"} placeholder={""} />
-                </Row>
+              
+                    <Row>
+                        <Col md={4}>
+                            No Dokumen
+                            <BasicInput placeholder={"Masukan No Dokumen Anda"} />
+                        </Col>
+                        <Col md={3}>
+                            Tanggal Dokumen
+                            <SelectDateInput />
+                        </Col>
+                        <Col md={5}>
+                            Upload Dokumen
+                            <UploadInput />
+                        </Col>
+                    </Row>
+                    <Row className={"mb-9 mt-3 mx-2"}>
+                        Perihal
+                        <TextAreaInput className={"border border-dark form-control"} placeholder={""} />
+                    </Row>
+              
                     </>
-            ))}
+            ))
+               : 
+            <div>
+                    <Row>
+                        <Col md={4}>
+                            Nama Dokumen
+                            <BasicInput placeholder={"Dokumen A"} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4}>
+                            No Dokumen
+                            <BasicInput placeholder={"Masukan No Dokumen Anda"} />
+                        </Col>
+                        <Col md={3}>
+                            Tanggal Dokumen
+                            <SelectDateInput />
+                        </Col>
+                        <Col md={5}>
+                            Upload Dokumen
+                            <UploadInput />
+                        </Col>
+                    </Row>
+                    <Row className={"mb-9 mt-3 mx-2"}>
+                        Perihal
+                        <TextAreaInput className={"border border-dark form-control"} placeholder={""} />
+                    </Row>
+            </div>}
         </>
     )
 }

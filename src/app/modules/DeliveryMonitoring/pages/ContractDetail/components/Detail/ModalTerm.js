@@ -12,9 +12,9 @@ import {
   InputLabel,
   makeStyles,
 } from "@material-ui/core";
-import { rupiah } from "../../../../../../libs/currency";
+import { rupiah } from "app/libs/currency";
 import { connect } from "react-redux";
-import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
+import DialogGlobal from "app/components/modals/DialogGlobal";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -36,8 +36,11 @@ const ModalTerm = ({
   const classes = useStyles();
   return (
     <DialogGlobal
-      // visible={visible}
+      // true
+      visible={visible}
+      // 
       ref={innerRef}
+      // 
       title={
         update.update ? (
           <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.UPDATE" />
@@ -45,9 +48,14 @@ const ModalTerm = ({
           <FormattedMessage id="CONTRACT_DETAIL.MODAL_TITLE.CREATE" />
         )
       }
+      // handleClose()
       onClose={onClose}
+
       onYes={formik.handleSubmit}
+
+      // handleClose
       onNo={onClose}
+      // 
       textYes={
         update.update ? (
           <FormattedMessage id="BUTTON.UPDATE" />
@@ -55,9 +63,12 @@ const ModalTerm = ({
           <FormattedMessage id="BUTTON.CREATE" />
         )
       }
+
+      // literal value
       btnNoProps={{
         className: "bg-secondary text-black",
       }}
+      // false
       loading={loading}
       minWidth="40vw"
       maxwidth="70vw"

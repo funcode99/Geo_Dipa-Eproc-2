@@ -35,6 +35,7 @@ const RenderInput = ({
   onBlur,
   onChange,
   fieldInfo,
+  layout,
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom"
@@ -103,7 +104,7 @@ const RenderInput = ({
         :
       (
         <div>
-          <div className="form-group row">
+          <div className={`form-group ${layout === 'Column' ? 'col': 'row'}`}>
             <label className={`col-sm-${labelSize} col-form-label`}>
               {label}
             </label>

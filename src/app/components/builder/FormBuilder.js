@@ -4,9 +4,11 @@ import React from "react";
 import FieldBuilder from "./FieldBuilder";
 import { Send } from "@material-ui/icons";
 
+// gua yakin sebenernya props ini dipakai semua, cuma oleh komponen yang berbeda2 dan semua props nya itu ditumpuk disini, sebaiknya jangan dihapus biar gak membingungkan saat menggunakan data lainnya
 const FormBuilder = (
   {
     onSubmit,
+    onDraft,
     formData,
     initial = {},
     validation,
@@ -15,16 +17,24 @@ const FormBuilder = (
     loading = false,
     disabledButton = false,
     withSubmit = true,
+    withDraft = false,
     btnChildren,
   },
   ref
 ) => {
-  const formikRef = React.useRef();
+  
+  console.log('ISI PROPS ONSUBMIT', onSubmit)
+  console.log('ISI PROPS REF?', ref)
+
+  const formikRef = React.useRef()
   const _handleSubmit = React.useCallback(
+    // ada beberapa onSubmit yang mengirimkan fungsi, beberapa isi nya undefined
     (data) => typeof onSubmit === "function" && onSubmit(data),
     [onSubmit]
-  );
+  )
   // console.log(`formProps`, fieldProps);
+
+
 
   React.useImperativeHandle(ref, () => formikRef.current);
   return (
@@ -36,6 +46,7 @@ const FormBuilder = (
       validationSchema={validation}
     >
       {(formikProps) => {
+        console.log('ISI FORMIK PROPS',formikProps)
         const { handleSubmit, isValid } = formikProps
         console.log('ini isi fungsi handleSubmit', handleSubmit)
         return (
@@ -48,7 +59,7 @@ const FormBuilder = (
             (
               <FieldBuilder formData={formData} {...fieldProps} />
             )}
-            <div className="d-flex justify-content-end w-100">
+            <div className="d-flex justify-content-end w-100" style={{gap: '20px'}}>
               {btnChildren}
               {withSubmit && (
                 <Button
