@@ -1617,6 +1617,34 @@ function ContractTaxPage(props) {
                   <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
                 </label>
                 <div className="col-sm-8">
+                {addtionalPayment.length > 0 && (
+                    <table className="table table-sm mb-4">
+                      <thead>
+                        <tr>
+                          <th style={{ width: "10%" }}>#</th>
+                          <th style={{ width: "50%" }}>
+                            <FormattedMessage id="TITLE.DESCRIPTION" />
+                          </th>
+                          <th style={{ width: "30%" }}>
+                            <FormattedMessage id="TITLE.VALUE" />
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {addtionalPayment.map((item, index) => {
+                          return (
+                            <tr>
+                              <td>{index + 1}</td>
+                              <td>{item.description}</td>
+                              <td>
+                                {formatCurrency(currencyCode, item.value)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  )}
                   <button
                     type="button"
                     className="btn btn-sm btn-primary w-100"
@@ -1624,7 +1652,7 @@ function ContractTaxPage(props) {
                       setModalAddtionalPayment(true);
                     }}
                   >
-                    <FormattedMessage id="TITLE.SELECT" />
+                    <FormattedMessage id="TITLE.ADD" />
                   </button>
                 </div>
               </div>
