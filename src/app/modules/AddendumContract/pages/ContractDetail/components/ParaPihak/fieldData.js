@@ -8,17 +8,20 @@ const Ini = ({ text }) => <FormattedMessage id={`LABEL.DM.PARTIES.${text}`} />
 const Ini2 = ({ text }) => <FormattedMessage id={`LABEL.AC.PARTIES.${text}`} />
 // <FormattedMessage id={`CONTRACT_DETAIL.PARTIES.${text}`} />
 
-export const formData1 = [
+export const formDataCheckbox = [
   {
     Child: TitleField,
     ChildrenProps: {
       title: <Ini2 text={"ADDENDUM_STATUS"} />
-    }
+    },
+    deleteInput: true
   },
+  // isi checkboxinput
   [
     {
       name: "parties_data",
-      label: <Ini2 text={"PARTIES_DATA"} />,
+      // label: <Ini2 text={"PARTIES_DATA"} />,
+      label: "Data Para Pihak",
       typeInput: "CheckboxInput"
     },
     {
@@ -37,7 +40,7 @@ export const formData1 = [
       typeInput: "CheckboxInput"
     }
   ],
-  // ada on karena name nya kosong
+  // isi checkboxinput part2. ada on karena name nya kosong
   [
     {
       name: "scope_of_work",
@@ -53,20 +56,35 @@ export const formData1 = [
       name: "fine",
       label: <Ini2 text={"FINE"} />,
       typeInput: "CheckboxInput"
+    },
+    {
+      name: "account_number",
+      label: <Ini2 text={"ACCOUNT_NUMBER"} />,
+      typeInput: "CheckboxInput"
     }
   ],
+  // isi checkboxinput part3. buat dinamis checkbox
   [
-    // harus sama dengan key di variabel values file parapihak
-    // {
-    //   name: "nama_pemberitahu",
-    //   label: <Ini text={"NAMA_PEMBERI"} />,
-    // },
+    {
+      name: "others",
+      label: 'Lainnya',
+      typeInput: "CheckboxInput"
+    },
+    {
+      name: "input_other",
+      placeholder: 'Masukkan Perihal Addendum Lainnya',
+      // typeInput: 'SelectInputCustom'
+    }
   ],
+]
+
+export const formData1 = [
   {
     Child: TitleField,
     ChildrenProps: {
       title: <Ini2 text={"PRICE_CHANGE.TITLE"} />
-    }
+    },
+    deleteInput: true
   },
   [
     {
@@ -114,39 +132,72 @@ export const formData1 = [
     Child: TitleField,
     ChildrenProps: {
       title: <Ini2 text={"SUPPORTING_DOCUMENT.TITLE"} />
-    }
+    },
+    deleteInput: true
   },
 
 ]
 
 export const supportingDocumentDefault = [
   {
-    name: "application_letter",
+    name: "Surat Permohonan Addendum dari Pihak Kedua",
+    // nama adalah referensi, jika nama sama maka referensi input nya sama
+    doc_num_field: '1',
+    date_field: '2',
+    doc_upload_field: '3'
   },
   {
-    name: "offer_detail",
+    name: "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor",
+    doc_num_field: '4',
+    date_field: '5',
+    doc_upload_field: '6'
   },
   {
-    name: "minutes_of_agreement"
+    name: "Berita Acara Kesepakatan Addendum",
+    doc_num_field: '7',
+    date_field: '8',
+    doc_upload_field: '9'
   },
   {
-    name: "special_power_of_attorney"
+    name: "Surat Kuasa Khusus",
+    doc_num_field: '10',
+    date_field: '11',
+    doc_upload_field: '12'
   },
   {
-    name: "justification"
+    name: "Justifikasi",
+    doc_num_field: '13',
+    date_field: '14',
+    doc_upload_field: '15'
   },
   {
-    name: "studies_of_functions"
+    name: "Kajian Hukum dari Fungsi Legal",
+    doc_num_field: '16',
+    date_field: '17',
+    doc_upload_field: '18'
   },
   {
-    name: "risk_management"
+    name: "Kajian Risk Management dari Fungsi Risk Management",
+    doc_num_field: '19',
+    date_field: '20',
+    doc_upload_field: '21'
   },
   {
-    name: "director_decision"
+    name: "Hasil Keputusan Rapat Direksi (Radir)",
+    doc_num_field: '22',
+    date_field: '23',
+    doc_upload_field: '24'
   },
   {
-    name: "memo"
+    name: "Memo/Surat Permohonan Addendum",
+    doc_num_field: '25',
+    date_field: '26',
+    doc_upload_field: '27'
   }
+]
+
+export const supportingDocumentAdditional = [
+
 ]
 
 export const formData2 = [

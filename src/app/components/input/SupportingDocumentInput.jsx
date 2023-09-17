@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Col, Row } from "react-bootstrap"
 
 import BasicInput from "app/components/input/BasicInput"
@@ -7,6 +7,7 @@ import SelectInputCustom from "app/components/input/SelectInputCustom"
 import TextAreaInput from "app/components/input/TextAreaInput"
 import UploadInput from "app/components/input/UploadInput"
 import CheckboxInput from "app/components/input/CheckboxInput"
+import RenderInput from "./RenderInput"
 
 const inputs = {
     BasicInput,
@@ -20,35 +21,44 @@ const inputs = {
 const SupportingDocumentInput = ({
     title
 }) => {
-    // title.map((item) => {
-    //     console.log(item)
-    // })
     return(
         <>
             {title ? title?.map((item) => (
+                
                 <>
-                    {item.name}
+
+                    <p style={{fontWeight: 500}}>
+                        {item.name}
+                    </p>
               
                     <Row>
                         <Col md={4}>
-                            No Dokumen
-                            <BasicInput placeholder={"Masukan No Dokumen Anda"} />
+                            <p style={{fontWeight: 500, fontSize:14}}>
+                                No Dokumen
+                            </p>
+                            <RenderInput typeInput={""} placeholder={"Masukan No Dokumen Anda"} name={item.doc_num_field} />
                         </Col>
                         <Col md={3}>
-                            Tanggal Dokumen
-                            <SelectDateInput />
+                            <p style={{fontWeight: 500, fontSize:14}}>
+                                Tanggal Dokumen
+                            </p>
+                            <RenderInput typeInput={"SelectDateInput"} name={item.date_field} />
                         </Col>
                         <Col md={5}>
-                            Upload Dokumen
-                            <UploadInput />
+                            <p style={{fontWeight: 500, fontSize:14}}>
+                                Upload Dokumen
+                            </p>
+                            <RenderInput typeInput={"UploadInput"} name={item.doc_upload_field} />
                         </Col>
                     </Row>
+                
                     <Row className={"mb-9 mt-3 mx-2"}>
                         Perihal
                         <TextAreaInput className={"border border-dark form-control"} placeholder={""} />
                     </Row>
               
-                    </>
+                </>
+
             ))
                : 
             <div>
@@ -76,7 +86,8 @@ const SupportingDocumentInput = ({
                         Perihal
                         <TextAreaInput className={"border border-dark form-control"} placeholder={""} />
                     </Row>
-            </div>}
+            </div>
+            }
         </>
     )
 }

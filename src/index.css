@@ -111,13 +111,13 @@ th {
 
 ::-webkit-calendar-picker-indicator {
   /* filter: invert(1); */
-  position: absolute;
-  left: 5%;
+  position: relative;
+  right: 95%;
 }
 
   input::-webkit-datetime-edit-fields-wrapper {
     position: relative;
-    left: 8%;
+    left: 15%;
   }
 
 /* input::-webkit-datetime-edit {

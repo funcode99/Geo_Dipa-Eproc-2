@@ -32,11 +32,11 @@ import DokContract from "./components/DokContract";
 import HargaPekerjaan from "./components/HargaPekerjaan";
 import JangkaWaktu from "./components/JangkaWaktu";
 import Jaminan from "./components/Jaminan";
-import Denda from "./components/Denda";
-import BAST from "./components/BAST";
-import Steppers from "../../../../components/steppersCustom/Steppers";
-import DetailPage from "./components/Detail/DetailPage";
-import KickOffDetail from "./components/Detail/KickOffDetail";
+import Denda from "./components/Denda"
+import BAST from "./components/BAST"
+import Steppers from "../../../../components/steppersCustom/Steppers"
+import DetailPage from "./components/Detail/DetailPage"
+import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail"
 
 import { compose } from "redux"
 import {

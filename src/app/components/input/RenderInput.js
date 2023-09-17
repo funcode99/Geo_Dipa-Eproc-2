@@ -1,5 +1,5 @@
 import { connect, ErrorMessage } from "formik"
-import React from "react"
+import React, { useState } from "react"
 import BasicInput from "app/components/input/BasicInput"
 import SelectDateInput from "app/components/input/SelectDateInput"
 import SelectInputCustom from "app/components/input/SelectInputCustom"
@@ -7,6 +7,7 @@ import TextAreaInput from "app/components/input/TextAreaInput"
 import UploadInput from "app/components/input/UploadInput"
 import CheckboxInput from "app/components/input/CheckboxInput"
 import SupportingDocumentInput from "app/components/input/SupportingDocumentInput.jsx"
+import { formDataCheckbox } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData"
 
 const inputs = {
   BasicInput,
@@ -23,6 +24,7 @@ const RenderInput = ({
   Child,
   children,
   ChildrenProps,
+  deleteInput,
   label,
   handleSubmit,
   readOnly,
@@ -36,22 +38,21 @@ const RenderInput = ({
   onChange,
   fieldInfo,
   layout,
+  placeholder,
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom"
+
   // inputs.BasicInput || inputs.typeInput
-  // console.log('isi typeInput', typeInput)
-  console.log('isi name', name)
-  console.log('isi label', label?.type?.name === 'Ini2')
-  // BasicInput
   // kalo typeInput nya undefined auto BasicInput
-  const Component = inputs[typeInput || "BasicInput"];
-  const { values, errors, setFieldValue, setTouched, touched } = formik;
-  const selectProps = isSelect ? { listOptions } : {};
+  
+  const Component = inputs[typeInput || "BasicInput"]
+  const { values, errors, setFieldValue, setTouched, touched } = formik
+  const selectProps = isSelect ? { listOptions } : {}
 
   const _handleFocus = (e) => {
-    setTouched({ [name]: true });
-    if (typeof onFocus === "function") onFocus(e);
+    setTouched({ [name]: true })
+    if (typeof onFocus === "function") onFocus(e)
   }
 
   const _handleBlur = (e) => {
@@ -59,15 +60,67 @@ const RenderInput = ({
     if (typeof onBlur === "function") onBlur(e);
   }
 
+  const [isi, setIsi] = useState('')
+  
+
   const _handleChange = (val) => {
-    setFieldValue(name, val, true);
-    if (typeof onChange === "function") onChange(val);
+
+    setIsi(val)
+    console.log('isi setelah val', isi)
+    setFieldValue(name, val, true)
+    // if (typeof onChange === "function") onChange(val)
+
   }
+
+  const _handleKeyDown = (e) => {
+    // console.log('isi event', e)
+    // console.log(e.target.value)
+    // console.log('ini namanya apa', name)
+    if(e.key === 'Enter' && name === 'input_other' && isi !== '') {
+
+      alert('enter telah ditekan')
+      // console.log('isi val', isi)
+      formDataCheckbox.map((item, index) => {
+        
+        console.log('index ke-', index)
+
+        if(Array.isArray(item) && item.length < 4) {
+          let a = item.pop()
+          console.log('masuk ke a')
+          item.push({
+            name: isi,
+            label: isi,
+            typeInput: "CheckboxInput"
+          })
+          item.push(a)
+          setFieldValue(name, isi, true)
+        }
+
+        else if (index === formDataCheckbox.length-1 && item.length == 4) {
+          let a = item.pop()
+            console.log('masuk ke b')        
+              item.push({
+                name: isi,
+                label: isi,
+                typeInput: "CheckboxInput"
+              })
+              formDataCheckbox.push([a])
+            setFieldValue(name, isi, true)
+        }
+
+        formik.resetForm()
+
+      })
+
+    }
+  }
+
 
   // const _onChange = (val) => {
   //   setFieldValue(name, val, true)
   //   onChangeCustom()
   // }
+
   return (
     <div>
       {name && typeInput === 'CheckboxInput' ? 
@@ -75,7 +128,7 @@ const RenderInput = ({
         <div>
           <div className={`form-group row ${typeInput ==='CheckboxInput' ? 'abcd' : ''}`}>
 
-            <div className={``}>
+            <div>
               {/* ini input nya */}
               <Component
                 value={values[name] || ""}
@@ -83,7 +136,6 @@ const RenderInput = ({
                 onChange={_handleChange}
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
-                // disabled={readOnly || disabledFields.includes(name)}
                 {...selectProps}
                 {...otherProps}
               />
@@ -105,21 +157,27 @@ const RenderInput = ({
       (
         <div>
           <div className={`form-group ${layout === 'Column' ? 'col': 'row'}`}>
-            <label className={`col-sm-${labelSize} col-form-label`}>
+            <label className={`col-sm-${labelSize} col-form-label ${label === undefined ? 'd-none': ''}`}>
               {label}
             </label>
-            <div className={`col-sm-${formInputSize}`}>
+            <div className={`${label === undefined ? 'col-sm-8' : `col-sm-${formInputSize}`}`}>
               {/* ini input nya */}
+              {!deleteInput &&
               <Component
                 value={values[name] || ""}
                 name={name}
                 onChange={_handleChange}
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
+                onKeyDown={_handleKeyDown}
+                placeholder={placeholder || ""}
+                
+                // onKeyUp={_handleKeyUp}
                 // disabled={readOnly || disabledFields.includes(name)}
                 {...selectProps}
                 {...otherProps}
               />
+              }
               {fieldInfo}
               {/* <ErrorMessage name={name} /> */}
               {!!!touched[name] && (

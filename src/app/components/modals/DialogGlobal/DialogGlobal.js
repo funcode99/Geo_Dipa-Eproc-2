@@ -119,7 +119,7 @@ class DialogGlobal extends React.PureComponent {
   handleYes = () => {
     const { onYes } = this.props;
     if (typeof onYes === "function") onYes();
-    // this.close();
+    this.close();
   };
   handleNo = () => {
     const { onNo } = this.props;

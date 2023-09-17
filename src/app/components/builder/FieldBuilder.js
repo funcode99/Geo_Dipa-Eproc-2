@@ -32,7 +32,11 @@ const FieldBuilder = ({
               <Col key={idx} md={12}>
                 <Row>
                   {item?.map((it, id) => (
-                    <Col key={id} md={it.typeInput === 'CheckboxInput' ? 3 : 12}>
+                    // <div>
+                    //   masuk kesini, dan input nya masih ada
+                    // </div>
+                    // isi nya label + form
+                    <Col key={id} md={it.typeInput === 'CheckboxInput' || it.label === undefined ? 3 : 12}>
                       <RenderInput 
                         {...it}
                         {...formProps}

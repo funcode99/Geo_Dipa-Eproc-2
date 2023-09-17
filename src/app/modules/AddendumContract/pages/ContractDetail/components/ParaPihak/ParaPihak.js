@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react"
+import React, { useState, useRef } from "react"
 import DialogGlobal from "app/components/modals/DialogGlobal"
+import { Col, Row } from "react-bootstrap"
 
+import RenderInput from "app/components/input/RenderInput"
 
-import { Button } from "@material-ui/core"
+// import { Button } from "@material-ui/core"
 
-import { useFormik } from "formik"
-import * as Yup from "yup"
-import { format } from "date-fns"
+import { Formik, Field, FieldArray } from "formik";
+import { Container, CardContent, Grid, Button, TextField } from "@material-ui/core";
+// import { FormStepper } from "./FormStepper"; 
 
 import { FormattedMessage } from "react-intl"
 import { useSelector } from "react-redux"
@@ -14,11 +16,14 @@ import {
   Card,
   CardBody,
 } from "_metronic/_partials/controls"
-import { formData1, supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData"
+import { formData1, formDataCheckbox, supportingDocumentAdditional, supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData"
 import FieldBuilder from "app/components/builder/FieldBuilder"
 import FormBuilder from "app/components/builder/FormBuilder"
 import SupportingDocumentInput from "app/components/input/SupportingDocumentInput"
-import Navs from "app/components/navs"
+import UploadInput from "app/components/input/UploadInput";
+import SelectDateInput from "app/components/input/SelectDateInput";
+import TextAreaInput from "app/components/input/TextAreaInput";
+import BasicInput from "app/components/input/BasicInput"
 
 
 
@@ -33,6 +38,7 @@ const navLists = [
   },
 ]
 
+
 const ParaPihak = ({
 
 }) => {
@@ -41,6 +47,22 @@ const ParaPihak = ({
   const openCloseDraftModalRef = React.useRef()
   const openCloseAddDocument = React.useRef()
   // console.log(openCloseModalRef)
+
+  let [linksGroup, setLinksGroup] = useState({ 
+    documentname: 'nama dokumen',
+    documentnumber: "keluarga", 
+    documentdate: null, 
+    documentfileupload: 'test.jpg', 
+    about: "individu" 
+  })
+
+  const toPush = useRef()
+
+  const setPush = (e) => {
+    toPush.current.click()
+    // console.log('isi event', e)
+    // console.log('isi current', toPush.current)
+  }
 
   const { contract_party, vendor } = useSelector(
     (state) => state.deliveryMonitoring.dataContractById
@@ -75,17 +97,22 @@ const ParaPihak = ({
     [contract_party, vendor]
   )
 
+  const _handleChange = (val) => {
+    console.log(val)
+    // setIsi(val)
+    // console.log('isi setelah val', isi)
+    // setFieldValue(name, val, true)
+    // if (typeof onChange === "function") onChange(val)
+
+  }
+
   return (
     <>
     
     <Card>
 
       <CardBody>
-        
-        {/* <Navs
-          navLists={navLists}
-          handleSelect={(selectedKey) => setNavActive(selectedKey)}
-        /> */}
+
 
           <DialogGlobal
             ref={openCloseModalRef}
@@ -110,12 +137,61 @@ const ParaPihak = ({
             {/* <SupportingDocumentInput title={[{name:""}]} /> */}
           </DialogGlobal>
 
+          {/* Modal buat bikin komponen dokumen pendukung baru */}
           <DialogGlobal
                 ref={openCloseAddDocument}
                 isCancel={false}
-                isSubmit={false}
+                isSubmit={true}
+                onYes={setPush}
           >
-              <SupportingDocumentInput />
+              {/* <SupportingDocumentInput /> */}
+              <div>
+                    <Row>
+                        <Col md={4}>
+                            Nama Dokumen
+                            <BasicInput 
+                            placeholder={"Dokumen A"} 
+                            value={linksGroup.documentname} 
+                            onChange={(e) => setLinksGroup({...linksGroup, documentname: e})} 
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4}>
+                            No Dokumen
+                            <BasicInput 
+                              placeholder={"Masukan No Dokumen Anda"}
+                              value={linksGroup.documentnumber} 
+                              onChange={(e) => setLinksGroup({...linksGroup, documentnumber: e})} 
+                              />
+                        </Col>
+                        <Col md={3}>
+                            Tanggal Dokumen
+                            <SelectDateInput
+                              value={linksGroup.documentdate} 
+                              onChange={(e) => setLinksGroup({...linksGroup, documentdate: e})} 
+                            />
+                        </Col>
+                        <Col md={5}>
+                            Upload Dokumen
+                            <UploadInput
+                              value={linksGroup.documentfileupload} 
+                              onChange={(e) => setLinksGroup({...linksGroup, 
+                                documentfileupload: { path: e.path } })} 
+                              // onChange={(e) => console.log('isi event', e.path)}
+                            />
+                        </Col>
+                    </Row>
+                    <Row className={"mb-9 mt-3 mx-2"}>
+                        Perihal
+                        <TextAreaInput 
+                          className={"border border-dark form-control"} 
+                          placeholder={""}
+                          value={linksGroup.about} 
+                          onChange={(e) => setLinksGroup({...linksGroup, about: e})}  
+                        />
+                    </Row>
+            </div>
           </DialogGlobal>
 
         <FormBuilder 
@@ -123,16 +199,17 @@ const ParaPihak = ({
           withSubmit={true} 
           onSubmit={showModal}
           onDraft={showDraft} 
+          
           btnChildren={
-          <Button
-            variant="contained"
-            color="secondary"
-            size="medium"
-            onClick={showDraft}
-          >
-            Save Draft
-          </Button>
-        }
+            <Button
+              variant="contained"
+              color="secondary"
+              size="medium"
+              onClick={showDraft}
+            >
+              Save Draft
+            </Button>
+          }
         >
 
           {({}) => {
@@ -142,8 +219,121 @@ const ParaPihak = ({
                   <>
                     {/* bagian ini untuk label */}
                     {/* readOnly */}
+                    <FieldBuilder formData={formDataCheckbox} />
                     <FieldBuilder formData={formData1} />
                     <SupportingDocumentInput title={supportingDocumentDefault} />
+                    <SupportingDocumentInput additionalDocument={supportingDocumentAdditional} />
+                    <Formik
+                      initialValues={{
+                        links: [linksGroup],
+                      }}
+                      onSubmit={async (values, actions) => {
+                        alert(JSON.stringify(values, null, 2));
+                      }}
+                    >
+                      {({ values }) => (
+                    
+                      <>
+
+                        <FieldArray name="links">
+                          
+                          {({ push, remove }) => (
+
+                            <Grid container spacing={2} sx={{ marginTop: 2, paddingX: 2 }}>
+                  
+                              {values.links.map((_, index) => (
+                                <>
+                                  <Grid item md={12}>
+                                    <div>
+                                      <p 
+                                        style={{fontWeight: 500, fontSize:14, marginBottom: 0}}
+                                      >{_.documentname}</p>
+                                    </div>
+                                  </Grid>
+
+                                  <Grid item md={4}>
+                                    <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                      No Dokumen
+                                    </p>
+                                    <Field 
+                                      fullWidth 
+                                      name={`links.${index}.documentnumber`} 
+                                      component={RenderInput} 
+                                      placeholder={"Masukan No Dokumen Anda"}
+                                      value={`${_.documentnumber}`}
+                                      />
+                                  </Grid>
+                                  <Grid item md={3}>
+                                  <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                    Tanggal Dokumen
+                                  </p>
+                                    <Field 
+                                    fullWidth 
+                                    name={`links.${index}.documentdate`} 
+                                    component={SelectDateInput}
+                                    value={`${_.documentdate}`}
+                                    />
+                                  </Grid>
+                                  <Grid item md={3}>
+                                    <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                    Upload Dokumen
+                                    </p>
+                                    <Field 
+                                      fullWidth 
+                                      name={`links.${index}.documentfileupload`} 
+                                      component={UploadInput} 
+                                      // gaperlu pakai backtick, malah dianggap string bukan objek
+                                      value={{ path: _.documentfileupload }}
+                                    />
+                                  </Grid>
+                                  {index > 0 && (
+                                    <Grid item md={2}>
+                                      {/* color="error" */}
+                                      <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                    
+                                      </p>
+                                      <Button variant="outlined"  onClick={() => remove(index)}>
+                                        Delete
+                                      </Button>
+                                    </Grid>
+                                  )}
+                                  <Grid item md={12}>
+                                    <Field 
+                                      name={`links.${index}.about`} 
+                                      component={TextAreaInput}
+                                      value={`${_.about}`}
+                                    />
+                                  </Grid>
+                                </>
+                              ))}{" "}
+
+                              <Grid item xs={12}>
+                                
+                                {/* <Button
+                                  variant="outlined"
+                                  
+                                  onClick={() => push()}
+                                >
+                                  Add Link
+                                </Button> */}
+
+                                <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
+                                    Klik Disini
+                                </button>
+
+                              </Grid>
+
+                            </Grid>
+
+                          )}
+
+                        </FieldArray>
+                        
+                      </>
+          
+                      )}
+                    </Formik>
+                    
                     <Button
                       variant="contained"
                       color="secondary"
@@ -152,10 +342,11 @@ const ParaPihak = ({
                     >
                       Tambah Dokumen
                     </Button>
+                    
                     <div className="mt-5">
                       <p className="mb-0">Permintaan Penerbitan Draft Addendum Kepada:</p>
-                      <select>
-                        <option selected>
+                      <select value={"Supply Chain Management (SCM) Division"}>
+                        <option>
                           Supply Chain Management (SCM) Division
                         </option>
                         <option>
@@ -166,6 +357,7 @@ const ParaPihak = ({
                         </option>
                       </select>
                     </div>
+
                     {/* <RenderInput typeInput={'SelectInputCustom'} /> */}
                   </>
                 )}
@@ -174,10 +366,19 @@ const ParaPihak = ({
           }}
         </FormBuilder>
 
+        <Container sx={{ bgcolor: "#87c1ff4d", paddingY: 3, marginTop: 5 }}>
+          <Card sx={{ marginTop: 2 }}>
+            <CardContent sx={{ paddingY: 10, paddingX: 5 }}>
+            </CardContent>
+          </Card>
+        </Container>
+        
+
       </CardBody>
+
     </Card>
     </>
   );
-};
+}
 
-export default ParaPihak;
+export default ParaPihak

@@ -22,9 +22,6 @@ const FormBuilder = (
   },
   ref
 ) => {
-  
-  console.log('ISI PROPS ONSUBMIT', onSubmit)
-  console.log('ISI PROPS REF?', ref)
 
   const formikRef = React.useRef()
   const _handleSubmit = React.useCallback(
@@ -32,9 +29,8 @@ const FormBuilder = (
     (data) => typeof onSubmit === "function" && onSubmit(data),
     [onSubmit]
   )
-  // console.log(`formProps`, fieldProps);
 
-
+  console.log( 'isi children', children)
 
   React.useImperativeHandle(ref, () => formikRef.current);
   return (
@@ -46,19 +42,26 @@ const FormBuilder = (
       validationSchema={validation}
     >
       {(formikProps) => {
-        console.log('ISI FORMIK PROPS',formikProps)
         const { handleSubmit, isValid } = formikProps
-        console.log('ini isi fungsi handleSubmit', handleSubmit)
         return (
           <React.Fragment>
+            {/* isi children function _ref2 */}
             {typeof children === "function" ? 
             (
+              // <div>
+              //   masuk ke children formikprops + fieldprops
+              // keduanya isi nya kosong, pantes aja form input nya masih ada
+              // </div>
               children({ ...formikProps, fieldProps })
             )
             : 
             (
-              <FieldBuilder formData={formData} {...fieldProps} />
+              <div>
+                masuk ke field builder
+              </div>
+              // <FieldBuilder formData={formData} {...fieldProps} />
             )}
+            {/* button children & submit */}
             <div className="d-flex justify-content-end w-100" style={{gap: '20px'}}>
               {btnChildren}
               {withSubmit && (
