@@ -8,6 +8,7 @@ import UploadInput from "app/components/input/UploadInput"
 import CheckboxInput from "app/components/input/CheckboxInput"
 import SupportingDocumentInput from "app/components/input/SupportingDocumentInput.jsx"
 import { formDataCheckbox } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData"
+import { element } from "prop-types"
 
 const inputs = {
   BasicInput,
@@ -61,6 +62,7 @@ const RenderInput = ({
   }
 
   const [isi, setIsi] = useState('')
+  const [inputName, setInputName] = useState('')
   
 
   const _handleChange = (val) => {
@@ -78,7 +80,7 @@ const RenderInput = ({
     // console.log('ini namanya apa', name)
     if(e.key === 'Enter' && name === 'input_other' && isi !== '') {
 
-      alert('enter telah ditekan')
+      // alert('enter telah ditekan')
       // console.log('isi val', isi)
       formDataCheckbox.map((item, index) => {
         
@@ -94,6 +96,7 @@ const RenderInput = ({
           })
           item.push(a)
           setFieldValue(name, isi, true)
+          setInputName(a)
         }
 
         else if (index === formDataCheckbox.length-1 && item.length == 4) {
@@ -107,10 +110,15 @@ const RenderInput = ({
               formDataCheckbox.push([a])
             setFieldValue(name, isi, true)
         }
-
-        formik.resetForm()
-
+        
       })
+
+      formik.resetForm()
+      setTimeout(() => {
+        let elementInput = document.getElementsByName('input_other')[0]
+        console.log(elementInput)
+        elementInput.focus()
+      }, 1)
 
     }
   }

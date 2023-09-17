@@ -2,27 +2,15 @@ import React from "react"
 import { Col, Row } from "react-bootstrap"
 import RenderInput from 'app/components/input/RenderInput'
 
-// values = {},
-// errors,
-// handleSubmit,
 const FieldBuilder = ({
   formData,
   ...other
 }) => {
-  console.log('isi formData', formData)
-  // values,
-  // errors,
-  // handleSubmit,
-  // readOnly,
-  // onChange: readOnly ? () => {} : undefined,
-  // disabled: readOnly,
+
   const formProps = {
     ...other,
-  };
+  }
 
-  console.log('isi formProps', other)
-
-  // console.log(`formProps`, formProps);
   return (
     <Row className={"mt-9"}>
       {formData &&
@@ -58,7 +46,7 @@ const FieldBuilder = ({
           }
         })}
     </Row>
-  );
-};
+  )
+}
 
-export default FieldBuilder;
+export default FieldBuilder
