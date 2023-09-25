@@ -651,7 +651,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
                       }
                       {...formik.getFieldProps("receipt_no")}
                       onChange={(e) => {
@@ -683,7 +683,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
                       }
                       {...formik.getFieldProps("receipt_date")}
                       onChange={(e) => {
@@ -720,7 +720,7 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -744,7 +744,7 @@ function ContractReceiptPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      receiptStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                      receiptStatus || (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
                         ? ""
                         : "pointer"
                     }`}
@@ -759,7 +759,7 @@ function ContractReceiptPage(props) {
                     <span
                       className={`form-control text-truncate ${
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -806,7 +806,7 @@ function ContractReceiptPage(props) {
                     disabled={
                       loading ||
                       receiptStatus ||
-                      (!invoicePeriodsStatus && !isOnMismatch)
+                      (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -901,7 +901,7 @@ function ContractReceiptPage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 receiptStatus ||
-                (!invoicePeriodsStatus && !isOnMismatch)
+                (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
