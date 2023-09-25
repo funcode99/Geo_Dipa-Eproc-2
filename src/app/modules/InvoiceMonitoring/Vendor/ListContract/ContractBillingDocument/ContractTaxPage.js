@@ -698,7 +698,7 @@ function ContractTaxPage(props) {
                       id={
                         loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
@@ -706,7 +706,7 @@ function ContractTaxPage(props) {
                       displayType={
                         loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                           ? "text"
                           : "input"
                       }
@@ -741,7 +741,7 @@ function ContractTaxPage(props) {
                       disabled={
                         loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("tax_date")}
@@ -775,7 +775,7 @@ function ContractTaxPage(props) {
                       id={
                         loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                           ? "NumberFormat-text"
                           : "NumberFormat-input"
                       }
@@ -783,7 +783,7 @@ function ContractTaxPage(props) {
                       displayType={
                         loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                           ? "text"
                           : "input"
                       }
@@ -819,7 +819,7 @@ function ContractTaxPage(props) {
                       disabled={
                         loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -843,7 +843,7 @@ function ContractTaxPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      taxStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                      taxStatus || (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                         ? ""
                         : "pointer"
                     }`}
@@ -857,7 +857,7 @@ function ContractTaxPage(props) {
                     )}
                     <span
                       className={`form-control text-truncate ${
-                        taxStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                        taxStatus || (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -903,7 +903,7 @@ function ContractTaxPage(props) {
                     disabled={
                       loading ||
                       taxStatus ||
-                      (!invoicePeriodsStatus && !isOnMismatch)
+                      (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -995,7 +995,7 @@ function ContractTaxPage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 taxStatus ||
-                (!invoicePeriodsStatus && !isOnMismatch)
+                (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />
