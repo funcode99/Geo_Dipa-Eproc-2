@@ -45,7 +45,10 @@ export function HeaderMenu({ layoutProps }) {
                 <li className={`menu-item menu-item-rel`}>
                 <div className="d-flex align-items-baseline mr-5">
                     <h6 className="text-dark font-weight-bold my-2 mr-5">
-                    <>{subheader.title} coeg</>
+                    <>
+                    {subheader.title} 
+                    {/* coeg */}
+                    </>
                     {/*<small></small>*/}
                     </h6>
                 </div>

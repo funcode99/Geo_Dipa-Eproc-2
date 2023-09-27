@@ -1,0 +1,502 @@
+import React from "react"
+import Tabs from "app/components/tabs"
+import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/FormParameter"
+import { Button } from "react-bootstrap"
+import {
+    Card,
+    CardBody,
+} from "_metronic/_partials/controls"
+import Steppers from "app/components/steppersCustom/Steppers"
+import {
+    STEPPER_ADDENDUM_CONTRACT
+  } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA"
+  import Subheader from "app/components/subheader"
+  import SubBreadcrumbs from "app/components/SubBreadcrumbs"
+
+const DraftAddendumPage = () => {
+
+    const [tabActive, setTabActive] = React.useState(0)
+    const [sequence, setSequence] = React.useState(0)
+    const TabLists = [
+  
+        {
+          id: "kick-off",
+          // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+          label: "Para Pihak",
+          // icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
+          addendum: true
+        },
+      
+        {
+          id: "detail",
+          // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+          label: "Harga Pekerjaan",
+          // icon: <FindInPage className="mb-0 mr-2" />,
+        },
+      
+        {
+          id: "para-pihak",
+          // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
+          label: "Jangka Waktu",
+          // icon: <PeopleAlt className="mb-0 mr-2" />,
+        },
+      
+        {
+          id: "dokumen-kontrak",
+          // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
+          label: "Metode Pembayaran",
+          // icon: <Assignment className="mb-0 mr-2" />,
+        },
+      
+        {
+          id: "harga-pekerjaan",
+          // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
+          label: "Denda",
+          // icon: <MonetizationOn className="mb-0 mr-2" />,
+        },
+      
+        {
+          id: "jangka-waktu",
+          // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
+          label: "Jaminan",
+          // icon: <QueryBuilderSharp className="mb-0 mr-2" />,
+          addendum: true
+        },
+      
+        {
+          id: "jaminan",
+          // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+          label: "Nomor Rekening",
+          // icon: <FeaturedPlayList className="mb-0 mr-2" />,
+          addendum: true
+        },
+      
+        // {
+        //   id: "denda",
+        //   label: <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />,
+        //   icon: <Error className="mb-0 mr-2" />,
+        // },
+        //   {
+        //     id: "para-pihak2",
+        //     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
+        //     icon: <PeopleAlt className="mb-0 mr-2" />,
+        //   },
+        // {
+        //   id: "bast",
+        //   label: <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />,
+        //   icon: <Description className="mb-0 mr-2" />,
+        // },
+      
+      ]
+
+    function handleChangeTab(newTabActive) {
+        // isi nya urutan angka array sesuai dengan yang di klik
+        console.log('isi newTabActive', newTabActive)
+        setTabActive(newTabActive);
+      }
+
+    //   const getContractById = async (contract_id) => {
+    //     try {
+    
+    //       // loading buat throttling
+    //       setLoading(true);
+    
+    //       // masukin response api nya ke objek yang nama properti nya data
+    //       const {
+    //         data: { data },
+    //       } = await addendumContract.getContractById(contract_id);
+    
+    //       addCheckedField(data?.services, "jasa");
+    //       addCheckedField(data?.items, "barang");
+    
+    //       dispatch({
+    //         type: actionTypes.SetContractById,
+    //         payload: data,
+    //       })
+
+    //     } catch (error) {
+    //       if (
+    //         error.response?.status !== 400 &&
+    //         error.response?.data.message !== "TokenExpiredError"
+    //       ) {
+    //         if (
+    //           error.response?.status !== 400 &&
+    //           error.response?.data.message !== "TokenExpiredError"
+    //         ) {
+    //           setToast("Error API, please contact developer!");
+    //         }
+    //       }
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   }
+    
+    //   React.useEffect(() => {
+    //     // kalo dipanggil bisa
+    //     getContractById(contract_id)
+    //     setInitialSubmitItems();
+    //     // eslint-disable-next-line
+    //   }, []);
+
+    return (
+        <>
+
+        <Subheader 
+            text={
+            // dataContractById
+            // null
+            // ? 
+            `No Dokumen Addendum : ADD-01/015.PJ/PST.100-GDE/I/2023` 
+            }
+        />
+
+        <SubBreadcrumbs
+            items={[
+            {
+                label: `Addendum Contract`
+            },
+            {
+                label: "List of Addendum",
+                // to: `/${authStatus}/addendum-contract/list-of-addendum`,
+                to: `/client/addendum-contract/list-of-addendum`,
+            }
+            ]}
+        />
+
+        <Steppers
+            steps={
+                STEPPER_ADDENDUM_CONTRACT
+            }
+        />
+
+<h1 style={{ fontSize: 18 }}>Silahkan download file final draft dibawah ini:</h1>
+
+<select>
+  <option>
+    Final Draft Kontrak
+  </option>
+  <option>
+    Final Draft Addendum
+  </option>
+</select>
+
+<div style={{ minHeight: 100, marginBottom: 10 }}>
+    <p>Body Kontrak Perjanjian.doc</p>
+    <p>Lampiran 1.doc</p>
+    <p>Lampiran 2.doc</p>
+</div>
+
+        <div 
+          style={{
+            height: 74, 
+            fontSize: 14, 
+            display: 'grid', 
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))" 
+          }}
+        >
+          
+          <div
+            className="d-flex align-items-center justify-content-center"
+            style={{
+                backgroundColor: 'white', 
+                flexGrow: 1, 
+                borderTopLeftRadius: 14, 
+                cursor: 'pointer'
+            }}
+            onClick={() => setSequence(0)}
+          >
+            <h1 style={{
+                fontSize: 14,
+                color: sequence === 0 ? '#3699ff' : '#8c8a8a'
+            }}>Pengisian Form Parameter Addendum</h1>
+          </div>
+          
+          <div
+            className="d-flex align-items-center justify-content-center"
+             style={{
+                backgroundColor:'white', 
+                flexGrow: 1, 
+                cursor: 'pointer',
+                borderTopRightRadius: 14
+            }}
+            onClick={() => setSequence(1)}
+          >
+            <h1 style={{
+                fontSize: 14,
+                color: sequence === 1 ? '#3699ff' : '#8c8a8a'
+                }}>Template Klausul</h1>
+          </div>
+
+        </div>
+
+        <Card>
+                        <form>
+                            <div 
+                                    style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
+                                >
+                                    <div className="col-md-4">
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="agreement_number"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Nomor Perjanjian
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                className="form-control"
+                                                id="agreement_number"
+                                                style={{ backgroundColor: "#c7d2d8" }}
+                                                disabled
+                                                value={'015.PJ/PST.100-GDE/I/2023'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="po_number"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Nomor PO
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="po_number"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                value={'8000007360'}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-7">
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="procurement_title"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Judul Pengadaan
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="procurement_title"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="po_number"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Keterangan PO
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="po_number"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
+                                            />
+                                        </div>
+                                    </div>
+                            </div>
+
+                            <div 
+                                    style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
+                                >
+                                    <div className="col-md-7">
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="agreement_format"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Format Perjanjian
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="agreement_format"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Isi format perjanjian'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="procurement_authority"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Kewenangan Pengadaan
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="procurement_authority"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Plant Dieng'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="user"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Pengguna
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="user"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Plant Dieng'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="provider"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Penyedia
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="provider"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Plant Dieng'}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="agreement_type"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Jenis Perjanjian
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="agreement_type"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                value={'Perjanjian'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="po_number"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Grup Kewenangan Pengadaan
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="po_number"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'961242390'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="user_group"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Grup Pengguna
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="user_group"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'961242390'}
+                                            />
+                                        </div>
+                                    </div>
+                            </div>
+                        </form>
+        </Card>
+
+        <Tabs
+            tabActive={tabActive}
+            handleChange={handleChangeTab}
+            tabLists={TabLists}
+            variant="scrollable"
+          />
+
+          <FormParameter currentActiveTab={tabActive} />
+
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 28,
+                padding: '2rem 2.25rem'
+              }}
+            >
+              <Button
+                 style={{
+                  minWidth: 100
+                }}
+              >
+                Update
+              </Button>
+              <Button
+                style={{
+                  minWidth: 100
+                }}
+                onClick={() => setTabActive(tabActive < TabLists.length-1 ? tabActive+1 : tabActive)}
+              >
+                Next
+              </Button>
+            </div>
+        </>
+    )
+}
+
+export default DraftAddendumPage

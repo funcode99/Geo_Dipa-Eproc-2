@@ -64,7 +64,7 @@ export const getLoading = (state, key) => {
   const { loadings } = state.globalReducer;
   const loadState = loadings.includes(key);
   return loadState;
-};
+}
 
 export const getAuthorizedUser = ({ auth, deliveryMonitoring }) => {
   const plant_data = auth?.user?.data?.plant_data;
@@ -108,16 +108,16 @@ export function* saga() {
     const { key, onSuccess, onFail, alertAppear = false } = action.payload
     if (key) yield put(set_loading_rd(key))
     try {
-      let { data } = yield call(apiHelper.fetchGlobalApi, action.payload);
+      let { data } = yield call(apiHelper.fetchGlobalApi, action.payload)
       // let data = yield call(apiHelper.fetchGlobalApi, action.payload);
-      console.log(`resnew + ${key}`, data);
+      console.log(`resnew + ${key}`, data)
       if (data.status === true || data.status === "success") {
-        if (typeof onSuccess === "function") onSuccess(data);
+        if (typeof onSuccess === "function") onSuccess(data)
         if (alertAppear === "both")
-          MODAL.showSnackbar(data?.message ?? "Success", "success");
+          MODAL.showSnackbar(data?.message ?? "Success", "success")
       } else {
-        if (typeof onFail === "function") onFail(data);
-        MODAL.showSnackbar(data?.message ?? "Failed");
+        if (typeof onFail === "function") onFail(data)
+        MODAL.showSnackbar(data?.message ?? "Failed")
       }
     } catch (err) {
       console.log(`err gloReducer`, err);
@@ -133,7 +133,7 @@ export function* saga() {
         if (typeof onFail === "function") onFail(err.response?.data);
         MODAL.showSnackbar(
           err.response?.data?.message ?? "Error API, please contact developer!"
-        );
+        )
       } else {
         console.log(`err gloReducer3`, err);
         if (alertAppear === "never") return;

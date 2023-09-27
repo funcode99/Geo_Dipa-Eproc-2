@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DEV_NODE, API_EPROC, DEV_RUBY } from "../../../../redux/BaseHost";
+import { DEV_NODE, API_EPROC, DEV_RUBY } from "redux/BaseHost";
 
 export function getPicContract(data) {
   return axios.post(`/invoice/get_pic_contract/${data.id}`, data);

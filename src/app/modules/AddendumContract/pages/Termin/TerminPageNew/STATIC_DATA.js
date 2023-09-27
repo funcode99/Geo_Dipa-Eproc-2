@@ -98,21 +98,71 @@ export const DUMMY_STEPPER = [
     status: "NO STARTED",
   },
 ];
+// export const DUMMY_STEPPER_CONTRACT = [
+//   {
+//     label: "Kick Off",
+//     status: "NO STARTED",
+//   },
+//   {
+//     label: "Upload Guarantee",
+//     status: "NO STARTED",
+//   },
+//   {
+//     label: "Initialize Contract Periods",
+//     status: "NO STARTED",
+//   },
+//   {
+//     label: "Initialize Term",
+//     status: "NO STARTED",
+//   },
+// ];
+
 export const DUMMY_STEPPER_CONTRACT = [
+    {
+      label: "Isi Form Permohonan",
+      status: "NO STARTED"
+    },
+    {
+      label: "Isi Form Parameter",
+      status: "ON PROGRESS"
+    },
+    {
+      label: "Upload Dokumen Pendukung",
+      status: "COMPLETE"
+    },
+    {
+      label: "Verifikasi Permohonan",
+      status: "NO STARTED"
+    },
+    {
+      label: "Permohonan Disetujui",
+      status: "NO STARTED"
+    }
+]
+
+export const STEPPER_ADDENDUM_CONTRACT = [
   {
-    label: "Kick Off",
-    status: "NO STARTED",
+    label: "Drafting",
+    status: "ON PROGRESS"
   },
   {
-    label: "Upload Guarantee",
-    status: "NO STARTED",
+    label: "In Review",
+    status: "NO STARTED"
   },
   {
-    label: "Initialize Contract Periods",
-    status: "NO STARTED",
+    label: "Approval Vendor",
+    status: "NO STARTED"
   },
   {
-    label: "Initialize Term",
-    status: "NO STARTED",
+    label: "Approval User",
+    status: "NO STARTED"
   },
-];
+  {
+    label: "Final Draft",
+    status: "NO STARTED"
+  },
+  {
+    label: "Distribusi",
+    status: "NO STARTED"
+  }
+]

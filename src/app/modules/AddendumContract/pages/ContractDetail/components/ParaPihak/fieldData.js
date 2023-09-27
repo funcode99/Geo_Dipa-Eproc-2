@@ -9,6 +9,7 @@ const Ini2 = ({ text }) => <FormattedMessage id={`LABEL.AC.PARTIES.${text}`} />
 // <FormattedMessage id={`CONTRACT_DETAIL.PARTIES.${text}`} />
 
 export const formDataCheckbox = [
+  
   {
     Child: TitleField,
     ChildrenProps: {
@@ -16,59 +17,70 @@ export const formDataCheckbox = [
     },
     deleteInput: true
   },
+
   // isi checkboxinput
   [
     {
       name: "parties_data",
       // label: <Ini2 text={"PARTIES_DATA"} />,
       label: "Data Para Pihak",
-      typeInput: "CheckboxInput"
+      typeInput: "CheckboxInput",
+      inputValue: "parties_data"
     },
     {
       name: "job_price",
       label: <Ini2 text={"JOB_PRICE"} />,
-      typeInput: "CheckboxInput"
+      typeInput: "CheckboxInput",
+      inputValue: "job_price"
     },
     {
       name: "time_period",
       label: <Ini2 text={"TIME_PERIOD"} />,
-      typeInput: "CheckboxInput"
+      typeInput: "CheckboxInput",
+      inputValue: "time_period"
     },
     {
       name: "guarantee",
       label: <Ini2 text={"GUARANTEE"} />,
-      typeInput: "CheckboxInput"
+      typeInput: "CheckboxInput",
+      inputValue: "guarantee"
     }
   ],
+
   // isi checkboxinput part2. ada on karena name nya kosong
   [
-    {
-      name: "scope_of_work",
-      label: <Ini2 text={"SCOPE_OF_WORK"} />,
-      typeInput: "CheckboxInput"
-    },
+    // {
+    //   name: "scope_of_work",
+    //   label: <Ini2 text={"SCOPE_OF_WORK"} />,
+    //   typeInput: "CheckboxInput"
+    // },
     {
       name: "payment_method",
       label: <Ini2 text={"PAYMENT_METHOD"} />,
-      typeInput: "CheckboxInput"
+      typeInput: "CheckboxInput",
+      inputValue: "payment_method"
     },
     {
       name: "fine",
       label: <Ini2 text={"FINE"} />,
-      typeInput: "CheckboxInput"
+      typeInput: "CheckboxInput",
+      inputValue: "fine"
     },
     {
       name: "account_number",
       label: <Ini2 text={"ACCOUNT_NUMBER"} />,
-      typeInput: "CheckboxInput"
+      typeInput: "CheckboxInput",
+      inputValue: "account_number"
     }
   ],
+
   // isi checkboxinput part3. buat dinamis checkbox
   [
     {
       name: "others",
       label: 'Lainnya',
-      typeInput: "CheckboxInput"
+      typeInput: "CheckboxInput",
+      inputValue: "others"
     },
     {
       name: "input_other",
@@ -76,6 +88,7 @@ export const formDataCheckbox = [
       // typeInput: 'SelectInputCustom'
     }
   ],
+  
 ]
 
 export const formData1 = [
@@ -106,6 +119,13 @@ export const formData1 = [
   ],
   [
     {
+      name: "tab_outside",
+      label: <Ini2 text={"PRICE_CHANGE.ADDITIONAL_PRICE"} />,
+      typeInput: "CheckboxInput"
+    }
+  ]
+  [
+    {
       name: "subtraction_price",
       label: <Ini2 text={"PRICE_CHANGE.SUBTRACTION_PRICE"} />,
     }
@@ -128,13 +148,13 @@ export const formData1 = [
       label: <Ini2 text={"PRICE_CHANGE.CONCLUSION"} />
     }
   ],
-  {
-    Child: TitleField,
-    ChildrenProps: {
-      title: <Ini2 text={"SUPPORTING_DOCUMENT.TITLE"} />
-    },
-    deleteInput: true
-  },
+  // {
+  //   Child: TitleField,
+  //   ChildrenProps: {
+  //     title: <Ini2 text={"SUPPORTING_DOCUMENT.TITLE"} />
+  //   },
+  //   deleteInput: true
+  // },
 
 ]
 

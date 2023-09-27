@@ -20,6 +20,7 @@ const inputs = {
 }
 
 const RenderInput = ({
+  inputValue,
   typeInput,
   name,
   Child,
@@ -63,13 +64,19 @@ const RenderInput = ({
 
   const [isi, setIsi] = useState('')
   const [inputName, setInputName] = useState('')
-  
+  const [checked, setChecked] = useState([])
 
   const _handleChange = (val) => {
+    
+    console.log('isi val checkbox', val)
 
-    setIsi(val)
-    console.log('isi setelah val', isi)
-    setFieldValue(name, val, true)
+    if(typeInput !== 'CheckboxInput') {
+      setIsi(val)
+      setFieldValue(name, val, true)
+    } else {
+      // setFieldValue('checked_list', val, true)
+    }
+    // console.log('isi checked_list', checked_list)
     // if (typeof onChange === "function") onChange(val)
 
   }
@@ -78,49 +85,48 @@ const RenderInput = ({
     // console.log('isi event', e)
     // console.log(e.target.value)
     // console.log('ini namanya apa', name)
-    if(e.key === 'Enter' && name === 'input_other' && isi !== '') {
+    // if(e.key === 'Enter' && name === 'input_other' && isi !== '') {
 
-      // alert('enter telah ditekan')
-      // console.log('isi val', isi)
-      formDataCheckbox.map((item, index) => {
+    //   // alert('enter telah ditekan')
+    //   // console.log('isi val', isi)
+    //   formDataCheckbox.map((item, index) => {
         
-        console.log('index ke-', index)
+    //     console.log('index ke-', index)
 
-        if(Array.isArray(item) && item.length < 4) {
-          let a = item.pop()
-          console.log('masuk ke a')
-          item.push({
-            name: isi,
-            label: isi,
-            typeInput: "CheckboxInput"
-          })
-          item.push(a)
-          setFieldValue(name, isi, true)
-          setInputName(a)
-        }
+    //     if(Array.isArray(item) && item.length < 4) {
+    //       let a = item.pop()
+    //       console.log('masuk ke a')
+    //       item.push({
+    //         name: isi,
+    //         label: isi,
+    //         typeInput: "CheckboxInput"
+    //       })
+    //       item.push(a)
+    //       setFieldValue(name, isi, true)
+    //       setInputName(a)
+    //     }
 
-        else if (index === formDataCheckbox.length-1 && item.length == 4) {
-          let a = item.pop()
-            console.log('masuk ke b')        
-              item.push({
-                name: isi,
-                label: isi,
-                typeInput: "CheckboxInput"
-              })
-              formDataCheckbox.push([a])
-            setFieldValue(name, isi, true)
-        }
+    //     else if (index === formDataCheckbox.length-1 && item.length == 4) {
+    //       let a = item.pop()
+    //         console.log('masuk ke b')        
+    //           item.push({
+    //             name: isi,
+    //             label: isi,
+    //             typeInput: "CheckboxInput"
+    //           })
+    //           formDataCheckbox.push([a])
+    //         setFieldValue(name, isi, true)
+    //     }
         
-      })
+    //   })
 
-      formik.resetForm()
-      setTimeout(() => {
-        let elementInput = document.getElementsByName('input_other')[0]
-        console.log(elementInput)
-        elementInput.focus()
-      }, 1)
+    //   formik.resetForm()
+    //   setTimeout(() => {
+    //     let elementInput = document.getElementsByName('input_other')[0]
+    //     elementInput.focus()
+    //   }, 1)
 
-    }
+    // }
   }
 
 
@@ -128,6 +134,8 @@ const RenderInput = ({
   //   setFieldValue(name, val, true)
   //   onChangeCustom()
   // }
+
+  console.log('isi values name nya broh', values[name])
 
   return (
     <div>
@@ -139,9 +147,10 @@ const RenderInput = ({
             <div>
               {/* ini input nya */}
               <Component
-                value={values[name] || ""}
+                value={inputValue || ""}
                 name={name}
-                onChange={_handleChange}
+                onChange={() => setChecked(oldValue => [...oldValue, inputValue] 
+                )}
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
                 {...selectProps}

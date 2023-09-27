@@ -34,6 +34,7 @@ export function AsideMenuList({ layoutProps }) {
     shallowEqual
   );
   const isClient = status === "client"
+  // const isClient = false
   let isFinance = useSelector((state) => getFinanceUser(state))
   const dataUser = useSelector((state) => state.auth.user.data)
   let monitoring_role = dataUser.monitoring_role
@@ -116,7 +117,7 @@ export function AsideMenuList({ layoutProps }) {
         >
           <NavLink className="menu-link" to={`/${status}/dashboard`}>
             <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")} />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/All/New_Dashboard.svg")} />
             </span>
             <span className="menu-text">Dashboard</span>
           </NavLink>

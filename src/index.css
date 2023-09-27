@@ -109,8 +109,8 @@ th {
   height: 20px;
 }
 
-::-webkit-calendar-picker-indicator {
-  /* filter: invert(1); */
+/* filter: invert(1); */
+/* ::-webkit-calendar-picker-indicator {
   position: relative;
   right: 95%;
 }
@@ -118,7 +118,7 @@ th {
   input::-webkit-datetime-edit-fields-wrapper {
     position: relative;
     left: 15%;
-  }
+  } */
 
 /* input::-webkit-datetime-edit {
   position: relative;

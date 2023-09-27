@@ -1,5 +1,6 @@
 import { makeStyles, Paper } from "@material-ui/core"
 import React from "react"
+import { shallowEqual, useSelector } from "react-redux";
 import SVG from "react-inlinesvg"
 import { FormattedMessage } from "react-intl"
 import { TableRow, TableCell } from "@material-ui/core"
@@ -109,6 +110,69 @@ const useStyles = makeStyles((theme) => ({
       filter: { active: false, type: "text" },
     },
   ]
+
+  const tableHeaderContractsVendor = [
+    {
+      name: "req_number",
+      title: "Addendum Request Number",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    { 
+      name: "req_date",
+      title: "Addendum Request Date",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "contract_number",
+      title: "Contract Number",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "po_num",
+      title: "PO Number",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "procurement_title",
+      title: "Procurement Contract Title",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "end_date",
+      title: "Contract End Date",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "customer",
+      title: "Customer",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "provider",
+      title: "Provider",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "req_status",
+      title: "Request Addendum Status",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "action",
+      title: "Action",
+      order: { active: true, status: true, type: true },
+      filter: { active: true, type: "text" },
+    }
+  ]
   
   const keys = {
     fetch: "get-data-contracts",
@@ -178,10 +242,22 @@ const useStyles = makeStyles((theme) => ({
                   // handleAction={console.log(null)}
                   ops={[
                     {
+                      // contract details ada disini
                       label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
-                      icon: "fas fa-search text-primary pointer",
+                      // icon: "fas fa-search text-primary pointer",
                       to: {
                         url: `/${status}/delivery-monitoring/contract/${item.id}`,
+                        style: {
+                          color: "black",
+                        },
+                      },
+                    },
+                    {
+                      // mari kita tambahkan addendum disini
+                      label: "CONTRACT.TABLE_ACTION.ADD_ADDENDUM",
+                      // icon: "fas fa-search text-primary pointer",
+                      to: {
+                        url: `/${status}/addendum-contract/contract/${item.id}`,
                         style: {
                           color: "black",
                         },
@@ -195,6 +271,13 @@ const useStyles = makeStyles((theme) => ({
         },
       });
     }
+
+    let authStatus = useSelector(
+      (state) => state.auth.user.data.status,
+      shallowEqual
+    );
+
+    const isClient = authStatus === "client"
   
     React.useEffect(() => {
       getDataContracts();
@@ -206,18 +289,13 @@ const useStyles = makeStyles((theme) => ({
         {/* terpakai disini, ada judul & icon yang dikirim ke komponen subheader */}
         {/* komponen sudah muncul, tapi data tidak muncul */}
         <Subheader
-          text="Daftar Kontrak & POS"
-          IconComponent={
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")}
-              style={{ color: "white" }}
-            />
-          }
+          // text={isClient? "List of Contract & PO" : "List of Addendum Request"}
+          text="List of Contract & PO"
         />
   
         <Paper className={classes.root}>
           <Tables
-            dataHeader={tableHeaderContractsNew}
+            dataHeader={isClient ? tableHeaderContractsNew : tableHeaderContractsVendor}
             handleParams={handleFilter}
             err={false}
             loading={false}
@@ -243,11 +321,7 @@ const useStyles = makeStyles((theme) => ({
                     {index}
                   </TableCell>
                   <TableCell>
-                    <NavLink
-                      to={`/${status}/addendum-contract/contract/${item.id}`}
-                    >
                       {item?.contract_no}
-                    </NavLink>
                   </TableCell>
                   <TableCell>{item.po_number}</TableCell>
                   <TableCell>{item.procurement_title}</TableCell>

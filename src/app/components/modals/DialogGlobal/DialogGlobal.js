@@ -147,6 +147,7 @@ class DialogGlobal extends React.PureComponent {
     return (
       <div>
         <Dialog
+          // style={{backgroundColor: '#3699ff', opacity: .2}}
           onClose={this.close}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}

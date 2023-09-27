@@ -1,5 +1,5 @@
 import { persistReducer } from "redux-persist";
-import { PERSIST_REDUCER } from "../../../../redux/BaseHost";
+import { PERSIST_REDUCER } from "redux/BaseHost";
 import { actionTypes } from "./deliveryMonitoringAction";
 
 const initialDelivMonitoringState = {

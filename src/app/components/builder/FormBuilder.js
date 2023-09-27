@@ -56,10 +56,10 @@ const FormBuilder = (
             )
             : 
             (
-              <div>
-                masuk ke field builder
-              </div>
-              // <FieldBuilder formData={formData} {...fieldProps} />
+              // <div>
+              //   masuk ke field builder
+              // </div>
+              <FieldBuilder formData={formData} {...fieldProps} />
             )}
             {/* button children & submit */}
             <div className="d-flex justify-content-end w-100" style={{gap: '20px'}}>

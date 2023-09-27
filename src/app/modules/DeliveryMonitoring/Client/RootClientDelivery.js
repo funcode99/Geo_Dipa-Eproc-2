@@ -21,7 +21,8 @@ import {
   DashboardDM,
 } from "../pages"
 
-function RootClientDelivery(props) {
+function RootClientDelivery() {
+    // console.log('isi props di delivery monitoring', props)
   // const { user } = useSelector((state) => state.auth);
   // const { intl } = props;
   const suhbeader = useSubheader()

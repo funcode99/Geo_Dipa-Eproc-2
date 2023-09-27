@@ -455,7 +455,8 @@ const Tables = (props) => {
                 })}
               <button
                 type="button"
-                className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit"
+                // className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit"
+                className="btn btn-md btn-primary text-white ml-2 mt-2 button-filter-submit"
                 onClick={() => {
                   resetFilter();
                 }}
