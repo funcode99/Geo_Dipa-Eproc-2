@@ -13,33 +13,37 @@ import {
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
-import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { useLocation, useParams, withRouter } from "react-router-dom";
+import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
+
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import Tabs from "../../../../components/tabs";
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast";
 import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
+import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { FormattedMessage } from "react-intl";
+
 import ParaPihak from "./components/ParaPihak";
 import ParaPihak2 from "./components/ParaPihak/ParaPihak2";
 import DokContract from "./components/DokContract";
 import HargaPekerjaan from "./components/HargaPekerjaan";
 import JangkaWaktu from "./components/JangkaWaktu";
 import Jaminan from "./components/Jaminan";
-import Denda from "./components/Denda";
-import BAST from "./components/BAST";
-import DetailPage from "./components/Detail/DetailPage";
-import { compose } from "redux";
-import KickOffDetail from "./components/Detail/KickOffDetail";
-import Steppers from "../../../../components/steppersCustom/Steppers";
+import Denda from "./components/Denda"
+import BAST from "./components/BAST"
+import Steppers from "app/components/steppersCustom/Steppers"
+import DetailPage from "./components/Detail/DetailPage"
+import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail"
+
+import { compose } from "redux"
 import {
   DUMMY_STEPPER,
   DUMMY_STEPPER_CONTRACT,
   STATE_STEPPER,
-} from "../Termin/TerminPageNew/STATIC_DATA";
+} from "app/modules/DeliveryMonitoring/pages/Termin/TerminPageNew/STATIC_DATA";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,6 +112,8 @@ const TabLists = [
 ];
 
 export const ContractDetailPage = ({ dataContractById, authStatus }) => {
+  // ada isinya
+  // console.log('isi data contract by id di delivery monitoring', dataContractById)
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, tab: forceTabActive } = useParams();
@@ -130,6 +136,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   //   (state) => state.auth.user.data.status,
   //   shallowEqual
   // );
+
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
       data.map((services) => {
@@ -157,41 +164,41 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   };
 
   // get data contract detail from api
-  const getContractById = async (contract_id) => {
-    try {
-      // dispatch({
-      //   type: actionTypes.SetContractById,
-      //   payload: [],
-      // });
+  // const getContractById = async (contract_id) => {
+  //   try {
+  //     // dispatch({
+  //     //   type: actionTypes.SetContractById,
+  //     //   payload: [],
+  //     // });
 
-      setLoading(true);
-      const {
-        data: { data },
-      } = await deliveryMonitoring.getContractById(contract_id);
+  //     setLoading(true);
+  //     const {
+  //       data: { data },
+  //     } = await deliveryMonitoring.getContractById(contract_id);
 
-      addCheckedField(data?.services, "jasa");
-      addCheckedField(data?.items, "barang");
+  //     addCheckedField(data?.services, "jasa");
+  //     addCheckedField(data?.items, "barang");
 
-      dispatch({
-        type: actionTypes.SetContractById,
-        payload: data,
-      });
-    } catch (error) {
-      if (
-        error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
-      ) {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        ) {
-          setToast("Error API, please contact developer!");
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     dispatch({
+  //       type: actionTypes.SetContractById,
+  //       payload: data,
+  //     });
+  //   } catch (error) {
+  //     if (
+  //       error.response?.status !== 400 &&
+  //       error.response?.data.message !== "TokenExpiredError"
+  //     ) {
+  //       if (
+  //         error.response?.status !== 400 &&
+  //         error.response?.data.message !== "TokenExpiredError"
+  //       ) {
+  //         setToast("Error API, please contact developer!");
+  //       }
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   React.useEffect(() => {
     // getContractById(contract_id);
@@ -292,6 +299,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
       />
 
       <Paper className={classes.root}>
+        
         <Container>
           <Tabs
             tabActive={tabActive}
@@ -300,6 +308,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
             variant="scrollable"
           />
         </Container>
+
         <hr className="p-0 m-0" />
         {tabActive === 0 && <KickOffDetail setToast={setToast} />}
         <DetailPage
@@ -318,7 +327,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
         {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
           <ParaPihak2 />
         )}
-        {/* {tabActive === 8 && <BAST />} */}
+        {tabActive === 8 && <BAST />}
       </Paper>
     </React.Fragment>
   );

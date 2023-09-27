@@ -41,6 +41,14 @@ const UserProfilePageVendor = lazy(() =>
   import("./modules/UserProfile/Vendor/UserProfilePage")
 );
 
+const RootClientAddendum = lazy(() => 
+  import("./modules/AddendumContract/Client/RootClientAddendum")
+)
+
+const RootVendorAddendum = lazy(() => 
+  import("./modules/AddendumContract/Vendor/RootVendorAddendum")
+)
+
 const RootClientDelivery = lazy(() =>
   import("./modules/DeliveryMonitoring/Client/RootClientDelivery")
 );
@@ -83,6 +91,7 @@ export default function BasePage() {
           <Redirect
             exact
             from="/"
+            // status === "client"
             to={status === "client" ? "/client/dashboard" : "/vendor/dashboard"}
           />
         }
@@ -118,7 +127,15 @@ export default function BasePage() {
           component={RootVendorInvoiceMonitoring}
         />
 
-        <Route path="/client/master" component={MasterData} />
+        <Route 
+          path="/client/master" 
+          component={MasterData} 
+        />
+        {/* ternyata di sini akar masalah routing nya */}
+        <Route 
+          path="/client/addendum-contract"
+          component={RootClientAddendum}
+        />
         <Route
           path="/client/delivery-monitoring"
           component={RootClientDelivery}
@@ -126,6 +143,10 @@ export default function BasePage() {
         <Route
           path="/vendor/delivery-monitoring"
           component={RootVendorDelivery}
+        />
+                <Route 
+          path="/vendor/addendum-contract"
+          component={RootVendorAddendum}
         />
         <Route path="/client/reports" component={RootReports} />
         <Redirect to="/error" />

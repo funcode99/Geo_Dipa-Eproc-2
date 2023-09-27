@@ -42,13 +42,13 @@ var KTLayoutAsideToggle = function() {
 			// to set default minimized left aside use this cookie value in your
 			// server side code and add "kt-primary--minimize aside-minimize" classes to
 			// the body tag in order to initialize the minimized left aside mode during page loading.
-		});
+		})
 
 		_toggleObject.on('beforeToggle', function(toggle) {
 			if (KTUtil.hasClass(_body, 'aside-minimize') === false && KTUtil.hasClass(_body, 'aside-minimize-hover')) {
-				KTUtil.removeClass(_body, 'aside-minimize-hover');
+				KTUtil.removeClass(_body, 'aside-minimize-hover')
 			}
-		});
+		})
 	}
 
     // Public methods

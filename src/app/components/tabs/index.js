@@ -18,15 +18,26 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1.5),
     marginBottom: theme.spacing(1.5),
   },
-  tabWrapper: {
+  tabWrapper1: {
     flexDirection: "row",
     fontSize: "1rem",
     fontWeight: "500",
     textTransform: "none",
+    color: '#8c8a8a'
+  },
+  tabWrapper2: {
+    flexDirection: "row",
+    fontSize: "1rem",
+    fontWeight: "500",
+    textTransform: "none",
+    color: '#3699ff'
   },
   customIndicatorColor: {
-    backgroundColor: "#3699FF",
+    // backgroundColor: "green",
   },
+  customLabelColor: {
+    color: 'green'
+  }
 }));
 
 const initialTabLists = [
@@ -63,11 +74,20 @@ export default function Tabs({
       textColor="secondary"
       variant="scrollable"
       scrollButtons="auto"
-      classes={{ root: classes.root, indicator: classes.customIndicatorColor }}
+      classes={{ 
+        root: classes.root, 
+        indicator: classes.customIndicatorColor 
+      }}
+      TabIndicatorProps={{
+        style: {
+          backgroundColor: "#D97D54"
+        }
+      }}
       {...other}
     >
       {tabLists.map((item) => (
         <MuiTab
+
           key={item.id}
           label={item.label}
           icon={item.icon}
@@ -76,7 +96,7 @@ export default function Tabs({
           }}
           classes={{
             root: classes.tabRoot,
-            wrapper: classes.tabWrapper,
+            wrapper: item.addendum ? classes.tabWrapper2 : classes.tabWrapper1,
           }}
         />
       ))}

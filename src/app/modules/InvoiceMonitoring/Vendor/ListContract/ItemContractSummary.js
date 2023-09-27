@@ -24,7 +24,7 @@ import {
   assignUser,
   getContractSummary,
   checkRole,
-} from "../../_redux/InvoiceMonitoringCrud";
+} from "app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -506,6 +506,7 @@ function ItemContractSummary(props) {
       });
   };
 
+  // fungsi submit nya disini
   const assignPic = () => {
     setLoading(true);
     var data = {
@@ -537,6 +538,7 @@ function ItemContractSummary(props) {
   return (
     <React.Fragment>
       <Toast />
+
       <Dialog
         open={openModalDeletePIC}
         TransitionComponent={Transition}
@@ -547,13 +549,16 @@ function ItemContractSummary(props) {
         fullWidth={true}
         style={{ zIndex: "1301" }}
       >
+        
         <DialogTitle id="alert-dialog-slide-title">
           <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_DELETE.TITLE" />
         </DialogTitle>
+
         <DialogContent>
           <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_DELETE.BODY" />
           <span className="text-danger"> {tempPic.label}</span> ?
         </DialogContent>
+
         <DialogActions>
           <button
             className="btn btn-secondary"
@@ -578,7 +583,9 @@ function ItemContractSummary(props) {
             )}
           </button>
         </DialogActions>
+
       </Dialog>
+      
       <Dialog
         open={openModalEmail}
         TransitionComponent={Transition}
@@ -588,6 +595,7 @@ function ItemContractSummary(props) {
         maxWidth="sm"
         fullWidth={true}
       >
+        
         <DialogTitle id="alert-dialog-slide-title">
           <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.TITLE" />
           {editEmail ? (
@@ -596,6 +604,7 @@ function ItemContractSummary(props) {
             <FormattedMessage id="TITLE.SUMMARY.PIC.MODAL_EDIT.BREADCRUMB.NEW" />
           )}
         </DialogTitle>
+
         <DialogContent>
           <div ref={updateEmailRef}>
             {!editEmail && (
@@ -751,6 +760,7 @@ function ItemContractSummary(props) {
             </div>
           </div>
         </DialogContent>
+
         <DialogActions>
           <button
             type="button"
@@ -762,10 +772,15 @@ function ItemContractSummary(props) {
             <FormattedMessage id="AUTH.GENERAL.BACK_BUTTON" />
           </button>
         </DialogActions>
+
       </Dialog>
+      
       <Card>
+        
         <CardBody>
+          
           <div className="row">
+            
             <div className="col-md-6">
               <div className="form-group row">
                 <label
@@ -940,7 +955,9 @@ function ItemContractSummary(props) {
                 </div>
               </div>
             </div>
+
             <div className="col-md-6">
+              
               <div className="form-group row">
                 <label htmlFor="first" className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.FIRST_PARTY" />
@@ -958,6 +975,7 @@ function ItemContractSummary(props) {
                   ></textarea>
                 </div>
               </div>
+              
               <div className="form-group row">
                 <label htmlFor="second" className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.SECOND_PARTY" />
@@ -975,17 +993,20 @@ function ItemContractSummary(props) {
                   ></textarea>
                 </div>
               </div>
+              
               <div className="form-group row">
+                
                 <label htmlFor="pic" className="col-sm-4 col-form-label">
                   <FormattedMessage id="TITLE.SELECT_PIC" />
                 </label>
+                
                 <div className="input-group col-sm-8">
-                  <StyledSelect
+                  {/* <StyledSelect
                     isDisabled={!role.main_vendor}
                     options={picVendorData}
                     value={picContractData}
                     onChange={handlePic}
-                  ></StyledSelect>
+                  ></StyledSelect> */}
                   {role.main_vendor && (
                     <div className="input-group-prepend">
                       <span
@@ -999,12 +1020,19 @@ function ItemContractSummary(props) {
                     </div>
                   )}
                 </div>
+                
                 <div className="col-sm-8"></div>
+
               </div>
+
             </div>
+
           </div>
+
         </CardBody>
+
         <CardFooter className="text-right">
+          
           <button
             type="button"
             className="btn btn-primary mx-1"
@@ -1012,15 +1040,20 @@ function ItemContractSummary(props) {
             disabled={loading || picContractData.length === 0}
           >
             Simpan
+            
             {loading && (
               <span
                 className="spinner-border spinner-border-sm ml-1"
                 aria-hidden="true"
               ></span>
             )}
+
           </button>
+
         </CardFooter>
+
       </Card>
+
       {/* <Card className="mt-5">
         <CardBody>
           <div className="my-5 text-center">
@@ -1050,6 +1083,7 @@ function ItemContractSummary(props) {
           </TableOnly>
         </CardBody>
       </Card> */}
+
     </React.Fragment>
   );
 }

@@ -29,6 +29,9 @@ const theme = createMuiTheme(
         main: "#f018a6",
         // dark: will be calculated from palette.primary.main,
         // contrastText: "#fff" //will be calculated to contrast with palette.primary.main
+      },
+      danger: {
+        main: "#dc0526"
       }
     },
 

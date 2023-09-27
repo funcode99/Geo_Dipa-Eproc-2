@@ -1,12 +1,12 @@
-import React, {useMemo} from "react";
-import objectPath from "object-path";
-import {useHtmlClassService} from "../../_core/MetronicLayout";
-import {Topbar} from "./Topbar";
-import {HeaderMenuWrapper} from "./header-menu/HeaderMenuWrapper";
-import {AnimateLoading} from "../../../_partials/controls";
+import React, {useMemo} from "react"
+import objectPath from "object-path"
+import {useHtmlClassService} from "../../_core/MetronicLayout"
+import { Topbar } from '_metronic/layout/components/header/Topbar'
+import {HeaderMenuWrapper} from "./header-menu/HeaderMenuWrapper"
+import {AnimateLoading} from "../../../_partials/controls"
 
 export function Header() {
-  const uiService = useHtmlClassService();
+  const uiService = useHtmlClassService()
 
   const layoutProps = useMemo(() => {
     return {

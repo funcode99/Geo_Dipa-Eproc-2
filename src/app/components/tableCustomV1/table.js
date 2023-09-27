@@ -46,7 +46,8 @@ const Tables = (props) => {
     page: 0,
     count: countData,
     rowsPerPage: 10,
-  });
+  })
+
   const [sortData, setSortData] = React.useState({
     name:
       dataHeader.filter(
@@ -83,6 +84,10 @@ const Tables = (props) => {
           )[0].order.type
         : null,
   });
+
+  console.log('isi dataHeader', dataHeader)
+  console.log('ini isi state sort data', sortData)
+
   const [filterTable, setFilterTable] = React.useState({});
   const [filterSort, setFilterSort] = React.useState({ filter: {}, sort: {} });
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -234,8 +239,10 @@ const Tables = (props) => {
   return (
     <React.Fragment>
       <div>
+        
         <form id="filter-form-all" className="panel-filter-table mb-1">
           <span className="mr-2 mt-1 float-left">
+            {/* Filter by */}
             <FormattedMessage id="TITLE.FILTER.TABLE" />
           </span>
           <div className="d-block">
@@ -448,7 +455,8 @@ const Tables = (props) => {
                 })}
               <button
                 type="button"
-                className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit"
+                // className="btn btn-sm btn-danger ml-2 mt-2 button-filter-submit"
+                className="btn btn-md btn-primary text-white ml-2 mt-2 button-filter-submit"
                 onClick={() => {
                   resetFilter();
                 }}
@@ -458,6 +466,10 @@ const Tables = (props) => {
             </div>
           </div>
         </form>
+
+        {/*  */}
+
+        {/* bagian paling bawah setelah tabel */}
         <div>
           <TableContainer component={Paper}>
             <Table className={"hecto-" + hecto}>
@@ -529,6 +541,7 @@ const Tables = (props) => {
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
         </div>
+
       </div>
     </React.Fragment>
   );

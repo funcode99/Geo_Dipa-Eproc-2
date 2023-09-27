@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// kena lo!
 const TabLists = [
   {
     id: "summary",
@@ -177,6 +178,8 @@ const ItemContract = (props) => {
         </Container>
         <hr className="p-0 m-0" />
         <Container className="p-0">
+
+          {/* tab active nya ada 4 sesuai data */}
           {tabActive === 0 && (
             <ItemContractSummary
               {...props}
@@ -203,6 +206,7 @@ const ItemContract = (props) => {
               terminName={data.termin_name || ""}
             />
           )}
+
           {/* {tabActive === 3 && (
             <ItemContractRoutingSlip
               {...props}
