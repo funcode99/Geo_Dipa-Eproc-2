@@ -12,6 +12,8 @@ import {
   } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA"
   import Subheader from "app/components/subheader"
   import SubBreadcrumbs from "app/components/SubBreadcrumbs"
+  import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
+import SVG from "react-inlinesvg";
 
 const DraftAddendumPage = () => {
 
@@ -87,9 +89,10 @@ const DraftAddendumPage = () => {
         //   icon: <Description className="mb-0 mr-2" />,
         // },
       
-      ]
+    ]
 
-    function handleChangeTab(newTabActive) {
+     // sengaja dikasih event biar yang diambil value nya
+    function handleChangeTab(event, newTabActive) {
         // isi nya urutan angka array sesuai dengan yang di klik
         console.log('isi newTabActive', newTabActive)
         setTabActive(newTabActive);
@@ -159,6 +162,9 @@ const DraftAddendumPage = () => {
                 label: "List of Addendum",
                 // to: `/${authStatus}/addendum-contract/list-of-addendum`,
                 to: `/client/addendum-contract/list-of-addendum`,
+            },
+            {
+                label: "015.PJ/PST.100-GDE/I/2023 - Pengadaan Material Gasket Spiral Wound & Rupture Disk"
             }
             ]}
         />
@@ -169,24 +175,16 @@ const DraftAddendumPage = () => {
             }
         />
 
-<h1 style={{ fontSize: 18 }}>Silahkan download file final draft dibawah ini:</h1>
+        <br/>
 
-<select>
-  <option>
-    Final Draft Kontrak
-  </option>
-  <option>
-    Final Draft Addendum
-  </option>
-</select>
+        <Card>
+            <form
+                style={{
+                    padding: 28,
+                }}
+            >
 
-<div style={{ minHeight: 100, marginBottom: 10 }}>
-    <p>Body Kontrak Perjanjian.doc</p>
-    <p>Lampiran 1.doc</p>
-    <p>Lampiran 2.doc</p>
-</div>
-
-        <div 
+<div 
           style={{
             height: 74, 
             fontSize: 14, 
@@ -196,31 +194,40 @@ const DraftAddendumPage = () => {
         >
           
           <div
-            className="d-flex align-items-center justify-content-center"
+            className="d-flex flex-column align-items-center"
             style={{
                 backgroundColor: 'white', 
                 flexGrow: 1, 
                 borderTopLeftRadius: 14, 
-                cursor: 'pointer'
+                cursor: 'pointer',
+                gap: 4
             }}
             onClick={() => setSequence(0)}
           >
+            
+            <SVG 
+            src={toAbsoluteUrl("/media/svg/icons/All/form-parameter.svg")} />
             <h1 style={{
                 fontSize: 14,
                 color: sequence === 0 ? '#3699ff' : '#8c8a8a'
-            }}>Pengisian Form Parameter Addendum</h1>
+            }}>
+                Form Parameter Addendum
+            </h1>
+
           </div>
           
           <div
-            className="d-flex align-items-center justify-content-center"
+            className="d-flex flex-column align-items-center"
              style={{
                 backgroundColor:'white', 
                 flexGrow: 1, 
                 cursor: 'pointer',
-                borderTopRightRadius: 14
+                borderTopRightRadius: 14,
+                gap: 4
             }}
             onClick={() => setSequence(1)}
           >
+            <SVG src={toAbsoluteUrl("/media/svg/icons/All/clause-template.svg")} />
             <h1 style={{
                 fontSize: 14,
                 color: sequence === 1 ? '#3699ff' : '#8c8a8a'
@@ -228,9 +235,6 @@ const DraftAddendumPage = () => {
           </div>
 
         </div>
-
-        <Card>
-                        <form>
                             <div 
                                     style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
                                 >
@@ -459,15 +463,98 @@ const DraftAddendumPage = () => {
                                         </div>
                                     </div>
                             </div>
-                        </form>
+            </form>
         </Card>
 
-        <Tabs
-            tabActive={tabActive}
-            handleChange={handleChangeTab}
-            tabLists={TabLists}
-            variant="scrollable"
-          />
+                {/* silahkan download file */}
+                <div
+          style={{
+            backgroundColor: 'white',
+            padding: 28,
+            marginTop: 24,
+            marginBottom: 24,
+            borderRadius: 5
+          }}
+        >
+
+          <h1 style={{ 
+              fontSize: 12,
+              fontWeight: 400
+          }}>Silahkan download file final draft dibawah ini:</h1>
+
+          <select
+            style={{
+              borderRadius: 4,
+              padding: '10px 12px',
+              width: 310,
+              backgroundColor: '#e8f4fb'
+            }}
+          >
+            <option>
+              Final Draft Kontrak
+            </option>
+            <option>
+              Final Draft Addendum
+            </option>
+          </select>
+
+          <div style={{ 
+              minHeight: 100, 
+              marginTop: 10,
+              marginBottom: 10,
+              fontSize: 12,
+              fontWeight: 400,
+              color: '#3699ff'
+          }}>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 6
+                }}
+              >
+                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                <p>Body Kontrak Perjanjian.doc</p>
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 6
+                }}
+              >
+                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                <p>Lampiran 1.doc</p>
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 6
+                }}
+              >
+                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                <p>Lampiran 2.doc</p>
+              </div>
+
+
+          </div>
+
+        </div>
+
+        <div
+            style={{
+                backgroundColor: 'white',
+                borderTopLeftRadius: 14,
+                borderTopRightRadius: 14
+            }}
+        >
+            <Tabs
+                tabActive={tabActive}
+                handleChange={handleChangeTab}
+                tabLists={TabLists}
+                variant="scrollable"
+            />
+        </div>
 
           <FormParameter currentActiveTab={tabActive} />
 

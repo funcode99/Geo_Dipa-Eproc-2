@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Col, Row } from "react-bootstrap"
 
+
 // import FieldBuilder from "app/components/builder/FieldBuilder"
 // import FormBuilder from "app/components/builder/FormBuilder"
 // import { formData1, formDataCheckbox } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData"
 
 import { FormControlLabel, Checkbox} from "@material-ui/core";
 
-import { Formik, Field, Form } from 'formik'
+import { Formik, Field, Form, useFormikContext } from 'formik'
 
 import { useSelector } from "react-redux"
 import {
@@ -23,6 +24,17 @@ const FormPermohonan = (
     const handleChange = () => {
 
     }
+
+    const FormObserver = () => {
+        const { values } = useFormikContext();
+        
+        useEffect(() => {
+          console.log("FormObserver::values", values.checked)
+          props.assignTabLists(values.checked)
+        }, [values]);
+      
+        return null;
+      };
 
     return (
         <>  
@@ -264,14 +276,13 @@ const FormPermohonan = (
 
                     <Formik
                         initialValues={{
-                            checked: [],
+                            checked: props.checkedValues,
                             others: [],
                             additional_price: '',
                             substraction_price: null
                         }}
                         onSubmit={
                             (values) => {
-                                // alert('telah disubmit')
                                 props.checkedLength(values.checked.length)
                             }
                         }
@@ -281,6 +292,9 @@ const FormPermohonan = (
                             <>
                                 <Form>
                                     
+                                    <FormObserver />
+
+                                    {/* checkbox */}
                                     <div
                                         style={{
                                             display: 'grid',
@@ -299,7 +313,7 @@ const FormPermohonan = (
                                             <Field 
                                                 type="checkbox" 
                                                 name="checked" 
-                                                value="Data Para Pihak"
+                                                value="parties"
                                                 style={{
                                                     height: 20,
                                                     width: 20
@@ -317,7 +331,7 @@ const FormPermohonan = (
                                             <Field 
                                                 type="checkbox" 
                                                 name="checked" 
-                                                value="Metode Pembayaran"
+                                                value="payment_method"
                                                 style={{
                                                     height: 20,
                                                     width: 20
@@ -335,7 +349,7 @@ const FormPermohonan = (
                                             <Field 
                                                 type="checkbox" 
                                                 name="checked" 
-                                                value="Denda" 
+                                                value="fine" 
                                                 style={{
                                                     height: 20,
                                                     width: 20
@@ -353,7 +367,7 @@ const FormPermohonan = (
                                             <Field 
                                                 type="checkbox" 
                                                 name="checked" 
-                                                value="Nomor Rekening" 
+                                                value="account_number" 
                                                 style={{
                                                     height: 20,
                                                     width: 20
@@ -379,7 +393,7 @@ const FormPermohonan = (
                                             <Field 
                                                 type="checkbox" 
                                                 name="checked" 
-                                                value="Harga Pekerjaan"
+                                                value="job_price"
                                                 style={{
                                                     height: 20,
                                                     width: 20
@@ -397,7 +411,7 @@ const FormPermohonan = (
                                             <Field 
                                                 type="checkbox" 
                                                 name="checked" 
-                                                value="Jangka Waktu" 
+                                                value="time_period" 
                                                 style={{
                                                     height: 20,
                                                     width: 20
@@ -416,7 +430,7 @@ const FormPermohonan = (
                                             <Field 
                                                 type="checkbox" 
                                                 name="checked" 
-                                                value="Jaminan" 
+                                                value="guarantee" 
                                                 style={{
                                                     height: 20,
                                                     width: 20
@@ -463,7 +477,11 @@ const FormPermohonan = (
                                         />
                                     </div>
                     
-                                <Row>
+                                <Row
+                                    style={{
+                                        marginTop: 28
+                                    }}
+                                >
                                     <Col md={12}>
                                         <Row>
                                             <Col md={12}>
@@ -502,13 +520,6 @@ const FormPermohonan = (
                                                     Penambahan Harga Pekerjaan
                                                 </label>
                                                 <div className='col-sm-8'>
-                                                    {/* <input 
-                                                        className='form-control' 
-                                                        type='text'
-                                                        name='additional_price'
-                                                        onChange={handleChange}
-                                                        value={values.additional_price}
-                                                    /> */}
                                                        <Field 
                                                             className='form-control'
                                                             type="text" 
@@ -522,7 +533,9 @@ const FormPermohonan = (
                                 <Row>
                                     <Col md={12}>
                                             <div
-                                            className={`form-group row ${values.additional_price !== '' ? '' : 'd-none'}`}>
+                                                className=
+                                            {`form-group row ${values.additional_price !== '' ? '' : 'd-none'}`}
+                                            >
                                                 <label className='col-sm-4 col-form-label'>
                                                     
                                                 </label>
@@ -611,7 +624,7 @@ const FormPermohonan = (
                                     }}
                                 >
                                     <button 
-                                        className="btn btn-primary"
+                                        className={`btn ${values.checked.length === 0 ? `btn-secondary` : `btn-primary`} `}
                                         type='submit' 
                                         disabled={values.checked.length === 0 ? true : false}
                                         style={{

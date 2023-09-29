@@ -11,8 +11,10 @@ import Tabs from "app/components/tabs"
 import * as addendumContract from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
 import useToast from "../../../../components/toast"
 import Subheader from "app/components/subheader"
-import SubBreadcrumbs from "app/components/SubBreadcrumbs";
+import SubBreadcrumbs from "app/components/SubBreadcrumbs"
 import { actionTypes } from "app/modules/AddendumContract/_redux/deliveryMonitoringAction";
+import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
+import SVG from "react-inlinesvg";
 
 import { useState, useRef } from "react"
 import DialogGlobal from "app/components/modals/DialogGlobal"
@@ -45,7 +47,7 @@ import {
 } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA"
 
 import FormPermohonan from "./components/ParaPihak/FormPermohonan"
-import FormParameter from "./components/ParaPihak/FormParameter"
+import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/FormParameter"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,77 +60,65 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TabLists = [
+// const TabLists = [
   
-  {
-    id: "kick-off",
-    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
-    label: "Para Pihak",
-    // icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
-    addendum: true
-  },
+//   {
+//     id: "parties",
+//     // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+//     label: "Para Pihak",
+//     // icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
+//     addendum: false
+//   },
 
-  {
-    id: "detail",
-    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
-    label: "Harga Pekerjaan",
-    // icon: <FindInPage className="mb-0 mr-2" />,
-  },
+//   {
+//     id: "price_job",
+//     // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+//     label: "Harga Pekerjaan",
+//     // icon: <FindInPage className="mb-0 mr-2" />,
+//     addendum: false
+//   },
 
-  {
-    id: "para-pihak",
-    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
-    label: "Jangka Waktu",
-    // icon: <PeopleAlt className="mb-0 mr-2" />,
-  },
+//   {
+//     id: "time_period",
+//     // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
+//     label: "Jangka Waktu",
+//     // icon: <PeopleAlt className="mb-0 mr-2" />,
+//     addendum: false
+//   },
 
-  {
-    id: "dokumen-kontrak",
-    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
-    label: "Metode Pembayaran",
-    // icon: <Assignment className="mb-0 mr-2" />,
-  },
+//   {
+//     id: "payment_method",
+//     // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
+//     label: "Metode Pembayaran",
+//     // icon: <Assignment className="mb-0 mr-2" />,
+//     addendum: false
+//   },
 
-  {
-    id: "harga-pekerjaan",
-    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
-    label: "Denda",
-    // icon: <MonetizationOn className="mb-0 mr-2" />,
-  },
+//   {
+//     id: "fine",
+//     // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
+//     label: "Denda",
+//     // icon: <MonetizationOn className="mb-0 mr-2" />,
+//     addendum: false
+//   },
 
-  {
-    id: "jangka-waktu",
-    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
-    label: "Jaminan",
-    // icon: <QueryBuilderSharp className="mb-0 mr-2" />,
-    addendum: true
-  },
+//   {
+//     id: "guarantee",
+//     // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
+//     label: "Jaminan",
+//     // icon: <QueryBuilderSharp className="mb-0 mr-2" />,
+//     addendum: false
+//   },
 
-  {
-    id: "jaminan",
-    // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
-    label: "Nomor Rekening",
-    // icon: <FeaturedPlayList className="mb-0 mr-2" />,
-    addendum: true
-  },
+//   {
+//     id: "jaminan",
+//     // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+//     label: "Nomor Rekening",
+//     // icon: <FeaturedPlayList className="mb-0 mr-2" />,
+//     addendum: false
+//   },
 
-  // {
-  //   id: "denda",
-  //   label: <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />,
-  //   icon: <Error className="mb-0 mr-2" />,
-  // },
-  //   {
-  //     id: "para-pihak2",
-  //     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
-  //     icon: <PeopleAlt className="mb-0 mr-2" />,
-  //   },
-  // {
-  //   id: "bast",
-  //   label: <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />,
-  //   icon: <Description className="mb-0 mr-2" />,
-  // },
-
-]
+// ]
 
 // ternyata dataContractById ini props
 export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
@@ -152,7 +142,66 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
     needRefresh: false,
     path: "",
   })
-
+  const [TabLists, setTabLists] = React.useState([
+  
+    {
+      id: "parties",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+      label: "Para Pihak",
+      // icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
+      addendum: false
+    },
+  
+    {
+      id: "job_price",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+      label: "Harga Pekerjaan",
+      // icon: <FindInPage className="mb-0 mr-2" />,
+      addendum: false
+    },
+  
+    {
+      id: "time_period",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
+      label: "Jangka Waktu",
+      // icon: <PeopleAlt className="mb-0 mr-2" />,
+      addendum: false
+    },
+  
+    {
+      id: "payment_method",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
+      label: "Metode Pembayaran",
+      // icon: <Assignment className="mb-0 mr-2" />,
+      addendum: false
+    },
+  
+    {
+      id: "fine",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
+      label: "Denda",
+      // icon: <MonetizationOn className="mb-0 mr-2" />,
+      addendum: false
+    },
+  
+    {
+      id: "guarantee",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
+      label: "Jaminan",
+      // icon: <QueryBuilderSharp className="mb-0 mr-2" />,
+      addendum: false
+    },
+  
+    {
+      id: "account_number",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+      label: "Nomor Rekening",
+      // icon: <FeaturedPlayList className="mb-0 mr-2" />,
+      addendum: false
+    },
+  
+  ])
+  const [checkedInitialValues, setCheckedInitialValues] = React.useState([])
 
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
@@ -245,11 +294,14 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
     // eslint-disable-next-line
   }, []);
 
-  function handleChangeTab(newTabActive) {
+  // sengaja dikasih event biar yang diambil value nya
+  function handleChangeTab(event, newTabActive) {
     // isi nya urutan angka array sesuai dengan yang di klik
     console.log('isi newTabActive', newTabActive)
-    setTabActive(newTabActive);
+    setTabActive(newTabActive)
   }
+
+
 
   React.useEffect(() => {
     if (
@@ -294,6 +346,27 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
     if(lengthValue > 0) {
       setSequence(1)
     }
+  }
+
+  const assignTabLists = (values) => {
+
+    console.log('isi values', values)
+    console.log('isi tablists', TabLists)
+
+    TabLists.map((Tabitem) => {
+      Tabitem.addendum = false
+    })
+
+    TabLists.map((Tabitem) => {
+      values.map((item) => {
+          if(item === Tabitem.id) {
+            Tabitem.addendum = true
+          }
+        })
+      })
+
+    setCheckedInitialValues(values)
+
   }
 
   return (
@@ -376,7 +449,7 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
           },
 
           {
-            label: "List of Contract & PO",
+            label: "List of Contract & SPK",
             to: `/${authStatus}/addendum-contract/list-contract-po`,
           },
           {
@@ -394,22 +467,81 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
         }
       />
 
-        <h1 style={{ fontSize: 18 }}>Silahkan download file final draft dibawah ini:</h1>
 
-        <select>
-          <option>
-            Final Draft Kontrak
-          </option>
-          <option>
-            Final Draft Addendum
-          </option>
-        </select>
+        <div
+          style={{
+            backgroundColor: 'white',
+            padding: 28,
+            marginTop: 24,
+            marginBottom: 24,
+            borderRadius: 5
+          }}
+        >
 
-        <div style={{ minHeight: 100, marginBottom: 10 }}>
-            <p>Body Kontrak Perjanjian.doc</p>
-            <p>Lampiran 1.doc</p>
-            <p>Lampiran 2.doc</p>
+          <h1 style={{ 
+              fontSize: 12,
+              fontWeight: 400
+          }}>Silahkan download file final draft dibawah ini:</h1>
+
+          <select
+            style={{
+              borderRadius: 4,
+              padding: '10px 12px',
+              width: 310,
+              backgroundColor: '#e8f4fb'
+            }}
+          >
+            <option>
+              Final Draft Kontrak
+            </option>
+            <option>
+              Final Draft Addendum
+            </option>
+          </select>
+
+          <div style={{ 
+              minHeight: 100, 
+              marginTop: 10,
+              marginBottom: 10,
+              fontSize: 12,
+              fontWeight: 400,
+              color: '#3699ff'
+          }}>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 6
+                }}
+              >
+                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                <p>Body Kontrak Perjanjian.doc</p>
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 6
+                }}
+              >
+                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                <p>Lampiran 1.doc</p>
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 6
+                }}
+              >
+                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                <p>Lampiran 2.doc</p>
+              </div>
+
+
+          </div>
+
         </div>
+
 
         <div 
           style={{
@@ -456,7 +588,11 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
         </div>
 
       {sequence === 0 && <Paper className={classes.root}>
-        <FormPermohonan checkedLength={checkLength}  />
+        <FormPermohonan 
+          checkedLength={checkLength}
+          assignTabLists={assignTabLists}
+          checkedValues={checkedInitialValues}
+        />
       </Paper>}
 
       {sequence === 1 && <Paper className={classes.root}>
@@ -489,7 +625,7 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
                 style={{
                   minWidth: 100
                 }}
-                onClick={() => setTabActive(tabActive < TabLists.length-1 ? tabActive+1 : tabActive)}
+                onClick={() => TabLists.length-1 ? setTabActive(tabActive+1) : setTabActive(tabActive) }
               >
                 Next
               </Button>
@@ -503,12 +639,12 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
       </Paper>}
 
     </React.Fragment>
-  );
-};
+  )
+}
 
 const mapState = ({ auth, addendumContract }) => ({
   authStatus: auth.user.data.status,
   dataContractById: addendumContract.dataContractById,
-});
+})
 
-export default compose(withRouter, connect(mapState))(ContractAddendumDetail);
+export default compose(withRouter, connect(mapState))(ContractAddendumDetail)

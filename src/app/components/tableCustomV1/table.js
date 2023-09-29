@@ -478,7 +478,21 @@ const Tables = (props) => {
                   {dataHeader.map((item, index) => {
                     return (
                       <TableCell
-                        className={`bg-primary ${item?.td ? item?.td : ""}`}
+                      style={{
+                        position: item.name === 'action' ? 'sticky' : '',
+                        right: item.name === 'action' ? 0 : '',
+                        minWidth: item.name === 'action' ? 123 : '',
+                        minHeight: item.name === 'action' ? 71 : '',
+                        display: item.name === 'action' ? 'flex' : '',
+                        justifyContent: item.name === 'action' ? 'center' : '',
+                        alignItems: item.name === 'action' ? 'center' : '',
+                        border: item.name === 'action' ? 0 : 0,
+                        textAlign: item.name === 'action' ? 'center' : ''
+                      }}
+                        className={`
+                          bg-primary 
+                          ${item?.td ? item?.td : ""} 
+                        `}
                         key={index.toString()}
                       >
                         {item.order.active ? (
@@ -502,7 +516,8 @@ const Tables = (props) => {
                             <span>{item.title}</span>
                           </TableSortLabel>
                         ) : (
-                          <span>{item.title}</span>
+                          <span
+                          >{item.title}</span>
                         )}
                       </TableCell>
                     );
