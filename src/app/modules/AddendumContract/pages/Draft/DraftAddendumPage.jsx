@@ -184,7 +184,8 @@ const DraftAddendumPage = () => {
                 }}
             >
 
-<div 
+        {/* form parameter & template klausul */}
+        <div 
           style={{
             height: 74, 
             fontSize: 14, 
@@ -235,7 +236,8 @@ const DraftAddendumPage = () => {
           </div>
 
         </div>
-                            <div 
+                
+        <div 
                                     style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
                                 >
                                     <div className="col-md-4">
@@ -316,9 +318,9 @@ const DraftAddendumPage = () => {
                                             />
                                         </div>
                                     </div>
-                            </div>
+        </div>
 
-                            <div 
+        <div 
                                     style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
                                 >
                                     <div className="col-md-7">
@@ -462,12 +464,13 @@ const DraftAddendumPage = () => {
                                             />
                                         </div>
                                     </div>
-                            </div>
+        </div>
+
             </form>
         </Card>
 
                 {/* silahkan download file */}
-                <div
+        <div
           style={{
             backgroundColor: 'white',
             padding: 28,
@@ -541,22 +544,105 @@ const DraftAddendumPage = () => {
 
         </div>
 
-        <div
-            style={{
-                backgroundColor: 'white',
-                borderTopLeftRadius: 14,
-                borderTopRightRadius: 14
-            }}
-        >
-            <Tabs
-                tabActive={tabActive}
-                handleChange={handleChangeTab}
-                tabLists={TabLists}
-                variant="scrollable"
-            />
-        </div>
+        {sequence === 0 &&            
+            <>
+            <div
+                style={{
+                    backgroundColor: 'white',
+                    borderTopLeftRadius: 14,
+                    borderTopRightRadius: 14
+                }}
+            >
+                <Tabs
+                    tabActive={tabActive}
+                    handleChange={handleChangeTab}
+                    tabLists={TabLists}
+                    variant="scrollable"
+                />
+            </div>
+            <FormParameter currentActiveTab={tabActive} />
+            </>
+        }
 
-          <FormParameter currentActiveTab={tabActive} />
+        {sequence === 1 &&
+            <>
+                <div
+                    style={{
+                        backgroundColor: 'white',
+                        borderRadius: 4,
+                        minHeight: 100,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 28,
+                        padding: 28
+                    }}
+                >
+                    <div
+                        style={{
+                            border: 1,
+                            borderStyle: 'solid',
+                            borderColor: '#8C8A8A',
+                            borderRadius: 4,
+                            padding: '12px 10px',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <span>Template Word Body Kontrak</span>
+                        <Button
+                style={{
+                  minWidth: 100
+                }}
+              >
+                Download
+              </Button>
+                    </div>
+                    <div
+                                                style={{
+                                                    border: 1,
+                                                    borderStyle: 'solid',
+                                                    borderColor: '#8C8A8A',
+                                                    borderRadius: 4,
+                                                    padding: '12px 10px',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center'
+                                                }}
+                    >
+                               <span>Template Word Lampiran 1</span>
+                               <Button
+                style={{
+                  minWidth: 100
+                }}
+              >
+                Download
+                                </Button>
+                    </div>
+                    <div
+                                                style={{
+                                                    border: 1,
+                                                    borderStyle: 'solid',
+                                                    borderColor: '#8C8A8A',
+                                                    borderRadius: 4,
+                                                    padding: '12px 10px',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center'
+                                                }}
+                    >
+                               <span>Template Word Lampiran 2</span>
+                               <Button
+                style={{
+                  minWidth: 100
+                }}
+              >
+                Download
+              </Button>
+                    </div>
+                </div>
+            </>
+        }
 
             <div
               style={{
@@ -582,6 +668,7 @@ const DraftAddendumPage = () => {
                 Next
               </Button>
             </div>
+
         </>
     )
 }
