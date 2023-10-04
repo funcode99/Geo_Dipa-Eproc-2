@@ -12,9 +12,9 @@ import {
     AddendumRequestListPage,
     DraftAddendumPage,
     ApprovalAddendumPage
- } from 'app/modules/AddendumContract/pages/index'
+} from 'app/modules/AddendumContract/pages/index'
 
- import ParaPihak from "../pages/ContractDetail/components/ParaPihak"
+import ParaPihak from "../pages/ContractDetail/components/ParaPihak"
 
 function RootClientAddendum() {
     const subheader = useSubheader()
@@ -49,6 +49,11 @@ function RootClientAddendum() {
                 path="/client/addendum-contract/list-of-addendum"
                 component={AddendumListPage}
             />
+            {/* <Route 
+                path="/client/percobaan"
+                component={reactSelect}
+                exact={true}
+            /> */}
         </Switch>
     )
 }

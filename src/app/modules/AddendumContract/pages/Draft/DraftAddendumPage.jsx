@@ -24,6 +24,7 @@ import SelectDateInput from "app/components/input/SelectDateInput";
 import TextAreaInput from "app/components/input/TextAreaInput";
 import RenderInput from "app/components/input/RenderInput"
 
+
 // bentrok antara button mui & bootstrap
 
 
@@ -1346,7 +1347,7 @@ const DraftAddendumPage = () => {
           </div>
 
         </div>
-                
+
         <div 
             style={{
                 display: 'flex', 
@@ -1354,6 +1355,7 @@ const DraftAddendumPage = () => {
                 flexWrap: 'wrap'
             }}
         >
+            
             <div className="col-md-4">
                                         <div className="form-group row">
                                             <label
@@ -1389,57 +1391,6 @@ const DraftAddendumPage = () => {
                                                 value={'8000007360'}
                                             />
                                         </div>
-            </div>
-
-            <div className="col-md-7">
-                                        <div className="form-group row">
-                                            <label
-                                                htmlFor="procurement_title"
-                                                className="col-form-label"
-                                                style={{ fontWeight: 500, fontSize: 14 }}
-                                            >
-                                                Judul Pengadaan
-                                            </label>
-                                            <input 
-                                                type="text"
-                                                    className="form-control"
-                                                    id="procurement_title"
-                                                    style={{ backgroundColor: "#c7d2d8" }}
-                                                    disabled
-                                                    onChange={(e) => {
-
-                                                    }}
-                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
-                                            />
-                                        </div>
-                                        <div className="form-group row">
-                                            <label
-                                                htmlFor="po_number"
-                                                className="col-form-label"
-                                                style={{ fontWeight: 500, fontSize: 14 }}
-                                            >
-                                                Keterangan PO
-                                            </label>
-                                            <input 
-                                                type="text"
-                                                    className="form-control"
-                                                    id="po_number"
-                                                    style={{ backgroundColor: "#c7d2d8" }}
-                                                    disabled
-                                                    onChange={(e) => {
-
-                                                    }}
-                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
-                                            />
-                                        </div>
-            </div>
-
-        </div>
-
-        <div 
-                                    style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
-                                >
-                                    <div className="col-md-7">
                                         <div className="form-group row">
                                             <label
                                                 htmlFor="agreement_format"
@@ -1520,8 +1471,49 @@ const DraftAddendumPage = () => {
                                                 value={'Plant Dieng'}
                                             />
                                         </div>
-                                    </div>
-                                    <div className="col-md-4">
+            </div>
+            
+            <div className="col-md-7">
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="procurement_title"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Judul Pengadaan
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="procurement_title"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="po_number"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Keterangan PO
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="po_number"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
+                                            />
+                                        </div>
                                         <div className="form-group row">
                                             <label
                                                 htmlFor="agreement_type"
@@ -1579,86 +1571,90 @@ const DraftAddendumPage = () => {
                                                 value={'961242390'}
                                             />
                                         </div>
-                                    </div>
+            </div>
+
         </div>
 
             </form>
         </Card>
 
                 {/* silahkan download file */}
-        <div
-          style={{
-            backgroundColor: 'white',
-            padding: 28,
-            marginTop: 24,
-            marginBottom: 24,
-            borderRadius: 5
-          }}
-        >
-
-          <h1 style={{ 
-              fontSize: 12,
-              fontWeight: 400
-          }}>Silahkan download file final draft dibawah ini:</h1>
-
-          <select
+        
+        {sequence < 2 &&
+            <div
             style={{
-              borderRadius: 4,
-              padding: '10px 12px',
-              width: 310,
-              backgroundColor: '#e8f4fb'
+                backgroundColor: 'white',
+                padding: 28,
+                marginTop: 24,
+                marginBottom: 24,
+                borderRadius: 5
             }}
-          >
-            <option>
-              Final Draft Kontrak
-            </option>
-            <option>
-              Final Draft Addendum
-            </option>
-          </select>
+            >
 
-          <div style={{ 
-              minHeight: 100, 
-              marginTop: 10,
-              marginBottom: 10,
-              fontSize: 12,
-              fontWeight: 400,
-              color: '#3699ff'
-          }}>
-              <div
+            <h1 style={{ 
+                fontSize: 12,
+                fontWeight: 400
+            }}>Silahkan download file final draft dibawah ini:</h1>
+
+            <select
                 style={{
-                  display: 'flex',
-                  gap: 6
+                borderRadius: 4,
+                padding: '10px 12px',
+                width: 310,
+                backgroundColor: '#e8f4fb'
                 }}
-              >
-                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
-                <p>Body Kontrak Perjanjian.doc</p>
-              </div>
+            >
+                <option>
+                Final Draft Kontrak
+                </option>
+                <option>
+                Final Draft Addendum
+                </option>
+            </select>
 
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 6
-                }}
-              >
-                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
-                <p>Lampiran 1.doc</p>
-              </div>
+            <div style={{ 
+                minHeight: 100, 
+                marginTop: 10,
+                marginBottom: 10,
+                fontSize: 12,
+                fontWeight: 400,
+                color: '#3699ff'
+            }}>
+                <div
+                    style={{
+                    display: 'flex',
+                    gap: 6
+                    }}
+                >
+                    <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                    <p>Body Kontrak Perjanjian.doc</p>
+                </div>
 
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 6
-                }}
-              >
-                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
-                <p>Lampiran 2.doc</p>
-              </div>
+                <div
+                    style={{
+                    display: 'flex',
+                    gap: 6
+                    }}
+                >
+                    <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                    <p>Lampiran 1.doc</p>
+                </div>
+
+                <div
+                    style={{
+                    display: 'flex',
+                    gap: 6
+                    }}
+                >
+                    <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                    <p>Lampiran 2.doc</p>
+                </div>
 
 
-          </div>
+            </div>
 
-        </div>
+            </div>
+        }
 
         {sequence === 0 &&            
             <>
@@ -2094,6 +2090,7 @@ const DraftAddendumPage = () => {
                             tabLists={reviewProcessTabLists}
                             variant="scrollable"
                             grid={true}
+                            arrayLength={4}
                         />
 
                         <div
@@ -3128,6 +3125,8 @@ const DraftAddendumPage = () => {
                         handleChange={handleChangeDistributionTab}
                         tabLists={distributionTabLists}
                         variant="scrollable"
+                        grid={true}
+                        arrayLength={2}
                     />
                 </div>
                 
@@ -3372,134 +3371,177 @@ const DraftAddendumPage = () => {
                     
                     
                                                 </div>
+
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        gap: 28
+                                                    }}
+                                                >
+
+                                                    <div>
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                justifyContent: 'space-between',
+                                                                marginBottom: 14
+                                                            }}
+                                                        >
+                                                            <h1
+                                                                style={{
+                                                                    fontSize: 16,
+                                                                    fontWeight: 600
+                                                                }}
+                                                            >
+                                                                User
+                                                            </h1>
+                                                            <Button
+                                                                className="btn btn-primary"
+                                                                variant="contained"
+                                                                size="medium"
+                                                                onClick={showAddReviewer}
+                                                            >
+                                                                <div>
+                                                                    <span>
+                                                                        Reviewer User
+                                                                    </span>
+                                                                </div>
+                                                            </Button>
+                                                        </div>
+                            
+                                                        <table>
+                                                                <tr>
+                                                                    <th>
+                                                                        No
+                                                                    </th>
+                                                                    <th>
+                                                                        Nama
+                                                                    </th>
+                                                                    <th>
+                                                                        Jabatan
+                                                                    </th>
+                                                                    <th>
+                                                                        Email
+                                                                    </th>
+                                                                    <th>
+                                                                        Aksi
+                                                                    </th>
+                                                                </tr>
+                            
+                                                                {TableListsUser && TableListsUser.map((item, index) => {
+                            
+                                                                    return(
+                                                                    <>                                
+                                                                        <tr key={index}>
+                                                                            <td>
+                                                                                {index+1}
+                                                                            </td>
+                                                                            <td>
+                                                                                {item.name}
+                                                                            </td>
+                                                                            <td>
+                                                                                {item.position}
+                                                                            </td>
+                                                                            <td>
+                                                                                {item.email}
+                                                                            </td>
+                                                                            <td>
+                                                                                {actionButton}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </>)
+                                                                })}
+                            
+                                                        </table>
+                                                    </div>
+                    
+                                                    <div>
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                justifyContent: 'space-between',
+                                                                marginBottom: 14
+                                                            }}
+                                                        >
+                                                            <h1
+                                                                style={{
+                                                                    fontSize: 16,
+                                                                    fontWeight: 600
+                                                                }}
+                                                            >
+                                                                User
+                                                            </h1>
+                                                            <Button
+                                                                className="btn btn-primary"
+                                                                variant="contained"
+                                                                size="medium"
+                                                                // onClick={showAddVendor}
+                                                            >
+                                                                <div>
+                                                                    <span>
+                                                                        Reviewer Vendor
+                                                                    </span>
+                                                                </div>
+                                                            </Button>
+                                                        </div>
+                                                        
+                                                        <table>
+                                                                
+                                                                <tr>
+                                                                    <th>
+                                                                        No
+                                                                    </th>
+                                                                    <th>
+                                                                        Nama
+                                                                    </th>
+                                                                    <th>
+                                                                        Jabatan
+                                                                    </th>
+                                                                    <th>
+                                                                        Email
+                                                                    </th>
+                                                                    <th>
+                                                                        Aksi
+                                                                    </th>
+                                                                </tr>
+                            
+                                                                {TableListsVendor && TableListsVendor.map((item, index) => {
+                                                                return(
+                                                                    <>                                
+                                                                            <tr key={index}>
+                                                                                <td>
+                                                                                    {index+1}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {item.name}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {item.position}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {item.email}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {actionButton}
+                                                                                </td>
+                                                                            </tr>
+                                                                    </>
+                                                                )
+                                                                })}
+                            
+                                                        </table>
+                                                    </div>
+
+                                                </div>
                     
                                                 <div
                                                     style={{
                                                         display: 'flex',
-                                                        justifyContent: 'space-between'
+                                                        justifyContent: 'flex-end',
+                                                        marginTop: 40
                                                     }}
                                                 >
-                                                    <h1
-                                                        style={{
-                                                            fontSize: 16,
-                                                            fontWeight: 600
-                                                        }}
-                                                    >
-                                                        User
-                                                    </h1>
-                                                    <Button
-                                                        // className="btn btn-outline-danger"
-                                                        //   variant="outlined"
-                                                        size="medium"
-                                                        onClick={showAddReviewer}
-                                                    >
-                                                        <div>
-                                                            <span>
-                                                                Reviewer User
-                                                            </span>
-                                                        </div>
-                                                    </Button>
-                                                </div>
-                    
-                                                <table>
-                                                        <tr>
-                                                            <th>
-                                                                No
-                                                            </th>
-                                                            <th>
-                                                                Nama
-                                                            </th>
-                                                            <th>
-                                                                Jabatan
-                                                            </th>
-                                                            <th>
-                                                                Email
-                                                            </th>
-                                                            <th>
-                                                                Aksi
-                                                            </th>
-                                                        </tr>
-                    
-                                                        {TableListsUser && TableListsUser.map((item, index) => {
-                    
-                                                            return(
-                                                            <>                                
-                                                                <tr key={index}>
-                                                                    <td>
-                                                                        {index+1}
-                                                                    </td>
-                                                                    <td>
-                                                                        {item.name}
-                                                                    </td>
-                                                                    <td>
-                                                                        {item.position}
-                                                                    </td>
-                                                                    <td>
-                                                                        {item.email}
-                                                                    </td>
-                                                                    <td>
-                                                                        {actionButton}
-                                                                    </td>
-                                                                </tr>
-                                                            </>)
-                                                        })}
-                    
-                                                </table>
-                    
-                    
-                                                <table>
-                                                        
-                                                        <tr>
-                                                            <th>
-                                                                No
-                                                            </th>
-                                                            <th>
-                                                                Nama
-                                                            </th>
-                                                            <th>
-                                                                Jabatan
-                                                            </th>
-                                                            <th>
-                                                                Email
-                                                            </th>
-                                                            <th>
-                                                                Aksi
-                                                            </th>
-                                                        </tr>
-                    
-                                                        {TableListsVendor && TableListsVendor.map((item, index) => {
-                                                        return(
-                                                            <>                                
-                                                                    <tr key={index}>
-                                                                        <td>
-                                                                            {index+1}
-                                                                        </td>
-                                                                        <td>
-                                                                            {item.name}
-                                                                        </td>
-                                                                        <td>
-                                                                            {item.position}
-                                                                        </td>
-                                                                        <td>
-                                                                            {item.email}
-                                                                        </td>
-                                                                        <td>
-                                                                            {actionButton}
-                                                                        </td>
-                                                                    </tr>
-                                                            </>
-                                                        )
-                                                        })}
-                    
-                                                </table>
-                    
-                                                <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            justifyContent: 'flex-end',
-                                                            marginTop: 40
-                                                        }}
-                                                    >
                                                         <Button
                                                             variant="contained"
                                                             color="secondary"
