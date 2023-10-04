@@ -160,6 +160,7 @@ export const formData1 = [
 
 export const supportingDocumentDefault = [
   {
+    id: '1',
     name: "Surat Permohonan Addendum dari Pihak Kedua",
     // nama adalah referensi, jika nama sama maka referensi input nya sama
     doc_num_field: '1',
@@ -167,48 +168,56 @@ export const supportingDocumentDefault = [
     doc_upload_field: '3'
   },
   {
+    id: '2',
     name: "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor",
     doc_num_field: '4',
     date_field: '5',
     doc_upload_field: '6'
   },
   {
+    id: '3',
     name: "Berita Acara Kesepakatan Addendum",
     doc_num_field: '7',
     date_field: '8',
     doc_upload_field: '9'
   },
   {
+    id: '4',
     name: "Surat Kuasa Khusus",
     doc_num_field: '10',
     date_field: '11',
     doc_upload_field: '12'
   },
   {
+    id: '5',
     name: "Justifikasi",
     doc_num_field: '13',
     date_field: '14',
     doc_upload_field: '15'
   },
   {
+    id: '6',
     name: "Kajian Hukum dari Fungsi Legal",
     doc_num_field: '16',
     date_field: '17',
     doc_upload_field: '18'
   },
   {
+    id: '7',
     name: "Kajian Risk Management dari Fungsi Risk Management",
     doc_num_field: '19',
     date_field: '20',
     doc_upload_field: '21'
   },
   {
+    id: '8',
     name: "Hasil Keputusan Rapat Direksi (Radir)",
     doc_num_field: '22',
     date_field: '23',
     doc_upload_field: '24'
   },
   {
+    id: '9',
     name: "Memo/Surat Permohonan Addendum",
     doc_num_field: '25',
     date_field: '26',
@@ -217,7 +226,9 @@ export const supportingDocumentDefault = [
 ]
 
 export const supportingDocumentAdditional = [
-
+  {
+    
+  }
 ]
 
 export const formData2 = [

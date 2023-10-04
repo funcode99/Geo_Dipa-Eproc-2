@@ -371,6 +371,7 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
 
   return (
     <React.Fragment>
+
       <Toast />
 
       {loading ? (
@@ -379,13 +380,12 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
         </div>
       ) : null}
 
-            <DialogGlobal
+      <DialogGlobal
                   ref={openCloseAddDocument}
                   isCancel={false}
                   isSubmit={true}
                   onYes={setPush}
             >
-                {/* <SupportingDocumentInput /> */}
                 <div>
                       <Row>
                           <Col md={4}>
@@ -432,7 +432,7 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
                           />
                       </Row>
               </div>
-            </DialogGlobal>
+      </DialogGlobal>
 
       <Subheader 
         text={
@@ -466,7 +466,6 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
           DUMMY_STEPPER_CONTRACT
         }
       />
-
 
         <div
           style={{
@@ -542,7 +541,6 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
 
         </div>
 
-
         <div 
           style={{
             height: 74, 
@@ -614,13 +612,20 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
                 padding: '2rem 2.25rem'
               }}
             >
-              <Button
+              {/* <Button
                  style={{
                   minWidth: 100
                 }}
               >
-                Update
-              </Button>
+              </Button> */}
+              <button
+                className="btn btn-primary"
+                style={{
+                  minWidth: 100
+                }}
+              >
+                Update  
+              </button>
               <Button
                 style={{
                   minWidth: 100
@@ -633,10 +638,217 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
 
       </Paper>}
 
-      {sequence === 2 && 
-      <Paper className={classes.root}>
-        
-      </Paper>}
+      {sequence === 2 &&
+        <Paper className={classes.root}>
+          <div
+            style={{
+              padding: '2rem 2.25rem'
+            }}
+          >
+            <Formik
+              initialValues={{
+                isi : 'kosong'
+              }}
+            >
+              {(formikProps) => {
+                // console.log('isi formikProps', formikProps)
+                // formikProps.values.isi
+                // formikProps.initialValues.isi
+                return (
+                  <> 
+                    <h1
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 600,
+                        color: '#2e1f22',
+                        marginBottom: 14
+                      }}
+                    >
+                      Dokumen Pendukung  
+                    </h1>        
+                    <SupportingDocumentInput title={supportingDocumentDefault} />
+                    <SupportingDocumentInput title={supportingDocumentAdditional} />
+                    <Formik
+                        initialValues={{
+                          links: [linksGroup],
+                        }}
+                        onSubmit={async (values, actions) => {
+                          alert(JSON.stringify(values, null, 2));
+                        }}
+                      >
+                        {({ values }) => (
+                      
+                        <>
+
+                          <FieldArray name="links">
+                            
+                            {({ push, remove }) => (
+
+                              <Grid container spacing={2} sx={{ marginTop: 2, paddingX: 2 }}>
+                    
+                                {values.links.map((_, index) => (
+                                  <>
+                                    <Grid item md={12}>
+                                      <div>
+                                        <p 
+                                          style={{fontWeight: 500, fontSize:14, marginBottom: 0}}
+                                        >{_.documentname}</p>
+                                      </div>
+                                    </Grid>
+
+                                    <Grid item md={4}>
+                                      <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                        No Dokumen
+                                      </p>
+                                      <Field 
+                                        fullWidth 
+                                        name={`links.${index}.documentnumber`} 
+                                        component={RenderInput} 
+                                        placeholder={"Masukan No Dokumen Anda"}
+                                        value={`${_.documentnumber}`}
+                                        />
+                                    </Grid>
+                                    <Grid item md={3}>
+                                    <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                      Tanggal Dokumen
+                                    </p>
+                                      <Field 
+                                      fullWidth 
+                                      name={`links.${index}.documentdate`} 
+                                      component={SelectDateInput}
+                                      value={`${_.documentdate}`}
+                                      />
+                                    </Grid>
+                                    <Grid item md={3}>
+                                      <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                      Upload Dokumen
+                                      </p>
+                                      <Field 
+                                        fullWidth 
+                                        name={`links.${index}.documentfileupload`} 
+                                        component={UploadInput} 
+                                        // gaperlu pakai backtick, malah dianggap string bukan objek
+                                        value={{ path: _.documentfileupload }}
+                                      />
+                                    </Grid>
+                                    {index > 0 && (
+                                      <Grid item md={2}>
+                                        {/* color="error" */}
+                                        <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                      
+                                        </p>
+                                        <Button variant="outlined"  onClick={() => remove(index)}>
+                                          Delete
+                                        </Button>
+                                      </Grid>
+                                    )}
+                                    <Grid item md={12}>
+                                      <Field 
+                                        name={`links.${index}.about`} 
+                                        component={TextAreaInput}
+                                        value={`${_.about}`}
+                                      />
+                                    </Grid>
+                                  </>
+                                ))}{" "}
+
+                                <Grid item xs={12}>
+                                  
+                                  {/* <Button
+                                    variant="outlined"
+                                    
+                                    onClick={() => push()}
+                                  >
+                                    Add Link
+                                  </Button> */}
+
+                                  <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
+                                      Klik Disini
+                                  </button>
+
+                                </Grid>
+
+                              </Grid>
+
+                            )}
+
+                          </FieldArray>
+                          
+                        </>
+            
+                        )}
+                    </Formik>
+
+                    <div className="mt-5">
+                        <p 
+                          className="mb-0"
+                          style={{
+                            color: '#2e1f22',
+                            fontSize: 14,
+                            fontWeight: 500
+                          }}
+                        >Permintaan Penerbitan Draft Addendum Kepada:</p>
+                        <select 
+                          style={{
+                            padding: '10px 12px',
+                            fontSize: 12,
+                            backgroundColor: '#e8f4fb',
+                            borderRadius: 4
+                          }}
+                          value={"Supply Chain Management (SCM) Division"}
+                        >
+                          <option
+                            // style={{
+                            //   padding: '10px 12px',
+                            //   fontSize: 12,
+                            //   backgroundColor: '#e8f4fb',
+                            //   borderRadius: 4
+                            // }}
+                          >
+                            Supply Chain Management (SCM) Division
+                          </option>
+                          <option>
+                            Corporate Legal & Compliance Division
+                          </option>
+                          <option>
+                            Pengguna (Direksi Pekerjaan)
+                          </option>
+                        </select>
+                    </div>
+
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 28,
+                padding: '2rem 2.25rem'
+              }}
+            >
+              <Button
+                className="text-primary btn btn-white border border-primary"
+                 style={{
+                  minWidth: 100
+                }}
+              >
+                Save Draft
+              </Button>
+              <Button
+                style={{
+                  minWidth: 100
+                }}
+                // onClick={() => TabLists.length-1 ? setTabActive(tabActive+1) : setTabActive(tabActive) }
+              >
+                Submit
+              </Button>
+            </div>
+
+                  </>
+                )
+              }}
+            </Formik>
+          </div>
+        </Paper>
+      }
 
     </React.Fragment>
   )

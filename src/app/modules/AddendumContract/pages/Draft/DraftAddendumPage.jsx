@@ -1,7 +1,8 @@
-import React from "react"
+import React, { useState, useRef } from "react"
 import Tabs from "app/components/tabs"
+import DialogGlobal from "app/components/modals/DialogGlobal"
+import { Col, Row } from "react-bootstrap"
 import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/FormParameter"
-import { Button } from "react-bootstrap"
 import {
     Card,
     CardBody,
@@ -9,18 +10,33 @@ import {
 import Steppers from "app/components/steppersCustom/Steppers"
 import {
     STEPPER_ADDENDUM_CONTRACT
-  } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA"
-  import Subheader from "app/components/subheader"
-  import SubBreadcrumbs from "app/components/SubBreadcrumbs"
-  import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
-import SVG from "react-inlinesvg";
+} from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA"
+import Subheader from "app/components/subheader"
+import SubBreadcrumbs from "app/components/SubBreadcrumbs"
+import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers"
+import SVG from "react-inlinesvg"
+import ButtonAction from "app/components/buttonAction/ButtonAction"
+import { Formik, Field, FieldArray } from "formik"
+// import { Button } from "react-bootstrap"
+import { Grid, Button } from "@material-ui/core"
+import UploadInput from "app/components/input/UploadInput";
+import SelectDateInput from "app/components/input/SelectDateInput";
+import TextAreaInput from "app/components/input/TextAreaInput";
+import RenderInput from "app/components/input/RenderInput"
+
+// bentrok antara button mui & bootstrap
+
+
 
 const DraftAddendumPage = () => {
 
     const [tabActive, setTabActive] = React.useState(0)
+    const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0)
+    const [distributionTabActive, setDistributionTabActive] = React.useState(0)
     const [sequence, setSequence] = React.useState(0)
+    const [reviewSequence, setReviewSequence] = React.useState(0)
+    const [distributionSequence, setDistributionSequence] = React.useState(0)
     const TabLists = [
-  
         {
           id: "kick-off",
           // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
@@ -91,12 +107,131 @@ const DraftAddendumPage = () => {
       
     ]
 
+    const reviewProcessTabLists = [
+        {
+            id: 'form_review',
+            label: 'Form Review Addendum',
+        },
+        {
+            id: 'draft_review',
+            label: 'Draft Review Addendum'
+        },
+        {
+            id: 'review_user',
+            label: 'Hasil Review User'
+        },
+        {
+            id: 'review_vendor',
+            label: 'Hasil Review Vendor'
+        }
+    ]
+
+    const distributionTabLists = [
+        {
+            id: 'admin_verification',
+            label: 'Verifikasi Admin'
+        },
+        {
+            id: 'document_distribution',
+            label: 'Distribusi Dokumen'
+        }
+    ]
+
+    const TableListsUser = [
+        {
+            name: 'User 1',
+            position: 'Logistic Supervisor',
+            email: 'user.1@geodipa.co.id'
+        },
+        {
+            name: 'User 2',
+            position: 'Procurement Staff',
+            email: 'user.2@geodipa.co.id'
+        },
+        {
+            name: 'User 3',
+            position: 'Procurement Superintendent',
+            email: 'user.3@geodipa.co.id'
+        },
+    ]
+
+    const TableListsVendor = [
+        {
+            name: 'Samudera Raya Engineering',
+            position: 'Awaludin',
+            email: 'ptsamuderaraya@gmail.com'
+        },
+    ]
+
+    const dataGroup = [        { 
+        documentname: 'Kontrak Perjanjian',
+        documentfileupload: 'test.jpg', 
+        about: "Terlampir draft addendum kontrak, mohon user untuk direview"
+    },
+    { 
+        documentname: 'Lampiran 1',
+        documentfileupload: 'test.jpg', 
+        about: ""
+    },
+    { 
+        documentname: 'Lampiran 2',
+        documentfileupload: 'test.jpg', 
+        about: ""
+    },
+    {
+        documentname: 'Full Kontrak',
+        documentfileupload: 'test.jpg', 
+        about: ""
+    }
+
+]
+
+    let [linksGroup, setLinksGroup] = useState(dataGroup)
+    
+      const toPush = useRef()
+    
+      const setPush = (e) => {
+        toPush.current.click()
+      }
+
+    const openCloseAddReviewer = React.useRef()
+    const showAddReviewer = () => {
+        openCloseAddReviewer.current.open()
+    }
+
+    const openCloseAddAttachment = React.useRef()
+    const showAddAttachment = () => {
+        openCloseAddAttachment.current.open()
+    }
+
+    const openCloseAddChecklistAddendum = React.useRef()
+    const showAddChecklistAddendum = () => {
+        openCloseAddChecklistAddendum.current.open()
+    }
+
+    const openCloseDownloadUser = React.useRef()
+    const showDownloadUser = () => {
+        openCloseDownloadUser.current.open()
+    }
+
+    const openCloseDownloadVendor = React.useRef()
+    const showDownloadVendor = () => {
+        openCloseDownloadVendor.current.open()
+    }
+
      // sengaja dikasih event biar yang diambil value nya
     function handleChangeTab(event, newTabActive) {
-        // isi nya urutan angka array sesuai dengan yang di klik
-        console.log('isi newTabActive', newTabActive)
         setTabActive(newTabActive);
-      }
+    }
+
+    function handleChangeReviewProcessTab(event, newTabActive) {
+        setReviewProcessTabActive(newTabActive)
+    }
+
+    function handleChangeDistributionTab(event, newTabActive) {
+        setDistributionTabActive(newTabActive);
+        setDistributionSequence(newTabActive);
+    }
 
     //   const getContractById = async (contract_id) => {
     //     try {
@@ -141,14 +276,935 @@ const DraftAddendumPage = () => {
     //     // eslint-disable-next-line
     //   }, []);
 
+      const actionButton = (
+        <ButtonAction
+            style={{
+                backgroundColor: '#e8f4fb'
+            }}
+            hoverLabel="More"
+            data={"1"}
+            ops={[
+                {
+                    label: "Batalkan",
+                },
+            ]}
+        />
+      )
+
+      const userReviewData = [
+        {
+            agreement_name: 'Kontrak Perjanjian',
+            agreement_file_name: '001.KTR-DNG1.PBJ-GDE-I-2022.Body-Perjanjian.Admin_Zulfiqur_Rahman.07-08-2022 1437.V0_ADD.docx',
+            userComment : [
+                {
+                    name: 'Kurniawan Tri Widhianto',
+                    position: 'Logistic Supervisor',
+                    reviewStatus: 'Setuju',
+                    date: '08-08-2022 13:51',
+                    comment: 'Oke. Sudah Review',
+                    file: ''
+                },
+                {
+                    name: 'Rustianah',
+                    position: 'Procurement Staff',
+                    reviewStatus: 'Revisi',
+                    date: '08-08-2022 13:55',
+                    comment: 'Ada revisi dibagian ini',
+                    file: '001.KTR-DNG1.PBJ-GDE-I-2022.Body-Perjanjian.Admin_Zulfiqur_Rahman.07-08-2022 1437.V0_ADD.docx'
+                },
+                {
+                    name: 'Weni Kusumaningrum',
+                    position: 'Procurement Superintendent',
+                    reviewStatus: 'Setuju',
+                    date: '08-08-2022 13:58',
+                    comment: 'Oke. sudah review',
+                    file: ''
+                },
+            ]
+        },
+        {
+            agreement_name: 'Lampiran 1',
+            agreement_file_name: '001.KTR-DNG1.PBJ-GDE-I-2022.Lamp-1.Admin_Zulfiqur_Rahman.07-08-2022 1437.V0_ADD.docx',
+            userComment : [
+                {
+                    name: 'Kurniawan Tri Widhianto',
+                    position: 'Logistic Supervisor',
+                    reviewStatus: 'Setuju',
+                    date: '08-08-2022 13:51',
+                    comment: 'Oke. Sudah Review',
+                    file: ''
+                },
+                {
+                    name: 'Rustianah',
+                    position: 'Procurement Staff',
+                    reviewStatus: 'Revisi',
+                    date: '08-08-2022 13:55',
+                    comment: 'Ada revisi dibagian ini',
+                    file: '001.KTR-DNG1.PBJ-GDE-I-2022.Body-Perjanjian.Admin_Zulfiqur_Rahman.07-08-2022 1437.V0_ADD.docx'
+                },
+                {
+                    name: 'Rustianah',
+                    position: 'Procurement Staff',
+                    reviewStatus: 'Revisi',
+                    date: '08-08-2022 13:55',
+                    comment: 'Ada revisi dibagian ini',
+                    file: ''
+                },
+            ]
+        }
+      ]
+
     return (
         <>
 
+            <DialogGlobal
+                ref={openCloseAddChecklistAddendum}
+                isCancel={false}
+                isSubmit={false}
+                maxWidth={'md'}
+            >
+
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginBottom: 40
+                    }}
+                >
+                    <p
+                        style={{
+                            fontSize: 16,
+                            fontWeight: 600
+                        }}
+                    >
+                        Checklist Addendum Kontrak
+                    </p>
+                </div>
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 28
+                    }}
+                >
+                    
+                    
+                    <div
+                        style={{
+                            display: 'flex',
+                        }}
+                    >
+                        <div
+                            className="col-sm-3"
+                        >
+                            1. No Kontrak
+                        </div>
+                        <div
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                                textAlign: 'center'
+                            }}
+                        >
+                            <div>
+                                015.PJ/PST.100-GDE/I/2023
+                            </div>
+                            <div>
+                                Tanggal
+                            </div>
+                            <div>
+                                14 Jan 2021
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            2. Jenis Kontrak
+                        </div>
+
+                        <label
+                            style={{
+                                display: 'flex',
+                                gap: 8
+                            }}
+                        >
+                            <input 
+                                type="checkbox"
+                            />
+                            <span
+                            >
+                                Kontrak Unit Price
+                            </span>
+                        </label>
+
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            3. Nama Pekerjaan
+                        </div>
+
+                        <span>Pengadaan Material Gasket Spiral Wound & Rupture Disk</span>
+
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            4. Penyedia
+                        </div>
+
+                        <span>PT. PANCA ENERGI MAKMUR</span>
+
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            5. Pejabat Berwenang
+                        </div>
+
+                        <div
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(2, minmax(0, 1fr))'
+                            }}
+                        >
+                            <label
+                                style={{
+                                    display: 'flex',
+                                    gap: 8
+                                }}
+                            >
+                                <input 
+                                    type="checkbox"
+                                />
+                                Lien Kardani
+                            </label>
+                            <span>General Manager Unit Patuha</span>
+                        </div>
+
+                    </div>
+
+                    {/* 6.direksi pekerjaan */}
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            6. Direksi Pekerjaan:
+                        </div>
+
+
+                        <label
+                            style={{
+                                display: 'flex',
+                                gap: 8
+                            }}
+                        >
+                            <input 
+                                type="checkbox"
+                            />
+                                HSSE Manager
+                        </label>
+
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            7. Harga Pekerjaan (inc PPN):
+                        </div>
+
+
+                        <i>IDR Rp 8.164.200.000,00</i>
+
+                    </div>
+
+                    {/* 8.cara pembayaran */}
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            8. Cara Pembayaran:
+                        </div>
+
+
+                        <label
+                            style={{
+                                display: 'flex',
+                                gap: 8
+                            }}
+                        >
+                            <input 
+                                type="checkbox"
+                            />
+                                100%
+                        </label>
+
+                    </div>
+
+                    {/* 9.jangka waktu */}
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            9. Jangka Waktu:
+                        </div>
+
+                        <div>
+                            <label
+                                style={{
+                                    display: 'flex',
+                                    gap: 8
+                                }}
+                            >
+                                <input 
+                                    type="checkbox"
+                                />
+                                    Pelaksanaan Pekerjaan 29 Agustus 2023 - 27 Oktober 2023
+                            </label>
+                            <label
+                                style={{
+                                    display: 'flex',
+
+                                    gap: 8
+                                }}
+                            >
+                                <input 
+                                    type="checkbox"
+                                />
+                                    Garansi (Barang/Jasa) 28 Oktober 2023 - 27 Oktober 2024
+                            </label>
+                        </div>
+
+                    </div>
+
+                    {/* 10. Denda */}
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        
+                        <div
+                            className="col-sm-3"
+                        >
+                            10. Denda:
+                        </div>
+
+                        <div>
+                            <label
+                                style={{
+                                    display: 'flex',
+                                    gap: 8
+                                }}
+                            >
+                                <input 
+                                    type="checkbox"
+                                />
+                                    Pelaksanaan Pekerjaan 29 Agustus 2023 - 27 Oktober 2023
+                            </label>
+                            <label
+                                style={{
+                                    display: 'flex',
+
+                                    gap: 8
+                                }}
+                            >
+                                <input 
+                                    type="checkbox"
+                                />
+                                    Garansi (Barang/Jasa) 28 Oktober 2023 - 27 Oktober 2024
+                            </label>
+                        </div>
+
+                    </div>
+
+                    {/* 11. Jaminan */}
+                    <div
+                        className="col-sm-3"
+                    >
+                        11. Jaminan:
+                    </div>
+
+                    {/* 12.Addendum */}
+                    <div
+                        style={{
+                            padding: '0 12.5px'
+                        }}
+                    >
+                        12. Addendum
+                    </div>
+
+                    {/* A.Perihal */}
+                    <div
+                        style={{
+                            padding: '0 12.5px'
+                        }}
+                    >
+                        <div
+                            style={{
+                                marginBottom: '14px'
+                            }}
+                        >
+                            A. Perihal
+                        </div>
+                        <div
+                                        style={{
+                                            display: 'grid',
+                                            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                                            columnGap: 8
+                                        }}
+                                    >
+                                        <label
+                                            style={{
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                gap: 8
+                                       
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox" 
+                                                name="checked" 
+                                                value="parties"
+                                                style={{
+                                                    height: 20,
+                                                    width: 20
+                                                }}
+                                            />
+                                            Data Para Pihak
+                                        </label>
+                                        <label
+                                            style={{
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                gap: 8
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox" 
+                                                name="checked" 
+                                                value="payment_method"
+                                                style={{
+                                                    height: 20,
+                                                    width: 20
+                                                }}
+                                            />
+                                            Metode Pembayaran
+                                        </label>
+                                        <label
+                                                 style={{
+                                                    display: 'flex',
+                                                    flexWrap: 'wrap',
+                                                    gap: 8
+                                                }}
+                                        >
+                                            <input
+                                                type="checkbox" 
+                                                name="checked" 
+                                                value="fine" 
+                                                style={{
+                                                    height: 20,
+                                                    width: 20
+                                                }}
+                                            />
+                                            Denda
+                                        </label>
+                                        <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexWrap: 'wrap',
+                                                    gap: 8
+                                                }}
+                                        >
+                                            <input
+                                                type="checkbox" 
+                                                name="checked" 
+                                                value="account_number" 
+                                                style={{
+                                                    height: 20,
+                                                    width: 20
+                                                }}
+                                            />
+                                            Nomor Rekening
+                                        </label>
+                        </div>   
+                        <div
+                                        style={{
+                                            display: 'grid',
+                                            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                                            columnGap: 8
+                                        }}
+                                    >
+                                        <label
+                                             style={{
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                gap: 8
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox" 
+                                                name="checked" 
+                                                value="job_price"
+                                                style={{
+                                                    height: 20,
+                                                    width: 20
+                                                }}
+                                            />
+                                            Harga Pekerjaan
+                                        </label>
+                                        <label
+                                             style={{
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                gap: 8
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox" 
+                                                name="checked" 
+                                                value="time_period" 
+                                                style={{
+                                                    height: 20,
+                                                    width: 20
+                                                }}
+                                            />
+                                            Jangka Waktu
+                                        </label>
+                                        <label
+                                             style={{
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                gap: 8
+                                       
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox" 
+                                                name="checked" 
+                                                value="guarantee" 
+                                                style={{
+                                                    height: 20,
+                                                    width: 20
+                                                }}
+                                            />
+                                            Jaminan
+                                        </label>
+                        </div>
+                    </div>
+
+                    {/* B.Nilai Addendum */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <div
+                            className="col-sm-5"
+                        >
+                            B. Nilai Addendum (exc PPN)
+                        </div>
+                        <input 
+                            className="col-sm-7"
+                            style={{
+                                padding: '10px 12px',
+                                fontSize: '14px',
+                                fontWeight: 500,
+                                color: '#403f3f',
+                                borderRadius: 4
+                            }}
+                            value={"Rp 121.100.000,00"}
+                        />
+                    </div>
+
+                    {/* C.Nilai Perjanjian Setelah Addendum (exc PPN) */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <div
+                            className="col-sm-5"
+                        >
+                            C. Nilai Perjanjian Setelah Addendum (exc PPN)
+                        </div>
+                        <input 
+                            className="col-sm-7"
+                            type="text"
+                            style={{
+                                padding: '10px 12px',
+                                fontSize: '14px',
+                                fontWeight: 500,
+                                color: '#403f3f',
+                                borderRadius: 4
+                            }}
+                            value={"Rp 7.300.900.000,00"}
+                        />
+                    </div>
+
+                    {/* D.Kesimpulan */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexWrap: 'wrap'
+                        }}
+                    >
+                        <div
+                            className="col-sm-5"
+                        >
+                            D. Kesimpulan
+                        </div>
+                        <input 
+                            className="col-sm-7"
+                            
+                            type="text"
+                            style={{
+                                padding: '10px 12px',
+                                fontSize: '14px',
+                                fontWeight: 500,
+                                color: '#403f3f',
+                                borderRadius: 4
+                            }}
+                            value={"Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal"}
+                        />
+
+              
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexWrap: 'wrap'
+                        }}
+                    >
+                        <div
+                        className="col-sm-5"
+                        >
+                        </div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                gap: 20
+                            }}
+                        >
+                                <label
+                                    style={{
+                                        display: 'flex',
+                                        gap: 8
+                                    }}
+                                >
+                                    <input 
+                                        type="checkbox"
+                                    />
+                                    Justifikasi
+                                </label>
+                                <label
+                                    style={{
+                                        display: 'flex',
+                                        gap: 8
+                                    }}
+                                >
+                                    <input
+                                        type="checkbox"
+                                    />
+                                    Justifikasi & Radir
+                                </label>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </DialogGlobal>
+
+            <DialogGlobal
+              ref={openCloseAddReviewer}
+              isCancel={false}
+              isSubmit={false}
+              yesButton={false}
+              noButton={false}
+              maxWidth={'sm'}
+            >
+
+                <div
+                    style={{
+                        padding: '0 17%'
+                    }}
+                >
+                    
+                    <h1
+                        style={{
+                            marginBottom: 40,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            textAlign: 'center'
+                        }}
+                    >
+                        Tambah Reviewer User
+                    </h1>
+                
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 14
+                        }}
+                    >
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Name
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"User 4"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Jabatan
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"Procurement Staff"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Email
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"user.4@geodipa.co.id"}
+                        />
+                    </div>
+
+                    </div>
+
+
+                </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            marginTop: 52,
+                            padding: '0 7%'
+                        }}
+                    >
+                        <Button>
+                            Save
+                        </Button>
+                    </div>
+
+
+            </DialogGlobal>
+
+            <DialogGlobal
+                  ref={openCloseAddAttachment}
+                  isCancel={false}
+                  isSubmit={true}
+                  onYes={setPush}
+            >
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 14
+                    }}
+                >
+                      <Row>
+                          <Col md={6}>
+                              Nama Lampiran
+                              <input 
+                                    value={"Lampiran 3"}
+                                    style={{
+                                        padding: 8,
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        width: '100%'
+                                    }}
+                              />
+                          </Col>
+                      </Row>
+
+                      <Row>
+                        <Col md={12}>
+                            Pilih File
+                            <div
+                                style={{
+                                    padding: 8,
+                                    border: 1,
+                                    borderStyle: 'solid',
+                                    borderColor: '#8c8a8a',
+                                    opacity: .8,
+                                    borderRadius: 4
+                                }}
+                            >
+                                <a
+                                    style={{
+                                        color: '#3699ff',
+                                        fontSize: 12,
+                                        fontWeight: 400
+                                    }}
+                                >
+                                    001.KTR-DNG1.PBJ-GDE-I-2022.Lamp-2.Perjanjian.Admin_Zulfiqur_Rahman.07-08-2022 1437.V0_ADD.docx
+                                </a>
+                            </div>
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <Col>
+                            Komentar*
+                            <div>
+                                <textarea
+                                    name="comment"
+                                    value={"Terlampir draft addendum kontrak, mohon user untuk direview"}
+                                    rows="4"
+                                    className="form-control"
+                                ></textarea>
+                            </div>
+                        </Col>
+                      </Row>
+              </div>
+            </DialogGlobal>
+
+            {/* unduh approval user */}
+            <DialogGlobal
+              ref={openCloseDownloadUser}
+              isCancel={false}
+              isSubmit={false}
+              maxWidth={'xs'}
+            >
+              
+              <div className="d-flex justify-content-center">
+                <img src={toAbsoluteUrl("/media/svg/icons/All/Vector.png")} />
+              </div>
+
+              <p className="text-center mt-3" style={{fontWeight: 600}}>
+                Unduh hasil approval user telah berhasil
+              </p>
+
+            </DialogGlobal>
+
+            {/* unduh approval vendor */}
+            <DialogGlobal
+              ref={openCloseDownloadVendor}
+              isCancel={false}
+              isSubmit={false}
+              maxWidth={'xs'}
+            >
+              
+              <div className="d-flex justify-content-center">
+                <img src={toAbsoluteUrl("/media/svg/icons/All/Vector.png")} />
+              </div>
+
+              <p className="text-center mt-3" style={{fontWeight: 600}}>
+                Unduh hasil approval vendor telah berhasil
+              </p>
+
+            </DialogGlobal>
+
         <Subheader 
             text={
-            // dataContractById
-            // null
-            // ? 
             `No Dokumen Addendum : ADD-01/015.PJ/PST.100-GDE/I/2023` 
             }
         />
@@ -190,7 +1246,7 @@ const DraftAddendumPage = () => {
             height: 74, 
             fontSize: 14, 
             display: 'grid', 
-            gridTemplateColumns: "repeat(2, minmax(0, 1fr))" 
+            gridTemplateColumns: "repeat(5, minmax(0, 1fr))" 
           }}
         >
           
@@ -212,7 +1268,7 @@ const DraftAddendumPage = () => {
                 fontSize: 14,
                 color: sequence === 0 ? '#3699ff' : '#8c8a8a'
             }}>
-                Form Parameter Addendum
+                Form Parameter
             </h1>
 
           </div>
@@ -235,12 +1291,70 @@ const DraftAddendumPage = () => {
                 }}>Template Klausul</h1>
           </div>
 
+          <div
+            className="d-flex flex-column align-items-center"
+             style={{
+                backgroundColor:'white', 
+                flexGrow: 1, 
+                cursor: 'pointer',
+                borderTopRightRadius: 14,
+                gap: 4
+            }}
+            onClick={() => setSequence(2)}
+          >
+            <SVG src={toAbsoluteUrl("/media/svg/icons/All/review.svg")} />
+            <h1 style={{
+                fontSize: 14,
+                color: sequence === 2 ? '#3699ff' : '#8c8a8a'
+                }}>Review</h1>
+          </div>
+
+          <div
+            className="d-flex flex-column align-items-center"
+             style={{
+                backgroundColor:'white', 
+                flexGrow: 1, 
+                cursor: 'pointer',
+                borderTopRightRadius: 14,
+                gap: 4
+            }}
+            onClick={() => setSequence(3)}
+          >
+            <SVG src={toAbsoluteUrl("/media/svg/icons/All/approval.svg")} />
+            <h1 style={{
+                fontSize: 14,
+                color: sequence === 3 ? '#3699ff' : '#8c8a8a'
+                }}>Approval</h1>
+          </div>
+
+          <div
+            className="d-flex flex-column align-items-center"
+             style={{
+                backgroundColor:'white', 
+                flexGrow: 1, 
+                cursor: 'pointer',
+                borderTopRightRadius: 14,
+                gap: 4
+            }}
+            onClick={() => setSequence(4)}
+          >
+            <SVG src={toAbsoluteUrl("/media/svg/icons/All/distribusi.svg")} />
+            <h1 style={{
+                fontSize: 14,
+                color: sequence === 4 ? '#3699ff' : '#8c8a8a'
+                }}>Distribusi</h1>
+          </div>
+
         </div>
                 
         <div 
-                                    style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
-                                >
-                                    <div className="col-md-4">
+            style={{
+                display: 'flex', 
+                columnGap: 40, 
+                flexWrap: 'wrap'
+            }}
+        >
+            <div className="col-md-4">
                                         <div className="form-group row">
                                             <label
                                                 htmlFor="agreement_number"
@@ -275,8 +1389,9 @@ const DraftAddendumPage = () => {
                                                 value={'8000007360'}
                                             />
                                         </div>
-                                    </div>
-                                    <div className="col-md-7">
+            </div>
+
+            <div className="col-md-7">
                                         <div className="form-group row">
                                             <label
                                                 htmlFor="procurement_title"
@@ -317,7 +1432,8 @@ const DraftAddendumPage = () => {
                                                 value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
                                             />
                                         </div>
-                                    </div>
+            </div>
+
         </div>
 
         <div 
@@ -546,21 +1662,21 @@ const DraftAddendumPage = () => {
 
         {sequence === 0 &&            
             <>
-            <div
-                style={{
-                    backgroundColor: 'white',
-                    borderTopLeftRadius: 14,
-                    borderTopRightRadius: 14
-                }}
-            >
-                <Tabs
-                    tabActive={tabActive}
-                    handleChange={handleChangeTab}
-                    tabLists={TabLists}
-                    variant="scrollable"
-                />
-            </div>
-            <FormParameter currentActiveTab={tabActive} />
+                <div
+                    style={{
+                        backgroundColor: 'white',
+                        borderTopLeftRadius: 14,
+                        borderTopRightRadius: 14
+                    }}
+                >
+                    <Tabs
+                        tabActive={tabActive}
+                        handleChange={handleChangeTab}
+                        tabLists={TabLists}
+                        variant="scrollable"
+                    />
+                </div>
+                <FormParameter currentActiveTab={tabActive} />
             </>
         }
 
@@ -599,28 +1715,28 @@ const DraftAddendumPage = () => {
               </Button>
                     </div>
                     <div
-                                                style={{
-                                                    border: 1,
-                                                    borderStyle: 'solid',
-                                                    borderColor: '#8C8A8A',
-                                                    borderRadius: 4,
-                                                    padding: '12px 10px',
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    alignItems: 'center'
-                                                }}
+                        style={{
+                            border: 1,
+                            borderStyle: 'solid',
+                            borderColor: '#8C8A8A',
+                            borderRadius: 4,
+                            padding: '12px 10px',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}
                     >
-                               <span>Template Word Lampiran 1</span>
-                               <Button
+                            <span>Template Word Lampiran 1</span>
+                            <Button
                 style={{
                   minWidth: 100
                 }}
               >
                 Download
-                                </Button>
+                            </Button>
                     </div>
                     <div
-                                                style={{
+                        style={{
                                                     border: 1,
                                                     borderStyle: 'solid',
                                                     borderColor: '#8C8A8A',
@@ -629,18 +1745,1773 @@ const DraftAddendumPage = () => {
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center'
-                                                }}
+                        }}
                     >
-                               <span>Template Word Lampiran 2</span>
-                               <Button
+                        <span>Template Word Lampiran 2</span>
+                        <Button
                 style={{
                   minWidth: 100
                 }}
               >
                 Download
-              </Button>
+                        </Button>
                     </div>
                 </div>
+            </>
+        }
+
+        {sequence === 2 &&
+            <>
+
+                <div 
+                style={{
+                    height: 74, 
+                    fontSize: 14, 
+                    display: 'grid', 
+                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))" 
+                }}
+                >
+                
+                <div
+                    className="d-flex align-items-center justify-content-center"
+                    style={{
+                        backgroundColor: reviewSequence === 0 ? '#3699ff' : 'white',
+                        color: reviewSequence === 0 ? 'white' : 'black',
+                        flexGrow: 1, 
+                        borderTopLeftRadius: 14, 
+                        cursor: 'pointer'
+                    }}
+                    onClick={() => setReviewSequence(0)}
+                >
+                    
+                    <h1 style={{
+                        fontSize: 14
+                        }}>
+                        Reviewer
+                    </h1>
+
+                </div>
+                
+                <div
+                    className="d-flex align-items-center justify-content-center"
+                    style={{
+                        backgroundColor: reviewSequence === 1 ? '#3699ff' : 'white',
+                        color: reviewSequence === 1 ? 'white' : 'black',
+                        flexGrow: 1, 
+                        cursor: 'pointer'
+                    }}
+                    onClick={() => setReviewSequence(1)}
+                >
+                    <h1 
+                        style={{
+                            fontSize: 14
+                        }}
+                    >
+                        Proses Review
+                    </h1>
+                </div>
+
+                <div
+                    className="d-flex align-items-center justify-content-center"
+                    style={{
+                    backgroundColor: reviewSequence === 2 ? '#3699ff' : 'white',
+                    color: reviewSequence === 2 ? 'white' : 'black',
+                    flexGrow: 1,
+                    borderTopRightRadius: 14, cursor: 'pointer' 
+                    }}
+                    onClick={() => setReviewSequence(2)}
+                >
+                    <h1 
+                        style={{
+                            fontSize: 14
+                        }}
+                    >
+                    Final Draft
+                    </h1>
+                    
+                </div>
+
+                </div>
+
+               {reviewSequence === 0 &&
+                    <div
+                    style={{
+                        padding: 28,
+                        backgroundColor: 'white'
+                    }}
+                >
+                        <div
+                            style={{
+                                border: 1,
+                                borderColor: 'black',
+                                borderStyle: 'solid',
+                                padding: '14px 28px',
+                                backgroundColor: 'white',
+                                borderRadius: 14
+                            }}
+                        >
+
+                            <h1
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: 600
+                                }}
+                            >
+                                Reviewer Addendum
+                            </h1>
+
+                            <br
+                                style={{
+                                    border: 1,
+                                    borderColor: 'black',
+                                    borderStyle: 'solid'
+                                }}
+                            />
+
+                            <h1
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: 600
+                                }}
+                            >
+                                Admin Kontrak
+                            </h1>
+
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                                    gap: 28,
+                                    margin: '14px 0px 28px 0px'
+                                }}
+                            >
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 4
+                                    }}
+                                >
+                                    <span>Nama</span>
+                                    <input 
+                                        type="text" 
+                                        value={"Zulfiqur Rahman"}
+                                        style={{
+                                            borderRadius: 4,
+                                            padding: 8,
+                                            backgroundColor: '#e8f4fb'
+                                        }}
+                                    />
+                                </div>
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 4
+                                    }}
+                                >
+                                    <span>Jabatan</span>
+                                    <input 
+                                        type="text" 
+                                        value={"Purchasing Staff"} 
+                                        style={{
+                                            borderRadius: 4,
+                                            padding: 8,
+                                            backgroundColor: '#e8f4fb'
+                                        }}
+                                    />
+                                </div>
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 4
+                                    }}
+                                >
+                                    <span>Email</span>
+                                    <input
+                                        type="text" 
+                                        value={"zulfiqur.r@geodipa.co.id"} 
+                                        style={{
+                                            borderRadius: 4,
+                                            padding: 8,
+                                            backgroundColor: '#e8f4fb'
+                                        }}
+                                    />
+                                </div>
+
+
+                            </div>
+
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between'
+                                }}
+                            >
+                                <h1
+                                    style={{
+                                        fontSize: 16,
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    User
+                                </h1>
+                                <Button
+                                    // className="btn btn-outline-danger"
+                                    //   variant="outlined"
+                                    size="medium"
+                                    onClick={showAddReviewer}
+                                >
+                                    <div>
+                                        <span>
+                                            Reviewer User
+                                        </span>
+                                    </div>
+                                </Button>
+                            </div>
+
+                            <table>
+                                    <tr>
+                                        <th>
+                                            No
+                                        </th>
+                                        <th>
+                                            Nama
+                                        </th>
+                                        <th>
+                                            Jabatan
+                                        </th>
+                                        <th>
+                                            Email
+                                        </th>
+                                        <th>
+                                            Aksi
+                                        </th>
+                                    </tr>
+
+                                    {TableListsUser && TableListsUser.map((item, index) => {
+
+                                        return(
+                                        <>                                
+                                            <tr key={index}>
+                                                <td>
+                                                    {index+1}
+                                                </td>
+                                                <td>
+                                                    {item.name}
+                                                </td>
+                                                <td>
+                                                    {item.position}
+                                                </td>
+                                                <td>
+                                                    {item.email}
+                                                </td>
+                                                <td>
+                                                    {actionButton}
+                                                </td>
+                                            </tr>
+                                        </>)
+                                    })}
+
+                            </table>
+
+
+                            <table>
+                                    
+                                    <tr>
+                                        <th>
+                                            No
+                                        </th>
+                                        <th>
+                                            Nama
+                                        </th>
+                                        <th>
+                                            Jabatan
+                                        </th>
+                                        <th>
+                                            Email
+                                        </th>
+                                        <th>
+                                            Aksi
+                                        </th>
+                                    </tr>
+
+                                    {TableListsVendor && TableListsVendor.map((item, index) => {
+                                    return(
+                                        <>                                
+                                                <tr key={index}>
+                                                    <td>
+                                                        {index+1}
+                                                    </td>
+                                                    <td>
+                                                        {item.name}
+                                                    </td>
+                                                    <td>
+                                                        {item.position}
+                                                    </td>
+                                                    <td>
+                                                        {item.email}
+                                                    </td>
+                                                    <td>
+                                                        {actionButton}
+                                                    </td>
+                                                </tr>
+                                        </>
+                                    )
+                                    })}
+
+                            </table>
+
+                            <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
+                                        marginTop: 40
+                                    }}
+                                >
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                    >
+                                        Submit
+                                    </Button>
+                            </div>
+
+                        </div>
+                    </div>
+               }
+
+               {reviewSequence === 1 &&
+
+                    <>
+                        <Tabs
+                            tabActive={reviewProcessTabActive}
+                            handleChange={handleChangeReviewProcessTab}
+                            tabLists={reviewProcessTabLists}
+                            variant="scrollable"
+                            grid={true}
+                        />
+
+                        <div
+                            style={{
+                                padding: 28,
+                                backgroundColor: 'white'
+                            }}
+                        >
+
+
+                            {reviewProcessTabActive === 0 &&
+                                <div
+                                    style={{
+                                        border: 1,
+                                        borderColor: 'black',
+                                        borderStyle: 'solid',
+                                        borderRadius: 14,
+                                        padding: '14px 28px',
+                                        backgroundColor: 'white',
+                                    }}
+                                >
+                                                               
+                                    <h1
+                                                                   style={{
+                                                                       fontSize: 16,
+                                                                       fontWeight: 600
+                                                                   }}
+                                                               >
+                                                                   Form Review Addendum Kontrak
+                                    </h1>
+                           
+                                    <br
+                                        style={{
+                                                                       border: 1,
+                                                                       borderColor: 'black',
+                                                                       borderStyle: 'solid'
+                                        }}
+                                    />
+                           
+                                    <Formik
+                                        initialValues={{
+                                            links: linksGroup,
+                                        }}
+                                        onSubmit={async (values, actions) => {
+                                            alert(JSON.stringify(values, null, 2));
+                                        }}
+                                    >
+                                                           {({ values }) => 
+                                                       
+                                                           (
+                                                       
+                                                           <>
+                           
+                                                           <FieldArray name="links">
+                                                               
+                                                               {({ push, remove }) => (
+                           
+                                                               <Grid container spacing={2} sx={{ marginTop: 2, paddingX: 2 }}>
+                                                       
+                                                                   {values.links.map((_, index) => (
+                                                                   <>
+                           
+                                                                       <Grid item md={10}>
+                                                                       <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                                                           {_.documentname}
+                                                                       </p>                                 <div                    className="col-sm-12"                    style={{
+                                                                            color: _.documentfileupload === '' ? 'black' : '#3699ff',
+                                                                            padding: '10px 14px',
+                                                                            borderRadius: 4,
+                                                                            backgroundColor: '#e8f4fb',
+                                                                            border: 1,
+                                                                            borderStyle: 'solid',
+                                                                            borderColor: '#8c8a8a',
+                                                                            opacity: .8,
+                                                                            fontSize: 10,
+                                                                            fontWeight: 400
+                                                                        }}
+                                                                        >
+                                                                            <a
+                                                                                        href=""
+                                                                                    >
+                                                                                        {_.documentfileupload === '' ? 'tidak ada file' : _.documentfileupload}
+                                                                            </a>
+                                                                        </div>
+                                                                       </Grid>
+                                                                       {index > 2 && (
+                                                                       <Grid item md={2} alignItems="center" justifyContent="center">
+                           
+                                                                           <p style={{fontWeight: 500, fontSize:14, marginBottom: 14}}>
+                                                                       
+                                                                           </p>
+                                                                           <Button variant="outlined"  onClick={() => remove(index)}>
+                                                                           Delete
+                                                                           </Button>
+                           
+                                                                       </Grid>
+                                                                       )}
+                                                                       <Grid item md={12}>
+                                                                           <h1
+                                                                               style={{
+                                                                                   fontWeight: 500,
+                                                                                   fontSize: 14
+                                                                               }}
+                                                                           >Komentar<span style={{
+                                                                               fontWeight: 500,
+                                                                               fontSize: 14,
+                                                                               color: '#dc0526'
+                                                                           }}>*</span>
+                                                                           </h1>
+                                                                       <Field 
+                                                                           name={`links.${index}.about`} 
+                                                                           component={TextAreaInput}
+                                                                           value={`${_.about}`}
+                                                                       />
+                                                                       </Grid>
+                           
+                                                                   </>
+                                                                   ))}
+                           
+                                                                   <Grid item xs={12}>
+                                                                   
+                                                                   {/* <Button
+                                                                       variant="outlined"
+                                                                       
+                                                                       onClick={() => push()}
+                                                                   >
+                                                                       Add Link
+                                                                   </Button> */}
+                           
+                                                                   <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
+                                                                       Klik Disini
+                                                                   </button>
+                           
+                                                                   </Grid>
+                           
+                                                               </Grid>
+                           
+                                                               )}
+                           
+                                                           </FieldArray>
+                                                           
+                                                           </>
+                                               
+                                                           )}
+                                    </Formik>
+                           
+                                    <div
+                                                                   style={{
+                                                                       display: 'flex',
+                                                                       flexDirection: 'column',
+                                                                       gap: 4,
+                                                                       marginBottom: 87
+                                                                   }}
+                                                               >
+                                                                   <h1
+                                                                       style={{
+                                                                           fontSize: 14,
+                                                                           fontWeight: 500
+                                                                       }}
+                                                                   >Version</h1>
+                                                                   <input 
+                                                                       className="col-sm-6"
+                                                                       value={"Versi 0"}
+                                                                       style={{
+                                                                           backgroundColor: '#e8f4fb',
+                                                                           padding: 8,
+                                                                           borderRadius: 4,
+                                                                           border: 1,
+                                                                           borderStyle: 'solid',
+                                                                           borderColor: '#8c8a8a',
+                                                                           opacity: .8
+                                                                       }}
+                                                                   />
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'flex-end',
+                                            gap : 20
+                                        }}
+                                    >
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={showAddChecklistAddendum}
+                                        >
+                                            Checklist Addendum Kontrak
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
+                           
+                                </div>
+                            }
+                            
+                            {reviewProcessTabActive === 1 &&                            
+                                <div
+                                    style={{
+                                        border: 1,
+                                        borderColor: 'black',
+                                        borderStyle: 'solid',
+                                        padding: '14px 28px',
+                                        backgroundColor: 'white',
+                                        borderRadius: 14
+                                    }}
+                                >
+                                    <h1
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Form Review Addendum Kontrak
+                                    </h1>
+
+                                    <br
+                                        style={{
+                                            border: 1,
+                                            borderColor: 'black',
+                                            borderStyle: 'solid'
+                                        }}
+                                    />
+
+                                <Formik
+                                    initialValues={{
+                                    links: linksGroup,
+                                    }}
+                                    onSubmit={async (values, actions) => {
+                                    alert(JSON.stringify(values, null, 2));
+                                    }}
+                            >
+                                {({ values }) => 
+                            
+                                (
+                            
+                                <>
+
+                                <FieldArray name="links">
+                                    
+                                    {({ push, remove }) => (
+
+                                    <Grid container spacing={2} sx={{ marginTop: 2, paddingX: 2 }}>
+                            
+                                        {values.links.map((_, index) => (
+                                        <>
+
+                                            <Grid item md={10}>
+                                            <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                                {_.documentname}
+                                            </p>
+                                                <UploadInput
+                                                    value={_.documentfileupload} 
+                                                    onChange={(e) => setLinksGroup({...linksGroup, 
+                                                    documentfileupload: { path: e.path } })}
+                                                />
+                                            </Grid>
+                                            {index > 2 && (
+                                            <Grid item md={2} alignItems="center" justifyContent="center">
+
+                                                <p style={{fontWeight: 500, fontSize:14, marginBottom: 14}}>
+                                            
+                                                </p>
+                                                <Button variant="outlined"  onClick={() => remove(index)}>
+                                                Delete
+                                                </Button>
+
+                                            </Grid>
+                                            )}
+                                            <Grid item md={12}>
+                                                <h1
+                                                    style={{
+                                                        fontWeight: 500,
+                                                        fontSize: 14
+                                                    }}
+                                                >Komentar<span style={{
+                                                    fontWeight: 500,
+                                                    fontSize: 14,
+                                                    color: '#dc0526'
+                                                }}>*</span>
+                                                </h1>
+                                            <Field 
+                                                name={`links.${index}.about`} 
+                                                component={TextAreaInput}
+                                                value={`${_.about}`}
+                                            />
+                                            </Grid>
+
+                                        </>
+                                        ))}
+
+                                        <Grid item xs={12}>
+                                        
+                                        {/* <Button
+                                            variant="outlined"
+                                            
+                                            onClick={() => push()}
+                                        >
+                                            Add Link
+                                        </Button> */}
+
+                                        <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
+                                            Klik Disini
+                                        </button>
+
+                                        </Grid>
+
+                                    </Grid>
+
+                                    )}
+
+                                </FieldArray>
+                                
+                                </>
+                    
+                                )}
+                                </Formik>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 4,
+                                            marginBottom: 87
+                                        }}
+                                    >
+                                        <h1
+                                            style={{
+                                                fontSize: 14,
+                                                fontWeight: 500
+                                            }}
+                                        >Version</h1>
+                                        <input 
+                                            className="col-sm-6"
+                                            value={"Versi 0"}
+                                            style={{
+                                                backgroundColor: '#e8f4fb',
+                                                padding: 8,
+                                                borderRadius: 4,
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderColor: '#8c8a8a',
+                                                opacity: .8
+                                            }}
+                                        />
+                                    </div>
+
+                                </div>
+                            }
+
+
+                            {reviewProcessTabActive === 2 &&
+                                <>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 24
+                                        }}
+                                    >
+                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                gap: 14
+                                                            }}
+                                                        >
+                                                            <select
+                                                                style={{
+                                                                    padding: '10px 12px',
+                                                                    backgroundColor: '#e8f4fb',
+                                                                    borderRadius: 4,
+                                                                    border: 1,
+                                                                    borderStyle: 'solid',
+                                                                    borderColor: '#8c8a8a',
+                                                                    opacity: .8
+                                                                }}
+                                                            >
+                                                                <option>
+                                                                    Versi 0
+                                                                </option>
+                                                            </select>
+                                                            <h1
+                                                                style={{
+                                                                    fontSize: 10,
+                                                                    fontWeight: 400,
+                                                                    color: '#403f3f'
+                                                                }}
+                                                            >
+                                                                diupload 07-08-2022
+                                                            </h1>
+                                        </div>
+
+                                        {userReviewData &&
+                                            userReviewData.map((item, index) => (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            border: 1,
+                                                            borderColor: 'black',
+                                                            borderStyle: 'solid',
+                                                            padding: '14px 28px',
+                                                            backgroundColor: 'white',
+                                                            borderRadius: 14,
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            gap: 14
+                                                        }}
+                                                    >
+
+                                                        <h1
+                                                            style={{
+                                                                fontSize: 16,
+                                                                fontWeight: 600
+                                                            }}
+                                                        >
+                                                            {item.agreement_name}
+                                                        </h1>
+
+                                                        <h1
+                                                            style={{
+                                                                fontSize: 12,
+                                                                fontWeight: 500,
+                                                                color: '#2e1f22'
+                                                            }}
+                                                        >
+                                                            Terlampir draft addendum kontrak, mohon user untuk direview
+                                                        </h1>
+
+                                                        <input
+                                                            className="col-sm-12"
+                                                            style={{
+                                                                backgroundColor: '#e8f4fb',
+                                                                padding: '10px 14px',
+                                                                color: '#3699ff',
+                                                                borderRadius: 4,
+                                                                border: 1,
+                                                                borderStyle: 'solid',
+                                                                borderColor: '#8c8a8a',
+                                                                opacity: .8
+                                                            }}
+                                                            value={item.agreement_file_name}
+                                                        />
+
+                                                            <h1
+                                                                style={{
+                                                                    fontSize: 12,
+                                                                    fontWeight: 500
+                                                                }}
+                                                            >
+                                                                Komentar User
+                                                            </h1>
+
+                                                        <div
+                                                            style={{
+                                                                maxHeight: 160,
+                                                                overflowY: 'scroll',
+                                                                padding:'24px 31px 24px 0px',
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                gap: 14
+                                                            }}
+                                                        >
+                                                            {item.userComment &&
+
+                                                            item.userComment.map((itm, idx) => (
+                                                                <>
+                                                                    
+                                                                    <div
+                                                                        style={{
+                                                                            display: 'flex',
+                                                                            flexDirection: 'column',
+                                                                            gap: 10
+                                                                        }}
+                                                                    >
+
+                                                                        <div
+                                                                            style={{
+                                                                                display: 'flex',
+                                                                                flexDirection: 'column',
+                                                                                gap: 4,
+                                                                            }}
+                                                                        >
+                                                                            <div>
+                                                                                {itm.name}
+                                                                                ({itm.position})
+                                                                            </div>
+                                                                            <div
+                                                                                style={{
+                                                                                    color: itm.reviewStatus === 'Setuju' ? '#14b571' : '#dc0526'
+                                                                                }}
+                                                                            >
+                                                                                Direview ({itm.reviewStatus}) : {itm.date}
+                                                                            </div>
+                                                                            <div>
+                                                                                <input
+                                                                                    className="col-sm-6"
+                                                                                    style={{
+                                                                                        padding: 10,
+                                                                                        borderRadius: 4,
+                                                                                        border: 1,
+                                                                                        borderStyle: 'solid',
+                                                                                        borderColor: '#8c8a8a',
+                                                                                        opacity: .8,
+                                                                                        fontSize: 10,
+                                                                                        fontWeight: 400
+                                                                                    }}
+                                                                                    value={itm.comment}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                
+                                                                        <div                    className="col-sm-12"                       style={{
+                                                                                        color: itm.file === '' ? 'black' : '#3699ff',
+                                                                                        padding: '10px 14px',
+                                                                                        borderRadius: 4,
+                                                                                        backgroundColor: '#e8f4fb',
+                                                                                        border: 1,
+                                                                                        borderStyle: 'solid',
+                                                                                        borderColor: '#8c8a8a',
+                                                                                        opacity: .8,
+                                                                                        fontSize: 10,
+                                                                                        fontWeight: 400
+                                                                                    }}
+                                                                                >
+                                                                                    <a
+                                                                                        href=""
+                                                                                    >
+                                                                                        {itm.file === '' ? 'tidak ada file' : itm.file}
+                                                                                    </a>
+                                                                        </div>
+
+                                                                    </div>
+                                                                  
+                                                                </>
+                                                            ))}
+                                                        </div>
+
+                                                    </div>
+                                                </>
+                                            ))
+                                        }
+                                    </div>
+
+                                </>
+                            }
+
+                            {reviewProcessTabActive === 3 &&
+                                   <>
+
+                                   <div
+                                       style={{
+                                           display: 'flex',
+                                           flexDirection: 'column',
+                                           gap: 24
+                                       }}
+                                   >
+                                       <div
+                                                           style={{
+                                                               display: 'flex',
+                                                               alignItems: 'center',
+                                                               gap: 14
+                                                           }}
+                                                       >
+                                                           <select
+                                                               style={{
+                                                                   padding: '10px 12px',
+                                                                   backgroundColor: '#e8f4fb',
+                                                                   borderRadius: 4,
+                                                                   border: 1,
+                                                                   borderStyle: 'solid',
+                                                                   borderColor: '#8c8a8a',
+                                                                   opacity: .8
+                                                               }}
+                                                           >
+                                                               <option>
+                                                                   Versi 0
+                                                               </option>
+                                                           </select>
+                                                           <h1
+                                                               style={{
+                                                                   fontSize: 10,
+                                                                   fontWeight: 400,
+                                                                   color: '#403f3f'
+                                                               }}
+                                                           >
+                                                               diupload 07-08-2022
+                                                           </h1>
+                                       </div>
+
+                                       {userReviewData &&
+                                           userReviewData.map((item, index) => (
+                                               <>
+                                                   <div
+                                                       style={{
+                                                           border: 1,
+                                                           borderColor: 'black',
+                                                           borderStyle: 'solid',
+                                                           padding: '14px 28px',
+                                                           backgroundColor: 'white',
+                                                           borderRadius: 14,
+                                                           display: 'flex',
+                                                           flexDirection: 'column',
+                                                           gap: 14
+                                                       }}
+                                                   >
+
+                                                       <h1
+                                                           style={{
+                                                               fontSize: 16,
+                                                               fontWeight: 600
+                                                           }}
+                                                       >
+                                                           {item.agreement_name}
+                                                       </h1>
+
+                                                       <h1
+                                                           style={{
+                                                               fontSize: 12,
+                                                               fontWeight: 500,
+                                                               color: '#2e1f22'
+                                                           }}
+                                                       >
+                                                           Terlampir draft addendum kontrak, mohon user untuk direview
+                                                       </h1>
+
+                                                       <input
+                                                           className="col-sm-12"
+                                                           style={{
+                                                               backgroundColor: '#e8f4fb',
+                                                               padding: '10px 14px',
+                                                               color: '#3699ff',
+                                                               borderRadius: 4,
+                                                               border: 1,
+                                                               borderStyle: 'solid',
+                                                               borderColor: '#8c8a8a',
+                                                               opacity: .8
+                                                           }}
+                                                           value={item.agreement_file_name}
+                                                       />
+
+                                                           <h1
+                                                               style={{
+                                                                   fontSize: 12,
+                                                                   fontWeight: 500
+                                                               }}
+                                                           >
+                                                               Komentar User
+                                                           </h1>
+
+                                                       <div
+                                                           style={{
+                                                               maxHeight: 160,
+                                                               overflowY: 'scroll',
+                                                               padding:'24px 31px 24px 0px',
+                                                               display: 'flex',
+                                                               flexDirection: 'column',
+                                                               gap: 14
+                                                           }}
+                                                       >
+                                                           {item.userComment &&
+
+                                                           item.userComment.map((itm, idx) => (
+                                                               <>
+                                                                   
+                                                                   <div
+                                                                       style={{
+                                                                           display: 'flex',
+                                                                           flexDirection: 'column',
+                                                                           gap: 10
+                                                                       }}
+                                                                   >
+
+                                                                       <div
+                                                                           style={{
+                                                                               display: 'flex',
+                                                                               flexDirection: 'column',
+                                                                               gap: 4,
+                                                                           }}
+                                                                       >
+                                                                           <div>
+                                                                               {itm.name}
+                                                                               ({itm.position})
+                                                                           </div>
+                                                                           <div
+                                                                               style={{
+                                                                                   color: itm.reviewStatus === 'Setuju' ? '#14b571' : '#dc0526'
+                                                                               }}
+                                                                           >
+                                                                               Direview ({itm.reviewStatus}) : {itm.date}
+                                                                           </div>
+                                                                           <div>
+                                                                               <input
+                                                                                   className="col-sm-6"
+                                                                                   style={{
+                                                                                       padding: 10,
+                                                                                       borderRadius: 4,
+                                                                                       border: 1,
+                                                                                       borderStyle: 'solid',
+                                                                                       borderColor: '#8c8a8a',
+                                                                                       opacity: .8,
+                                                                                       fontSize: 10,
+                                                                                       fontWeight: 400
+                                                                                   }}
+                                                                                   value={itm.comment}
+                                                                               />
+                                                                           </div>
+                                                                       </div>
+                                                               
+                                                                       <div                    className="col-sm-12"                       style={{
+                                                                                       color: itm.file === '' ? 'black' : '#3699ff',
+                                                                                       padding: '10px 14px',
+                                                                                       borderRadius: 4,
+                                                                                       backgroundColor: '#e8f4fb',
+                                                                                       border: 1,
+                                                                                       borderStyle: 'solid',
+                                                                                       borderColor: '#8c8a8a',
+                                                                                       opacity: .8,
+                                                                                       fontSize: 10,
+                                                                                       fontWeight: 400
+                                                                                   }}
+                                                                               >
+                                                                                   <a
+                                                                                       href=""
+                                                                                   >
+                                                                                       {itm.file === '' ? 'tidak ada file' : itm.file}
+                                                                                   </a>
+                                                                       </div>
+
+                                                                   </div>
+                                                                 
+                                                               </>
+                                                           ))}
+                                                       </div>
+
+                                                   </div>
+                                               </>
+                                           ))
+                                       }
+                                   </div>
+
+                               </>
+                            }
+
+                        </div>
+
+
+                    </>
+
+               }
+
+               {reviewSequence === 2 &&
+                    <div                             
+                        style={{
+                                                        border: 1,
+                                                        borderColor: 'black',
+                                                        borderStyle: 'solid',
+                                                        borderRadius: 14,
+                                                        padding: '14px 28px',
+                                                        backgroundColor: 'white',
+                        }}
+                    >
+                                                                               
+                        <h1
+                                                                                    style={{
+                                                                                        fontSize: 16,
+                                                                                        fontWeight: 600
+                                                                                    }}
+                                                                                >
+                                                                                    Final Draft Addendum Kontrak
+                        </h1>
+                                            
+                        <br
+                            style={{
+                                                                                        border: 1,
+                                                                                        borderColor: 'black',
+                                                                                        borderStyle: 'solid'
+                            }}
+                        />
+                                            
+                        <Formik
+                                                            initialValues={{
+                                                                links: linksGroup,
+                                                            }}
+                                                            onSubmit={async (values, actions) => {
+                                                                alert(JSON.stringify(values, null, 2));
+                                                                }}
+                                                        >
+                                                            {({ values }) =>                
+                                                                (
+                                                                        
+                                                                    <>
+                                            
+                                <FieldArray name="links">
+                                                                                
+                                {({ push, remove }) => (
+                                    
+                                    <>
+                                        
+                                        <Grid 
+                                            container 
+                                            spacing={2} 
+                                            sx={{ marginTop: 2, paddingX: 2 }}
+                                        >                             
+                                                                                        
+                                            {values.links.map((_, index) => (
+                                                                                        <>
+                                                
+                                                                                            <Grid item md={10}>
+                                                                                            <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                                                                                {_.documentname}
+                                                                                            </p>                                 <div                    className="col-sm-12"                    style={{
+                                                                                                    color: _.documentfileupload === '' ? 'black' : '#3699ff',
+                                                                                                    padding: '10px 14px',
+                                                                                                    borderRadius: 4,
+                                                                                                    backgroundColor: '#e8f4fb',
+                                                                                                    border: 1,
+                                                                                                    borderStyle: 'solid',
+                                                                                                    borderColor: '#8c8a8a',
+                                                                                                    opacity: .8,
+                                                                                                    fontSize: 10,
+                                                                                                    fontWeight: 400
+                                                                                                }}
+                                                                                                >
+                                                                                                    <a
+                                                                                                                href=""
+                                                                                                            >
+                                                                                                                {_.documentfileupload === '' ? 'tidak ada file' : _.documentfileupload}
+                                                                                                    </a>
+                                                                                                </div>
+                                                                                            </Grid>
+                                                                                            {index > 3 && (
+                                                                                            <Grid item md={2} alignItems="center" justifyContent="center">
+                                                
+                                                                                                <p style={{fontWeight: 500, fontSize:14, marginBottom: 14}}>
+                                                                                            
+                                                                                                </p>
+
+                                                                                                <Button variant="outlined"  onClick={() => remove(index)}>
+                                                                                                Delete
+                                                                                                </Button>
+                                                
+                                                                                            </Grid>
+                                                                                            )}
+                                                                                            <Grid item md={12}>
+                                                                                                <h1
+                                                                                                    style={{
+                                                                                                        fontWeight: 500,
+                                                                                                        fontSize: 14
+                                                                                                    }}
+                                                                                                >Komentar<span style={{
+                                                                                                    fontWeight: 500,
+                                                                                                    fontSize: 14,
+                                                                                                    color: '#dc0526'
+                                                                                                }}>*</span>
+                                                                                                </h1>
+                                                                                            <Field 
+                                                                                                name={`links.${index}.about`} 
+                                                                                                component={TextAreaInput}
+                                                                                                value={`${_.about}`}
+                                                                                            />
+                                                                                            </Grid>
+                                                
+                                                                                        </>
+                                            ))}
+                                                
+                                                
+                                        </Grid>
+
+                                        <Grid item xs={12}>
+                                                                                                                        
+                                        <Button                                                                       variant="contained"
+                                            color="secondary"
+                                        // onClick={() => push()}
+                                            onClick={showAddAttachment}
+                                        >                                                                               Tambah Lampiran                                                                      </Button>
+                                                                                
+                                        <button 
+                                                                        className="d-none" 
+                                                                        ref={toPush} 
+                                                                        onClick={() => push(linksGroup)}
+                                                                    >
+                                                                        Klik Disini
+                                        </button>
+                                                                                
+                                        </Grid>
+
+                                    </>
+                                            
+                                )}
+                                            
+                            </FieldArray>
+
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end'
+                                }}
+                            >
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                >
+                                    Submit
+                                </Button>
+                            </div>
+                                                                            
+                            </>
+                                                                
+                            )}
+                        </Formik>                  
+                                           
+                    </div>
+               }
+
+                
+            </>
+        }
+
+        {sequence === 3 &&
+            <div
+                        style={{
+                            backgroundColor: 'white',
+                            padding: 28,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 28
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 14
+                            }}
+                        >
+                            Approval Vendor
+                            <div
+                                style={{
+                                    padding: '12px 10px',
+                                    border: '1px solid black'
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        color: '#3699ff',
+                                        fontSize: 14,
+                                        fontWeight: 500
+                                    }}
+                                >
+                                    001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
+                                </span>
+                            </div>
+                            <div>
+                                    Catatan Vendor
+                                    <textarea
+                                        rows="4"
+                                        className="form-control"
+                                    ></textarea>
+                            </div>
+                            <button
+                                onClick={showDownloadVendor}
+                                className="btn btn-primary"
+                                style={{
+                                    maxWidth: 270
+                                }}
+                            >
+                                Unduh Hasil Approval Vendor
+                            </button>
+                        </div>
+                        <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            gap: 14
+                                                        }}
+                        >
+                            Approval User
+                            <div
+                                style={{
+                                    padding: '12px 10px',
+                                    border: '1px solid black'
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        color: '#3699ff',
+                                        fontSize: 14,
+                                        fontWeight: 500
+                                    }}
+                                >
+                                    001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
+                                </span>
+                            </div>
+                            <div>
+                                Catatan User
+                                <textarea
+                                    rows="4"
+                                    className="form-control"
+                                    value={"sudah oke"}
+                                ></textarea>
+                            </div>
+                            <button
+                                onClick={showDownloadUser}
+                                className="btn btn-primary"
+                                style={{
+                                    maxWidth: 270
+                                }}
+                            >
+                                Unduh Hasil Approval User
+                            </button>
+                        </div>
+            </div>
+        }
+
+        {sequence === 4 &&
+            
+            <>
+                
+                <div
+                    style={{
+                        backgroundColor: 'white'
+                    }}
+                >
+                    <Tabs
+                        tabActive={distributionTabActive}
+                        handleChange={handleChangeDistributionTab}
+                        tabLists={distributionTabLists}
+                        variant="scrollable"
+                    />
+                </div>
+                
+               {distributionSequence === 0 &&               
+                    <div
+                        style={{
+                            backgroundColor: 'white',
+                            padding: 28,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 28
+                        }}
+                    >
+
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14
+                                    }}
+                                >
+                                    
+                                    <h1
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Hasil Persetujuan Vendor dan User
+                                    </h1>
+                                    <div
+                                        style={{
+                                            padding: '12px 10px',
+                                            border: '1px solid black'
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                color: '#3699ff',
+                                                fontSize: 14,
+                                                fontWeight: 500
+                                            }}
+                                        >
+                                            001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
+                                        </span>
+                                    </div>
+                                    {/* <div>
+                                        Catatan User
+                                        <textarea
+                                            rows="4"
+                                            className="form-control"
+                                            value={"sudah oke"}
+                                        ></textarea>
+                                    </div> */}
+                                    <button
+                                        onClick={showDownloadUser}
+                                        className="btn btn-primary"
+                                        style={{
+                                            maxWidth: 270
+                                        }}
+                                    >
+                                        Unduh Persetujuan
+                                    </button>
+                                </div>
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14
+                                    }}
+                                >
+                                    Distribusi Addendum Kontrak
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 4
+                                        }}
+                                    >
+                                        Pilihan Masukan
+                                        <div>
+                                            <select
+                                                style={{
+                                                    padding: '10px 12px',
+                                                    backgroundColor: '#e8f4fb',
+                                                    minWidth: 180,
+                                                    borderRadius: 4
+                                                }}
+                                            >
+                                                <option>
+                                                    Upload File
+                                                </option>
+                                                <option>
+                                                    Link
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                    <UploadInput />
+                                    </div>
+                                    <div>
+                                        *Catatan
+                                        <textarea
+                                            rows="4"
+                                            className="form-control"
+                                            value={"sudah oke"}
+                                        ></textarea>
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'flex-end'
+                                        }}
+                                    >
+                                        <button
+                                            onClick={showDownloadUser}
+                                            className="btn btn-primary"
+                                            style={{
+                                                maxWidth: 100
+                                            }}
+                                        >
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
+                    </div>
+               }
+
+               {distributionSequence === 1 &&
+                    <div
+                                        style={{
+                                            padding: 28,
+                                            backgroundColor: 'white'
+                                        }}
+                                    >
+                                            <div
+                                                style={{
+                                                    border: 1,
+                                                    borderColor: 'black',
+                                                    borderStyle: 'solid',
+                                                    padding: '14px 28px',
+                                                    backgroundColor: 'white',
+                                                    borderRadius: 14
+                                                }}
+                                            >
+                    
+                                                <h1
+                                                    style={{
+                                                        fontSize: 16,
+                                                        fontWeight: 600
+                                                    }}
+                                                >
+                                                    Reviewer Addendum
+                                                </h1>
+                    
+                                                <br
+                                                    style={{
+                                                        border: 1,
+                                                        borderColor: 'black',
+                                                        borderStyle: 'solid'
+                                                    }}
+                                                />
+                    
+                                                <h1
+                                                    style={{
+                                                        fontSize: 16,
+                                                        fontWeight: 600
+                                                    }}
+                                                >
+                                                    Admin Kontrak
+                                                </h1>
+                    
+                                                <div
+                                                    style={{
+                                                        display: 'grid',
+                                                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                                                        gap: 28,
+                                                        margin: '14px 0px 28px 0px'
+                                                    }}
+                                                >
+                    
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            gap: 4
+                                                        }}
+                                                    >
+                                                        <span>Nama</span>
+                                                        <input 
+                                                            type="text" 
+                                                            value={"Zulfiqur Rahman"}
+                                                            style={{
+                                                                borderRadius: 4,
+                                                                padding: 8,
+                                                                backgroundColor: '#e8f4fb'
+                                                            }}
+                                                        />
+                                                    </div>
+                    
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            gap: 4
+                                                        }}
+                                                    >
+                                                        <span>Jabatan</span>
+                                                        <input 
+                                                            type="text" 
+                                                            value={"Purchasing Staff"} 
+                                                            style={{
+                                                                borderRadius: 4,
+                                                                padding: 8,
+                                                                backgroundColor: '#e8f4fb'
+                                                            }}
+                                                        />
+                                                    </div>
+                    
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            gap: 4
+                                                        }}
+                                                    >
+                                                        <span>Email</span>
+                                                        <input
+                                                            type="text" 
+                                                            value={"zulfiqur.r@geodipa.co.id"} 
+                                                            style={{
+                                                                borderRadius: 4,
+                                                                padding: 8,
+                                                                backgroundColor: '#e8f4fb'
+                                                            }}
+                                                        />
+                                                    </div>
+                    
+                    
+                                                </div>
+                    
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between'
+                                                    }}
+                                                >
+                                                    <h1
+                                                        style={{
+                                                            fontSize: 16,
+                                                            fontWeight: 600
+                                                        }}
+                                                    >
+                                                        User
+                                                    </h1>
+                                                    <Button
+                                                        // className="btn btn-outline-danger"
+                                                        //   variant="outlined"
+                                                        size="medium"
+                                                        onClick={showAddReviewer}
+                                                    >
+                                                        <div>
+                                                            <span>
+                                                                Reviewer User
+                                                            </span>
+                                                        </div>
+                                                    </Button>
+                                                </div>
+                    
+                                                <table>
+                                                        <tr>
+                                                            <th>
+                                                                No
+                                                            </th>
+                                                            <th>
+                                                                Nama
+                                                            </th>
+                                                            <th>
+                                                                Jabatan
+                                                            </th>
+                                                            <th>
+                                                                Email
+                                                            </th>
+                                                            <th>
+                                                                Aksi
+                                                            </th>
+                                                        </tr>
+                    
+                                                        {TableListsUser && TableListsUser.map((item, index) => {
+                    
+                                                            return(
+                                                            <>                                
+                                                                <tr key={index}>
+                                                                    <td>
+                                                                        {index+1}
+                                                                    </td>
+                                                                    <td>
+                                                                        {item.name}
+                                                                    </td>
+                                                                    <td>
+                                                                        {item.position}
+                                                                    </td>
+                                                                    <td>
+                                                                        {item.email}
+                                                                    </td>
+                                                                    <td>
+                                                                        {actionButton}
+                                                                    </td>
+                                                                </tr>
+                                                            </>)
+                                                        })}
+                    
+                                                </table>
+                    
+                    
+                                                <table>
+                                                        
+                                                        <tr>
+                                                            <th>
+                                                                No
+                                                            </th>
+                                                            <th>
+                                                                Nama
+                                                            </th>
+                                                            <th>
+                                                                Jabatan
+                                                            </th>
+                                                            <th>
+                                                                Email
+                                                            </th>
+                                                            <th>
+                                                                Aksi
+                                                            </th>
+                                                        </tr>
+                    
+                                                        {TableListsVendor && TableListsVendor.map((item, index) => {
+                                                        return(
+                                                            <>                                
+                                                                    <tr key={index}>
+                                                                        <td>
+                                                                            {index+1}
+                                                                        </td>
+                                                                        <td>
+                                                                            {item.name}
+                                                                        </td>
+                                                                        <td>
+                                                                            {item.position}
+                                                                        </td>
+                                                                        <td>
+                                                                            {item.email}
+                                                                        </td>
+                                                                        <td>
+                                                                            {actionButton}
+                                                                        </td>
+                                                                    </tr>
+                                                            </>
+                                                        )
+                                                        })}
+                    
+                                                </table>
+                    
+                                                <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'flex-end',
+                                                            marginTop: 40
+                                                        }}
+                                                    >
+                                                        <Button
+                                                            variant="contained"
+                                                            color="secondary"
+                                                        >
+                                                            Submit
+                                                        </Button>
+                                                </div>
+                    
+                                            </div>
+                    </div>
+               }
+
             </>
         }
 
@@ -651,22 +3522,25 @@ const DraftAddendumPage = () => {
                 gap: 28,
                 padding: '2rem 2.25rem'
               }}
-            >
-              <Button
-                 style={{
-                  minWidth: 100
-                }}
-              >
-                Update
-              </Button>
-              <Button
+            >   
+            <button
+                className="btn btn-primary"
                 style={{
                   minWidth: 100
                 }}
-                onClick={() => setTabActive(tabActive < TabLists.length-1 ? tabActive+1 : tabActive)}
+              >
+                Update  
+              </button>
+              {/* disable pasal sebelum addnm */}
+              <button
+               className="btn btn-primary"
+                              style={{
+                                minWidth: 100
+                              }}
+                              onClick={() => setTabActive(tabActive < TabLists.length-1 ? tabActive+1 : tabActive)}
               >
                 Next
-              </Button>
+              </button>
             </div>
 
         </>

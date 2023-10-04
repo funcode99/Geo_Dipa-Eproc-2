@@ -21,47 +21,65 @@ const inputs = {
 const SupportingDocumentInput = ({
     title
 }) => {
+
+    console.log('isi title', title)
+
     return(
         <>
-            {title ? title?.map((item) => (
-                
-                <>
+            {title ? title?.map((item, index) => (
 
-                    <p style={{fontWeight: 500}}>
-                        {item.name}
-                    </p>
-              
-                    <Row>
-                        <Col md={4}>
-                            <p style={{fontWeight: 500, fontSize:14}}>
-                                No Dokumen
-                            </p>
-                            <RenderInput typeInput={""} placeholder={"Masukan No Dokumen Anda"} name={item.doc_num_field} />
-                        </Col>
-                        <Col md={3}>
-                            <p style={{fontWeight: 500, fontSize:14}}>
-                                Tanggal Dokumen
-                            </p>
-                            <RenderInput typeInput={"SelectDateInput"} name={item.date_field} />
-                        </Col>
-                        <Col md={5}>
-                            <p style={{fontWeight: 500, fontSize:14}}>
-                                Upload Dokumen
-                            </p>
-                            <RenderInput typeInput={"UploadInput"} name={item.doc_upload_field} />
-                        </Col>
-                    </Row>
+                <>                   
+
+                        <p style={{fontWeight: 500}}>
+                            {item.name}
+                        </p>
                 
-                    <Row className={"mb-9 mt-3 mx-2"}>
-                        Perihal
-                        <TextAreaInput className={"border border-dark form-control"} placeholder={""} />
-                    </Row>
-              
+                        <Row md={12}>
+                            <Col md={4}>
+                                <p style={{fontWeight: 500, fontSize:14}}>
+                                    No Dokumen
+                                </p>
+                                <RenderInput 
+                                    typeInput={""} 
+                                    placeholder={"Masukan No Dokumen Anda"} 
+                                    name={item.doc_num_field}
+                                />
+                            </Col>
+                            <Col md={3}>
+                                <p style={{fontWeight: 500, fontSize:14}}>
+                                    Tanggal Dokumen
+                                </p>
+                                <RenderInput 
+                                    typeInput={"SelectDateInput"} 
+                                    name={item.date_field}
+                                />
+                            </Col>
+                            <Col md={5}>
+                                <p style={{fontWeight: 500, fontSize:14}}>
+                                    Upload Dokumen
+                                </p>
+                                <RenderInput 
+                                    typeInput={"UploadInput"} 
+                                    name={item.doc_upload_field}
+                                />
+                            </Col>
+                        </Row>
+                    
+                        <Row className={"mb-9 mt-3 mx-2"}>
+                            Perihal
+                            <TextAreaInput className={"border border-dark form-control"} placeholder={""} />
+                        </Row>
+
+             
+
                 </>
 
             ))
                : 
-            <div>
+            
+            // kalo gak ada title render yang ini
+            <div
+            >
                     <Row>
                         <Col md={4}>
                             Nama Dokumen
@@ -87,6 +105,7 @@ const SupportingDocumentInput = ({
                         <TextAreaInput className={"border border-dark form-control"} placeholder={""} />
                     </Row>
             </div>
+
             }
         </>
     )

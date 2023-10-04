@@ -7,6 +7,10 @@ import {
 } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
+  grid: {
+      display: 'grid',
+      gridTemplateColumns: `repeat(4, minmax(0, 1fr))`
+  },
   root: {
     "& button.Mui-selected": {
       color: "#3699FF",
@@ -62,9 +66,12 @@ export default function Tabs({
   tabLists = initialTabLists,
   tabActive,
   handleChange,
+  grid,
   ...other
 }) {
   const classes = useStyles();
+
+  // console.log('isi grid', grid)
 
   return (
     <MuiTabs
@@ -75,8 +82,10 @@ export default function Tabs({
       variant="scrollable"
       scrollButtons="auto"
       classes={{ 
-        root: classes.root, 
-        indicator: classes.customIndicatorColor 
+        root: classes.root,
+        // MuiTabs-indicator
+        indicator: classes.customIndicatorColor,
+        flexContainer: grid === true ? classes.grid : ''
       }}
       TabIndicatorProps={{
         style: {
@@ -86,19 +95,19 @@ export default function Tabs({
       {...other}
     >
       {tabLists.map((item) => (
-        <MuiTab
-
-          key={item.id}
-          label={item.label}
-          icon={item.icon}
-          style={{
-            display: item?.display,
-          }}
-          classes={{
-            root: classes.tabRoot,
-            wrapper: item.addendum ? classes.tabWrapper2 : classes.tabWrapper1,
-          }}
-        />
+        // dilarang keras pake fragment disini
+          <MuiTab
+            key={item.id}
+            label={item.label}
+            icon={item.icon}
+            style={{
+              display: item?.display,
+            }}
+            classes={{
+              root: classes.tabRoot,
+              wrapper: item.addendum === true ? classes.tabWrapper2 : item.addendum === undefined ? '' : classes.tabWrapper1
+            }}
+          />
       ))}
     </MuiTabs>
   );

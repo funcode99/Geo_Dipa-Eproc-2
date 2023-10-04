@@ -298,6 +298,7 @@ const useStyles = makeStyles((theme) => ({
   
         <Paper className={classes.root}>
           <Tables
+            isAddendum={true}
             dataHeader={tableHeaderAddendum}
             handleParams={handleFilter}
             err={false}

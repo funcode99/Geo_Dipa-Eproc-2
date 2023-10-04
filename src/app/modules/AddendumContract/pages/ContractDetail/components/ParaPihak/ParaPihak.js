@@ -64,18 +64,16 @@ const ParaPihak = ({
 
   let [linksGroup, setLinksGroup] = useState({ 
     documentname: 'nama dokumen',
-    documentnumber: "keluarga", 
+    documentnumber: "nomor dokumen", 
     documentdate: null, 
     documentfileupload: 'test.jpg', 
-    about: "individu" 
+    about: "tentang" 
   })
 
   const toPush = useRef()
 
   const setPush = (e) => {
     toPush.current.click()
-    // console.log('isi event', e)
-    // console.log('isi current', toPush.current)
   }
 
   const downloadAllDocument = () => {
@@ -167,7 +165,6 @@ const ParaPihak = ({
                   isSubmit={true}
                   onYes={setPush}
             >
-                {/* <SupportingDocumentInput /> */}
                 <div>
                       <Row>
                           <Col md={4}>
@@ -217,6 +214,7 @@ const ParaPihak = ({
               </div>
             </DialogGlobal>
 
+            {/* apakah anda sudah yakin */}
             <DialogGlobal
               ref={openCloseAreYouSure}
               isCancel={false}
@@ -228,6 +226,7 @@ const ParaPihak = ({
               Apakah anda sudah yakin ?
             </DialogGlobal>
 
+            {/* download semua dokumen telah berhasil */}
             <DialogGlobal
               ref={openCloseModalDownload}
               isCancel={false}
@@ -324,7 +323,7 @@ const ParaPihak = ({
                       <FieldBuilder formData={formDataCheckbox} />
                       <FieldBuilder formData={formData1} />
                       <SupportingDocumentInput title={supportingDocumentDefault} />
-                      <SupportingDocumentInput additionalDocument={supportingDocumentAdditional} />
+                      <SupportingDocumentInput title={supportingDocumentAdditional} />
                       <Formik
                         initialValues={{
                           links: [linksGroup],
@@ -475,6 +474,8 @@ const ParaPihak = ({
                         <p>Catatan Addendum (Opsional)</p>
                           <TextAreaInput />
                       </div>
+
+                      
 
                     </>
 
