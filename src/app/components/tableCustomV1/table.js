@@ -12,9 +12,11 @@ import {
   TableSortLabel,
   Paper,
   Menu,
-} from "@material-ui/core";
-import NumberFormat from "react-number-format";
-import "./styles.scss";
+} from "@material-ui/core"
+import NumberFormat from "react-number-format"
+import "./styles.scss"
+import SVG from 'react-inlinesvg'
+import { toAbsoluteUrl } from '_metronic/_helpers'
 
 const format = (countryCode, currency, number) => {
   const options = {
@@ -40,6 +42,7 @@ const Tables = (props) => {
     hecto = 1,
     onChangePage,
     onChangePerPage,
+    isAddendum
   } = props;
   const [paginations, setPaginations] = React.useState({
     numberColum: 0,
@@ -241,10 +244,12 @@ const Tables = (props) => {
       <div>
         
         <form id="filter-form-all" className="panel-filter-table mb-1">
+          
           <span className="mr-2 mt-1 float-left">
             {/* Filter by */}
             <FormattedMessage id="TITLE.FILTER.TABLE" />
           </span>
+
           <div className="d-block">
             <div className="">
               {dataHeader
@@ -464,7 +469,52 @@ const Tables = (props) => {
                 <FormattedMessage id="TITLE.FILTER.RESET.TABLE" />
               </button>
             </div>
+
+            {isAddendum &&             
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 7,
+                  justifyContent: 'flex-end',
+                  marginBottom: 20,
+                  marginTop: 40
+                }}
+              >
+                <button
+                  style={{
+                    borderRadius: 8,
+                    fontSize: 10,
+                    backgroundColor: '#14b571',
+                    border: 'none',
+                    color: 'white',
+                    padding: '8px 14px',
+                    display: 'flex',
+                    gap: 8
+                  }}
+                >
+                  <SVG src={toAbsoluteUrl('/media/svg/icons/All/download-excel.svg')} />
+                  Download Excel
+                </button>
+                <button
+                  style={{
+                    borderRadius: 8,
+                    fontSize: 10,
+                    backgroundColor: '#dc0526',
+                    border: 'none',
+                    color: 'white',
+                    padding: '8px 14px',
+                    display: 'flex',
+                    gap: 8
+                  }}
+                >
+                  <SVG src={toAbsoluteUrl('/media/svg/icons/All/download-pdf.svg')} />
+                  Download PDF
+                </button>
+              </div>
+            }
+
           </div>
+
         </form>
 
         {/*  */}
@@ -478,7 +528,21 @@ const Tables = (props) => {
                   {dataHeader.map((item, index) => {
                     return (
                       <TableCell
-                        className={`bg-primary ${item?.td ? item?.td : ""}`}
+                      style={{
+                        position: item.name === 'action' ? 'sticky' : '',
+                        right: item.name === 'action' ? 0 : '',
+                        minWidth: item.name === 'action' ? 123 : '',
+                        minHeight: item.name === 'action' ? 71 : '',
+                        display: item.name === 'action' ? 'flex' : '',
+                        justifyContent: item.name === 'action' ? 'center' : '',
+                        alignItems: item.name === 'action' ? 'center' : '',
+                        border: item.name === 'action' ? 0 : 0,
+                        textAlign: item.name === 'action' ? 'center' : ''
+                      }}
+                        className={`
+                          bg-primary 
+                          ${item?.td ? item?.td : ""} 
+                        `}
                         key={index.toString()}
                       >
                         {item.order.active ? (
@@ -502,7 +566,8 @@ const Tables = (props) => {
                             <span>{item.title}</span>
                           </TableSortLabel>
                         ) : (
-                          <span>{item.title}</span>
+                          <span
+                          >{item.title}</span>
                         )}
                       </TableCell>
                     );

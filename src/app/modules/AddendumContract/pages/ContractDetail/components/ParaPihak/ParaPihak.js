@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react"
 import DialogGlobal from "app/components/modals/DialogGlobal"
 import { Col, Row } from "react-bootstrap"
+import Subheader from "app/components/subheader"
+import SubBreadcrumbs from "app/components/SubBreadcrumbs"
 
 import RenderInput from "app/components/input/RenderInput"
 import { useSelector, shallowEqual } from "react-redux"
@@ -62,18 +64,16 @@ const ParaPihak = ({
 
   let [linksGroup, setLinksGroup] = useState({ 
     documentname: 'nama dokumen',
-    documentnumber: "keluarga", 
+    documentnumber: "nomor dokumen", 
     documentdate: null, 
     documentfileupload: 'test.jpg', 
-    about: "individu" 
+    about: "tentang" 
   })
 
   const toPush = useRef()
 
   const setPush = (e) => {
     toPush.current.click()
-    // console.log('isi event', e)
-    // console.log('isi current', toPush.current)
   }
 
   const downloadAllDocument = () => {
@@ -165,7 +165,6 @@ const ParaPihak = ({
                   isSubmit={true}
                   onYes={setPush}
             >
-                {/* <SupportingDocumentInput /> */}
                 <div>
                       <Row>
                           <Col md={4}>
@@ -215,6 +214,7 @@ const ParaPihak = ({
               </div>
             </DialogGlobal>
 
+            {/* apakah anda sudah yakin */}
             <DialogGlobal
               ref={openCloseAreYouSure}
               isCancel={false}
@@ -226,6 +226,7 @@ const ParaPihak = ({
               Apakah anda sudah yakin ?
             </DialogGlobal>
 
+            {/* download semua dokumen telah berhasil */}
             <DialogGlobal
               ref={openCloseModalDownload}
               isCancel={false}
@@ -291,10 +292,38 @@ const ParaPihak = ({
 
                       {/* bagian ini untuk label */}
                       {/* readOnly */}
+                      <Subheader 
+        text={
+          // dataContractById
+          // ? `Formulir Permohonan Addendum Kontrak No : ${dataContractById?.contract_no}` : 
+          // null
+          `Formulir Permohonan Addendum Kontrak No : 015.PJ/PST.100-GDE/I/2023`
+        }
+      />
+
+      <SubBreadcrumbs
+        items={[
+          {
+            label: `Addendum Contract`
+          },
+
+          {
+            label: "List of Contract & SPK",
+            // to: `/${authStatus}/addendum-contract/list-contract-po`,
+              to: `/client/addendum-contract/list-contract-po`      
+          },
+          // {
+          //   label: `${
+          //     dataContractById ? dataContractById?.contract_name : "x"
+          //   }`,
+          //   to: "/",
+          // },
+        ]}
+      />
                       <FieldBuilder formData={formDataCheckbox} />
                       <FieldBuilder formData={formData1} />
                       <SupportingDocumentInput title={supportingDocumentDefault} />
-                      <SupportingDocumentInput additionalDocument={supportingDocumentAdditional} />
+                      <SupportingDocumentInput title={supportingDocumentAdditional} />
                       <Formik
                         initialValues={{
                           links: [linksGroup],
@@ -445,6 +474,8 @@ const ParaPihak = ({
                         <p>Catatan Addendum (Opsional)</p>
                           <TextAreaInput />
                       </div>
+
+                      
 
                     </>
 

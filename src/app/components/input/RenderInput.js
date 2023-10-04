@@ -177,7 +177,7 @@ const RenderInput = ({
             <label className={`col-sm-${labelSize} col-form-label ${label === undefined ? 'd-none': ''}`}>
               {label}
             </label>
-            <div className={`${label === undefined ? 'col-sm-8' : `col-sm-${formInputSize}`}`}>
+            <div className={`${label === undefined ? 'col-sm-12' : `col-sm-${formInputSize}`}`}>
               {/* ini input nya */}
               {!deleteInput &&
               <Component

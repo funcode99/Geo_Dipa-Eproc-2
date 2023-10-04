@@ -4,8 +4,23 @@ import {
     CardBody,
   } from "_metronic/_partials/controls"
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core'
+import { 
+    Table, 
+    TableBody, 
+    TableCell, 
+    TableContainer, 
+    TableHead, 
+    TableRow, 
+    Paper, 
+    Typography,
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary
+} from '@material-ui/core'
+// import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material"
 // import DataGridDemo from "./percobaantabel";
+
+// import Accordion from "@mui/material";
 
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
@@ -3696,7 +3711,21 @@ const FormParameter = ({
                                             ))}
                                         </TableBody>
                                     </Table>
-                                </TableContainer>
+                            </TableContainer>
+
+                            <ExpansionPanel>
+                                <ExpansionPanelSummary
+
+                                >
+                                    Expansion
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails>
+                                    <Typography>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                                        malesuada lacus ex, sit amet blandit leo lobortis eget.
+                                    </Typography>
+                                </ExpansionPanelDetails>
+                            </ExpansionPanel>
 
                     </div>
                 }
@@ -4098,7 +4127,9 @@ const FormParameter = ({
                                 >
 
                                         {/* tanggal mulai */}
-                                        <div>
+                                        <div
+                                            className="col-sm-3"
+                                        >
                                             <label
                                                 style={{
                                                     margin: 0,
@@ -4122,7 +4153,9 @@ const FormParameter = ({
                                         </div>
 
                                         {/* tanggal selesai */}
-                                        <div>
+                                        <div
+                                              className="col-sm-3"
+                                        >
                                             <label
                                                 style={{
                                                     margin: 0,
@@ -4148,7 +4181,7 @@ const FormParameter = ({
                                     
                                                                                 {/* evidence */}
                                                                                 <div
-                                            className="col-md-4"
+                                            className="col-md-5"
                                             style={{
                                                 padding: 0
                                             }}

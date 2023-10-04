@@ -16,8 +16,8 @@ import {
     Button
 } from '@material-ui/core';
 import useToast from '../../../components/toast';
-import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl } from '../../../../_metronic/_helpers';
+import SVG from 'react-inlinesvg'
+import { toAbsoluteUrl } from '_metronic/_helpers'
 import {
     SubWrap,
     Flex,

@@ -171,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
       name: "action",
       title: "Action",
       order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
+      filter: { active: false, type: "text" },
     }
   ]
   
@@ -317,7 +317,16 @@ const useStyles = makeStyles((theme) => ({
                   <TableCell>{item.group}</TableCell>
                   <TableCell>{item?.vendor}</TableCell>
                   <TableCell>{item.status}</TableCell>
-                  <TableCell>{item.action}</TableCell>
+                  <TableCell
+                    style={{
+                      position: 'sticky',
+                      right: 0,
+                      background: 'white',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      minHeight: 65
+                    }}
+                  >{item.action}</TableCell>
                 </TableRow>
               ))}
           </Tables>
