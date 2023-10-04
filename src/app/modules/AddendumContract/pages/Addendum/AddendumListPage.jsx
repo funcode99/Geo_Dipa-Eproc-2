@@ -289,7 +289,7 @@ const useStyles = makeStyles((theme) => ({
   
     return (
       <>
-  
+
         {/* terpakai disini, ada judul & icon yang dikirim ke komponen subheader */}
         {/* komponen sudah muncul, tapi data tidak muncul */}
         <Subheader
@@ -335,14 +335,14 @@ const useStyles = makeStyles((theme) => ({
                   <TableCell>{item?.vendor}</TableCell>
                   <TableCell>{item.status}</TableCell>
                   <TableCell
-                                   style={{
-                                    position: 'sticky',
-                                    right: 0,
-                                    background: 'white',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    minHeight: 65
-                                  }}
+                    style={{
+                      position: 'sticky',
+                      right: 0,
+                      background: 'white',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      minHeight: 65
+                    }}
                   >{item.action}</TableCell>
                 </TableRow>
               ))}

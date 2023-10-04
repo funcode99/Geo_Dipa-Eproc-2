@@ -6,44 +6,6 @@ import {
   BookmarkBorderOutlined,
 } from "@material-ui/icons";
 
-const useStyles = makeStyles((theme) => ({
-  grid: {
-      display: 'grid',
-      gridTemplateColumns: `repeat(4, minmax(0, 1fr))`
-  },
-  root: {
-    "& button.Mui-selected": {
-      color: "#3699FF",
-    },
-  },
-  tabRoot: {
-    minWidth: "max-content",
-    minHeight: "max-content",
-    marginTop: theme.spacing(1.5),
-    marginBottom: theme.spacing(1.5),
-  },
-  tabWrapper1: {
-    flexDirection: "row",
-    fontSize: "1rem",
-    fontWeight: "500",
-    textTransform: "none",
-    color: '#8c8a8a'
-  },
-  tabWrapper2: {
-    flexDirection: "row",
-    fontSize: "1rem",
-    fontWeight: "500",
-    textTransform: "none",
-    color: '#3699ff'
-  },
-  customIndicatorColor: {
-    // backgroundColor: "green",
-  },
-  customLabelColor: {
-    color: 'green'
-  }
-}));
-
 const initialTabLists = [
   {
     id: "tab-1",
@@ -67,8 +29,48 @@ export default function Tabs({
   tabActive,
   handleChange,
   grid,
+  arrayLength,
   ...other
 }) {
+
+  const useStyles = makeStyles((theme) => ({
+    grid: {
+        display: 'grid',
+        gridTemplateColumns: `repeat(${arrayLength}, minmax(0, 1fr))`,
+    },
+    root: {
+      "& button.Mui-selected": {
+        color: "#3699FF",
+      },
+    },
+    tabRoot: {
+      minWidth: "max-content",
+      minHeight: "max-content",
+      marginTop: theme.spacing(1.5),
+      marginBottom: theme.spacing(1.5),
+    },
+    tabWrapper1: {
+      flexDirection: "row",
+      fontSize: "1rem",
+      fontWeight: "500",
+      textTransform: "none",
+      color: '#8c8a8a',
+    },
+    tabWrapper2: {
+      flexDirection: "row",
+      fontSize: "1rem",
+      fontWeight: "500",
+      textTransform: "none",
+      color: '#3699ff',
+    },
+    customIndicatorColor: {
+      // backgroundColor: "green",
+    },
+    customLabelColor: {
+      color: 'green'
+    }
+  }));
+
   const classes = useStyles();
 
   // console.log('isi grid', grid)
@@ -102,6 +104,7 @@ export default function Tabs({
             icon={item.icon}
             style={{
               display: item?.display,
+              textAlign: 'center'
             }}
             classes={{
               root: classes.tabRoot,

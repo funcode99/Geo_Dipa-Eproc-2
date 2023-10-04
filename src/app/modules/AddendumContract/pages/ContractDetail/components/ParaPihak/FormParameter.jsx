@@ -1,8 +1,12 @@
-import React from "react"
+import React, { useState, useRef } from "react"
 import {
     Card,
     CardBody,
   } from "_metronic/_partials/controls"
+
+import ButtonAction from "app/components/buttonAction/ButtonAction"
+import DialogGlobal from "app/components/modals/DialogGlobal"
+import { Button } from "@material-ui/core"
 
 import { 
     Table, 
@@ -17,10 +21,26 @@ import {
     ExpansionPanelDetails,
     ExpansionPanelSummary
 } from '@material-ui/core'
-// import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material"
-// import DataGridDemo from "./percobaantabel";
 
-// import Accordion from "@mui/material";
+import { ReactSelect } from "percobaan/ReactSelect"
+
+const actionButton = (
+    <ButtonAction
+        style={{
+            backgroundColor: '#e8f4fb'
+        }}
+        hoverLabel="More"
+        data={"1"}
+        ops={[
+            {
+                label: "Edit",
+            },
+            {
+                label: "Hapus",
+            },
+        ]}
+    />
+  )
 
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
@@ -42,8 +62,176 @@ const FormParameter = ({
 
     console.log('tab yang aktif sekarang', currentActiveTab)
 
+    const openCloseAddFine = React.useRef()
+    const showAddFine = () => {
+        openCloseAddFine.current.open()
+    }
+
     return (
         <>
+
+            <DialogGlobal
+              ref={openCloseAddFine}
+              isCancel={false}
+              isSubmit={false}
+              yesButton={false}
+              noButton={false}
+              maxWidth={'sm'}
+            >
+
+                <div
+                    style={{
+                        padding: '0 17%'
+                    }}
+                >
+                    
+                    <h1
+                        style={{
+                            marginBottom: 40,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            textAlign: 'center'
+                        }}
+                    >
+                        Tambah Denda
+                    </h1>
+                
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 14
+                        }}
+                    >
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Jenis Denda
+                        </span>
+                        {/* <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"User 4"}
+                        /> */}
+                        <select name="" id="">
+                            <option>
+                                Keterlambatan Kerja
+                            </option>
+                        </select>
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Nilai
+                            </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"Procurement Staff"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Maksimal Hari
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"user.4@geodipa.co.id"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        Type Nilai
+                        <div
+                            style={{
+                                display: 'flex',
+                                gap: 20
+                            }}
+                        >
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="value_type"
+                                />
+                                %
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="value_type"
+                                />
+                                Nilai
+                            </label>
+                        </div>
+                    </div>
+
+                    </div>
+
+
+                </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            marginTop: 52,
+                            padding: '0 7%'
+                        }}
+                    >
+                        <button
+                            className="btn btn-primary"
+                        >
+                            Save
+                        </button>
+                    </div>
+
+
+            </DialogGlobal>
+
             <Card>
                 <CardBody>
 
@@ -76,6 +264,11 @@ const FormParameter = ({
 
                         <div
                             className="col-md-6"
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 14
+                            }}
                         >
 
                             {/* Pejabat Berwenang */}
@@ -99,12 +292,13 @@ const FormParameter = ({
                                         }}
                                     >
                                         <span>Username</span>
-                                        <input 
+                                        {/* <input 
                                             type="text" 
                                             value={"herdian"}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
-                                        />
+                                        /> */}
+                                        <ReactSelect />
                                     </label>
                                 </div>
 
@@ -344,7 +538,8 @@ const FormParameter = ({
                                 
                                 <h1
                                     style={{
-                                        fontSize: '16px'
+                                        fontSize: '16px',
+                                        minHeight: 38.17
                                     }}
                                 >
                                     Direksi pekerjaan
@@ -360,12 +555,13 @@ const FormParameter = ({
                                         }}
                                     >
                                         <span>Username</span>
-                                        <input
+                                        {/* <input
                                             type="text" 
                                             value={"weni"}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
-                                        />
+                                        /> */}
+                                        <ReactSelect />
                                     </label>
                                 </div>
 
@@ -559,6 +755,11 @@ const FormParameter = ({
 
                         <div
                             className="col-md-6"
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 14
+                            }}
                         >
 
                             {/* Pejabat Berwenang */}
@@ -582,12 +783,13 @@ const FormParameter = ({
                                         }}
                                     >
                                         <span>Username</span>
-                                        <input 
+                                        {/* <input 
                                             type="text" 
                                             value={"herdian"}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
-                                        />
+                                        /> */}
+                                        <ReactSelect />
                                     </label>
                                 </div>
 
@@ -829,12 +1031,14 @@ const FormParameter = ({
                                 <div
                                     style={{
                                         display: 'flex',
-                                        justifyContent: 'space-between'
+                                        justifyContent: 'space-between',
+                                        
                                     }}
                                 >
                                         <h1
                                             style={{
-                                                fontSize: '16px'
+                                                fontSize: '16px',
+
                                             }}
                                         >
                                             Addendum Direksi pekerjaan
@@ -857,12 +1061,13 @@ const FormParameter = ({
                                         }}
                                     >
                                         <span>Username</span>
-                                        <input
+                                        {/* <input
                                             type="text" 
                                             value={"weni"}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
-                                        />
+                                        /> */}
+                                        <ReactSelect />
                                     </label>
                                 </div>
 
@@ -997,12 +1202,13 @@ const FormParameter = ({
                                         }}
                                     >
                                         <span>Username</span>
-                                        <input
+                                        {/* <input
                                             type="text" 
                                             value={"weni"}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
-                                        />
+                                        /> */}
+                                        <ReactSelect />
                                     </label>
                                 </div>
 
@@ -1257,12 +1463,13 @@ const FormParameter = ({
                                             }}
                                         >
                                             <span>Username</span>
-                                            <input 
+                                            {/* <input 
                                                 type="text" 
                                                 value={"herdian"}
                                                 className="form-control"
                                                 style={{ backgroundColor: "#e8f4fb" }}
-                                            />
+                                            /> */}
+                                            <ReactSelect />
                                         </label>
                                     </div>
 
@@ -1518,12 +1725,13 @@ const FormParameter = ({
                                             }}
                                         >
                                             <span>Username</span>
-                                            <input
+                                            {/* <input
                                                 type="text" 
                                                 value={"weni"}
                                                 className="form-control"
                                                 style={{ backgroundColor: "#e8f4fb" }}
-                                            />
+                                            /> */}
+                                            <ReactSelect />
                                         </label>
                                     </div>
 
@@ -1739,12 +1947,13 @@ const FormParameter = ({
                                             }}
                                         >
                                             <span>Username</span>
-                                            <input 
+                                            {/* <input 
                                                 type="text" 
                                                 value={"herdian"}
                                                 className="form-control"
                                                 style={{ backgroundColor: "#e8f4fb" }}
-                                            />
+                                            /> */}
+                                            <ReactSelect />
                                         </label>
                                     </div>
 
@@ -2012,12 +2221,13 @@ const FormParameter = ({
                                             }}
                                         >
                                             <span>Username</span>
-                                            <input
+                                            {/* <input
                                                 type="text" 
                                                 value={"weni"}
                                                 className="form-control"
                                                 style={{ backgroundColor: "#e8f4fb" }}
-                                            />
+                                            /> */}
+                                            <ReactSelect />
                                         </label>
                                     </div>
 
@@ -3541,7 +3751,10 @@ const FormParameter = ({
                             borderRadius: 14,
                             border: 1,
                             borderStyle: 'solid',
-                            borderColor: '#8c8a8a'
+                            borderColor: '#8c8a8a',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 28
                         }}
                     >
 
@@ -3552,6 +3765,7 @@ const FormParameter = ({
                                     flexWrap: 'wrap'
                                 }}
                             >
+                                
                                 <label
                                     style={{
                                         flex: 1
@@ -3559,7 +3773,7 @@ const FormParameter = ({
                                 >
                                     <p
                                         style={{
-                                            margin: 0,
+                                            marginBottom: 14,
                                             fontSize: 16,
                                             fontWeight: 600
                                         }}
@@ -3579,6 +3793,7 @@ const FormParameter = ({
                                         disabled
                                     />
                                 </label>
+
                                 <label
                                     style={{
                                         flex: 1
@@ -3586,7 +3801,7 @@ const FormParameter = ({
                                 >
                                     <p
                                         style={{
-                                            margin: 0,
+                                            marginBottom: 14,
                                             fontSize: 16,
                                             fontWeight: 600
                                         }}
@@ -3604,8 +3819,15 @@ const FormParameter = ({
                                         }}
                                     />
                                 </label>
+
                             </div>
                             
+                            <TableContainer
+                                style={{
+                                    padding: 10
+                                }}
+                            component={Paper}
+                            >
                             <h1
                                 style={{
                                     fontSize: 16,  
@@ -3614,8 +3836,6 @@ const FormParameter = ({
                             >
                                 Rincian harga pekerjaan awal
                             </h1>
-
-                            <TableContainer component={Paper}>
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                         <TableHead>
                                             <TableRow>
@@ -3646,8 +3866,15 @@ const FormParameter = ({
                                             ))}
                                         </TableBody>
                                     </Table>
-                                </TableContainer>
+                            </TableContainer>
 
+
+                            <TableContainer 
+                                style={{
+                                    padding:10
+                                }}
+                                component={Paper}
+                            >
                             <div
                                 style={{
                                     display: 'flex',
@@ -3679,8 +3906,6 @@ const FormParameter = ({
                                 </div>
 
                             </div>
-
-                            <TableContainer component={Paper}>
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                         <TableHead>
                                             <TableRow>
@@ -3726,6 +3951,32 @@ const FormParameter = ({
                                     </Typography>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
+
+                            
+                            <div
+                            >
+                                <span
+                                    style={{
+                                        fontWeight: 500
+                                    }}
+                                >Pasal Sebelum Addendum</span>
+                                <textarea
+                                    rows="4"
+                                    className="form-control"
+                                ></textarea>
+                            </div>
+
+                            <div>
+                                <span
+                                    style={{
+                                        fontWeight: 500
+                                    }}
+                                >Pasal Setelah Addendum</span>
+                                <textarea
+                                    rows="4"
+                                    className="form-control"
+                                ></textarea>
+                            </div>
 
                     </div>
                 }
@@ -3890,98 +4141,133 @@ const FormParameter = ({
                                 border: 1,
                                 borderStyle: 'solid',
                                 borderColor: '#8c8a8a',
-                                // display: 'flex',
+                                display: 'flex',
+                                flexDirection: 'column',
+
                                 // justifyContent: 'space-between'
                             }}
                         >
-                            <h1
+
+                            <div
                                 style={{
-                                    fontSize: 16,
-                                    fontWeight: 600,
-                                    color: '#2e1f22'
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 34.5,
                                 }}
                             >
-                                Denda Kontrak Awal
-                            </h1>
-
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            {/* <TableCell>Dessert (100g serving)</TableCell>
-                                            <TableCell align="left">Calories</TableCell>
-                                            <TableCell align="left">Fat&nbsp;(g)</TableCell>
-                                            <TableCell align="left">Carbs&nbsp;(g)</TableCell>
-                                            <TableCell align="left">Protein&nbsp;(g)</TableCell> */}
-                                        {/* <TableCell>
-                                                1
-                                        </TableCell> */}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {rows.map((row) => (
-                                            <TableRow
-                                            key={row.name}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                                <TableCell component="th" >
-                                                    {row.name}
-                                                </TableCell>
-                                                <TableCell align="left" scope="row">{row.calories}</TableCell>
-                                                <TableCell align="left">{row.fat}</TableCell>
-                                                <TableCell align="left">{row.carbs}</TableCell>
-                                                <TableCell align="left">{row.protein}</TableCell>
+                                <TableContainer
+                                    style={{
+                                        padding: 10
+                                    }}
+                                component={Paper}>
+                                    <h1
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600,
+                                            color: '#2e1f22'
+                                        }}
+                                    >
+                                        Denda Kontrak Awal
+                                    </h1>
+                                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                {/* <TableCell>Dessert (100g serving)</TableCell>
+                                                <TableCell align="left">Calories</TableCell>
+                                                <TableCell align="left">Fat&nbsp;(g)</TableCell>
+                                                <TableCell align="left">Carbs&nbsp;(g)</TableCell>
+                                                <TableCell align="left">Protein&nbsp;(g)</TableCell> */}
+                                            {/* <TableCell>
+                                                    1
+                                            </TableCell> */}
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                        </TableHead>
+                                        <TableBody>
+                                            {rows.map((row) => (
+                                                <TableRow
+                                                key={row.name}
+                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell component="th" >
+                                                        {row.name}
+                                                    </TableCell>
+                                                    <TableCell align="left" scope="row">{row.calories}</TableCell>
+                                                    <TableCell align="left">{row.fat}</TableCell>
+                                                    <TableCell align="left">{row.carbs}</TableCell>
+                                                    <TableCell align="left">{row.protein}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
 
-                            <h1
-                                style={{
-                                    fontSize: 16,
-                                    fontWeight: 600,
-                                    color: '#2e1f22',
-                                    marginTop: 34,
-                                    marginBottom: 20
-                                }}
-                            >
-                                Addendum Denda Pekerjaan
-                            </h1>
-
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            {/* <TableCell>Dessert (100g serving)</TableCell>
-                                            <TableCell align="left">Calories</TableCell>
-                                            <TableCell align="left">Fat&nbsp;(g)</TableCell>
-                                            <TableCell align="left">Carbs&nbsp;(g)</TableCell>
-                                            <TableCell align="left">Protein&nbsp;(g)</TableCell> */}
-                                        {/* <TableCell>
-                                                1
-                                        </TableCell> */}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {rows.map((row) => (
-                                            <TableRow
-                                            key={row.name}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                                <TableCell component="th" >
-                                                    {row.name}
-                                                </TableCell>
-                                                <TableCell align="left" scope="row">{row.calories}</TableCell>
-                                                <TableCell align="left">{row.fat}</TableCell>
-                                                <TableCell align="left">{row.carbs}</TableCell>
-                                                <TableCell align="left">{row.protein}</TableCell>
-                                                <TableCell align="left">aksi</TableCell>
+                                <TableContainer 
+                                    style={{
+                                        padding: 10
+                                    }}
+                                component={Paper}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            // marginTop: 34,
+                                            // marginBottom: 20
+                                        }}
+                                    >
+                                        <h1
+                                            style={{
+                                                fontSize: 16,
+                                                fontWeight: 600,
+                                                color: '#2e1f22',
+                                            }}
+                                        >
+                                            Addendum Denda Pekerjaan
+                                        </h1>
+                                        <button
+                                            className="btn btn-primary"
+                                            style={{
+                                                maxHeight: 40
+                                            }}
+                                            onClick={showAddFine}
+                                        >
+                                            Denda
+                                        </button>
+                                    </div>
+                                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                {/* <TableCell>Dessert (100g serving)</TableCell>
+                                                <TableCell align="left">Calories</TableCell>
+                                                <TableCell align="left">Fat&nbsp;(g)</TableCell>
+                                                <TableCell align="left">Carbs&nbsp;(g)</TableCell>
+                                                <TableCell align="left">Protein&nbsp;(g)</TableCell> */}
+                                            {/* <TableCell>
+                                                    1
+                                            </TableCell> */}
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                        </TableHead>
+                                        <TableBody>
+                                            {rows.map((row) => (
+                                                <TableRow
+                                                key={row.name}
+                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell component="th" >
+                                                        {row.name}
+                                                    </TableCell>
+                                                    <TableCell align="left" scope="row">{row.calories}</TableCell>
+                                                    <TableCell align="left">{row.fat}</TableCell>
+                                                    <TableCell align="left">{row.carbs}</TableCell>
+                                                    <TableCell align="left">{row.protein}</TableCell>
+                                                    <TableCell align="left">{actionButton}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </div>
+
 
                             <div
                                 style={{
@@ -4371,7 +4657,7 @@ const FormParameter = ({
 
                                                                                {/* evidence */}
                                                                                <div
-                                            className="col-md-4"
+                                            className="col-md-5"
                                             style={{
                                                 padding: 0
                                             }}
@@ -4561,7 +4847,7 @@ const FormParameter = ({
 
                                                                              {/* evidence */}
                                                                              <div
-                                            className="col-md-4"
+                                            className="col-md-5"
                                             style={{
                                                 padding: 0
                                             }}
@@ -4763,7 +5049,7 @@ const FormParameter = ({
 
                                                                                 {/* evidence */}
                                                                                 <div
-                                            className="col-md-4"
+                                            className="col-md-5"
                                             style={{
                                                 padding: 0
                                             }}
@@ -4951,7 +5237,7 @@ const FormParameter = ({
 
                                                                                 {/* evidence */}
                                                                                 <div
-                                            className="col-md-4"
+                                            className="col-md-5"
                                             style={{
                                                 padding: 0
                                             }}
@@ -5141,7 +5427,7 @@ const FormParameter = ({
 
                                         {/* evidence */}
                                         <div
-                                            className="col-md-4"
+                                            className="col-md-5"
                                             style={{
                                                 padding: 0
                                             }}
