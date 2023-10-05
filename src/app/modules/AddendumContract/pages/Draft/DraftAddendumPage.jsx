@@ -3016,99 +3016,194 @@ const DraftAddendumPage = () => {
         }
 
         {sequence === 3 &&
+            
+            // <div
+            //             style={{
+            //                 backgroundColor: 'white',
+            //                 padding: 28,
+            //                 display: 'flex',
+            //                 flexDirection: 'column',
+            //                 gap: 28
+            //             }}
+            //         >
+            //             <div
+            //                 style={{
+            //                     display: 'flex',
+            //                     flexDirection: 'column',
+            //                     gap: 14
+            //                 }}
+            //             >
+            //                 Approval Vendor
+            //                 <div
+            //                     style={{
+            //                         padding: '12px 10px',
+            //                         border: '1px solid black'
+            //                     }}
+            //                 >
+            //                     <span
+            //                         style={{
+            //                             color: '#3699ff',
+            //                             fontSize: 14,
+            //                             fontWeight: 500
+            //                         }}
+            //                     >
+            //                         001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
+            //                     </span>
+            //                 </div>
+            //                 <div>
+            //                         Catatan Vendor
+            //                         <textarea
+            //                             rows="4"
+            //                             className="form-control"
+            //                         ></textarea>
+            //                 </div>
+            //                 <button
+            //                     onClick={showDownloadVendor}
+            //                     className="btn btn-primary"
+            //                     style={{
+            //                         maxWidth: 270
+            //                     }}
+            //                 >
+            //                     Unduh Hasil Approval Vendor
+            //                 </button>
+            //             </div>
+            //             <div
+            //                                             style={{
+            //                                                 display: 'flex',
+            //                                                 flexDirection: 'column',
+            //                                                 gap: 14
+            //                                             }}
+            //             >
+            //                 Approval User
+            //                 <div
+            //                     style={{
+            //                         padding: '12px 10px',
+            //                         border: '1px solid black'
+            //                     }}
+            //                 >
+            //                     <span
+            //                         style={{
+            //                             color: '#3699ff',
+            //                             fontSize: 14,
+            //                             fontWeight: 500
+            //                         }}
+            //                     >
+            //                         001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
+            //                     </span>
+            //                 </div>
+            //                 <div>
+            //                     Catatan User
+            //                     <textarea
+            //                         rows="4"
+            //                         className="form-control"
+            //                         value={"sudah oke"}
+            //                     ></textarea>
+            //                 </div>
+            //                 <button
+            //                     onClick={showDownloadUser}
+            //                     className="btn btn-primary"
+            //                     style={{
+            //                         maxWidth: 270
+            //                     }}
+            //                 >
+            //                     Unduh Hasil Approval User
+            //                 </button>
+            //             </div>
+            // </div>
+
             <div
+            style={{
+                backgroundColor: 'white',
+                padding: 28,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 28
+            }}
+        >
+
+            <h1>Form Unduh Addendum Kontrak</h1>
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 14
+                    }}
+                >
+                    Unduh Kontrak ini, di TTD sebagai persetujuan vendor dan unggah kembali dalam bentuk pdf
+                    <div
                         style={{
-                            backgroundColor: 'white',
-                            padding: 28,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 28
+                            padding: '12px 10px',
+                            border: '1px solid black'
                         }}
                     >
-                        <div
+                        <span
                             style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 14
+                                color: '#3699ff',
+                                fontSize: 14,
+                                fontWeight: 500
                             }}
                         >
-                            Approval Vendor
-                            <div
-                                style={{
-                                    padding: '12px 10px',
-                                    border: '1px solid black'
-                                }}
-                            >
-                                <span
-                                    style={{
-                                        color: '#3699ff',
-                                        fontSize: 14,
-                                        fontWeight: 500
-                                    }}
-                                >
-                                    001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
-                                </span>
-                            </div>
-                            <div>
-                                    Catatan Vendor
-                                    <textarea
-                                        rows="4"
-                                        className="form-control"
-                                    ></textarea>
-                            </div>
-                            <button
-                                onClick={showDownloadVendor}
-                                className="btn btn-primary"
-                                style={{
-                                    maxWidth: 270
-                                }}
-                            >
-                                Unduh Hasil Approval Vendor
-                            </button>
-                        </div>
-                        <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            gap: 14
-                                                        }}
-                        >
-                            Approval User
-                            <div
-                                style={{
-                                    padding: '12px 10px',
-                                    border: '1px solid black'
-                                }}
-                            >
-                                <span
-                                    style={{
-                                        color: '#3699ff',
-                                        fontSize: 14,
-                                        fontWeight: 500
-                                    }}
-                                >
-                                    001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
-                                </span>
-                            </div>
-                            <div>
-                                Catatan User
-                                <textarea
-                                    rows="4"
-                                    className="form-control"
-                                    value={"sudah oke"}
-                                ></textarea>
-                            </div>
-                            <button
-                                onClick={showDownloadUser}
-                                className="btn btn-primary"
-                                style={{
-                                    maxWidth: 270
-                                }}
-                            >
-                                Unduh Hasil Approval User
-                            </button>
-                        </div>
+                            001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
+                        </span>
+                    </div>
+                    <p>Catatan Vendor: sudah oke.</p>
+                    {/* <div>
+                            Catatan Vendor
+                            <textarea
+                                rows="4"
+                                className="form-control"
+                            ></textarea>
+                    </div> */}
+                    <button
+                        onClick={showDownloadVendor}
+                        className="btn btn-primary"
+                        style={{
+                            maxWidth: 270
+                        }}
+                    >
+                        Unduh Addendum Kontrak
+                    </button>
+                </div>
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 14
+                    }}
+                >
+                    Form Unggah Addendum Kontrak
+                    Unggah Kontrak yang sudah di Tanda Tangan dibawah ini
+                    <div
+                        style={{
+                            // padding: '12px 10px',
+                            border: '1px solid black'
+                        }}
+                    >
+                        <UploadInput />
+                    </div>
+                    <div>
+                        Catatan
+                        <textarea
+                            rows="4"
+                            className="form-control"
+                            value={"sudah oke"}
+                        ></textarea>
+                    </div>
+                    <button
+                        onClick={showDownloadUser}
+                        className="btn btn-primary"
+                        style={{
+                            maxWidth: 270
+                        }}
+                    >
+                        Unduh Hasil Approval User
+                    </button>
+                </div>
+
             </div>
+
         }
 
         {sequence === 4 &&

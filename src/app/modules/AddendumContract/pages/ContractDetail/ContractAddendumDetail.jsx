@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap"
 import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 
@@ -16,7 +16,6 @@ import { actionTypes } from "app/modules/AddendumContract/_redux/deliveryMonitor
 import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
 
-import { useState, useRef } from "react"
 import DialogGlobal from "app/components/modals/DialogGlobal"
 import { Col, Row } from "react-bootstrap"
 
@@ -29,14 +28,17 @@ import {
   CardBody,
 } from "_metronic/_partials/controls"
 
-import { supportingDocumentAdditional, supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData"
+import { 
+  supportingDocumentAdditional, 
+  supportingDocumentDefault 
+} from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData"
 import FieldBuilder from "app/components/builder/FieldBuilder"
 import FormBuilder from "app/components/builder/FormBuilder"
 import SupportingDocumentInput from "app/components/input/SupportingDocumentInput"
 
-import UploadInput from "app/components/input/UploadInput";
-import SelectDateInput from "app/components/input/SelectDateInput";
-import TextAreaInput from "app/components/input/TextAreaInput";
+import UploadInput from "app/components/input/UploadInput"
+import SelectDateInput from "app/components/input/SelectDateInput"
+import TextAreaInput from "app/components/input/TextAreaInput"
 import BasicInput from "app/components/input/BasicInput"
 
 import Steppers from "app/components/steppersCustom/Steppers"
@@ -58,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
-}));
+}))
 
 // const TabLists = [
   
@@ -122,6 +124,11 @@ const useStyles = makeStyles((theme) => ({
 
 // ternyata dataContractById ini props
 export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
+
+
+const showAddDocument = () => {
+  openCloseAddDocument.current.open()
+}
 
   // gak ada isi nya
     // console.log('isi data contract by id di delivery monitoring', dataContractById)
@@ -380,6 +387,8 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
         </div>
       ) : null}
 
+
+      {/* open close add document */}
       <DialogGlobal
                   ref={openCloseAddDocument}
                   isCancel={false}
@@ -477,10 +486,14 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
           }}
         >
 
-          <h1 style={{ 
-              fontSize: 12,
-              fontWeight: 400
-          }}>Silahkan download file final draft dibawah ini:</h1>
+          <h1 
+            style={{ 
+                fontSize: 12,
+                fontWeight: 400
+            }}
+          >
+            Silahkan download file final draft dibawah ini:
+          </h1>
 
           <select
             style={{
@@ -498,14 +511,16 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
             </option>
           </select>
 
-          <div style={{ 
+          <div 
+            style={{ 
               minHeight: 100, 
               marginTop: 10,
               marginBottom: 10,
               fontSize: 12,
               fontWeight: 400,
               color: '#3699ff'
-          }}>
+            }}
+          >
               <div
                 style={{
                   display: 'flex',
@@ -630,7 +645,10 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
                 style={{
                   minWidth: 100
                 }}
-                onClick={() => TabLists.length-1 ? setTabActive(tabActive+1) : setTabActive(tabActive) }
+                onClick={
+                  () => tabActive < TabLists.length-1 ? 
+                  setTabActive(tabActive+1) : 
+                  setTabActive(tabActive)}
               >
                 Next
               </Button>
@@ -762,9 +780,25 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
                                     Add Link
                                   </Button> */}
 
-                                  <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
-                                      Klik Disini
+                                  {/* <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="medium"
+                                    onClick={showAddDocument}
+                                  >
+                                    Tambah Dokumen
+                                  </Button> */}
+
+                                  <button
+                                    className="btn btn-primary"
+                                    onClick={showAddDocument}
+                                  >
+                                    Tambah Dokumen
                                   </button>
+
+                                  {/* <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
+                                      Klik Disini
+                                  </button> */}
 
                                 </Grid>
 

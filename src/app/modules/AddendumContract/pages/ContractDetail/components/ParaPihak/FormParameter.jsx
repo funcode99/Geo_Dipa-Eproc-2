@@ -24,6 +24,65 @@ import {
 
 import { ReactSelect } from "percobaan/ReactSelect"
 
+const timePeriodBeforeAddendum = [
+    {
+        title: 'Jangka Waktu Masa Garansi',
+        startDate: '2023-09-29',
+        endDate: '2023-09-30',
+        totalMonth: 6,
+        calendarDay: 15,
+        radio: 'SKPP'
+    },
+    {
+        title: 'Jangka Waktu Pelaksanaan Pekerjaan',
+        startDate: '2023-09-29',
+        endDate: '2023-09-30',
+        totalMonth: 6,
+        calendarDay: 15,
+        radio: 'SPMK'
+    },
+    {
+        title: 'Jangka Waktu Masa Garansi',
+        startDate: '2023-09-29',
+        endDate: '2023-09-30',
+        totalMonth: 6,
+        calendarDay: 15,
+        radio: 'SKPP'
+    },
+    {
+        title: 'Jangka Waktu Masa Pemeliharaan',
+        startDate: '2023-09-29',
+        endDate: '2023-09-30',
+        totalMonth: 6,
+        calendarDay: 15,
+        radio: 'SPMK'
+    },
+]
+
+const guaranteeBeforeAddendum = [
+    {
+        title: 'Jaminan Uang Muka',
+        startDate: '2023-09-19',
+        endDate: '2023-10-29',
+        filename: 'bla_blah.pdf',
+        radio: 'yes'
+    },
+    {
+        title: 'Jaminan Pelaksanaan',
+        startDate: '2023-09-19',
+        endDate: '2023-10-29',
+        filename: 'secret.docx',
+        radio: 'no'
+    },
+    {
+        title: 'Jaminan Pemeliharaan',
+        startDate: '2023-09-19',
+        endDate: '2023-10-29',
+        filename: 'another_file.xlsx',
+        radio: 'yes'
+    }
+]
+
 const actionButton = (
     <ButtonAction
         style={{
@@ -40,7 +99,9 @@ const actionButton = (
             },
         ]}
     />
-  )
+)
+
+
 
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
@@ -62,9 +123,16 @@ const FormParameter = ({
 
     console.log('tab yang aktif sekarang', currentActiveTab)
 
+    const [addendumPaymentMethod, setAddendumPaymentMethod] = useState('full')
+
     const openCloseAddFine = React.useRef()
     const showAddFine = () => {
         openCloseAddFine.current.open()
+    }
+
+    const openCloseAddPayment = React.useRef()
+    const showAddPayment = () => {
+        openCloseAddPayment.current.open()
     }
 
     return (
@@ -228,6 +296,90 @@ const FormParameter = ({
                             Save
                         </button>
                     </div>
+
+
+            </DialogGlobal>
+
+            <DialogGlobal
+              ref={openCloseAddPayment}
+              isCancel={false}
+            >
+
+                <div
+                    style={{
+                        padding: '0 17%'
+                    }}
+                >
+                    
+                    <h1
+                        style={{
+                            marginBottom: 40,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            textAlign: 'center'
+                        }}
+                    >
+                        Tambah pembayaran bertahap
+                    </h1>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 14
+                        }}
+                    >
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Persentase
+                            </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"10%"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Deskripsi
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"isi"}
+                        />
+                    </div>
+
+
+                    </div>
+
+                </div>
 
 
             </DialogGlobal>
@@ -2448,6 +2600,7 @@ const FormParameter = ({
                                     }}
                                 >Pasal Sebelum Addendum</span>
                                 <textarea
+                                    disabled
                                     rows="4"
                                     className="form-control"
                                 ></textarea>
@@ -2482,639 +2635,197 @@ const FormParameter = ({
                             Jangka waktu kontrak awal
                         </h1>
 
-                        <div
-                            className=""
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                rowGap: 20
-                            }}
-                        >
+                        {timePeriodBeforeAddendum && 
 
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'flex-end',
-                                    columnGap: 10
-                                }}
-                            >
-                                <div
-                                    className="col-md-2"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span
-                                    >Jangka Waktu Masa Garansi
-                                    </span>
-                                    <input
-                                    
-                                        type="date"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-                                    
-                                <div
-                                style={{
-                                    display: 'flex',
-                                    placeItems: 'center'
-                                }}
-                            >
-                                S/D
-                            </div>
-                                
-                                <div
-                                    className="col-md-2"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-
-                                    </span>
-                                    <input 
-                                        type="date"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-                                        Jumlah Bulan
-                                    </span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-                                        Hari Kalender
-                                    </span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-
+                            timePeriodBeforeAddendum.map((data, index) => (
+                                <>
                                     <div
+                                        className=""
                                         style={{
                                             display: 'flex',
-                                            gap: 14,
-                                            alignItems: 'center'
+                                            flexDirection: 'column',
+                                            rowGap: 20
                                         }}
                                     >
 
-                                            <label
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'flex-end',
+                                                columnGap: 10
+                                            }}
+                                        >
+                                            <div
+                                                className="col-md-2"
                                                 style={{
-                                                    margin: 0,
                                                     display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    padding: 0
                                                 }}
                                             >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    SKPP
+                                                <span
+                                                >
+                                                    {/* Jangka Waktu Masa Garansi */}
+                                                    {data.title}
                                                 </span>
-                                            </label>
+                                                <input
+                                                    disabled
+                                                    type="date"
+                                                    style={{
+                                                        backgroundColor: "#e8f4fb",
+                                                        borderRadius: 4,
+                                                        padding: '10px 12px',
+                                                        border: 'none'
+                                                    }}
+                                                    value={data.startDate}
+                                                />
+                                            </div>
+                                                
+                                            <div
+                                            style={{
+                                                display: 'flex',
+                                                placeItems: 'center',
+                                                minHeight: 41.5
+                                            }}
+                                        >
+                                            S/D
+                                        </div>
+                                            
+                                            <div
+                                                className="col-md-2"
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    padding: 0
+                                                }}
+                                            >
+                                                <span>
 
-                                            <label
+                                                </span>
+                                                <input 
+                                                    disabled
+                                                    type="date"
+                                                    style={{
+                                                        backgroundColor: "#e8f4fb",
+                                                        borderRadius: 4,
+                                                        padding: '10px 12px',
+                                                        border: 'none'
+                                                    }}
+                                                    value={data.endDate}
+                                                />
+                                            </div>
+
+                                            <div
                                                 style={{
-                                                    margin: 0,
                                                     display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    padding: 0
                                                 }}
                                             >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
                                                 <span>
-                                                    SPMK
+                                                    Jumlah Bulan
                                                 </span>
-                                            </label>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        backgroundColor: "#e8f4fb",
+                                                        borderRadius: 4,
+                                                        padding: '10px 12px',
+                                                        border: 'none'
+                                                    }}
+                                                    value={data.totalMonth}
+                                                    disabled
+                                                />
+                                            </div>
+
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    padding: 0
+                                                }}
+                                            >
+                                                <span>
+                                                    Hari Kalender
+                                                </span>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        backgroundColor: "#e8f4fb",
+                                                        borderRadius: 4,
+                                                        padding: '10px 12px',
+                                                        border: 'none'
+                                                    }}
+                                                    value={data.calendarDay}
+                                                    disabled
+                                                />
+                                            </div>
+
+                                            <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        gap: 14,
+                                                        alignItems: 'center',
+                                                        minHeight: 41.5
+                                                    }}
+                                                >
+
+                                                        <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexWrap: 'wrap',
+                                                                alignItems: 'center',
+                                                                columnGap: 8
+                                                            }}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={`${index}_down_payment_guarantee`}
+                                                                value={"SKPP"}
+                                                                checked={data.radio === "SKPP"}
+                                                            />
+                                                            <span>
+                                                                SKPP
+                                                            </span>
+                                                        </label>
+
+                                                        <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexWrap: 'wrap',
+                                                                alignItems: 'center',
+                                                                columnGap: 8
+                                                            }}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={`${data.title}_down_payment_guarantee`}
+                                                                value={"SPMK"}
+                                                                checked={data.radio === "SPMK"}
+                                                            />
+                                                            <span>
+                                                                SPMK
+                                                            </span>
+                                                        </label>
+
+                                            </div>
+
+                                        </div>
 
                                     </div>
+                                </>
+                            ))
 
-                            </div>
-
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'flex-end',
-                                    columnGap: 10
-                                }}
-                            >
-                                <div
-                                    className="col-md-2"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span
-                                    >Jangka Waktu Masa Garansi
-                                    </span>
-                                    <input
-                                    
-                                        type="date"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-                                    
-                                <div
-                                style={{
-                                    display: 'flex',
-                                    placeItems: 'center'
-                                }}
-                            >
-                                S/D
-                            </div>
-                                
-                                <div
-                                    className="col-md-2"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-
-                                    </span>
-                                    <input 
-                                        type="date"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-                                        Jumlah Bulan
-                                    </span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-                                        Hari Kalender
-                                    </span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
+                        }
 
 
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            gap: 14,
-                                            alignItems: 'center'
-                                        }}
-                                    >
-
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
-                                                }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    SKPP
-                                                </span>
-                                            </label>
-
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
-                                                }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    SPMK
-                                                </span>
-                                            </label>
-
-                                    </div>
-
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'flex-end',
-                                    columnGap: 10
-                                }}
-                            >
-                                <div
-                                    className="col-md-2"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span
-                                    >Jangka Waktu Masa Garansi
-                                    </span>
-                                    <input
-                                    
-                                        type="date"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-                                    
-                                <div
-                                style={{
-                                    display: 'flex',
-                                    placeItems: 'center'
-                                }}
-                            >
-                                S/D
-                            </div>
-                                
-                                <div
-                                    className="col-md-2"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-
-                                    </span>
-                                    <input 
-                                        type="date"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-                                        Jumlah Bulan
-                                    </span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-                                        Hari Kalender
-                                    </span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            gap: 14,
-                                            alignItems: 'center'
-                                        }}
-                                    >
-
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
-                                                }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    SKPP
-                                                </span>
-                                            </label>
-
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
-                                                }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    SPMK
-                                                </span>
-                                            </label>
-
-                                    </div>
-
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'flex-end',
-                                    columnGap: 10
-                                }}
-                            >
-                                <div
-                                    className="col-md-2"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span
-                                    >Jangka Waktu Masa Garansi
-                                    </span>
-                                    <input
-                                    
-                                        type="date"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-                                    
-                                <div
-                                style={{
-                                    display: 'flex',
-                                    placeItems: 'center'
-                                }}
-                            >
-                                S/D
-                            </div>
-                                
-                                <div
-                                    className="col-md-2"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-
-                                    </span>
-                                    <input 
-                                        type="date"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-                                        Jumlah Bulan
-                                    </span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        rowGap: 4,
-                                        padding: 0
-                                    }}
-                                >
-                                    <span>
-                                        Hari Kalender
-                                    </span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb",
-                                            borderRadius: 4,
-                                            padding: '10px 12px',
-                                            border: 'none'
-                                        }}
-                                    />
-                                </div>
-
-
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            gap: 14,
-                                            alignItems: 'center'
-                                        }}
-                                    >
-
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
-                                                }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    SKPP
-                                                </span>
-                                            </label>
-
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
-                                                }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    SPMK
-                                                </span>
-                                            </label>
-
-                                    </div>
-
-                            </div>
-
-                        </div>
-
+                        {/* Addendum jangka waktu */}
                         <h1
                             style={{
                                 fontSize: '16px',
@@ -3124,7 +2835,7 @@ const FormParameter = ({
                         >
                             Addendum jangka waktu
                         </h1>
-
+{/* 
                         <div
                             className=""
                             style={{
@@ -3710,7 +3421,196 @@ const FormParameter = ({
 
 
 
-                        </div>
+                        </div> */}
+
+{timePeriodBeforeAddendum && 
+
+timePeriodBeforeAddendum.map((data, index) => (
+    <>
+        <div
+            className=""
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                rowGap: 20
+            }}
+        >
+
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    columnGap: 10
+                }}
+            >
+                <div
+                    className="col-md-2"
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        rowGap: 4,
+                        padding: 0
+                    }}
+                >
+                    <span
+                    >
+                        {/* Jangka Waktu Masa Garansi */}
+                        {data.title}
+                    </span>
+                    <input
+              
+                        type="date"
+                        style={{
+                            backgroundColor: "#e8f4fb",
+                            borderRadius: 4,
+                            padding: '10px 12px',
+                            border: 'none'
+                        }}
+                        value={data.startDate}
+                    />
+                </div>
+                    
+                <div
+                style={{
+                    display: 'flex',
+                    placeItems: 'center',
+                    minHeight: 41.5
+                }}
+            >
+                S/D
+            </div>
+                
+                <div
+                    className="col-md-2"
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        rowGap: 4,
+                        padding: 0
+                    }}
+                >
+                    <span>
+
+                    </span>
+                    <input 
+          
+                        type="date"
+                        style={{
+                            backgroundColor: "#e8f4fb",
+                            borderRadius: 4,
+                            padding: '10px 12px',
+                            border: 'none'
+                        }}
+                        value={data.endDate}
+                    />
+                </div>
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        rowGap: 4,
+                        padding: 0
+                    }}
+                >
+                    <span>
+                        Jumlah Bulan
+                    </span>
+                    <input 
+                        type="text"
+                        style={{
+                            backgroundColor: "#e8f4fb",
+                            borderRadius: 4,
+                            padding: '10px 12px',
+                            border: 'none'
+                        }}
+                        value={data.totalMonth}
+                 
+                    />
+                </div>
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        rowGap: 4,
+                        padding: 0
+                    }}
+                >
+                    <span>
+                        Hari Kalender
+                    </span>
+                    <input 
+                        type="text"
+                        style={{
+                            backgroundColor: "#e8f4fb",
+                            borderRadius: 4,
+                            padding: '10px 12px',
+                            border: 'none'
+                        }}
+                        value={data.calendarDay}
+                  
+                    />
+                </div>
+
+                <div
+                        style={{
+                            display: 'flex',
+                            gap: 14,
+                            alignItems: 'center',
+                            minHeight: 41.5
+                        }}
+                    >
+
+                            <label
+                                style={{
+                                    margin: 0,
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    alignItems: 'center',
+                                    columnGap: 8
+                                }}
+                            >
+                                <input
+                                    type="radio"
+                                    name={`${index}_down_payment_guarantee`}
+                                    value={"SKPP"}
+                        
+                                />
+                                <span>
+                                    SKPP
+                                </span>
+                            </label>
+
+                            <label
+                                style={{
+                                    margin: 0,
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    alignItems: 'center',
+                                    columnGap: 8
+                                }}
+                            >
+                                <input
+                                    type="radio"
+                                    name={`${data.title}_down_payment_guarantee`}
+                                    value={"SPMK"}
+                            
+                                />
+                                <span>
+                                    SPMK
+                                </span>
+                            </label>
+
+                </div>
+
+            </div>
+
+        </div>
+    </>
+))
+
+}
                         
 
 
@@ -3723,6 +3623,7 @@ const FormParameter = ({
                                     }}
                                 >Pasal Sebelum Addendum</span>
                                 <textarea
+                                    disabled
                                     rows="4"
                                     className="form-control"
                                 ></textarea>
@@ -3961,6 +3862,7 @@ const FormParameter = ({
                                     }}
                                 >Pasal Sebelum Addendum</span>
                                 <textarea
+                                    disabled
                                     rows="4"
                                     className="form-control"
                                 ></textarea>
@@ -4023,7 +3925,12 @@ const FormParameter = ({
                                                 gap: 12
                                             }}
                                         >
-                                            <input type="radio" name="payment" />
+                                            <input 
+                                                type="radio" 
+                                                name="payment" 
+                                                disabled 
+                                                checked 
+                                            />
                                             Full Pembayaran
                                         </label>
                                         <label
@@ -4032,7 +3939,7 @@ const FormParameter = ({
                                                 gap: 12
                                             }}
                                         >
-                                            <input type="radio" name="payment" />
+                                            <input type="radio" name="payment" disabled />
                                             Pembayaran Bertahap
                                         </label>
                                     </div>
@@ -4054,7 +3961,12 @@ const FormParameter = ({
                                                 gap: 12
                                             }}
                                         >
-                                            <input type="radio" name="payment" />
+                                            <input 
+                                                type="radio" 
+                                                name="payment_addendum"
+                                                onClick={() => setAddendumPaymentMethod('full')}
+                                                checked={addendumPaymentMethod === 'full'}
+                                            />
                                             Full Pembayaran
                                         </label>
                                         <label
@@ -4063,7 +3975,12 @@ const FormParameter = ({
                                                 gap: 12
                                             }}
                                         >
-                                            <input type="radio" name="payment" />
+                                            <input 
+                                                type="radio" 
+                                                name="payment_addendum"
+                                                onClick={() => setAddendumPaymentMethod('gradual')}
+                                                checked={addendumPaymentMethod === 'gradual'}
+                                            />
                                             Pembayaran Bertahap
                                         </label>
                                     </div>
@@ -4078,11 +3995,15 @@ const FormParameter = ({
                                         <input
                                             className="col-sm-3"
                                             type="text" 
-                                            placeholder="Persentase" />
+                                            placeholder="Persentase" 
+                                            disabled={addendumPaymentMethod !== 'gradual'}
+                                        />
                                         <input 
                                             className="col-sm-6"
                                             type="text"
-                                            placeholder="Deskripsi" />   
+                                            placeholder="Deskripsi"
+                                            disabled={addendumPaymentMethod !== 'gradual'} 
+                                        />   
                                     </div>
                                     <div
                                         style={{
@@ -4093,6 +4014,7 @@ const FormParameter = ({
                                     >
                                         <button
                                             className="btn btn-primary mx-1"
+                                            onClick={showAddPayment}
                                         >
                                             Tambah
                                         </button>
@@ -4109,6 +4031,7 @@ const FormParameter = ({
                                     }}
                                 >Pasal Sebelum Addendum</span>
                                 <textarea
+                                    disabled
                                     rows="4"
                                     className="form-control"
                                 ></textarea>
@@ -4287,6 +4210,7 @@ const FormParameter = ({
                                         }}
                                     >Pasal Sebelum Addendum</span>
                                     <textarea
+                                        disabled
                                         rows="4"
                                         className="form-control"
                                     ></textarea>
@@ -4333,579 +4257,211 @@ const FormParameter = ({
                             </div>
 
                             {/* jaminan uang muka */}
-                            <div>
-                                    
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: 30,
-                                        alignItems: 'center'
-                                    }}
-                                >   
-                                    {/* jaminan uang muka */}
-                                    <p
-                                        style={{
-                                            width: 150,
-                                            margin: 0
-                                        }}
-                                    >
-                                        Jaminan uang muka
-                                    </p>
-
-                                    {/* ya / tidak */}
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            gap: 14,
-                                            alignItems: 'center'
-                                        }}
-                                    >
-
-                                            <label
+                            {guaranteeBeforeAddendum && 
+                                guaranteeBeforeAddendum.map((data, index) => (
+                                    <>
+                                        <div>
+                                                
+                                            <div
                                                 style={{
-                                                    margin: 0,
                                                     display: 'flex',
                                                     flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
+                                                    gap: 30,
+                                                    alignItems: 'center'
                                                 }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    Ya
-                                                </span>
-                                            </label>
+                                            >   
+                                                {/* jaminan uang muka */}
+                                                <p
+                                                    style={{
+                                                        width: 150,
+                                                        margin: 0
+                                                    }}
+                                                >
+                                                    {data.title}
+                                                </p>
 
-                                            <label
+                                                {/* ya / tidak */}
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        gap: 14,
+                                                        alignItems: 'center'
+                                                    }}
+                                                >
+
+                                                    <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexWrap: 'wrap',
+                                                                alignItems: 'center',
+                                                                columnGap: 8
+                                                            }}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={`${index}_down_payment_guarantee`}
+                                                                checked={data.radio === 'yes'}
+                                                            />
+                                                            <span>
+                                                                Ya
+                                                            </span>
+                                                    </label>
+
+                                                    <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexWrap: 'wrap',
+                                                                alignItems: 'center',
+                                                                columnGap: 8
+                                                            }}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={`${index}_down_payment_guarantee`}
+                                                                checked={data.radio === 'no'}
+                                                            />
+                                                            <span>
+                                                                Tidak
+                                                            </span>
+                                                    </label>
+
+                                                </div>
+
+                                            </div>
+
+                                            {/* tanggal mulai, selesai, evidence */}
+                                            <div
                                                 style={{
-                                                    margin: 0,
                                                     display: 'flex',
                                                     flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
+                                                    gap: 20,
+                                                    marginTop: 15
                                                 }}
                                             >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    Tidak
-                                                </span>
-                                            </label>
 
-                                    </div>
+                                                    {/* tanggal mulai */}
+                                                    <div
+                                                        className="col-sm-3"
+                                                    >
+                                                        <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                            }}
+                                                        >
+                                                            <span>
+                                                                Tanggal Mulai
+                                                            </span>
+                                                            <input
+                                                                type="date"
+                                                                style={{
+                                                                    borderRadius: 4,
+                                                                    padding: '10px 12px',
+                                                                    border: 'none'
+                                                                }}
+                                                                value={data.startDate}
+                                                                disabled
+                                                            />
+                                                        </label>
+                                                    </div>
 
-                                </div>
+                                                    {/* tanggal selesai */}
+                                                    <div
+                                                        className="col-sm-3"
+                                                    >
+                                                        <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                            }}
+                                                        >
+                                                            <span>
+                                                                Tanggal Selesai
+                                                            </span>
+                                                            <input
+                                                                type="date"
+                                                                style={{
+                                                                    borderRadius: 4,
+                                                                    padding: '10px 12px',
+                                                                    border: 'none'
+                                                                }}
+                                                                value={data.endDate}
+                                                                disabled
+                                                            />
+                                                        </label>    
+                                                    </div>
 
-                                {/* tanggal mulai, selesai, evidence */}
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: 20,
-                                        marginTop: 15
-                                    }}
-                                >
-
-                                        {/* tanggal mulai */}
-                                        <div
-                                            className="col-sm-3"
-                                        >
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Tanggal Mulai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>
-                                        </div>
-
-                                        {/* tanggal selesai */}
-                                        <div
-                                              className="col-sm-3"
-                                        >
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                                                        <span>
-                                                    Tanggal Selesai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>    
-                                        </div>
-
-                                    
-                                                                                {/* evidence */}
-                                                                                <div
-                                            className="col-md-5"
-                                            style={{
-                                                padding: 0
-                                            }}
-                                        >
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Evidence
-                                                </span>
-                                                <div>
-                                                    <label
-                                                        htmlFor="upload"
-                                                        className={`input-group mb-3 col-sm-12 pointer`}
+                                                
+                                                    {/* evidence */}
+                                                    <div
+                                                        className="col-md-5"
                                                         style={{
                                                             padding: 0
                                                         }}
                                                     >
-
-                                                        <span
-                                                        className={`form-control text-truncate`} 
-                                                        style={{
-                                                            backgroundColor: '#e8f4fb'
-                                                        }}
+                                                        <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                            }}
                                                         >
-                                                        nama_file_upload.pdf
-                                                        </span>
-                                                        <div 
-                                                            className="input-group-prepend"
-                                                        >
-                                                            <span className="input-group-text"
-                                                                 style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}    
-                                                            >
-                                                            <i className="fas fa-file-upload"></i>
+                                                            <span>
+                                                                Evidence
                                                             </span>
-                                                        </div>
-                                                    </label>
-                                                    <input
-                                                        type="file"
-                                                        className="d-none"
-                                                        id="upload"
-                                                        style={{
-                                                            backgroundColor: '#E8F4FB'
-                                                        }}
-                                                    />
-                                                </div>
-                                            </label>
+                                                            <div>
+                                                                <label
+                                                                    htmlFor="upload"
+                                                                    className={`input-group mb-3 col-sm-12 pointer`}
+                                                                    style={{
+                                                                        padding: 0
+                                                                    }}
+                                                                >
+
+                                                                    <span
+                                                                    className={`form-control text-truncate`} 
+                                                                    style={{
+                                                                        backgroundColor: '#e8f4fb'
+                                                                    }}
+                                                                    >
+                                                                    {/* nama_file_upload.pdf */}
+                                                                    {data.filename}
+                                                                    </span>
+                                                                    <div 
+                                                                        className="input-group-prepend"
+                                                                    >
+                                                                        <span className="input-group-text"
+                                                                            style={{
+                                                                                backgroundColor: '#e8f4fb'
+                                                                            }}    
+                                                                        >
+                                                                        <i className="fas fa-file-upload"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </label>
+                                                                <input
+                                                                    type="file"
+                                                                    className="d-none"
+                                                                    id="upload"
+                                                                    style={{
+                                                                        backgroundColor: '#E8F4FB'
+                                                                    }}
+                                                                    disabled
+                                                                />
+                                                            </div>
+                                                        </label>
+                                                    </div>
+
+                                            </div>
+
                                         </div>
-
-                                </div>
-
-                            </div>
-
-                            {/* jaminan pelaksanaan */}
-                            <div>
-                                    
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            gap: 30,
-                                            alignItems: 'center'
-                                        }}
-                                    >   
-                                        {/* jaminan pelaksanaan */}
-                                        <p
-                                                style={{
-                                                    width: 150,
-                                                    margin: 0
-                                                }}
-                                        >
-                                            Jaminan pelaksanaan
-                                        </p>
-            
-                                        {/* ya / tidak */}
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                gap: 14,
-                                                alignItems: 'center'
-                                            }}
-                                        >
-            
-                                                <label
-                                                    style={{
-                                                        margin: 0,
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItems: 'center',
-                                                        columnGap: 8
-                                                    }}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="down_payment_guarantee"
-                                                    />
-                                                    <span>
-                                                        Ya
-                                                    </span>
-                                                </label>
-            
-                                                <label
-                                                    style={{
-                                                        margin: 0,
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItems: 'center',
-                                                        columnGap: 8
-                                                    }}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="down_payment_guarantee"
-                                                    />
-                                                    <span>
-                                                        Tidak
-                                                    </span>
-                                                </label>
-            
-                                        </div>
-            
-                                    </div>
-            
-                                    {/* tanggal mulai, selesai, evidence */}
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: 20,
-                                        marginTop: 15
-                                    }}
-                                >
-
-                                        {/* tanggal mulai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Tanggal Mulai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>
-                                        </div>
-
-                                        {/* tanggal selesai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                                                        <span>
-                                                    Tanggal Selesai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>    
-                                        </div>
-
-                                                                               {/* evidence */}
-                                                                               <div
-                                            className="col-md-5"
-                                            style={{
-                                                padding: 0
-                                            }}
-                                        >
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Evidence
-                                                </span>
-                                                <div>
-                                                    <label
-                                                        htmlFor="upload"
-                                                        className={`input-group mb-3 col-sm-12 pointer`}
-                                                        style={{
-                                                            padding: 0
-                                                        }}
-                                                    >
-
-                                                        <span
-                                                        className={`form-control text-truncate`} 
-                                                        style={{
-                                                            backgroundColor: '#e8f4fb'
-                                                        }}
-                                                        >
-                                                        nama_file_upload.pdf
-                                                        </span>
-                                                        <div 
-                                                            className="input-group-prepend"
-                                                        >
-                                                            <span className="input-group-text"
-                                                                 style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}    
-                                                            >
-                                                            <i className="fas fa-file-upload"></i>
-                                                            </span>
-                                                        </div>
-                                                    </label>
-                                                    <input
-                                                        type="file"
-                                                        className="d-none"
-                                                        id="upload"
-                                                        style={{
-                                                            backgroundColor: '#E8F4FB'
-                                                        }}
-                                                    />
-                                                </div>
-                                            </label>
-                                        </div>
-
-                                </div>
-            
-                            </div>
-
-                            {/* jaminan pemeliharaan */}
-                            <div>
-                                    
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            gap: 30,
-                                            alignItems: 'center'
-                                        }}
-                                    >   
-                                        {/* jaminan pemeliharaan */}
-                                        <p
-                                            style={{
-                                                width: 150,
-                                                margin: 0
-                                            }}
-                                        >
-                                            Jaminan pemeliharaan
-                                        </p>
-            
-                                        {/* ya / tidak */}
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                gap: 14,
-                                                alignItems: 'center'
-                                            }}
-                                        >
-            
-                                                <label
-                                                    style={{
-                                                        margin: 0,
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItems: 'center',
-                                                        columnGap: 8
-                                                    }}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="down_payment_guarantee"
-                                                    />
-                                                    <span>
-                                                        Ya
-                                                    </span>
-                                                </label>
-            
-                                                <label
-                                                    style={{
-                                                        margin: 0,
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItems: 'center',
-                                                        columnGap: 8
-                                                    }}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="down_payment_guarantee"
-                                                    />
-                                                    <span>
-                                                        Tidak
-                                                    </span>
-                                                </label>
-            
-                                        </div>
-            
-                                    </div>
-            
-                                    {/* tanggal mulai, selesai, evidence */}
-                                    <div
-                                    style={{
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: 20,
-                                        marginTop: 15
-                                    }}
-                                >
-
-                                        {/* tanggal mulai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Tanggal Mulai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>
-                                        </div>
-
-                                        {/* tanggal selesai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                                                        <span>
-                                                    Tanggal Selesai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>    
-                                        </div>
-
-                                                                             {/* evidence */}
-                                                                             <div
-                                            className="col-md-5"
-                                            style={{
-                                                padding: 0
-                                            }}
-                                        >
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Evidence
-                                                </span>
-                                                <div>
-                                                    <label
-                                                        htmlFor="upload"
-                                                        className={`input-group mb-3 col-sm-12 pointer`}
-                                                        style={{
-                                                            padding: 0
-                                                        }}
-                                                    >
-
-                                                        <span
-                                                        className={`form-control text-truncate`} 
-                                                        style={{
-                                                            backgroundColor: '#e8f4fb'
-                                                        }}
-                                                        >
-                                                        nama_file_upload.pdf
-                                                        </span>
-                                                        <div 
-                                                            className="input-group-prepend"
-                                                        >
-                                                            <span className="input-group-text"
-                                                                 style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}    
-                                                            >
-                                                            <i className="fas fa-file-upload"></i>
-                                                            </span>
-                                                        </div>
-                                                    </label>
-                                                    <input
-                                                        type="file"
-                                                        className="d-none"
-                                                        id="upload"
-                                                        style={{
-                                                            backgroundColor: '#E8F4FB'
-                                                        }}
-                                                    />
-                                                </div>
-                                            </label>
-                                        </div>
-
-                                </div>
-            
-                            </div>
+                                    </>
+                                ))
+                            }
 
                             {/* Addendum jaminan */}
                             <div>
@@ -4919,573 +4475,208 @@ const FormParameter = ({
                                 </span>
                             </div>
 
-                            {/* jaminan uang muka */}
-                            <div>
-                                    
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: 30,
-                                        alignItems: 'center'
-                                    }}
-                                >   
-                                    {/* jaminan uang muka */}
-                                    <p
-                                        style={{
-                                            width: 150,
-                                            margin: 0
-                                        }}
-                                    >
-                                        Jaminan uang muka
-                                    </p>
-
-                                    {/* ya / tidak */}
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            gap: 14,
-                                            alignItems: 'center'
-                                        }}
-                                    >
-
-                                            <label
+                            {guaranteeBeforeAddendum && 
+                                guaranteeBeforeAddendum.map((data, index) => (
+                                    <>
+                                        <div>
+                                                
+                                            <div
                                                 style={{
-                                                    margin: 0,
                                                     display: 'flex',
                                                     flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
+                                                    gap: 30,
+                                                    alignItems: 'center'
                                                 }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    Ya
-                                                </span>
-                                            </label>
+                                            >   
+                                                {/* jaminan uang muka */}
+                                                <p
+                                                    style={{
+                                                        width: 150,
+                                                        margin: 0
+                                                    }}
+                                                >
+                                                    {data.title}
+                                                </p>
 
-                                            <label
+                                                {/* ya / tidak */}
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        gap: 14,
+                                                        alignItems: 'center'
+                                                    }}
+                                                >
+
+                                                    <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexWrap: 'wrap',
+                                                                alignItems: 'center',
+                                                                columnGap: 8
+                                                            }}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={`${index}_down_payment_guarantee`}
+                                          
+                                                            />
+                                                            <span>
+                                                                Ya
+                                                            </span>
+                                                    </label>
+
+                                                    <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexWrap: 'wrap',
+                                                                alignItems: 'center',
+                                                                columnGap: 8
+                                                            }}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={`${index}_down_payment_guarantee`}
+                                                        
+                                                            />
+                                                            <span>
+                                                                Tidak
+                                                            </span>
+                                                    </label>
+
+                                                </div>
+
+                                            </div>
+
+                                            {/* tanggal mulai, selesai, evidence */}
+                                            <div
                                                 style={{
-                                                    margin: 0,
                                                     display: 'flex',
                                                     flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    columnGap: 8
+                                                    gap: 20,
+                                                    marginTop: 15
                                                 }}
                                             >
-                                                <input
-                                                    type="radio"
-                                                    name="down_payment_guarantee"
-                                                />
-                                                <span>
-                                                    Tidak
-                                                </span>
-                                            </label>
 
-                                    </div>
+                                                    {/* tanggal mulai */}
+                                                    <div
+                                                        className="col-sm-3"
+                                                    >
+                                                        <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                            }}
+                                                        >
+                                                            <span>
+                                                                Tanggal Mulai
+                                                            </span>
+                                                            <input
+                                                                type="date"
+                                                                style={{
+                                                                    borderRadius: 4,
+                                                                    padding: '10px 12px',
+                                                                    border: 'none'
+                                                                }}
+                                                                value={data.startDate}
+                                              
+                                                            />
+                                                        </label>
+                                                    </div>
 
-                                </div>
+                                                    {/* tanggal selesai */}
+                                                    <div
+                                                        className="col-sm-3"
+                                                    >
+                                                        <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                            }}
+                                                        >
+                                                            <span>
+                                                                Tanggal Selesai
+                                                            </span>
+                                                            <input
+                                                                type="date"
+                                                                style={{
+                                                                    borderRadius: 4,
+                                                                    padding: '10px 12px',
+                                                                    border: 'none'
+                                                                }}
+                                                                value={data.endDate}
+                                                            />
+                                                        </label>    
+                                                    </div>
 
-                                {/* tanggal mulai, selesai, evidence */}
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: 20,
-                                        marginTop: 15
-                                    }}
-                                >
-
-                                        {/* tanggal mulai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Tanggal Mulai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>
-                                        </div>
-
-                                        {/* tanggal selesai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                                                        <span>
-                                                    Tanggal Selesai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>    
-                                        </div>
-
-                                                                                {/* evidence */}
-                                                                                <div
-                                            className="col-md-5"
-                                            style={{
-                                                padding: 0
-                                            }}
-                                        >
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Evidence
-                                                </span>
-                                                <div>
-                                                    <label
-                                                        htmlFor="upload"
-                                                        className={`input-group mb-3 col-sm-12 pointer`}
+                                                
+                                                    {/* evidence */}
+                                                    <div
+                                                        className="col-md-5"
                                                         style={{
                                                             padding: 0
                                                         }}
                                                     >
-
-                                                        <span
-                                                        className={`form-control text-truncate`} 
-                                                        style={{
-                                                            backgroundColor: '#e8f4fb'
-                                                        }}
+                                                        <label
+                                                            style={{
+                                                                margin: 0,
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                            }}
                                                         >
-                                                        nama_file_upload.pdf
-                                                        </span>
-                                                        <div 
-                                                            className="input-group-prepend"
-                                                        >
-                                                            <span className="input-group-text"
-                                                                 style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}    
-                                                            >
-                                                            <i className="fas fa-file-upload"></i>
+                                                            <span>
+                                                                Evidence
                                                             </span>
-                                                        </div>
-                                                    </label>
-                                                    <input
-                                                        type="file"
-                                                        className="d-none"
-                                                        id="upload"
-                                                        style={{
-                                                            backgroundColor: '#E8F4FB'
-                                                        }}
-                                                    />
-                                                </div>
-                                            </label>
+                                                            <div>
+                                                                <label
+                                                                    htmlFor="upload"
+                                                                    className={`input-group mb-3 col-sm-12 pointer`}
+                                                                    style={{
+                                                                        padding: 0
+                                                                    }}
+                                                                >
+
+                                                                    <span
+                                                                    className={`form-control text-truncate`} 
+                                                                    style={{
+                                                                        backgroundColor: '#e8f4fb'
+                                                                    }}
+                                                                    >
+                                                                    {data.filename}
+                                                                    </span>
+                                                                    <div 
+                                                                        className="input-group-prepend"
+                                                                    >
+                                                                        <span className="input-group-text"
+                                                                            style={{
+                                                                                backgroundColor: '#e8f4fb'
+                                                                            }}    
+                                                                        >
+                                                                        <i className="fas fa-file-upload"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </label>
+                                                                <input
+                                                                    type="file"
+                                                                    className="d-none"
+                                                                    id="upload"
+                                                                    style={{
+                                                                        backgroundColor: '#E8F4FB'
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        </label>
+                                                    </div>
+
+                                            </div>
+
                                         </div>
-
-                                </div>
-
-                            </div>
-
-                            {/* jaminan pelaksanaan */}
-                            <div>
-                                    
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            gap: 30,
-                                            alignItems: 'center'
-                                        }}
-                                    >   
-                                        {/* jaminan pelaksanaan */}
-                                        <p
-                                            style={{
-                                                width: 150,
-                                                margin: 0
-                                            }}
-                                        >
-                                            Jaminan pelaksanaan
-                                        </p>
-            
-                                        {/* ya / tidak */}
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                gap: 14,
-                                                alignItems: 'center'
-                                            }}
-                                        >
-            
-                                                <label
-                                                    style={{
-                                                        margin: 0,
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItems: 'center',
-                                                        columnGap: 8
-                                                    }}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="down_payment_guarantee"
-                                                    />
-                                                    <span>
-                                                        Ya
-                                                    </span>
-                                                </label>
-            
-                                                <label
-                                                    style={{
-                                                        margin: 0,
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItems: 'center',
-                                                        columnGap: 8
-                                                    }}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="down_payment_guarantee"
-                                                    />
-                                                    <span>
-                                                        Tidak
-                                                    </span>
-                                                </label>
-            
-                                        </div>
-            
-                                    </div>
-            
-                                    <div
-                                    style={{
-                                        display: 'flex',
-                                        gap: 20,
-                                        marginTop: 15
-                                    }}
-                                >
-
-                                        {/* tanggal mulai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Tanggal Mulai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>
-                                        </div>
-
-                                        {/* tanggal selesai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Tanggal Selesai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>    
-                                        </div>
-
-                                                                                {/* evidence */}
-                                                                                <div
-                                            className="col-md-5"
-                                            style={{
-                                                padding: 0
-                                            }}
-                                        >
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Evidence
-                                                </span>
-                                                <div>
-                                                    <label
-                                                        htmlFor="upload"
-                                                        className={`input-group mb-3 col-sm-12 pointer`}
-                                                        style={{
-                                                            padding: 0
-                                                        }}
-                                                    >
-
-                                                        <span
-                                                        className={`form-control text-truncate`} 
-                                                        style={{
-                                                            backgroundColor: '#e8f4fb'
-                                                        }}
-                                                        >
-                                                        nama_file_upload.pdf
-                                                        </span>
-                                                        <div 
-                                                            className="input-group-prepend"
-                                                        >
-                                                            <span className="input-group-text"
-                                                                 style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}    
-                                                            >
-                                                            <i className="fas fa-file-upload"></i>
-                                                            </span>
-                                                        </div>
-                                                    </label>
-                                                    <input
-                                                        type="file"
-                                                        className="d-none"
-                                                        id="upload"
-                                                        style={{
-                                                            backgroundColor: '#E8F4FB'
-                                                        }}
-                                                    />
-                                                </div>
-                                            </label>
-                                        </div>
-
-                                </div>
-            
-                            </div>
-
-                            {/* jaminan pemeliharaan */}
-                            <div>
-                                    
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            gap: 30,
-                                            alignItems: 'center'
-                                        }}
-                                    >   
-                                        {/* jaminan pemeliharaan */}
-                                        <p
-                                            style={{
-                                                width: 150,
-                                                margin: 0
-                                            }}
-                                        >
-                                            Jaminan pemeliharaan
-                                        </p>
-            
-                                        {/* ya / tidak */}
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                gap: 14,
-                                                alignItems: 'center'
-                                            }}
-                                        >
-            
-                                                <label
-                                                    style={{
-                                                        margin: 0,
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItems: 'center',
-                                                        columnGap: 8
-                                                    }}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="down_payment_guarantee"
-                                                    />
-                                                    <span>
-                                                        Ya
-                                                    </span>
-                                                </label>
-            
-                                                <label
-                                                    style={{
-                                                        margin: 0,
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItems: 'center',
-                                                        columnGap: 8
-                                                    }}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="down_payment_guarantee"
-                                                    />
-                                                    <span>
-                                                        Tidak
-                                                    </span>
-                                                </label>
-            
-                                        </div>
-            
-                                    </div>
-            
-                                    {/* tanggal mulai, selesai, evidence */}
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            gap: 20,
-                                            marginTop: 15
-                                        }}
-                                    >
-
-                                        {/* tanggal mulai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Tanggal Mulai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>
-                                        </div>
-
-                                        {/* tanggal selesai */}
-                                        <div>
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                                                        <span>
-                                                    Tanggal Selesai
-                                                </span>
-                                                <input
-                                                    // className="form-control"
-                                                    type="date"
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        padding: '10px 12px',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </label>    
-                                        </div>
-
-                                        {/* evidence */}
-                                        <div
-                                            className="col-md-5"
-                                            style={{
-                                                padding: 0
-                                            }}
-                                        >
-                                            <label
-                                                style={{
-                                                    margin: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <span>
-                                                    Evidence
-                                                </span>
-                                                <div>
-                                                    <label
-                                                        htmlFor="upload"
-                                                        className={`input-group mb-3 col-sm-12 pointer`}
-                                                        style={{
-                                                            padding: 0
-                                                        }}
-                                                    >
-
-                                                        <span
-                                                        className={`form-control text-truncate`} 
-                                                        style={{
-                                                            backgroundColor: '#e8f4fb'
-                                                        }}
-                                                        >
-                                                        nama_file_upload.pdf
-                                                        </span>
-                                                        <div 
-                                                            className="input-group-prepend"
-                                                        >
-                                                            <span className="input-group-text"
-                                                                 style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}    
-                                                            >
-                                                            <i className="fas fa-file-upload"></i>
-                                                            </span>
-                                                        </div>
-                                                    </label>
-                                                    <input
-                                                        type="file"
-                                                        className="d-none"
-                                                        id="upload"
-                                                        style={{
-                                                            backgroundColor: '#E8F4FB'
-                                                        }}
-                                                    />
-                                                </div>
-                                            </label>
-                                        </div>
-
-                                    </div>
-            
-                            </div>
+                                    </>
+                                ))
+                            }
 
                         </div>
                     </>
@@ -5651,7 +4842,8 @@ const FormParameter = ({
                                     Surat pernyataan dari bank
                                 </span>
                                 <div>
-                                                    <label
+                                    
+                                    <label
                                                         htmlFor="upload"
                                                         className={`input-group mb-3 col-sm-3 pointer`}
                                                         style={{
@@ -5678,15 +4870,17 @@ const FormParameter = ({
                                                             <i className="fas fa-file-upload"></i>
                                                             </span>
                                                         </div>
-                                                    </label>
-                                                    <input
-                                                        type="file"
-                                                        className="d-none"
-                                                        id="upload"
-                                                        style={{
-                                                            backgroundColor: '#E8F4FB'
-                                                        }}
-                                                    />
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        className="d-none"
+                                        id="upload"
+                                        style={{
+                                            backgroundColor: '#E8F4FB'
+                                        }}
+                                    />
+
                                 </div>
                             </div>
 
@@ -5697,6 +4891,7 @@ const FormParameter = ({
                                     }}
                                 >Pasal Sebelum Addendum</span>
                                 <textarea
+                                    disabled
                                     rows="4"
                                     className="form-control"
                                 ></textarea>

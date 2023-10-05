@@ -44,8 +44,12 @@ const FormPermohonan = (
                     <Card>
                         <form>
                             <div 
-                                    style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
-                                >
+                                style={{
+                                    display: 'flex', 
+                                    columnGap: 40, 
+                                    flexWrap: 'wrap'
+                                }}
+                            >
                                     <div className="col-md-4">
                                         <div className="form-group row">
                                             <label
@@ -81,55 +85,6 @@ const FormPermohonan = (
                                                 value={'8000007360'}
                                             />
                                         </div>
-                                    </div>
-                                    <div className="col-md-7">
-                                        <div className="form-group row">
-                                            <label
-                                                htmlFor="procurement_title"
-                                                className="col-form-label"
-                                                style={{ fontWeight: 500, fontSize: 14 }}
-                                            >
-                                                Judul Pengadaan
-                                            </label>
-                                            <input 
-                                                type="text"
-                                                    className="form-control"
-                                                    id="procurement_title"
-                                                    style={{ backgroundColor: "#c7d2d8" }}
-                                                    disabled
-                                                    onChange={(e) => {
-
-                                                    }}
-                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
-                                            />
-                                        </div>
-                                        <div className="form-group row">
-                                            <label
-                                                htmlFor="po_number"
-                                                className="col-form-label"
-                                                style={{ fontWeight: 500, fontSize: 14 }}
-                                            >
-                                                Keterangan PO
-                                            </label>
-                                            <input 
-                                                type="text"
-                                                    className="form-control"
-                                                    id="po_number"
-                                                    style={{ backgroundColor: "#c7d2d8" }}
-                                                    disabled
-                                                    onChange={(e) => {
-
-                                                    }}
-                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
-                                            />
-                                        </div>
-                                    </div>
-                            </div>
-
-                            <div 
-                                    style={{display: 'flex', columnGap: 40, flexWrap: 'wrap'}}
-                                >
-                                    <div className="col-md-7">
                                         <div className="form-group row">
                                             <label
                                                 htmlFor="agreement_format"
@@ -211,7 +166,48 @@ const FormPermohonan = (
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-4">
+            
+                                    <div className="col-md-7">
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="procurement_title"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Judul Pengadaan
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="procurement_title"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
+                                            />
+                                        </div>
+                                        <div className="form-group row">
+                                            <label
+                                                htmlFor="po_number"
+                                                className="col-form-label"
+                                                style={{ fontWeight: 500, fontSize: 14 }}
+                                            >
+                                                Keterangan PO
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                    className="form-control"
+                                                    id="po_number"
+                                                    style={{ backgroundColor: "#c7d2d8" }}
+                                                    disabled
+                                                    onChange={(e) => {
+
+                                                    }}
+                                                value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
+                                            />
+                                        </div>
                                         <div className="form-group row">
                                             <label
                                                 htmlFor="agreement_type"
@@ -490,7 +486,11 @@ const FormPermohonan = (
                                                         Harga Pekerjaan Awal
                                                     </label>
                                                     <div className='col-sm-8'>
-                                                        <input className='form-control' type='text' />
+                                                        <input 
+                                                            className='form-control' 
+                                                            type='text' 
+                                                            value={`Rp 7.422.000.000,00`} 
+                                                        />
                                                     </div>
                                                 </div>
                                             </Col>
@@ -506,7 +506,11 @@ const FormPermohonan = (
                                                         Harga Pekerjaan Addendum Terakhir
                                                     </label>
                                                     <div className='col-sm-8'>
-                                                        <input className='form-control' type='text' />
+                                                        <input 
+                                                            className='form-control' 
+                                                            type='text'
+                                                            value={"Rp 0"} 
+                                                        />
                                                     </div>
                                                 </div>
                                             </Col>
@@ -524,7 +528,8 @@ const FormPermohonan = (
                                                             className='form-control'
                                                             type="text" 
                                                             name="additional_price" 
-                                                            value={values.additional_price}
+                                                            // value={values.additional_price}
+                                                            value={`Rp 0`} 
                                                         />
                                                 </div>
                                             </div>
@@ -575,7 +580,11 @@ const FormPermohonan = (
                                                     Pengurangan Harga Pekerjaan
                                                 </label>
                                                 <div className='col-sm-8'>
-                                                    <input className='form-control' type='text' />
+                                                    <input 
+                                                        className='form-control' 
+                                                        type='text'
+                                                        value={"Rp 121.100.000,00"}
+                                                    />
                                                 </div>
                                             </div>
                                     </Col>
@@ -587,7 +596,11 @@ const FormPermohonan = (
                                                 Harga Pekerjaan Setelah Addendum
                                                 </label>
                                                 <div className='col-sm-8'>
-                                                    <input className='form-control' type='text' />
+                                                    <input 
+                                                        className='form-control' 
+                                                        type='text' 
+                                                        value={`Rp 7.300.900.000,00`}    
+                                                    />
                                                 </div>
                                             </div>
                                     </Col>
@@ -599,7 +612,11 @@ const FormPermohonan = (
                                                 Persentase Addendum
                                                 </label>
                                                 <div className='col-sm-8'>
-                                                    <input className='form-control' type='text' />
+                                                    <input 
+                                                        className='form-control' 
+                                                        type='text'
+                                                        value={`3%`}  
+                                                    />
                                                 </div>
                                             </div>
                                     </Col>
@@ -611,7 +628,11 @@ const FormPermohonan = (
                                                 Kesimpulan
                                                 </label>
                                                 <div className='col-sm-8'>
-                                                    <input className='form-control' type='text' />
+                                                    <input 
+                                                        className='form-control' 
+                                                        type='text'
+                                                        value={`Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal`}
+                                                    />
                                                 </div>
                                             </div>
                                     </Col>
