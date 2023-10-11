@@ -639,6 +639,7 @@
   "TITLE.REPORT_BY": "Reported By",
   "TITLE.INVOICE_NUMBER": "Invoice Number",
   "TITLE.DATE_OF_INVOICE": "Date Of Invoice",
+  "TITLE.DATE_OF_SEND_DATE": "Send Date",
   "TITLE.HARDCOPY_RECEIVE": "Hardcopy Receive",
   "TITLE.PAYMENT_DEADLINE": "Estimation Payment",
   "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position",

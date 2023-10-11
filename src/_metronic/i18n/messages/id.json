@@ -604,6 +604,7 @@
   "TITLE.REPORT_BY": "Laporkan Oleh",
   "TITLE.INVOICE_NUMBER": "Nomor Invoice",
   "TITLE.DATE_OF_INVOICE": "Date Of Invoice",
+  "TITLE.DATE_OF_SEND_DATE": "Tanggal Dikirim",
   "TITLE.HARDCOPY_RECEIVE": "Tanda Terima Hardcopy",
   "TITLE.PAYMENT_DEADLINE": "Estimation Payment",
   "TITLE.ROUTING_SLIP_POSITION": "Routing Slip Position",
