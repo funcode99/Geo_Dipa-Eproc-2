@@ -34,7 +34,6 @@ import {
     flexRender,
     RowData,
   } from '@tanstack/react-table'
-  import { makeData, Person } from 'percobaan/makeData'
 
 import { ReactSelect } from "percobaan/ReactSelect"
 
@@ -5464,8 +5463,8 @@ function TanStackTable() {
       []
     )
   
-    const [data, setData] = React.useState(() => makeData(1000))
-    const refreshData = () => setData(() => makeData(1000))
+    const [data, setData] = React.useState()
+    const refreshData = () => setData()
   
     const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
   
