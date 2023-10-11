@@ -19,10 +19,69 @@ import {
     Typography,
     ExpansionPanel,
     ExpansionPanelDetails,
-    ExpansionPanelSummary
+    ExpansionPanelSummary,
+    Collapse
 } from '@material-ui/core'
 
+import {
+    Column,
+    TableTan,
+    ColumnDef,
+    useReactTable,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    flexRender,
+    RowData,
+  } from '@tanstack/react-table'
+
 import { ReactSelect } from "percobaan/ReactSelect"
+
+const tableDummyJobPriceDetail = [
+    {   
+        item_desc: 'TX-76543 -- 001 ABCDEFFGH',
+        qty: '10',
+        unit: 'EA',
+        unit_price: '100.000.000',
+        total_price: '1.000.000.000',
+        info: 'empty',
+        child: [
+            {
+                item_desc: 'TX-76543 -- 001 ABCDEFFGH',
+                qty: '10',
+                unit: 'EA',
+                unit_price: '100.000.000',
+                total_price: '1.000.000.000',
+                info: 'empty',
+            },
+            {
+                item_desc: 'TX-76543 -- 001 ABCDEFFGH',
+                qty: '10',
+                unit: 'EA',
+                unit_price: '100.000.000',
+                total_price: '1.000.000.000',
+                info: 'empty',
+            },
+            {
+                item_desc: 'TX-76543 -- 001 ABCDEFFGH',
+                qty: '10',
+                unit: 'EA',
+                unit_price: '100.000.000',
+                total_price: '1.000.000.000',
+                info: 'empty',
+            },
+        ]
+    },
+    {
+        item_desc: 'TX-76544 -- 002 ABCDEFFGH',
+        qty: '5',
+        unit: 'EA',
+        unit_price: '100.000.000',
+        total_price: '1.000.000.000',
+        info: 'nothing',
+        child: []
+    }
+]
 
 const timePeriodBeforeAddendum = [
     {
@@ -135,9 +194,322 @@ const FormParameter = ({
         openCloseAddPayment.current.open()
     }
 
+    const openCloseWorkSupervisor = React.useRef()
+    const showAddWorkSupervisor = () => {
+        openCloseWorkSupervisor.current.open()
+    }
+
+    const openCloseWorkDirector = React.useRef()
+    const showAddWorkDirector = () => {
+        openCloseWorkDirector.current.open()
+    }
+
     return (
         <>
 
+            {/* modal tambah supervisor pekerjaan */}
+            <DialogGlobal
+                ref={openCloseWorkSupervisor}
+                isCancel={false}
+            >
+                <div
+                    style={{
+                        padding: '0 17%'
+                    }}
+                >
+                    
+                    <h1
+                        style={{
+                            marginBottom: 40,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            textAlign: 'center'
+                        }}
+                    >
+                        Tambah Pengawas Pekerjaan
+                    </h1>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 14
+                        }}
+                    >
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Jabatan
+                            </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={""}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Alamat
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={""}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Telp
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={""}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Fax
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={""}
+                        />
+                    </div>
+
+
+                    </div>
+
+                </div>
+            </DialogGlobal>
+
+            {/* modal tambah direksi pekerjaan */}
+            <DialogGlobal
+                 ref={openCloseWorkDirector}
+                 isCancel={false}
+            >
+                <div
+                    style={{
+                        padding: '0 17%'
+                    }}
+                >
+                    
+                    <h1
+                        style={{
+                            marginBottom: 40,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            textAlign: 'center'
+                        }}
+                    >
+                        Tambah Direksi Pekerjaan
+                    </h1>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 14
+                        }}
+                    >
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Username
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"10%"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Nama Lengkap
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"isi"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Jabatan
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"isi"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Alamat
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={""}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Telp
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={""}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                           Fax
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={""}
+                        />
+                    </div>
+
+
+                    </div>
+
+                </div>
+            </DialogGlobal>
+
+            {/* modal tambah denda */}
             <DialogGlobal
               ref={openCloseAddFine}
               isCancel={false}
@@ -147,7 +519,7 @@ const FormParameter = ({
               maxWidth={'sm'}
             >
 
-                <div
+                    <div
                     style={{
                         padding: '0 17%'
                     }}
@@ -280,7 +652,7 @@ const FormParameter = ({
                     </div>
 
 
-                </div>
+                    </div>
 
                     <div
                         style={{
@@ -297,9 +669,9 @@ const FormParameter = ({
                         </button>
                     </div>
 
-
             </DialogGlobal>
 
+            {/* modal tambah pembayaran */}
             <DialogGlobal
               ref={openCloseAddPayment}
               isCancel={false}
@@ -380,7 +752,6 @@ const FormParameter = ({
                     </div>
 
                 </div>
-
 
             </DialogGlobal>
 
@@ -1198,6 +1569,7 @@ const FormParameter = ({
 
                                         <button
                                             className="btn btn-primary mx-1"
+                                            onClick={showAddWorkDirector}
                                         >
                                             Tambah
                                         </button>
@@ -1213,12 +1585,6 @@ const FormParameter = ({
                                         }}
                                     >
                                         <span>Username</span>
-                                        {/* <input
-                                            type="text" 
-                                            value={"weni"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        /> */}
                                         <ReactSelect />
                                     </label>
                                 </div>
@@ -1480,6 +1846,7 @@ const FormParameter = ({
 
                                         <button
                                             className="btn btn-primary mx-1"
+                                            onClick={showAddWorkSupervisor}
                                         >
                                             Tambah
                                         </button>
@@ -2358,6 +2725,7 @@ const FormParameter = ({
                                         </h1>
                                         <button
                                             className="btn btn-primary mx-1"
+                                            onClick={showAddWorkDirector}
                                         >
                                             Tambah
                                         </button>
@@ -2499,6 +2867,7 @@ const FormParameter = ({
 
                                             <button
                                                 className="btn btn-primary mx-1"
+                                                onClick={showAddWorkSupervisor}
                                             >
                                                 Tambah
                                             </button>
@@ -3839,21 +4208,117 @@ timePeriodBeforeAddendum.map((data, index) => (
                                     </Table>
                             </TableContainer>
 
-                            <ExpansionPanel>
-                                <ExpansionPanelSummary
-
+                            <TableContainer>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}
                                 >
-                                    Expansion
-                                </ExpansionPanelSummary>
-                                <ExpansionPanelDetails>
-                                    <Typography>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                        malesuada lacus ex, sit amet blandit leo lobortis eget.
-                                    </Typography>
-                                </ExpansionPanelDetails>
-                            </ExpansionPanel>
+                                    <h1
+                                        style={{
+                                            fontSize: 16,  
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Addendum Rincian Harga Pekerjaan
+                                    </h1>
+                                </div>
+                                <Table>
+                                    <TableRow>
+                                        {tableDummyJobPriceDetail.map((row) => (
+                                            
+                                            row.child.length > 0 ?
+                                                <>
+                                                    <ExpansionPanel>
+                                                        <ExpansionPanelSummary
+                                                            style={{
+                                                                padding: 0
+                                                            }}
+                                                        >
+                                                            <TableRow
+                                                            key={row.item_desc}
+                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                        >
+                                                            <TableCell component="th" >
+                                                                {row.qty}
+                                                            </TableCell>
+                                                            <TableCell align="left" scope="row">
+                                                                {row.unit}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.unit_price}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.total_price}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.info}
+                                                            </TableCell>
+                                                            </TableRow>
+                                                        </ExpansionPanelSummary>
+                                                        {/* gabisa dibaca length nya */}
+                                                        {row.child &&
+                                                            row.child.map(() => (
+                                                                    <ExpansionPanelDetails>
+                                                                        <TableRow
+                                                        key={row.item_desc}
+                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                    >
+                                                        <TableCell component="th" >
+                                                            {row.qty}
+                                                        </TableCell>
+                                                        <TableCell align="left" scope="row">
+                                                            {row.unit}
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            {row.unit_price}
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            {row.total_price}
+                                                        </TableCell>
+                                                        <TableCell align="left">
+                                                            {row.info}
+                                                        </TableCell>
+                                                                        </TableRow>
+                                                                    </ExpansionPanelDetails>
+                                                            )) 
+                                                        }
+                                                    </ExpansionPanel>
+                                                </>
+                                                :
+                                                <>
+                                                    <TableRow
+                                                            key={row.item_desc}
+                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                        >
+                                                            <TableCell component="th" >
+                                                                {row.qty}
+                                                            </TableCell>
+                                                            <TableCell align="left" scope="row">
+                                                                {row.unit}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.unit_price}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.total_price}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.info}
+                                                            </TableCell>
+                                                    </TableRow>
+                                                </>
+                                        ))}
+                                    </TableRow>
+                                </Table>
+                            </TableContainer>
 
-                            
+
+                            {/* <TanStackTable /> */}
+
+
                             <div
                             >
                                 <span
@@ -4919,5 +5384,26 @@ timePeriodBeforeAddendum.map((data, index) => (
     )
 
 }
+
+const defaultColumn = {
+    cell: ({ getValue, row: { index }, column: { id }, table }) => {
+    },
+  }
+  
+  function useSkipper() {
+    const shouldSkipRef = React.useRef(true)
+    const shouldSkip = shouldSkipRef.current
+  
+    // Wrap a function with this to skip a pagination reset temporarily
+    const skip = React.useCallback(() => {
+      shouldSkipRef.current = false
+    }, [])
+  
+    React.useEffect(() => {
+      shouldSkipRef.current = true
+    })
+  
+    return [shouldSkip, skip]
+  }
 
 export default FormParameter
