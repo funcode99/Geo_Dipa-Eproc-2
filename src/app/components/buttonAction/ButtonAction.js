@@ -36,14 +36,14 @@ export default function ButtonAction({
     setAnchorEl(null);
   }
   const handleChange = React.useCallback(
-    (type, data) => {
-      if (typeof handleAction === "function") handleAction(type, data);
+    (type, data, label) => {
+      if (typeof handleAction === "function") handleAction(type, data, label)
       handleClose();
     },
     [handleAction, handleClose]
   );
 
-  const listUsed = ops;
+  const listUsed = ops
 
   return (
     <div>
@@ -105,10 +105,12 @@ export default function ButtonAction({
                 </Link>
               );
             } else {
+
               return (
+
                 <MenuItem
                   key={id}
-                  onClick={() => handleChange(el.type, data)}
+                  onClick={() => handleChange(el.type, data, el.label)}
                   disabled={el.disabled}
                 >
                   <ListItemIcon>
