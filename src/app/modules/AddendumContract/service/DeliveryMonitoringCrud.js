@@ -12,6 +12,10 @@ export function getContractById(id) {
   return axios.get(`/delivery/contract/${id}`);
 }
 
+export function getAddendumContractById(id) {
+  return axios.get(`/adendum/contract-released/${id}/show`)
+}
+
 // Tasks
 export function submitTask(values, update) {
   if (update) {

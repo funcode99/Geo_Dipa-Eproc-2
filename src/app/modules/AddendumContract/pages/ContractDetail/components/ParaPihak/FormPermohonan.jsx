@@ -111,7 +111,7 @@ import {
        return (
             <>
                 {/* parent table */}
-                    <TableRow>
+                <TableRow>
                             <TableCell>
                                     <div
                                         style={{
@@ -189,7 +189,8 @@ import {
                                         </TableCell>
                                 )
                             }
-                    </TableRow>
+                </TableRow>
+
                 {/* children table */}
                 {row?.children &&
                     row.children.map((data, childIndex) => (
@@ -200,6 +201,8 @@ import {
                         >
                                                                 
                             <TableCell>
+                                <div>
+                                </div>
                             </TableCell>
                             <TableCell align="left" className={classes.tableCell}>
                                                                         {data.isEditMode ? (

@@ -8,6 +8,7 @@ import { connect } from "react-redux"
 import { 
     ContractsAddendumPage,
     ContractAddendumDetail,
+    AddContractAddendum,
     AddendumListPage,
     AddendumRequestListPage,
     DraftAddendumPage,
@@ -25,6 +26,11 @@ function RootClientAddendum() {
             <Route 
                 path="/client/addendum-contract/list-contract-po"
                 component={ContractsAddendumPage}
+            />
+            <Route 
+                path="/client/addendum-contract/add-addendum"
+                component={AddContractAddendum}
+                exact={true}
             />
             <Route 
                 path="/client/addendum-contract/contract/:contract_id"

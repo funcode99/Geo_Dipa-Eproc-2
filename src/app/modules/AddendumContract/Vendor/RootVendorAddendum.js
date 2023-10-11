@@ -6,7 +6,7 @@ import { injectIntl } from "react-intl"
 import { connect } from "react-redux"
 import { 
     ContractsAddendumPage,
-    ContractAddendumDetail
+    AddContractAddendum
  } from 'app/modules/AddendumContract/pages/index'
 
 function RootVendorAddendum(props) {
@@ -21,7 +21,7 @@ function RootVendorAddendum(props) {
             />
             <Route 
                 path="/vendor/addendum-contract/contract/:contract_id"
-                component={ContractAddendumDetail}
+                component={AddContractAddendum}
             />
 
         </Switch>
