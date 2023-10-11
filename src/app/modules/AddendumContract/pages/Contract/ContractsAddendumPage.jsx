@@ -213,11 +213,10 @@ const useStyles = makeStyles((theme) => ({
       fetch_api_sg({
         key: keys.fetch,
         type: "get",
-        url: `/delivery/contract`,
+        // url: `/delivery/contract`,
+        url: `/adendum/contract-released`,
         onSuccess: (res) => {
           console.log('apakah menarik data', res)
-          // console.log(`res.data`, res.data);
-          // generateTableContent(res.data);
           setDataArr(
             res.data.map((item, index) => ({
               id: item.id,
@@ -246,7 +245,7 @@ const useStyles = makeStyles((theme) => ({
                       label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
                       // icon: "fas fa-search text-primary pointer",
                       to: {
-                        url: `/${status}/delivery-monitoring/contract/${item.id}`,
+                        url: `/${status}/addendum-contract/contract/${item.id}`,
                         style: {
                           color: "black",
                         },
@@ -257,7 +256,9 @@ const useStyles = makeStyles((theme) => ({
                       label: "CONTRACT.TABLE_ACTION.ADD_ADDENDUM",
                       // icon: "fas fa-search text-primary pointer",
                       to: {
-                        url: `/${status}/addendum-contract/contract/${item.id}`,
+                        // url: `/${status}/addendum-contract/contract/${item.id}`,
+                        // ${status}/addendum-contract/
+                        url: `/${status}/addendum-contract/add-addendum`,
                         style: {
                           color: "black",
                         },

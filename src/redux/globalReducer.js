@@ -2,19 +2,19 @@ import { isEmpty } from "lodash";
 import { persistReducer } from "redux-persist";
 import { call, delay, put, takeEvery } from "redux-saga/effects";
 import apiHelper from "app/service/helper/apiHelper";
-import { MODAL } from "../service/modalSession/ModalService";
-import { PERSIST_REDUCER } from "./BaseHost";
+import { MODAL } from "../service/modalSession/ModalService"
+import { PERSIST_REDUCER } from "./BaseHost"
 
 const globalRedTypes = {
   SET_LOADING: "SET_LOADING",
   SET_LOADING_DONE: "SET_LOADING_DONE",
   FETCH_API_SAGA: "FETCH_API_SAGA",
   CLEAR_LOADING: "CLEAR_LOADING_STATE",
-};
+}
 
 const initialState = {
   loadings: [],
-};
+}
 
 export const reducer = persistReducer(
   PERSIST_REDUCER,
@@ -36,7 +36,7 @@ export const reducer = persistReducer(
           loadings: [],
         };
       default:
-        return state;
+        return state
     }
   }
 );
@@ -45,19 +45,20 @@ export const reducer = persistReducer(
 export const set_loading_rd = (payload) => ({
   type: globalRedTypes.SET_LOADING,
   payload,
-});
+})
 export const set_loading_done_rd = (payload) => ({
   type: globalRedTypes.SET_LOADING_DONE,
   payload,
-});
+})
 export const clean_loading_state_rd = (payload) => ({
   type: globalRedTypes.CLEAR_LOADING,
   payload,
-});
+})
+// fetch api saga
 export const fetch_api_sg = (payload) => ({
   type: globalRedTypes.FETCH_API_SAGA,
   payload,
-});
+})
 
 // selectors below
 export const getLoading = (state, key) => {
