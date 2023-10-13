@@ -555,6 +555,22 @@ const showAddDocument = () => {
 
         </div>
 
+        <button
+          style={{
+            color: 'white',
+            fontSize: 14,
+            fontWeight: '400',
+            padding: '8px 14px',
+            borderRadius: '8px',
+            backgroundColor: '#8c8a8a',
+            outline: 'none',
+            border: 'none',
+            marginBottom: 28
+          }}
+        >
+          Lihat Detail Addendum
+        </button>
+
         <div 
           style={{
             height: 74, 
@@ -617,41 +633,39 @@ const showAddDocument = () => {
           />
 
           <FormParameter currentActiveTab={tabActive} />
-
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: 28,
-                padding: '2rem 2.25rem'
-              }}
-            >
-              {/* <Button
-                 style={{
-                  minWidth: 100
-                }}
-              >
-              </Button> */}
-              <button
-                className="btn btn-primary"
+          
+              <div
                 style={{
-                  minWidth: 100
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: 28,
+                  padding: '2rem 2.25rem'
                 }}
               >
-                Update  
-              </button>
-              <Button
-                style={{
-                  minWidth: 100
-                }}
-                onClick={
-                  () => tabActive < TabLists.length-1 ? 
-                  setTabActive(tabActive+1) : 
-                  setTabActive(tabActive)}
-              >
-                Next
-              </Button>
-            </div>
+                <button
+                  className="btn btn-outline-primary"
+                  style={{
+                    minWidth: 100
+                  }}
+                  onClick={
+                    () => tabActive > 0 ? 
+                    setTabActive(tabActive-1) : 
+                    setTabActive(tabActive)}
+                >
+                  {`<< Back`}
+                </button>
+                <Button
+                  style={{
+                    minWidth: 100
+                  }}
+                  onClick={
+                    () => tabActive < TabLists.length-1 ? 
+                    setTabActive(tabActive+1) : 
+                    setTabActive(tabActive)}
+                >
+                  {`Next >>`}
+                </Button>
+              </div>
 
       </Paper>}
 

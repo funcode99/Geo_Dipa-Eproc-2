@@ -15,7 +15,7 @@ import {
     ApprovalAddendumPage
 } from 'app/modules/AddendumContract/pages/index'
 
-import ParaPihak from "../pages/ContractDetail/components/ParaPihak"
+// import ParaPihak from "../pages/ContractDetail/components/ParaPihak"
 
 function RootClientAddendum() {
     const subheader = useSubheader()
@@ -28,7 +28,7 @@ function RootClientAddendum() {
                 component={ContractsAddendumPage}
             />
             <Route 
-                path="/client/addendum-contract/add-addendum"
+                path="/client/addendum-contract/add-addendum/:contract_id"
                 component={AddContractAddendum}
                 exact={true}
             />
@@ -39,7 +39,7 @@ function RootClientAddendum() {
             />
             <Route 
                 path="/client/addendum-contract/approval/:approval_id"
-                component={ParaPihak}
+                component={ApprovalAddendumPage}
                 exact={true}
             />
             <Route

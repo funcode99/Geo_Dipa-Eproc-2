@@ -27,8 +27,6 @@ import RenderInput from "app/components/input/RenderInput"
 
 // bentrok antara button mui & bootstrap
 
-
-
 const DraftAddendumPage = () => {
 
     const [tabActive, setTabActive] = React.useState(0)
@@ -164,40 +162,36 @@ const DraftAddendumPage = () => {
         },
     ]
 
-    const dataGroup = [        { 
+    const dataGroup = [{ 
         documentname: 'Kontrak Perjanjian',
-        documentfileupload: 'test.jpg', 
-        about: "Terlampir draft addendum kontrak, mohon user untuk direview"
+        documentfileupload: 'https://geodipa-my.sharepoint.com/:w:/g/personal/contract_admin_geodipa_Kontrak-Perjanjian_id/EVLWq8U2WxVLgVmHO--FqR0BiX_FbrptwluwNlitelZ0eg?e=5mhN9Q', 
     },
     { 
         documentname: 'Lampiran 1',
-        documentfileupload: 'test.jpg', 
-        about: ""
+        documentfileupload: 'https://geodipa-my.sharepoint.com/:w:/g/personal/contract_admin_geodipa_Lamp-1_id/EVLWq8U2WxVLgVmHO--FqR0BiX_FbrptwluwNlitelZ0eg?e=5mhN9Q', 
     },
     { 
         documentname: 'Lampiran 2',
-        documentfileupload: 'test.jpg', 
-        about: ""
-    },
-    {
-        documentname: 'Full Kontrak',
-        documentfileupload: 'test.jpg', 
-        about: ""
+        documentfileupload: 'https://geodipa-my.sharepoint.com/:w:/g/personal/contract_admin_geodipa_Lamp-2_id/EVLWq8U2WxVLgVmHO--FqR0BiX_FbrptwluwNlitelZ0eg?e=5mhN9Q', 
     }
 
-]
+    ]
 
     let [linksGroup, setLinksGroup] = useState(dataGroup)
     
-      const toPush = useRef()
-    
-      const setPush = (e) => {
+    const toPush = useRef()
+    const setPush = (e) => {
         toPush.current.click()
-      }
+    }
 
     const openCloseAddReviewer = React.useRef()
     const showAddReviewer = () => {
         openCloseAddReviewer.current.open()
+    }
+
+    const openCloseAddVendor = React.useRef()
+    const showAddVendor = () => {
+        openCloseAddVendor.current.open()
     }
 
     const openCloseAddAttachment = React.useRef()
@@ -974,6 +968,7 @@ const DraftAddendumPage = () => {
 
             </DialogGlobal>
 
+            {/* Tambah Reviewer */}
             <DialogGlobal
               ref={openCloseAddReviewer}
               isCancel={false}
@@ -1074,6 +1069,131 @@ const DraftAddendumPage = () => {
                                 opacity: .8
                             }}
                             value={"user.4@geodipa.co.id"}
+                        />
+                    </div>
+
+                    </div>
+
+
+                </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            marginTop: 52,
+                            padding: '0 7%'
+                        }}
+                    >
+                        <Button>
+                            Save
+                        </Button>
+                    </div>
+
+
+            </DialogGlobal>
+
+            {/* Tambah Vendor */}
+            <DialogGlobal
+              ref={openCloseAddVendor}
+              isCancel={false}
+              isSubmit={false}
+              yesButton={false}
+              noButton={false}
+              maxWidth={'sm'}
+            >
+
+                <div
+                    style={{
+                        padding: '0 17%'
+                    }}
+                >
+                    
+                    <h1
+                        style={{
+                            marginBottom: 40,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            textAlign: 'center'
+                        }}
+                    >
+                        Tambah Reviewer Vendor
+                    </h1>
+                
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 14
+                        }}
+                    >
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Nama
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"SAMUDERA RAYA ENGINEERING"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            PIC
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"Awaludin"}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 10
+                        }}
+                    >
+                        <span>
+                            Email
+                        </span>
+                        <input 
+                            style={{
+                                padding: 8,
+                                borderRadius: 4,
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: '#8c8a8a',
+                                opacity: .8
+                            }}
+                            value={"ptsamuderarayae@gmail.com"}
                         />
                     </div>
 
@@ -1689,6 +1809,7 @@ const DraftAddendumPage = () => {
                         padding: 28
                     }}
                 >
+                    Template Word Body Kontrak
                     <div
                         style={{
                             border: 1,
@@ -1698,18 +1819,23 @@ const DraftAddendumPage = () => {
                             padding: '12px 10px',
                             display: 'flex',
                             justifyContent: 'space-between',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            overflow: 'hidden',
+                            textOverflow: 'clip'
                         }}
                     >
-                        <span>Template Word Body Kontrak</span>
-                        <Button
-                style={{
-                  minWidth: 100
-                }}
-              >
-                Download
-              </Button>
+                        <p
+                            style={{
+                                fontSize: 14,
+                                fontWeight: 500,
+                                color: '#3699ff',
+                            }}
+                        >
+                            https://geodipa-my.sharepoint.com/:w:/g/personalcontract_admin_geodipa_Kontrak-Perjanjian_idEVLWq8U2WxVLgVmHO--FqR0BiX_FbrptwluwNlitelZ0eg?e=5mhN9Q
+                        </p>
                     </div>
+                    
+                    Template Word Lampiran 1
                     <div
                         style={{
                             border: 1,
@@ -1719,18 +1845,23 @@ const DraftAddendumPage = () => {
                             padding: '12px 10px',
                             display: 'flex',
                             justifyContent: 'space-between',
-                            alignItems: 'center'
+                            alignItems: 'center',
+
                         }}
                     >
-                            <span>Template Word Lampiran 1</span>
-                            <Button
-                style={{
-                  minWidth: 100
-                }}
-              >
-                Download
-                            </Button>
+                            <p
+                                style={{
+                                                                fontSize: 14,
+                                                                fontWeight: 500,
+                                                                color: '#3699ff',
+                                                                textOverflow: 'clip'
+                                }}
+                            >
+                                https://geodipa-my.sharepoint.com/:w:/g/personal/contract_admin_geodipa_Lamp-1_id/EVLWq8U2WxVLgVmHO--FqR0BiX_FbrptwluwNlitelZ0eg?e=5mhN9Q
+                            </p>
                     </div>
+                    
+                    Template Word Lampiran 2
                     <div
                         style={{
                                                     border: 1,
@@ -1743,15 +1874,31 @@ const DraftAddendumPage = () => {
                                                     alignItems: 'center'
                         }}
                     >
-                        <span>Template Word Lampiran 2</span>
-                        <Button
-                style={{
-                  minWidth: 100
-                }}
-              >
-                Download
-                        </Button>
+                        <p
+                            style={{
+                                                            fontSize: 14,
+                                                            fontWeight: 500,
+                                                            color: '#3699ff',
+                                                            textOverflow: 'clip'
+                            }}
+                        >
+                            https://geodipa-my.sharepoint.com/:w:/g/personal/contract_admin_geodipa_Lamp-2_id/EVLWq8U2WxVLgVmHO--FqR0BiX_FbrptwluwNlitelZ0eg?e=5mhN9Q
+                        </p>
                     </div>
+
+                </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        padding: 28
+                    }}
+                >
+                    <button
+                        className="btn btn-primary"
+                    >
+                        Submit
+                    </button>
                 </div>
             </>
         }
@@ -2084,14 +2231,15 @@ const DraftAddendumPage = () => {
                {reviewSequence === 1 &&
 
                     <>
-                        <Tabs
+
+                        {/* <Tabs
                             tabActive={reviewProcessTabActive}
                             handleChange={handleChangeReviewProcessTab}
                             tabLists={reviewProcessTabLists}
                             variant="scrollable"
                             grid={true}
                             arrayLength={4}
-                        />
+                        /> */}
 
                         <div
                             style={{
@@ -2100,196 +2248,204 @@ const DraftAddendumPage = () => {
                             }}
                         >
 
-
-                            {reviewProcessTabActive === 0 &&
-                                <div
+<div
+                                style={{
+                                    border: 1,
+                                    borderColor: 'black',
+                                    borderStyle: 'solid',
+                                    borderRadius: 14,
+                                    padding: '14px 28px',
+                                    backgroundColor: 'white',
+                                }}
+                            >
+                                                           
+                                {/* <h1
+                                                               style={{
+                                                                   fontSize: 16,
+                                                                   fontWeight: 600
+                                                               }}
+                                                           >
+                                                               Form Review Addendum Kontrak
+                                </h1> */}
+                            
+                                {/* <br
                                     style={{
-                                        border: 1,
-                                        borderColor: 'black',
-                                        borderStyle: 'solid',
-                                        borderRadius: 14,
-                                        padding: '14px 28px',
-                                        backgroundColor: 'white',
+                                                                   border: 1,
+                                                                   borderColor: 'black',
+                                                                   borderStyle: 'solid'
+                                    }}
+                                /> */}
+                            
+                                <Formik
+                                    initialValues={{
+                                        links: linksGroup,
+                                    }}
+                                    onSubmit={async (values, actions) => {
+                                        alert(JSON.stringify(values, null, 2));
                                     }}
                                 >
-                                                               
-                                    <h1
-                                                                   style={{
-                                                                       fontSize: 16,
-                                                                       fontWeight: 600
-                                                                   }}
-                                                               >
-                                                                   Form Review Addendum Kontrak
-                                    </h1>
-                           
-                                    <br
-                                        style={{
-                                                                       border: 1,
-                                                                       borderColor: 'black',
-                                                                       borderStyle: 'solid'
-                                        }}
-                                    />
-                           
-                                    <Formik
-                                        initialValues={{
-                                            links: linksGroup,
-                                        }}
-                                        onSubmit={async (values, actions) => {
-                                            alert(JSON.stringify(values, null, 2));
-                                        }}
-                                    >
-                                                           {({ values }) => 
-                                                       
-                                                           (
-                                                       
-                                                           <>
-                           
-                                                           <FieldArray name="links">
-                                                               
-                                                               {({ push, remove }) => (
-                           
-                                                               <Grid container spacing={2} sx={{ marginTop: 2, paddingX: 2 }}>
-                                                       
-                                                                   {values.links.map((_, index) => (
-                                                                   <>
-                           
-                                                                       <Grid item md={10}>
-                                                                       <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
-                                                                           {_.documentname}
-                                                                       </p>                                 <div                    className="col-sm-12"                    style={{
-                                                                            color: _.documentfileupload === '' ? 'black' : '#3699ff',
-                                                                            padding: '10px 14px',
-                                                                            borderRadius: 4,
-                                                                            backgroundColor: '#e8f4fb',
-                                                                            border: 1,
-                                                                            borderStyle: 'solid',
-                                                                            borderColor: '#8c8a8a',
-                                                                            opacity: .8,
-                                                                            fontSize: 10,
-                                                                            fontWeight: 400
-                                                                        }}
-                                                                        >
-                                                                            <a
-                                                                                        href=""
-                                                                                    >
-                                                                                        {_.documentfileupload === '' ? 'tidak ada file' : _.documentfileupload}
-                                                                            </a>
-                                                                        </div>
-                                                                       </Grid>
-                                                                       {index > 2 && (
-                                                                       <Grid item md={2} alignItems="center" justifyContent="center">
-                           
-                                                                           <p style={{fontWeight: 500, fontSize:14, marginBottom: 14}}>
-                                                                       
-                                                                           </p>
-                                                                           <Button variant="outlined"  onClick={() => remove(index)}>
-                                                                           Delete
-                                                                           </Button>
-                           
-                                                                       </Grid>
-                                                                       )}
-                                                                       <Grid item md={12}>
-                                                                           <h1
-                                                                               style={{
-                                                                                   fontWeight: 500,
-                                                                                   fontSize: 14
-                                                                               }}
-                                                                           >Komentar<span style={{
-                                                                               fontWeight: 500,
-                                                                               fontSize: 14,
-                                                                               color: '#dc0526'
-                                                                           }}>*</span>
-                                                                           </h1>
-                                                                       <Field 
-                                                                           name={`links.${index}.about`} 
-                                                                           component={TextAreaInput}
-                                                                           value={`${_.about}`}
-                                                                       />
-                                                                       </Grid>
-                           
-                                                                   </>
-                                                                   ))}
-                           
-                                                                   <Grid item xs={12}>
-                                                                   
-                                                                   {/* <Button
-                                                                       variant="outlined"
-                                                                       
-                                                                       onClick={() => push()}
-                                                                   >
-                                                                       Add Link
-                                                                   </Button> */}
-                           
-                                                                   <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
-                                                                       Klik Disini
-                                                                   </button>
-                           
-                                                                   </Grid>
-                           
-                                                               </Grid>
-                           
-                                                               )}
-                           
-                                                           </FieldArray>
+                                                       {({ values }) => 
+                                                   
+                                                       (
+                                                   
+                                                       <>
+                            
+                                                       <FieldArray name="links">
                                                            
-                                                           </>
-                                               
-                                                           )}
-                                    </Formik>
-                           
-                                    <div
-                                                                   style={{
-                                                                       display: 'flex',
-                                                                       flexDirection: 'column',
-                                                                       gap: 4,
-                                                                       marginBottom: 87
-                                                                   }}
-                                                               >
-                                                                   <h1
-                                                                       style={{
+                                                           {({ push, remove }) => (
+                            
+                                                           <Grid container spacing={2} sx={{ marginTop: 2, paddingX: 2 }}>
+                                                   
+                                                               {values.links.map((_, index) => (
+                                                               <>
+                            
+                                                                   <Grid item md={10}>
+                                                                   <p style={{fontWeight: 500, fontSize:14, marginBottom: 0}}>
+                                                                       {_.documentname}
+                                                                   </p>
+                                                                    <p
+                                                                        style={{
+                                                                            margin: '14px 0'
+                                                                        }}
+                                                                    >
+                                                                        Silahkan klik link dibawah ini untuk melakukan review :
+                                                                    </p>
+                                                                    <div                 className="col-sm-12"                   style={{
+                                                                        color: _.documentfileupload === '' ? 'black' : '#3699ff',
+                                                                        padding: '10px 14px',
+                                                                        borderRadius: 4,
+                                                                        backgroundColor: '#e8f4fb',
+                                                                        border: 1,
+                                                                        borderStyle: 'solid',
+                                                                        borderColor: '#8c8a8a',
+                                                                        opacity: .8,
+                                                                        fontSize: 10,
+                                                                        fontWeight: 400
+                                                                    }}
+                                                                    >
+                                                                        <a
+                                                                                    href=""
+                                                                                >
+                                                                                    {_.documentfileupload === '' ? 'tidak ada file' : _.documentfileupload}
+                                                                        </a>
+                                                                    </div>
+                                                                   </Grid>
+                                                                   {index > 2 && (
+                                                                   <Grid item md={2} alignItems="center" justifyContent="center">
+                            
+                                                                       <p style={{fontWeight: 500, fontSize:14, marginBottom: 14}}>
+                                                                   
+                                                                       </p>
+                                                                       <Button variant="outlined"  onClick={() => remove(index)}>
+                                                                       Delete
+                                                                       </Button>
+                            
+                                                                   </Grid>
+                                                                   )}
+                                                                   {/* <Grid item md={12}>
+                                                                       <h1
+                                                                           style={{
+                                                                               fontWeight: 500,
+                                                                               fontSize: 14
+                                                                           }}
+                                                                       >Komentar<span style={{
+                                                                           fontWeight: 500,
                                                                            fontSize: 14,
-                                                                           fontWeight: 500
-                                                                       }}
-                                                                   >Version</h1>
-                                                                   <input 
-                                                                       className="col-sm-6"
-                                                                       value={"Versi 0"}
-                                                                       style={{
-                                                                           backgroundColor: '#e8f4fb',
-                                                                           padding: 8,
-                                                                           borderRadius: 4,
-                                                                           border: 1,
-                                                                           borderStyle: 'solid',
-                                                                           borderColor: '#8c8a8a',
-                                                                           opacity: .8
-                                                                       }}
+                                                                           color: '#dc0526'
+                                                                       }}>*</span>
+                                                                       </h1>
+                                                                   <Field 
+                                                                       name={`links.${index}.about`} 
+                                                                       component={TextAreaInput}
+                                                                       value={`${_.about}`}
                                                                    />
-                                    </div>
-
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'flex-end',
-                                            gap : 20
-                                        }}
+                                                                   </Grid> */}
+                            
+                                                               </>
+                                                               ))}
+                            
+                                                               <Grid item xs={12}>
+                                                               
+                                                               {/* <Button
+                                                                   variant="outlined"
+                                                                   
+                                                                   onClick={() => push()}
+                                                               >
+                                                                   Add Link
+                                                               </Button> */}
+                            
+                                                               <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
+                                                                   Klik Disini
+                                                               </button>
+                            
+                                                               </Grid>
+                            
+                                                           </Grid>
+                            
+                                                           )}
+                            
+                                                       </FieldArray>
+                                                       
+                                                       </>
+                                           
+                                                       )}
+                                </Formik>
+                            
+                                {/* <div
+                                                               style={{
+                                                                   display: 'flex',
+                                                                   flexDirection: 'column',
+                                                                   gap: 4,
+                                                                   marginBottom: 87
+                                                               }}
+                                                           >
+                                                               <h1
+                                                                   style={{
+                                                                       fontSize: 14,
+                                                                       fontWeight: 500
+                                                                   }}
+                                                               >Version</h1>
+                                                               <input 
+                                                                   className="col-sm-6"
+                                                                   value={"Versi 0"}
+                                                                   style={{
+                                                                       backgroundColor: '#e8f4fb',
+                                                                       padding: 8,
+                                                                       borderRadius: 4,
+                                                                       border: 1,
+                                                                       borderStyle: 'solid',
+                                                                       borderColor: '#8c8a8a',
+                                                                       opacity: .8
+                                                                   }}
+                                                               />
+                                </div> */}
+                            
+                                {/* <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
+                                        gap : 20
+                                    }}
+                                >
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={showAddChecklistAddendum}
                                     >
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={showAddChecklistAddendum}
-                                        >
-                                            Checklist Addendum Kontrak
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                           
-                                </div>
-                            }
+                                        Checklist Addendum Kontrak
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                    >
+                                        Submit
+                                    </Button>
+                                </div> */}
+                            
+                            </div>
+
+                            {/* {reviewProcessTabActive === 0 &&
+                            } */}
                             
                             {reviewProcessTabActive === 1 &&                            
                                 <div
@@ -3499,7 +3655,7 @@ const DraftAddendumPage = () => {
                                                             >
                                                                 <div>
                                                                     <span>
-                                                                        Reviewer User
+                                                                        Tambah User
                                                                     </span>
                                                                 </div>
                                                             </Button>
@@ -3571,11 +3727,11 @@ const DraftAddendumPage = () => {
                                                                 className="btn btn-primary"
                                                                 variant="contained"
                                                                 size="medium"
-                                                                // onClick={showAddVendor}
+                                                                onClick={showAddVendor}
                                                             >
                                                                 <div>
                                                                     <span>
-                                                                        Reviewer Vendor
+                                                                        Tambah Vendor
                                                                     </span>
                                                                 </div>
                                                             </Button>
@@ -3652,6 +3808,8 @@ const DraftAddendumPage = () => {
             </>
         }
 
+
+        {sequence === 0 &&
             <div
               style={{
                 display: 'flex',
@@ -3660,25 +3818,34 @@ const DraftAddendumPage = () => {
                 padding: '2rem 2.25rem'
               }}
             >   
-            <button
-                className="btn btn-primary"
+                          <button
+                className="btn btn-outline-primary"
                 style={{
                   minWidth: 100
                 }}
+                onClick={
+                  () => tabActive > 0 ? 
+                  setTabActive(tabActive-1) : 
+                  setTabActive(tabActive)}
               >
-                Update  
+                {`<< Back`}
               </button>
               {/* disable pasal sebelum addnm */}
               <button
                className="btn btn-primary"
-                              style={{
-                                minWidth: 100
-                              }}
-                              onClick={() => setTabActive(tabActive < TabLists.length-1 ? tabActive+1 : tabActive)}
+                    style={{
+                        minWidth: 100
+                    }}
+                    onClick={
+                        () => setTabActive(
+                            tabActive < TabLists.length-1 ? 
+                            tabActive+1 : tabActive
+                    )}
               >
                 Next
               </button>
             </div>
+        }
 
         </>
     )

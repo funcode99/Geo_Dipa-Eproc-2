@@ -258,7 +258,7 @@ const useStyles = makeStyles((theme) => ({
                       to: {
                         // url: `/${status}/addendum-contract/contract/${item.id}`,
                         // ${status}/addendum-contract/
-                        url: `/${status}/addendum-contract/add-addendum`,
+                        url: `/${status}/addendum-contract/add-addendum/${item.id}`,
                         style: {
                           color: "black",
                         },

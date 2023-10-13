@@ -3,10 +3,13 @@ import {
     Card,
     CardBody,
   } from "_metronic/_partials/controls"
+import SVG from "react-inlinesvg"
+import {toAbsoluteUrl} from "_metronic/_helpers/index"
 
 import ButtonAction from "app/components/buttonAction/ButtonAction"
 import DialogGlobal from "app/components/modals/DialogGlobal"
-import { Button } from "@material-ui/core"
+
+import { useParams } from "react-router-dom"
 
 import { 
     Table, 
@@ -23,19 +26,13 @@ import {
     Collapse
 } from '@material-ui/core'
 
-import {
-    Column,
-    TableTan,
-    ColumnDef,
-    useReactTable,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    flexRender,
-    RowData,
-  } from '@tanstack/react-table'
-
 import { ReactSelect } from "percobaan/ReactSelect"
+
+import { 
+    fetch_api_sg, 
+    getLoading 
+} from "redux/globalReducer"
+import { connect } from "react-redux"
 
 const tableDummyJobPriceDetail = [
     {   
@@ -177,10 +174,57 @@ function createData(name, calories, fat, carbs, protein) {
   
 
 const FormParameter = ({
-    currentActiveTab
+    currentActiveTab,
+    fetch_api_sg
 }) => {
 
     console.log('tab yang aktif sekarang', currentActiveTab)
+
+    const [dataArr, setDataArr] = React.useState([])
+    const { contract_id } = useParams();
+
+    const getDataPenalties = async () => {
+        fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/refference/get-all-pinalties`,
+        onSuccess: (res) => {
+            // console.log(`res.data`, res.data);
+            // generateTableContent(res.data);
+            setDataArr(
+            res.data.map((item) => ({
+                id: item.id,
+                name: item.pinalty_name
+            }))
+            )
+        },
+        });
+    }
+
+    const getDataBankAccounts = async () => {
+        fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/refference/get-party-bank/${contract_id}`,
+        onSuccess: (res) => {
+            setDataArr(
+            res.data.map((item) => ({
+                id: item.id,
+                name: item.pinalty_name
+            }))
+            )
+        },
+        });
+    }
+
+    React.useEffect(() => {
+        getDataPenalties()
+        getDataBankAccounts()
+    }, [])
+
+    React.useEffect(() => {
+        console.log('isi dataArr',dataArr)
+    }, [dataArr])
 
     const [addendumPaymentMethod, setAddendumPaymentMethod] = useState('full')
 
@@ -566,9 +610,14 @@ const FormParameter = ({
                             value={"User 4"}
                         /> */}
                         <select name="" id="">
-                            <option>
-                                Keterlambatan Kerja
-                            </option>
+                            {dataArr.length > 0 &&
+                                dataArr.map((data) => {
+                                    return <option key={data.id}>{data.name}</option>
+                                })
+                                // <option>
+                                //     Keterlambatan Kerja
+                                // </option>
+                            }
                         </select>
                     </div>
 
@@ -5154,201 +5203,364 @@ timePeriodBeforeAddendum.map((data, index) => (
                             style={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                rowGap: 28
+                                rowGap: 24
                             }}
                         >
-                            <h1
-                                style={{
-                                    fontSize: 16,
-                                    fontWeight: 600
-                                }}
-                            >
-                                Nomor rekening kontrak awal
-                            </h1>
 
-                            <div
-                                style={{
-                                    display: 'grid',
-                                    gap: 24,
-                                    gridTemplateColumns: "repeat(4, minmax(0, 1fr))"
-                                }}
-                            >
-                                <div
+                            <div>
+                                <h1
                                     style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
+                                        fontSize: 16,
+                                        fontWeight: 600,
+                                        marginBottom: 14
                                     }}
                                 >
-                                    <span>Nama rekening</span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb"
-                                        }}
-                                        disabled
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Nama bank</span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb"
-                                        }}
-                                        disabled
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Alamat bank</span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb"
-                                        }}
-                                        disabled
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Nomor rekening</span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb"
-                                        }}
-                                        disabled
-                                    />
-                                </div>
-                            </div>
+                                    Nomor rekening kontrak awal
+                                </h1>
 
-                            <h1
-                                style={{
-                                    fontSize: 16,
-                                    fontWeight: 600
-                                }}
-                            >
-                                Addendum nomor rekening 
-                            </h1>
-
-                            <div
-                                style={{
-                                    display: 'grid',
-                                    gap: 24,
-                                    gridTemplateColumns: "repeat(4, minmax(0, 1fr))"
-                                }}
-                            >
-                                                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Nama rekening</span>
-                                    <input 
-                                        type="text"
-                                    />
-                                </div>
                                 <div
                                     style={{
+                                        // display: 'grid',
+                                        // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
                                         display: 'flex',
-                                        flexDirection: 'column'
+                                        flexWrap: 'wrap',
+                                        gap: 24,
+                                        fontSize: 14,
+                                        fontWeight: 500,
                                     }}
                                 >
-                                    <span>Nama bank</span>
-                                    <input 
-                                        type="text"
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Alamat bank</span>
-                                    <input 
-                                        type="text"
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Nomor rekening</span>
-                                    <input 
-                                        type="text"
-                                    />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nomor rekening</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: "#e8f4fb",
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            disabled
+                                            value={"128574647483"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nama rekening</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: "#e8f4fb",
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            disabled
+                                            value={"GOLDEN PRATAMA ENGINEERING"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nama bank</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: "#e8f4fb",
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            disabled
+                                            value={"MANDIRI"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Alamat bank</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: "#e8f4fb",
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            disabled
+                                            value={"Jl Warung Buncit Raya"}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
                             <div>
-                                <span
+                                <h1
                                     style={{
                                         fontSize: 16,
-                                        fontWeight: 600
+                                        fontWeight: 600,
+                                        marginBottom: 14
                                     }}
                                 >
-                                    Surat pernyataan dari bank
-                                </span>
-                                <div>
-                                    
-                                    <label
-                                                        htmlFor="upload"
-                                                        className={`input-group mb-3 col-sm-3 pointer`}
-                                                        style={{
-                                                            padding: 0
-                                                        }}
-                                                    >
+                                    Addendum nomor rekening 
+                                </h1>
 
-                                                        <span
-                                                        className={`form-control text-truncate`} 
-                                                        style={{
-                                                            backgroundColor: '#e8f4fb'
-                                                        }}
-                                                        >
-                                                        nama_file_upload.pdf
-                                                        </span>
-                                                        <div 
-                                                            className="input-group-prepend"
-                                                        >
-                                                            <span className="input-group-text"
-                                                                 style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}    
-                                                            >
-                                                            <i className="fas fa-file-upload"></i>
-                                                            </span>
-                                                        </div>
-                                    </label>
-
-                                    <input
-                                        type="file"
-                                        className="d-none"
-                                        id="upload"
+                                <div
+                                    style={{
+                                        // display: 'grid',
+                                        // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        gap: 24,
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                    }}
+                                >
+                                    <div
                                         style={{
-                                            backgroundColor: '#E8F4FB'
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
                                         }}
-                                    />
+                                    >
+                                        <span>Nomor rekening</span>
+                                        <input 
+                                            type="text"
+                                            value={"08647583942"}
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nama rekening</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            value={"GOLDEN PRATAMA ENGINEERING"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nama bank</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
 
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            value={"BCA"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Alamat bank</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            value={"Jl Menteng Pusat"}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
+                            {/* surat pernyataan dari bank */}
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                                    gap: 24
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column'
+                                    }}
+                                >
+                                        <span
+                                            style={{
+                                                fontSize: 14,
+                                                fontWeight: 500
+                                            }}
+                                        >
+                                            Surat pernyataan dari bank
+                                        </span>
+                                        <div
+                                            style={{
+                                                position: 'relative',
+                                                padding: 0,
+                                                margin: 0
+                                            }}
+                                        >
+                                            <input
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '10px 12px 10px 46px',
+                                                    color: '#3699ff',
+                                                    borderColor: 'black',
+                                                    border: 1,
+                                                    borderStyle: 'solid',
+                                                    borderRadius: 4,
+                                                    fontSize: 14,
+                                                    fontWeight: 500,
+                                                    marginTop: 4
+                                                }}
+                                                type="text"
+                                                value={`surat_pernyataan_bank_bca.pdf`}
+                                                disabled
+                                            />
+                                            <SVG 
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    bottom: 0,
+                                                    left: 12,
+                                                    margin: 'auto 0'
+                                                    // width:10,
+                                                    // height:10
+                                                }}
+                                                src={toAbsoluteUrl("/media/svg/icons/All/upload.svg")}
+                                            />
+                                        </div>
+                                        {/* <div>
+                                            <label
+                                                htmlFor="upload"
+                                                className={`input-group mb-3 col-sm-3 pointer`}
+                                                style={{
+                                                    padding: 0
+                                                }}
+                                            >
+                                                <span
+                                                                className={`form-control text-truncate`} 
+                                                                style={{
+                                                                    backgroundColor: '#e8f4fb'
+                                                                }}
+                                                                >
+                                                                nama_file_upload.pdf
+                                                </span>
+                                                <div 
+                                                                    className="input-group-prepend"
+                                                                >
+                                                                    <span className="input-group-text"
+                                                                        style={{
+                                                                            backgroundColor: '#e8f4fb'
+                                                                        }}    
+                                                                    >
+                                                                    <i className="fas fa-file-upload"></i>
+                                                                    </span>
+                                                </div>
+                                            </label>
+                                            <input
+                                                type="file"
+                                                className="d-none"
+                                                id="upload"
+                                                style={{
+                                                    backgroundColor: '#E8F4FB'
+                                                }}
+                                            />
+                                        </div> */}
+                                </div>
+                                <div>
+                                        
+                                </div>
+                            </div>
+
+                            {/* pasal sebelum addendum */}
                             <div>
                                 <span
                                     style={{
@@ -5362,6 +5574,7 @@ timePeriodBeforeAddendum.map((data, index) => (
                                 ></textarea>
                             </div>
 
+                            {/* pasal setelah addendum */}
                             <div>
                                 <span
                                     style={{
@@ -5385,25 +5598,21 @@ timePeriodBeforeAddendum.map((data, index) => (
 
 }
 
-const defaultColumn = {
-    cell: ({ getValue, row: { index }, column: { id }, table }) => {
+const keys = {
+    fetch: "get-data-penalties",
+  }
+  
+  const mapState = (state) => ({
+    loadings: {
+      fetch: getLoading(state, keys.fetch),
     },
+    status: state.auth.user.data.status,
+  })
+  
+  const mapDispatch = {
+    fetch_api_sg,
   }
   
-  function useSkipper() {
-    const shouldSkipRef = React.useRef(true)
-    const shouldSkip = shouldSkipRef.current
-  
-    // Wrap a function with this to skip a pagination reset temporarily
-    const skip = React.useCallback(() => {
-      shouldSkipRef.current = false
-    }, [])
-  
-    React.useEffect(() => {
-      shouldSkipRef.current = true
-    })
-  
-    return [shouldSkip, skip]
-  }
+  export default connect(mapState, mapDispatch)(FormParameter)
 
-export default FormParameter
+// export default FormParameter
