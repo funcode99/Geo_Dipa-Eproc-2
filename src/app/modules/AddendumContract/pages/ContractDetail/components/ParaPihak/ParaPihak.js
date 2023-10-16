@@ -290,36 +290,67 @@ const ParaPihak = ({
                     <>
 
 
+
                       {/* bagian ini untuk label */}
                       {/* readOnly */}
                       <Subheader 
-        text={
-          // dataContractById
-          // ? `Formulir Permohonan Addendum Kontrak No : ${dataContractById?.contract_no}` : 
-          // null
-          `Formulir Permohonan Addendum Kontrak No : 015.PJ/PST.100-GDE/I/2023`
-        }
-      />
+                        text={
+                          // dataContractById
+                          // ? `Formulir Permohonan Addendum Kontrak No : ${dataContractById?.contract_no}` : 
+                          // null
+                          `Formulir Permohonan Addendum Kontrak No : 015.PJ/PST.100-GDE/I/2023`
+                        }
+                      />
 
-      <SubBreadcrumbs
-        items={[
-          {
-            label: `Addendum Contract`
-          },
+                      <SubBreadcrumbs
+                        items={[
+                          {
+                            label: `Addendum Contract`
+                          },
 
-          {
-            label: "List of Contract & SPK",
-            // to: `/${authStatus}/addendum-contract/list-contract-po`,
-              to: `/client/addendum-contract/list-contract-po`      
-          },
-          // {
-          //   label: `${
-          //     dataContractById ? dataContractById?.contract_name : "x"
-          //   }`,
-          //   to: "/",
-          // },
-        ]}
-      />
+                          {
+                            label: "List of Contract & SPK",
+                            // to: `/${authStatus}/addendum-contract/list-contract-po`,
+                              to: `/client/addendum-contract/list-contract-po`      
+                          },
+                          // {
+                          //   label: `${
+                          //     dataContractById ? dataContractById?.contract_name : "x"
+                          //   }`,
+                          //   to: "/",
+                          // },
+                        ]}
+                      />
+
+                      {/* Tanggal dokumen permohonan */}
+                      <div
+                                            style={{
+                                                marginTop: 28,
+                                                marginBottom: 28,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: 4
+                                            }}
+                                        >
+                                            
+                                            <h1
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: 600,
+                                                    margin: 0
+                                                }}
+                                            >
+                                                Tanggal Dokumen Permohonan
+                                            </h1> 
+                                            <div>
+                                                <input 
+                                                    type='date'
+                                                    // pakai strip bukan garing
+                                                    value="2023-07-15"
+                                                />
+                                            </div>
+                      </div>
+
                       <FieldBuilder formData={formDataCheckbox} />
                       <FieldBuilder formData={formData1} />
                       <SupportingDocumentInput title={supportingDocumentDefault} />

@@ -3,10 +3,13 @@ import {
     Card,
     CardBody,
   } from "_metronic/_partials/controls"
+import SVG from "react-inlinesvg"
+import {toAbsoluteUrl} from "_metronic/_helpers/index"
 
 import ButtonAction from "app/components/buttonAction/ButtonAction"
 import DialogGlobal from "app/components/modals/DialogGlobal"
-import { Button } from "@material-ui/core"
+
+import { useParams } from "react-router-dom"
 
 import { 
     Table, 
@@ -23,65 +26,626 @@ import {
     Collapse
 } from '@material-ui/core'
 
-import {
-    Column,
-    TableTan,
-    ColumnDef,
-    useReactTable,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    flexRender,
-    RowData,
-  } from '@tanstack/react-table'
-
 import { ReactSelect } from "percobaan/ReactSelect"
 
-const tableDummyJobPriceDetail = [
-    {   
-        item_desc: 'TX-76543 -- 001 ABCDEFFGH',
-        qty: '10',
-        unit: 'EA',
-        unit_price: '100.000.000',
-        total_price: '1.000.000.000',
-        info: 'empty',
-        child: [
-            {
-                item_desc: 'TX-76543 -- 001 ABCDEFFGH',
-                qty: '10',
-                unit: 'EA',
-                unit_price: '100.000.000',
-                total_price: '1.000.000.000',
-                info: 'empty',
-            },
-            {
-                item_desc: 'TX-76543 -- 001 ABCDEFFGH',
-                qty: '10',
-                unit: 'EA',
-                unit_price: '100.000.000',
-                total_price: '1.000.000.000',
-                info: 'empty',
-            },
-            {
-                item_desc: 'TX-76543 -- 001 ABCDEFFGH',
-                qty: '10',
-                unit: 'EA',
-                unit_price: '100.000.000',
-                total_price: '1.000.000.000',
-                info: 'empty',
-            },
-        ]
+import { 
+    fetch_api_sg, 
+    getLoading 
+} from "redux/globalReducer"
+import { connect } from "react-redux"
+
+import { useCollapse } from 'react-collapsed'
+import { makeStyles } from "@material-ui/core/styles"
+import Input from "@material-ui/core/Input"
+import IconButton from "@material-ui/core/IconButton"
+import DoneIcon from "@material-ui/icons/DoneAllTwoTone"
+import RevertIcon from "@material-ui/icons/NotInterestedOutlined"
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
+
+const CustomTableCell = ({ row, name, onChange }) => {
+    const classes = useStyles()
+    const { isEditMode } = row
+
+    return (
+    <TableCell align="left" className={classes.tableCell}>
+        {isEditMode ? (
+        <Input
+            value={row[name]}
+            name={name}
+            onChange={e => onChange(e, row)}
+            className={classes.input}
+        />
+        ) : (
+        row[name]
+        )}
+    </TableCell>
+    )
+}
+
+const useStyles = makeStyles(theme => ({
+    root: {
+      width: "100%",
+      marginTop: theme.spacing(3),
+      overflowX: "auto"
     },
-    {
-        item_desc: 'TX-76544 -- 002 ABCDEFFGH',
-        qty: '5',
-        unit: 'EA',
-        unit_price: '100.000.000',
-        total_price: '1.000.000.000',
-        info: 'nothing',
-        child: []
+    table: {
+      minWidth: 650
+    },
+    selectTableCell: {
+      width: 60
+    },
+    tableCell: {
+      width: 130,
+      height: 40
+    },
+    input: {
+      width: 130,
+      height: 40
+    },
+    content: {
+        display: 'table-row',
+        width: '100%'
     }
-]
+}))
+
+const createNewData = (item_desc, qty, unit, unit_price, total_price, information) => ({
+    id: item_desc.replace(" ", "_"),
+    item_desc,
+    qty,
+    unit,
+    unit_price,
+    total_price,
+    information,
+    isEditMode: false,
+    children: []
+})
+
+const createNewPlaceman = (name, fullname, position, address, phone_number, fax) => ({
+    name,
+    fullname,
+    position,
+    address,
+    phone_number,
+    fax
+})
+
+// const toPush = useRef()
+
+// const setPush = (e) => {
+//   toPush.current.click()
+// }
+
+const CollapsibleRow = ({ 
+    classes, 
+    index, 
+    onAddMode,
+    onAddChildMode,
+    onChange, 
+    onChangeChild, 
+    onDeleteMode,
+    onDeleteChildMode,
+    onRevert,
+    onRevertChild,
+    onToggleEditMode, 
+    onToggleEditChildMode, 
+    row
+}) => 
+{
+
+    const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
+        
+       return (
+            <>
+                {/* parent table */}
+                <TableRow>
+                            <TableCell
+                                className={classes.tableCell}
+                            >
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between'
+                                        }}
+                                    >
+                                        {`${index+1}`}
+                                        {/* it work like a charm! */}
+                                        {row.children.length > 0 &&
+                                            <button {...getToggleProps()}>
+                                                {isExpanded ? 
+                                                    <KeyboardArrowUpIcon /> 
+                                                    :
+                                                    <KeyboardArrowDownIcon />
+                                                }
+                                            </button>
+                                        }
+                                    </div>
+                            </TableCell>
+                            <CustomTableCell {...{ row, name: "item_desc", onChange }} />
+                            <CustomTableCell {...{ row, name: "qty", onChange }} />
+                            <CustomTableCell {...{ row, name: "unit", onChange }} />
+                            <CustomTableCell {...{ row, name: "unit_price", onChange }} />
+                            <CustomTableCell {...{ row, name: "total_price", onChange }} />
+                            <CustomTableCell {...{ row, name: "information", onChange }} />
+                            {row.isEditMode ? 
+                                (
+                                    <TableCell>
+                                                                        <IconButton
+                                                                                aria-label="done"
+                                                                                onClick={() => onToggleEditMode(row.id)}
+                                                                            >
+                                                                                <DoneIcon />
+                                                                        </IconButton>
+                                                                        <IconButton
+                                                                                aria-label="revert"
+                                                                                onClick={() => onRevert(row.id)}
+                                                                            >
+                                                                                <RevertIcon />
+                                                                        </IconButton>
+                                    </TableCell>
+                                )
+                                    : 
+                                (
+                                    <TableCell>
+                                        <ButtonAction
+                                            handleAction={(a, b, c) => {
+                                                                                if(c === 'Hapus') {
+                                                                                                        onDeleteMode(row.id)
+                                                                                } else if (c === 'Edit') {
+                                                                                                        onToggleEditMode(row.id)
+                                                                                } else if (c === 'Tambah') {
+                                                                                                        onAddMode()
+                                                                                } else if (c === 'Tambah Sub Item') {
+                                                                                    onAddChildMode(row.id, index)
+                                                                                }
+                                                                            }}
+                                                                            ops={[
+                                                                                                    {
+                                                                                                        label: "Edit",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        label: "Hapus",
+                                                                                                    },
+                                                                                                    {
+                                                                                                        label: "Tambah"
+                                                                                                    },
+                                                                                                    {
+                                                                                                        label: 'Tambah Sub Item'
+                                                                                                    }
+                                            ]}
+                                        >
+                                        </ButtonAction>
+                                    </TableCell>
+                                )
+                            }
+                </TableRow>
+
+                {/* children table */}
+                {row?.children &&
+                    row.children.map((data, childIndex) => (
+                            
+                        <TableRow 
+                            key={index}
+                            {...getCollapseProps()}
+                        >
+                                                                
+                            <TableCell>
+                                <div>
+                                </div>
+                            </TableCell>
+                            <TableCell align="left" className={classes.tableCell}>
+                                {data.isEditMode ? (
+                                    <Input
+                                        value={data.item_desc}
+                                        name={'item_desc'}
+                                        onChange={e => onChangeChild(e, data, index, childIndex)}
+                                        className={classes.input}
+                                    />
+                                ) : 
+                                (data.item_desc)}
+                            </TableCell>
+                            <TableCell align="left" className={classes.tableCell}>
+                                {data.isEditMode ? (
+                                                                        <Input
+                                                                            value={data.calories}
+                                                                            name={'calories'}
+                                                                            onChange={e => onChangeChild(e, data, index, childIndex)}
+                                                                            className={classes.input}
+                                                                        />
+                                ) : 
+                                (data.calories)}
+                            </TableCell>
+                            <TableCell align="left" className={classes.tableCell}>
+                                                                            {data.isEditMode ? 
+                                                                                (
+                                                                                <Input
+                                                                                    value={data.fat}
+                                                                                    name={'fat'}
+                                                                                    onChange={e => onChangeChild(e, data, index, childIndex)}
+                                                                                    className={classes.input}
+                                                                                />
+                                                                                ) 
+                                                                            :
+                                                                                (
+                                                                                    data.fat
+                                                                                )
+                                                                            }
+                            </TableCell>
+                            <TableCell align="left" className={classes.tableCell}>
+                                                                            {data.isEditMode ? 
+                                                                                (
+                                                                                    <Input
+                                                                                        value={data.carbs}
+                                                                                        name={'carbs'}
+                                                                                        onChange={e => onChangeChild(e, data, index, childIndex)}
+                                                                                        className={classes.input}
+                                                                                    />
+                                                                                ) 
+                                                                            :
+                                                                                (
+                                                                                    data.carbs
+                                                                                )
+                                                                            }
+                            </TableCell>
+                            <TableCell align="left" className={classes.tableCell}>
+                                                                            {data.isEditMode ? 
+                                                                                (
+                                                                                    <Input
+                                                                                        value={data.protein}
+                                                                                        name={'protein'}
+                                                                                        onChange={e => onChangeChild(e, data, index, childIndex)}
+                                                                                        className={classes.input}
+                                                                                    />
+                                                                                ) 
+                                                                            :
+                                                                                (
+                                                                                    data.protein
+                                                                                )
+                                                                            }
+                            </TableCell>
+                        
+                            {/* error karena data nya gak sampai kesini dulu */}
+                        
+                            {data.isEditMode ? 
+                                (
+                                    <TableCell>
+                                        <IconButton
+                                                                                    aria-label="done-child"
+                                                                                    onClick={() => onToggleEditChildMode(data.id, index)}
+                                                                                >
+                                                                                    <DoneIcon />
+                                        </IconButton>
+                                        <IconButton
+                                                                                    aria-label="revert-child"
+                                                                                    onClick={() => onRevertChild(data.id, index)}
+                                                                                >
+                                                                                    <RevertIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                )
+                                    : 
+                                (
+                                    <TableCell>
+                                                                                <ButtonAction
+                                                                                    handleAction={(a, b, c) => {
+                                                                                        if(c === 'Hapus') {
+                                                                                            onDeleteChildMode(data.id, index)
+                                                                                        } else if (c === 'Edit') {
+                                                                                            onToggleEditChildMode(data.id, index)
+                                                                                        }
+                                                                                    }}
+                        
+                                                                                    ops={[
+                                                                                        {
+                                                                                            label: "Edit",
+                                                                                        },
+                                                                                        {
+                                                                                            label: "Hapus",
+                                                                                        }
+                                                                                    ]}
+                                                                                >
+                                                                                </ButtonAction>
+                                    </TableCell>
+                                )
+                            }
+                        
+                        </TableRow>
+                    
+                    ))
+                }
+            </>
+       )
+        
+    
+        
+
+}
+
+function EditableTable() {
+    const [rows, setRows] = React.useState([
+      createNewData("TX-76543 -- 001 ABCDEFFGH", 10, 'EA', '100.000.000', '1.000.000.000', 'Tidak Ada'),
+      createNewData("TX-76543 -- 002 ABCDEFFGH", 10, 'EA', '100.000.000', '1.000.000.000', 'Tidak Ada'),
+      createNewData("TX-76543 -- 003 ABCDEFFGH", 10, 'EA', '100.000.000', '1.000.000.000', 'Tidak Ada')
+    ])
+    const [previous, setPrevious] = React.useState({});
+    const classes = useStyles();
+
+    const onToggleEditMode = id => {
+      setRows(state => {
+        // isi state nya semua baris objek di dalam array tsb
+        console.log('isi state onToggleEditMode', state)
+        return rows.map(row => {
+          if (row.id === id) {
+            return { ...row, isEditMode: !row.isEditMode };
+          }
+          return row
+        });
+      });
+    }
+    
+    const onDeleteMode = id => {
+        setRows(state => {
+            return rows.filter(row => {
+              return row.id !== id;
+            })
+          })
+    }
+
+    const onChange = (e, row) => {
+        if (!previous[row.id]) {
+          setPrevious(state => ({ ...state, [row.id]: row }));
+        }
+        const value = e.target.value;
+        const name = e.target.name;
+        const { id } = row;
+        const newRows = rows.map(row => {
+          if (row.id === id) {
+            return { ...row, [name]: value };
+          }
+          return row;
+        });
+        setRows(newRows);
+    }
+    
+    const onRevert = id => {
+        const newRows = rows.map(row => {
+          if (row.id === id) {
+            return previous[id] ? previous[id] : row;
+          }
+          return row;
+        })
+        // console.log('isi previous', previous[id])
+        // console.log('isi new rows', newRows)
+        setRows(newRows);
+        setPrevious(state => {
+          delete state[id]
+          return state
+        })
+        onToggleEditMode(id)
+    }
+  
+    const onAddMode = () => {
+          setRows(state => [...state, 
+            createNewData(
+                "TX-76543 -- 002 ABCDEFFGH", 
+                5, 
+                'EA', 
+                '100.000.000', 
+                '500.000.000',
+                'Tidak Ada'
+                )
+            ])
+    }
+
+    const onToggleEditChildMode = (id, index) => {
+        setRows(prev => {
+            const newState = prev
+            const changedData = rows[index].children.map(row => {
+                if (row.id === id) {
+                    return { ...row, isEditMode: !row.isEditMode }
+                }
+                    return row
+            })
+            newState[index].children = changedData
+            return [...newState]
+        })
+    }
+
+    const onDeleteChildMode = (childId, index) => {
+
+        // akhirnya bisa juga ngentiaw
+        setRows((prev) => {
+            const newState = prev;
+            const items = rows[index].children.filter(
+            (variant) => variant.id !== childId
+            )
+            console.log('setelah filter', items)
+            newState[index].children = items;
+            return [...newState]
+        })
+
+    }
+
+    const onChangeChild = (e, row, parentIndex, childIndex) => {
+           
+        console.log('isi row di onchangechild', row)
+
+          if (!previous[row.id]) {
+            setPrevious(state => ({ ...state, [row.id]: row }));
+          }
+
+          const value = e.target.value;
+          const name = e.target.name;
+          const { id } = row;
+          const newRows = rows[parentIndex].children.map(item => {
+                return { ...row, [name] : value }
+          })
+          
+          console.log('isi new rows', newRows)
+
+          setRows((prev) => {
+            const newState = prev;
+            newState[parentIndex].children = newRows
+            return [...newState]
+          })
+
+    }
+
+    const onAddChildMode = (parentId, index) => {
+       let result = rows.map(row => {
+            if (row.id === parentId) {
+                if(row.children) {
+                    return { 
+                        ...row, 
+                        children: [
+                            ...row.children, 
+                            createNewData("Pudding", 591, 9.1, 60, 7.2)
+                        ] 
+                    }
+                } 
+                else {
+                    return { 
+                        ...row, 
+                        children: [
+                            createData("Pudding", 591, 9.1, 60, 7.2)
+                        ]
+                    }
+                }
+            }
+            // wajib ada, kalo gak ada bakal error
+            return row
+        })
+        setRows(result)
+    }
+
+    const onRevertChild = (id, index) => {
+
+        // const newRows = rows[index].children.map(row => {
+        //     if (row.id === id) {
+        //       return previous[id] ? previous[id] : row;
+        //     }
+        //     return row;
+        //   })
+        //   setRows(newRows);
+        //   setPrevious(state => {
+        //     delete state[index].children[id];
+        //     return state[index];
+        //   })
+
+        onToggleEditChildMode(id, index)
+
+    }
+
+    return (
+      <Paper className={classes.root}>
+        <Table className={classes.table} aria-label="caption table">
+          
+          {/* Table Header */}
+          <TableBody>
+            <TableRow>
+              <TableCell align='left'>No.</TableCell>
+              <TableCell align="left">Deskripsi Item</TableCell>
+              <TableCell align="left">QTY</TableCell>
+              <TableCell align="left">Satuan</TableCell>
+              <TableCell align="left">Harga Satuan</TableCell>
+              <TableCell align="left">Harga Total</TableCell>
+              <TableCell align="left">Keterangan</TableCell>
+              <TableCell align="left">Aksi</TableCell>
+            </TableRow>
+          </TableBody>
+
+          <TableBody>
+                {rows.map((row, index) => (
+                    row.children ?
+                        
+                        <>
+    
+                            <CollapsibleRow 
+                                row={row}
+                                index={index}
+                                classes={classes}
+                                onAddMode={onAddMode}
+                                onAddChildMode={onAddChildMode}
+                                onChange={onChange}
+                                onChangeChild={onChangeChild}
+                                onDeleteMode={onDeleteMode}
+                                onDeleteChildMode={onDeleteChildMode}
+                                onRevert={onRevert}
+                                onRevertChild={onRevertChild}
+                                onToggleEditChildMode={onToggleEditChildMode}
+                                onToggleEditMode={onToggleEditMode}
+                            />
+    
+                        </>
+
+                            :
+
+                        <>
+                            {/* selalu masuk kesini */}
+                            <TableRow key={row.id}>
+                                <CustomTableCell {...{ row, name: "name", onChange }} />
+                                <CustomTableCell {...{ row, name: "calories", onChange }} />
+                                <CustomTableCell {...{ row, name: "fat", onChange }} />
+                                <CustomTableCell {...{ row, name: "carbs", onChange }} />
+                                <CustomTableCell {...{ row, name: "protein", onChange }} />
+                                <TableCell className={classes.selectTableCell}>
+                                    {row.isEditMode ? (
+                                        <>
+                                        <IconButton
+                                            aria-label="done"
+                                            onClick={() => onToggleEditMode(row.id)}
+                                        >
+                                            <DoneIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            aria-label="revert"
+                                            onClick={() => onRevert(row.id)}
+                                        >
+                                            <RevertIcon />
+                                        </IconButton>
+                                        </>
+                                    ) : (
+                                        <ButtonAction
+                                            handleAction={(a, b, c) => {
+                                                if(c === 'Hapus') {
+                                                    onDeleteMode(row.id)
+                                                } else if (c === 'Edit') {
+                                                    onToggleEditMode(row.id)
+                                                } else if (c === 'Tambah') {
+                                                    onAddMode()
+                                                } else if (c === 'Tambah Sub Item') {
+                                                    onAddChildMode(row.id, index)
+                                                }
+                                            }}
+                                            ops={[
+                                                {
+                                                    label: "Edit",
+                                                },
+                                                {
+                                                    label: "Hapus",
+                                                },
+                                                {
+                                                    label: "Tambah"
+                                                },
+                                                {
+                                                    label: 'Tambah Sub Item'
+                                                }
+                                            ]}
+                                        >
+                                        </ButtonAction>
+                                    )}
+                                </TableCell>
+                            </TableRow>
+                        </>
+
+                    ))
+                }
+          </TableBody>
+
+        </Table>
+      </Paper>
+    );
+}
 
 const timePeriodBeforeAddendum = [
     {
@@ -160,11 +724,9 @@ const actionButton = (
     />
 )
 
-
-
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
-  }
+}
   
   const rows = [
     createData(1, 'Keterlambatan Pekerjaan', 10, 30, '%'),
@@ -177,10 +739,80 @@ function createData(name, calories, fat, carbs, protein) {
   
 
 const FormParameter = ({
-    currentActiveTab
+    currentActiveTab,
+    fetch_api_sg
 }) => {
 
-    console.log('tab yang aktif sekarang', currentActiveTab)
+    // console.log('tab yang aktif sekarang', currentActiveTab)
+
+    const [dataArr, setDataArr] = React.useState([])
+    const [dataArrFine, setDataArrFine] = React.useState([])
+    const { contract_id } = useParams()
+    const [placeman, setPlaceman] = useState({
+        workDirector: [
+            createNewPlaceman(
+                'Herdian', 
+                'Herdian Ardi Febrianto', 
+                'General Manager Unit Dieng', 
+                'Jl Raya Dieng - Batur Banjarnegara PO BOX 01 Wonosobo',
+                '+62-286-3342020',
+                '+62-286-3342022'
+            )
+        ],
+        workSupervisor: [
+            createNewPlaceman(
+                '',
+                '',
+                'Logistic Supervisor',
+                'Jl. Raya Dieng Batur, Karangtengah Batur Banjarnegara',
+                '+62-286-3342020',
+                '+62-286-3342022'
+            )
+        ]
+    })
+
+    const getDataPenalties = async () => {
+        fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/refference/get-all-pinalties`,
+        onSuccess: (res) => {
+            // console.log(`res.data`, res.data);
+            // generateTableContent(res.data);
+            setDataArr(
+            res.data.map((item) => ({
+                id: item.id,
+                name: item.pinalty_name
+            }))
+            )
+        },
+        });
+    }
+
+    const getDataBankAccounts = async () => {
+        fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/refference/get-party-bank/${contract_id}`,
+        onSuccess: (res) => {
+            setDataArrFine(
+            res.data.map((item) => ({
+                id: item.id,
+                name: item.pinalty_name
+            }))
+            )
+        },
+        });
+    }
+
+    React.useEffect(() => {
+        getDataPenalties()
+        getDataBankAccounts()
+    }, [])
+
+    React.useEffect(() => {
+        console.log('isi dataArr',dataArr)
+    }, [dataArr])
 
     const [addendumPaymentMethod, setAddendumPaymentMethod] = useState('full')
 
@@ -211,6 +843,26 @@ const FormParameter = ({
             <DialogGlobal
                 ref={openCloseWorkSupervisor}
                 isCancel={false}
+                onYes={() => {
+                    setPlaceman(placeman => {
+                        return {
+                            ...placeman,
+                            workSupervisor: [
+                                ...placeman.workSupervisor,
+                                createNewPlaceman(
+                                    "TX-76543 -- 002 ABCDEFFGH", 
+                                    5, 
+                                    'EA', 
+                                    '100.000.000', 
+                                    '500.000.000',
+                                    'Tidak Ada'
+                                )
+                            ] 
+                        }
+                    }
+                        
+                    )
+                 }}
             >
                 <div
                     style={{
@@ -339,6 +991,26 @@ const FormParameter = ({
             <DialogGlobal
                  ref={openCloseWorkDirector}
                  isCancel={false}
+                 onYes={() => {
+                    setPlaceman(placeman => {
+                        return {
+                            ...placeman,
+                            workDirector: [
+                                ...placeman.workDirector,
+                                createNewPlaceman(
+                                    "TX-76543 -- 002 ABCDEFFGH", 
+                                    5, 
+                                    'EA', 
+                                    '100.000.000', 
+                                    '500.000.000',
+                                    'Tidak Ada'
+                                )
+                            ] 
+                        }
+                    }
+                        
+                    )
+                 }}
             >
                 <div
                     style={{
@@ -453,7 +1125,8 @@ const FormParameter = ({
                                 borderColor: '#8c8a8a',
                                 opacity: .8
                             }}
-                            value={""}
+                            // kalo ada value nya jadi statis, gabisa diisi apa2
+                            // value={""}
                         />
                     </div>
 
@@ -476,7 +1149,7 @@ const FormParameter = ({
                                 borderColor: '#8c8a8a',
                                 opacity: .8
                             }}
-                            value={""}
+                            // value={""}
                         />
                     </div>
 
@@ -499,10 +1172,9 @@ const FormParameter = ({
                                 borderColor: '#8c8a8a',
                                 opacity: .8
                             }}
-                            value={""}
+                            // value={""}
                         />
                     </div>
-
 
                     </div>
 
@@ -551,7 +1223,12 @@ const FormParameter = ({
                             gap: 10
                         }}
                     >
-                        <span>
+                        <span
+                            style={{
+                                fontSize: 10,
+                                fontWeight: 600
+                            }}
+                        >
                             Jenis Denda
                         </span>
                         {/* <input 
@@ -565,10 +1242,30 @@ const FormParameter = ({
                             }}
                             value={"User 4"}
                         /> */}
-                        <select name="" id="">
-                            <option>
-                                Keterlambatan Kerja
-                            </option>
+                        <select
+                            style={{
+                                padding: '10px 0',
+                                backgroundColor: '#e8f4fb',
+                                borderRadius: 4
+                            }}
+                            name=""
+                            id=""
+                        >
+                            {dataArrFine.length > 0 &&
+                                dataArr.map((data) => {
+                                    return <option
+                                     key={data.id}
+                                     style={{
+                                        padding: '10px 12px',
+                                        backgroundColor: 'white',
+                                        borderRadius: 4
+                                     }}
+                                     >{data.name}</option>
+                                })
+                                // <option>
+                                //     Keterlambatan Kerja
+                                // </option>
+                            }
                         </select>
                     </div>
 
@@ -579,9 +1276,14 @@ const FormParameter = ({
                             gap: 10
                         }}
                     >
-                        <span>
+                        <span
+                            style={{
+                                fontSize: 10,
+                                fontWeight: 600
+                            }}
+                        >
                             Nilai
-                            </span>
+                        </span>
                         <input 
                             style={{
                                 padding: 8,
@@ -602,7 +1304,12 @@ const FormParameter = ({
                             gap: 10
                         }}
                     >
-                        <span>
+                        <span
+                            style={{
+                                fontSize: 10,
+                                fontWeight: 600
+                            }}
+                        >
                            Maksimal Hari
                         </span>
                         <input 
@@ -625,7 +1332,14 @@ const FormParameter = ({
                             gap: 10
                         }}
                     >
-                        Type Nilai
+                        <span
+                            style={{
+                                fontSize: 10,
+                                fontWeight: 600
+                            }}
+                        >
+                            Type Nilai
+                        </span>
                         <div
                             style={{
                                 display: 'flex',
@@ -1548,387 +2262,258 @@ const FormParameter = ({
                             </div>
 
                             {/* Direksi Pekerjaan */}
-                            <div>
-                                
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
+                            {/* addendum direksi pekerjaan 1 */}
+                            {placeman.workDirector && 
+                                placeman.workDirector.map((data, index) => {
+                                    return <div>
                                         
-                                    }}
-                                >
-                                        <h1
+                                        <div
                                             style={{
-                                                fontSize: '16px',
-
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                
                                             }}
                                         >
-                                            Addendum Direksi pekerjaan
-                                        </h1>
+                                                <h1
+                                                    style={{
+                                                        fontSize: '16px',
 
-                                        <button
-                                            className="btn btn-primary mx-1"
-                                            onClick={showAddWorkDirector}
+                                                    }}
+                                                >
+                                                    Addendum Direksi pekerjaan
+                                                </h1>
+
+                                                {index === 0 &&                                                
+                                                    <button
+                                                        className="btn btn-primary mx-1"
+                                                        onClick={showAddWorkDirector}
+                                                    >
+                                                        Tambah
+                                                    </button>
+                                                }
+                                        </div>
+
+                                        <div
                                         >
-                                            Tambah
-                                        </button>
-                                </div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Username</span>
+                                                <ReactSelect />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Username</span>
-                                        <ReactSelect />
-                                    </label>
-                                </div>
-
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Nama Lengkap</span>
-                                        <input
-                                            type="text" 
-                                            value={"Weni Kusumaningrum"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Jabatan</span>
-                                        <input
-                                            type="text" 
-                                            value={"Procurement Superintendent"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Alamat</span>
-                                        <input
-                                            type="text" 
-                                            value={"Jl. Raya Dieng - Batur PO BOX 01 Wonosobo"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Telp</span>
-                                        <input
-                                            type="text" 
-                                            value={"+62-286-3342020"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>FAX</span>
-                                        <input
-                                            type="text" 
-                                            value={"+62-286-3342022"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                            </div>
-
-                            <div>
-                                
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between'
-                                    }}
-                                >
-                                        <h1
-                                            style={{
-                                                fontSize: '16px'
-                                            }}
+                                        <div
                                         >
-                                            Addendum Direksi pekerjaan
-                                        </h1>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama Lengkap</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.fullname}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                        {/* <button
-                                            
+                                        <div
                                         >
-                                            Tambah
-                                        </button> */}
-                                </div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.position}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Username</span>
-                                        {/* <input
-                                            type="text" 
-                                            value={"weni"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        /> */}
-                                        <ReactSelect />
-                                    </label>
-                                </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.address}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Nama Lengkap</span>
-                                        <input
-                                            type="text" 
-                                            value={"Weni Kusumaningrum"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.phone_number}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Jabatan</span>
-                                        <input
-                                            type="text" 
-                                            value={"Procurement Superintendent"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.fax}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Alamat</span>
-                                        <input
-                                            type="text" 
-                                            value={"Jl. Raya Dieng - Batur PO BOX 01 Wonosobo"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Telp</span>
-                                        <input
-                                            type="text" 
-                                            value={"+62-286-3342020"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>FAX</span>
-                                        <input
-                                            type="text" 
-                                            value={"+62-286-3342022"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                            </div>
+                                    </div>
+                                })
+                            }
 
                             {/* Pengawas Pekerjaan */}
-                            <div>
-                                
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between'
-                                    }}
-                                >
-                                        <h1
+                            {placeman.workSupervisor && 
+                                placeman.workSupervisor.map((data, index) => {
+                                    return <div>
+                                        
+                                        <div
                                             style={{
-                                                fontSize: '16px'
+                                                display: 'flex',
+                                                justifyContent: 'space-between'
                                             }}
                                         >
-                                            Addendum Pengawas pekerjaan
-                                        </h1>
+                                                <h1
+                                                    style={{
+                                                        fontSize: '16px'
+                                                    }}
+                                                >
+                                                    Addendum Pengawas pekerjaan
+                                                </h1>
 
-                                        <button
-                                            className="btn btn-primary mx-1"
-                                            onClick={showAddWorkSupervisor}
+                                                {index === 0 &&
+                                                    <button
+                                                        className="btn btn-primary mx-1"
+                                                        onClick={showAddWorkSupervisor}
+                                                    >
+                                                        Tambah
+                                                    </button>
+                                                }
+                                        </div>
+
+                                        <div
                                         >
-                                            Tambah
-                                        </button>
-                                </div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.position}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Jabatan</span>
-                                        <input
-                                            type="text" 
-                                            value={"Logistic Supervisor"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.address}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Alamat</span>
-                                        <input
-                                            type="text" 
-                                            value={"Jl. Raya Dieng Batur, Karangtengah Batur Banjarnegara"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.phone_number}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>Telp</span>
-                                        <input
-                                            type="text" 
-                                            value={"+62-286-3342020"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${data.fax}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                <div
-                                >
-                                    <label
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            rowGap: 4
-                                        }}
-                                    >
-                                        <span>FAX</span>
-                                        <input
-                                            type="text" 
-                                            value={"+62-286-3342022"}
-                                            className="form-control"
-                                            style={{ backgroundColor: "#e8f4fb" }}
-                                        />
-                                    </label>
-                                </div>
-
-                            </div>
+                                    </div>
+                                })
+                            }
 
                         </div>
 
@@ -2710,6 +3295,7 @@ const FormParameter = ({
                                 {/* Direksi Pekerjaan */}
                                 <div>
                                     
+                                    {/* addendum direksi pekerjaan pihak kedua */}
                                     <div
                                         style={{
                                             display: 'flex',
@@ -4013,8 +4599,7 @@ timePeriodBeforeAddendum.map((data, index) => (
                     </>
                 }
 
-                {
-                    currentActiveTab === 1 &&
+                {currentActiveTab === 1 &&
                     <div
                         style={{
                             padding: 28,
@@ -4096,27 +4681,24 @@ timePeriodBeforeAddendum.map((data, index) => (
                                 style={{
                                     padding: 10
                                 }}
-                            component={Paper}
+                                component={Paper}
                             >
-                            <h1
-                                style={{
-                                    fontSize: 16,  
-                                    fontWeight: 600
-                                }}
-                            >
-                                Rincian harga pekerjaan awal
-                            </h1>
-                                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                <h1
+                                    style={{
+                                        fontSize: 16,  
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    Rincian harga pekerjaan awal
+                                </h1>
+                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                         <TableHead>
                                             <TableRow>
-                                                {/* <TableCell>Dessert (100g serving)</TableCell>
+                                                <TableCell>Dessert (100g serving)</TableCell>
                                                 <TableCell align="left">Calories</TableCell>
                                                 <TableCell align="left">Fat&nbsp;(g)</TableCell>
                                                 <TableCell align="left">Carbs&nbsp;(g)</TableCell>
-                                                <TableCell align="left">Protein&nbsp;(g)</TableCell> */}
-                                            {/* <TableCell>
-                                                    1
-                                            </TableCell> */}
+                                                <TableCell align="left">Protein&nbsp;(g)</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -4135,9 +4717,8 @@ timePeriodBeforeAddendum.map((data, index) => (
                                                 </TableRow>
                                             ))}
                                         </TableBody>
-                                    </Table>
+                                </Table>
                             </TableContainer>
-
 
                             <TableContainer 
                                 style={{
@@ -4145,37 +4726,37 @@ timePeriodBeforeAddendum.map((data, index) => (
                                 }}
                                 component={Paper}
                             >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <h1
-                                    style={{
-                                        fontSize: 16,  
-                                        fontWeight: 600
-                                    }}
-                                >
-                                    Rincian harga PO-SAP
-                                </h1>
-
-                                <div>
-                                    <button
+                                    <div
                                         style={{
-                                            color: 'white',
-                                            backgroundColor: '#ffc045',
-                                            borderRadius: 8,
-                                            border: 'none',
-                                            padding: '8px 14px'
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
                                         }}
                                     >
-                                        Get PO-SAP
-                                    </button>
-                                </div>
+                                        <h1
+                                            style={{
+                                                fontSize: 16,  
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Rincian harga PO-SAP
+                                        </h1>
 
-                            </div>
+                                        <div>
+                                            <button
+                                                style={{
+                                                    color: 'white',
+                                                    backgroundColor: '#ffc045',
+                                                    borderRadius: 8,
+                                                    border: 'none',
+                                                    padding: '8px 14px'
+                                                }}
+                                            >
+                                                Get PO-SAP
+                                            </button>
+                                        </div>
+
+                                    </div>
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                         <TableHead>
                                             <TableRow>
@@ -4224,101 +4805,22 @@ timePeriodBeforeAddendum.map((data, index) => (
                                     >
                                         Addendum Rincian Harga Pekerjaan
                                     </h1>
+                                    <button
+                                        style={{
+
+                                        }}
+                                    >
+                                        + Tambah Rincian
+                                    </button>
                                 </div>
-                                <Table>
-                                    <TableRow>
-                                        {tableDummyJobPriceDetail.map((row) => (
-                                            
-                                            row.child.length > 0 ?
-                                                <>
-                                                    <ExpansionPanel>
-                                                        <ExpansionPanelSummary
-                                                            style={{
-                                                                padding: 0
-                                                            }}
-                                                        >
-                                                            <TableRow
-                                                            key={row.item_desc}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell component="th" >
-                                                                {row.qty}
-                                                            </TableCell>
-                                                            <TableCell align="left" scope="row">
-                                                                {row.unit}
-                                                            </TableCell>
-                                                            <TableCell align="left">
-                                                                {row.unit_price}
-                                                            </TableCell>
-                                                            <TableCell align="left">
-                                                                {row.total_price}
-                                                            </TableCell>
-                                                            <TableCell align="left">
-                                                                {row.info}
-                                                            </TableCell>
-                                                            </TableRow>
-                                                        </ExpansionPanelSummary>
-                                                        {/* gabisa dibaca length nya */}
-                                                        {row.child &&
-                                                            row.child.map(() => (
-                                                                    <ExpansionPanelDetails>
-                                                                        <TableRow
-                                                        key={row.item_desc}
-                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                    >
-                                                        <TableCell component="th" >
-                                                            {row.qty}
-                                                        </TableCell>
-                                                        <TableCell align="left" scope="row">
-                                                            {row.unit}
-                                                        </TableCell>
-                                                        <TableCell align="left">
-                                                            {row.unit_price}
-                                                        </TableCell>
-                                                        <TableCell align="left">
-                                                            {row.total_price}
-                                                        </TableCell>
-                                                        <TableCell align="left">
-                                                            {row.info}
-                                                        </TableCell>
-                                                                        </TableRow>
-                                                                    </ExpansionPanelDetails>
-                                                            )) 
-                                                        }
-                                                    </ExpansionPanel>
-                                                </>
-                                                :
-                                                <>
-                                                    <TableRow
-                                                            key={row.item_desc}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell component="th" >
-                                                                {row.qty}
-                                                            </TableCell>
-                                                            <TableCell align="left" scope="row">
-                                                                {row.unit}
-                                                            </TableCell>
-                                                            <TableCell align="left">
-                                                                {row.unit_price}
-                                                            </TableCell>
-                                                            <TableCell align="left">
-                                                                {row.total_price}
-                                                            </TableCell>
-                                                            <TableCell align="left">
-                                                                {row.info}
-                                                            </TableCell>
-                                                    </TableRow>
-                                                </>
-                                        ))}
-                                    </TableRow>
-                                </Table>
+
+                                
+                                
                             </TableContainer>
 
+                            <EditableTable />
 
-                            {/* <TanStackTable /> */}
-
-
+                            {/* pasal sebelum addendum */}
                             <div
                             >
                                 <span
@@ -4333,6 +4835,7 @@ timePeriodBeforeAddendum.map((data, index) => (
                                 ></textarea>
                             </div>
 
+                            {/* pasal setelah addendum */}
                             <div>
                                 <span
                                     style={{
@@ -4351,8 +4854,7 @@ timePeriodBeforeAddendum.map((data, index) => (
 
                 {/* <DataGridDemo /> */}
 
-                {
-                    currentActiveTab === 3 &&
+                {currentActiveTab === 3 &&
                     <>
 
                         <div
@@ -4519,8 +5021,7 @@ timePeriodBeforeAddendum.map((data, index) => (
                     </>
                 }
 
-                {
-                    currentActiveTab === 4 &&
+                {currentActiveTab === 4 &&
                     <>
                         <div
                             style={{
@@ -5147,208 +5648,370 @@ timePeriodBeforeAddendum.map((data, index) => (
                     </>
                 }
 
-                {
-                    currentActiveTab === 6 &&
+                {currentActiveTab === 6 &&
                     <>
                         <div
                             style={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                rowGap: 28
+                                rowGap: 24
                             }}
                         >
-                            <h1
-                                style={{
-                                    fontSize: 16,
-                                    fontWeight: 600
-                                }}
-                            >
-                                Nomor rekening kontrak awal
-                            </h1>
 
-                            <div
-                                style={{
-                                    display: 'grid',
-                                    gap: 24,
-                                    gridTemplateColumns: "repeat(4, minmax(0, 1fr))"
-                                }}
-                            >
-                                <div
+                            <div>
+                                <h1
                                     style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
+                                        fontSize: 16,
+                                        fontWeight: 600,
+                                        marginBottom: 14
                                     }}
                                 >
-                                    <span>Nama rekening</span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb"
-                                        }}
-                                        disabled
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Nama bank</span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb"
-                                        }}
-                                        disabled
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Alamat bank</span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb"
-                                        }}
-                                        disabled
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Nomor rekening</span>
-                                    <input 
-                                        type="text"
-                                        style={{
-                                            backgroundColor: "#e8f4fb"
-                                        }}
-                                        disabled
-                                    />
-                                </div>
-                            </div>
+                                    Nomor rekening kontrak awal
+                                </h1>
 
-                            <h1
-                                style={{
-                                    fontSize: 16,
-                                    fontWeight: 600
-                                }}
-                            >
-                                Addendum nomor rekening 
-                            </h1>
-
-                            <div
-                                style={{
-                                    display: 'grid',
-                                    gap: 24,
-                                    gridTemplateColumns: "repeat(4, minmax(0, 1fr))"
-                                }}
-                            >
-                                                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Nama rekening</span>
-                                    <input 
-                                        type="text"
-                                    />
-                                </div>
                                 <div
                                     style={{
+                                        // display: 'grid',
+                                        // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
                                         display: 'flex',
-                                        flexDirection: 'column'
+                                        flexWrap: 'wrap',
+                                        gap: 24,
+                                        fontSize: 14,
+                                        fontWeight: 500,
                                     }}
                                 >
-                                    <span>Nama bank</span>
-                                    <input 
-                                        type="text"
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Alamat bank</span>
-                                    <input 
-                                        type="text"
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    <span>Nomor rekening</span>
-                                    <input 
-                                        type="text"
-                                    />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nomor rekening</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: "#e8f4fb",
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            disabled
+                                            value={"128574647483"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nama rekening</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: "#e8f4fb",
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            disabled
+                                            value={"GOLDEN PRATAMA ENGINEERING"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nama bank</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: "#e8f4fb",
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            disabled
+                                            value={"MANDIRI"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Alamat bank</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: "#e8f4fb",
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            disabled
+                                            value={"Jl Warung Buncit Raya"}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
                             <div>
-                                <span
+                                <h1
                                     style={{
                                         fontSize: 16,
-                                        fontWeight: 600
+                                        fontWeight: 600,
+                                        marginBottom: 14
                                     }}
                                 >
-                                    Surat pernyataan dari bank
-                                </span>
-                                <div>
-                                    
-                                    <label
-                                                        htmlFor="upload"
-                                                        className={`input-group mb-3 col-sm-3 pointer`}
-                                                        style={{
-                                                            padding: 0
-                                                        }}
-                                                    >
+                                    Addendum nomor rekening 
+                                </h1>
 
-                                                        <span
-                                                        className={`form-control text-truncate`} 
-                                                        style={{
-                                                            backgroundColor: '#e8f4fb'
-                                                        }}
-                                                        >
-                                                        nama_file_upload.pdf
-                                                        </span>
-                                                        <div 
-                                                            className="input-group-prepend"
-                                                        >
-                                                            <span className="input-group-text"
-                                                                 style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}    
-                                                            >
-                                                            <i className="fas fa-file-upload"></i>
-                                                            </span>
-                                                        </div>
-                                    </label>
-
-                                    <input
-                                        type="file"
-                                        className="d-none"
-                                        id="upload"
+                                <div
+                                    style={{
+                                        // display: 'grid',
+                                        // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        gap: 24,
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                    }}
+                                >
+                                    <div
                                         style={{
-                                            backgroundColor: '#E8F4FB'
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
                                         }}
-                                    />
+                                    >
+                                        <span>Nomor rekening</span>
+                                        <input 
+                                            type="text"
+                                            value={"08647583942"}
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nama rekening</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            value={"GOLDEN PRATAMA ENGINEERING"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Nama bank</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
 
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            value={"BCA"}
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            flex: 1
+                                        }}
+                                    >
+                                        <span>Alamat bank</span>
+                                        <input 
+                                            type="text"
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
+                                                borderColor: 'black',
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderRadius: 4,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                marginTop: 4
+                                            }}
+                                            value={"Jl Menteng Pusat"}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
+                            {/* surat pernyataan dari bank */}
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                                    gap: 24
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column'
+                                    }}
+                                >
+                                        <span
+                                            style={{
+                                                fontSize: 14,
+                                                fontWeight: 500
+                                            }}
+                                        >
+                                            Surat pernyataan dari bank
+                                        </span>
+                                        <div
+                                            style={{
+                                                position: 'relative',
+                                                padding: 0,
+                                                margin: 0
+                                            }}
+                                        >
+                                            <input
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '10px 12px 10px 46px',
+                                                    color: '#3699ff',
+                                                    borderColor: 'black',
+                                                    border: 1,
+                                                    borderStyle: 'solid',
+                                                    borderRadius: 4,
+                                                    fontSize: 14,
+                                                    fontWeight: 500,
+                                                    marginTop: 4
+                                                }}
+                                                type="text"
+                                                value={`surat_pernyataan_bank_bca.pdf`}
+                                                disabled
+                                            />
+                                            <SVG 
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    bottom: 0,
+                                                    left: 12,
+                                                    margin: 'auto 0'
+                                                    // width:10,
+                                                    // height:10
+                                                }}
+                                                src={toAbsoluteUrl("/media/svg/icons/All/upload.svg")}
+                                            />
+                                        </div>
+                                        {/* <div>
+                                            <label
+                                                htmlFor="upload"
+                                                className={`input-group mb-3 col-sm-3 pointer`}
+                                                style={{
+                                                    padding: 0
+                                                }}
+                                            >
+                                                <span
+                                                                className={`form-control text-truncate`} 
+                                                                style={{
+                                                                    backgroundColor: '#e8f4fb'
+                                                                }}
+                                                                >
+                                                                nama_file_upload.pdf
+                                                </span>
+                                                <div 
+                                                                    className="input-group-prepend"
+                                                                >
+                                                                    <span className="input-group-text"
+                                                                        style={{
+                                                                            backgroundColor: '#e8f4fb'
+                                                                        }}    
+                                                                    >
+                                                                    <i className="fas fa-file-upload"></i>
+                                                                    </span>
+                                                </div>
+                                            </label>
+                                            <input
+                                                type="file"
+                                                className="d-none"
+                                                id="upload"
+                                                style={{
+                                                    backgroundColor: '#E8F4FB'
+                                                }}
+                                            />
+                                        </div> */}
+                                </div>
+                                <div>
+                                        
+                                </div>
+                            </div>
+
+                            {/* pasal sebelum addendum */}
                             <div>
                                 <span
                                     style={{
@@ -5362,6 +6025,7 @@ timePeriodBeforeAddendum.map((data, index) => (
                                 ></textarea>
                             </div>
 
+                            {/* pasal setelah addendum */}
                             <div>
                                 <span
                                     style={{
@@ -5385,25 +6049,21 @@ timePeriodBeforeAddendum.map((data, index) => (
 
 }
 
-const defaultColumn = {
-    cell: ({ getValue, row: { index }, column: { id }, table }) => {
-    },
-  }
+    const keys = {
+    fetch: "get-data-penalties",
+    }
   
-  function useSkipper() {
-    const shouldSkipRef = React.useRef(true)
-    const shouldSkip = shouldSkipRef.current
-  
-    // Wrap a function with this to skip a pagination reset temporarily
-    const skip = React.useCallback(() => {
-      shouldSkipRef.current = false
-    }, [])
-  
-    React.useEffect(() => {
-      shouldSkipRef.current = true
+    const mapState = (state) => ({
+        loadings: {
+        fetch: getLoading(state, keys.fetch),
+        },
+        status: state.auth.user.data.status,
     })
   
-    return [shouldSkip, skip]
-  }
+    const mapDispatch = {
+        fetch_api_sg,
+    }
 
-export default FormParameter
+  export default connect(mapState, mapDispatch)(FormParameter)
+
+// export default FormParameter

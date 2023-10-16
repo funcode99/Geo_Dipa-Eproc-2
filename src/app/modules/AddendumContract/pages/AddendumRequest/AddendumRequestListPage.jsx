@@ -214,20 +214,24 @@ const useStyles = makeStyles((theme) => ({
       fetch_api_sg({
         key: keys.fetch,
         type: "get",
-        url: `/delivery/contract`,
+        url: `/adendum/add-contracts-request`,
         onSuccess: (res) => {
           // console.log(`res.data`, res.data);
           // generateTableContent(res.data);
           setDataArr(
             res.data.map((item, index) => ({
               id: item.id,
-              contract_no: item?.contract_no,
-              po_number: item?.purch_order_no,
-              procurement_title: item?.contract_name,
+              // contract_no: item?.contract_no,
+              contract_no: item?.add_request_number,
+              // po_number: item?.purch_order_no,
+              // procurement_title: item?.contract_name,
               po_date:
-                item?.issued_date !== null
-                  ? formatDate(new Date(item?.issued_date))
-                  : null,
+                // item?.issued_date !== null
+                //   ? formatDate(new Date(item?.issued_date))
+                //   : null,
+                item?.add_request_date !== null
+                ? formatDate(new Date(item?.add_request_date))
+                : null,
               contract_date:
                 item?.issued_date !== null
                   ? formatDate(new Date(item?.issued_date))

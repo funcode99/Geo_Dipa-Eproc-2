@@ -6,7 +6,12 @@ import { injectIntl } from "react-intl"
 import { connect } from "react-redux"
 import { 
     ContractsAddendumPage,
-    AddContractAddendum
+    ContractAddendumDetail,
+    AddContractAddendum,
+    AddendumListPage,
+    AddendumRequestListPage,
+    DraftAddendumPage,
+    ApprovalAddendumPage
  } from 'app/modules/AddendumContract/pages/index'
 
 function RootVendorAddendum(props) {
@@ -15,13 +20,37 @@ function RootVendorAddendum(props) {
 
     return(
         <Switch>
-            <Route 
-                path="/vendor/addendum-contract/list-addendum-request"
+                        <Route 
+                path="/vendor/addendum-contract/list-contract-po"
                 component={ContractsAddendumPage}
             />
             <Route 
-                path="/vendor/addendum-contract/contract/:contract_id"
+                path="/vendor/addendum-contract/add-addendum/:contract_id"
                 component={AddContractAddendum}
+                exact={true}
+            />
+            <Route 
+                path="/vendor/addendum-contract/contract/:contract_id"
+                component={ContractAddendumDetail}
+                exact={true}
+            />
+            <Route 
+                path="/vendor/addendum-contract/approval/:approval_id"
+                component={ApprovalAddendumPage}
+                exact={true}
+            />
+            <Route
+                path="/vendor/addendum-contract/draft/:draft_id"
+                component={DraftAddendumPage}
+                exact={true}
+            />
+            <Route 
+                path="/vendor/addendum-contract/list-addendum-request"
+                component={AddendumRequestListPage}
+            />
+            <Route
+                path="/vendor/addendum-contract/list-of-addendum"
+                component={AddendumListPage}
             />
 
         </Switch>

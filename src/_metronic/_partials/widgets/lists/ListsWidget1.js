@@ -1,8 +1,8 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
 import React from "react";
-import SVG from "react-inlinesvg";
+import SVG from "react-inlinesvg"
+import {toAbsoluteUrl} from "_metronic/_helpers/index"
 import {Dropdown} from "react-bootstrap";
-import {toAbsoluteUrl} from "../../../_helpers";
 import {DropdownCustomToggler, DropdownMenu4} from "../../dropdowns";
 
 export function ListsWidget1({ className }) {
