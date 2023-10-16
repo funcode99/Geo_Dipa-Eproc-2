@@ -23,18 +23,28 @@ import UploadInput from "app/components/input/UploadInput";
 import SelectDateInput from "app/components/input/SelectDateInput";
 import TextAreaInput from "app/components/input/TextAreaInput";
 import RenderInput from "app/components/input/RenderInput"
-
+import { connect } from "react-redux"
 
 // bentrok antara button mui & bootstrap
 
-const DraftAddendumPage = () => {
+const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
 
+    const [inputValue, setInputValue] = useState('Upload File')
     const [tabActive, setTabActive] = React.useState(0)
     const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0)
     const [distributionTabActive, setDistributionTabActive] = React.useState(0)
     const [sequence, setSequence] = React.useState(0)
     const [reviewSequence, setReviewSequence] = React.useState(0)
-    const [distributionSequence, setDistributionSequence] = React.useState(0)
+    const [distributionSequence, setDistributionSequence] = React.useState(0)   
+
+    const getClientStatus = () => {
+        const client_role = "ADMIN_CONTRACT"
+        const filteredData = rolesEproc?.filter(({ ident_name }) => ident_name === client_role)
+        return !!filteredData?.length > 0
+      }
+
+    let isAdmin = getClientStatus()
+
     const TabLists = [
         {
           id: "kick-off",
@@ -1698,7 +1708,7 @@ const DraftAddendumPage = () => {
             </form>
         </Card>
 
-                {/* silahkan download file */}
+        {/* silahkan download file */}
         
         {sequence < 2 &&
             <div
@@ -1876,10 +1886,10 @@ const DraftAddendumPage = () => {
                     >
                         <p
                             style={{
-                                                            fontSize: 14,
-                                                            fontWeight: 500,
-                                                            color: '#3699ff',
-                                                            textOverflow: 'clip'
+                                fontSize: 14,
+                                fontWeight: 500,
+                                color: '#3699ff',
+                                textOverflow: 'clip'
                             }}
                         >
                             https://geodipa-my.sharepoint.com/:w:/g/personal/contract_admin_geodipa_Lamp-2_id/EVLWq8U2WxVLgVmHO--FqR0BiX_FbrptwluwNlitelZ0eg?e=5mhN9Q
@@ -3267,98 +3277,276 @@ const DraftAddendumPage = () => {
             //             </div>
             // </div>
 
-            <div
-            style={{
-                backgroundColor: 'white',
-                padding: 28,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 28
-            }}
-        >
-
-            <h1>Form Unduh Addendum Kontrak</h1>
-
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 14
-                    }}
-                >
-                    Unduh Kontrak ini, di TTD sebagai persetujuan vendor dan unggah kembali dalam bentuk pdf
+            <>
+                {!isAdmin &&
                     <div
                         style={{
-                            padding: '12px 10px',
-                            border: '1px solid black'
+                            backgroundColor: 'white',
+                            padding: 28,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 28
                         }}
                     >
-                        <span
+
+                        <div>
+                            <span>
+                                Ketentuan persetujuan:
+                            </span>
+                            <ol
+                                style={{
+                                    margin: 0,
+                                    padding: 0
+                                }}
+                            >
+                                <li>
+                                    A
+                                </li>
+                                <li>
+                                    B                        
+                                </li>
+                                <li>
+                                    C
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div
                             style={{
-                                color: '#3699ff',
-                                fontSize: 14,
-                                fontWeight: 500
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: 'black',
+                                borderRadius: 4,
+                                padding: 28
                             }}
                         >
-                            001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
-                        </span>
-                    </div>
-                    <p>Catatan Vendor: sudah oke.</p>
-                    {/* <div>
-                            Catatan Vendor
-                            <textarea
-                                rows="4"
-                                className="form-control"
-                            ></textarea>
-                    </div> */}
-                    <button
-                        onClick={showDownloadVendor}
-                        className="btn btn-primary"
-                        style={{
-                            maxWidth: 270
-                        }}
-                    >
-                        Unduh Addendum Kontrak
-                    </button>
-                </div>
+                            
+                            <h1
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: 600
+                                }}
+                            >
+                                Form Unduh Addendum Kontrak
+                            </h1>
 
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 14
-                    }}
-                >
-                    Form Unggah Addendum Kontrak
-                    Unggah Kontrak yang sudah di Tanda Tangan dibawah ini
-                    <div
-                        style={{
-                            // padding: '12px 10px',
-                            border: '1px solid black'
-                        }}
-                    >
-                        <UploadInput />
-                    </div>
-                    <div>
-                        Catatan
-                        <textarea
-                            rows="4"
-                            className="form-control"
-                            value={"sudah oke"}
-                        ></textarea>
-                    </div>
-                    <button
-                        onClick={showDownloadUser}
-                        className="btn btn-primary"
-                        style={{
-                            maxWidth: 270
-                        }}
-                    >
-                        Unduh Hasil Approval User
-                    </button>
-                </div>
+                            <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14
+                                    }}
+                                >
+                                    Catatan Admin:
+                                    <span
+                                        style={{
+                                            color: '#dc0526',
+                                            fontSize: 12,
+                                            fontWeight: 400
+                                        }}
+                                    >
+                                        Unduh Kontrak ini, di TTD sebagai persetujuan vendor dan unggah kembali dalam bentuk pdf
+                                    </span>
+                                    <div
+                                        style={{
+                                            padding: '12px 10px',
+                                            border: '1px solid black'
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                color: '#3699ff',
+                                                fontSize: 14,
+                                                fontWeight: 500
+                                            }}
+                                        >
+                                            001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
+                                        </span>
+                                    </div>
+                                    {/* <div>
+                                            Catatan Vendor
+                                            <textarea
+                                                rows="4"
+                                                className="form-control"
+                                            ></textarea>
+                                    </div> */}
+                                    <button
+                                        onClick={showDownloadVendor}
+                                        className="btn btn-primary"
+                                        style={{
+                                            maxWidth: 270
+                                        }}
+                                    >
+                                        Unduh Addendum Kontrak
+                                    </button>
+                            </div>
 
-            </div>
+                        </div>
+
+                        <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 14,
+                                    border: 1,
+                                    borderStyle: 'solid',
+                                    borderColor: 'black',
+                                    borderRadius: 4,
+                                    padding: 28
+                                }}
+                            >
+                                <p
+                                    style={{
+                                        padding: 0,
+                                        margin: 0,
+                                        color: 'black',
+                                        fontSize: 16,
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    Persetujuan Vendor
+                                </p>
+                                {/* <div
+                                    style={{
+                                        border: '1px solid black'
+                                    }}
+                                >
+                                    <UploadInput />
+                                </div> */}
+                                <div>
+                                    Catatan Vendor
+                                    <textarea
+                                        rows="4"
+                                        className="form-control"
+                                        value={"sudah oke"}
+                                    ></textarea>
+                                </div>
+                                <button
+                                    onClick={showDownloadUser}
+                                    className="btn btn-primary"
+                                    style={{
+                                        maxWidth: 270
+                                    }}
+                                >
+                                    Setuju
+                                </button>
+                        </div>
+
+                    </div>
+                }
+
+                {isAdmin &&                    
+                    <>
+                        <div
+                            style={{
+                                backgroundColor: 'white',
+                                padding: 28,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 28
+                            }}
+                        >
+                            <div>
+                                <h1
+                                    style={{
+                                        fontSize: 16,
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    Persetujuan Vendor
+                                </h1>
+                                <div
+                                    style={{
+                                        border: 1,
+                                        borderRadius: 4,
+                                        borderStyle: 'solid',
+                                        borderColor: 'black',
+                                        padding: '24px 28px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            padding: '12px 10px',
+                                            backgroundColor: '#e8f4fb',
+                                            color: '#3699ff',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                margin: 0
+                                            }}
+                                        >Addendum disetujui vendor</p>
+                                    </div>
+                                    <div>
+                                        <p
+                                            style={{
+                                                margin: 0
+                                            }}
+                                        >
+                                            Catatan Vendor
+                                        </p>
+                                        <textarea>Sudah Oke</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h1
+                                    style={{
+                                        fontSize: 16,
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    Persetujuan User
+                                </h1>
+                                <div
+                                    style={{
+                                                                            border: 1,
+                                                                            borderRadius: 4,
+                                                                            borderStyle: 'solid',
+                                                                            borderColor: 'black',
+                                                                            padding: '24px 28px',
+                                                                            display: 'flex',
+                                                                            flexDirection: 'column',
+                                                                            gap: 14
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            padding: '12px 10px',
+                                            backgroundColor: '#e8f4fb',
+                                            color: '#3699ff',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                margin: 0
+                                            }}
+                                        >Addendum disetujui user</p>
+                                    </div>
+                                    <div>
+                                        <p
+                                            style={{
+                                                margin: 0
+                                            }}
+                                        >
+                                            Catatan Vendor
+                                        </p>
+                                        <textarea>Sudah Oke</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                }
+            </>
+
 
         }
 
@@ -3381,7 +3569,7 @@ const DraftAddendumPage = () => {
                     />
                 </div>
                 
-               {distributionSequence === 0 &&               
+               {distributionSequence === 0 &&       
                     <div
                         style={{
                             backgroundColor: 'white',
@@ -3392,7 +3580,7 @@ const DraftAddendumPage = () => {
                         }}
                     >
 
-
+                                {/* gak kepake */}
                                 <div
                                     style={{
                                         display: 'flex',
@@ -3401,30 +3589,15 @@ const DraftAddendumPage = () => {
                                     }}
                                 >
                                     
-                                    <h1
+                                    {/* Hasil Persetujuan Vendor dan User */}
+                                    {/* <h1
                                         style={{
                                             fontSize: 16,
                                             fontWeight: 600
                                         }}
                                     >
-                                        Hasil Persetujuan Vendor dan User
-                                    </h1>
-                                    <div
-                                        style={{
-                                            padding: '12px 10px',
-                                            border: '1px solid black'
-                                        }}
-                                    >
-                                        <span
-                                            style={{
-                                                color: '#3699ff',
-                                                fontSize: 14,
-                                                fontWeight: 500
-                                            }}
-                                        >
-                                            001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
-                                        </span>
-                                    </div>
+                                        Distribusi Addendum Kontrak
+                                    </h1> */}
                                     {/* <div>
                                         Catatan User
                                         <textarea
@@ -3433,7 +3606,7 @@ const DraftAddendumPage = () => {
                                             value={"sudah oke"}
                                         ></textarea>
                                     </div> */}
-                                    <button
+                                    {/* <button
                                         onClick={showDownloadUser}
                                         className="btn btn-primary"
                                         style={{
@@ -3441,7 +3614,7 @@ const DraftAddendumPage = () => {
                                         }}
                                     >
                                         Unduh Persetujuan
-                                    </button>
+                                    </button> */}
                                 </div>
 
                                 <div
@@ -3451,7 +3624,14 @@ const DraftAddendumPage = () => {
                                         gap: 14
                                     }}
                                 >
-                                    Distribusi Addendum Kontrak
+                                    <h1
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Distribusi Addendum Perjanjian
+                                    </h1>
                                     <div
                                         style={{
                                             display: 'flex',
@@ -3468,19 +3648,46 @@ const DraftAddendumPage = () => {
                                                     minWidth: 180,
                                                     borderRadius: 4
                                                 }}
+                                                onChange={event => setInputValue(event.target.value)}
                                             >
-                                                <option>
+                                                <option
+                                                    value={'Upload File'}
+                                                >
                                                     Upload File
                                                 </option>
-                                                <option>
+                                                <option
+                                                    value={'Link'}
+                                                >
                                                     Link
                                                 </option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div>
-                                    <UploadInput />
-                                    </div>
+                                    {inputValue === 'Upload File' &&
+                                        <div>
+                                            <UploadInput />
+                                        </div>
+                                    }
+                                    {inputValue === 'Link' &&                                    
+                                        <div>
+                                            <div
+                                                style={{
+                                                    padding: '12px 10px',
+                                                    border: '1px solid black'
+                                                }}
+                                            >
+                                                <span
+                                                    style={{
+                                                        color: '#3699ff',
+                                                        fontSize: 14,
+                                                        fontWeight: 500
+                                                    }}
+                                                >
+                                                    001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022 1437.DRAFT_FINAL_ADD_PDF.pdf
+                                                </span>
+                                            </div>
+                                        </div>
+                                    }
                                     <div>
                                         *Catatan
                                         <textarea
@@ -3510,299 +3717,648 @@ const DraftAddendumPage = () => {
                     </div>
                }
 
-               {distributionSequence === 1 &&
+               {distributionSequence === 1 && isAdmin &&
                     <div
+                                style={{
+                                                                                    padding: 28,
+                                                                                    backgroundColor: 'white'
+                                }}
+                            >
+                                <div
+                                                                                        style={{
+                                                                                            border: 1,
+                                                                                            borderColor: 'black',
+                                                                                            borderStyle: 'solid',
+                                                                                            padding: '14px 28px',
+                                                                                            backgroundColor: 'white',
+                                                                                            borderRadius: 14
+                                                                                        }}
+                                                                                    >
+                                                            
+                                                                                        <h1
+                                                                                            style={{
+                                                                                                fontSize: 16,
+                                                                                                fontWeight: 600
+                                                                                            }}
+                                                                                        >
+                                                                                            Daftar Distribusi Final Addendum
+                                                                                        </h1>
+                                                            
+                                                                                        <br
+                                                                                            style={{
+                                                                                                border: 1,
+                                                                                                borderColor: 'black',
+                                                                                                borderStyle: 'solid'
+                                                                                            }}
+                                                                                        />
+            
+                                                                                        {/* admin kontrak */}
+                                                                                        <h1
+                                                                                            style={{
+                                                                                                fontSize: 16,
+                                                                                                fontWeight: 600
+                                                                                            }}
+                                                                                        >
+                                                                                            Admin Kontrak
+                                                                                        </h1>
+                                                            
+                                                                                        <div
+                                                                                            style={{
+                                                                                                display: 'grid',
+                                                                                                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                                                                                                gap: 28,
+                                                                                                margin: '14px 0px 28px 0px'
+                                                                                            }}
+                                                                                        >
+                                                            
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    display: 'flex',
+                                                                                                    flexDirection: 'column',
+                                                                                                    gap: 4
+                                                                                                }}
+                                                                                            >
+                                                                                                <span>Nama</span>
+                                                                                                <input 
+                                                                                                    type="text" 
+                                                                                                    value={"Zulfiqur Rahman"}
+                                                                                                    style={{
+                                                                                                        borderRadius: 4,
+                                                                                                        padding: 8,
+                                                                                                        backgroundColor: '#e8f4fb'
+                                                                                                    }}
+                                                                                                />
+                                                                                            </div>
+                                                            
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    display: 'flex',
+                                                                                                    flexDirection: 'column',
+                                                                                                    gap: 4
+                                                                                                }}
+                                                                                            >
+                                                                                                <span>Jabatan</span>
+                                                                                                <input 
+                                                                                                    type="text" 
+                                                                                                    value={"Purchasing Staff"} 
+                                                                                                    style={{
+                                                                                                        borderRadius: 4,
+                                                                                                        padding: 8,
+                                                                                                        backgroundColor: '#e8f4fb'
+                                                                                                    }}
+                                                                                                />
+                                                                                            </div>
+                                                            
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    display: 'flex',
+                                                                                                    flexDirection: 'column',
+                                                                                                    gap: 4
+                                                                                                }}
+                                                                                            >
+                                                                                                <span>Email</span>
+                                                                                                <input
+                                                                                                    type="text" 
+                                                                                                    value={"zulfiqur.r@geodipa.co.id"} 
+                                                                                                    style={{
+                                                                                                        borderRadius: 4,
+                                                                                                        padding: 8,
+                                                                                                        backgroundColor: '#e8f4fb'
+                                                                                                    }}
+                                                                                                />
+                                                                                            </div>
+                                                            
+                                                            
+                                                                                        </div>
+            
+                                                                                        {/* user */}
+                                                                                        <div
+                                                                                            style={{
+                                                                                                display: 'flex',
+                                                                                                flexDirection: 'column',
+                                                                                                gap: 28
+                                                                                            }}
+                                                                                        >
+            
+                                                                                            <div>
+                                                                                                <div
+                                                                                                    style={{
+                                                                                                        display: 'flex',
+                                                                                                        justifyContent: 'space-between',
+                                                                                                        marginBottom: 14
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <h1
+                                                                                                        style={{
+                                                                                                            fontSize: 16,
+                                                                                                            fontWeight: 600
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        User
+                                                                                                    </h1>
+                                                                                                    <Button
+                                                                                                        className="btn btn-primary"
+                                                                                                        variant="contained"
+                                                                                                        size="medium"
+                                                                                                        onClick={showAddReviewer}
+                                                                                                    >
+                                                                                                        <div>
+                                                                                                            <span>
+                                                                                                                Tambah User
+                                                                                                            </span>
+                                                                                                        </div>
+                                                                                                    </Button>
+                                                                                                </div>
+                                                                    
+                                                                                                <table>
+                                                                                                        <tr>
+                                                                                                            <th>
+                                                                                                                No
+                                                                                                            </th>
+                                                                                                            <th>
+                                                                                                                Nama
+                                                                                                            </th>
+                                                                                                            <th>
+                                                                                                                Jabatan
+                                                                                                            </th>
+                                                                                                            <th>
+                                                                                                                Email
+                                                                                                            </th>
+                                                                                                            <th>
+                                                                                                                Aksi
+                                                                                                            </th>
+                                                                                                        </tr>
+                                                                    
+                                                                                                        {TableListsUser && TableListsUser.map((item, index) => {
+                                                                    
+                                                                                                            return(
+                                                                                                            <>                                
+                                                                                                                <tr key={index}>
+                                                                                                                    <td>
+                                                                                                                        {index+1}
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        {item.name}
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        {item.position}
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        {item.email}
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        {actionButton}
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </>)
+                                                                                                        })}
+                                                                    
+                                                                                                </table>
+                                                                                            </div>
+                                                            
+                                                                                            <div>
+                                                                                                <div
+                                                                                                    style={{
+                                                                                                        display: 'flex',
+                                                                                                        justifyContent: 'space-between',
+                                                                                                        marginBottom: 14
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <h1
+                                                                                                        style={{
+                                                                                                            fontSize: 16,
+                                                                                                            fontWeight: 600
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        Vendor
+                                                                                                    </h1>
+                                                                                                    <Button
+                                                                                                        className="btn btn-primary"
+                                                                                                        variant="contained"
+                                                                                                        size="medium"
+                                                                                                        onClick={showAddVendor}
+                                                                                                    >
+                                                                                                        <div>
+                                                                                                            <span>
+                                                                                                                Tambah Vendor
+                                                                                                            </span>
+                                                                                                        </div>
+                                                                                                    </Button>
+                                                                                                </div>
+                                                                                                
+                                                                                                <table>
+                                                                                                        
+                                                                                                        <tr>
+                                                                                                            <th>
+                                                                                                                No
+                                                                                                            </th>
+                                                                                                            <th>
+                                                                                                                Nama
+                                                                                                            </th>
+                                                                                                            <th>
+                                                                                                                Jabatan
+                                                                                                            </th>
+                                                                                                            <th>
+                                                                                                                Email
+                                                                                                            </th>
+                                                                                                            <th>
+                                                                                                                Aksi
+                                                                                                            </th>
+                                                                                                        </tr>
+                                                                    
+                                                                                                        {TableListsVendor && TableListsVendor.map((item, index) => {
+                                                                                                        return(
+                                                                                                            <>                                
+                                                                                                                    <tr key={index}>
+                                                                                                                        <td>
+                                                                                                                            {index+1}
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            {item.name}
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            {item.position}
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            {item.email}
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            {actionButton}
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                            </>
+                                                                                                        )
+                                                                                                        })}
+                                                                    
+                                                                                                </table>
+                                                                                            </div>
+            
+                                                                                        </div>
+                                                                                        
+                                                                                        {/* vendor */}
+                                                                                        <div
+                                                                                            style={{
+                                                                                                display: 'flex',
+                                                                                                justifyContent: 'flex-end',
+                                                                                                marginTop: 40
+                                                                                            }}
+                                                                                        >
+                                                                                                <Button
+                                                                                                    variant="contained"
+                                                                                                    color="secondary"
+                                                                                                >
+                                                                                                    Submit
+                                                                                                </Button>
+                                                                                        </div>
+                                                            
+                                </div>
+                    </div>
+                }
+
+                {distributionSequence === 1 && !isAdmin && loginStatus !== 'vendor' &&
+                    <div
+                        style={{
+                            padding: 28,
+                            backgroundColor: 'white'
+                        }}
+                    >
+                        
+                        <div
+                            style={{
+                                                                    border: 1,
+                                                                    borderColor: 'black',
+                                                                    borderStyle: 'solid',
+                                                                    padding: '14px 28px',
+                                                                    backgroundColor: 'white',
+                                                                    borderRadius: 14
+                            }}
+                        >
+                                    
+                            <h1
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: 600
+                                }}
+                            >
+                                Distribusi Final Addendum
+                            </h1>
+                                    
+                            <br
+                                style={{
+                                    border: 1,
+                                    borderColor: 'black',
+                                    borderStyle: 'solid'
+                                }}
+                            />
+
+                                {/* admin kontrak */}
+                                <h1
+                                                                    style={{
+                                                                        fontSize: 16,
+                                                                        fontWeight: 600
+                                                                    }}
+                                                                >
+                                                                    Admin Kontrak
+                                </h1>
+                                    
+                                <div
+                                                                    style={{
+                                                                        display: 'grid',
+                                                                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                                                                        gap: 28,
+                                                                        margin: '14px 0px 28px 0px'
+                                                                    }}
+                                                                >
+                                    
+                                                                    <div
+                                                                        style={{
+                                                                            display: 'flex',
+                                                                            flexDirection: 'column',
+                                                                            gap: 4
+                                                                        }}
+                                                                    >
+                                                                        <span>Nama</span>
+                                                                        <input 
+                                                                            type="text" 
+                                                                            value={"Zulfiqur Rahman"}
+                                                                            style={{
+                                                                                borderRadius: 4,
+                                                                                padding: 8,
+                                                                                backgroundColor: '#e8f4fb'
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                    
+                                                                    <div
+                                                                        style={{
+                                                                            display: 'flex',
+                                                                            flexDirection: 'column',
+                                                                            gap: 4
+                                                                        }}
+                                                                    >
+                                                                        <span>Jabatan</span>
+                                                                        <input 
+                                                                            type="text" 
+                                                                            value={"Purchasing Staff"} 
+                                                                            style={{
+                                                                                borderRadius: 4,
+                                                                                padding: 8,
+                                                                                backgroundColor: '#e8f4fb'
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                    
+                                                                    <div
+                                                                        style={{
+                                                                            display: 'flex',
+                                                                            flexDirection: 'column',
+                                                                            gap: 4
+                                                                        }}
+                                                                    >
+                                                                        <span>Email</span>
+                                                                        <input
+                                                                            type="text" 
+                                                                            value={"zulfiqur.r@geodipa.co.id"} 
+                                                                            style={{
+                                                                                borderRadius: 4,
+                                                                                padding: 8,
+                                                                                backgroundColor: '#e8f4fb'
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                    
+                                    
+                                </div>
+
+                                {/* user */}
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 28
+                                    }}
+                                >
+
+                                    <div>
+                                        <div
+                                                                            style={{
+                                                                                display: 'flex',
+                                                                                justifyContent: 'space-between',
+                                                                                marginBottom: 14
+                                                                            }}
+                                                                        >
+                                                                            <h1
+                                                                                style={{
+                                                                                    fontSize: 16,
+                                                                                    fontWeight: 600
+                                                                                }}
+                                                                            >
+                                                                                User
+                                                                            </h1>
+                                        </div>
+                                            
+                                        <table>
+                                                                                <tr>
+                                                                                    <th>
+                                                                                        No
+                                                                                    </th>
+                                                                                    <th>
+                                                                                        Nama
+                                                                                    </th>
+                                                                                    <th>
+                                                                                        Jabatan
+                                                                                    </th>
+                                                                                    <th>
+                                                                                        Email
+                                                                                    </th>
+                                                                                </tr>
+                                            
+                                                                                {TableListsUser && TableListsUser.map((item, index) => {
+                                            
+                                                                                    return(
+                                                                                    <>                                
+                                                                                        <tr key={index}>
+                                                                                            <td>
+                                                                                                {index+1}
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                {item.name}
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                {item.position}
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                {item.email}
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </>)
+                                                                                })}
+                                            
+                                        </table>
+                                    </div>
+                                    
+                                    <div>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                                                justifyContent: 'space-between',
+                                                                                marginBottom: 14
+                                                                            }}
+                                        >
+                                                                            <h1
+                                                                                style={{
+                                                                                    fontSize: 16,
+                                                                                    fontWeight: 600
+                                                                                }}
+                                                                            >
+                                                                                Vendor
+                                                                            </h1>
+                                        </div>
+                                                                        
+                                        <table>
+                                                                                
+                                            <tr>
+                                                                                    <th>
+                                                                                        No
+                                                                                    </th>
+                                                                                    <th>
+                                                                                        Nama
+                                                                                    </th>
+                                                                                    <th>
+                                                                                        Jabatan
+                                                                                    </th>
+                                                                                    <th>
+                                                                                        Email
+                                                                                    </th>
+                                            </tr>
+                                            
+                                            {TableListsVendor && TableListsVendor.map((item, index) => {
+                                                                                return(
+                                                                                    <>                                
+                                                                                            <tr key={index}>
+                                                                                                <td>
+                                                                                                    {index+1}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {item.name}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {item.position}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {item.email}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                    </>
+                                                                                )
+                                            })}
+                                            
+                                        </table>
+                                    </div>
+
+                                    <div
                                         style={{
-                                            padding: 28,
-                                            backgroundColor: 'white'
+                                            backgroundColor: '#e8f4fb',
+                                            padding: '12px 10px',
+                                            color: '#dc0526',
+                                            borderRadius: 4
                                         }}
                                     >
-                                            <div
-                                                style={{
-                                                    border: 1,
-                                                    borderColor: 'black',
-                                                    borderStyle: 'solid',
-                                                    padding: '14px 28px',
-                                                    backgroundColor: 'white',
-                                                    borderRadius: 14
-                                                }}
-                                            >
-                    
-                                                <h1
-                                                    style={{
-                                                        fontSize: 16,
-                                                        fontWeight: 600
-                                                    }}
-                                                >
-                                                    Reviewer Addendum
-                                                </h1>
-                    
-                                                <br
-                                                    style={{
-                                                        border: 1,
-                                                        borderColor: 'black',
-                                                        borderStyle: 'solid'
-                                                    }}
-                                                />
-                    
-                                                <h1
-                                                    style={{
-                                                        fontSize: 16,
-                                                        fontWeight: 600
-                                                    }}
-                                                >
-                                                    Admin Kontrak
-                                                </h1>
-                    
-                                                <div
-                                                    style={{
-                                                        display: 'grid',
-                                                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                                                        gap: 28,
-                                                        margin: '14px 0px 28px 0px'
-                                                    }}
-                                                >
-                    
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            gap: 4
-                                                        }}
-                                                    >
-                                                        <span>Nama</span>
-                                                        <input 
-                                                            type="text" 
-                                                            value={"Zulfiqur Rahman"}
-                                                            style={{
-                                                                borderRadius: 4,
-                                                                padding: 8,
-                                                                backgroundColor: '#e8f4fb'
-                                                            }}
-                                                        />
-                                                    </div>
-                    
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            gap: 4
-                                                        }}
-                                                    >
-                                                        <span>Jabatan</span>
-                                                        <input 
-                                                            type="text" 
-                                                            value={"Purchasing Staff"} 
-                                                            style={{
-                                                                borderRadius: 4,
-                                                                padding: 8,
-                                                                backgroundColor: '#e8f4fb'
-                                                            }}
-                                                        />
-                                                    </div>
-                    
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            gap: 4
-                                                        }}
-                                                    >
-                                                        <span>Email</span>
-                                                        <input
-                                                            type="text" 
-                                                            value={"zulfiqur.r@geodipa.co.id"} 
-                                                            style={{
-                                                                borderRadius: 4,
-                                                                padding: 8,
-                                                                backgroundColor: '#e8f4fb'
-                                                            }}
-                                                        />
-                                                    </div>
-                    
-                    
-                                                </div>
+                                        Final Addendum belum di distribusi
+                                    </div>
 
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        gap: 28
-                                                    }}
-                                                >
+                                </div>
+                                    
+                        </div>
 
-                                                    <div>
-                                                        <div
-                                                            style={{
-                                                                display: 'flex',
-                                                                justifyContent: 'space-between',
-                                                                marginBottom: 14
-                                                            }}
-                                                        >
-                                                            <h1
-                                                                style={{
-                                                                    fontSize: 16,
-                                                                    fontWeight: 600
-                                                                }}
-                                                            >
-                                                                User
-                                                            </h1>
-                                                            <Button
-                                                                className="btn btn-primary"
-                                                                variant="contained"
-                                                                size="medium"
-                                                                onClick={showAddReviewer}
-                                                            >
-                                                                <div>
-                                                                    <span>
-                                                                        Tambah User
-                                                                    </span>
-                                                                </div>
-                                                            </Button>
-                                                        </div>
-                            
-                                                        <table>
-                                                                <tr>
-                                                                    <th>
-                                                                        No
-                                                                    </th>
-                                                                    <th>
-                                                                        Nama
-                                                                    </th>
-                                                                    <th>
-                                                                        Jabatan
-                                                                    </th>
-                                                                    <th>
-                                                                        Email
-                                                                    </th>
-                                                                    <th>
-                                                                        Aksi
-                                                                    </th>
-                                                                </tr>
-                            
-                                                                {TableListsUser && TableListsUser.map((item, index) => {
-                            
-                                                                    return(
-                                                                    <>                                
-                                                                        <tr key={index}>
-                                                                            <td>
-                                                                                {index+1}
-                                                                            </td>
-                                                                            <td>
-                                                                                {item.name}
-                                                                            </td>
-                                                                            <td>
-                                                                                {item.position}
-                                                                            </td>
-                                                                            <td>
-                                                                                {item.email}
-                                                                            </td>
-                                                                            <td>
-                                                                                {actionButton}
-                                                                            </td>
-                                                                        </tr>
-                                                                    </>)
-                                                                })}
-                            
-                                                        </table>
-                                                    </div>
-                    
-                                                    <div>
-                                                        <div
-                                                            style={{
-                                                                display: 'flex',
-                                                                justifyContent: 'space-between',
-                                                                marginBottom: 14
-                                                            }}
-                                                        >
-                                                            <h1
-                                                                style={{
-                                                                    fontSize: 16,
-                                                                    fontWeight: 600
-                                                                }}
-                                                            >
-                                                                User
-                                                            </h1>
-                                                            <Button
-                                                                className="btn btn-primary"
-                                                                variant="contained"
-                                                                size="medium"
-                                                                onClick={showAddVendor}
-                                                            >
-                                                                <div>
-                                                                    <span>
-                                                                        Tambah Vendor
-                                                                    </span>
-                                                                </div>
-                                                            </Button>
-                                                        </div>
-                                                        
-                                                        <table>
-                                                                
-                                                                <tr>
-                                                                    <th>
-                                                                        No
-                                                                    </th>
-                                                                    <th>
-                                                                        Nama
-                                                                    </th>
-                                                                    <th>
-                                                                        Jabatan
-                                                                    </th>
-                                                                    <th>
-                                                                        Email
-                                                                    </th>
-                                                                    <th>
-                                                                        Aksi
-                                                                    </th>
-                                                                </tr>
-                            
-                                                                {TableListsVendor && TableListsVendor.map((item, index) => {
-                                                                return(
-                                                                    <>                                
-                                                                            <tr key={index}>
-                                                                                <td>
-                                                                                    {index+1}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {item.name}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {item.position}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {item.email}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {actionButton}
-                                                                                </td>
-                                                                            </tr>
-                                                                    </>
-                                                                )
-                                                                })}
-                            
-                                                        </table>
-                                                    </div>
-
-                                                </div>
-                    
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'flex-end',
-                                                        marginTop: 40
-                                                    }}
-                                                >
-                                                        <Button
-                                                            variant="contained"
-                                                            color="secondary"
-                                                        >
-                                                            Submit
-                                                        </Button>
-                                                </div>
-                    
-                                            </div>
                     </div>
+                }
+
+               {distributionSequence === 1 && loginStatus === 'vendor' &&
+                    <>
+                        <div
+                                                    style={{
+                                                        padding: 28,
+                                                        backgroundColor: 'white'
+                                                    }}
+                                                >
+                                                    <div
+                                                        style={{
+                                                                                                            border: 1,
+                                                                                                            borderColor: 'black',
+                                                                                                            borderStyle: 'solid',
+                                                                                                            padding: '14px 28px',
+                                                                                                            backgroundColor: 'white',
+                                                                                                            borderRadius: 14
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <div
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    justifyContent: 'space-between',
+                                                                    marginBottom: 14
+                                                                }}
+                                                            >
+                                                                <h1
+                                                                    style={{
+                                                                        fontSize: 16,
+                                                                        fontWeight: 600
+                                                                    }}
+                                                                >
+                                                                    Vendor
+                                                                </h1>
+                                                            </div>
+                    
+                                                            <table>
+                                                                    
+                                                                    <tr>
+                                                                        <th>
+                                                                            No
+                                                                        </th>
+                                                                        <th>
+                                                                            Nama
+                                                                        </th>
+                                                                        <th>
+                                                                            Jabatan
+                                                                        </th>
+                                                                        <th>
+                                                                            Email
+                                                                        </th>
+                                                                        <th>
+                                                                            Aksi
+                                                                        </th>
+                                                                    </tr>
+                    
+                                                                    {TableListsVendor && TableListsVendor.map((item, index) => {
+                                                                    return(
+                                                                        <>                                
+                                                                                <tr key={index}>
+                                                                                    <td>
+                                                                                        {index+1}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        {item.name}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        {item.position}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        {item.email}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        {actionButton}
+                                                                                    </td>
+                                                                                </tr>
+                                                                        </>
+                                                                    )
+                                                                    })}
+                    
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                        </div>
+                    </>
                }
 
             </>
@@ -3851,4 +4407,9 @@ const DraftAddendumPage = () => {
     )
 }
 
-export default DraftAddendumPage
+const mapState = (state) => ({
+    loginStatus: state.auth.user.data.status,
+    rolesEproc: state.auth.user.data.roles_eproc
+})
+
+export default connect(mapState)(DraftAddendumPage)

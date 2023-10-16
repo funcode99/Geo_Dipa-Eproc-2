@@ -160,13 +160,13 @@ const ApprovalAddendumPage = ({
 
             {/* Modal buat bikin komponen dokumen pendukung baru */}
             <DialogGlobal
-                  ref={openCloseAddDocument}
-                  isCancel={false}
-                  isSubmit={true}
-                  onYes={setPush}
+              ref={openCloseAddDocument}
+              isCancel={false}
+              isSubmit={true}
+              onYes={setPush}
             >
-                <div>
-                      <Row>
+              <div>
+                <Row>
                           <Col md={4}>
                               Nama Dokumen
                               <BasicInput 
@@ -175,8 +175,8 @@ const ApprovalAddendumPage = ({
                               onChange={(e) => setLinksGroup({...linksGroup, documentname: e})} 
                               />
                           </Col>
-                      </Row>
-                      <Row>
+                </Row>
+                <Row>
                           <Col md={4}>
                               No Dokumen
                               <BasicInput 
@@ -201,8 +201,8 @@ const ApprovalAddendumPage = ({
                                 // onChange={(e) => console.log('isi event', e.path)}
                               />
                           </Col>
-                      </Row>
-                      <Row className={"mb-9 mt-3 mx-2"}>
+                </Row>
+                <Row className={"mb-9 mt-3 mx-2"}>
                           Perihal
                           <TextAreaInput 
                             className={"border border-dark form-control"} 
@@ -210,7 +210,7 @@ const ApprovalAddendumPage = ({
                             value={linksGroup.about} 
                             onChange={(e) => setLinksGroup({...linksGroup, about: e})}  
                           />
-                      </Row>
+                </Row>
               </div>
             </DialogGlobal>
 
@@ -466,7 +466,7 @@ const ApprovalAddendumPage = ({
                         )}
                       </Formik>
                       
-                      {/* {isClient &&
+                      {isClient &&
                       <Button
                         variant="contained"
                         color="secondary"
@@ -475,7 +475,7 @@ const ApprovalAddendumPage = ({
                       >
                         Tambah Dokumen
                       </Button>
-                      } */}
+                      }
 
                       <Button
                       variant="contained"
