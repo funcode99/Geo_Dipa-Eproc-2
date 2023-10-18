@@ -219,34 +219,34 @@ const useStyles = makeStyles((theme) => ({
           // console.log(`res.data`, res.data);
           // generateTableContent(res.data);
           setDataArr(
-            res.data.map((item, index) => ({
+            res.data.map((item) => ({
               id: item.id,
-              // contract_no: item?.contract_no,
-              contract_no: item?.add_request_number,
-              // po_number: item?.purch_order_no,
-              // procurement_title: item?.contract_name,
-              po_date:
-                // item?.issued_date !== null
-                //   ? formatDate(new Date(item?.issued_date))
-                //   : null,
-                item?.add_request_date !== null
-                ? formatDate(new Date(item?.add_request_date))
-                : null,
-              contract_date:
-                item?.issued_date !== null
-                  ? formatDate(new Date(item?.issued_date))
-                  : null,
-              group: item?.user_group?.party?.full_name,
-              vendor: item?.vendor?.party?.full_name,
-              status: item?.state,
+              addnm_req_number: item?.add_request_number,
+              addnm_req_date: item?.add_req_date,
+              contract_no: item?.contract?.contract_no,
+              po_no: item?.contract?.purch_order_no,
+              proc_contract_title: item?.contract?.contract_name,
+              // contract_end_date: item?,
+              group: item?.contract?.user_group?.party?.full_name,
+              vendor: item?.contract?.vendor?.party?.full_name,
+              addnm_req_status: item?.status,
+
+              // add_request_date
+              // add_request_approval_date
+              // contract.contract_date
+              // contract.issued_date
+              // contract.from_time
+              // contract.thru_time
+              // guarantee_start_end_date
+              // maintenance_start_end_date
+              // worked_start_end_date
+
               action: (
                 <ButtonAction
                   hoverLabel="More"
                   data={"1"}
-                  // handleAction={console.log(null)}
                   ops={[
                     {
-                      // mari kita tambahkan addendum disini
                       label: "CONTRACT.TABLE_ACTION.APPROVAL_REQUEST",
                       to: {
                         url: `/${status}/addendum-contract/approval/${item.id}`,
@@ -309,18 +309,32 @@ const useStyles = makeStyles((theme) => ({
               .map((item, index) => (
                 <TableRow key={index.toString()}>
                   <TableCell className="text-center">
-                    {index}
+                    {item?.addnm_req_number}
                   </TableCell>
                   <TableCell>
-                      {item?.contract_no}
+                    {item?.addnm_req_date}
                   </TableCell>
-                  <TableCell>{item.po_number}</TableCell>
-                  <TableCell>{item.procurement_title}</TableCell>
-                  <TableCell>{item.po_date}</TableCell>
-                  <TableCell>{item.contract_date}</TableCell>
-                  <TableCell>{item.group}</TableCell>
-                  <TableCell>{item?.vendor}</TableCell>
-                  <TableCell>{item.status}</TableCell>
+                  <TableCell>
+                    {item?.contract_no}
+                  </TableCell>
+                  <TableCell>
+                    {item.po_no}
+                  </TableCell>
+                  <TableCell>
+                    {item.proc_contract_title}
+                  </TableCell>
+                  <TableCell>
+
+                  </TableCell>
+                  <TableCell>
+                    {item?.group}
+                  </TableCell>
+                  <TableCell>
+                    {item?.vendor}
+                  </TableCell>
+                  <TableCell>
+                    {item?.addnm_req_status}
+                  </TableCell>
                   <TableCell
                     style={{
                       position: 'sticky',

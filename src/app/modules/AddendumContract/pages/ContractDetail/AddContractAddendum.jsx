@@ -27,13 +27,13 @@ import {
   Card,
   CardBody,
 } from "_metronic/_partials/controls"
+import FieldBuilder from "app/components/builder/FieldBuilder"
+import FormBuilder from "app/components/builder/FormBuilder"
 
 import { 
   supportingDocumentAdditional, 
   supportingDocumentDefault 
 } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData"
-import FieldBuilder from "app/components/builder/FieldBuilder"
-import FormBuilder from "app/components/builder/FormBuilder"
 import SupportingDocumentInput from "app/components/input/SupportingDocumentInput"
 
 import UploadInput from "app/components/input/UploadInput"
@@ -50,6 +50,11 @@ import {
 
 import FormPermohonan from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/FormPermohonan"
 import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/FormParameter"
+
+import { 
+  fetch_api_sg, 
+  getLoading 
+} from "redux/globalReducer"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -123,11 +128,15 @@ const useStyles = makeStyles((theme) => ({
 // ]
 
 // ternyata dataContractById ini props
-export const AddContractAddendum = ({ dataContractById, authStatus }) => {
+export const AddContractAddendum = ({ dataContractById, authStatus, fetch_api_sg }) => {
 
 
 const showAddDocument = () => {
   openCloseAddDocument.current.open()
+}
+
+const keys = {
+  fetch: "get-data-contracts-header",
 }
 
   // gak ada isi nya
@@ -137,6 +146,7 @@ const showAddDocument = () => {
   const { contract_id, tab: forceTabActive } = useParams()
   const [Toast, setToast] = useToast()
   const dispatch = useDispatch()
+  const [dataArr, setDataArr] = useState()
   const [tabActive, setTabActive] = React.useState(0)
   const [sequence, setSequence] = React.useState(0)
   const [loading, setLoading] = React.useState(false)
@@ -297,7 +307,8 @@ const showAddDocument = () => {
   React.useEffect(() => {
     // kalo dipanggil bisa
     getContractById(contract_id)
-    setInitialSubmitItems();
+    getDataContractHeader()
+    setInitialSubmitItems()
     // eslint-disable-next-line
   }, []);
 
@@ -308,7 +319,43 @@ const showAddDocument = () => {
     setTabActive(newTabActive)
   }
 
-
+  const getDataContractHeader = async () => {
+    console.log('masuk ke data header')
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/add-contracts/${contract_id}`,
+      onSuccess: (res) => {
+        console.log('apakah menarik data', res)
+        setDataArr(
+          res.data.map((item, index) => ({
+            // id: item.id,
+            // contract_no: item?.contract_no,
+            // po_number: item?.purch_order_no,
+            // procurement_title: item?.contract_name,
+            // po_date:
+            //   item?.issued_date !== null
+            //     ? formatDate(new Date(item?.issued_date))
+            //     : null,
+            // contract_date:
+            //   item?.issued_date !== null
+            //     ? formatDate(new Date(item?.issued_date))
+            //     : null,
+            // group: item?.user_group?.party?.full_name,
+            // vendor: item?.vendor?.party?.full_name,
+            // status: item?.state,
+            id: item.id,
+            conclusion: item.conclusion,
+            increase_job_price: item.increase_job_price,
+            decrease_job_price: item.decrease_job_price,
+            addendum_percentage: item.addendum_percentage,
+            agreement_number: item.add_request_number,
+            po_number: item.add_doc_number
+          }))
+        )
+      },
+    });
+  }
 
   React.useEffect(() => {
     if (
@@ -615,13 +662,15 @@ const showAddDocument = () => {
 
         </div>
 
-      {sequence === 0 && <Paper className={classes.root}>
-        <FormPermohonan 
-          checkedLength={checkLength}
-          assignTabLists={assignTabLists}
-          checkedValues={checkedInitialValues}
-        />
-      </Paper>}
+      {sequence === 0 && 
+        <Paper className={classes.root}>
+          <FormPermohonan
+            checkedLength={checkLength}
+            assignTabLists={assignTabLists}
+            checkedValues={checkedInitialValues}
+          />
+        </Paper>
+      }
 
       {sequence === 1 && <Paper className={classes.root}>
 
@@ -954,4 +1003,9 @@ const mapState = ({ auth, addendumContract }) => ({
   dataContractById: addendumContract.dataContractById,
 })
 
-export default compose(withRouter, connect(mapState))(AddContractAddendum)
+const mapDispatch = {
+  fetch_api_sg,
+}
+
+// apa itu withRouter?
+export default compose(withRouter, connect(mapState, mapDispatch))(AddContractAddendum)
