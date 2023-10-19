@@ -233,11 +233,11 @@ const Documents = ({
               .then(handleSuccess)
               .catch(handleError)
               .finally(() => {
-                handleLoading(type, false);
-                handleVisible(type);
-              });
+                handleLoading(type, false)
+                handleVisible(type)
+              })
           }
-          break;
+          break
         case "upload":
           fetch_api_sg({
             key: keys.upload,

@@ -34,111 +34,34 @@ const useStyles = makeStyles((theme) => ({
       minWidth: 650,
     },
   }))
-  
-  const tableHeaderContractsNew = [
-    {
-      name: "document_type",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.DOCUMENT_TYPE" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_no",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "po_number",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "procurement_title",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "po_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_end_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_END_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "group",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "vendor",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    // {
-    //   name: "status",
-    //   title: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
-    //   order: { active: false, status: false },
-    //   filter: { active: true, type: "text" },
-    // },
-    {
-      name: "status",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_STATUS" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    // kenapa action disini gak muncul ya?
-    {
-      name: "action",
-      title: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
-      order: { active: false, status: false },
-      // kenapa filter nya false?
-      filter: { active: false, type: "text" },
-    },
-  ]
 
   const tableHeaderAddendumRequest = [
     {
-      name: "req_number",
+      name: "addnm_req_number",
       title: "Addendum Request Number",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     { 
-      name: "req_date",
+      name: "addnm_req_date",
       title: "Addendum Request Date",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "contract_number",
+      name: "contract_no",
       title: "Contract Number",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "po_num",
+      name: "po_no",
       title: "PO Number",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "procurement_title",
+      name: "procurement_contract_title",
       title: "Procurement Contract Title",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
@@ -150,19 +73,19 @@ const useStyles = makeStyles((theme) => ({
       filter: { active: true, type: "text" },
     },
     {
-      name: "customer",
-      title: "Customer",
+      name: "group",
+      title: "User",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "provider",
-      title: "Provider",
+      name: "vendor",
+      title: "Vendor",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "req_status",
+      name: "addnm_req_status",
       title: "Request Addendum Status",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
@@ -207,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
     }
   
     function handleChangeRowsPerPage(event) {
-      setRowsPerPage(+event.target.value);
+      setRowsPerPage(+event.target.value)
     }
   
     const getDataContracts = async () => {
@@ -216,37 +139,35 @@ const useStyles = makeStyles((theme) => ({
         type: "get",
         url: `/adendum/add-contracts-request`,
         onSuccess: (res) => {
-          // console.log(`res.data`, res.data);
-          // generateTableContent(res.data);
           setDataArr(
-            res.data.map((item, index) => ({
+            res.data.map((item) => ({
               id: item.id,
-              // contract_no: item?.contract_no,
-              contract_no: item?.add_request_number,
-              // po_number: item?.purch_order_no,
-              // procurement_title: item?.contract_name,
-              po_date:
-                // item?.issued_date !== null
-                //   ? formatDate(new Date(item?.issued_date))
-                //   : null,
-                item?.add_request_date !== null
-                ? formatDate(new Date(item?.add_request_date))
-                : null,
-              contract_date:
-                item?.issued_date !== null
-                  ? formatDate(new Date(item?.issued_date))
-                  : null,
-              group: item?.user_group?.party?.full_name,
-              vendor: item?.vendor?.party?.full_name,
-              status: item?.state,
+              addnm_req_number: item?.add_request_number,
+              addnm_req_date: item?.add_request_date,
+              contract_no: item?.contract?.contract_no,
+              po_no: item?.contract?.purch_order_no,
+              proc_contract_title: item?.contract?.contract_name,
+              // contract_end_date: item?,
+              group: item?.contract?.user_group?.party?.full_name,
+              vendor: item?.contract?.vendor?.party?.full_name,
+              addnm_req_status: item?.status,
+
+              // add_request_date
+              // add_request_approval_date
+              // contract.contract_date
+              // contract.issued_date
+              // contract.from_time
+              // contract.thru_time
+              // guarantee_start_end_date
+              // maintenance_start_end_date
+              // worked_start_end_date
+
               action: (
                 <ButtonAction
                   hoverLabel="More"
                   data={"1"}
-                  // handleAction={console.log(null)}
                   ops={[
                     {
-                      // mari kita tambahkan addendum disini
                       label: "CONTRACT.TABLE_ACTION.APPROVAL_REQUEST",
                       to: {
                         url: `/${status}/addendum-contract/approval/${item.id}`,
@@ -259,9 +180,9 @@ const useStyles = makeStyles((theme) => ({
                 />
               ),
             }))
-          );
+          )
         },
-      });
+      })
     }
 
     let authStatus = useSelector(
@@ -309,18 +230,32 @@ const useStyles = makeStyles((theme) => ({
               .map((item, index) => (
                 <TableRow key={index.toString()}>
                   <TableCell className="text-center">
-                    {index}
+                    {item?.addnm_req_number}
                   </TableCell>
                   <TableCell>
-                      {item?.contract_no}
+                    {item?.addnm_req_date}
                   </TableCell>
-                  <TableCell>{item.po_number}</TableCell>
-                  <TableCell>{item.procurement_title}</TableCell>
-                  <TableCell>{item.po_date}</TableCell>
-                  <TableCell>{item.contract_date}</TableCell>
-                  <TableCell>{item.group}</TableCell>
-                  <TableCell>{item?.vendor}</TableCell>
-                  <TableCell>{item.status}</TableCell>
+                  <TableCell>
+                    {item?.contract_no}
+                  </TableCell>
+                  <TableCell>
+                    {item.po_no}
+                  </TableCell>
+                  <TableCell>
+                    {item.proc_contract_title}
+                  </TableCell>
+                  <TableCell>
+
+                  </TableCell>
+                  <TableCell>
+                    {item?.group}
+                  </TableCell>
+                  <TableCell>
+                    {item?.vendor}
+                  </TableCell>
+                  <TableCell>
+                    {item?.addnm_req_status}
+                  </TableCell>
                   <TableCell
                     style={{
                       position: 'sticky',

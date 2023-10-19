@@ -22,7 +22,7 @@ import useToast from "../../../../components/toast";
 import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 // import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
-import * as addendumContract from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
+import * as deliveryMonitoring from "app/modules/DeliveryMonitoring/service/DeliveryMonitoringCrud";
 
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { FormattedMessage } from "react-intl";
@@ -334,9 +334,10 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   );
 };
 
-const mapState = ({ auth, addendumContract }) => ({
+const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
-  dataContractById: addendumContract.getAddendumContractById,
+  dataContractById: deliveryMonitoring.getContractById,
 });
 
 export default compose(withRouter, connect(mapState))(ContractDetailPage);
+  
