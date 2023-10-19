@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   
   const tableHeaderContractsNew = [
     {
-      name: "document_type",
+      name: "contract_status",
       title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.DOCUMENT_TYPE" />,
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
@@ -198,7 +198,7 @@ const useStyles = makeStyles((theme) => ({
       setOrder(sort.order ? "asc" : "desc")
       setOrderBy(sort.name)
       setFilterBy(filter)
-      console.log(`datazzz`, filter, data2)
+      // console.log(`datazzz`, filter, data2)
     }
   
     function handleChangePage(newPage) {
@@ -218,8 +218,9 @@ const useStyles = makeStyles((theme) => ({
         onSuccess: (res) => {
           console.log('apakah menarik data', res)
           setDataArr(
-            res.data.map((item, index) => ({
+            res.data.map((item) => ({
               id: item.id,
+              contract_status: item?.contract_status,
               contract_no: item?.contract_no,
               po_number: item?.purch_order_no,
               procurement_title: item?.contract_name,
@@ -228,9 +229,12 @@ const useStyles = makeStyles((theme) => ({
                   ? formatDate(new Date(item?.issued_date))
                   : null,
               contract_date:
-                item?.issued_date !== null
-                  ? formatDate(new Date(item?.issued_date))
+                item?.from_time !== null
+                  ? formatDate(new Date(item?.from_time))
                   : null,
+              contract_end_date: 
+              item?.thru_time !== null
+              ? formatDate(new Date(item?.thru_time)) : null,
               group: item?.user_group?.party?.full_name,
               vendor: item?.vendor?.party?.full_name,
               status: item?.state,
@@ -319,19 +323,43 @@ const useStyles = makeStyles((theme) => ({
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item, index) => (
                 <TableRow key={index.toString()}>
+                  {/* document type */}
                   <TableCell className="text-center">
-                    {index}
+                    {item?.contract_status === 'PO' ? 'Perjanjian' : item?.contract_status}
+                  </TableCell>
+                  {/* contract number */}
+                  <TableCell>
+                    {item?.contract_no}
+                  </TableCell>
+                  {/* po number */}
+                  <TableCell>
+                    {item?.po_number}
+                  </TableCell>
+                  {/* procurement title */}
+                  <TableCell>
+                    {item?.procurement_title}
+                  </TableCell>
+                  {/* po date */}
+                  <TableCell>
+                    {item?.po_date}
+                  </TableCell>
+                  {/* contract date */}
+                  <TableCell>
+                    {item?.contract_date}
+                  </TableCell>
+                  {/* contract end date */}
+                  <TableCell>
+                    {item?.contract_end_date}
                   </TableCell>
                   <TableCell>
-                      {item?.contract_no}
+                    {item?.group}
                   </TableCell>
-                  <TableCell>{item.po_number}</TableCell>
-                  <TableCell>{item.procurement_title}</TableCell>
-                  <TableCell>{item.po_date}</TableCell>
-                  <TableCell>{item.contract_date}</TableCell>
-                  <TableCell>{item.group}</TableCell>
-                  <TableCell>{item?.vendor}</TableCell>
-                  <TableCell>{item.status}</TableCell>
+                  <TableCell>
+                    {item?.vendor}
+                  </TableCell>
+                  <TableCell>
+                    {item.status}
+                  </TableCell>
                   <TableCell
                     style={{
                       position: 'sticky',
@@ -341,7 +369,9 @@ const useStyles = makeStyles((theme) => ({
                       justifyContent: 'center',
                       minHeight: 65
                     }}
-                    >{item.action}</TableCell>
+                    >
+                    {item.action}
+                  </TableCell>
                 </TableRow>
               ))}
           </Tables>

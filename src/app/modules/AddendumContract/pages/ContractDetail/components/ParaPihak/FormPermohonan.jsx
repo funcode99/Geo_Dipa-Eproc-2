@@ -10,20 +10,76 @@ import {
     Card,
     CardBody,
 } from "_metronic/_partials/controls"
+import { rupiah } from "app/libs/currency"
+
+import {
+    submitAddendumRequest
+  } from "app/modules/AddendumContract/service/DeliveryMonitoringCrud"
 
     const FormPermohonan = (
         props
     ) => {
 
-    const FormObserver = () => {
-            const { values } = useFormikContext();
-            
-            useEffect(() => {
-            console.log("FormObserver::values", values.checked)
-            props.assignTabLists(values.checked)
-            }, [values]);
+    console.log('isi props', props)
+
+    const [conclusion, setConclusion] = useState('')
+    const [adnm_percentage, set_adnm_percentage] = useState()
+    const [disabledInput, setDisabledInput] = useState('both')
+
+    const submitAddendumRequestForm = (values) => {
         
-            return null;
+        console.log('isi values saat submit', values)
+        submitAddendumRequest({
+            // unauthorized karena contract id nya wkwk, dasar goblok
+            contract_id: `${props.contractId}`,
+            add_doc_number: `${props.headerData.doc_number}`,
+            is_add_parties: values.checked.includes('parties') ? '1': '0',
+            is_add_job_price: values.checked.includes('job_price') ? '1': '0',
+            is_add_time_period: values.checked.includes('time_period') ? '1': '0',
+            is_add_payment_method: values.checked.includes('payment_method') ? '1': '0',
+            is_add_fine: values.checked.includes('fine') ? '1': '0',
+            is_add_guarantee: values.checked.includes('guarantee') ? '1': '0',
+            is_add_account_number: values.checked.includes('account_number') ? '1': '0',
+            is_budget_availability: values.others.includes('Lainnya') ? '1' : '0',
+            other_note: values.note,
+            initial_job_price: `${props?.headerData?.initial_contract_value}`,
+            latest_addendum_job_price: values.latest_adnm_job_price,
+            increase_job_price: values.additional_price,
+            decrease_job_price: values.substraction_price,
+            after_addendum_job_price: values.after_adnm_job_price,
+            conclusion: conclusion
+        })
+    }
+
+    const FormObserver = () => {
+        const { values } = useFormikContext()
+            
+        useEffect(() => {
+        console.log("FormObserver::values", values.checked)
+        console.log('isi values formobserver', values)
+        props.assignTabLists(values.checked)
+        if(
+            (values.additional_price === '0' || values.additional_price === '')
+            &&
+            (values.substraction_price === '0' || values.substraction_price === '')
+        ) {
+            setDisabledInput('both')
+        } else if (
+            (values.additional_price === '0' || values.additional_price === '')
+            &&
+            (values.substraction_price !== '0' || values.substraction_price !== '')
+        ) {
+            setDisabledInput('add')
+        } else if (
+            (values.additional_price !== '0' || values.additional_price !== '')
+            &&
+            (values.substraction_price === '0' || values.substraction_price === '')
+        ) {
+            setDisabledInput('sub')
+        }
+        }, [values])
+        
+        return null
     }
 
         return (
@@ -58,7 +114,7 @@ import {
                                                     id="agreement_number"
                                                     style={{ backgroundColor: "#c7d2d8" }}
                                                     disabled
-                                                    value={'015.PJ/PST.100-GDE/I/2023'}
+                                                    value={`${props?.headerData?.agreement_number}`}
                                                 />
                                             </div>
                                             <div className="form-group row">
@@ -75,7 +131,7 @@ import {
                                                         id="po_number"
                                                         style={{ backgroundColor: "#c7d2d8" }}
                                                         disabled
-                                                    value={'8000007360'}
+                                                        value={`${props?.headerData?.po_number}`}
                                                 />
                                             </div>
                                             <div className="form-group row">
@@ -115,7 +171,7 @@ import {
                                                         onChange={(e) => {
 
                                                         }}
-                                                    value={'Plant Dieng'}
+                                                        value={`${props?.headerData?.procurement_authority}`}
                                                 />
                                             </div>
                                             <div className="form-group row">
@@ -135,7 +191,7 @@ import {
                                                         onChange={(e) => {
 
                                                         }}
-                                                    value={'Plant Dieng'}
+                                                        value={`${props?.headerData?.user}`}
                                                 />
                                             </div>
                                             <div className="form-group row">
@@ -155,7 +211,7 @@ import {
                                                         onChange={(e) => {
 
                                                         }}
-                                                    value={'Plant Dieng'}
+                                                        value={`${props?.headerData?.provider}`}
                                                 />
                                             </div>
                                         </div>
@@ -178,7 +234,7 @@ import {
                                                         onChange={(e) => {
 
                                                         }}
-                                                    value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
+                                                        value={`${props?.headerData?.procurement_title}`}
                                                 />
                                             </div>
                                             <div className="form-group row">
@@ -196,9 +252,9 @@ import {
                                                         style={{ backgroundColor: "#c7d2d8" }}
                                                         disabled
                                                         onChange={(e) => {
-
+                                                            
                                                         }}
-                                                    value={'Pengadaan Material Gasket Spiral Wound & Rupture Disk'}
+                                                        value={`${props?.headerData?.po_note}`}
                                                 />
                                             </div>
                                             <div className="form-group row">
@@ -235,7 +291,7 @@ import {
                                                         onChange={(e) => {
 
                                                         }}
-                                                    value={'961242390'}
+                                                        value={`${props?.headerData?.procurement_authority_group}`}
                                                 />
                                             </div>
                                             <div className="form-group row">
@@ -255,7 +311,7 @@ import {
                                                         onChange={(e) => {
 
                                                         }}
-                                                    value={'961242390'}
+                                                        value={`${props?.headerData?.user_group}`}
                                                 />
                                             </div>
                                         </div>
@@ -267,12 +323,15 @@ import {
                             initialValues={{
                                 checked: props.checkedValues,
                                 others: [],
-                                additional_price: '',
-                                substraction_price: null
+                                additional_price: '0',
+                                substraction_price: '0',
+                                note: '',
+                                adnm_conclusion: ''
                             }}
                             onSubmit={
                                 (values) => {
                                     props.checkedLength(values.checked.length)
+                                    submitAddendumRequestForm(values)
                                 }
                             }
                         >
@@ -506,13 +565,14 @@ import {
                                                         />
                                                     Lainnya
                                                 </label>
-                                                <input
+                                                <Field
                                                     style={{
                                                         minWidth: '300px',
                                                         padding: 8,
                                                         borderRadius: 4
                                                     }}
                                                     type='text'
+                                                    name='note'
                                                     placeholder='Masukkan perihal addendum lainnya'
                                                     disabled={values.others.length === 0 ? true : false}
                                                 />
@@ -536,7 +596,7 @@ import {
                                                             <input 
                                                                 className='form-control' 
                                                                 type='text' 
-                                                                value={`Rp 7.422.000.000,00`}
+                                                                value={`${rupiah(props?.headerData?.initial_contract_value)}`}
                                                                 disabled
                                                             />
                                                         </div>
@@ -557,7 +617,13 @@ import {
                                                             <input 
                                                                 className='form-control' 
                                                                 type='text'
-                                                                value={"Rp 0"}
+                                                                // di parseInt auto number jir
+                                                                value={`${rupiah(
+                                                                    typeof props?.headerData?.latest_contract_value !== 'number' ? 
+                                                                    0 
+                                                                    : 
+                                                                    props?.headerData?.latest_contract_value
+                                                                    )}`}
                                                                 disabled
                                                             />
                                                         </div>
@@ -574,12 +640,16 @@ import {
                                                     </label>
                                                     <div className='col-sm-8'>
                                                         <Field 
-                                                                className='form-control'
-                                                                type="text" 
-                                                                name="additional_price" 
-                                                                // value={values.additional_price}
-                                                                value={`Rp 0`} 
-                                                            />
+                                                            className='form-control'
+                                                            type="text" 
+                                                            name="additional_price"
+                                                            disabled={
+                                                                disabledInput === 'add'
+                                                            }
+                                                        />
+                                                                {/* // component={}
+                                                                // onChange={e => rupiah(e.target.value)}
+                                                                // onKeyUp={e => values.additional_price = rupiah(e.target.value)} */}
                                                     </div>
                                                 </div>
                                         </Col>
@@ -588,7 +658,7 @@ import {
                                         <Col md={12}>
                                                 <div
                                                     className=
-                                                {`form-group row ${values.additional_price !== '' ? '' : 'd-none'}`}
+                                                {`form-group row ${values.additional_price !== '0' && values.additional_price !== '' ? '' : 'd-none'}`}
                                                 >
                                                     <label className='col-sm-4 col-form-label'>
                                                         
@@ -629,10 +699,13 @@ import {
                                                         Pengurangan Harga Pekerjaan
                                                     </label>
                                                     <div className='col-sm-8'>
-                                                        <input 
-                                                            className='form-control' 
-                                                            type='text'
-                                                            value={"Rp 121.100.000,00"}
+                                                        <Field 
+                                                            className='form-control'
+                                                            type="text"
+                                                            name="substraction_price"
+                                                            disabled={
+                                                                disabledInput === 'sub'
+                                                            }
                                                         />
                                                     </div>
                                                 </div>
@@ -648,7 +721,15 @@ import {
                                                         <input 
                                                             className='form-control' 
                                                             type='text' 
-                                                            value={`Rp 7.300.900.000,00`}
+                                                            value={`${
+                                                                values.additional_price !== '0' 
+                                                                && 
+                                                                values.additional_price  !== '' 
+                                                                ?
+                                                                rupiah(parseInt(props?.headerData?.initial_contract_value) + parseInt(values.additional_price === '' ? '0' : values.additional_price))
+                                                            : 
+                                                                rupiah(parseInt(props?.headerData?.initial_contract_value) - parseInt(values.substraction_price === '' ? '0' : values.substraction_price))
+                                                            }`}
                                                             disabled 
                                                         />
                                                     </div>
@@ -657,19 +738,44 @@ import {
                                     </Row>
                                     <Row>
                                         <Col md={12}>
-                                                <div className='form-group row'>
+                                            <div className='form-group row'>
                                                     <label className='col-sm-4 col-form-label'>
                                                     Persentase Addendum
                                                     </label>
                                                     <div className='col-sm-8'>
                                                         <input 
-                                                            className='form-control' 
+                                                            className='form-control'
                                                             type='text'
-                                                            value={`3%`}
+                                                            value={`${adnm_percentage}%`}
+                                                            disabled
+                                                        />
+                                                        <input 
+                                                            className='d-none' 
+                                                            type='text'
+                                                            value=
+                                                            {
+                                                            `${
+                                                            values.additional_price !== '0' 
+                                                            && 
+                                                            values.additional_price !== ''
+                                                            &&
+                                                            (values.substraction_price === '0'
+                                                            ||
+                                                            values.substraction_price === '')
+                                                            ? 
+                                                                set_adnm_percentage(
+                                                                    ((((parseInt(props?.headerData?.initial_contract_value) + parseInt(values.additional_price === '' ? '0' : values.additional_price)) / parseInt(props?.headerData?.initial_contract_value)) - 1) * 100).toFixed(2)
+                                                                )
+                                                            : 
+                                                                set_adnm_percentage(
+                                                                    ((((parseInt(props?.headerData?.initial_contract_value) - parseInt(values.substraction_price === '' ? '0' : values.substraction_price)) / parseInt(props?.headerData?.initial_contract_value)) - 1) * 100).toFixed(2)
+                                                                )
+                                                            }`
+                                                            }
                                                             disabled
                                                         />
                                                     </div>
-                                                </div>
+                                            </div>
                                         </Col>
                                     </Row>
                                     <Row>
@@ -679,11 +785,19 @@ import {
                                                     Kesimpulan
                                                     </label>
                                                     <div className='col-sm-8'>
-                                                        <input 
-                                                            className='form-control' 
+                                                        <input
+                                                            className='form-control'
                                                             type='text'
-                                                            value={`Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal`}
+                                                            value={conclusion}
                                                             disabled
+                                                        />
+                                                        <input
+                                                            className='d-none'
+                                                            value=
+                                                            {`${
+                                                            parseInt(props?.headerData?.initial_contract_value) < 5000000000 && parseInt(Math.abs(adnm_percentage)) < 10 ?                                                 setConclusion('Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal')
+                                                                :
+                                                            setConclusion('Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai Kontrak di bawah Rp 5M)')}`}
                                                         />
                                                     </div>
                                                 </div>

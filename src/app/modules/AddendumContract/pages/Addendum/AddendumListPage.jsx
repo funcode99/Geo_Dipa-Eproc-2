@@ -33,83 +33,6 @@ const useStyles = makeStyles((theme) => ({
       minWidth: 650,
     },
   }))
-  
-  const tableHeaderContractsNew = [
-    {
-      name: "document_type",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.DOCUMENT_TYPE" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_no",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "po_number",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "procurement_title",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "po_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_end_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_END_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "group",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "vendor",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    // {
-    //   name: "status",
-    //   title: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
-    //   order: { active: false, status: false },
-    //   filter: { active: true, type: "text" },
-    // },
-    {
-      name: "status",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_STATUS" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    // kenapa action disini gak muncul ya?
-    {
-      name: "action",
-      title: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
-      order: { active: false, status: false },
-      // kenapa filter nya false?
-      filter: { active: false, type: "text" },
-    },
-  ]
 
   const tableHeaderAddendum = [
     {
@@ -327,13 +250,27 @@ const useStyles = makeStyles((theme) => ({
                   <TableCell>
                       {item?.contract_no}
                   </TableCell>
-                  <TableCell>{item.po_number}</TableCell>
-                  <TableCell>{item.procurement_title}</TableCell>
-                  <TableCell>{item.po_date}</TableCell>
-                  <TableCell>{item.contract_date}</TableCell>
-                  <TableCell>{item.group}</TableCell>
-                  <TableCell>{item?.vendor}</TableCell>
-                  <TableCell>{item.status}</TableCell>
+                  <TableCell>
+                    {item.po_number}
+                  </TableCell>
+                  <TableCell>
+                    {item.procurement_title}
+                  </TableCell>
+                  <TableCell>
+                    {item.po_date}
+                  </TableCell>
+                  <TableCell>
+                    {item.contract_date}
+                  </TableCell>
+                  <TableCell>
+                    {item.group}
+                  </TableCell>
+                  <TableCell>
+                    {item?.vendor}
+                  </TableCell>
+                  <TableCell>
+                    {item.status}
+                  </TableCell>
                   <TableCell
                     style={{
                       position: 'sticky',
@@ -343,7 +280,9 @@ const useStyles = makeStyles((theme) => ({
                       justifyContent: 'center',
                       minHeight: 65
                     }}
-                  >{item.action}</TableCell>
+                  >
+                    {item.action}
+                  </TableCell>
                 </TableRow>
               ))}
           </Tables>

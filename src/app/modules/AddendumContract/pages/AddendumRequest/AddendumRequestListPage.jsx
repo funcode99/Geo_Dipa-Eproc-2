@@ -34,111 +34,34 @@ const useStyles = makeStyles((theme) => ({
       minWidth: 650,
     },
   }))
-  
-  const tableHeaderContractsNew = [
-    {
-      name: "document_type",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.DOCUMENT_TYPE" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_no",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_NUMBER" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "po_number",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_NUMBER" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "procurement_title",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PROCUREMENT_TITLE" />,
-      order: { active: true, status: true, type: true },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "po_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.PO_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "contract_end_date",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_END_DATE" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "group",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.GROUP" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    {
-      name: "vendor",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.VENDOR" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    // {
-    //   name: "status",
-    //   title: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.STATUS" />,
-    //   order: { active: false, status: false },
-    //   filter: { active: true, type: "text" },
-    // },
-    {
-      name: "status",
-      title: <FormattedMessage id="CONTRACT_DETAIL.LABEL.CONTRACT_STATUS" />,
-      order: { active: false, status: false },
-      filter: { active: true, type: "text" },
-    },
-    // kenapa action disini gak muncul ya?
-    {
-      name: "action",
-      title: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.ACTION" />,
-      order: { active: false, status: false },
-      // kenapa filter nya false?
-      filter: { active: false, type: "text" },
-    },
-  ]
 
   const tableHeaderAddendumRequest = [
     {
-      name: "req_number",
+      name: "addnm_req_number",
       title: "Addendum Request Number",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     { 
-      name: "req_date",
+      name: "addnm_req_date",
       title: "Addendum Request Date",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "contract_number",
+      name: "contract_no",
       title: "Contract Number",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "po_num",
+      name: "po_no",
       title: "PO Number",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "procurement_title",
+      name: "procurement_contract_title",
       title: "Procurement Contract Title",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
@@ -150,19 +73,19 @@ const useStyles = makeStyles((theme) => ({
       filter: { active: true, type: "text" },
     },
     {
-      name: "customer",
-      title: "Customer",
+      name: "group",
+      title: "User",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "provider",
-      title: "Provider",
+      name: "vendor",
+      title: "Vendor",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
     },
     {
-      name: "req_status",
+      name: "addnm_req_status",
       title: "Request Addendum Status",
       order: { active: true, status: true, type: true },
       filter: { active: true, type: "text" },
@@ -207,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
     }
   
     function handleChangeRowsPerPage(event) {
-      setRowsPerPage(+event.target.value);
+      setRowsPerPage(+event.target.value)
     }
   
     const getDataContracts = async () => {
@@ -216,13 +139,11 @@ const useStyles = makeStyles((theme) => ({
         type: "get",
         url: `/adendum/add-contracts-request`,
         onSuccess: (res) => {
-          // console.log(`res.data`, res.data);
-          // generateTableContent(res.data);
           setDataArr(
             res.data.map((item) => ({
               id: item.id,
               addnm_req_number: item?.add_request_number,
-              addnm_req_date: item?.add_req_date,
+              addnm_req_date: item?.add_request_date,
               contract_no: item?.contract?.contract_no,
               po_no: item?.contract?.purch_order_no,
               proc_contract_title: item?.contract?.contract_name,
@@ -259,9 +180,9 @@ const useStyles = makeStyles((theme) => ({
                 />
               ),
             }))
-          );
+          )
         },
-      });
+      })
     }
 
     let authStatus = useSelector(

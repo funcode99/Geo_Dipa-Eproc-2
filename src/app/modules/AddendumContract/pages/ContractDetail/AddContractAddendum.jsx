@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap"
 import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
+import { Link } from 'react-router-dom'
 
 import { useLocation, useParams, withRouter } from "react-router-dom";
 import { compose } from "redux";
@@ -147,6 +148,7 @@ const keys = {
   const [Toast, setToast] = useToast()
   const dispatch = useDispatch()
   const [dataArr, setDataArr] = useState()
+  const [jsonData, setJsonData] = useState()
   const [tabActive, setTabActive] = React.useState(0)
   const [sequence, setSequence] = React.useState(0)
   const [loading, setLoading] = React.useState(false)
@@ -324,34 +326,38 @@ const keys = {
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      url: `/adendum/add-contracts/${contract_id}`,
+      // url: `/adendum/add-contracts/${contract_id}`,
+      // url: `/adendum/add-contracts/e44336cc-9604-4a49-9c6d-dafdd4043485`,
+      url: `/adendum/contract-released/01075fff-a2a6-43eb-979f-cef98afae970/show`,
       onSuccess: (res) => {
-        console.log('apakah menarik data', res)
+        console.log('apakah menarik data', res.data.id)
+        setJsonData(
+          res.data
+        )
         setDataArr(
-          res.data.map((item, index) => ({
-            // id: item.id,
-            // contract_no: item?.contract_no,
-            // po_number: item?.purch_order_no,
-            // procurement_title: item?.contract_name,
-            // po_date:
-            //   item?.issued_date !== null
-            //     ? formatDate(new Date(item?.issued_date))
-            //     : null,
-            // contract_date:
-            //   item?.issued_date !== null
-            //     ? formatDate(new Date(item?.issued_date))
-            //     : null,
-            // group: item?.user_group?.party?.full_name,
-            // vendor: item?.vendor?.party?.full_name,
-            // status: item?.state,
-            id: item.id,
-            conclusion: item.conclusion,
-            increase_job_price: item.increase_job_price,
-            decrease_job_price: item.decrease_job_price,
-            addendum_percentage: item.addendum_percentage,
-            agreement_number: item.add_request_number,
-            po_number: item.add_doc_number
-          }))
+          {         
+            id: res.data.id,
+            agreement_number: res.data.contract_no,
+            procurement_title: res.data.contract_name,
+            po_number: res.data.purch_order_no,
+            po_note: res.data.purch_order.name,
+            // agreement_format: '',
+            // agreement_type: '',
+            procurement_authority: res.data.authority.facility.name,
+            procurement_authority_group: res.data.authority_group.party.full_name,
+            user: res.data.user.facility.name,
+            user_group: res.data.user_group.party.full_name,
+            provider: res.data.vendor.party.full_name,
+
+            initial_contract_value: res.data.contract_value,
+            latest_contract_value: res.data.after_addendum_job_price,
+            doc_number: res.data.add_contracts[0].add_doc_number
+            // increase_job_price: res.data.increase_job_price,
+            // decrease_job_price: res.data.decrease_job_price,
+            // addendum_percentage: res.data.addendum_percentage,
+            // conclusion: res.data.conclusion,
+
+          }
         )
       },
     });
@@ -602,21 +608,25 @@ const keys = {
 
         </div>
 
-        <button
-          style={{
-            color: 'white',
-            fontSize: 14,
-            fontWeight: '400',
-            padding: '8px 14px',
-            borderRadius: '8px',
-            backgroundColor: '#8c8a8a',
-            outline: 'none',
-            border: 'none',
-            marginBottom: 28
-          }}
+        <Link
+          to={"/client/addendum_contract/draft/"+contract_id}
         >
-          Lihat Detail Addendum
-        </button>
+          <button
+            style={{
+              color: 'white',
+              fontSize: 14,
+              fontWeight: '400',
+              padding: '8px 14px',
+              borderRadius: '8px',
+              backgroundColor: '#8c8a8a',
+              outline: 'none',
+              border: 'none',
+              marginBottom: 28
+            }}
+          >
+            Lihat Detail Addendum
+          </button>
+        </Link>
 
         <div 
           style={{
@@ -665,6 +675,8 @@ const keys = {
       {sequence === 0 && 
         <Paper className={classes.root}>
           <FormPermohonan
+            contractId={contract_id}
+            headerData={dataArr}
             checkedLength={checkLength}
             assignTabLists={assignTabLists}
             checkedValues={checkedInitialValues}
@@ -681,9 +693,12 @@ const keys = {
             variant="scrollable"
           />
 
-          <FormParameter currentActiveTab={tabActive} />
+          <FormParameter 
+            currentActiveTab={tabActive}
+            jsonData={jsonData}
+          />
           
-              <div
+          <div
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
@@ -729,9 +744,9 @@ const keys = {
                 >
                     Update
                 </button>
-              </div>
+          </div>
 
-              <div
+          <div
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
@@ -762,7 +777,7 @@ const keys = {
                 >
                   {`Next >>`}
                 </Button>
-              </div>
+          </div>
 
       </Paper>}
 

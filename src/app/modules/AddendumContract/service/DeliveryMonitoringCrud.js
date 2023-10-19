@@ -16,6 +16,10 @@ export function getAddendumContractById(id) {
   return axios.get(`/adendum/contract-released/${id}/show`)
 }
 
+export function submitAddendumRequest(params) {
+  return axios.post(`/adendum/add-contracts`, params)
+}
+
 // Tasks
 export function submitTask(values, update) {
   if (update) {
@@ -34,7 +38,7 @@ export function getTaskById(taskId) {
 }
 
 export function submitItems(values, taskId) {
-  return axios.post(`/delivery/task/${taskId}`, values);
+  return axios.post(`/delivery/task/${taskId}`, values)
 }
 
 // Task Delivery Item

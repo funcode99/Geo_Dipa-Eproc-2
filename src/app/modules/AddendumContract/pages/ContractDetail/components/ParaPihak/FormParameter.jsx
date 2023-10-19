@@ -740,10 +740,12 @@ function createData(name, calories, fat, carbs, protein) {
 
 const FormParameter = ({
     currentActiveTab,
-    fetch_api_sg
+    fetch_api_sg,
+    jsonData
 }) => {
 
     // console.log('tab yang aktif sekarang', currentActiveTab)
+    console.log('isi jsonData', jsonData)   
 
     const [dataArr, setDataArr] = React.useState([])
     const [dataArrFine, setDataArrFine] = React.useState([])
@@ -1509,6 +1511,7 @@ const FormParameter = ({
                         >
 
                             {/* Pejabat Berwenang */}
+                            
                             <div>
 
                                 <h1
@@ -1529,13 +1532,16 @@ const FormParameter = ({
                                         }}
                                     >
                                         <span>Username</span>
-                                        {/* <input 
+                                        <input 
                                             type="text" 
-                                            value={"herdian"}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
-                                        /> */}
-                                        <ReactSelect />
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_username}`}
+                                        />
+                                        {/* <ReactSelect /> */}
                                     </label>
                                 </div>
 
@@ -1550,8 +1556,11 @@ const FormParameter = ({
                                     >
                                         <span>Nama</span>
                                         <input 
-                                            type="text" 
-                                            value={"Herdian Ardi Febrianto"}
+                                            type="text"
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_full_name}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }} 
                                         />
@@ -1570,7 +1579,10 @@ const FormParameter = ({
                                         <span>Jabatan</span>
                                         <input 
                                             type="text" 
-                                            value={"General Manager Unit Dieng"} 
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_position_of_autorize}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1590,7 +1602,10 @@ const FormParameter = ({
                                         <input
                                             className="form-control"
                                             type="text" 
-                                            value={"Jl Raya Dieng - Batur Banjarnegara PO BOX 01 Wonosobo"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_address}`}
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
                                     </label>
@@ -1609,8 +1624,11 @@ const FormParameter = ({
                                         <input
                                             className="form-control"
                                             type="text" 
-                                            value={"+62-286-3342020"}
                                             style={{ backgroundColor: "#e8f4fb" }}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_phone}`}
                                         />
                                     </label>
                                 </div>
@@ -1628,7 +1646,10 @@ const FormParameter = ({
                                         <input
                                             className="form-control"
                                             type="text" 
-                                            value={"+62-286-3342022"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_fax}`}
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
                                     </label>
@@ -1654,7 +1675,10 @@ const FormParameter = ({
                                         >
                                             <input 
                                                 type="text"
-                                                value={"015.PJ/PST.100-GDE/I/2023"}
+                                                value={`${
+                                                    jsonData?.
+                                                    contract_party?.
+                                                    party_1_sk_no}`}
                                                 className="form-control"
                                                 style={{
                                                     backgroundColor: "#e8f4fb"
@@ -1663,7 +1687,10 @@ const FormParameter = ({
                                             -
                                             <input 
                                                 type="date" 
-                                                defaultValue={"2022-03-25"}
+                                                value={`${
+                                                    jsonData?.
+                                                    contract_party?.
+                                                    party_1_sk_date}`}
                                                 className="form-control"
                                                 style={{
                                                     backgroundColor: "#e8f4fb"
@@ -1685,7 +1712,10 @@ const FormParameter = ({
                                         <span>Nama Notaris</span>
                                         <input
                                             type="text" 
-                                            value={""}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_notary_act_autorized_name}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1792,13 +1822,16 @@ const FormParameter = ({
                                         }}
                                     >
                                         <span>Username</span>
-                                        {/* <input
+                                        <input
                                             type="text" 
-                                            value={"weni"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_username}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
-                                        /> */}
-                                        <ReactSelect />
+                                        />
+                                        {/* <ReactSelect /> */}
                                     </label>
                                 </div>
 
@@ -1814,7 +1847,10 @@ const FormParameter = ({
                                         <span>Nama Lengkap</span>
                                         <input
                                             type="text" 
-                                            value={"Weni Kusumaningrum"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_full_name}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1833,7 +1869,10 @@ const FormParameter = ({
                                         <span>Jabatan</span>
                                         <input
                                             type="text" 
-                                            value={"Procurement Superintendent"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position}`}   
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1852,7 +1891,10 @@ const FormParameter = ({
                                         <span>Alamat</span>
                                         <input
                                             type="text" 
-                                            value={"Jl. Raya Dieng - Batur PO BOX 01 Wonosobo"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_address}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1871,7 +1913,10 @@ const FormParameter = ({
                                         <span>Telp</span>
                                         <input
                                             type="text" 
-                                            value={"+62-286-3342020"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_phone}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1890,7 +1935,10 @@ const FormParameter = ({
                                         <span>FAX</span>
                                         <input
                                             type="text" 
-                                            value={"+62-286-3342022"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_director_position_fax}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1922,7 +1970,10 @@ const FormParameter = ({
                                         <span>Jabatan</span>
                                         <input
                                             type="text" 
-                                            value={"Logistic Supervisor"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_job_supervisor.name}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1941,7 +1992,10 @@ const FormParameter = ({
                                         <span>Alamat</span>
                                         <input
                                             type="text" 
-                                            value={"Jl. Raya Dieng Batur, Karangtengah Batur Banjarnegara"}
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_job_supervisor.address}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1959,8 +2013,11 @@ const FormParameter = ({
                                     >
                                         <span>Telp</span>
                                         <input
-                                            type="text" 
-                                            value={"+62-286-3342020"}
+                                            type="text"
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_job_supervisor.telp}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -1978,8 +2035,11 @@ const FormParameter = ({
                                     >
                                         <span>FAX</span>
                                         <input
-                                            type="text" 
-                                            value={"+62-286-3342022"}
+                                            type="text"
+                                            value={`${
+                                                jsonData?.
+                                                contract_party?.
+                                                party_1_job_supervisor.fax}`}
                                             className="form-control"
                                             style={{ backgroundColor: "#e8f4fb" }}
                                         />
@@ -2567,13 +2627,15 @@ const FormParameter = ({
                                             }}
                                         >
                                             <span>Username</span>
-                                            {/* <input 
+                                            <input 
                                                 type="text" 
-                                                value={"herdian"}
+                                                value={`${
+                                                    jsonData?.
+                                                    contract_party?.
+                                                    party_2_director_position_username}`}
                                                 className="form-control"
                                                 style={{ backgroundColor: "#e8f4fb" }}
-                                            /> */}
-                                            <ReactSelect />
+                                            />
                                         </label>
                                     </div>
 

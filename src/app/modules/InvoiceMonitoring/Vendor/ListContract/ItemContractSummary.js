@@ -904,6 +904,7 @@ function ItemContractSummary(props) {
                   className="col-sm-4 col-form-label"
                 >
                   <FormattedMessage id="TITLE.AUTHOR_OFFICIAL" />
+                  coeg
                 </label>
                 <div className="col-sm-8">
                   <input
