@@ -32,7 +32,6 @@ export const ReactSelect = () => {
           display: 'inline-block',
           fontSize: 12,
           fontStyle: 'italic',
-          marginTop: '1em',
         }}
       >
       </div>
