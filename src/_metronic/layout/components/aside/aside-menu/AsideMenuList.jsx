@@ -105,9 +105,12 @@ export function AsideMenuList({ layoutProps }) {
     dispatch(clean_loading_state_rd())
   }, [])
 
+  console.log('isi asidemenu',asideMenu)
+
   return (
     <>
       <ul className={`menu-nav ${layoutProps.ulClasses}`}>
+        
         <li
           className={`menu-item ${getMenuItemActive(
             `/${status}/dashboard`,
@@ -122,6 +125,7 @@ export function AsideMenuList({ layoutProps }) {
             <span className="menu-text">Dashboard</span>
           </NavLink>
         </li>
+
         {asideMenu.map((item, index) => {
           return (
             <li
@@ -134,6 +138,7 @@ export function AsideMenuList({ layoutProps }) {
               aria-haspopup="true"
               data-menu-toggle="hover"
             >
+              
               <NavLink
                 className={
                   item.subMenu && item.subMenu.length > 0
@@ -152,6 +157,7 @@ export function AsideMenuList({ layoutProps }) {
                   <i className="menu-arrow" />
                 )}
               </NavLink>
+
               {item.subMenu && item.subMenu.length > 0 && (
                 <div className="menu-submenu ">
                   <i className="menu-arrow" />
@@ -233,9 +239,11 @@ export function AsideMenuList({ layoutProps }) {
                   </ul>
                 </div>
               )}
+
             </li>
           );
         })}
+
       </ul>
     </>
   );

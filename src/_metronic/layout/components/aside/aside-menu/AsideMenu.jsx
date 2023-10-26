@@ -13,6 +13,8 @@ export function AsideMenu({disableScroll}) {
     };
   }, [uiService]);
 
+  console.log('isi layout props', layoutProps)
+
   return (
     <>
       {/* begin::Menu Container */}
