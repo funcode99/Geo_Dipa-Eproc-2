@@ -129,8 +129,11 @@ const useStyles = makeStyles((theme) => ({
 // ]
 
 // ternyata dataContractById ini props
+
 export const AddContractAddendum = ({ dataContractById, authStatus, fetch_api_sg }) => {
 
+  // isinya kosong
+  // console.log('isi dataContractById', dataContractById)
 
 const showAddDocument = () => {
   openCloseAddDocument.current.open()
@@ -149,6 +152,9 @@ const keys = {
   const dispatch = useDispatch()
   const [dataArr, setDataArr] = useState()
   const [jsonData, setJsonData] = useState()
+  const [jobDirector, setJobDirector] = useState()
+  const [jobSupervisor, setJobSupervisor] = useState()
+  const [authorizedOfficial, setauthorizedOfficial] = useState()
   const [tabActive, setTabActive] = React.useState(0)
   const [sequence, setSequence] = React.useState(0)
   const [loading, setLoading] = React.useState(false)
@@ -218,6 +224,14 @@ const keys = {
       // icon: <FeaturedPlayList className="mb-0 mr-2" />,
       addendum: false
     },
+
+    {
+      id: "other",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+      label: "Lainnya",
+      // icon: <FeaturedPlayList className="mb-0 mr-2" />,
+      addendum: false
+    },
   
   ])
   const [checkedInitialValues, setCheckedInitialValues] = React.useState([])
@@ -269,11 +283,6 @@ const keys = {
   const getContractById = async (contract_id) => {
     try {
 
-      // dispatch({
-      //   type: actionTypes.SetContractById,
-      //   payload: [],
-      // });
-
       // loading buat throttling
       setLoading(true);
 
@@ -288,7 +297,8 @@ const keys = {
       dispatch({
         type: actionTypes.SetContractById,
         payload: data,
-      });
+      })
+
     } catch (error) {
       if (
         error.response?.status !== 400 &&
@@ -306,13 +316,36 @@ const keys = {
     }
   };
 
+  const getBanksById = async (contract_id) => {
+    try {
+      setLoading(true)
+    } catch (error) {
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== "TokenExpiredError"
+      ) {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        ) {
+          setToast("Error API, please contact developer!");
+        }
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
   React.useEffect(() => {
     // kalo dipanggil bisa
     getContractById(contract_id)
     getDataContractHeader()
+    getauthorizedOfficial()
+    getJobDirector()
+    getJobSupervisor()
     setInitialSubmitItems()
     // eslint-disable-next-line
-  }, []);
+  }, [])
 
   // sengaja dikasih event biar yang diambil value nya
   function handleChangeTab(event, newTabActive) {
@@ -322,7 +355,7 @@ const keys = {
   }
 
   const getDataContractHeader = async () => {
-    console.log('masuk ke data header')
+    // console.log('masuk ke data header')
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
@@ -360,7 +393,43 @@ const keys = {
           }
         )
       },
-    });
+    })
+  }
+
+  const getauthorizedOfficial = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/job-directors`,
+      onSuccess: (res) => {
+        console.log('apakah menarik data direksi', res.data)
+        setauthorizedOfficial(res.data)
+      },
+    })
+  }
+
+  const getJobDirector = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/direksi-pekerjaan`,
+      onSuccess: (res) => {
+        console.log('apakah menarik data direksi', res.data)
+        setJobDirector(res.data)
+      },
+    })
+  }
+
+  const getJobSupervisor = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/user-plants`,
+      onSuccess: (res) => {
+        console.log('apakah menarik data direksi', res.data)
+        setJobSupervisor(res.data)
+      },
+    })
   }
 
   React.useEffect(() => {
@@ -496,10 +565,14 @@ const keys = {
               </div>
       </DialogGlobal>
 
+      {/* ${dataContractById?.contract_no} */}
       <Subheader 
         text={
-          dataContractById
-          ? `Formulir Permohonan Addendum Kontrak No : ${dataContractById?.contract_no}` : 
+          // dataContractById
+          dataArr
+          ? `Formulir Permohonan Addendum Kontrak No : 
+            ${dataArr?.agreement_number}
+          `: 
           null
         }
       />
@@ -513,9 +586,13 @@ const keys = {
             label: "List of Contract & SPK",
             to: `/${authStatus}/addendum-contract/list-contract-po`,
           },
+          // dataContractById?.contract_name 
           {
             label: `${
-              dataContractById ? dataContractById?.contract_name : "x"
+              dataArr ? 
+              dataArr?.agreement_number
+              : 
+              "x"
             }`,
             to: "/",
           },
@@ -528,88 +605,96 @@ const keys = {
         }
       />
 
-        <div
-          style={{
-            backgroundColor: 'white',
-            padding: 28,
-            marginTop: 24,
-            marginBottom: 24,
-            borderRadius: 5
-          }}
-        >
-
-          <h1 
-            style={{ 
-                fontSize: 12,
-                fontWeight: 400
-            }}
-          >
-            Silahkan download file final draft dibawah ini:
-          </h1>
-
-          <select
-            style={{
-              borderRadius: 4,
-              padding: '10px 12px',
-              width: 310,
-              backgroundColor: '#e8f4fb'
-            }}
-          >
-            <option>
-              Final Draft Kontrak
-            </option>
-            <option>
-              Final Draft Addendum
-            </option>
-          </select>
-
-          <div 
-            style={{ 
-              minHeight: 100, 
-              marginTop: 10,
-              marginBottom: 10,
-              fontSize: 12,
-              fontWeight: 400,
-              color: '#3699ff'
-            }}
-          >
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 6
-                }}
-              >
-                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
-                <p>Body Kontrak Perjanjian.doc</p>
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 6
-                }}
-              >
-                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
-                <p>Lampiran 1.doc</p>
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 6
-                }}
-              >
-                <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
-                <p>Lampiran 2.doc</p>
-              </div>
-
-
+        {jsonData?.form_review ?        
+                  <div
+                  style={{
+                    backgroundColor: 'white',
+                    padding: 28,
+                    marginTop: 24,
+                    marginBottom: 24,
+                    borderRadius: 5
+                  }}
+                >
+        
+                  <h1 
+                    style={{ 
+                        fontSize: 12,
+                        fontWeight: 400
+                    }}
+                  >
+                    Silahkan download file final draft dibawah ini:
+                  </h1>
+        
+                  <select
+                    style={{
+                      borderRadius: 4,
+                      padding: '10px 12px',
+                      width: 310,
+                      backgroundColor: '#e8f4fb'
+                    }}
+                  >
+                    <option>
+                      Final Draft Kontrak
+                    </option>
+                    <option>
+                      Final Draft Addendum
+                    </option>
+                  </select>
+        
+                  <div 
+                    style={{ 
+                      minHeight: 100, 
+                      marginTop: 10,
+                      marginBottom: 10,
+                      fontSize: 12,
+                      fontWeight: 400,
+                      color: '#3699ff'
+                    }}
+                  >
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: 6
+                        }}
+                      >
+                        <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                        {/* <p>Body Kontrak Perjanjian.doc</p> */}
+                          <p>{jsonData?.form_review?.spk_name}</p>
+                      </div>
+        
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: 6
+                        }}
+                      >
+                        <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                        {/* <p>Lampiran 1.doc</p> */}
+                        <p>{jsonData?.form_review?.lampiran_1_name}</p>
+                      </div>
+        
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: 6
+                        }}
+                      >
+                        <SVG src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")} />
+                        {/* <p>Lampiran 2.doc</p> */}
+                        <p>{jsonData?.form_review?.lampiran_2_name}</p>
+                      </div>
+        
+                  </div>
+        
+                </div> 
+          :
+          <div className="d-flex justify-content-center m-5 border-danger">
+            <CircularProgress />
           </div>
-
-        </div>
+      }
 
         <Link
-          to={"/client/addendum_contract/draft/"+contract_id}
+          to={"/client/addendum-contract/draft/"+contract_id}
         >
           <button
             style={{
@@ -696,6 +781,9 @@ const keys = {
           <FormParameter 
             currentActiveTab={tabActive}
             jsonData={jsonData}
+            authorizedOfficial={authorizedOfficial}
+            jobDirector={jobDirector}
+            jobSupervisor={jobSupervisor}
           />
           
           <div
@@ -1016,6 +1104,7 @@ const keys = {
 const mapState = ({ auth, addendumContract }) => ({
   authStatus: auth.user.data.status,
   dataContractById: addendumContract.dataContractById,
+  getBanksById: addendumContract.dataBanksById
 })
 
 const mapDispatch = {

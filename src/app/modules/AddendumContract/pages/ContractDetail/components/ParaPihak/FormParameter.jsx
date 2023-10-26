@@ -549,7 +549,7 @@ function EditableTable() {
           {/* Table Header */}
           <TableBody>
             <TableRow>
-              <TableCell align='left'>No.</TableCell>
+              <TableCell size="small">No.</TableCell>
               <TableCell align="left">Deskripsi Item</TableCell>
               <TableCell align="left">QTY</TableCell>
               <TableCell align="left">Satuan</TableCell>
@@ -655,7 +655,7 @@ function EditableTable() {
 
 const timePeriodBeforeAddendum = [
     {
-        title: 'Jangka Waktu Masa Garansi',
+        title: 'Jangka Waktu Perjanjian',
         startDate: '2023-09-29',
         endDate: '2023-09-30',
         totalMonth: 6,
@@ -676,7 +676,7 @@ const timePeriodBeforeAddendum = [
         endDate: '2023-09-30',
         totalMonth: 6,
         calendarDay: 15,
-        radio: 'SKPP'
+        // radio: 'SKPP'
     },
     {
         title: 'Jangka Waktu Masa Pemeliharaan',
@@ -684,7 +684,7 @@ const timePeriodBeforeAddendum = [
         endDate: '2023-09-30',
         totalMonth: 6,
         calendarDay: 15,
-        radio: 'SPMK'
+        // radio: 'SPMK'
     },
 ]
 
@@ -744,9 +744,29 @@ function createData(name, calories, fat, carbs, protein) {
   const FormParameter = ({
       currentActiveTab,
       fetch_api_sg,
-      jsonData
+      jsonData,
+      authorizedOfficial,
+      jobDirector,
+      jobSupervisor
     }) => {
-        
+
+        const [bankIndex, setBankIndex] = useState(0)
+        const [authorizedOfficialIndex, setauthorizedOfficialIndex] = useState(0)
+        const [jobDirectorIndex, setJobDirectorIndex] = useState(0)
+        const [jobSupervisorIndex, setJobSupervisorIndex] = useState(0)
+        const changeDataBankIndex = (num) => {
+            setBankIndex(num)
+        }
+        const changeDataauthorizedOfficial = (num) => {
+            setauthorizedOfficialIndex(num)
+        }
+        const changeDataJobDirector = (num) => {
+            setJobDirectorIndex(num)
+        }
+        const changeDataJobSupervisor = (num) => {
+            setJobSupervisorIndex(num)
+        }
+
         const [addendumRows, setAddendumRows] = useState([
           createData(1, 'Keterlambatan Pekerjaan', 10, 30, '%')
         ])
@@ -827,6 +847,11 @@ function createData(name, calories, fat, carbs, protein) {
     const openCloseAddFine = React.useRef()
     const showAddFine = () => {
         openCloseAddFine.current.open()
+    }
+
+    const openCloseAddDetail = React.useRef()
+    const showAddDetail = () => {
+        openCloseAddDetail.current.open()
     }
 
     const openCloseAddPayment = React.useRef()
@@ -1189,6 +1214,338 @@ function createData(name, calories, fat, carbs, protein) {
                 </div>
             </DialogGlobal>
 
+            {/* modal tambah rincian */}
+            <DialogGlobal
+              ref={openCloseAddDetail}
+              isCancel={false}
+              isSubmit={false}
+              yesButton={false}
+              noButton={false}
+              maxWidth={'sm'}
+            >
+
+              <Formik
+                    initialValues={{
+                        fine_type: '',
+                        value: '',
+                        max_day: '',
+                        value_type: ''
+                    }}
+                onSubmit={
+                    (values) => {
+                        setAddendumRows(data => {
+                            return [
+                                ...data,
+                                createData(
+                                    1,
+                                    values.fine_type, 
+                                    values.value, 
+                                    values.max_day, 
+                                    values.value_type
+                                )
+                            ]
+                        }
+                        )
+                    }
+                }
+              >
+                {({values}) => (
+                    <>
+
+                        <Form>
+
+                            <div
+                                style={{
+                                    padding: '0 17%'
+                                }}
+                            >
+                            
+                                <h1
+                                    style={{
+                                        marginBottom: 40,
+                                        fontSize: 16,
+                                        fontWeight: 600,
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    Tambah Rincian Harga Pekerjaan
+                                </h1>
+
+                            </div>
+
+                            {/* form flex */}
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'space-between',
+                                    padding: '0 12px',
+                                    columnGap: '72px',
+                                    rowGap: '14px'
+                                }}
+                            >
+                                
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14,
+                                        flex: 1
+                                    }}
+                                >
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 10
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                fontSize: 10,
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Deskripsi Item
+                                        </span>
+                                        <Field 
+                                            type="text"
+                                            name="item_desc"
+                                            style={{
+                                                padding: 8,
+                                                borderRadius: 4,
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderColor: '#8c8a8a',
+                                                opacity: .8
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 10
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                fontSize: 10,
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            QTY
+                                        </span>
+                                        <Field 
+                                            type="text" 
+                                            name="quantity"
+                                            style={{
+                                                padding: 8,
+                                                borderRadius: 4,
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderColor: '#8c8a8a',
+                                                opacity: .8
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 10
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                fontSize: 10,
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Satuan
+                                        </span>
+                                        <Field 
+                                            type="text" 
+                                            name="uom" 
+                                            style={{
+                                                    padding: 8,
+                                                    borderRadius: 4,
+                                                    border: 1,
+                                                    borderStyle: 'solid',
+                                                    borderColor: '#8c8a8a',
+                                                    opacity: .8
+                                            }}
+                                        />
+                                    </div>
+
+                                </div>
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14,
+                                        flex: 1
+                                    }}
+                                >
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 10
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                fontSize: 10,
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Harga Satuan
+                                        </span>
+
+                                        <Field 
+                                            type="text" 
+                                            name="unit_price"
+                                            style={{
+                                                padding: 8,
+                                                borderRadius: 4,
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderColor: '#8c8a8a',
+                                                opacity: .8
+                                            }}
+                                        />
+
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 10
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                fontSize: 10,
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Harga Total
+                                        </span>
+                                        <Field 
+                                            type="text" 
+                                            name="value"
+                                            style={{
+                                                padding: 8,
+                                                borderRadius: 4,
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderColor: '#8c8a8a',
+                                                opacity: .8
+                                            }} 
+                                        />
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 10
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                fontSize: 10,
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Keterangan
+                                        </span>
+                                        <Field 
+                                            type="text" 
+                                            name="note"
+                                            style={{
+                                                padding: 8,
+                                                borderRadius: 4,
+                                                border: 1,
+                                                borderStyle: 'solid',
+                                                borderColor: '#8c8a8a',
+                                                opacity: .8
+                                            }} 
+                                        />
+                                    </div>
+
+                                    {/* <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 10
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                fontSize: 10,
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Type Nilai
+                                        </span>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                gap: 20
+                                            }}
+                                        >
+                                            <label>
+                                                <input
+                                                    type="radio"
+                                                    name="value_type"
+                                                />
+                                                %
+                                            </label>
+                                            <label>
+                                                <input
+                                                    type="radio"
+                                                    name="value_type"
+                                                />
+                                                Nilai
+                                            </label>
+                                        </div>
+                                    </div> */}
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    marginTop: 52,
+                                    padding: '0 12px'
+                                }}
+                            >
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                >
+                                    Save
+                                </button>
+                            </div>
+
+                        </Form>
+                    </>
+                )}
+              </Formik>
+
+            </DialogGlobal>
+
             {/* modal tambah denda */}
             <DialogGlobal
               ref={openCloseAddFine}
@@ -1545,1206 +1902,65 @@ function createData(name, calories, fat, carbs, protein) {
                 {/* Para Pihak */}
                 {currentActiveTab === 0 &&                
                     <>
-                    
-                        {/* Header pihak pertama */}
+
+                        {/* Pihak 1 + 2 */}
                         <div
+                            className="parties-wrapper"
                             style={{
-                                backgroundColor: '#cdcdcd',
-                                display: 'inline-block',
-                                padding: 8,
-                                borderRadius: 6,
-                                marginBottom: 14,
-                                marginLeft: 12.5
+                                border: 1,
+                                borderStyle: 'solid',
+                                borderColor: 'black',
+                                borderRadius: 14,
+                                padding: '28px 15.5px',
+                                marginBottom: 40
                             }}
                         >
-                            <span
-                                style={{
-                                    fontSize: 14,
-                                    fontWeight: 500,
-                                    color: '#2e1f22'
-                                }}
-                            >
-                                A. Pihak Pertama
-                            </span>
-                        </div>
-
-                        {/* Baris pihak pertama */}
-                        <div
-                            className="row col-md-12"
-                        >
-
-                            {/* Pihak pertama */}
+                            
+                            {/* Header pihak pertama */}
                             <div
-                                className="col-md-6"
                                 style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 28
+                                    backgroundColor: '#cdcdcd',
+                                    display: 'inline-block',
+                                    padding: 8,
+                                    borderRadius: 6,
+                                    marginBottom: 14,
+                                    marginLeft: 12.5
                                 }}
                             >
-
-                                {/* Pejabat Berwenang */}
-                                <div
+                                <span
                                     style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: 14
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        color: '#2e1f22'
                                     }}
                                 >
-                                    <h1
-                                        style={{
-                                            fontSize: '16px'
-                                        }}
-                                    >
-                                        Pejabat berwenang
-                                    </h1>
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4,
-                                                height: 65.5
-                                            }}
-                                        >
-                                            <span>Username</span>
-                                            <input 
-                                                type="text" 
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_contract_signature_username}`}
-                                            />
-                                        </label>
-                                    </div>
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama</span>
-                                            <input 
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_contract_signature_name}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }} 
-                                            />
-                                        </label>
-                                    </div>
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Jabatan</span>
-                                            <input 
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_position_of_autorize}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                className="form-control"
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    authority?.
-                                                    address
-                                                }`}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Telp</span>
-                                            <input
-                                                className="form-control"
-                                                type="text" 
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                                value={`${
-                                                    jsonData?.
-                                                    authority?.
-                                                    phone
-                                                }`}
-                                            />
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                className="form-control"
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    authority?.
-                                                    fax
-                                                }`}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor SK Penugasan</span>
-                                            <div
-                                            
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
-                                                }}
-                                            >
-                                                <input 
-                                                    type="text"
-                                                    value={`${
-                                                        jsonData?.
-                                                        contract_party?.
-                                                        party_1_sk_no}`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                                -
-                                                <input 
-                                                    type="date" 
-                                                    value={`${
-                                                        jsonData?.
-                                                        contract_party?.
-                                                        party_1_sk_date}`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama Notaris</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_notary_act_autorized_name}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor Akta</span>
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
-                                                }}
-                                            >
-                                                <input 
-                                                    type="text"
-                                                    value={`${
-                                                        jsonData?.
-                                                        contract_party?.
-                                                        party_1_notary_act_autorized_no}`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                                -
-                                                <input 
-                                                    type="date" 
-                                                    value={`${
-                                                        jsonData?.
-                                                        contract_party?.
-                                                        party_1_notary_act_autorized_no}`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor SK Kemenkumham</span>
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
-                                                }}
-                                            >
-                                                <input 
-                                                    type="text"
-                                                    value={`${
-                                                        jsonData?.
-                                                        contract_party?.
-                                                        party_1_autorized_kemenkumham_no}`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                                -
-                                                <input 
-                                                    type="date"
-                                                    value={`${
-                                                        jsonData?.
-                                                        contract_party?.
-                                                        party_1_autorized_kemenkumham_no}`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
-
-                                </div>
-
-                                {/* Direksi Pekerjaan */}
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: 14
-                                    }}
-                                >
-                                    
-                                    <div
-                                        style={{
-                                            height: 44.89
-                                        }}
-                                    >
-                                        <h1
-                                            style={{
-                                                fontSize: '16px',
-                                                minHeight: 38.17
-                                            }}
-                                        >
-                                            Direksi pekerjaan
-                                        </h1>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4,
-                                                height: 65.5
-                                            }}
-                                        >
-                                            <span>Username</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_director_position_username}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama Lengkap</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_director_position_full_name}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Jabatan</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_director_position}`}   
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_director_position_address}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Telp</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_director_position_phone}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_director_position_fax}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                </div>
-
-                                {/* Pengawas Pekerjaan */}
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: 14
-                                    }}
-                                >
-                                    
-                                    <div
-                                        style={{
-                                            height: 44.89
-                                        }}
-                                    >
-                                        <h1
-                                            style={{
-                                                fontSize: '16px'
-                                            }}
-                                        >
-                                            Pengawas pekerjaan
-                                        </h1>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Jabatan</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_job_supervisor.name}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_job_supervisor.address}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Telp</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_job_supervisor.telp}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_1_job_supervisor.fax}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                </div>
-
+                                    A. Pihak Pertama
+                                </span>
                             </div>
 
-                            {/* Addendum pihak pertama */}
+                            {/* Baris pihak pertama */}
                             <div
-                                className="col-md-6"
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 28
-                                }}
+                                className="row col-md-12"
                             >
 
-                                {/* Pejabat Berwenang */}
+                                {/* Pihak pertama */}
                                 <div
+                                    className="col-md-6"
                                     style={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        gap: 14
+                                        gap: 28
                                     }}
                                 >
 
-                                    <h1
-                                        style={{
-                                            fontSize: '16px'
-                                        }}
-                                    >
-                                        Addendum Pejabat berwenang
-                                    </h1>
-
+                                    {/* Pejabat Berwenang */}
                                     <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Username</span>
-                                            <ReactSelect />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama</span>
-                                            <input 
-                                                type="text" 
-                                                value={"Herdian Ardi Febrianto"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }} 
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Jabatan</span>
-                                            <input 
-                                                type="text" 
-                                                value={"General Manager Unit Dieng"} 
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                className="form-control"
-                                                type="text" 
-                                                value={"Jl Raya Dieng - Batur Banjarnegara PO BOX 01 Wonosobo"}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Telp</span>
-                                            <input
-                                                className="form-control"
-                                                type="text" 
-                                                value={"+62-286-3342020"}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                className="form-control"
-                                                type="text" 
-                                                value={"+62-286-3342022"}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor SK Penugasan</span>
-                                            <div
-                                            
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
-                                                }}
-                                            >
-                                                <input 
-                                                    type="text"
-                                                    value={"015.PJ/PST.100-GDE/I/2023"}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                                -
-                                                <input 
-                                                    type="date" 
-                                                    defaultValue={"2022-03-25"}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama Notaris</span>
-                                            <input
-                                                type="text" 
-                                                value={""}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor Akta</span>
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
-                                                }}
-                                            >
-                                                <input 
-                                                    type="text"
-                                                    value={""}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                                -
-                                                <input 
-                                                    type="date" 
-                                                    defaultValue={"2022-03-25"}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor SK Kemenkumham</span>
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
-                                                }}
-                                            >
-                                                <input 
-                                                    type="text"
-                                                    value={""}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                                -
-                                                <input 
-                                                    type="date" 
-                                                    defaultValue={"2022-03-25"}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
-
-                                </div>
-
-                                {/* Direksi Pekerjaan */}
-                                {/* addendum direksi pekerjaan 1 */}
-                                {placeman.workDirector && 
-                                    placeman.workDirector.map((data, index) => {
-                                        return <div
                                         style={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: 14
                                         }}
-                                        >
-                                            
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    
-                                                }}
-                                            >
-                                                    <h1
-                                                        style={{
-                                                            fontSize: '16px',
-
-                                                        }}
-                                                    >
-                                                        Addendum Direksi pekerjaan
-                                                    </h1>
-
-                                                    {index === 0 &&                                                
-                                                        <button
-                                                            className="btn btn-primary mx-1"
-                                                            onClick={showAddWorkDirector}
-                                                        >
-                                                            Tambah
-                                                        </button>
-                                                    }
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>Username</span>
-                                                    <ReactSelect />
-                                                </label>
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>Nama Lengkap</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.fullname}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>Jabatan</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.position}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>Alamat</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.address}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>Telp</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.phone_number}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>FAX</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.fax}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                        </div>
-                                    })
-                                }
-
-                                {/* Pengawas Pekerjaan */}
-                                {placeman.workSupervisor && 
-                                    placeman.workSupervisor.map((data, index) => {
-                                        return <div
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                gap: 14
-                                            }}
-                                        >
-                                            
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between'
-                                                }}
-                                            >
-                                                    <h1
-                                                        style={{
-                                                            fontSize: '16px'
-                                                        }}
-                                                    >
-                                                        Addendum Pengawas pekerjaan
-                                                    </h1>
-
-                                                    {index === 0 &&
-                                                        <button
-                                                            className="btn btn-primary mx-1"
-                                                            onClick={showAddWorkSupervisor}
-                                                        >
-                                                            Tambah
-                                                        </button>
-                                                    }
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>Jabatan</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.position}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>Alamat</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.address}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>Telp</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.phone_number}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                            <div
-                                            >
-                                                <label
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4
-                                                    }}
-                                                >
-                                                    <span>FAX</span>
-                                                    <input
-                                                        type="text" 
-                                                        value={`${data.fax}`}
-                                                        className="form-control"
-                                                        style={{ backgroundColor: "#e8f4fb" }}
-                                                    />
-                                                </label>
-                                            </div>
-
-                                        </div>
-                                    })
-                                }
-
-                            </div>
-
-                        </div>
-
-                        {/* Header pihak kedua */}
-                        <div
-                            style={{
-                                backgroundColor: '#cdcdcd',
-                                display: 'inline-block',
-                                padding: 8,
-                                borderRadius: 6,
-                                marginBottom: 14,
-                                marginTop: 40,
-                                marginLeft: 12.5
-                            }}
-                        >
-                            <span
-                                style={{
-                                    fontSize: 14,
-                                    fontWeight: 500,
-                                    color: '#2e1f22'
-                                }}
-                            >
-                                B. Pihak Kedua
-                            </span>
-                        </div>
-
-                        {/* Baris pihak kedua */}
-                        <div
-                            className="row col-md-12"
-                        >
-                            
-                            {/* Pihak kedua */}
-                            <div
-                                className="col-md-6"
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 28
-                                }}
-                            >
-
-                                {/* Pejabat Berwenang */}
-                                <div
-                                                                        style={{
-                                                                            display: 'flex',
-                                                                            flexDirection: 'column',
-                                                                            gap: 14
-                                                                        }}
-
-                                >
-
-                                    <div
-
                                     >
-
                                         <h1
                                             style={{
                                                 fontSize: '16px'
@@ -2752,599 +1968,578 @@ function createData(name, calories, fat, carbs, protein) {
                                         >
                                             Pejabat berwenang
                                         </h1>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4,
-                                                height: 65.5
-                                            }}
+                                        <div
                                         >
-                                            <span>Username</span>
-                                            <input 
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_contract_signature_username}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama</span>
-                                            <input 
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_autorize_name}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }} 
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Jabatan</span>
-                                            <input 
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_position}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                className="form-control"
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position_address}`}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Telp</span>
-                                            <input
-                                                className="form-control"
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position_phone}`}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                className="form-control"
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position_fax}`}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor SK Penugasan</span>
-                                            <div
-                                            
+                                            <label
                                                 style={{
                                                     display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    height: 65.5
                                                 }}
                                             >
+                                                <span>Username</span>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_contract_signature_username}`}
+                                                />
+                                            </label>
+                                        </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama</span>
                                                 <input 
                                                     type="text"
                                                     value={`${
                                                         jsonData?.
                                                         contract_party?.
-                                                        party_2_sk_no}`}
+                                                        party_1_contract_signature_name}`}
                                                     className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
+                                                    style={{ backgroundColor: "#e8f4fb" }} 
                                                 />
-                                                -
+                                            </label>
+                                        </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
                                                 <input 
-                                                    type="date"
+                                                    type="text" 
                                                     value={`${
                                                         jsonData?.
                                                         contract_party?.
-                                                        party_2_sk_date}`}
+                                                        party_1_position_of_autorize}`}
                                                     className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
                                                 />
-                                            </div>
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama Notaris</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_notary_act_autorized_name
-                                                }`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor Akta</span>
-                                            <div
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label
                                                 style={{
                                                     display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
                                                 }}
                                             >
-                                                <input 
+                                                <span>Alamat</span>
+                                                <input
+                                                    className="form-control"
                                                     type="text"
                                                     value={`${
                                                         jsonData?.
-                                                        contract_party?.
-                                                        party_2_notary_act_autorized_no
+                                                        authority?.
+                                                        address
                                                     }`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
                                                 />
-                                                -
-                                                <input 
-                                                    type="date"
-                                                    value={`${
-                                                        jsonData?.
-                                                        contract_party?.
-                                                        party_2_notary_act_autorized_date
-                                                    }`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                            </label>
+                                        </div>
+                                        <div
                                         >
-                                            <span>Nomor SK Kemenkumham</span>
-                                            <div
+                                            <label
                                                 style={{
                                                     display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
                                                 }}
                                             >
-                                                <input 
+                                                <span>Telp</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text" 
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                    value={`${
+                                                        jsonData?.
+                                                        authority?.
+                                                        phone
+                                                    }`}
+                                                />
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    className="form-control"
                                                     type="text"
                                                     value={`${
                                                         jsonData?.
-                                                        contract_party?.
-                                                        party_2_autorized_kemenkumham_no
+                                                        authority?.
+                                                        fax
                                                     }`}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
                                                 />
-                                                -
-                                                <input 
-                                                    type="date"
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor SK Penugasan</span>
+                                                <div
+                                                
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_1_sk_no}`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date" 
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_1_sk_date}`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama Notaris</span>
+                                                <input
+                                                    type="text" 
                                                     value={`${
                                                         jsonData?.
                                                         contract_party?.
-                                                        party_2_autorized_kemenkumham_date
-                                                    }`}
+                                                        party_1_notary_act_autorized_name}`}
                                                     className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
                                                 />
-                                            </div>
-                                        </label>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor Akta</span>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_1_notary_act_autorized_no}`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date" 
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_1_notary_act_autorized_no}`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor SK Kemenkumham</span>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_1_autorized_kemenkumham_no}`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_1_autorized_kemenkumham_no}`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
                                     </div>
 
-                                </div>
-
-                                {/* Direksi Pekerjaan */}
-                                <div
-                                                                        style={{
-                                                                            display: 'flex',
-                                                                            flexDirection: 'column',
-                                                                            gap: 14
-                                                                        }}
-                                >
-                                    
+                                    {/* Direksi Pekerjaan */}
                                     <div
                                         style={{
-                                            minHeight: 44.89
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14
                                         }}
                                     >
-                                        <h1
+                                        
+                                        <div
                                             style={{
-                                                fontSize: '16px'
+                                                height: 44.89
                                             }}
                                         >
-                                            Direksi pekerjaan
-                                        </h1>
+                                            <h1
+                                                style={{
+                                                    fontSize: '16px',
+                                                    minHeight: 38.17
+                                                }}
+                                            >
+                                                Direksi pekerjaan
+                                            </h1>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    height: 65.5
+                                                }}
+                                            >
+                                                <span>Username</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_director_position_username}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama Lengkap</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_director_position_full_name}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_director_position}`}   
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_director_position_address}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_director_position_phone}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_director_position_fax}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
                                     </div>
 
+                                    {/* Pengawas Pekerjaan */}
                                     <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14
+                                        }}
                                     >
-                                        <label
+                                        
+                                        <div
                                             style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4,
-                                                height: 65.5
+                                                height: 44.89
                                             }}
                                         >
-                                            <span>Username</span>
-                                            <input
-                                                type="text" 
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position_username}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
+                                            <h1
+                                                style={{
+                                                    fontSize: '16px'
+                                                }}
+                                            >
+                                                Pengawas pekerjaan
+                                            </h1>
+                                        </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
                                         >
-                                            <span>Nama Lengkap</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position_full_name}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_job_supervisor.name}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
                                         >
-                                            <span>Jabatan</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_job_supervisor.address}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
                                         >
-                                            <span>Alamat</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position_address}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_job_supervisor.telp}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
                                         >
-                                            <span>Telp</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position_phone}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_1_job_supervisor.fax}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_director_position_fax}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
                                     </div>
 
                                 </div>
 
-                                {/* Pengawas Pekerjaan */}
+                                {/* Addendum pihak pertama */}
                                 <div
+                                    className="col-md-6"
                                     style={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        gap: 14
+                                        gap: 28
                                     }}
                                 >
-                                    
+
+                                    {/* Pejabat Berwenang */}
                                     <div
                                         style={{
-                                            minHeight: 44.89
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14
                                         }}
                                     >
-                                        <h1
-                                            style={{
-                                                fontSize: '16px'
-                                            }}
-                                        >
-                                            Pengawas pekerjaan
-                                        </h1>
-                                    </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4,
-                                                // height: 65.5
-                                            }}
-                                        >
-                                            <span>Jabatan</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_job_supervisor.name}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_job_supervisor.address}`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Telp</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_job_supervisor.telp
-                                                }`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                type="text"
-                                                value={`${
-                                                    jsonData?.
-                                                    contract_party?.
-                                                    party_2_job_supervisor.fax
-                                                }`}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                            
-                            {/* Addendum pihak kedua */}
-                            <div
-                                className="col-md-6"
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 28
-                                }}
-                            >
-
-                                {/* Pejabat Berwenang */}
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: 14
-                                    }}
-                                >
-
-                                    <div>
                                         <h1
                                             style={{
                                                 fontSize: '16px'
@@ -3352,555 +2547,1888 @@ function createData(name, calories, fat, carbs, protein) {
                                         >
                                             Addendum Pejabat berwenang
                                         </h1>
-                                    </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
                                         >
-                                            <span>Username</span>
-                                            {/* <input 
-                                                type="text" 
-                                                value={"herdian"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            /> */}
-                                            <ReactSelect />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama</span>
-                                            <input 
-                                                type="text" 
-                                                value={"Herdian Ardi Febrianto"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }} 
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Jabatan</span>
-                                            <input 
-                                                type="text" 
-                                                value={"General Manager Unit Dieng"} 
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                className="form-control"
-                                                type="text" 
-                                                value={"Jl Raya Dieng - Batur Banjarnegara PO BOX 01 Wonosobo"}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Telp</span>
-                                            <input
-                                                className="form-control"
-                                                type="text" 
-                                                value={"+62-286-3342020"}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                className="form-control"
-                                                type="text" 
-                                                value={"+62-286-3342022"}
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor SK Penugasan</span>
-                                            <div
-                                            
+                                            <label
                                                 style={{
                                                     display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
                                                 }}
                                             >
-                                                <input 
-                                                    type="text"
-                                                    value={"015.PJ/PST.100-GDE/I/2023"}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
+                                                <span>Username</span>
+                                                {/* <ReactSelect /> */}
+                                                <ReactSelect
+                                                    data={authorizedOfficial}
+                                                    func={changeDataauthorizedOfficial}
+                                                    labelName={`authorized_official_username`}
                                                 />
-                                                -
-                                                <input 
-                                                    type="date" 
-                                                    defaultValue={"2022-03-25"}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
+                                            </label>
+                                        </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
                                         >
-                                            <span>Nama Notaris</span>
-                                            <input
-                                                type="text" 
-                                                value={""}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nomor Akta</span>
-                                            <div
+                                            <label
                                                 style={{
                                                     display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
                                                 }}
                                             >
+                                                <span>Nama</span>
                                                 <input 
                                                     type="text"
-                                                    value={""}
+                                                    value={
+                                                        authorizedOfficial[authorizedOfficialIndex]?.
+                                                        authorized_official_name
+                                                    }
                                                     className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
+                                                    style={{ backgroundColor: "#e8f4fb" }} 
                                                 />
-                                                -
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
                                                 <input 
-                                                    type="date" 
-                                                    defaultValue={"2022-03-25"}
+                                                    type="text"
+                                                    value={
+                                                        authorizedOfficial[authorizedOfficialIndex]?.
+                                                        authorized_official_position
+                                                    }
                                                     className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
                                                 />
-                                            </div>
-                                        </label>
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text" 
+                                                    // value={"Jl Raya Dieng - Batur Banjarnegara PO BOX 01 Wonosobo"}
+                                                    value={
+                                                        authorizedOfficial[authorizedOfficialIndex]?.
+                                                        address
+                                                    }
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    value={
+                                                        authorizedOfficial[authorizedOfficialIndex]?.
+                                                        phone
+                                                    }
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    value={
+                                                        authorizedOfficial[authorizedOfficialIndex]?.
+                                                        fax
+                                                    }
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor SK Penugasan</span>
+                                                <div
+                                                
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={
+                                                            authorizedOfficial[authorizedOfficialIndex]?.
+                                                            assignment_deed_no
+                                                        }
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date" 
+                                                        value={
+                                                            authorizedOfficial[authorizedOfficialIndex]?.
+                                                            assignment_deed_date
+                                                        }
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama Notaris</span>
+                                                <input
+                                                    type="text" 
+                                                    value={
+                                                        authorizedOfficial[authorizedOfficialIndex]?.
+                                                        name_notary_deed_of_authorized_official
+                                                    }
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor Akta</span>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={
+                                                            authorizedOfficial[authorizedOfficialIndex]?.
+                                                            authorized_official_deed_no
+                                                        }
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date" 
+                                                        value={
+                                                            authorizedOfficial[authorizedOfficialIndex]?.
+                                                            authorized_official_deed_date
+                                                        }
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor SK Kemenkumham</span>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={
+                                                            authorizedOfficial[authorizedOfficialIndex]?.
+                                                            authorized_official_sk_kemenkumham_no
+                                                        }
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date"
+                                                        value={
+                                                            authorizedOfficial[authorizedOfficialIndex]?.
+                                                            authorized_official_sk_kemenkumham_date
+                                                        }
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
                                     </div>
 
-                                    <div
-                                    >
-                                        <label
+                                    {/* Direksi Pekerjaan */}
+                                    {/* addendum direksi pekerjaan 1 */}
+                                    {placeman.workDirector && 
+                                        placeman.workDirector.map((data, index) => {
+                                            return <div
                                             style={{
                                                 display: 'flex',
                                                 flexDirection: 'column',
-                                                rowGap: 4
+                                                gap: 14
                                             }}
-                                        >
-                                            <span>Nomor SK Kemenkumham</span>
-                                            <div
+                                            >
+                                                
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        height: 44.89
+                                                    }}
+                                                >
+                                                        <h1
+                                                            style={{
+                                                                fontSize: '16px',
+
+                                                            }}
+                                                        >
+                                                            Addendum Direksi pekerjaan
+                                                        </h1>
+
+                                                        {index === 0 &&                                                
+                                                            <button
+                                                                className="btn btn-primary mx-1"
+                                                                onClick={showAddWorkDirector}
+                                                            >
+                                                                Tambah
+                                                            </button>
+                                                        }
+                                                </div>
+
+                                                <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>Username</span>
+                                                        <ReactSelect
+                                                            data={jobDirector}
+                                                            func={changeDataJobDirector}
+                                                            labelName={`username`}
+                                                        />
+                                                    </label>
+                                                </div>
+
+                                                <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>Nama Lengkap</span>
+                                                        <input
+                                                            type="text" 
+                                                            value={jobDirector[jobDirectorIndex]?.full_name}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        />
+                                                    </label>
+                                                </div>
+
+                                                <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>Jabatan</span>
+                                                        <input
+                                                            type="text" 
+                                                            // value={`${data.position}`}
+                                                            value={jobDirector[jobDirectorIndex]?.position_name}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        />
+                                                    </label>
+                                                </div>
+
+                                                <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>Alamat</span>
+                                                        <input
+                                                            type="text" 
+                                                            // value={`${data.address}`}
+                                                            value={authorizedOfficial[authorizedOfficialIndex]?.address}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        />
+                                                    </label>
+                                                </div>
+
+                                                <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>Telp</span>
+                                                        <input
+                                                            type="text" 
+                                                            value={authorizedOfficial[authorizedOfficialIndex]?.phone}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        />
+                                                    </label>
+                                                </div>
+
+                                                <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>FAX</span>
+                                                        <input
+                                                            type="text"
+                                                            value={authorizedOfficial[authorizedOfficialIndex]?.fax}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        />
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        })
+                                    }
+
+                                    {/* Pengawas Pekerjaan */}
+                                    {placeman.workSupervisor && 
+                                        placeman.workSupervisor.map((data, index) => {
+                                            return <div
                                                 style={{
                                                     display: 'flex',
-                                                    alignItems: 'center',
-                                                    columnGap: 8,
+                                                    flexDirection: 'column',
+                                                    gap: 14
                                                 }}
                                             >
-                                                <input 
-                                                    type="text"
-                                                    value={""}
-                                                    className="form-control"
+                                                
+                                                <div
                                                     style={{
-                                                        backgroundColor: "#e8f4fb"
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between'
                                                     }}
-                                                />
-                                                -
-                                                <input 
-                                                    type="date" 
-                                                    defaultValue={"2022-03-25"}
-                                                    className="form-control"
-                                                    style={{
-                                                        backgroundColor: "#e8f4fb"
-                                                    }}
-                                                />
-                                            </div>
-                                        </label>
-                                    </div>
+                                                >
+                                                        <h1
+                                                            style={{
+                                                                fontSize: '16px'
+                                                            }}
+                                                        >
+                                                            Addendum Pengawas pekerjaan
+                                                        </h1>
+
+                                                        {index === 0 &&
+                                                            <button
+                                                                className="btn btn-primary mx-1"
+                                                                onClick={showAddWorkSupervisor}
+                                                            >
+                                                                Tambah
+                                                            </button>
+                                                        }
+                                                </div>
+
+                                                <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>Jabatan</span>
+                                                        <input
+                                                            type="text" 
+                                                            value={`${data.position}`}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        />
+                                                    </label>
+                                                </div>
+
+                            <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>Alamat</span>
+                                                        {/* <input
+                                                            type="text" 
+                                                            value={`${data.address}`}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        /> */}
+                                                        <ReactSelect 
+                                                            data={jobSupervisor}
+                                                            func={changeDataJobSupervisor}
+                                                            labelName={'facility_name'}
+                                                        />
+                                                    </label>
+                            </div>
+
+                            <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>Telp</span>
+                                                        <input
+                                                            type="text" 
+                                                            // value={`${data.phone_number}`}
+                                                            value={jobSupervisor[jobSupervisorIndex]?.phone}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        />
+                                                    </label>
+                            </div>
+
+                            <div
+                                                >
+                                                    <label
+                                                        style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            rowGap: 4
+                                                        }}
+                                                    >
+                                                        <span>FAX</span>
+                                                        <input
+                                                            type="text" 
+                                                            // value={`${data.fax}`}
+                                                            value={jobSupervisor[jobSupervisorIndex]?.fax}
+                                                            className="form-control"
+                                                            style={{ backgroundColor: "#e8f4fb" }}
+                                                        />
+                                                    </label>
+                            </div>
+
+                        </div>
+                                        })
+                                    }
 
                                 </div>
 
-                                {/* Direksi Pekerjaan */}
+                            </div>
+
+                            {/* Header pihak kedua */}
+                            <div
+                                style={{
+                                    backgroundColor: '#cdcdcd',
+                                    display: 'inline-block',
+                                    padding: 8,
+                                    borderRadius: 6,
+                                    marginBottom: 14,
+                                    marginTop: 40,
+                                    marginLeft: 12.5
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        color: '#2e1f22'
+                                    }}
+                                >
+                                    B. Pihak Kedua
+                                </span>
+                            </div>
+
+                            {/* Baris pihak kedua */}
+                            <div
+                                className="row col-md-12"
+                            >
+                                
+                                {/* Pihak kedua */}
                                 <div
+                                    className="col-md-6"
                                     style={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        gap: 14
+                                        gap: 28
                                     }}
                                 >
-                                    
-                                    {/* addendum direksi pekerjaan pihak kedua */}
+
+                                    {/* Pejabat Berwenang */}
                                     <div
                                         style={{
                                             display: 'flex',
-                                            justifyContent: 'space-between'
+                                            flexDirection: 'column',
+                                            gap: 14
                                         }}
                                     >
-                                        <h1
-                                            style={{
-                                                fontSize: '16px'
-                                            }}
-                                        >
-                                            Addendum Direksi pekerjaan
-                                        </h1>
-                                        <button
-                                            className="btn btn-primary mx-1"
-                                            onClick={showAddWorkDirector}
-                                        >
-                                            Tambah
-                                        </button>
-                                    </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
+
                                         >
-                                            <span>Username</span>
-                                            {/* <input
-                                                type="text" 
-                                                value={"weni"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            /> */}
-                                            <ReactSelect />
-                                        </label>
-                                    </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Nama Lengkap</span>
-                                            <input
-                                                type="text" 
-                                                value={"Weni Kusumaningrum"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Jabatan</span>
-                                            <input
-                                                type="text" 
-                                                value={"Procurement Superintendent"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                type="text" 
-                                                value={"Jl. Raya Dieng - Batur PO BOX 01 Wonosobo"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Telp</span>
-                                            <input
-                                                type="text" 
-                                                value={"+62-286-3342020"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>FAX</span>
-                                            <input
-                                                type="text" 
-                                                value={"+62-286-3342022"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
-
-                                </div>
-
-                                {/* Pengawas Pekerjaan */}
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: 14
-                                    }}
-                                >
-                                    
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between'
-                                        }}
-                                    >
                                             <h1
                                                 style={{
                                                     fontSize: '16px'
                                                 }}
                                             >
-                                                Addendum Pengawas pekerjaan
+                                                Pejabat berwenang
                                             </h1>
+                                        </div>
 
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    height: 65.5
+                                                }}
+                                            >
+                                                <span>Username</span>
+                                                <input 
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_contract_signature_username}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama</span>
+                                                <input 
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_autorize_name}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }} 
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input 
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_position}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position_address}`}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position_phone}`}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position_fax}`}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor SK Penugasan</span>
+                                                <div
+                                                
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_2_sk_no}`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_2_sk_date}`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama Notaris</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_notary_act_autorized_name
+                                                    }`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor Akta</span>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_2_notary_act_autorized_no
+                                                        }`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_2_notary_act_autorized_date
+                                                        }`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor SK Kemenkumham</span>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_2_autorized_kemenkumham_no
+                                                        }`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date"
+                                                        value={`${
+                                                            jsonData?.
+                                                            contract_party?.
+                                                            party_2_autorized_kemenkumham_date
+                                                        }`}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                    {/* Direksi Pekerjaan */}
+                                    <div
+                                                                            style={{
+                                                                                display: 'flex',
+                                                                                flexDirection: 'column',
+                                                                                gap: 14
+                                                                            }}
+                                    >
+                                        
+                                        <div
+                                            style={{
+                                                minHeight: 44.89
+                                            }}
+                                        >
+                                            <h1
+                                                style={{
+                                                    fontSize: '16px'
+                                                }}
+                                            >
+                                                Direksi pekerjaan
+                                            </h1>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    height: 65.5
+                                                }}
+                                            >
+                                                <span>Username</span>
+                                                <input
+                                                    type="text" 
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position_username}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama Lengkap</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position_full_name}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position_address}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position_phone}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_director_position_fax}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                    {/* Pengawas Pekerjaan */}
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14
+                                        }}
+                                    >
+                                        
+                                        <div
+                                            style={{
+                                                minHeight: 44.89
+                                            }}
+                                        >
+                                            <h1
+                                                style={{
+                                                    fontSize: '16px'
+                                                }}
+                                            >
+                                                Pengawas pekerjaan
+                                            </h1>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4,
+                                                    // height: 65.5
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_job_supervisor.name}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_job_supervisor.address}`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_job_supervisor.telp
+                                                    }`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    type="text"
+                                                    value={`${
+                                                        jsonData?.
+                                                        contract_party?.
+                                                        party_2_job_supervisor.fax
+                                                    }`}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                
+                                {/* Addendum pihak kedua */}
+                                <div
+                                    className="col-md-6"
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 28
+                                    }}
+                                >
+
+                                    {/* Pejabat Berwenang */}
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14
+                                        }}
+                                    >
+
+                                        <div>
+                                            <h1
+                                                style={{
+                                                    fontSize: '16px'
+                                                }}
+                                            >
+                                                Addendum Pejabat berwenang
+                                            </h1>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Username</span>
+                                                {/* <input 
+                                                    type="text" 
+                                                    value={"herdian"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                /> */}
+                                                <ReactSelect />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama</span>
+                                                <input 
+                                                    type="text" 
+                                                    value={"Herdian Ardi Febrianto"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }} 
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input 
+                                                    type="text" 
+                                                    value={"General Manager Unit Dieng"} 
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text" 
+                                                    value={"Jl Raya Dieng - Batur Banjarnegara PO BOX 01 Wonosobo"}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text" 
+                                                    value={"+62-286-3342020"}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    className="form-control"
+                                                    type="text" 
+                                                    value={"+62-286-3342022"}
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor SK Penugasan</span>
+                                                <div
+                                                
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={"015.PJ/PST.100-GDE/I/2023"}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date" 
+                                                        defaultValue={"2022-03-25"}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama Notaris</span>
+                                                <input
+                                                    type="text" 
+                                                    value={""}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor Akta</span>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={""}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date" 
+                                                        defaultValue={"2022-03-25"}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nomor SK Kemenkumham</span>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        columnGap: 8,
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="text"
+                                                        value={""}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                    -
+                                                    <input 
+                                                        type="date" 
+                                                        defaultValue={"2022-03-25"}
+                                                        className="form-control"
+                                                        style={{
+                                                            backgroundColor: "#e8f4fb"
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                    {/* Direksi Pekerjaan */}
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14
+                                        }}
+                                    >
+                                        
+                                        {/* addendum direksi pekerjaan pihak kedua */}
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                height: 44.89
+                                            }}
+                                        >
+                                            <h1
+                                                style={{
+                                                    fontSize: '16px'
+                                                }}
+                                            >
+                                                Addendum Direksi pekerjaan
+                                            </h1>
                                             <button
                                                 className="btn btn-primary mx-1"
-                                                onClick={showAddWorkSupervisor}
+                                                onClick={showAddWorkDirector}
                                             >
                                                 Tambah
                                             </button>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Username</span>
+                                                {/* <input
+                                                    type="text" 
+                                                    value={"weni"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                /> */}
+                                                <ReactSelect />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Nama Lengkap</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"Weni Kusumaningrum"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"Procurement Superintendent"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"Jl. Raya Dieng - Batur PO BOX 01 Wonosobo"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"+62-286-3342020"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"+62-286-3342022"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
                                     </div>
 
+                                    {/* Pengawas Pekerjaan */}
                                     <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14
+                                        }}
                                     >
-                                        <label
+                                        
+                                        <div
                                             style={{
                                                 display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
+                                                justifyContent: 'space-between'
                                             }}
                                         >
-                                            <span>Jabatan</span>
-                                            <input
-                                                type="text" 
-                                                value={"Logistic Supervisor"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
+                                                <h1
+                                                    style={{
+                                                        fontSize: '16px'
+                                                    }}
+                                                >
+                                                    Addendum Pengawas pekerjaan
+                                                </h1>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
-                                        >
-                                            <span>Alamat</span>
-                                            <input
-                                                type="text" 
-                                                value={"Jl. Raya Dieng Batur, Karangtengah Batur Banjarnegara"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
+                                                <button
+                                                    className="btn btn-primary mx-1"
+                                                    onClick={showAddWorkSupervisor}
+                                                >
+                                                    Tambah
+                                                </button>
+                                        </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
                                         >
-                                            <span>Telp</span>
-                                            <input
-                                                type="text" 
-                                                value={"+62-286-3342020"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
-                                    </div>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Jabatan</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"Logistic Supervisor"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
 
-                                    <div
-                                    >
-                                        <label
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 4
-                                            }}
+                                        <div
                                         >
-                                            <span>FAX</span>
-                                            <input
-                                                type="text" 
-                                                value={"+62-286-3342022"}
-                                                className="form-control"
-                                                style={{ backgroundColor: "#e8f4fb" }}
-                                            />
-                                        </label>
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Alamat</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"Jl. Raya Dieng Batur, Karangtengah Batur Banjarnegara"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>Telp</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"+62-286-3342020"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <div
+                                        >
+                                            <label
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    rowGap: 4
+                                                }}
+                                            >
+                                                <span>FAX</span>
+                                                <input
+                                                    type="text" 
+                                                    value={"+62-286-3342022"}
+                                                    className="form-control"
+                                                    style={{ backgroundColor: "#e8f4fb" }}
+                                                />
+                                            </label>
+                                        </div>
+
                                     </div>
 
                                 </div>
 
                             </div>
-
                         </div>
 
-                        {/* Pasal */}
+                        {/* Klausul Perubahan */}
                         <div
+                            className="clause-change-wrapper"
                             style={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: 28,
-                                marginTop: 28
+                                gap: 14,
+                                border: 1,
+                                borderColor: 'black',
+                                borderStyle: 'solid',
+                                padding: 28,
+                                borderRadius: 14
                             }}
                         >
                             
-                            {/* pasal sebelum addendum */}
                             <div>
-                                <span
+                                <div
                                     style={{
-                                        fontWeight: 500
+                                        backgroundColor: '#cdcdcd',
+                                        display: 'inline-block',
+                                        padding: 8,
+                                        borderRadius: 14
                                     }}
-                                >Pasal Sebelum Addendum</span>
+                                >
+                                    <span
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: 500,
+                                            color: '#2e1f22'
+                                        }}
+                                    >
+                                        C. Perubahan Klausul Kontrak Para Pihak
+                                    </span>
+                                </div>
+                            </div>
+
+                            <h1
+                                style={{
+                                    fontWeight: 600,
+                                    fontSize: 16,
+                                    margin: 0
+                                }}
+                            >
+                                C.1 Body Kontrak
+                            </h1>
+
+                            <div>
+                                <input 
+                                    type="text"
+                                    placeholder="Masukkan Nomor Pasal"
+                                    style={{
+                                        padding: 8,
+                                        borderRadius: 4,
+                                        minWidth: 400
+                                    }}
+                                />
+                            </div>
+
+                            {/* Pasal */}
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 14,
+                                    // marginTop: 28
+                                }}
+                            >
+                                
+                                {/* pasal sebelum addendum */}
+                                <div>
+                                    <p
+                                        style={{
+                                            fontWeight: 500,
+                                            marginBottom: 14
+                                        }}
+                                    >Pasal Sebelum Addendum</p>
+                                    <textarea
+                                        disabled
+                                        rows="4"
+                                        className="form-control"
+                                    ></textarea>
+                                </div>
+
+                                {/* pasal setelah addendum */}
+                                <div>
+                                    <p
+                                        style={{
+                                            fontWeight: 500,
+                                            marginBottom: 14
+                                        }}
+                                    >Pasal Setelah Addendum</p>
+                                    <textarea
+                                        rows="4"
+                                        className="form-control"
+                                    ></textarea>
+                                </div>
+
+                            </div>
+
+                            <h1
+                                style={{
+                                    fontWeight: 600,
+                                    fontSize: 16,
+                                    margin: 0
+                                }}
+                            >
+                                C.2 Lampiran
+                            </h1>
+                            
+                            <div>
+                                <input 
+                                    type="text"
+                                    placeholder="Masukkan Angka Lampiran"
+                                    style={{
+                                        padding: 8,
+                                        borderRadius: 4,
+                                        minWidth: 400
+                                    }}
+                                />
+                            </div>
+
+                            <div>
                                 <textarea
-                                    disabled
                                     rows="4"
                                     className="form-control"
                                 ></textarea>
                             </div>
 
-                            {/* pasal setelah addendum */}
                             <div>
-                                <span
+                                <button
+                                    className="btn btn-primary text-white add-new-clause"
                                     style={{
-                                        fontWeight: 500
+                                        marginTop: 14
                                     }}
-                                >Pasal Setelah Addendum</span>
-                                <textarea
-                                    rows="4"
-                                    className="form-control"
-                                ></textarea>
+                                >
+                                    Tambah Klausul Lampiran
+                                </button>
                             </div>
 
                         </div>
@@ -3910,142 +4438,100 @@ function createData(name, calories, fat, carbs, protein) {
 
                 {/* Harga Pekerjaan */}
                 {currentActiveTab === 1 &&
-                    <div
-                        style={{
-                            padding: 28,
-                            borderRadius: 14,
-                            border: 1,
-                            borderStyle: 'solid',
-                            borderColor: '#8c8a8a',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 28
-                        }}
-                    >
-
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    gap: 28,
-                                    flexWrap: 'wrap'
-                                }}
-                            >
-                                
-                                <label
-                                    style={{
-                                        flex: 1
-                                    }}
-                                >
-                                    <p
-                                        style={{
-                                            marginBottom: 14,
-                                            fontSize: 16,
-                                            fontWeight: 600
-                                        }}
-                                    >
-                                        Nilai perjanjian kontrak awal
-                                    </p>
-                                    <input
-                                        className="form-control"
-                                        type="text"
-                                        // value={`${
-                                        //     jsonData?.
-                                        //     contract_items?.
-                                        //     party_1_contract_signature_username}`}
-                                        style={{
-                                            width: '100%',
-                                            border: 1,
-                                            borderStyle: 'solid',
-                                            borderColor: '#d1d1d1',
-                                            backgroundColor: '#e8f4fb',
-                                        }}
-                                        disabled
-                                    />
-                                </label>
-
-                                <label
-                                    style={{
-                                        flex: 1
-                                    }}
-                                >
-                                    <p
-                                        style={{
-                                            marginBottom: 14,
-                                            fontSize: 16,
-                                            fontWeight: 600
-                                        }}
-                                    >
-                                        Nilai perjanjian setelah addendum
-                                    </p>
-                                    <input
-                                        className="form-control"
-                                        type="text"
-                                        style={{
-                                            width: '100%',
-                                            border: 1,
-                                            borderStyle: 'solid',
-                                            borderColor: '#d1d1d1'
-                                        }}
-                                    />
-                                </label>
-
-                            </div>
+                    <>
+                    
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 40
+                            }}
+                        >
                             
-                            <TableContainer
+                            {/* Rincian Harga Pekerjaan */}
+                            <div
+                                className="job-price-section"
                                 style={{
-                                    padding: 10
+                                    padding: 28,
+                                    borderRadius: 14,
+                                    border: 1,
+                                    borderStyle: 'solid',
+                                    borderColor: '#8c8a8a',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 28
                                 }}
-                                component={Paper}
                             >
-                                <h1
-                                    style={{
-                                        fontSize: 16,  
-                                        fontWeight: 600
-                                    }}
-                                >
-                                    Rincian harga pekerjaan awal
-                                </h1>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>Dessert (100g serving)</TableCell>
-                                                <TableCell align="left">Calories</TableCell>
-                                                <TableCell align="left">Fat&nbsp;(g)</TableCell>
-                                                <TableCell align="left">Carbs&nbsp;(g)</TableCell>
-                                                <TableCell align="left">Protein&nbsp;(g)</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow
-                                                key={row.name}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                >
-                                                    <TableCell component="th" >
-                                                        {row.name}
-                                                    </TableCell>
-                                                    <TableCell align="left" scope="row">{row.calories}</TableCell>
-                                                    <TableCell align="left">{row.fat}</TableCell>
-                                                    <TableCell align="left">{row.carbs}</TableCell>
-                                                    <TableCell align="left">{row.protein}</TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                </Table>
-                            </TableContainer>
 
-                            <TableContainer 
-                                style={{
-                                    padding:10
-                                }}
-                                component={Paper}
-                            >
                                     <div
                                         style={{
                                             display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center'
+                                            gap: 28,
+                                            flexWrap: 'wrap'
                                         }}
+                                    >
+                                        
+                                        <label
+                                            style={{
+                                                flex: 1
+                                            }}
+                                        >
+                                            <p
+                                                style={{
+                                                    marginBottom: 14,
+                                                    fontSize: 16,
+                                                    fontWeight: 600
+                                                }}
+                                            >
+                                                Nilai perjanjian kontrak awal
+                                            </p>
+                                            <input
+                                                className="form-control"
+                                                type="text"
+                                                style={{
+                                                    width: '100%',
+                                                    border: 1,
+                                                    borderStyle: 'solid',
+                                                    borderColor: '#d1d1d1',
+                                                    backgroundColor: '#e8f4fb',
+                                                }}
+                                                disabled
+                                            />
+                                        </label>
+
+                                        <label
+                                            style={{
+                                                flex: 1
+                                            }}
+                                        >
+                                            <p
+                                                style={{
+                                                    marginBottom: 14,
+                                                    fontSize: 16,
+                                                    fontWeight: 600
+                                                }}
+                                            >
+                                                Nilai perjanjian setelah addendum
+                                            </p>
+                                            <input
+                                                className="form-control"
+                                                type="text"
+                                                style={{
+                                                    width: '100%',
+                                                    border: 1,
+                                                    borderStyle: 'solid',
+                                                    borderColor: '#d1d1d1'
+                                                }}
+                                            />
+                                        </label>
+
+                                    </div>
+                                    
+                                    <TableContainer
+                                        style={{
+                                            padding: 10
+                                        }}
+                                        component={Paper}
                                     >
                                         <h1
                                             style={{
@@ -4053,568 +4539,855 @@ function createData(name, calories, fat, carbs, protein) {
                                                 fontWeight: 600
                                             }}
                                         >
-                                            Rincian harga PO-SAP
+                                            Rincian harga pekerjaan awal
+                                        </h1>
+                                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                                <TableBody>
+                                                    <TableRow>
+                                                        <TableCell align="left">No</TableCell>
+                                                        <TableCell align="left">Deskripsi Item</TableCell>
+                                                        <TableCell align="left">QTY</TableCell>
+                                                        <TableCell align="left">Satuan</TableCell>
+                                                        <TableCell align="left">Harga Satuan</TableCell>
+                                                        <TableCell align="left">Harga Total</TableCell>
+                                                        <TableCell align="left">Keterangan</TableCell>
+                                                    </TableRow>
+                                                </TableBody>
+                                                <TableBody>
+                                                    {jsonData?.contract_items?.map((row, index) => (
+                                                        <TableRow
+                                                        key={row.product_name}
+                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                        >
+                                                            <TableCell align="l">
+                                                                {index+1}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.product_name}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.qty}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.uom}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.unit_price}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.subtotal}
+                                                            </TableCell>
+                                                            <TableCell align="left">
+                                                                {row.note}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </TableBody>
+                                        </Table>
+                                    </TableContainer>
+
+                                    <TableContainer 
+                                        style={{
+                                            padding:10
+                                        }}
+                                        component={Paper}
+                                    >
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center'
+                                                }}
+                                            >
+                                                <h1
+                                                    style={{
+                                                        fontSize: 16,  
+                                                        fontWeight: 600
+                                                    }}
+                                                >
+                                                    Rincian harga PO-SAP
+                                                </h1>
+
+                                                <div>
+                                                    <button
+                                                        style={{
+                                                            color: 'white',
+                                                            backgroundColor: '#ffc045',
+                                                            borderRadius: 8,
+                                                            border: 'none',
+                                                            padding: '8px 14px'
+                                                        }}
+                                                    >
+                                                        Get PO-SAP
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                                <TableBody>
+                                                    <TableRow>
+                                                        <TableCell align="left">No</TableCell>
+                                                        <TableCell align="left">Deskripsi Item</TableCell>
+                                                        <TableCell align="left">QTY</TableCell>
+                                                        <TableCell align="left">Satuan</TableCell>
+                                                        <TableCell align="left">Harga Satuan</TableCell>
+                                                        <TableCell align="left">Harga Total</TableCell>
+                                                        <TableCell align="left">Keterangan</TableCell>
+                                                    </TableRow>
+                                                </TableBody>
+                                                <TableBody>
+                                                    {rows.map((row) => (
+                                                        <TableRow
+                                                        key={row.name}
+                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                        >
+                                                            <TableCell component="th" >
+                                                                {row.name}
+                                                            </TableCell>
+                                                            <TableCell align="left" scope="row">{row.calories}</TableCell>
+                                                            <TableCell align="left">{row.fat}</TableCell>
+                                                            <TableCell align="left">{row.carbs}</TableCell>
+                                                            <TableCell align="left">{row.protein}</TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </TableBody>
+                                            </Table>
+                                    </TableContainer>
+
+                                    <TableContainer>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <h1
+                                                style={{
+                                                    fontSize: 16,  
+                                                    fontWeight: 600
+                                                }}
+                                            >
+                                                B. Addendum Rincian Harga Pekerjaan
+                                            </h1>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    gap: 14
+                                                }}
+                                            >
+                                                <button
+                                                    className="btn btn-success text-white"
+                                                >
+                                                    + Harga Pekerjaan By Excel
+                                                </button>
+                                                <button
+                                                    className="btn btn-primary text-white"
+                                                    onClick={showAddDetail}
+                                                >
+                                                    + Tambah Rincian
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <EditableTable
+                                        />
+                                        
+                                    </TableContainer>
+
+                            </div>
+
+                            {/* Klausul Perubahan */}
+                            <div
+                                        className="clause-change-wrapper"
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14,
+                                            border: 1,
+                                            borderColor: 'black',
+                                            borderStyle: 'solid',
+                                            padding: 28,
+                                            borderRadius: 14
+                                        }}
+                                    >
+                                        
+                                        <div>
+                                            <div
+                                                style={{
+                                                    backgroundColor: '#cdcdcd',
+                                                    display: 'inline-block',
+                                                    padding: 8,
+                                                    borderRadius: 14
+                                                }}
+                                            >
+                                                <span
+                                                    style={{
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        color: '#2e1f22'
+                                                    }}
+                                                >
+                                                    C. Perubahan Klausul Kontrak Para Pihak
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <h1
+                                            style={{
+                                                fontWeight: 600,
+                                                fontSize: 16,
+                                                margin: 0
+                                            }}
+                                        >
+                                            C.1 Body Kontrak
                                         </h1>
 
                                         <div>
-                                            <button
+                                            <input 
+                                                type="text"
+                                                placeholder="Masukkan Nomor Pasal"
                                                 style={{
-                                                    color: 'white',
-                                                    backgroundColor: '#ffc045',
-                                                    borderRadius: 8,
-                                                    border: 'none',
-                                                    padding: '8px 14px'
+                                                    padding: 8,
+                                                    borderRadius: 4,
+                                                    minWidth: 400
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* Pasal */}
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: 14,
+                                                // marginTop: 28
+                                            }}
+                                        >
+                                            
+                                            {/* pasal sebelum addendum */}
+                                            <div>
+                                                <p
+                                                    style={{
+                                                        fontWeight: 500,
+                                                        marginBottom: 14
+                                                    }}
+                                                >Pasal Sebelum Addendum</p>
+                                                <textarea
+                                                    disabled
+                                                    rows="4"
+                                                    className="form-control"
+                                                ></textarea>
+                                            </div>
+
+                                            {/* pasal setelah addendum */}
+                                            <div>
+                                                <p
+                                                    style={{
+                                                        fontWeight: 500,
+                                                        marginBottom: 14
+                                                    }}
+                                                >Pasal Setelah Addendum</p>
+                                                <textarea
+                                                    rows="4"
+                                                    className="form-control"
+                                                ></textarea>
+                                            </div>
+
+                                        </div>
+
+                                        <h1
+                                            style={{
+                                                fontWeight: 600,
+                                                fontSize: 16,
+                                                margin: 0
+                                            }}
+                                        >
+                                            C.2 Lampiran
+                                        </h1>
+                                        
+                                        <div>
+                                            <input 
+                                                type="text"
+                                                placeholder="Masukkan Angka Lampiran"
+                                                style={{
+                                                    padding: 8,
+                                                    borderRadius: 4,
+                                                    minWidth: 400
+                                                }}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <textarea
+                                                rows="4"
+                                                className="form-control"
+                                            ></textarea>
+                                        </div>
+
+                                        <div>
+                                            <button
+                                                className="btn btn-primary text-white add-new-clause"
+                                                style={{
+                                                    marginTop: 14
                                                 }}
                                             >
-                                                Get PO-SAP
+                                                Tambah Klausul Lampiran
                                             </button>
                                         </div>
 
-                                    </div>
-                                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                        <TableHead>
-                                            <TableRow>
-                                                {/* <TableCell>Dessert (100g serving)</TableCell>
-                                                <TableCell align="left">Calories</TableCell>
-                                                <TableCell align="left">Fat&nbsp;(g)</TableCell>
-                                                <TableCell align="left">Carbs&nbsp;(g)</TableCell>
-                                                <TableCell align="left">Protein&nbsp;(g)</TableCell> */}
-                                            {/* <TableCell>
-                                                    1
-                                            </TableCell> */}
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow
-                                                key={row.name}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                >
-                                                    <TableCell component="th" >
-                                                        {row.name}
-                                                    </TableCell>
-                                                    <TableCell align="left" scope="row">{row.calories}</TableCell>
-                                                    <TableCell align="left">{row.fat}</TableCell>
-                                                    <TableCell align="left">{row.carbs}</TableCell>
-                                                    <TableCell align="left">{row.protein}</TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                            </TableContainer>
-
-                            <TableContainer>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}
-                                >
-                                    <h1
-                                        style={{
-                                            fontSize: 16,  
-                                            fontWeight: 600
-                                        }}
-                                    >
-                                        Addendum Rincian Harga Pekerjaan
-                                    </h1>
-                                    <button
-                                        style={{
-
-                                        }}
-                                    >
-                                        + Tambah Rincian
-                                    </button>
-                                </div>
-
-                                
-                                
-                            </TableContainer>
-
-                            <EditableTable />
-
-                            {/* pasal sebelum addendum */}
-                            <div
-                            >
-                                <span
-                                    style={{
-                                        fontWeight: 500
-                                    }}
-                                >Pasal Sebelum Addendum</span>
-                                <textarea
-                                    disabled
-                                    rows="4"
-                                    className="form-control"
-                                ></textarea>
                             </div>
 
-                            {/* pasal setelah addendum */}
-                            <div>
-                                <span
-                                    style={{
-                                        fontWeight: 500
-                                    }}
-                                >Pasal Setelah Addendum</span>
-                                <textarea
-                                    rows="4"
-                                    className="form-control"
-                                ></textarea>
-                            </div>
+                        </div>
 
-                    </div>
+                    </>
                 }
 
                 {currentActiveTab === 2 &&
                     <>
 
-                        {/* Jangka waktu kontrak awal */}
-                        <h1
+                        <div
                             style={{
-                                fontSize: '16px',
-                                fontWeight: 600,
-                                marginBottom: 14
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 14,
+                                border: 1,
+                                borderColor: 'black',
+                                borderStyle: 'solid',
+                                borderRadius: 14,
+                                padding: 28
                             }}
                         >
-                            Jangka waktu kontrak awal
-                        </h1>
-
-                        <div
+                            {/* Jangka waktu kontrak awal */}
+                            <h1
                                 style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: 14
+                                    fontSize: '16px',
+                                    fontWeight: 600,
+                                    marginBottom: 14
+                                }}
+                            >
+                                Jangka waktu kontrak awal
+                            </h1>
+
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 14
                                 }}
                             >
                                 {timePeriodBeforeAddendum && 
                                     timePeriodBeforeAddendum.map((data, index) => (
                                             <>
                                                 <div
-                                                        className=""
-                                                        style={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            rowGap: 20
-                                                        }}
-                                                    >
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'flex-end',
+                                                        columnGap: 18
+                                                    }}
+                                                >
 
-                                                        <div
-                                                            style={{
-                                                                display: 'flex',
-                                                                alignItems: 'flex-end',
-                                                                columnGap: 10
-                                                            }}
-                                                        >
-                                                            <div
-                                                                className="col-md-2"
-                                                                style={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    rowGap: 4,
-                                                                    padding: 0
-                                                                }}
-                                                            >
-                                                                <span
-                                                                >
-                                                                    {/* Jangka Waktu Masa Garansi */}
-                                                                    {data.title}
-                                                                </span>
-                                                                <input
-                                                                    disabled
-                                                                    type="date"
-                                                                    style={{
-                                                                        backgroundColor: "#e8f4fb",
-                                                                        borderRadius: 4,
-                                                                        padding: '10px 12px',
-                                                                        border: 'none'
-                                                                    }}
-                                                                    value={data.startDate}
-                                                                />
-                                                            </div>
-                                                                
-                                                            <div
-                                                            style={{
-                                                                display: 'flex',
-                                                                placeItems: 'center',
-                                                                minHeight: 41.5
-                                                            }}
-                                                        >
-                                                            S/D
-                                                        </div>
-                                                            
-                                                            <div
-                                                                className="col-md-2"
-                                                                style={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    rowGap: 4,
-                                                                    padding: 0
-                                                                }}
-                                                            >
-                                                                <span>
+                                                    <div>
+                                                                    <div
+                                                                        className="upper-for-title"
+                                                                    >
+                                                                        <p
+                                                                            style={{
+                                                                                margin: 0
+                                                                            }}
+                                                                        >
+                                                                            {data.title}
+                                                                        </p>
+                                                                    </div>
 
-                                                                </span>
-                                                                <input 
-                                                                    disabled
-                                                                    type="date"
-                                                                    style={{
-                                                                        backgroundColor: "#e8f4fb",
-                                                                        borderRadius: 4,
-                                                                        padding: '10px 12px',
-                                                                        border: 'none'
-                                                                    }}
-                                                                    value={data.endDate}
-                                                                />
-                                                            </div>
+                                                                    <div
+                                                                        className="bottom-for-input col-md-3"
+                                                                        style={{
+                                                                            display: 'flex',
+                                                                            alignItems: 'flex-end',
+                                                                            columnGap: 10,
+                                                                            padding: 0
+                                                                        }}
+                                                                    >
+                                                                        
+                                                                        <div
+                                                                                style={{
+                                                                                    display: 'flex',
+                                                                                    flexDirection: 'column',
+                                                                                    rowGap: 4,
+                                                                                    padding: 0,
+                                                                                }}
+                                                                            >
 
-                                                            <div
-                                                                style={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    rowGap: 4,
-                                                                    padding: 0
-                                                                }}
-                                                            >
-                                                                <span>
-                                                                    Jumlah Bulan
-                                                                </span>
-                                                                <input 
-                                                                    type="text"
-                                                                    style={{
-                                                                        backgroundColor: "#e8f4fb",
-                                                                        borderRadius: 4,
-                                                                        padding: '10px 12px',
-                                                                        border: 'none'
-                                                                    }}
-                                                                    value={data.totalMonth}
-                                                                    disabled
-                                                                />
-                                                            </div>
+                                                                                <input
+                                                                                    type="date"
+                                                                                    style={{
+                                                                                        backgroundColor: "#e8f4fb",
+                                                                                        borderRadius: 4,
+                                                                                        padding: '10px 12px',
+                                                                                        border: 'none',                                                                  display: 'flex',
+                                                                                        flexDirection: 'row-reverse',
+                                                                                        columnGap: 10,
+                                                                                    }}
+                                                                                    value={data.startDate}
+                                                                                    disabled
+                                                                                />
 
-                                                            <div
-                                                                style={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    rowGap: 4,
-                                                                    padding: 0
-                                                                }}
-                                                            >
-                                                                <span>
-                                                                    Hari Kalender
-                                                                </span>
-                                                                <input 
-                                                                    type="text"
-                                                                    style={{
-                                                                        backgroundColor: "#e8f4fb",
-                                                                        borderRadius: 4,
-                                                                        padding: '10px 12px',
-                                                                        border: 'none'
-                                                                    }}
-                                                                    value={data.calendarDay}
-                                                                    disabled
-                                                                />
-                                                            </div>
+                                                                        </div>
+                                                                                
+                                                                        <div
+                                                                                style={{
+                                                                                    display: 'flex',
+                                                                                    placeItems: 'center',
+                                                                                    minHeight: 41.5
+                                                                                }}
+                                                                            >
+                                                                                -
+                                                                        </div>
+                                                                            
+                                                                        <div
+                                                                                style={{
+                                                                                    display: 'flex',
+                                                                                    flexDirection: 'column',
+                                                                                    rowGap: 4,
+                                                                                    padding: 0
+                                                                                }}
+                                                                            >
+                                                                                <span>
 
-                                                            <div
+                                                                                </span>
+
+                                                                                <input
+                                                                                    type="date"
+                                                                                    disabled
+                                                                                    style={{
+                                                                                        backgroundColor: "#e8f4fb",
+                                                                                        borderRadius: 4,
+                                                                                        padding: '10px 12px',
+                                                                                        border: 'none',
+                                                                                        display: 'flex',
+                                                                                        flexDirection: 'row-reverse',
+                                                                                        columnGap: 10,
+                                                                                    }}
+                                                                                    value={data.endDate}
+                                                                                />
+
+                                                                        </div>
+
+                                                                    </div>
+                                                    </div>
+
+                                                    <div
+                                                                    className="month-day-wrapper"
                                                                     style={{
                                                                         display: 'flex',
-                                                                        gap: 14,
                                                                         alignItems: 'center',
                                                                         minHeight: 41.5
                                                                     }}
                                                                 >
 
-                                                                        <label
-                                                                            style={{
-                                                                                margin: 0,
-                                                                                display: 'flex',
-                                                                                flexWrap: 'wrap',
-                                                                                alignItems: 'center',
-                                                                                columnGap: 8
-                                                                            }}
-                                                                        >
-                                                                            <input
-                                                                                type="radio"
-                                                                                name={`${index}_down_payment_guarantee`}
-                                                                                value={"SKPP"}
-                                                                                checked={data.radio === "SKPP"}
-                                                                            />
-                                                                            <span>
-                                                                                SKPP
-                                                                            </span>
-                                                                        </label>
+                                                                    <p
+                                                                        style={{
+                                                                            margin: 0
+                                                                        }}
+                                                                    >
+                                                                        {data.totalMonth} Bulan {data.calendarDay} Hari
+                                                                    </p>
 
-                                                                        <label
+                                                    </div>
+
+                                                    {data.radio &&    
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                gap: 20,
+                                                                marginLeft: 10,
+                                                                alignItems: 'center',
+                                                                minHeight: 41.5
+                                                            }}
+                                                        >
+
+                                                            <label
+                                                                                    style={{
+                                                                                        margin: 0,
+                                                                                        display: 'flex',
+                                                                                        flexWrap: 'wrap',
+                                                                                        alignItems: 'center',
+                                                                                        columnGap: 8
+                                                                                    }}
+                                                                                >
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name={`${index}_down_payment_guarantee`}
+                                                                                        value={"SKPP"}
+                                                                                        checked={data.radio === "SKPP"}
+                                                                                    />
+                                                                                    <span>
+                                                                                        SKPP
+                                                                                    </span>
+                                                            </label>
+
+                                                            <label
+                                                                                    style={{
+                                                                                        margin: 0,
+                                                                                        display: 'flex',
+                                                                                        flexWrap: 'wrap',
+                                                                                        alignItems: 'center',
+                                                                                        columnGap: 8
+                                                                                    }}
+                                                                                >
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name={`${data.title}_down_payment_guarantee`}
+                                                                                        value={"SPMK"}
+                                                                                        checked={data.radio === "SPMK"}
+                                                                                    />
+                                                                                    <span>
+                                                                                        SPMK
+                                                                                    </span>
+                                                            </label>
+
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </>
+                                    ))
+                                }
+                            </div>
+
+                            {/* Addendum jangka waktu */}
+                            <h1
+                                style={{
+                                    fontSize: '16px',
+                                    fontWeight: 600,
+                                    marginTop: 28,
+                                    marginBottom: 14
+                                }}
+                            >
+                                A. Addendum jangka waktu
+                            </h1>
+
+                            <div
+                                style={{
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    gap: 14
+                                }}
+                            >
+                                {timePeriodBeforeAddendum && 
+                                    timePeriodBeforeAddendum.map((data, index) => (
+                                        <>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'flex-end',
+                                                    columnGap: 18
+                                                }}
+                                            >
+
+                                                <div>
+                                                        
+                                                        <div
+                                                                        className="upper-for-title"
+                                                                    >
+                                                                        <p
                                                                             style={{
-                                                                                margin: 0,
-                                                                                display: 'flex',
-                                                                                flexWrap: 'wrap',
-                                                                                alignItems: 'center',
-                                                                                columnGap: 8
+                                                                                margin: 0
                                                                             }}
                                                                         >
-                                                                            <input
-                                                                                type="radio"
-                                                                                name={`${data.title}_down_payment_guarantee`}
-                                                                                value={"SPMK"}
-                                                                                checked={data.radio === "SPMK"}
-                                                                            />
-                                                                            <span>
-                                                                                SPMK
-                                                                            </span>
-                                                                        </label>
+                                                                            {data.title}
+                                                                        </p>
+                                                        </div>
+
+                                                        <div
+                                                            className="bottom-for-input col-md-3"
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems: 'flex-end',
+                                                                columnGap: 10,
+                                                                padding: 0
+                                                            }}
+                                                        >
+                                                                            
+                                                            <div
+                                                                                style={{
+                                                                                    display: 'flex',
+                                                                                    flexDirection: 'column',
+                                                                                    rowGap: 4,
+                                                                                    padding: 0,
+                                                                                }}
+                                                                            >
+
+                                                                                <input
+                                                                                    type="date"
+                                                                                    style={{
+                                                                                        borderRadius: 4,
+                                                                                        padding: '10px 12px',
+                                                                                        border: 'none',
+                                                                                        display: 'flex',
+                                                                                        flexDirection: 'row-reverse',
+                                                                                        columnGap: 10,
+                                                                                    }}
+                                                                                    value={data.startDate}
+                                                                                />
+
+                                                            </div>
+                                                                                
+                                                            <div
+                                                                                style={{
+                                                                                    display: 'flex',
+                                                                                    placeItems: 'center',
+                                                                                    minHeight: 41.5
+                                                                                }}
+                                                                            >
+                                                                                -
+                                                            </div>
+                                                                            
+                                                            <div
+                                                                                style={{
+                                                                                    display: 'flex',
+                                                                                    flexDirection: 'column',
+                                                                                    rowGap: 4,
+                                                                                    padding: 0
+                                                                                }}
+                                                                            >
+                                                                                <span>
+
+                                                                                </span>
+
+                                                                                <input
+                                                                                    type="date"
+                                                                                    style={{
+                                                                                        borderRadius: 4,
+                                                                                        padding: '10px 12px',
+                                                                                        border: 'none',
+                                                                                        display: 'flex',
+                                                                                        flexDirection: 'row-reverse',
+                                                                                        columnGap: 10,
+                                                                                    }}
+                                                                                    value={data.endDate}
+                                                                                />
 
                                                             </div>
 
                                                         </div>
 
                                                 </div>
-                                            </>
-                                    ))
-                                }
-                        </div>
 
-
-                        {/* Addendum jangka waktu */}
-                        <h1
-                            style={{
-                                fontSize: '16px',
-                                fontWeight: 600,
-                                marginTop: 28,
-                                marginBottom: 14
-                            }}
-                        >
-                            Addendum jangka waktu
-                        </h1>
-
-                        <div
-                                                            style={{
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                                gap: 14
-                                                    }}
-                        >
-                            {timePeriodBeforeAddendum && 
-
-                                timePeriodBeforeAddendum.map((data, index) => (
-                                    <>
-                                        <div
-                                            className=""
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                rowGap: 20
-                                            }}
-                                        >
-
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'flex-end',
-                                                    columnGap: 10
-                                                }}
-                                            >
                                                 <div
-                                                    className="col-md-2"
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4,
-                                                        padding: 0
-                                                    }}
-                                                >
-                                                    <span
-                                                    >
-                                                        {/* Jangka Waktu Masa Garansi */}
-                                                        {data.title}
-                                                    </span>
-                                                    <input
-                                            
-                                                        type="date"
-                                                        style={{
-                                                            backgroundColor: "#e8f4fb",
-                                                            borderRadius: 4,
-                                                            padding: '10px 12px',
-                                                            border: 'none'
-                                                        }}
-                                                        value={data.startDate}
-                                                    />
-                                                </div>
-                                                    
-                                                <div
-                                                style={{
-                                                    display: 'flex',
-                                                    placeItems: 'center',
-                                                    minHeight: 41.5
-                                                }}
-                                            >
-                                                S/D
-                                            </div>
-                                                
-                                                <div
-                                                    className="col-md-2"
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4,
-                                                        padding: 0
-                                                    }}
-                                                >
-                                                    <span>
+                                                                    className="month-day-wrapper"
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        minHeight: 41.5
+                                                                    }}
+                                                                >
 
-                                                    </span>
-                                                    <input 
-                                        
-                                                        type="date"
-                                                        style={{
-                                                            backgroundColor: "#e8f4fb",
-                                                            borderRadius: 4,
-                                                            padding: '10px 12px',
-                                                            border: 'none'
-                                                        }}
-                                                        value={data.endDate}
-                                                    />
+                                                                    <p
+                                                                        style={{
+                                                                            margin: 0
+                                                                        }}
+                                                                    >
+                                                                        {data.totalMonth} Bulan {data.calendarDay} Hari
+                                                                    </p>
+
                                                 </div>
 
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4,
-                                                        padding: 0
-                                                    }}
-                                                >
-                                                    <span>
-                                                        Jumlah Bulan
-                                                    </span>
-                                                    <input 
-                                                        type="text"
-                                                        style={{
-                                                            backgroundColor: "#e8f4fb",
-                                                            borderRadius: 4,
-                                                            padding: '10px 12px',
-                                                            border: 'none'
-                                                        }}
-                                                        value={data.totalMonth}
-                                                
-                                                    />
-                                                </div>
-
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        rowGap: 4,
-                                                        padding: 0
-                                                    }}
-                                                >
-                                                    <span>
-                                                        Hari Kalender
-                                                    </span>
-                                                    <input 
-                                                        type="text"
-                                                        style={{
-                                                            backgroundColor: "#e8f4fb",
-                                                            borderRadius: 4,
-                                                            padding: '10px 12px',
-                                                            border: 'none'
-                                                        }}
-                                                        value={data.calendarDay}
-                                                
-                                                    />
-                                                </div>
-
-                                                <div
+                                                {data.radio &&                                                
+                                                    <div
                                                         style={{
                                                             display: 'flex',
-                                                            gap: 14,
+                                                            gap: 20,
+                                                            marginLeft: 10,
                                                             alignItems: 'center',
                                                             minHeight: 41.5
                                                         }}
                                                     >
 
-                                                            <label
-                                                                style={{
-                                                                    margin: 0,
-                                                                    display: 'flex',
-                                                                    flexWrap: 'wrap',
-                                                                    alignItems: 'center',
-                                                                    columnGap: 8
-                                                                }}
-                                                            >
-                                                                <input
-                                                                    type="radio"
-                                                                    name={`${index}_down_payment_guarantee`}
-                                                                    value={"SKPP"}
-                                                        
-                                                                />
-                                                                <span>
-                                                                    SKPP
-                                                                </span>
-                                                            </label>
+                                                        <label
+                                                                        style={{
+                                                                            margin: 0,
+                                                                            display: 'flex',
+                                                                            flexWrap: 'wrap',
+                                                                            alignItems: 'center',
+                                                                            columnGap: 8
+                                                                        }}  
+                                                                    >
+                                                                        <input
+                                                                            type="radio"
+                                                                            name={`${index+1}_down_payment_guarantee`}
+                                                                            value={"SKPP"}
+                                                                
+                                                                        />
+                                                                        <span>
+                                                                            SKPP
+                                                                        </span>
+                                                        </label>
 
-                                                            <label
-                                                                style={{
-                                                                    margin: 0,
-                                                                    display: 'flex',
-                                                                    flexWrap: 'wrap',
-                                                                    alignItems: 'center',
-                                                                    columnGap: 8
-                                                                }}
-                                                            >
-                                                                <input
-                                                                    type="radio"
-                                                                    name={`${data.title}_down_payment_guarantee`}
-                                                                    value={"SPMK"}
-                                                            
-                                                                />
-                                                                <span>
-                                                                    SPMK
-                                                                </span>
-                                                            </label>
+                                                        <label
+                                                                        style={{
+                                                                            margin: 0,
+                                                                            display: 'flex',
+                                                                            flexWrap: 'wrap',
+                                                                            alignItems: 'center',
+                                                                            columnGap: 8
+                                                                        }}
+                                                                    >
+                                                                        <input
+                                                                            type="radio"
+                                                                            name={`${index+2}_down_payment_guarantee`}
+                                                                            value={"SPMK"}
+                                                                        />
+                                                                        <span>
+                                                                            SPMK
+                                                                        </span>
+                                                        </label>
 
-                                                </div>
+                                                    </div>
+                                                }
 
                                             </div>
+                                        </>
+                                    ))
+                                }
+                            </div>
 
-                                        </div>
-                                    </>
-                                ))
-
-                            }
                         </div>
 
 
-                        {/* pasal sebelum addendum */}
-                            <div
-                                style={{
-                                    marginTop: 28,
-                                    marginBottom: 28
-                                }}
-                            >
+                        {/* Klausul Perubahan */}
+                        <div
+                            className="clause-change-wrapper"
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 14,
+                                border: 1,
+                                borderColor: 'black',
+                                borderStyle: 'solid',
+                                padding: 28,
+                                borderRadius: 14,
+                                marginTop: 40
+                            }}
+                        >
+                            
+                            <div>
                                 <span
                                     style={{
-                                        fontWeight: 500
+                                        fontSize: 16,
+                                        fontWeight: 600,
+                                        color: '#2e1f22'
                                     }}
-                                >Pasal Sebelum Addendum</span>
+                                >
+                                    B. Perubahan Klausul Kontrak Para Pihak
+                                </span>
+                            </div>
+
+                            <h1
+                                style={{
+                                    fontWeight: 600,
+                                    fontSize: 16,
+                                    margin: 0
+                                }}
+                            >
+                                B.1 Body Kontrak
+                            </h1>
+
+                            <div>
+                                <input 
+                                    type="text"
+                                    placeholder="Masukkan Nomor Pasal"
+                                    style={{
+                                        padding: 8,
+                                        borderRadius: 4,
+                                        minWidth: 400
+                                    }}
+                                />
+                            </div>
+
+                            {/* Pasal */}
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 14,
+                                    // marginTop: 28
+                                }}
+                            >
+                                
+                                {/* pasal sebelum addendum */}
+                                <div>
+                                    <p
+                                        style={{
+                                            fontWeight: 500,
+                                            marginBottom: 14
+                                        }}
+                                    >Pasal Sebelum Addendum</p>
+                                    <textarea
+                                        disabled
+                                        rows="4"
+                                        className="form-control"
+                                    ></textarea>
+                                </div>
+
+                                {/* pasal setelah addendum */}
+                                <div>
+                                    <p
+                                        style={{
+                                            fontWeight: 500,
+                                            marginBottom: 14
+                                        }}
+                                    >Pasal Setelah Addendum</p>
+                                    <textarea
+                                        rows="4"
+                                        className="form-control"
+                                    ></textarea>
+                                </div>
+
+                            </div>
+
+                            <h1
+                                style={{
+                                    fontWeight: 600,
+                                    fontSize: 16,
+                                    margin: 0
+                                }}
+                            >
+                                B.2 Lampiran
+                            </h1>
+                            
+                            <div>
+                                <input 
+                                    type="text"
+                                    placeholder="Masukkan Angka Lampiran"
+                                    style={{
+                                        padding: 8,
+                                        borderRadius: 4,
+                                        minWidth: 400
+                                    }}
+                                />
+                            </div>
+
+                            <div>
                                 <textarea
-                                    disabled
                                     rows="4"
                                     className="form-control"
                                 ></textarea>
                             </div>
 
                             <div>
-                                <span
+                                <button
+                                    className="btn btn-primary text-white add-new-clause"
                                     style={{
-                                        fontWeight: 500
+                                        marginTop: 14
                                     }}
-                                >Pasal Setelah Addendum</span>
-                                <textarea
-                                    rows="4"
-                                    className="form-control"
-                                ></textarea>
+                                >
+                                    Tambah Klausul Lampiran
+                                </button>
                             </div>
+
+                        </div>
 
                     </>
                 }
@@ -4626,9 +5399,10 @@ function createData(name, calories, fat, carbs, protein) {
                             style={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                rowGap: 28
+                                rowGap: 40
                             }}
                         >
+                            
                             <div
                                 style={{
                                     padding: 28,
@@ -4641,8 +5415,19 @@ function createData(name, calories, fat, carbs, protein) {
                                 }}
                             >
 
-                                <div>
-                                    Metode pembayaran kontrak awal
+                                <div
+                                    style={{
+                                        flex: 1
+                                    }}
+                                >
+                                    <h1
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Metode pembayaran kontrak awal
+                                    </h1>
                                     <div
                                         style={{
                                             display: 'flex',
@@ -4677,8 +5462,19 @@ function createData(name, calories, fat, carbs, protein) {
                                     </div>
                                 </div>
 
-                                <div>
-                                    Addendum metode pembayaran
+                                <div
+                                    style={{
+                                        flex: 1
+                                    }}
+                                >
+                                    <h1
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        A. Addendum metode pembayaran
+                                    </h1>
                                     <div
                                         style={{
                                             display: 'flex',
@@ -4725,17 +5521,31 @@ function createData(name, calories, fat, carbs, protein) {
                                     >
                                         Tahap 1
                                         <input
-                                            className="col-sm-3"
+                                            style={{
+                                                flex: 1,
+                                                padding: '10px 12px',
+                                                borderRadius: 4
+                                            }}
                                             type="text" 
                                             placeholder="Persentase" 
                                             disabled={addendumPaymentMethod !== 'gradual'}
                                         />
-                                        <input 
-                                            className="col-sm-6"
-                                            type="text"
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginTop: 14,
+                                            display: 'flex'
+                                        }}
+                                    >
+                                        <textarea
+                                            style={{
+                                                flex: 1,
+                                                padding: '10px 12px',
+                                                borderRadius: 4
+                                            }}
                                             placeholder="Deskripsi"
-                                            disabled={addendumPaymentMethod !== 'gradual'} 
-                                        />   
+                                            disabled={addendumPaymentMethod !== 'gradual'}
+                                        ></textarea>
                                     </div>
                                     <div
                                         style={{
@@ -4755,30 +5565,137 @@ function createData(name, calories, fat, carbs, protein) {
 
                             </div>
 
+                            {/* Klausul Perubahan */}
                             <div
+                                className="clause-change-wrapper"
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 14,
+                                    border: 1,
+                                    borderColor: 'black',
+                                    borderStyle: 'solid',
+                                    padding: 28,
+                                    borderRadius: 14,
+                                    // marginTop: 40
+                                }}
                             >
-                                <span
-                                    style={{
-                                        fontWeight: 500
-                                    }}
-                                >Pasal Sebelum Addendum</span>
-                                <textarea
-                                    disabled
-                                    rows="4"
-                                    className="form-control"
-                                ></textarea>
-                            </div>
+                                
+                                <div>
+                                    <span
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600,
+                                            color: '#2e1f22'
+                                        }}
+                                    >
+                                        B. Perubahan Klausul Kontrak Para Pihak
+                                    </span>
+                                </div>
 
-                            <div>
-                                <span
+                                <h1
                                     style={{
-                                        fontWeight: 500
+                                        fontWeight: 600,
+                                        fontSize: 16,
+                                        margin: 0
                                     }}
-                                >Pasal Setelah Addendum</span>
-                                <textarea
-                                    rows="4"
-                                    className="form-control"
-                                ></textarea>
+                                >
+                                    B.1 Body Kontrak
+                                </h1>
+
+                                <div>
+                                    <input 
+                                        type="text"
+                                        placeholder="Masukkan Nomor Pasal"
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 4,
+                                            minWidth: 400
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Pasal */}
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14,
+                                        // marginTop: 28
+                                    }}
+                                >
+                                    
+                                    {/* pasal sebelum addendum */}
+                                    <div>
+                                        <p
+                                            style={{
+                                                fontWeight: 500,
+                                                marginBottom: 14
+                                            }}
+                                        >Pasal Sebelum Addendum</p>
+                                        <textarea
+                                            disabled
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                    {/* pasal setelah addendum */}
+                                    <div>
+                                        <p
+                                            style={{
+                                                fontWeight: 500,
+                                                marginBottom: 14
+                                            }}
+                                        >Pasal Setelah Addendum</p>
+                                        <textarea
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                </div>
+
+                                <h1
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 16,
+                                        margin: 0
+                                    }}
+                                >
+                                    B.2 Lampiran
+                                </h1>
+                                
+                                <div>
+                                    <input 
+                                        type="text"
+                                        placeholder="Masukkan Angka Lampiran"
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 4,
+                                            minWidth: 400
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <textarea
+                                        rows="4"
+                                        className="form-control"
+                                    ></textarea>
+                                </div>
+
+                                <div>
+                                    <button
+                                        className="btn btn-primary text-white add-new-clause"
+                                        style={{
+                                            marginTop: 14
+                                        }}
+                                    >
+                                        Tambah Klausul Lampiran
+                                    </button>
+                                </div>
+
                             </div>
 
                         </div>
@@ -4789,6 +5706,7 @@ function createData(name, calories, fat, carbs, protein) {
                 {/* denda */}
                 {currentActiveTab === 4 &&
                     <>
+
                         <div
                             style={{
                                 padding: 28,
@@ -4797,7 +5715,8 @@ function createData(name, calories, fat, carbs, protein) {
                                 borderStyle: 'solid',
                                 borderColor: '#8c8a8a',
                                 display: 'flex',
-                                flexDirection: 'column'
+                                flexDirection: 'column',
+                                marginBottom: 40
                             }}
                         >
 
@@ -4838,8 +5757,8 @@ function createData(name, calories, fat, carbs, protein) {
                                             penalty_fine_data.
                                             map((data, index) => (
                                                 <TableRow
-                                                key={data.id}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                    key={data.id}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
                                                     <TableCell component="th" >
                                                        {index+1}
@@ -4883,7 +5802,7 @@ function createData(name, calories, fat, carbs, protein) {
                                                 color: '#2e1f22',
                                             }}
                                         >
-                                            Addendum Denda Pekerjaan
+                                            A. Addendum Denda Pekerjaan
                                         </h1>
                                         <button
                                             className="btn btn-primary"
@@ -4902,7 +5821,8 @@ function createData(name, calories, fat, carbs, protein) {
                                                 <TableCell align="left">Jenis Denda</TableCell>
                                                 <TableCell align="left">Nilai</TableCell>
                                                 <TableCell align="left">Maksimal Hari</TableCell>
-                                                <TableCell align="left">Type Nilai</TableCell>
+                                                <TableCell align="left">Tipe Nilai</TableCell>
+                                                <TableCell align="left">Aksi</TableCell>
                                             </TableRow>
                                         </TableBody>
                                         <TableBody>
@@ -4926,106 +5846,227 @@ function createData(name, calories, fat, carbs, protein) {
                                 </TableContainer>
                             </div>
 
+                        </div>
 
-                            <div
+                        {/* Klausul Perubahan */}
+                        <div
+                                className="clause-change-wrapper"
                                 style={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: 28
+                                    gap: 14,
+                                    border: 1,
+                                    borderColor: 'black',
+                                    borderStyle: 'solid',
+                                    padding: 28,
+                                    borderRadius: 14,
+                                    // marginTop: 40
                                 }}
                             >
-                                <div
-                                style={{
-                                    marginTop: 28
-                                }}
-                                >
+                                
+                                <div>
                                     <span
                                         style={{
-                                            fontWeight: 500
+                                            fontSize: 16,
+                                            fontWeight: 600,
+                                            color: '#2e1f22'
                                         }}
-                                    >Pasal Sebelum Addendum</span>
+                                    >
+                                        B. Perubahan Klausul Kontrak Para Pihak
+                                    </span>
+                                </div>
+
+                                <h1
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 16,
+                                        margin: 0
+                                    }}
+                                >
+                                    B.1 Body Kontrak
+                                </h1>
+
+                                <div>
+                                    <input 
+                                        type="text"
+                                        placeholder="Masukkan Nomor Pasal"
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 4,
+                                            minWidth: 400
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Pasal */}
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14,
+                                        // marginTop: 28
+                                    }}
+                                >
+                                    
+                                    {/* pasal sebelum addendum */}
+                                    <div>
+                                        <p
+                                            style={{
+                                                fontWeight: 500,
+                                                marginBottom: 14
+                                            }}
+                                        >Pasal Sebelum Addendum</p>
+                                        <textarea
+                                            disabled
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                    {/* pasal setelah addendum */}
+                                    <div>
+                                        <p
+                                            style={{
+                                                fontWeight: 500,
+                                                marginBottom: 14
+                                            }}
+                                        >Pasal Setelah Addendum</p>
+                                        <textarea
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                </div>
+
+                                <h1
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 16,
+                                        margin: 0
+                                    }}
+                                >
+                                    B.2 Lampiran
+                                </h1>
+                                
+                                <div>
+                                    <input 
+                                        type="text"
+                                        placeholder="Masukkan Angka Lampiran"
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 4,
+                                            minWidth: 400
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
                                     <textarea
-                                        disabled
                                         rows="4"
                                         className="form-control"
                                     ></textarea>
                                 </div>
 
-                                <div
-                                >
-                                    <span
+                                <div>
+                                    <button
+                                        className="btn btn-primary text-white add-new-clause"
                                         style={{
-                                            fontWeight: 500
+                                            marginTop: 14
                                         }}
-                                    >Pasal Setelah Addendum</span>
-                                    <textarea
-                                        rows="4"
-                                        className="form-control"
-                                    ></textarea>
+                                    >
+                                        Tambah Klausul Lampiran
+                                    </button>
                                 </div>
-                            </div>
 
                         </div>
+
                     </>
                 }
 
                 {/* jaminan */}
                 {currentActiveTab === 5 && 
-                    <>                    
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                rowGap: 28
-                            }}
-                        >
+                    <>
 
-                            {/* jaminan kontrak awal */}
-                            <div>
-                                <span
-                                    style={{
-                                        fontSize: 16,
-                                        fontWeight: 600
-                                    }}
-                                >
-                                    Jaminan Kontrak Awal
-                                </span>
-                            </div>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    rowGap: 28,
+                                    border: 1,
+                                    borderStyle: 'solid',
+                                    borderColor: 'black',
+                                    borderRadius: 14,
+                                    padding: 28,
+                                    marginBottom: 40
+                                }}
+                            >
 
-                            {/* jaminan uang muka */}
-                            {guaranteeBeforeAddendum && 
-                                guaranteeBeforeAddendum.map((data, index) => (
-                                    <>
-                                        <div>
-                                                
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    gap: 30,
-                                                    alignItems: 'center'
-                                                }}
-                                            >   
-                                                {/* jaminan uang muka */}
-                                                <p
-                                                    style={{
-                                                        width: 150,
-                                                        margin: 0
-                                                    }}
-                                                >
-                                                    {data.title}
-                                                </p>
+                                {/* jaminan kontrak awal */}
+                                <div>
+                                    <span
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Jaminan Kontrak Awal
+                                    </span>
+                                </div>
 
-                                                {/* ya / tidak */}
+                                {/* jaminan uang muka */}
+                                {guaranteeBeforeAddendum && 
+                                    guaranteeBeforeAddendum.map((data, index) => (
+                                        <>
+                                            <div>
+                                                    
                                                 <div
                                                     style={{
                                                         display: 'flex',
-                                                        gap: 14,
+                                                        flexWrap: 'wrap',
+                                                        gap: 30,
                                                         alignItems: 'center'
                                                     }}
-                                                >
+                                                >   
+                                                    {/* jaminan uang muka */}
+                                                    <p
+                                                        style={{
+                                                            width: 150,
+                                                            margin: 0
+                                                        }}
+                                                    >
+                                                        {data.title}
+                                                    </p>
 
-                                                    <label
+                                                    {/* ya / tidak */}
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            gap: 14,
+                                                            alignItems: 'center'
+                                                        }}
+                                                    >
+
+                                                        <label
+                                                                style={{
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexWrap: 'wrap',
+                                                                    alignItems: 'center',
+                                                                    columnGap: 8
+                                                                }}
+                                                            >
+                                                                <input
+                                                                    type="radio"
+                                                                    name={`${index}_down_payment_guarantee`}
+                                                                    checked={data.radio === 'yes'}
+                                                                />
+                                                                <span>
+                                                                    Ya
+                                                                </span>
+                                                        </label>
+
+                                                        <label
                                                             style={{
                                                                 margin: 0,
                                                                 display: 'flex',
@@ -5034,780 +6075,1175 @@ function createData(name, calories, fat, carbs, protein) {
                                                                 columnGap: 8
                                                             }}
                                                         >
-                                                            <input
-                                                                type="radio"
-                                                                name={`${index}_down_payment_guarantee`}
-                                                                checked={data.radio === 'yes'}
-                                                            />
-                                                            <span>
-                                                                Ya
-                                                            </span>
-                                                    </label>
+                                                                <input
+                                                                    type="radio"
+                                                                    name={`${index}_down_payment_guarantee`}
+                                                                    checked={data.radio === 'no'}
+                                                                />
+                                                                <span>
+                                                                    Tidak
+                                                                </span>
+                                                        </label>
 
-                                                    <label
-                                                            style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexWrap: 'wrap',
-                                                                alignItems: 'center',
-                                                                columnGap: 8
-                                                            }}
-                                                        >
-                                                            <input
-                                                                type="radio"
-                                                                name={`${index}_down_payment_guarantee`}
-                                                                checked={data.radio === 'no'}
-                                                            />
-                                                            <span>
-                                                                Tidak
-                                                            </span>
-                                                    </label>
+                                                    </div>
 
                                                 </div>
 
-                                            </div>
+                                                {/* tanggal mulai, selesai, evidence */}
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexWrap: 'wrap',
+                                                        gap: 20,
+                                                        marginTop: 15
+                                                    }}
+                                                >
 
-                                            {/* tanggal mulai, selesai, evidence */}
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    gap: 20,
-                                                    marginTop: 15
-                                                }}
-                                            >
-
-                                                    {/* tanggal mulai */}
-                                                    <div
-                                                        className="col-sm-3"
-                                                    >
-                                                        <label
-                                                            style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                            }}
+                                                        {/* tanggal mulai */}
+                                                        <div
+                                                            className="col-sm-3"
                                                         >
-                                                            <span>
-                                                                Tanggal Mulai
-                                                            </span>
-                                                            <input
-                                                                type="date"
+                                                            <label
                                                                 style={{
-                                                                    borderRadius: 4,
-                                                                    padding: '10px 12px',
-                                                                    border: 'none'
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
                                                                 }}
-                                                                value={data.startDate}
-                                                                disabled
-                                                            />
-                                                        </label>
-                                                    </div>
-
-                                                    {/* tanggal selesai */}
-                                                    <div
-                                                        className="col-sm-3"
-                                                    >
-                                                        <label
-                                                            style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                            }}
-                                                        >
-                                                            <span>
-                                                                Tanggal Selesai
-                                                            </span>
-                                                            <input
-                                                                type="date"
-                                                                style={{
-                                                                    borderRadius: 4,
-                                                                    padding: '10px 12px',
-                                                                    border: 'none'
-                                                                }}
-                                                                value={data.endDate}
-                                                                disabled
-                                                            />
-                                                        </label>    
-                                                    </div>
-
-                                                
-                                                    {/* evidence */}
-                                                    <div
-                                                        className="col-md-5"
-                                                        style={{
-                                                            padding: 0
-                                                        }}
-                                                    >
-                                                        <label
-                                                            style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                            }}
-                                                        >
-                                                            <span>
-                                                                Evidence
-                                                            </span>
-                                                            <div>
-                                                                <label
-                                                                    htmlFor="upload"
-                                                                    className={`input-group mb-3 col-sm-12 pointer`}
-                                                                    style={{
-                                                                        padding: 0
-                                                                    }}
-                                                                >
-
-                                                                    <span
-                                                                    className={`form-control text-truncate`} 
-                                                                    style={{
-                                                                        backgroundColor: '#e8f4fb'
-                                                                    }}
-                                                                    >
-                                                                    {/* nama_file_upload.pdf */}
-                                                                    {data.filename}
-                                                                    </span>
-                                                                    <div 
-                                                                        className="input-group-prepend"
-                                                                    >
-                                                                        <span className="input-group-text"
-                                                                            style={{
-                                                                                backgroundColor: '#e8f4fb'
-                                                                            }}    
-                                                                        >
-                                                                        <i className="fas fa-file-upload"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </label>
+                                                            >
+                                                                <span>
+                                                                    Tanggal Mulai
+                                                                </span>
                                                                 <input
-                                                                    type="file"
-                                                                    className="d-none"
-                                                                    id="upload"
+                                                                    type="date"
                                                                     style={{
-                                                                        backgroundColor: '#E8F4FB'
+                                                                        borderRadius: 4,
+                                                                        padding: '10px 12px',
+                                                                        border: 'none',
+                                                                        display: 'flex',
+                                                                        flexDirection: 'row-reverse',
+                                                                        columnGap: 10,
                                                                     }}
+                                                                    value={data.startDate}
                                                                     disabled
                                                                 />
-                                                            </div>
-                                                        </label>
-                                                    </div>
+                                                            </label>
+                                                        </div>
 
-                                            </div>
+                                                        {/* tanggal selesai */}
+                                                        <div
+                                                            className="col-sm-3"
+                                                        >
+                                                            <label
+                                                                style={{
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                }}
+                                                            >
+                                                                <span>
+                                                                    Tanggal Selesai
+                                                                </span>
+                                                                <input
+                                                                    type="date"
+                                                                    style={{
+                                                                        borderRadius: 4,
+                                                                        padding: '10px 12px',
+                                                                        border: 'none',
+                                                                        display: 'flex',
+                                                                        flexDirection: 'row-reverse',
+                                                                        columnGap: 10,
+                                                                    }}
+                                                                    value={data.endDate}
+                                                                    disabled
+                                                                />
+                                                            </label>    
+                                                        </div>
 
-                                        </div>
-                                    </>
-                                ))
-                            }
-
-                            {/* Addendum jaminan */}
-                            <div>
-                                <span
-                                    style={{
-                                        fontSize: 16,
-                                        fontWeight: 600
-                                    }}
-                                >
-                                    Addendum Jaminan
-                                </span>
-                            </div>
-
-                            {guaranteeBeforeAddendum && 
-                                guaranteeBeforeAddendum.map((data, index) => (
-                                    <>
-                                        <div>
-                                                
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    gap: 30,
-                                                    alignItems: 'center'
-                                                }}
-                                            >   
-                                                {/* jaminan uang muka */}
-                                                <p
-                                                    style={{
-                                                        width: 150,
-                                                        margin: 0
-                                                    }}
-                                                >
-                                                    {data.title}
-                                                </p>
-
-                                                {/* ya / tidak */}
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        gap: 14,
-                                                        alignItems: 'center'
-                                                    }}
-                                                >
-
-                                                    <label
+                                                    
+                                                        {/* evidence */}
+                                                        <div
+                                                            className="col-md-5"
                                                             style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexWrap: 'wrap',
-                                                                alignItems: 'center',
-                                                                columnGap: 8
+                                                                padding: 0
                                                             }}
                                                         >
-                                                            <input
-                                                                type="radio"
-                                                                name={`${index}_down_payment_guarantee`}
-                                          
-                                                            />
-                                                            <span>
-                                                                Ya
-                                                            </span>
-                                                    </label>
+                                                            <label
+                                                                style={{
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                }}
+                                                            >
+                                                                <span>
+                                                                    Evidence
+                                                                </span>
+                                                                <div>
+                                                                    <label
+                                                                        htmlFor="upload"
+                                                                        className={`input-group mb-3 col-sm-12 pointer`}
+                                                                        style={{
+                                                                            padding: 0
+                                                                        }}
+                                                                    >
 
-                                                    <label
-                                                            style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexWrap: 'wrap',
-                                                                alignItems: 'center',
-                                                                columnGap: 8
-                                                            }}
-                                                        >
-                                                            <input
-                                                                type="radio"
-                                                                name={`${index}_down_payment_guarantee`}
-                                                        
-                                                            />
-                                                            <span>
-                                                                Tidak
-                                                            </span>
-                                                    </label>
+                                                                        <span
+                                                                        className={`form-control text-truncate`} 
+                                                                        style={{
+                                                                            backgroundColor: '#e8f4fb'
+                                                                        }}
+                                                                        >
+                                                                        {/* nama_file_upload.pdf */}
+                                                                        {data.filename}
+                                                                        </span>
+                                                                        <div 
+                                                                            className="input-group-prepend"
+                                                                        >
+                                                                            <span className="input-group-text"
+                                                                                style={{
+                                                                                    backgroundColor: '#e8f4fb'
+                                                                                }}    
+                                                                            >
+                                                                            <i className="fas fa-file-upload"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </label>
+                                                                    <input
+                                                                        type="file"
+                                                                        className="d-none"
+                                                                        id="upload"
+                                                                        style={{
+                                                                            backgroundColor: '#E8F4FB'
+                                                                        }}
+                                                                        disabled
+                                                                    />
+                                                                </div>
+                                                            </label>
+                                                        </div>
 
                                                 </div>
 
                                             </div>
+                                        </>
+                                    ))
+                                }
 
-                                            {/* tanggal mulai, selesai, evidence */}
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    gap: 20,
-                                                    marginTop: 15
-                                                }}
-                                            >
+                                {/* Addendum jaminan */}
+                                <div>
+                                    <span
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        A. Addendum Jaminan
+                                    </span>
+                                </div>
 
-                                                    {/* tanggal mulai */}
-                                                    <div
-                                                        className="col-sm-3"
-                                                    >
-                                                        <label
-                                                            style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                            }}
-                                                        >
-                                                            <span>
-                                                                Tanggal Mulai
-                                                            </span>
-                                                            <input
-                                                                type="date"
-                                                                style={{
-                                                                    borderRadius: 4,
-                                                                    padding: '10px 12px',
-                                                                    border: 'none'
-                                                                }}
-                                                                value={data.startDate}
-                                              
-                                                            />
-                                                        </label>
-                                                    </div>
-
-                                                    {/* tanggal selesai */}
-                                                    <div
-                                                        className="col-sm-3"
-                                                    >
-                                                        <label
-                                                            style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                            }}
-                                                        >
-                                                            <span>
-                                                                Tanggal Selesai
-                                                            </span>
-                                                            <input
-                                                                type="date"
-                                                                style={{
-                                                                    borderRadius: 4,
-                                                                    padding: '10px 12px',
-                                                                    border: 'none'
-                                                                }}
-                                                                value={data.endDate}
-                                                            />
-                                                        </label>    
-                                                    </div>
-
-                                                
-                                                    {/* evidence */}
-                                                    <div
-                                                        className="col-md-5"
+                                {guaranteeBeforeAddendum && 
+                                    guaranteeBeforeAddendum.map((data, index) => (
+                                        <>
+                                            <div>
+                                                    
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexWrap: 'wrap',
+                                                        gap: 30,
+                                                        alignItems: 'center'
+                                                    }}
+                                                >   
+                                                    {/* jaminan uang muka */}
+                                                    <p
                                                         style={{
-                                                            padding: 0
+                                                            width: 150,
+                                                            margin: 0
                                                         }}
                                                     >
-                                                        <label
-                                                            style={{
-                                                                margin: 0,
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                            }}
-                                                        >
-                                                            <span>
-                                                                Evidence
-                                                            </span>
-                                                            <div>
-                                                                <label
-                                                                    htmlFor="upload"
-                                                                    className={`input-group mb-3 col-sm-12 pointer`}
-                                                                    style={{
-                                                                        padding: 0
-                                                                    }}
-                                                                >
+                                                        {data.title}
+                                                    </p>
 
-                                                                    <span
-                                                                    className={`form-control text-truncate`} 
-                                                                    style={{
-                                                                        backgroundColor: '#e8f4fb'
-                                                                    }}
-                                                                    >
-                                                                    {data.filename}
-                                                                    </span>
-                                                                    <div 
-                                                                        className="input-group-prepend"
-                                                                    >
-                                                                        <span className="input-group-text"
-                                                                            style={{
-                                                                                backgroundColor: '#e8f4fb'
-                                                                            }}    
-                                                                        >
-                                                                        <i className="fas fa-file-upload"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </label>
+                                                    {/* ya / tidak */}
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            gap: 14,
+                                                            alignItems: 'center'
+                                                        }}
+                                                    >
+
+                                                        <label
+                                                                style={{
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexWrap: 'wrap',
+                                                                    alignItems: 'center',
+                                                                    columnGap: 8
+                                                                }}
+                                                            >
                                                                 <input
-                                                                    type="file"
-                                                                    className="d-none"
-                                                                    id="upload"
-                                                                    style={{
-                                                                        backgroundColor: '#E8F4FB'
-                                                                    }}
+                                                                    type="radio"
+                                                                    name={`${index}_down_payment_guarantee`}
+                                            
                                                                 />
-                                                            </div>
+                                                                <span>
+                                                                    Ya
+                                                                </span>
                                                         </label>
+
+                                                        <label
+                                                                style={{
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexWrap: 'wrap',
+                                                                    alignItems: 'center',
+                                                                    columnGap: 8
+                                                                }}
+                                                            >
+                                                                <input
+                                                                    type="radio"
+                                                                    name={`${index}_down_payment_guarantee`}
+                                                            
+                                                                />
+                                                                <span>
+                                                                    Tidak
+                                                                </span>
+                                                        </label>
+
                                                     </div>
 
-                                            </div>
+                                                </div>
 
-                                        </div>
-                                    </>
-                                ))
-                            }
+                                                {/* tanggal mulai, selesai, evidence */}
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexWrap: 'wrap',
+                                                        gap: 20,
+                                                        marginTop: 15
+                                                    }}
+                                                >
+
+                                                        {/* tanggal mulai */}
+                                                        <div
+                                                            className="col-sm-3"
+                                                        >
+                                                            <label
+                                                                style={{
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                }}
+                                                            >
+                                                                <span>
+                                                                    Tanggal Mulai
+                                                                </span>
+                                                                <input
+                                                                    type="date"
+                                                                    style={{
+                                                                        borderRadius: 4,
+                                                                        padding: '10px 12px',
+                                                                        border: 'none',
+                                                                        display: 'flex',
+                                                                        flexDirection: 'row-reverse',
+                                                                        columnGap: 10,
+                                                                    }}
+                                                                    value={data.startDate}
+                                                
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        {/* tanggal selesai */}
+                                                        <div
+                                                            className="col-sm-3"
+                                                        >
+                                                            <label
+                                                                style={{
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                }}
+                                                            >
+                                                                <span>
+                                                                    Tanggal Selesai
+                                                                </span>
+                                                                <input
+                                                                    type="date"
+                                                                    style={{
+                                                                        borderRadius: 4,
+                                                                        padding: '10px 12px',
+                                                                        border: 'none',
+                                                                        display: 'flex',
+                                                                        flexDirection: 'row-reverse',
+                                                                        columnGap: 10,
+                                                                    }}
+                                                                    value={data.endDate}
+                                                                />
+                                                            </label>    
+                                                        </div>
+
+                                                    
+                                                        {/* evidence */}
+                                                        <div
+                                                            className="col-md-5"
+                                                            style={{
+                                                                padding: 0
+                                                            }}
+                                                        >
+                                                            <label
+                                                                style={{
+                                                                    margin: 0,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                }}
+                                                            >
+                                                                <span>
+                                                                    Evidence
+                                                                </span>
+                                                                <div>
+                                                                    <label
+                                                                        htmlFor="upload"
+                                                                        className={`input-group mb-3 col-sm-12 pointer`}
+                                                                        style={{
+                                                                            padding: 0
+                                                                        }}
+                                                                    >
+
+                                                                        <span
+                                                                        className={`form-control text-truncate`} 
+                                                                        style={{
+                                                                            backgroundColor: '#e8f4fb'
+                                                                        }}
+                                                                        >
+                                                                        {data.filename}
+                                                                        </span>
+                                                                        <div 
+                                                                            className="input-group-prepend"
+                                                                        >
+                                                                            <span className="input-group-text"
+                                                                                style={{
+                                                                                    backgroundColor: '#e8f4fb'
+                                                                                }}    
+                                                                            >
+                                                                            <i className="fas fa-file-upload"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </label>
+                                                                    <input
+                                                                        type="file"
+                                                                        className="d-none"
+                                                                        id="upload"
+                                                                        style={{
+                                                                            backgroundColor: '#E8F4FB'
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            </label>
+                                                        </div>
+
+                                                </div>
+
+                                            </div>
+                                        </>
+                                    ))
+                                }
+
+                            </div>
+
+                        {/* Klausul Perubahan */}
+                        <div
+                                className="clause-change-wrapper"
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 14,
+                                    border: 1,
+                                    borderColor: 'black',
+                                    borderStyle: 'solid',
+                                    padding: 28,
+                                    borderRadius: 14,
+                                    // marginTop: 40
+                                }}
+                            >
+                                
+                                <div>
+                                    <span
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600,
+                                            color: '#2e1f22'
+                                        }}
+                                    >
+                                        B. Perubahan Klausul Kontrak Para Pihak
+                                    </span>
+                                </div>
+
+                                <h1
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 16,
+                                        margin: 0
+                                    }}
+                                >
+                                    B.1 Body Kontrak
+                                </h1>
+
+                                <div>
+                                    <input 
+                                        type="text"
+                                        placeholder="Masukkan Nomor Pasal"
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 4,
+                                            minWidth: 400
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Pasal */}
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14,
+                                        // marginTop: 28
+                                    }}
+                                >
+                                    
+                                    {/* pasal sebelum addendum */}
+                                    <div>
+                                        <p
+                                            style={{
+                                                fontWeight: 500,
+                                                marginBottom: 14
+                                            }}
+                                        >Pasal Sebelum Addendum</p>
+                                        <textarea
+                                            disabled
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                    {/* pasal setelah addendum */}
+                                    <div>
+                                        <p
+                                            style={{
+                                                fontWeight: 500,
+                                                marginBottom: 14
+                                            }}
+                                        >Pasal Setelah Addendum</p>
+                                        <textarea
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                </div>
+
+                                <h1
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 16,
+                                        margin: 0
+                                    }}
+                                >
+                                    B.2 Lampiran
+                                </h1>
+                                
+                                <div>
+                                    <input 
+                                        type="text"
+                                        placeholder="Masukkan Angka Lampiran"
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 4,
+                                            minWidth: 400
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <textarea
+                                        rows="4"
+                                        className="form-control"
+                                    ></textarea>
+                                </div>
+
+                                <div>
+                                    <button
+                                        className="btn btn-primary text-white add-new-clause"
+                                        style={{
+                                            marginTop: 14
+                                        }}
+                                    >
+                                        Tambah Klausul Lampiran
+                                    </button>
+                                </div>
 
                         </div>
+
                     </>
                 }
 
                 {/* nomor rekening */}
                 {currentActiveTab === 6 &&
                     <>
+                        
                         <div
                             style={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                rowGap: 24
+                                rowGap: 40
                             }}
                         >
-
-                            <div>
-                                <h1
-                                    style={{
-                                        fontSize: 16,
-                                        fontWeight: 600,
-                                        marginBottom: 14
-                                    }}
-                                >
-                                    Nomor rekening kontrak awal
-                                </h1>
-
-                                <div
-                                    style={{
-                                        // display: 'grid',
-                                        // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: 24,
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flex: 1
-                                        }}
-                                    >
-                                        <span>Nomor rekening</span>
-                                        <input 
-                                            type="text"
-                                            style={{
-                                                width: '100%',
-                                                backgroundColor: "#e8f4fb",
-                                                padding: '10px 12px',
-                                                borderColor: 'black',
-                                                border: 1,
-                                                borderStyle: 'solid',
-                                                borderRadius: 4,
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                marginTop: 4
-                                            }}
-                                            disabled
-                                            value={"128574647483"}
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flex: 1
-                                        }}
-                                    >
-                                        <span>Nama rekening</span>
-                                        <input 
-                                            type="text"
-                                            style={{
-                                                width: '100%',
-                                                backgroundColor: "#e8f4fb",
-                                                padding: '10px 12px',
-                                                borderColor: 'black',
-                                                border: 1,
-                                                borderStyle: 'solid',
-                                                borderRadius: 4,
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                marginTop: 4
-                                            }}
-                                            disabled
-                                            value={"GOLDEN PRATAMA ENGINEERING"}
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flex: 1
-                                        }}
-                                    >
-                                        <span>Nama bank</span>
-                                        <input 
-                                            type="text"
-                                            style={{
-                                                width: '100%',
-                                                backgroundColor: "#e8f4fb",
-                                                padding: '10px 12px',
-                                                borderColor: 'black',
-                                                border: 1,
-                                                borderStyle: 'solid',
-                                                borderRadius: 4,
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                marginTop: 4
-                                            }}
-                                            disabled
-                                            value={"MANDIRI"}
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flex: 1
-                                        }}
-                                    >
-                                        <span>Alamat bank</span>
-                                        <input 
-                                            type="text"
-                                            style={{
-                                                width: '100%',
-                                                backgroundColor: "#e8f4fb",
-                                                padding: '10px 12px',
-                                                borderColor: 'black',
-                                                border: 1,
-                                                borderStyle: 'solid',
-                                                borderRadius: 4,
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                marginTop: 4
-                                            }}
-                                            disabled
-                                            value={"Jl Warung Buncit Raya"}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h1
-                                    style={{
-                                        fontSize: 16,
-                                        fontWeight: 600,
-                                        marginBottom: 14
-                                    }}
-                                >
-                                    Addendum nomor rekening 
-                                </h1>
-
-                                <div
-                                    style={{
-                                        // display: 'grid',
-                                        // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: 24,
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flex: 1
-                                        }}
-                                    >
-                                        <span>Nomor rekening</span>
-                                        <input 
-                                            type="text"
-                                            value={"08647583942"}
-                                            style={{
-                                                width: '100%',
-                                                padding: '10px 12px',
-                                                borderColor: 'black',
-                                                border: 1,
-                                                borderStyle: 'solid',
-                                                borderRadius: 4,
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                marginTop: 4
-                                            }}
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flex: 1
-                                        }}
-                                    >
-                                        <span>Nama rekening</span>
-                                        <input 
-                                            type="text"
-                                            style={{
-                                                width: '100%',
-                                                padding: '10px 12px',
-                                                borderColor: 'black',
-                                                border: 1,
-                                                borderStyle: 'solid',
-                                                borderRadius: 4,
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                marginTop: 4
-                                            }}
-                                            value={"GOLDEN PRATAMA ENGINEERING"}
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flex: 1
-                                        }}
-                                    >
-                                        <span>Nama bank</span>
-                                        <input 
-                                            type="text"
-                                            style={{
-                                                width: '100%',
-                                                padding: '10px 12px',
-
-                                                borderColor: 'black',
-                                                border: 1,
-                                                borderStyle: 'solid',
-                                                borderRadius: 4,
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                marginTop: 4
-                                            }}
-                                            value={"BCA"}
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            flex: 1
-                                        }}
-                                    >
-                                        <span>Alamat bank</span>
-                                        <input 
-                                            type="text"
-                                            style={{
-                                                width: '100%',
-                                                padding: '10px 12px',
-                                                borderColor: 'black',
-                                                border: 1,
-                                                borderStyle: 'solid',
-                                                borderRadius: 4,
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                marginTop: 4
-                                            }}
-                                            value={"Jl Menteng Pusat"}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* surat pernyataan dari bank */}
+                            
                             <div
                                 style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                                    gap: 24
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    gap: 14,
+                                                                    border: 1,
+                                                                    borderColor: 'black',
+                                                                    borderStyle: 'solid',
+                                                                    padding: 28,
+                                                                    borderRadius: 14,
+                                                                    // marginTop: 40
                                 }}
                             >
                                 <div
                                     style={{
                                         display: 'flex',
-                                        flexDirection: 'column'
+                                        flexDirection: 'column',
+                                        rowGap: 24,
+
                                     }}
                                 >
-                                        <span
+
+                                    <div>
+
+                                        <h1
                                             style={{
-                                                fontSize: 14,
-                                                fontWeight: 500
+                                                fontSize: 16,
+                                                fontWeight: 600,
+                                                marginBottom: 14
                                             }}
                                         >
-                                            Surat pernyataan dari bank
-                                        </span>
+                                            Nomor rekening kontrak awal
+                                        </h1>
+
                                         <div
                                             style={{
-                                                position: 'relative',
-                                                padding: 0,
-                                                margin: 0
+                                                // display: 'grid',
+                                                // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                gap: 24,
+                                                fontSize: 14,
+                                                fontWeight: 500,
                                             }}
                                         >
-                                            <input
+                                            <div
                                                 style={{
-                                                    width: '100%',
-                                                    padding: '10px 12px 10px 46px',
-                                                    color: '#3699ff',
-                                                    borderColor: 'black',
-                                                    border: 1,
-                                                    borderStyle: 'solid',
-                                                    borderRadius: 4,
-                                                    fontSize: 14,
-                                                    fontWeight: 500,
-                                                    marginTop: 4
-                                                }}
-                                                type="text"
-                                                value={`surat_pernyataan_bank_bca.pdf`}
-                                                disabled
-                                            />
-                                            <SVG 
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    bottom: 0,
-                                                    left: 12,
-                                                    margin: 'auto 0'
-                                                    // width:10,
-                                                    // height:10
-                                                }}
-                                                src={toAbsoluteUrl("/media/svg/icons/All/upload.svg")}
-                                            />
-                                        </div>
-                                        {/* <div>
-                                            <label
-                                                htmlFor="upload"
-                                                className={`input-group mb-3 col-sm-3 pointer`}
-                                                style={{
-                                                    padding: 0
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    flex: 1
                                                 }}
                                             >
+                                                <span>Nomor rekening</span>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        width: '100%',
+                                                        backgroundColor: "#e8f4fb",
+                                                        padding: '10px 12px',
+                                                        borderColor: 'black',
+                                                        border: 1,
+                                                        borderStyle: 'solid',
+                                                        borderRadius: 4,
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        marginTop: 4
+                                                    }}
+                                                    disabled
+                                                    value={"128574647483"}
+                                                />
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    flex: 1
+                                                }}
+                                            >
+                                                <span>Nama rekening</span>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        width: '100%',
+                                                        backgroundColor: "#e8f4fb",
+                                                        padding: '10px 12px',
+                                                        borderColor: 'black',
+                                                        border: 1,
+                                                        borderStyle: 'solid',
+                                                        borderRadius: 4,
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        marginTop: 4
+                                                    }}
+                                                    disabled
+                                                    value={"GOLDEN PRATAMA ENGINEERING"}
+                                                />
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    flex: 1
+                                                }}
+                                            >
+                                                <span>Nama bank</span>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        width: '100%',
+                                                        backgroundColor: "#e8f4fb",
+                                                        padding: '10px 12px',
+                                                        borderColor: 'black',
+                                                        border: 1,
+                                                        borderStyle: 'solid',
+                                                        borderRadius: 4,
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        marginTop: 4
+                                                    }}
+                                                    disabled
+                                                    value={"MANDIRI"}
+                                                />
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    flex: 1
+                                                }}
+                                            >
+                                                <span>Alamat bank</span>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        width: '100%',
+                                                        backgroundColor: "#e8f4fb",
+                                                        padding: '10px 12px',
+                                                        borderColor: 'black',
+                                                        border: 1,
+                                                        borderStyle: 'solid',
+                                                        borderRadius: 4,
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        marginTop: 4
+                                                    }}
+                                                    disabled
+                                                    value={"Jl Warung Buncit Raya"}
+                                                />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div>
+                                        <h1
+                                            style={{
+                                                fontSize: 16,
+                                                fontWeight: 600,
+                                                marginBottom: 14
+                                            }}
+                                        >
+                                           A. Addendum nomor rekening 
+                                        </h1>
+
+                                        <div
+                                            style={{
+                                                // display: 'grid',
+                                                // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                gap: 24,
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    flex: 1
+                                                }}
+                                            >
+                                                <span>Nomor rekening</span>
+                                                <ReactSelect 
+                                                    data={    
+                                                        jsonData?.data_bank
+                                                    }
+                                                    func={changeDataBankIndex}
+                                                    labelName={`account_number`}
+                                                />
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    flex: 1
+                                                }}
+                                            >
+                                                <span>Nama rekening</span>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '10px 12px',
+                                                        borderColor: 'black',
+                                                        border: 1,
+                                                        borderStyle: 'solid',
+                                                        borderRadius: 4,
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        marginTop: 4
+                                                    }}
+                                                    disabled
+                                                    value={jsonData?.data_bank[bankIndex]?.account_holder_name}
+                                                />
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    flex: 1
+                                                }}
+                                            >
+                                                <span>Nama bank</span>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '10px 12px',
+
+                                                        borderColor: 'black',
+                                                        border: 1,
+                                                        borderStyle: 'solid',
+                                                        borderRadius: 4,
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        marginTop: 4
+                                                    }}
+                                                    disabled
+                                                    value={jsonData?.data_bank[bankIndex]?.bank.full_name}
+                                                />
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    flex: 1
+                                                }}
+                                            >
+                                                <span>Alamat bank</span>
+                                                <input 
+                                                    type="text"
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '10px 12px',
+                                                        borderColor: 'black',
+                                                        border: 1,
+                                                        borderStyle: 'solid',
+                                                        borderRadius: 4,
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        marginTop: 4
+                                                    }}
+                                                    disabled
+                                                    value={jsonData?.data_bank[bankIndex]?.address?.postal_address}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* surat pernyataan dari bank */}
+                                    <div
+                                        style={{
+                                            display: 'grid',
+                                            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                                            gap: 24
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column'
+                                            }}
+                                        >
                                                 <span
-                                                                className={`form-control text-truncate`} 
-                                                                style={{
-                                                                    backgroundColor: '#e8f4fb'
-                                                                }}
-                                                                >
-                                                                nama_file_upload.pdf
+                                                    style={{
+                                                        fontSize: 14,
+                                                        fontWeight: 500
+                                                    }}
+                                                >
+                                                    Surat pernyataan dari bank
                                                 </span>
-                                                <div 
-                                                                    className="input-group-prepend"
-                                                                >
-                                                                    <span className="input-group-text"
+                                                <div
+                                                    style={{
+                                                        position: 'relative',
+                                                        padding: 0,
+                                                        margin: 0
+                                                    }}
+                                                >
+                                                    <input
+                                                        style={{
+                                                            width: '100%',
+                                                            padding: '10px 12px 10px 46px',
+                                                            color: '#3699ff',
+                                                            borderColor: 'black',
+                                                            border: 1,
+                                                            borderStyle: 'solid',
+                                                            borderRadius: 4,
+                                                            fontSize: 14,
+                                                            fontWeight: 500,
+                                                            marginTop: 4
+                                                        }}
+                                                        type="text"
+                                                        value={`surat_pernyataan_bank_bca.pdf`}
+                                                        disabled
+                                                    />
+                                                    <SVG 
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: 0,
+                                                            bottom: 0,
+                                                            left: 12,
+                                                            margin: 'auto 0'
+                                                            // width:10,
+                                                            // height:10
+                                                        }}
+                                                        src={toAbsoluteUrl("/media/svg/icons/All/upload.svg")}
+                                                    />
+                                                </div>
+                                                {/* <div>
+                                                    <label
+                                                        htmlFor="upload"
+                                                        className={`input-group mb-3 col-sm-3 pointer`}
+                                                        style={{
+                                                            padding: 0
+                                                        }}
+                                                    >
+                                                        <span
+                                                                        className={`form-control text-truncate`} 
                                                                         style={{
                                                                             backgroundColor: '#e8f4fb'
-                                                                        }}    
-                                                                    >
-                                                                    <i className="fas fa-file-upload"></i>
-                                                                    </span>
-                                                </div>
-                                            </label>
-                                            <input
-                                                type="file"
-                                                className="d-none"
-                                                id="upload"
-                                                style={{
-                                                    backgroundColor: '#E8F4FB'
-                                                }}
-                                            />
-                                        </div> */}
+                                                                        }}
+                                                                        >
+                                                                        nama_file_upload.pdf
+                                                        </span>
+                                                        <div 
+                                                                            className="input-group-prepend"
+                                                                        >
+                                                                            <span className="input-group-text"
+                                                                                style={{
+                                                                                    backgroundColor: '#e8f4fb'
+                                                                                }}    
+                                                                            >
+                                                                            <i className="fas fa-file-upload"></i>
+                                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <input
+                                                        type="file"
+                                                        className="d-none"
+                                                        id="upload"
+                                                        style={{
+                                                            backgroundColor: '#E8F4FB'
+                                                        }}
+                                                    />
+                                                </div> */}
+                                        </div>
+                                        <div>
+                                                
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div>
+                            </div>
+
+                            {/* Klausul Perubahan */}
+                            <div
+                                    className="clause-change-wrapper"
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14,
+                                        border: 1,
+                                        borderColor: 'black',
+                                        borderStyle: 'solid',
+                                        padding: 28,
+                                        borderRadius: 14,
+                                        // marginTop: 40
+                                    }}
+                                >
+                                    
+                                    <div>
+                                        <span
+                                            style={{
+                                                fontSize: 16,
+                                                fontWeight: 600,
+                                                color: '#2e1f22'
+                                            }}
+                                        >
+                                            B. Perubahan Klausul Kontrak Para Pihak
+                                        </span>
+                                    </div>
+
+                                    <h1
+                                        style={{
+                                            fontWeight: 600,
+                                            fontSize: 16,
+                                            margin: 0
+                                        }}
+                                    >
+                                        B.1 Body Kontrak
+                                    </h1>
+
+                                    <div>
+                                        <input 
+                                            type="text"
+                                            placeholder="Masukkan Nomor Pasal"
+                                            style={{
+                                                padding: 8,
+                                                borderRadius: 4,
+                                                minWidth: 400
+                                            }}
+                                        />
+                                    </div>
+
+                                    {/* Pasal */}
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 14,
+                                            // marginTop: 28
+                                        }}
+                                    >
                                         
+                                        {/* pasal sebelum addendum */}
+                                        <div>
+                                            <p
+                                                style={{
+                                                    fontWeight: 500,
+                                                    marginBottom: 14
+                                                }}
+                                            >Pasal Sebelum Addendum</p>
+                                            <textarea
+                                                disabled
+                                                rows="4"
+                                                className="form-control"
+                                            ></textarea>
+                                        </div>
+
+                                        {/* pasal setelah addendum */}
+                                        <div>
+                                            <p
+                                                style={{
+                                                    fontWeight: 500,
+                                                    marginBottom: 14
+                                                }}
+                                            >Pasal Setelah Addendum</p>
+                                            <textarea
+                                                rows="4"
+                                                className="form-control"
+                                            ></textarea>
+                                        </div>
+
+                                    </div>
+
+                                    <h1
+                                        style={{
+                                            fontWeight: 600,
+                                            fontSize: 16,
+                                            margin: 0
+                                        }}
+                                    >
+                                        B.2 Lampiran
+                                    </h1>
+                                    
+                                    <div>
+                                        <input 
+                                            type="text"
+                                            placeholder="Masukkan Angka Lampiran"
+                                            style={{
+                                                padding: 8,
+                                                borderRadius: 4,
+                                                minWidth: 400
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <textarea
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                    <div>
+                                        <button
+                                            className="btn btn-primary text-white add-new-clause"
+                                            style={{
+                                                marginTop: 14
+                                            }}
+                                        >
+                                            Tambah Klausul Lampiran
+                                        </button>
+                                    </div>
+
+                            </div>
+
+                        </div>
+
+                    </>
+                }
+
+                {/* lainnya */}
+                {currentActiveTab === 7 &&
+                    <>
+                        {/* Klausul Perubahan */}
+                        <div
+                                className="clause-change-wrapper"
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 14,
+                                    border: 1,
+                                    borderColor: 'black',
+                                    borderStyle: 'solid',
+                                    padding: 28,
+                                    borderRadius: 14,
+                                    // marginTop: 40
+                                }}
+                            >
+                                
+                                <div>
+                                    <span
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: 600,
+                                            color: '#2e1f22'
+                                        }}
+                                    >
+                                        A. Perubahan Klausul Kontrak Para Pihak
+                                    </span>
                                 </div>
-                            </div>
 
-                            {/* pasal sebelum addendum */}
-                            <div>
-                                <span
+                                <h1
                                     style={{
-                                        fontWeight: 500
+                                        fontWeight: 600,
+                                        fontSize: 16,
+                                        margin: 0
                                     }}
-                                >Pasal Sebelum Addendum</span>
-                                <textarea
-                                    disabled
-                                    rows="4"
-                                    className="form-control"
-                                ></textarea>
-                            </div>
+                                >
+                                    A.1 Body Kontrak
+                                </h1>
 
-                            {/* pasal setelah addendum */}
-                            <div>
-                                <span
+                                <div>
+                                    <input 
+                                        type="text"
+                                        placeholder="Masukkan Nomor Pasal"
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 4,
+                                            minWidth: 400
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Pasal */}
+                                <div
                                     style={{
-                                        fontWeight: 500
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 14,
+                                        // marginTop: 28
                                     }}
-                                >Pasal Setelah Addendum</span>
-                                <textarea
-                                    rows="4"
-                                    className="form-control"
-                                ></textarea>
-                            </div>
+                                >
+                                    
+                                    {/* pasal sebelum addendum */}
+                                    <div>
+                                        <p
+                                            style={{
+                                                fontWeight: 500,
+                                                marginBottom: 14
+                                            }}
+                                        >Pasal Sebelum Addendum</p>
+                                        <textarea
+                                            disabled
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                    {/* pasal setelah addendum */}
+                                    <div>
+                                        <p
+                                            style={{
+                                                fontWeight: 500,
+                                                marginBottom: 14
+                                            }}
+                                        >Pasal Setelah Addendum</p>
+                                        <textarea
+                                            rows="4"
+                                            className="form-control"
+                                        ></textarea>
+                                    </div>
+
+                                </div>
+
+                                <h1
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 16,
+                                        margin: 0
+                                    }}
+                                >
+                                    A.2 Lampiran
+                                </h1>
+                                
+                                <div>
+                                    <input 
+                                        type="text"
+                                        placeholder="Masukkan Angka Lampiran"
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 4,
+                                            minWidth: 400
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <textarea
+                                        rows="4"
+                                        className="form-control"
+                                    ></textarea>
+                                </div>
+
+                                <div>
+                                    <button
+                                        className="btn btn-primary text-white add-new-clause"
+                                        style={{
+                                            marginTop: 14
+                                        }}
+                                    >
+                                        Tambah Klausul Lampiran
+                                    </button>
+                                </div>
 
                         </div>
                     </>

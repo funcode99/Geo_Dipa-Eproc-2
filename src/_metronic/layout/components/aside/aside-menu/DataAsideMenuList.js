@@ -5,7 +5,10 @@ export const DataAsideMenuListClient = [
   // addendum contract
   {
     rootPath: "/client/addendum-contract",
+    // yang salah adalah file SVG nya
     icon: "/All/New_Addendum_Contract.svg",
+    // icon: "/All/New_Delivery_Monitoring.svg",
+    // icon: "/Communication/user-solid.svg",
     title: "MENU.ADDENDUM_CONTRACT",
     subMenu: [
       {
@@ -82,7 +85,8 @@ export const DataAsideMenuListClient = [
   // client invoice monitoring
   {
     rootPath: "/client/invoice_monitoring",
-    icon: "/All/file-invoice-dollar-solid.svg",
+    // icon: "/All/file-invoice-dollar-solid.svg",
+    icon: "/All/New_Invoice_Monitoring.svg",
     title: "MENU.INVOICE_MONITORING",
     subMenu: [
       {
@@ -218,7 +222,8 @@ export const DataAsideMenuListVendor = [
   
   {
     rootPath: "/vendor/addendum-contract",
-    icon: "/All/New_Addendum_Contract.svg",
+    // icon: "/All/New_Addendum_Contract.svg",
+    icon: "/All/New_Delivery_Monitoring.svg",
     title: "MENU.ADDENDUM_CONTRACT",
     subMenu: [
       {

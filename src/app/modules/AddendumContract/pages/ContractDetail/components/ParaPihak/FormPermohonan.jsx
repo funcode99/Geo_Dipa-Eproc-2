@@ -47,7 +47,8 @@ import {
             increase_job_price: values.additional_price,
             decrease_job_price: values.substraction_price,
             after_addendum_job_price: values.after_adnm_job_price,
-            conclusion: conclusion
+            conclusion: conclusion,
+            add_request_date: values.request_date
         })
     }
 
@@ -326,7 +327,8 @@ import {
                                 additional_price: '0',
                                 substraction_price: '0',
                                 note: '',
-                                adnm_conclusion: ''
+                                adnm_conclusion: '',
+                                request_date: null
                             }}
                             onSubmit={
                                 (values) => {
@@ -359,8 +361,8 @@ import {
                                                     margin: 0
                                                 }}
                                             >
+                                                A. Tanggal Dokumen Permohonan
                                                 <span style={{ color: '#dc0526' }}>*</span>
-                                                Tanggal Dokumen Permohonan
                                             </h1>
                                             <span
                                                 style={{
@@ -370,10 +372,13 @@ import {
                                                 }}
                                             >Silahkan pilih tanggal permohonan</span>
                                             <div>
-                                                <input 
-                                                    type='date'
-                                                    // pakai strip bukan garing
-                                                    value="2023-07-15"
+                                                <Field 
+                                                    type="date" 
+                                                    name="request_date" 
+                                                    // style={{
+                                                    //     height: 20,
+                                                    //     width: 20
+                                                    // }}
                                                 />
                                             </div>
                                         </div>
@@ -391,8 +396,9 @@ import {
                                                     fontSize: 16
                                                 }}
                                             >
-                                                Perihal Addendum
+                                               B. Perihal Addendum
                                             </h1>
+
                                             {/* checkbox */}
                                             <div
                                                 style={{
@@ -475,7 +481,8 @@ import {
                                                     />
                                                     Nomor Rekening
                                                 </label>
-                                            </div>   
+                                            </div>
+
                                             <div
                                                 style={{
                                                     display: 'grid',
@@ -539,6 +546,7 @@ import {
                                                     Jaminan
                                                 </label>
                                             </div>
+
                                             <div
                                                 style={{
                                                     display: 'flex',
@@ -577,13 +585,20 @@ import {
                                                     disabled={values.others.length === 0 ? true : false}
                                                 />
                                             </div>
+
                                         </div>
 
+                                        <h1
+                                            style={{
+                                                fontWeight: 600,
+                                                fontSize: 16,
+                                                marginTop: 28
+                                            }}
+                                        >
+                                            C. Perubahan Harga Pekerjaan (Exc PPN)
+                                        </h1>
                         
                                     <Row
-                                        style={{
-                                            marginTop: 28
-                                        }}
                                     >
                                         <Col md={12}>
                                             <Row>
