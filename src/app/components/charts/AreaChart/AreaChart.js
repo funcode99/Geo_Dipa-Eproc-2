@@ -4,7 +4,7 @@ import ApexCharts from "apexcharts";
 import objectPath from "object-path";
 import { Paper } from "@material-ui/core";
 import { format } from "date-fns";
-import { formatDate, formatSADate } from "../../../libs/date";
+import { formatDate, formatSADate } from "app/libs/date";
 
 const AreaChart = ({ baseColor, chart_data }) => {
   const uiService = useHtmlClassService();
