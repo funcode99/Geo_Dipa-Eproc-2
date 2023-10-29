@@ -41,13 +41,15 @@ const UserProfilePageVendor = lazy(() =>
   import("./modules/UserProfile/Vendor/UserProfilePage")
 );
 
-const RootClientAddendum = lazy(() => 
+const RootClientAddendum = lazy(() =>
   import("./modules/AddendumContract/Client/RootClientAddendum")
-)
+);
 
-const RootVendorAddendum = lazy(() => 
+const RootExperiment = lazy(() => import("./modules/_Percobaan/Route/Root"));
+
+const RootVendorAddendum = lazy(() =>
   import("./modules/AddendumContract/Vendor/RootVendorAddendum")
-)
+);
 
 const RootClientDelivery = lazy(() =>
   import("./modules/DeliveryMonitoring/Client/RootClientDelivery")
@@ -127,15 +129,15 @@ export default function BasePage() {
           component={RootVendorInvoiceMonitoring}
         />
 
-        <Route 
-          path="/client/master" 
-          component={MasterData} 
-        />
+        <Route path="/client/master" component={MasterData} />
         {/* ternyata di sini akar masalah routing nya */}
-        <Route 
+        <Route
           path="/client/addendum-contract"
           component={RootClientAddendum}
         />
+
+        <Route path="/client/exp" component={RootExperiment} />
+
         <Route
           path="/client/delivery-monitoring"
           component={RootClientDelivery}
@@ -144,7 +146,7 @@ export default function BasePage() {
           path="/vendor/delivery-monitoring"
           component={RootVendorDelivery}
         />
-                <Route 
+        <Route
           path="/vendor/addendum-contract"
           component={RootVendorAddendum}
         />

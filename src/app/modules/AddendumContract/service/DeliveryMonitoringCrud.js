@@ -13,11 +13,19 @@ export function getContractById(id) {
 }
 
 export function getAddendumContractById(id) {
-  return axios.get(`/adendum/contract-released/${id}/show`)
+  return axios.get(`/adendum/contract-released/${id}/show`);
 }
 
 export function submitAddendumRequest(params) {
-  return axios.post(`/adendum/add-contracts`, params)
+  return axios.post(`/adendum/add-contracts`, params);
+}
+
+export function submitParties(params, contract_id) {
+  return axios.post(`/adendum/add-contract-party/${contract_id}`, params);
+}
+
+export function submitTimePeriod(params, contract_id) {
+  return axios.post(`/adendum/add-contract-time-period/${contract_id}`, params);
 }
 
 // Tasks
@@ -38,7 +46,7 @@ export function getTaskById(taskId) {
 }
 
 export function submitItems(values, taskId) {
-  return axios.post(`/delivery/task/${taskId}`, values)
+  return axios.post(`/delivery/task/${taskId}`, values);
 }
 
 // Task Delivery Item
