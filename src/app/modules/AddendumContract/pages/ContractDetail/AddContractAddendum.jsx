@@ -777,7 +777,7 @@ export const AddContractAddendum = ({
             jobSupervisor={jobSupervisor}
           />
 
-          <div
+          {/* <div
             style={{
               display: "flex",
               justifyContent: "flex-end",
@@ -801,7 +801,7 @@ export const AddContractAddendum = ({
             >
               Update
             </button>
-          </div>
+          </div> */}
 
           <div
             style={{

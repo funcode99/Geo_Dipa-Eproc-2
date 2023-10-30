@@ -24,8 +24,34 @@ export function submitParties(params, contract_id) {
   return axios.post(`/adendum/add-contract-party/${contract_id}`, params);
 }
 
+export function submitJobPrice(params, contract_id) {
+  return axios.post(`/adendum/add-contract-items/${contract_id}`, params);
+}
+
 export function submitTimePeriod(params, contract_id) {
   return axios.post(`/adendum/add-contract-time-period/${contract_id}`, params);
+}
+
+export function submitPaymentMethod(params, contract_id) {
+  return axios.post(
+    `/adendum/add-contract-payment-method/${contract_id}`,
+    params
+  );
+}
+
+export function submitFine(params, contract_id) {
+  return axios.post(`/adendum/add-contract-fine/${contract_id}`, params);
+}
+
+export function submitGuarantee(params, contract_id) {
+  return axios.post(`/adendum/add-contract-guarantee/${contract_id}`, params);
+}
+
+export function submitAccountNumber(params, contract_id) {
+  return axios.post(
+    `/adendum/add-contract-account-number/${contract_id}`,
+    params
+  );
 }
 
 // Tasks
