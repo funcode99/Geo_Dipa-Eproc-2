@@ -4,6 +4,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "_metronic/_helpers/index";
+import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
 
 import ButtonAction from "app/components/buttonAction/ButtonAction";
 import DialogGlobal from "app/components/modals/DialogGlobal";
@@ -122,6 +123,11 @@ const createNewPlaceman = (
   address,
   phone_number,
   fax,
+});
+
+const createNewPaymentStage = (description, percentage) => ({
+  description,
+  percentage,
 });
 
 const CollapsibleRow = ({
@@ -927,6 +933,10 @@ const guaranteeBeforeAddendum = [
     endDate: "2023-10-29",
     filename: "bla_blah.pdf",
     radio: "yes",
+    nameTitle: "dp_guarantee",
+    nameStart: "dp_guarantee_start_date",
+    nameEnd: "dp_guarantee_end_date",
+    nameEvidence: "dp_guarantee_evidence_file",
   },
   {
     title: "Jaminan Pelaksanaan",
@@ -934,6 +944,10 @@ const guaranteeBeforeAddendum = [
     endDate: "2023-10-29",
     filename: "secret.docx",
     radio: "no",
+    nameTitle: "implementation_guarantee",
+    nameStart: "implementation_guarantee_start_date",
+    nameEnd: "implementation_guarantee_end_date",
+    nameEvidence: "implementation_guarantee_evidence_file",
   },
   {
     title: "Jaminan Pemeliharaan",
@@ -941,6 +955,10 @@ const guaranteeBeforeAddendum = [
     endDate: "2023-10-29",
     filename: "another_file.xlsx",
     radio: "yes",
+    nameTitle: "maintenance_guarantee",
+    nameStart: "maintenance_guarantee_start_date",
+    nameEnd: "maintenance_guarantee_end_date",
+    nameEvidence: "maintenance_guarantee_evidence_file",
   },
 ];
 
@@ -1029,17 +1047,20 @@ const FormParameter = ({
   };
 
   const submitFormParameterJobPrice = () => {
-    submitJobPrice({
-      add_contract_id: jsonData?.add_contracts[0]?.id,
-      product_title: "",
-      uom: "",
-      subtotal: "",
-      qty_total: "",
-      clause_note: "",
-      item_detail: [],
-      body_clause_data: [],
-      attachment_clause_data: [],
-    });
+    submitJobPrice(
+      {
+        add_contract_id: jsonData?.add_contracts[0]?.id,
+        product_title: "",
+        uom: "",
+        subtotal: "",
+        qty_total: "",
+        clause_note: "",
+        item_detail: [],
+        body_clause_data: [],
+        attachment_clause_data: [],
+      },
+      contract_id
+    );
   };
 
   const submitFormParameterTimePeriod = (values) => {
@@ -1073,77 +1094,93 @@ const FormParameter = ({
     );
   };
 
-  const submitFormParameterPaymentMethod = () => {
-    submitPaymentMethod({
-      add_contract_id: "a15c9f48-eff9-4b43-94eb-d81b350b92e5",
-      payment_method_name: "Full",
-      payment_method_data: {
-        payment_name: "2984029834",
-        percentage_value: 10,
-        description: "ini deskripsi",
-        body_clause_data: [],
-        attachment_clause_data: [],
+  const submitFormParameterPaymentMethod = (values) => {
+    submitPaymentMethod(
+      {
+        add_contract_id: jsonData?.add_contracts[0]?.id,
+        payment_method_name: values.payment_method,
+        payment_method_data: values.payment_data,
+        // payment_method_data: {
+        //   payment_name: "2984029834",
+        //   percentage_value: 10,
+        //   description: "ini deskripsi",
+        //   // body_clause_data: [],
+        //   // attachment_clause_data: [],
+        // },
       },
-    });
+      contract_id
+    );
   };
 
-  const submitFormParameterFine = () => {
-    submitFine({
-      add_contract_id: "",
-      penalty_fine_data: [],
-      clause_note: "",
-      body_clause_data: [],
-      attachment_clause_data: [],
-    });
+  const submitFormParameterFine = (values) => {
+    submitFine(
+      {
+        add_contract_id: jsonData?.add_contracts[0]?.id,
+        penalty_fine_data: values.fine_data,
+        // body_clause_data: [],
+        // attachment_clause_data: [],
+      },
+      contract_id
+    );
   };
 
-  const submitFormParameterGuarantee = () => {
-    submitGuarantee({
-      add_contract_id: "06fc7d39-055d-458c-b6eb-5e17c6fb5322",
-      down_payment_guarantee: "10",
-      down_payment_guarantee_start_date: "2023-09-10",
-      down_payment_guarantee_end_date: "2023-10-10",
-      down_payment_guarantee_evidence_file: "ini file",
-      implementation_guarantee: "implementation",
-      implementation_guarantee_start_date: "2023-10-09",
-      implementation_guarantee_end_date: "2023-10-20",
-      implementation_guarantee_evidence_file: "ini file",
-      maintenance_guarantee: "maintenance",
-      maintenance_guarantee_start_date: "2023-10-11",
-      maintenance_guarantee_end_date: "2023-10-14",
-      maintenance_guarantee_evidence_file: "ini file 2",
-      clause_note: "",
-      body_clause_data: [],
-      attachment_clause_data: [],
-    });
+  const submitFormParameterGuarantee = (values) => {
+    submitGuarantee(
+      {
+        add_contract_id: jsonData?.add_contracts[0]?.id,
+        down_payment_guarantee: values.dp_guarantee,
+        down_payment_guarantee_start_date: values.dp_guarantee_start_date,
+        down_payment_guarantee_end_date: values.dp_guarantee_end_date,
+        down_payment_guarantee_evidence_file: values.dp_guarantee_evidence_file,
+        implementation_guarantee: values.implementation_guarantee,
+        implementation_guarantee_start_date:
+          values.implementation_guarantee_start_date,
+        implementation_guarantee_end_date:
+          values.implementation_guarantee_end_date,
+        implementation_guarantee_evidence_file:
+          values.implementation_guarantee_evidence_file,
+        maintenance_guarantee: values.maintenance_guarantee,
+        maintenance_guarantee_start_date:
+          values.maintenance_guarantee_start_date,
+        maintenance_guarantee_end_date: values.maintenance_guarantee_end_date,
+        maintenance_guarantee_evidence_file:
+          values.maintenance_guarantee_evidence_file,
+        // body_clause_data: [],
+        // attachment_clause_data: [],
+      },
+      contract_id
+    );
   };
 
   const submitFormParameterAccountNumber = () => {
-    submitAccountNumber({
-      add_contract_id: "06fc7d39-055d-458c-b6eb-5e17c6fb5322",
-      data_bank: [
-        {
-          bank: {
-            id: "55f154b2-5f38-4cd6-899a-95c135643e16",
-            code: "7",
-            full_name: "BRI",
+    submitAccountNumber(
+      {
+        add_contract_id: jsonData?.add_contracts[0]?.id,
+        data_bank: [
+          {
+            bank: {
+              id: "55f154b2-5f38-4cd6-899a-95c135643e16",
+              code: "7",
+              full_name: "BRI",
+            },
+            address: {
+              postal_address: "Jl. Sultan Hasanudin No. 62 Jakarta Selatan",
+            },
+            currency: {
+              id: "75bcc84d-7ed5-4bd9-8a07-1b064fef1ff0",
+              code: "IDR",
+              name: "Rupiah",
+            },
+            branch_name: null,
+            account_number: "0193-01-001287-30-7",
+            account_holder_name: "Koperasi Pekerja PT Geo Dipa Energi",
           },
-          address: {
-            postal_address: "Jl. Sultan Hasanudin No. 62 Jakarta Selatan",
-          },
-          currency: {
-            id: "75bcc84d-7ed5-4bd9-8a07-1b064fef1ff0",
-            code: "IDR",
-            name: "Rupiah",
-          },
-          branch_name: null,
-          account_number: "0193-01-001287-30-7",
-          account_holder_name: "Koperasi Pekerja PT Geo Dipa Energi",
-        },
-      ],
-      body_clause_data: [],
-      attachment_clause_data: [],
-    });
+        ],
+        body_clause_data: [],
+        attachment_clause_data: [],
+      },
+      contract_id
+    );
   };
 
   const [addendumRows, setAddendumRows] = useState([
@@ -1160,6 +1197,9 @@ const FormParameter = ({
     workDirector: [],
     workSupervisor: [],
   });
+  const [stagePayment, setStagePayment] = useState([]);
+  const [fine, setFine] = useState([]);
+  const [accountNumber, setAccountNumber] = useState([]);
 
   const getDataPenalties = async () => {
     fetch_api_sg({
@@ -1797,10 +1837,10 @@ const FormParameter = ({
                         }}
                       >
                         <label>
-                          <input type="radio" name="value_type" />%
+                          <Field type="radio" name="value_type" value="%" />%
                         </label>
                         <label>
-                          <input type="radio" name="value_type" />
+                          <Field type="radio" name="value_type" value="nilai" />
                           Nilai
                         </label>
                       </div>
@@ -1827,8 +1867,28 @@ const FormParameter = ({
       </DialogGlobal>
 
       {/* modal tambah pembayaran */}
-      <DialogGlobal ref={openCloseAddPayment} isCancel={false}>
-        <Formik>
+      <DialogGlobal
+        ref={openCloseAddPayment}
+        isCancel={false}
+        isSubmit={false}
+        yesButton={false}
+        noButton={false}
+      >
+        <Formik
+          initialValues={{
+            percentage: "",
+            description: "",
+          }}
+          onSubmit={(values) => {
+            setStagePayment((data) => {
+              return [
+                ...data,
+                createNewPaymentStage(values.description, values.percentage),
+              ];
+            });
+            openCloseAddPayment.current.close();
+          }}
+        >
           <Form>
             <div
               style={{
@@ -1861,7 +1921,7 @@ const FormParameter = ({
                   }}
                 >
                   <span>Persentase</span>
-                  <input
+                  <Field
                     style={{
                       padding: 8,
                       borderRadius: 4,
@@ -1870,7 +1930,7 @@ const FormParameter = ({
                       borderColor: "#8c8a8a",
                       opacity: 0.8,
                     }}
-                    value={"10%"}
+                    name="percentage"
                   />
                 </div>
 
@@ -1882,7 +1942,7 @@ const FormParameter = ({
                   }}
                 >
                   <span>Deskripsi</span>
-                  <input
+                  <Field
                     style={{
                       padding: 8,
                       borderRadius: 4,
@@ -1891,10 +1951,23 @@ const FormParameter = ({
                       borderColor: "#8c8a8a",
                       opacity: 0.8,
                     }}
-                    value={"isi"}
+                    name="description"
                   />
                 </div>
               </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: 52,
+                padding: "0 7%",
+              }}
+            >
+              <button type="submit" className="btn btn-primary">
+                Save
+              </button>
             </div>
           </Form>
         </Formik>
@@ -4301,7 +4374,6 @@ const FormParameter = ({
                             Pasal Sebelum Addendum
                           </p>
                           <textarea
-                            // disabled
                             rows="4"
                             className="form-control"
                           ></textarea>
@@ -4362,30 +4434,7 @@ const FormParameter = ({
                       </div>
                     </div>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        gap: 28,
-                        padding: "2rem 0",
-                      }}
-                    >
-                      <button
-                        type="submit"
-                        style={{
-                          color: "white",
-                          fontSize: 14,
-                          fontWeight: "400",
-                          padding: "8px 14px",
-                          borderRadius: "8px",
-                          backgroundColor: "#8c8a8a",
-                          outline: "none",
-                          border: "none",
-                        }}
-                      >
-                        Update
-                      </button>
-                    </div>
+                    <UpdateButton />
                   </Form>
                 )}
               </Formik>
@@ -4455,7 +4504,7 @@ const FormParameter = ({
                                 padding: "10px 12px",
                               }}
                             >
-                              {currencies.count.map((item) => {
+                              {currencies?.count?.map((item) => {
                                 return <option>{item.code}</option>;
                               })}
                             </select>
@@ -4763,7 +4812,6 @@ const FormParameter = ({
                             Pasal Sebelum Addendum
                           </p>
                           <textarea
-                            disabled
                             rows="4"
                             className="form-control"
                           ></textarea>
@@ -4824,6 +4872,8 @@ const FormParameter = ({
                       </div>
                     </div>
                   </div>
+
+                  <UpdateButton />
                 </Form>
               </Formik>
             </>
@@ -5319,11 +5369,7 @@ const FormParameter = ({
                         >
                           Pasal Sebelum Addendum
                         </p>
-                        <textarea
-                          disabled
-                          rows="4"
-                          className="form-control"
-                        ></textarea>
+                        <textarea rows="4" className="form-control"></textarea>
                       </div>
 
                       {/* pasal setelah addendum */}
@@ -5377,6 +5423,8 @@ const FormParameter = ({
                       </button>
                     </div>
                   </div>
+
+                  <UpdateButton />
                 </Form>
               </Formik>
             </>
@@ -5385,175 +5433,177 @@ const FormParameter = ({
           {currentActiveTab === 3 && (
             <>
               <Formik
+                enableReinitialize={true}
                 initialValues={{
                   payment_method: addendumPaymentMethod,
-                  payment_data: [],
-                  body_data: [
-                    {
-                      clause_number: "",
-                      before_clause_note: "",
-                      after_clause_note: "",
-                    },
-                  ],
-                  attachment_data: [],
+                  payment_data: stagePayment,
+                  // body_data: [
+                  //   {
+                  //     clause_number: "",
+                  //     before_clause_note: "",
+                  //     after_clause_note: "",
+                  //   },
+                  // ],
+                  // attachment_data: [],
+                }}
+                onSubmit={(values) => {
+                  console.log("submit di metode pembayaran", values);
+                  submitFormParameterPaymentMethod(values);
                 }}
               >
                 <Form>
                   <div
                     style={{
+                      padding: 28,
+                      borderRadius: 14,
+                      border: 1,
+                      borderStyle: "solid",
+                      borderColor: "#8c8a8a",
                       display: "flex",
-                      flexDirection: "column",
-                      rowGap: 40,
+                      justifyContent: "space-between",
                     }}
                   >
+                    {/* Metode Pembayaran Kontrak Awal */}
                     <div
                       style={{
-                        padding: 28,
-                        borderRadius: 14,
-                        border: 1,
-                        borderStyle: "solid",
-                        borderColor: "#8c8a8a",
-                        display: "flex",
-                        justifyContent: "space-between",
+                        flex: 1,
                       }}
                     >
-                      {/* Metode Pembayaran Kontrak Awal */}
-                      <div
+                      <h1
                         style={{
-                          flex: 1,
+                          fontSize: 16,
+                          fontWeight: 600,
                         }}
                       >
-                        <h1
-                          style={{
-                            fontSize: 16,
-                            fontWeight: 600,
-                          }}
-                        >
-                          Metode pembayaran kontrak awal
-                        </h1>
-                        <div
+                        Metode pembayaran kontrak awal
+                      </h1>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          rowGap: 14,
+                          paddingTop: 14,
+                        }}
+                      >
+                        <label
                           style={{
                             display: "flex",
-                            flexDirection: "column",
-                            rowGap: 14,
-                            paddingTop: 14,
+                            gap: 12,
                           }}
                         >
-                          <label
-                            style={{
-                              display: "flex",
-                              gap: 12,
-                            }}
-                          >
-                            <input
-                              type="radio"
-                              name="payment"
-                              disabled
-                              checked
-                            />
-                            Full Pembayaran
-                          </label>
-                          <label
-                            style={{
-                              display: "flex",
-                              gap: 12,
-                            }}
-                          >
-                            <input type="radio" name="payment" disabled />
-                            Pembayaran Bertahap
-                          </label>
-                        </div>
+                          <input type="radio" name="payment" disabled checked />
+                          Full Pembayaran
+                        </label>
+                        <label
+                          style={{
+                            display: "flex",
+                            gap: 12,
+                          }}
+                        >
+                          <input type="radio" name="payment" disabled />
+                          Pembayaran Bertahap
+                        </label>
                       </div>
+                    </div>
 
-                      {/* Addendum Metode Pembayaran */}
-                      <div
+                    {/* Addendum Metode Pembayaran */}
+                    <div
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <h1
                         style={{
-                          flex: 1,
+                          fontSize: 16,
+                          fontWeight: 600,
                         }}
                       >
-                        <h1
-                          style={{
-                            fontSize: 16,
-                            fontWeight: 600,
-                          }}
-                        >
-                          A. Addendum metode pembayaran
-                        </h1>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            rowGap: 14,
-                            paddingTop: 14,
-                          }}
-                        >
-                          <label
-                            style={{
-                              display: "flex",
-                              gap: 12,
-                            }}
-                          >
-                            <input
-                              type="radio"
-                              name="payment_addendum"
-                              onClick={() => setAddendumPaymentMethod("full")}
-                              checked={addendumPaymentMethod === "full"}
-                            />
-                            Full Pembayaran
-                          </label>
-                          <label
-                            style={{
-                              display: "flex",
-                              gap: 12,
-                            }}
-                          >
-                            <input
-                              type="radio"
-                              name="payment_addendum"
-                              onClick={() =>
-                                setAddendumPaymentMethod("gradual")
-                              }
-                              checked={addendumPaymentMethod === "gradual"}
-                            />
-                            Pembayaran Bertahap
-                          </label>
-                        </div>
-                        {}
-                        <div
+                        A. Addendum metode pembayaran
+                      </h1>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          rowGap: 14,
+                          paddingTop: 14,
+                        }}
+                      >
+                        <label
                           style={{
                             display: "flex",
-                            columnGap: 10,
-                            placeItems: "center",
+                            gap: 12,
                           }}
                         >
-                          Tahap 1
                           <input
-                            style={{
-                              flex: 1,
-                              padding: "10px 12px",
-                              borderRadius: 4,
-                            }}
-                            type="text"
-                            placeholder="Persentase"
-                            disabled={addendumPaymentMethod !== "gradual"}
+                            type="radio"
+                            name="payment_addendum"
+                            onClick={() => setAddendumPaymentMethod("full")}
+                            checked={addendumPaymentMethod === "full"}
                           />
-                        </div>
-                        <div
+                          Full Pembayaran
+                        </label>
+                        <label
                           style={{
-                            marginTop: 14,
                             display: "flex",
+                            gap: 12,
+                            margin: 0,
                           }}
                         >
-                          <textarea
-                            style={{
-                              flex: 1,
-                              padding: "10px 12px",
-                              borderRadius: 4,
-                            }}
-                            placeholder="Deskripsi"
-                            disabled={addendumPaymentMethod !== "gradual"}
-                          ></textarea>
-                        </div>
+                          <input
+                            type="radio"
+                            name="payment_addendum"
+                            onClick={() => setAddendumPaymentMethod("gradual")}
+                            checked={addendumPaymentMethod === "gradual"}
+                          />
+                          Pembayaran Bertahap
+                        </label>
+                      </div>
+                      {stagePayment.map((item, index) => {
+                        return (
+                          <>
+                            <div
+                              style={{
+                                display: "flex",
+                                columnGap: 10,
+                                placeItems: "center",
+                                marginTop: "0.5rem",
+                                marginBottom: "0.5rem",
+                              }}
+                            >
+                              Tahap {index + 1}
+                              <input
+                                style={{
+                                  flex: 1,
+                                  padding: "10px 12px",
+                                  borderRadius: 4,
+                                }}
+                                type="text"
+                                placeholder="Persentase"
+                                value={item.percentage}
+                                disabled={addendumPaymentMethod !== "gradual"}
+                              />
+                            </div>
+                            <div
+                              style={{
+                                marginTop: 14,
+                                display: "flex",
+                              }}
+                            >
+                              <textarea
+                                style={{
+                                  flex: 1,
+                                  padding: "10px 12px",
+                                  borderRadius: 4,
+                                }}
+                                placeholder="Deskripsi"
+                                value={item.description}
+                                disabled={addendumPaymentMethod !== "gradual"}
+                              ></textarea>
+                            </div>
+                          </>
+                        );
+                      })}
+                      {addendumPaymentMethod === "gradual" && (
                         <div
                           style={{
                             display: "flex",
@@ -5568,139 +5618,134 @@ const FormParameter = ({
                             Tambah
                           </button>
                         </div>
-                      </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Klausul Perubahan */}
+                  <div
+                    className="clause-change-wrapper"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                      border: 1,
+                      borderColor: "black",
+                      borderStyle: "solid",
+                      padding: 28,
+                      borderRadius: 14,
+                      marginTop: 40,
+                    }}
+                  >
+                    <div>
+                      <span
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 600,
+                          color: "#2e1f22",
+                        }}
+                      >
+                        B. Perubahan Klausul Kontrak Metode Pembayaran
+                      </span>
                     </div>
 
-                    {/* Klausul Perubahan */}
+                    <h1
+                      style={{
+                        fontWeight: 600,
+                        fontSize: 16,
+                        margin: 0,
+                      }}
+                    >
+                      B.1 Body Kontrak
+                    </h1>
+
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Masukkan Nomor Pasal"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          minWidth: 400,
+                        }}
+                      />
+                    </div>
+
+                    {/* Pasal */}
                     <div
-                      className="clause-change-wrapper"
                       style={{
                         display: "flex",
                         flexDirection: "column",
                         gap: 14,
-                        border: 1,
-                        borderColor: "black",
-                        borderStyle: "solid",
-                        padding: 28,
-                        borderRadius: 14,
-                        // marginTop: 40
+                        // marginTop: 28
                       }}
                     >
+                      {/* pasal sebelum addendum */}
                       <div>
-                        <span
+                        <p
                           style={{
-                            fontSize: 16,
-                            fontWeight: 600,
-                            color: "#2e1f22",
+                            fontWeight: 500,
+                            marginBottom: 14,
                           }}
                         >
-                          B. Perubahan Klausul Kontrak Metode Pembayaran
-                        </span>
-                      </div>
-
-                      <h1
-                        style={{
-                          fontWeight: 600,
-                          fontSize: 16,
-                          margin: 0,
-                        }}
-                      >
-                        B.1 Body Kontrak
-                      </h1>
-
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="Masukkan Nomor Pasal"
-                          style={{
-                            padding: 8,
-                            borderRadius: 4,
-                            minWidth: 400,
-                          }}
-                        />
-                      </div>
-
-                      {/* Pasal */}
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 14,
-                          // marginTop: 28
-                        }}
-                      >
-                        {/* pasal sebelum addendum */}
-                        <div>
-                          <p
-                            style={{
-                              fontWeight: 500,
-                              marginBottom: 14,
-                            }}
-                          >
-                            Pasal Sebelum Addendum
-                          </p>
-                          <textarea
-                            disabled
-                            rows="4"
-                            className="form-control"
-                          ></textarea>
-                        </div>
-
-                        {/* pasal setelah addendum */}
-                        <div>
-                          <p
-                            style={{
-                              fontWeight: 500,
-                              marginBottom: 14,
-                            }}
-                          >
-                            Pasal Setelah Addendum
-                          </p>
-                          <textarea
-                            rows="4"
-                            className="form-control"
-                          ></textarea>
-                        </div>
-                      </div>
-
-                      <h1
-                        style={{
-                          fontWeight: 600,
-                          fontSize: 16,
-                          margin: 0,
-                        }}
-                      >
-                        B.2 Lampiran
-                      </h1>
-
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="Masukkan Angka Lampiran"
-                          style={{
-                            padding: 8,
-                            borderRadius: 4,
-                            minWidth: 400,
-                          }}
-                        />
-                      </div>
-
-                      <div>
+                          Pasal Sebelum Addendum
+                        </p>
                         <textarea rows="4" className="form-control"></textarea>
                       </div>
 
+                      {/* pasal setelah addendum */}
                       <div>
-                        <button
-                          className="btn btn-primary text-white add-new-clause"
+                        <p
                           style={{
-                            marginTop: 14,
+                            fontWeight: 500,
+                            marginBottom: 14,
                           }}
                         >
-                          Tambah Klausul Lampiran
-                        </button>
+                          Pasal Setelah Addendum
+                        </p>
+                        <textarea rows="4" className="form-control"></textarea>
                       </div>
                     </div>
+
+                    <h1
+                      style={{
+                        fontWeight: 600,
+                        fontSize: 16,
+                        margin: 0,
+                      }}
+                    >
+                      B.2 Lampiran
+                    </h1>
+
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Masukkan Angka Lampiran"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          minWidth: 400,
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <textarea rows="4" className="form-control"></textarea>
+                    </div>
+
+                    <div>
+                      <button
+                        className="btn btn-primary text-white add-new-clause"
+                        style={{
+                          marginTop: 14,
+                        }}
+                      >
+                        Tambah Klausul Lampiran
+                      </button>
+                    </div>
                   </div>
+
+                  <UpdateButton />
                 </Form>
               </Formik>
             </>
@@ -5710,10 +5755,14 @@ const FormParameter = ({
           {currentActiveTab === 4 && (
             <>
               <Formik
+                enableReinitialize={true}
                 initialValues={{
-                  fine_data: [],
+                  fine_data: addendumRows,
                   body_data: [],
                   attachment_data: [],
+                }}
+                onSubmit={(values) => {
+                  console.log("isi submit", values);
                 }}
               >
                 <Form>
@@ -5836,7 +5885,7 @@ const FormParameter = ({
                             </TableRow>
                           </TableBody>
                           <TableBody>
-                            {addendumRows.map((row) => (
+                            {addendumRows.map((row, index) => (
                               <TableRow
                                 key={row.name}
                                 sx={{
@@ -5845,7 +5894,9 @@ const FormParameter = ({
                                   },
                                 }}
                               >
-                                <TableCell component="th">{row.name}</TableCell>
+                                <TableCell component="th">
+                                  {index + 1}
+                                </TableCell>
                                 <TableCell align="left" scope="row">
                                   {row.calories}
                                 </TableCell>
@@ -5933,11 +5984,7 @@ const FormParameter = ({
                         >
                           Pasal Sebelum Addendum
                         </p>
-                        <textarea
-                          disabled
-                          rows="4"
-                          className="form-control"
-                        ></textarea>
+                        <textarea rows="4" className="form-control"></textarea>
                       </div>
 
                       {/* pasal setelah addendum */}
@@ -5991,6 +6038,8 @@ const FormParameter = ({
                       </button>
                     </div>
                   </div>
+
+                  <UpdateButton />
                 </Form>
               </Formik>
             </>
@@ -6013,8 +6062,11 @@ const FormParameter = ({
                   maintenance_guarantee_start_date: "",
                   maintenance_guarantee_end_data: "",
                   maintenance_guarantee_evidence_file: "",
-                  body_data: [],
-                  attachment_data: [],
+                  // body_data: [],
+                  // attachment_data: [],
+                }}
+                onSubmit={(values) => {
+                  submitFormParameterGuarantee(values);
                 }}
               >
                 <Form>
@@ -6282,9 +6334,10 @@ const FormParameter = ({
                                     columnGap: 8,
                                   }}
                                 >
-                                  <input
+                                  <Field
                                     type="radio"
-                                    name={`${index}_down_payment_guarantee`}
+                                    value="1"
+                                    name={data.nameTitle}
                                   />
                                   <span>Ya</span>
                                 </label>
@@ -6298,9 +6351,10 @@ const FormParameter = ({
                                     columnGap: 8,
                                   }}
                                 >
-                                  <input
+                                  <Field
                                     type="radio"
-                                    name={`${index}_down_payment_guarantee`}
+                                    value="0"
+                                    name={data.nameTitle}
                                   />
                                   <span>Tidak</span>
                                 </label>
@@ -6326,7 +6380,7 @@ const FormParameter = ({
                                   }}
                                 >
                                   <span>Tanggal Mulai</span>
-                                  <input
+                                  <Field
                                     type="date"
                                     style={{
                                       borderRadius: 4,
@@ -6336,7 +6390,7 @@ const FormParameter = ({
                                       flexDirection: "row-reverse",
                                       columnGap: 10,
                                     }}
-                                    value={data.startDate}
+                                    name={data.nameStart}
                                   />
                                 </label>
                               </div>
@@ -6351,7 +6405,7 @@ const FormParameter = ({
                                   }}
                                 >
                                   <span>Tanggal Selesai</span>
-                                  <input
+                                  <Field
                                     type="date"
                                     style={{
                                       borderRadius: 4,
@@ -6361,7 +6415,7 @@ const FormParameter = ({
                                       flexDirection: "row-reverse",
                                       columnGap: 10,
                                     }}
-                                    value={data.endDate}
+                                    name={data.nameEnd}
                                   />
                                 </label>
                               </div>
@@ -6411,6 +6465,9 @@ const FormParameter = ({
                                     <input
                                       type="file"
                                       className="d-none"
+                                      name={data.nameEvidence}
+                                      // value={data.filename}
+                                      filename={data.filename}
                                       id="upload"
                                       style={{
                                         backgroundColor: "#E8F4FB",
@@ -6493,11 +6550,7 @@ const FormParameter = ({
                         >
                           Pasal Sebelum Addendum
                         </p>
-                        <textarea
-                          disabled
-                          rows="4"
-                          className="form-control"
-                        ></textarea>
+                        <textarea rows="4" className="form-control"></textarea>
                       </div>
 
                       {/* pasal setelah addendum */}
@@ -6551,6 +6604,8 @@ const FormParameter = ({
                       </button>
                     </div>
                   </div>
+
+                  <UpdateButton />
                 </Form>
               </Formik>
             </>
@@ -6567,348 +6622,348 @@ const FormParameter = ({
                 }}
               >
                 <Form>
-                  <div
+                  {/* <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
                       rowGap: 40,
+                    }}
+                  > */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                      border: 1,
+                      borderColor: "black",
+                      borderStyle: "solid",
+                      padding: 28,
+                      borderRadius: 14,
+                      marginBottom: 40,
                     }}
                   >
                     <div
                       style={{
                         display: "flex",
                         flexDirection: "column",
-                        gap: 14,
-                        border: 1,
-                        borderColor: "black",
-                        borderStyle: "solid",
-                        padding: 28,
-                        borderRadius: 14,
-                        // marginTop: 40
+                        rowGap: 24,
                       }}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          rowGap: 24,
-                        }}
-                      >
-                        <div>
-                          <h1
-                            style={{
-                              fontSize: 16,
-                              fontWeight: 600,
-                              marginBottom: 14,
-                            }}
-                          >
-                            Nomor rekening kontrak awal
-                          </h1>
+                      <div>
+                        <h1
+                          style={{
+                            fontSize: 16,
+                            fontWeight: 600,
+                            marginBottom: 14,
+                          }}
+                        >
+                          Nomor rekening kontrak awal
+                        </h1>
 
-                          <div
-                            style={{
-                              // display: 'grid',
-                              // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                              display: "flex",
-                              flexWrap: "wrap",
-                              gap: 24,
-                              fontSize: 14,
-                              fontWeight: 500,
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nomor rekening</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  backgroundColor: "#e8f4fb",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={"128574647483"}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nama rekening</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  backgroundColor: "#e8f4fb",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={"GOLDEN PRATAMA ENGINEERING"}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nama bank</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  backgroundColor: "#e8f4fb",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={"MANDIRI"}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Alamat bank</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  backgroundColor: "#e8f4fb",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={"Jl Warung Buncit Raya"}
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <h1
-                            style={{
-                              fontSize: 16,
-                              fontWeight: 600,
-                              marginBottom: 14,
-                            }}
-                          >
-                            A. Addendum nomor rekening
-                          </h1>
-
-                          <div
-                            style={{
-                              // display: 'grid',
-                              // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                              display: "flex",
-                              flexWrap: "wrap",
-                              gap: 24,
-                              fontSize: 14,
-                              fontWeight: 500,
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nomor rekening</span>
-                              <ReactSelect
-                                data={jsonData?.data_bank}
-                                func={changeDataBankIndex}
-                                labelName={`account_number`}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nama rekening</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={
-                                  jsonData?.data_bank[bankIndex]
-                                    ?.account_holder_name
-                                }
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nama bank</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  padding: "10px 12px",
-
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={
-                                  jsonData?.data_bank[bankIndex]?.bank.full_name
-                                }
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Alamat bank</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={
-                                  jsonData?.data_bank[bankIndex]?.address
-                                    ?.postal_address
-                                }
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* surat pernyataan dari bank */}
                         <div
                           style={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                            // display: 'grid',
+                            // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                            display: "flex",
+                            flexWrap: "wrap",
                             gap: 24,
+                            fontSize: 14,
+                            fontWeight: 500,
                           }}
                         >
                           <div
                             style={{
                               display: "flex",
                               flexDirection: "column",
+                              flex: 1,
                             }}
                           >
-                            <span
+                            <span>Nomor rekening</span>
+                            <input
+                              type="text"
                               style={{
+                                width: "100%",
+                                backgroundColor: "#e8f4fb",
+                                padding: "10px 12px",
+                                borderColor: "black",
+                                border: 1,
+                                borderStyle: "solid",
+                                borderRadius: 4,
                                 fontSize: 14,
                                 fontWeight: 500,
+                                marginTop: 4,
                               }}
-                            >
-                              Surat pernyataan dari bank
-                            </span>
-                            <div
+                              disabled
+                              value={"128574647483"}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1,
+                            }}
+                          >
+                            <span>Nama rekening</span>
+                            <input
+                              type="text"
                               style={{
-                                position: "relative",
-                                padding: 0,
-                                margin: 0,
+                                width: "100%",
+                                backgroundColor: "#e8f4fb",
+                                padding: "10px 12px",
+                                borderColor: "black",
+                                border: 1,
+                                borderStyle: "solid",
+                                borderRadius: 4,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                marginTop: 4,
                               }}
-                            >
-                              <input
-                                style={{
-                                  width: "100%",
-                                  padding: "10px 12px 10px 46px",
-                                  color: "#3699ff",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                type="text"
-                                value={`surat_pernyataan_bank_bca.pdf`}
-                                disabled
-                              />
-                              <SVG
-                                style={{
-                                  position: "absolute",
-                                  top: 0,
-                                  bottom: 0,
-                                  left: 12,
-                                  margin: "auto 0",
-                                  // width:10,
-                                  // height:10
-                                }}
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/All/upload.svg"
-                                )}
-                              />
-                            </div>
+                              disabled
+                              value={"GOLDEN PRATAMA ENGINEERING"}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1,
+                            }}
+                          >
+                            <span>Nama bank</span>
+                            <input
+                              type="text"
+                              style={{
+                                width: "100%",
+                                backgroundColor: "#e8f4fb",
+                                padding: "10px 12px",
+                                borderColor: "black",
+                                border: 1,
+                                borderStyle: "solid",
+                                borderRadius: 4,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                marginTop: 4,
+                              }}
+                              disabled
+                              value={"MANDIRI"}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1,
+                            }}
+                          >
+                            <span>Alamat bank</span>
+                            <input
+                              type="text"
+                              style={{
+                                width: "100%",
+                                backgroundColor: "#e8f4fb",
+                                padding: "10px 12px",
+                                borderColor: "black",
+                                border: 1,
+                                borderStyle: "solid",
+                                borderRadius: 4,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                marginTop: 4,
+                              }}
+                              disabled
+                              value={"Jl Warung Buncit Raya"}
+                            />
+                          </div>
+                        </div>
+                      </div>
 
-                            {/* <div>
+                      <div>
+                        <h1
+                          style={{
+                            fontSize: 16,
+                            fontWeight: 600,
+                            marginBottom: 14,
+                          }}
+                        >
+                          A. Addendum nomor rekening
+                        </h1>
+
+                        <div
+                          style={{
+                            // display: 'grid',
+                            // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: 24,
+                            fontSize: 14,
+                            fontWeight: 500,
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1,
+                            }}
+                          >
+                            <span>Nomor rekening</span>
+                            <ReactSelect
+                              data={jsonData?.data_bank}
+                              func={changeDataBankIndex}
+                              labelName={`account_number`}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1,
+                            }}
+                          >
+                            <span>Nama rekening</span>
+                            <input
+                              type="text"
+                              style={{
+                                width: "100%",
+                                padding: "10px 12px",
+                                borderColor: "black",
+                                border: 1,
+                                borderStyle: "solid",
+                                borderRadius: 4,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                marginTop: 4,
+                              }}
+                              disabled
+                              value={
+                                jsonData?.data_bank[bankIndex]
+                                  ?.account_holder_name
+                              }
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1,
+                            }}
+                          >
+                            <span>Nama bank</span>
+                            <input
+                              type="text"
+                              style={{
+                                width: "100%",
+                                padding: "10px 12px",
+
+                                borderColor: "black",
+                                border: 1,
+                                borderStyle: "solid",
+                                borderRadius: 4,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                marginTop: 4,
+                              }}
+                              disabled
+                              value={
+                                jsonData?.data_bank[bankIndex]?.bank.full_name
+                              }
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1,
+                            }}
+                          >
+                            <span>Alamat bank</span>
+                            <input
+                              type="text"
+                              style={{
+                                width: "100%",
+                                padding: "10px 12px",
+                                borderColor: "black",
+                                border: 1,
+                                borderStyle: "solid",
+                                borderRadius: 4,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                marginTop: 4,
+                              }}
+                              disabled
+                              value={
+                                jsonData?.data_bank[bankIndex]?.address
+                                  ?.postal_address
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* surat pernyataan dari bank */}
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                          gap: 24,
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: 14,
+                              fontWeight: 500,
+                            }}
+                          >
+                            Surat pernyataan dari bank
+                          </span>
+                          <div
+                            style={{
+                              position: "relative",
+                              padding: 0,
+                              margin: 0,
+                            }}
+                          >
+                            <input
+                              style={{
+                                width: "100%",
+                                padding: "10px 12px 10px 46px",
+                                color: "#3699ff",
+                                borderColor: "black",
+                                border: 1,
+                                borderStyle: "solid",
+                                borderRadius: 4,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                marginTop: 4,
+                              }}
+                              type="text"
+                              value={`surat_pernyataan_bank_bca.pdf`}
+                              disabled
+                            />
+                            <SVG
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                bottom: 0,
+                                left: 12,
+                                margin: "auto 0",
+                                // width:10,
+                                // height:10
+                              }}
+                              src={toAbsoluteUrl(
+                                "/media/svg/icons/All/upload.svg"
+                              )}
+                            />
+                          </div>
+
+                          {/* <div>
                                                         <label
                                                             htmlFor="upload"
                                                             className={`input-group mb-3 col-sm-3 pointer`}
@@ -6945,142 +7000,137 @@ const FormParameter = ({
                                                             }}
                                                         />
                                                     </div> */}
-                          </div>
-                          <div></div>
                         </div>
+                        <div></div>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Klausul Perubahan */}
+                  {/* Klausul Perubahan */}
+                  <div
+                    className="clause-change-wrapper"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                      border: 1,
+                      borderColor: "black",
+                      borderStyle: "solid",
+                      padding: 28,
+                      borderRadius: 14,
+                      // marginTop: 40
+                    }}
+                  >
+                    <div>
+                      <span
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 600,
+                          color: "#2e1f22",
+                        }}
+                      >
+                        B. Perubahan Klausul Kontrak Nomor Rekening
+                      </span>
+                    </div>
+
+                    <h1
+                      style={{
+                        fontWeight: 600,
+                        fontSize: 16,
+                        margin: 0,
+                      }}
+                    >
+                      B.1 Body Kontrak
+                    </h1>
+
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Masukkan Nomor Pasal"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          minWidth: 400,
+                        }}
+                      />
+                    </div>
+
+                    {/* Pasal */}
                     <div
-                      className="clause-change-wrapper"
                       style={{
                         display: "flex",
                         flexDirection: "column",
                         gap: 14,
-                        border: 1,
-                        borderColor: "black",
-                        borderStyle: "solid",
-                        padding: 28,
-                        borderRadius: 14,
-                        // marginTop: 40
+                        // marginTop: 28
                       }}
                     >
+                      {/* pasal sebelum addendum */}
                       <div>
-                        <span
+                        <p
                           style={{
-                            fontSize: 16,
-                            fontWeight: 600,
-                            color: "#2e1f22",
+                            fontWeight: 500,
+                            marginBottom: 14,
                           }}
                         >
-                          B. Perubahan Klausul Kontrak Nomor Rekening
-                        </span>
-                      </div>
-
-                      <h1
-                        style={{
-                          fontWeight: 600,
-                          fontSize: 16,
-                          margin: 0,
-                        }}
-                      >
-                        B.1 Body Kontrak
-                      </h1>
-
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="Masukkan Nomor Pasal"
-                          style={{
-                            padding: 8,
-                            borderRadius: 4,
-                            minWidth: 400,
-                          }}
-                        />
-                      </div>
-
-                      {/* Pasal */}
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 14,
-                          // marginTop: 28
-                        }}
-                      >
-                        {/* pasal sebelum addendum */}
-                        <div>
-                          <p
-                            style={{
-                              fontWeight: 500,
-                              marginBottom: 14,
-                            }}
-                          >
-                            Pasal Sebelum Addendum
-                          </p>
-                          <textarea
-                            disabled
-                            rows="4"
-                            className="form-control"
-                          ></textarea>
-                        </div>
-
-                        {/* pasal setelah addendum */}
-                        <div>
-                          <p
-                            style={{
-                              fontWeight: 500,
-                              marginBottom: 14,
-                            }}
-                          >
-                            Pasal Setelah Addendum
-                          </p>
-                          <textarea
-                            rows="4"
-                            className="form-control"
-                          ></textarea>
-                        </div>
-                      </div>
-
-                      <h1
-                        style={{
-                          fontWeight: 600,
-                          fontSize: 16,
-                          margin: 0,
-                        }}
-                      >
-                        B.2 Lampiran
-                      </h1>
-
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="Masukkan Angka Lampiran"
-                          style={{
-                            padding: 8,
-                            borderRadius: 4,
-                            minWidth: 400,
-                          }}
-                        />
-                      </div>
-
-                      <div>
+                          Pasal Sebelum Addendum
+                        </p>
                         <textarea rows="4" className="form-control"></textarea>
                       </div>
 
+                      {/* pasal setelah addendum */}
                       <div>
-                        <button
-                          className="btn btn-primary text-white add-new-clause"
+                        <p
                           style={{
-                            marginTop: 14,
+                            fontWeight: 500,
+                            marginBottom: 14,
                           }}
                         >
-                          Tambah Klausul Lampiran
-                        </button>
+                          Pasal Setelah Addendum
+                        </p>
+                        <textarea rows="4" className="form-control"></textarea>
                       </div>
                     </div>
+
+                    <h1
+                      style={{
+                        fontWeight: 600,
+                        fontSize: 16,
+                        margin: 0,
+                      }}
+                    >
+                      B.2 Lampiran
+                    </h1>
+
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Masukkan Angka Lampiran"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          minWidth: 400,
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <textarea rows="4" className="form-control"></textarea>
+                    </div>
+
+                    <div>
+                      <button
+                        className="btn btn-primary text-white add-new-clause"
+                        style={{
+                          marginTop: 14,
+                        }}
+                      >
+                        Tambah Klausul Lampiran
+                      </button>
+                    </div>
                   </div>
+
+                  <UpdateButton />
+                  {/* </div> */}
                 </Form>
               </Formik>
             </>
@@ -7157,11 +7207,7 @@ const FormParameter = ({
                     >
                       Pasal Sebelum Addendum
                     </p>
-                    <textarea
-                      disabled
-                      rows="4"
-                      className="form-control"
-                    ></textarea>
+                    <textarea rows="4" className="form-control"></textarea>
                   </div>
 
                   {/* pasal setelah addendum */}
