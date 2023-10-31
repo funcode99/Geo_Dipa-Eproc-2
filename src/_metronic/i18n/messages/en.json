@@ -219,7 +219,7 @@
   "TITLE.FILE": "File",
   "TITLE.STATUS": "Status",
   "TITLE.UPDATE_DATA_SUCCESS": "Changes saved successfully",
-  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE": "Note: To be able to upload Billing Documents, Contract Documents and Deliverables Document must have Approved and in Upload Billing Documents periods (Day {start_day} to Day {end_day})\n\n- Make sure the document has been released\n- Make sure there are SA/GR documents",
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE": "Note: To be able to upload Billing Documents, Contract Documents and Deliverables Document must have Approved and in Upload Billing Documents periods (Day {start_day} to Day {end_day})\n\n- Make sure the document (SPP, Invoice, Kwitansi, Tax) has been released\n- Make sure there are SA/GR documents",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT": "Contract Amount",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER": "PO Number",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE": "{termin} Value",
