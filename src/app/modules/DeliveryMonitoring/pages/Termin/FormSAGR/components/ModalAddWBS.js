@@ -31,8 +31,8 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
 
   const [validateScheme, setValidateScheme] = useState(
     object().shape({
-      wbs1: validation.require("WBS 1"),
-      value1: validation.require("Value 1"),
+      wbs1: validation.require("WBS"),
+      value1: validation.require("Value"),
     })
   )
 
@@ -72,7 +72,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
       if (index > 1) addField();
       return {
         ...acc,
-        [`wbs${index}`]: { value: el.name, label: el.name },
+        [`wbs${index}`]: { value: el.name, label: el.name, wbs_id: el.name,},
         [`value${index}`]: el.value,
       };
     }, {});
@@ -89,7 +89,11 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
   }
 
   const _handleSubmit = (data) => {
-    console.log('ini isi data di _handleSubmit', data)
+    const wbs1 = data["wbs1"];
+    const value1 = data["value1"];
+
+    if(!wbs1 || !value1) return;
+
     if (typeof onSelected == "function")
       onSelected({ ...data, length: dataForm.length })
       _cleanSubmit();
@@ -137,6 +141,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
         onSubmit={_handleSubmit}
         formData={dataForm}
         initial={initial}
+        validation={validateScheme}
         withSubmit={false}
         fieldProps={{
           listOptions: {
@@ -171,9 +176,9 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
             </ButtonContained>
           )
         }
-        {!(dataForm.length == 10 || dist_value?.value === "") && (
+        {!(dataForm.length === 10 || dist_value?.value === "") && (
           <ButtonContained
-            disabled={dataForm.length == 10 || dist_value?.value === ""}
+            disabled={dataForm.length === 10 || dist_value?.value === ""}
             baseColor="success"
             onClick={addField}
           >

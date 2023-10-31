@@ -72,7 +72,6 @@ const FormSA = ({
           wbs: item.wbsdata,
         })),
       };
-      console.log(`data`, params, data, arrService);
       fetch_api_sg({
         key: keys.upload_sa,
         type: "post",
@@ -86,7 +85,7 @@ const FormSA = ({
         },
       });
     },
-    [arrService]
+    [arrService, fetch_api_sg, keys.upload_sa, onRefresh, task_id]
   );
   const fetchOption = () => {
     fetch_api_sg({
@@ -156,8 +155,6 @@ const FormSA = ({
     }),
     [dataSAGR, docDate]
   );
-
-  console.log(`dataSA`, dataSAGR, dataSA);
 
   const options = { optCost, optGL };
 
