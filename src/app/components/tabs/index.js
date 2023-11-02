@@ -6,6 +6,29 @@ import {
   BookmarkBorderOutlined,
 } from "@material-ui/icons";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& button.Mui-selected": {
+      color: "#3699FF",
+    },
+  },
+  tabRoot: {
+    minWidth: "max-content",
+    minHeight: "max-content",
+    marginTop: theme.spacing(1.5),
+    marginBottom: theme.spacing(1.5),
+  },
+  tabWrapper: {
+    flexDirection: "row",
+    fontSize: "1rem",
+    fontWeight: "500",
+    textTransform: "none",
+  },
+  customIndicatorColor: {
+    backgroundColor: "#3699FF",
+  },
+}));
+
 const initialTabLists = [
   {
     id: "tab-1",
@@ -28,52 +51,9 @@ export default function Tabs({
   tabLists = initialTabLists,
   tabActive,
   handleChange,
-  grid,
-  arrayLength,
   ...other
 }) {
-
-  const useStyles = makeStyles((theme) => ({
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: `repeat(${arrayLength}, minmax(0, 1fr))`,
-    },
-    root: {
-      "& button.Mui-selected": {
-        color: "#3699FF",
-      },
-    },
-    tabRoot: {
-      minWidth: "max-content",
-      minHeight: "max-content",
-      marginTop: theme.spacing(1.5),
-      marginBottom: theme.spacing(1.5),
-    },
-    tabWrapper1: {
-      flexDirection: "row",
-      fontSize: "1rem",
-      fontWeight: "500",
-      textTransform: "none",
-      color: '#8c8a8a',
-    },
-    tabWrapper2: {
-      flexDirection: "row",
-      fontSize: "1rem",
-      fontWeight: "500",
-      textTransform: "none",
-      color: '#3699ff',
-    },
-    customIndicatorColor: {
-      // backgroundColor: "green",
-    },
-    customLabelColor: {
-      color: 'green'
-    }
-  }));
-
   const classes = useStyles();
-
-  // console.log('isi grid', grid)
 
   return (
     <MuiTabs
@@ -83,34 +63,22 @@ export default function Tabs({
       textColor="secondary"
       variant="scrollable"
       scrollButtons="auto"
-      classes={{ 
-        root: classes.root,
-        // MuiTabs-indicator
-        indicator: classes.customIndicatorColor,
-        flexContainer: grid === true ? classes.grid : ''
-      }}
-      TabIndicatorProps={{
-        style: {
-          backgroundColor: "#D97D54"
-        }
-      }}
+      classes={{ root: classes.root, indicator: classes.customIndicatorColor }}
       {...other}
     >
       {tabLists.map((item) => (
-        // dilarang keras pake fragment disini
-          <MuiTab
-            key={item.id}
-            label={item.label}
-            icon={item.icon}
-            style={{
-              display: item?.display,
-              textAlign: 'center'
-            }}
-            classes={{
-              root: classes.tabRoot,
-              wrapper: item.addendum === true ? classes.tabWrapper2 : item.addendum === undefined ? '' : classes.tabWrapper1
-            }}
-          />
+        <MuiTab
+          key={item.id}
+          label={item.label}
+          icon={item.icon}
+          style={{
+            display: item?.display,
+          }}
+          classes={{
+            root: classes.tabRoot,
+            wrapper: classes.tabWrapper,
+          }}
+        />
       ))}
     </MuiTabs>
   );

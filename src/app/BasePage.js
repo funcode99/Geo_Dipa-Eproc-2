@@ -136,6 +136,11 @@ export default function BasePage() {
           component={RootClientAddendum}
         />
 
+        <Route
+          path="/vendor/addendum-contract"
+          component={RootVendorAddendum}
+        />
+
         <Route path="/client/exp" component={RootExperiment} />
 
         <Route
@@ -146,10 +151,7 @@ export default function BasePage() {
           path="/vendor/delivery-monitoring"
           component={RootVendorDelivery}
         />
-        <Route
-          path="/vendor/addendum-contract"
-          component={RootVendorAddendum}
-        />
+
         <Route path="/client/reports" component={RootReports} />
         <Redirect to="/error" />
       </Switch>

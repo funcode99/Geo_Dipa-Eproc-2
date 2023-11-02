@@ -1,21 +1,20 @@
-import React from "react"
-import TitleField from 'app/components/input/TitleField'
-import { object } from "yup"
-import validation from 'app/service/helper/validationHelper'
-import { FormattedMessage } from "react-intl"
+import React from "react";
+import TitleField from "app/components/input/TitleField";
+import { object } from "yup";
+import validation from "app/service/helper/validationHelper";
+import { FormattedMessage } from "react-intl";
 
-const Ini = ({ text }) => <FormattedMessage id={`LABEL.DM.PARTIES.${text}`} />
-const Ini2 = ({ text }) => <FormattedMessage id={`LABEL.AC.PARTIES.${text}`} />
+const Ini = ({ text }) => <FormattedMessage id={`LABEL.DM.PARTIES.${text}`} />;
+const Ini2 = ({ text }) => <FormattedMessage id={`LABEL.AC.PARTIES.${text}`} />;
 // <FormattedMessage id={`CONTRACT_DETAIL.PARTIES.${text}`} />
 
 export const formDataCheckbox = [
-  
   {
     Child: TitleField,
     ChildrenProps: {
-      title: <Ini2 text={"ADDENDUM_STATUS"} />
+      title: <Ini2 text={"ADDENDUM_STATUS"} />,
     },
-    deleteInput: true
+    deleteInput: true,
   },
 
   // isi checkboxinput
@@ -25,26 +24,26 @@ export const formDataCheckbox = [
       // label: <Ini2 text={"PARTIES_DATA"} />,
       label: "Data Para Pihak",
       typeInput: "CheckboxInput",
-      inputValue: "parties_data"
+      inputValue: "parties_data",
     },
     {
       name: "job_price",
       label: <Ini2 text={"JOB_PRICE"} />,
       typeInput: "CheckboxInput",
-      inputValue: "job_price"
+      inputValue: "job_price",
     },
     {
       name: "time_period",
       label: <Ini2 text={"TIME_PERIOD"} />,
       typeInput: "CheckboxInput",
-      inputValue: "time_period"
+      inputValue: "time_period",
     },
     {
       name: "guarantee",
       label: <Ini2 text={"GUARANTEE"} />,
       typeInput: "CheckboxInput",
-      inputValue: "guarantee"
-    }
+      inputValue: "guarantee",
+    },
   ],
 
   // isi checkboxinput part2. ada on karena name nya kosong
@@ -58,52 +57,51 @@ export const formDataCheckbox = [
       name: "payment_method",
       label: <Ini2 text={"PAYMENT_METHOD"} />,
       typeInput: "CheckboxInput",
-      inputValue: "payment_method"
+      inputValue: "payment_method",
     },
     {
       name: "fine",
       label: <Ini2 text={"FINE"} />,
       typeInput: "CheckboxInput",
-      inputValue: "fine"
+      inputValue: "fine",
     },
     {
       name: "account_number",
       label: <Ini2 text={"ACCOUNT_NUMBER"} />,
       typeInput: "CheckboxInput",
-      inputValue: "account_number"
-    }
+      inputValue: "account_number",
+    },
   ],
 
   // isi checkboxinput part3. buat dinamis checkbox
   [
     {
       name: "others",
-      label: 'Lainnya',
+      label: "Lainnya",
       typeInput: "CheckboxInput",
-      inputValue: "others"
+      inputValue: "others",
     },
     {
       name: "input_other",
-      placeholder: 'Masukkan Perihal Addendum Lainnya',
+      placeholder: "Masukkan Perihal Addendum Lainnya",
       // typeInput: 'SelectInputCustom'
-    }
+    },
   ],
-  
-]
+];
 
 export const formData1 = [
   {
     Child: TitleField,
     ChildrenProps: {
-      title: <Ini2 text={"PRICE_CHANGE.TITLE"} />
+      title: <Ini2 text={"PRICE_CHANGE.TITLE"} />,
     },
-    deleteInput: true
+    deleteInput: true,
   },
   [
     {
       name: "start_price",
-      label: <Ini2 text={"PRICE_CHANGE.START_PRICE"} /> 
-    }
+      label: <Ini2 text={"PRICE_CHANGE.START_PRICE"} />,
+    },
   ],
   [
     {
@@ -115,16 +113,15 @@ export const formData1 = [
     {
       name: "additional_price",
       label: <Ini2 text={"PRICE_CHANGE.ADDITIONAL_PRICE"} />,
-    }
+    },
   ],
   [
     {
       name: "tab_outside",
       label: <Ini2 text={"PRICE_CHANGE.ADDITIONAL_PRICE"} />,
-      typeInput: "CheckboxInput"
-    }
-  ]
-  [
+      typeInput: "CheckboxInput",
+    },
+  ][
     {
       name: "subtraction_price",
       label: <Ini2 text={"PRICE_CHANGE.SUBTRACTION_PRICE"} />,
@@ -133,20 +130,20 @@ export const formData1 = [
   [
     {
       name: "after_price_addendum",
-      label: <Ini2 text={"PRICE_CHANGE.AFTER_PRICE_ADDENDUM"} />
-    }
+      label: <Ini2 text={"PRICE_CHANGE.AFTER_PRICE_ADDENDUM"} />,
+    },
   ],
   [
     {
       name: "addendum_percentage",
-      label: <Ini2 text={"PRICE_CHANGE.PERCENTAGE_ADDENDUM"} />
-    }
+      label: <Ini2 text={"PRICE_CHANGE.PERCENTAGE_ADDENDUM"} />,
+    },
   ],
   [
     {
       name: "conclusion",
-      label: <Ini2 text={"PRICE_CHANGE.CONCLUSION"} />
-    }
+      label: <Ini2 text={"PRICE_CHANGE.CONCLUSION"} />,
+    },
   ],
   // {
   //   Child: TitleField,
@@ -155,81 +152,74 @@ export const formData1 = [
   //   },
   //   deleteInput: true
   // },
-
-]
+];
 
 export const supportingDocumentDefault = [
   {
-    id: '1',
+    id: "1",
     name: "Surat Permohonan Addendum dari Pihak Kedua",
     // nama adalah referensi, jika nama sama maka referensi input nya sama
-    doc_num_field: '1',
-    date_field: '2',
-    doc_upload_field: '3'
+    doc_num_field: "1",
+    date_field: "2",
+    doc_upload_field: "3",
   },
   {
-    id: '2',
+    id: "2",
     name: "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor",
-    doc_num_field: '4',
-    date_field: '5',
-    doc_upload_field: '6'
+    doc_num_field: "4",
+    date_field: "5",
+    doc_upload_field: "6",
   },
   {
-    id: '3',
+    id: "3",
     name: "Berita Acara Kesepakatan Addendum",
-    doc_num_field: '7',
-    date_field: '8',
-    doc_upload_field: '9'
+    doc_num_field: "7",
+    date_field: "8",
+    doc_upload_field: "9",
   },
   {
-    id: '4',
+    id: "4",
     name: "Surat Kuasa Khusus",
-    doc_num_field: '10',
-    date_field: '11',
-    doc_upload_field: '12'
+    doc_num_field: "10",
+    date_field: "11",
+    doc_upload_field: "12",
   },
   {
-    id: '5',
+    id: "5",
     name: "Justifikasi",
-    doc_num_field: '13',
-    date_field: '14',
-    doc_upload_field: '15'
+    doc_num_field: "13",
+    date_field: "14",
+    doc_upload_field: "15",
   },
   {
-    id: '6',
+    id: "6",
     name: "Kajian Hukum dari Fungsi Legal",
-    doc_num_field: '16',
-    date_field: '17',
-    doc_upload_field: '18'
+    doc_num_field: "16",
+    date_field: "17",
+    doc_upload_field: "18",
   },
   {
-    id: '7',
+    id: "7",
     name: "Kajian Risk Management dari Fungsi Risk Management",
-    doc_num_field: '19',
-    date_field: '20',
-    doc_upload_field: '21'
+    doc_num_field: "19",
+    date_field: "20",
+    doc_upload_field: "21",
   },
   {
-    id: '8',
+    id: "8",
     name: "Hasil Keputusan Rapat Direksi (Radir)",
-    doc_num_field: '22',
-    date_field: '23',
-    doc_upload_field: '24'
+    doc_num_field: "22",
+    date_field: "23",
+    doc_upload_field: "24",
   },
   {
-    id: '9',
+    id: "9",
     name: "Memo/Surat Permohonan Addendum",
-    doc_num_field: '25',
-    date_field: '26',
-    doc_upload_field: '27'
-  }
-]
-
-export const supportingDocumentAdditional = [
-  {
-    
-  }
-]
+    doc_num_field: "25",
+    date_field: "26",
+    doc_upload_field: "27",
+  },
+];
 
 export const formData2 = [
   [
@@ -439,7 +429,7 @@ export const formData2 = [
       label: <Ini text={"FAX"} />,
     },
   ],
-]
+];
 export const formData3 = [
   {
     Child: TitleField,
@@ -459,7 +449,7 @@ export const formData3 = [
     name: "nama_direksi",
     label: <Ini text={"BOARD_DIRECTOR"} />,
   },
-]
+];
 export const formData4 = [
   {
     Child: TitleField,
@@ -484,8 +474,8 @@ export const formData4 = [
     label: "Email PIC",
     // typeInput: "SelectInputCustom",
   },
-]
+];
 
 export const valSchemaPihakPertama = object().shape({
   nama_pemberi: validation.require("Nama Pemberi Kerja"),
-})
+});
