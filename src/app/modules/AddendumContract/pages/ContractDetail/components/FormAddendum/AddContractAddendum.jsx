@@ -7,37 +7,38 @@ import { useLocation, useParams, withRouter } from "react-router-dom";
 import { compose } from "redux";
 import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
 
-import RenderInput from "app/components/input/RenderInput";
-import Tabs from "app/components/tabs";
-import * as addendumContract from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
-import useToast from "../../../../components/toast";
-import Subheader from "app/components/subheader";
-import SubBreadcrumbs from "app/components/SubBreadcrumbs";
-import { actionTypes } from "app/modules/AddendumContract/_redux/deliveryMonitoringAction";
 import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
-import SVG from "react-inlinesvg";
+import { actionTypes } from "app/modules/AddendumContract/_redux/deliveryMonitoringAction";
+import * as addendumContract from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
 
 import DialogGlobal from "app/components/modals/DialogGlobal";
+import RenderInput from "app/components/input/RenderInput";
+import TabsAddendum from "./Components/Tabs";
+import useToast from "app/components/toast/index";
+import Subheader from "app/components/subheader";
+import SubBreadcrumbs from "app/components/SubBreadcrumbs";
+
+import SVG from "react-inlinesvg";
+
 import { Col, Row } from "react-bootstrap";
 
 import { Formik, Field, FieldArray } from "formik";
 import { Grid } from "@material-ui/core";
 // import { FormStepper } from "./FormStepper";
 
-import { Card, CardBody } from "_metronic/_partials/controls";
-import FieldBuilder from "app/components/builder/FieldBuilder";
-import FormBuilder from "app/components/builder/FormBuilder";
+// import { Card, CardBody } from "_metronic/_partials/controls";
+// import FieldBuilder from "app/components/builder/FieldBuilder";
+// import FormBuilder from "app/components/builder/FormBuilder";
 
-import {
-  supportingDocumentAdditional,
-  supportingDocumentDefault,
-} from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData";
+import { supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData";
 import SupportingDocumentInput from "app/components/input/SupportingDocumentInput";
 
 import UploadInput from "app/components/input/UploadInput";
 import SelectDateInput from "app/components/input/SelectDateInput";
 import TextAreaInput from "app/components/input/TextAreaInput";
 import BasicInput from "app/components/input/BasicInput";
+import FormPermohonan from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormPermohonan";
+import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameter";
 
 import Steppers from "app/components/steppersCustom/Steppers";
 import {
@@ -45,9 +46,6 @@ import {
   DUMMY_STEPPER_CONTRACT,
   STATE_STEPPER,
 } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
-
-import FormPermohonan from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/FormPermohonan";
-import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/FormParameter";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 
@@ -247,20 +245,18 @@ export const AddContractAddendum = ({
   };
 
   let [linksGroup, setLinksGroup] = useState({
-    documentname: "nama dokumen",
-    documentnumber: "keluarga",
+    documentname: "document",
+    documentnumber: "012345",
     documentdate: null,
     documentfileupload: "test.jpg",
-    about: "individu",
+    about: "wah",
   });
 
-  const toPush = useRef();
   const openCloseAddDocument = React.useRef();
+  const toPush = useRef();
 
   const setPush = (e) => {
     toPush.current.click();
-    // console.log('isi event', e)
-    // console.log('isi current', toPush.current)
   };
 
   const setInitialSubmitItems = () => {
@@ -352,9 +348,7 @@ export const AddContractAddendum = ({
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      // url: `/adendum/add-contracts/${contract_id}`,
-      // url: `/adendum/add-contracts/e44336cc-9604-4a49-9c6d-dafdd4043485`,
-      url: `/adendum/contract-released/01075fff-a2a6-43eb-979f-cef98afae970/show`,
+      url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
         console.log("apakah menarik data", res.data.id);
         setJsonData(res.data);
@@ -374,7 +368,10 @@ export const AddContractAddendum = ({
 
           initial_contract_value: res.data.contract_value,
           latest_contract_value: res.data.after_addendum_job_price,
-          doc_number: res.data.add_contracts[0].add_doc_number,
+          // salah, pake punya orang, harus nya null
+          // doc_number: res.data.add_contracts[0].add_doc_number,
+          doc_number: null,
+          currency: res.data?.currency?.code,
           // increase_job_price: res.data.increase_job_price,
           // decrease_job_price: res.data.decrease_job_price,
           // addendum_percentage: res.data.addendum_percentage,
@@ -499,7 +496,7 @@ export const AddContractAddendum = ({
         ref={openCloseAddDocument}
         isCancel={false}
         isSubmit={true}
-        onYes={setPush}
+        // onYes={setPush}
       >
         <div>
           <Row>
@@ -507,10 +504,10 @@ export const AddContractAddendum = ({
               Nama Dokumen
               <BasicInput
                 placeholder={"Dokumen A"}
-                value={linksGroup.documentname}
-                onChange={(e) =>
-                  setLinksGroup({ ...linksGroup, documentname: e })
-                }
+                // value={linksGroup.documentname}
+                // onChange={(e) =>
+                //   setLinksGroup({ ...linksGroup, documentname: e })
+                // }
               />
             </Col>
           </Row>
@@ -519,31 +516,31 @@ export const AddContractAddendum = ({
               No Dokumen
               <BasicInput
                 placeholder={"Masukan No Dokumen Anda"}
-                value={linksGroup.documentnumber}
-                onChange={(e) =>
-                  setLinksGroup({ ...linksGroup, documentnumber: e })
-                }
+                // value={linksGroup.documentnumber}
+                // onChange={(e) =>
+                //   setLinksGroup({ ...linksGroup, documentnumber: e })
+                // }
               />
             </Col>
             <Col md={3}>
               Tanggal Dokumen
               <SelectDateInput
-                value={linksGroup.documentdate}
-                onChange={(e) =>
-                  setLinksGroup({ ...linksGroup, documentdate: e })
-                }
+              // value={linksGroup.documentdate}
+              // onChange={(e) =>
+              //   setLinksGroup({ ...linksGroup, documentdate: e })
+              // }
               />
             </Col>
             <Col md={5}>
               Upload Dokumen
               <UploadInput
-                value={linksGroup.documentfileupload}
-                onChange={(e) =>
-                  setLinksGroup({
-                    ...linksGroup,
-                    documentfileupload: { path: e.path },
-                  })
-                }
+              // value={linksGroup.documentfileupload}
+              // onChange={(e) =>
+              //   setLinksGroup({
+              //     ...linksGroup,
+              //     documentfileupload: { path: e.path },
+              //   })
+              // }
               />
             </Col>
           </Row>
@@ -563,8 +560,13 @@ export const AddContractAddendum = ({
       <Subheader
         text={
           // dataContractById
+          // Kontrak
           dataArr
-            ? `Formulir Permohonan Addendum Kontrak No : 
+            ? `Formulir Permohonan Addendum ${
+                dataArr?.contract_no?.substring(4, 6) === "KTR"
+                  ? "Kontrak"
+                  : "Perjanjian"
+              }  No : 
             ${dataArr?.agreement_number}
           `
             : null
@@ -640,7 +642,6 @@ export const AddContractAddendum = ({
               <SVG
                 src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")}
               />
-              {/* <p>Body Kontrak Perjanjian.doc</p> */}
               <p>{jsonData?.form_review?.spk_name}</p>
             </div>
 
@@ -666,7 +667,6 @@ export const AddContractAddendum = ({
               <SVG
                 src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")}
               />
-              {/* <p>Lampiran 2.doc</p> */}
               <p>{jsonData?.form_review?.lampiran_2_name}</p>
             </div>
           </div>
@@ -697,7 +697,7 @@ export const AddContractAddendum = ({
 
       <div
         style={{
-          height: 74,
+          height: 60,
           fontSize: 14,
           display: "grid",
           gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
@@ -707,25 +707,38 @@ export const AddContractAddendum = ({
           className="d-flex align-items-center justify-content-center"
           style={{
             backgroundColor: sequence === 0 ? "#3699ff" : "white",
+
             flexGrow: 1,
             borderTopLeftRadius: 14,
             cursor: "pointer",
           }}
           onClick={() => setSequence(0)}
         >
-          <h1 style={{ fontSize: 14 }}>Form Permohonan</h1>
+          <h1
+            style={{ fontSize: 14, color: sequence === 0 ? "white" : "black" }}
+          >
+            Form Permohonan
+          </h1>
         </div>
 
         <div
           className="d-flex align-items-center justify-content-center"
           style={{
             backgroundColor: sequence === 1 ? "#3699ff" : "white",
+
             flexGrow: 1,
             cursor: "pointer",
           }}
           onClick={() => setSequence(1)}
         >
-          <h1 style={{ fontSize: 14 }}>Form Parameter</h1>
+          <h1
+            style={{
+              fontSize: 14,
+              color: sequence === 1 ? "white" : "black",
+            }}
+          >
+            Form Parameter
+          </h1>
         </div>
 
         <div
@@ -741,6 +754,7 @@ export const AddContractAddendum = ({
           <h1
             style={{
               fontSize: 14,
+              color: sequence === 2 ? "white" : "black",
             }}
           >
             Upload Dokumen Pendukung
@@ -762,7 +776,7 @@ export const AddContractAddendum = ({
 
       {sequence === 1 && (
         <Paper className={classes.root}>
-          <Tabs
+          <TabsAddendum
             tabActive={tabActive}
             handleChange={handleChangeTab}
             tabLists={TabLists}
@@ -771,37 +785,12 @@ export const AddContractAddendum = ({
 
           <FormParameter
             currentActiveTab={tabActive}
+            headerData={dataArr}
             jsonData={jsonData}
             authorizedOfficial={authorizedOfficial}
             jobDirector={jobDirector}
             jobSupervisor={jobSupervisor}
           />
-
-          {/* <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 28,
-              padding: "2rem 2.25rem",
-            }}
-          >
-            <button
-              type="submit"
-              style={{
-                color: "white",
-                fontSize: 14,
-                fontWeight: "400",
-                padding: "8px 14px",
-                borderRadius: "8px",
-                backgroundColor: "#8c8a8a",
-                outline: "none",
-                border: "none",
-                marginBottom: 28,
-              }}
-            >
-              Update
-            </button>
-          </div> */}
 
           <div
             style={{
@@ -849,13 +838,11 @@ export const AddContractAddendum = ({
           >
             <Formik
               initialValues={{
-                isi: "kosong",
+                initialSupportingData: [],
+                additionalSupportingData: [],
               }}
             >
               {(formikProps) => {
-                // console.log('isi formikProps', formikProps)
-                // formikProps.values.isi
-                // formikProps.initialValues.isi
                 return (
                   <>
                     <h1
@@ -866,17 +853,14 @@ export const AddContractAddendum = ({
                         marginBottom: 14,
                       }}
                     >
-                      Dokumen Pendukung
+                      A. Dokumen Pendukung
                     </h1>
                     <SupportingDocumentInput
                       title={supportingDocumentDefault}
                     />
-                    <SupportingDocumentInput
-                      title={supportingDocumentAdditional}
-                    />
                     <Formik
                       initialValues={{
-                        links: [linksGroup],
+                        additional_document: [linksGroup],
                       }}
                       onSubmit={async (values, actions) => {
                         alert(JSON.stringify(values, null, 2));
@@ -884,14 +868,14 @@ export const AddContractAddendum = ({
                     >
                       {({ values }) => (
                         <>
-                          <FieldArray name="links">
+                          <FieldArray name="additional_document">
                             {({ push, remove }) => (
                               <Grid
                                 container
                                 spacing={2}
                                 sx={{ marginTop: 2, paddingX: 2 }}
                               >
-                                {values.links.map((_, index) => (
+                                {values.additional_document.map((_, index) => (
                                   <>
                                     <Grid item md={12}>
                                       <div>
@@ -986,7 +970,7 @@ export const AddContractAddendum = ({
                                       />
                                     </Grid>
                                   </>
-                                ))}{" "}
+                                ))}
                                 <Grid item xs={12}>
                                   {/* <Button
                                     variant="outlined"

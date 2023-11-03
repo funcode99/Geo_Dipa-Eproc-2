@@ -1,24 +1,23 @@
 // TIDAK TERPAKAI
-import React from "react"
-import { Redirect, Route, Switch } from "react-router-dom"
-import { useSubheader } from "../../../_metronic/layout"
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { useSubheader } from "../../../_metronic/layout";
 
 import {
   // FormattedMessage,
   injectIntl,
-} from "react-intl"
-import { connect } from "react-redux"
+} from "react-intl";
+import { connect } from "react-redux";
 
-import { ContractsPage, ContractDetailPage, TerminPage } from "./pages"
+import { ContractsPage, ContractDetailPage, TerminPage } from "./pages";
 
 function RootDeliveryMonitoring(props) {
   // const { user } = useSelector((state) => state.auth)
   // const { intl } = props
-  const suhbeader = useSubheader()
-  suhbeader.setTitle("Delivery Monitoring")
+  const suhbeader = useSubheader();
+  suhbeader.setTitle("Delivery Monitoring");
   return (
     <Switch>
-
       <Redirect
         from="/client/delivery-monitoring"
         exact={true}
@@ -56,8 +55,7 @@ function RootDeliveryMonitoring(props) {
         path="/client/delivery-monitoring/contract"
         component={ContractsPage}
       />
-      
     </Switch>
-  )
+  );
 }
-// export default injectIntl(connect(null, null)(RootDeliveryMonitoring))
+export default injectIntl(connect(null, null)(RootDeliveryMonitoring));

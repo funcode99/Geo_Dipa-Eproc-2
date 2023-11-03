@@ -17,29 +17,28 @@ import { useLocation, useParams, withRouter } from "react-router-dom";
 import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
 
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
-import Tabs from "../../../../components/tabs";
-import useToast from "../../../../components/toast";
-import Subheader from "../../../../components/subheader";
+import Tabs from "app/components/tabs/index";
+import useToast from "app/components/toast/index";
+import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-// import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
 import * as deliveryMonitoring from "app/modules/DeliveryMonitoring/service/DeliveryMonitoringCrud";
 
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { FormattedMessage } from "react-intl";
 
-import ParaPihak from "./components/ParaPihak";
-import ParaPihak2 from "./components/ParaPihak/ParaPihak2";
+import ParaPihak from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/ParaPihak";
+import ParaPihak2 from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/ParaPihak/ParaPihak2";
 import DokContract from "./components/DokContract";
 import HargaPekerjaan from "./components/HargaPekerjaan";
 import JangkaWaktu from "./components/JangkaWaktu";
 import Jaminan from "./components/Jaminan";
-import Denda from "./components/Denda"
-import BAST from "./components/BAST"
-import Steppers from "app/components/steppersCustom/Steppers"
-import DetailPage from "./components/Detail/DetailPage"
-import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail"
+import Denda from "./components/Denda";
+import BAST from "./components/BAST";
+import Steppers from "app/components/steppersCustom/Steppers";
+import DetailPage from "./components/Detail/DetailPage";
+import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail";
 
-import { compose } from "redux"
+import { compose } from "redux";
 import {
   DUMMY_STEPPER,
   DUMMY_STEPPER_CONTRACT,
@@ -114,7 +113,14 @@ const TabLists = [
 
 export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   // ada isinya
-  // console.log('isi data contract by id di delivery monitoring', dataContractById)
+  // ini selalu kosong, why?
+  console.log(
+    "isi data contract by id di delivery monitoring",
+    dataContractById
+  );
+
+  // console.log()
+
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, tab: forceTabActive } = useParams();
@@ -165,44 +171,44 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   };
 
   // get data contract detail from api
-  // const getContractById = async (contract_id) => {
-  //   try {
-  //     // dispatch({
-  //     //   type: actionTypes.SetContractById,
-  //     //   payload: [],
-  //     // });
+  const getContractById = async (contract_id) => {
+    try {
+      // dispatch({
+      //   type: actionTypes.SetContractById,
+      //   payload: [],
+      // });
 
-  //     setLoading(true);
-  //     const {
-  //       data: { data },
-  //     } = await deliveryMonitoring.getContractById(contract_id);
+      setLoading(true);
+      const {
+        data: { data },
+      } = await deliveryMonitoring.getContractById(contract_id);
 
-  //     addCheckedField(data?.services, "jasa");
-  //     addCheckedField(data?.items, "barang");
+      addCheckedField(data?.services, "jasa");
+      addCheckedField(data?.items, "barang");
 
-  //     dispatch({
-  //       type: actionTypes.SetContractById,
-  //       payload: data,
-  //     });
-  //   } catch (error) {
-  //     if (
-  //       error.response?.status !== 400 &&
-  //       error.response?.data.message !== "TokenExpiredError"
-  //     ) {
-  //       if (
-  //         error.response?.status !== 400 &&
-  //         error.response?.data.message !== "TokenExpiredError"
-  //       ) {
-  //         setToast("Error API, please contact developer!");
-  //       }
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      dispatch({
+        type: actionTypes.SetContractById,
+        payload: data,
+      });
+    } catch (error) {
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== "TokenExpiredError"
+      ) {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        ) {
+          setToast("Error API, please contact developer!");
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   React.useEffect(() => {
-    // getContractById(contract_id);
+    getContractById(contract_id);
     setInitialSubmitItems();
     // eslint-disable-next-line
   }, []);
@@ -300,7 +306,6 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
       />
 
       <Paper className={classes.root}>
-        
         <Container>
           <Tabs
             tabActive={tabActive}
@@ -340,4 +345,3 @@ const mapState = ({ auth, deliveryMonitoring }) => ({
 });
 
 export default compose(withRouter, connect(mapState))(ContractDetailPage);
-  

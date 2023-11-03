@@ -54,6 +54,10 @@ export function submitAccountNumber(params, contract_id) {
   );
 }
 
+export function submitOther(params, contract_id) {
+  return axios.post(`/adendum/add-contract-other/${contract_id}`, params);
+}
+
 // Tasks
 export function submitTask(values, update) {
   if (update) {

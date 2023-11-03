@@ -1,5 +1,5 @@
-import React from "react"
-import { Paper, makeStyles, CircularProgress } from "@material-ui/core"
+import React from "react";
+import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import {
   Assignment,
   QueryBuilderSharp,
@@ -9,41 +9,41 @@ import {
   Description,
   FindInPage,
   MonetizationOn,
-} from "@material-ui/icons"
-import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline"
-import { Container } from "react-bootstrap"
-import SVG from "react-inlinesvg"
-import { useLocation, useParams, withRouter } from "react-router-dom"
-import { useSelector, useDispatch, shallowEqual, connect } from "react-redux"
+} from "@material-ui/icons";
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
+import { Container } from "react-bootstrap";
+import SVG from "react-inlinesvg";
+import { useLocation, useParams, withRouter } from "react-router-dom";
+import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
 
-import { toAbsoluteUrl } from "../../../../../_metronic/_helpers"
-import Tabs from "../../../../components/tabs"
-import useToast from "../../../../components/toast"
-import Subheader from "../../../../components/subheader"
-import SubBreadcrumbs from "../../../../components/SubBreadcrumbs"
-import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud"
+import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
+import Tabs from "../../../../../../components/tabs";
+import useToast from "../../../../../../components/toast";
+import Subheader from "../../../../../../components/subheader";
+import SubBreadcrumbs from "../../../../../../components/SubBreadcrumbs";
+import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
 
-import { actionTypes } from "../../_redux/deliveryMonitoringAction"
-import { FormattedMessage } from "react-intl"
+import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { FormattedMessage } from "react-intl";
 
-import ParaPihak from "./components/ParaPihak"
-import ParaPihak2 from "./components/ParaPihak/ParaPihak2"
-import DokContract from "./components/DokContract"
-import HargaPekerjaan from "./components/HargaPekerjaan"
-import JangkaWaktu from "./components/JangkaWaktu"
-import Jaminan from "./components/Jaminan"
-import Denda from "./components/Denda"
-import BAST from "./components/BAST"
-import Steppers from "app/components/steppersCustom/Steppers"
-import DetailPage from "./components/Detail/DetailPage"
-import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail"
+import ParaPihak from "../ParaPihak";
+import ParaPihak2 from "../ParaPihak/ParaPihak2";
+import DokContract from "../DokContract";
+import HargaPekerjaan from "../HargaPekerjaan";
+import JangkaWaktu from "../JangkaWaktu";
+import Jaminan from "../Jaminan";
+import Denda from "../Denda";
+import BAST from "../BAST";
+import Steppers from "app/components/steppersCustom/Steppers";
+import DetailPage from "../Detail/DetailPage";
+import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail";
 
-import { compose } from "redux"
+import { compose } from "redux";
 import {
   DUMMY_STEPPER,
   DUMMY_STEPPER_CONTRACT,
   STATE_STEPPER,
-} from "app/modules/DeliveryMonitoring/pages/Termin/TerminPageNew/STATIC_DATA"
+} from "app/modules/DeliveryMonitoring/pages/Termin/TerminPageNew/STATIC_DATA";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,8 +53,8 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 650,
-  }
-}))
+  },
+}));
 
 const TabLists = [
   {
@@ -109,7 +109,7 @@ const TabLists = [
   //   label: <FormattedMessage id="CONTRACT_DETAIL.TAB.BAST" />,
   //   icon: <Description className="mb-0 mr-2" />,
   // },
-]
+];
 
 export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
   // ada isinya
@@ -142,13 +142,13 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
       data.map((services) => {
         services.item_services.map((service) => {
           service.checked = false;
-        })
-      })
+        });
+      });
     }
     if (type === "barang") {
       data.map((item) => {
-        item.checked = false
-      })
+        item.checked = false;
+      });
     }
   };
 
@@ -160,8 +160,8 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
     dispatch({
       type: actionTypes.SetSubmitItemsByContractId,
       payload: initialSubmitItems,
-    })
-  }
+    });
+  };
 
   // get data contract detail from api
   // const getContractById = async (contract_id) => {
@@ -299,7 +299,6 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
       />
 
       <Paper className={classes.root}>
-        
         <Container>
           <Tabs
             tabActive={tabActive}
@@ -330,16 +329,15 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
         {tabActive === 8 && <BAST />}
       </Paper>
     </React.Fragment>
-  )
-}
+  );
+};
 
 const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
   dataContractById: deliveryMonitoring.dataContractById,
-})
+});
 
-export default compose(withRouter, connect(mapState))(ContractAddendumDetail)
-
+export default compose(withRouter, connect(mapState))(ContractAddendumDetail);
 
 // const ContractAddendumDetail = () => {
 //     return (

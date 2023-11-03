@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
@@ -12,11 +12,11 @@ import {
   TableSortLabel,
   Paper,
   Menu,
-} from "@material-ui/core"
-import NumberFormat from "react-number-format"
-import "./styles.scss"
-import SVG from 'react-inlinesvg'
-import { toAbsoluteUrl } from '_metronic/_helpers'
+} from "@material-ui/core";
+import NumberFormat from "react-number-format";
+import "./styles.scss";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl } from "_metronic/_helpers";
 
 const format = (countryCode, currency, number) => {
   const options = {
@@ -30,26 +30,44 @@ const format = (countryCode, currency, number) => {
 
 export const rupiah = (number) => format("id-ID", "IDR", number);
 
-const Tables = (props) => {
-  const {
-    intl,
-    dataHeader = [],
-    handleParams,
-    loading = false,
-    err = false,
-    children,
-    countData = 0,
-    hecto = 1,
-    onChangePage,
-    onChangePerPage,
-    isAddendum
-  } = props;
+const Tables = ({
+  intl,
+  dataHeader = [],
+  handleParams,
+  loading = false,
+  err = false,
+  children,
+  countData = 0,
+  hecto = 1,
+  onChangePage,
+  onChangePerPage,
+  isAddendum,
+  func = () => {},
+}) => {
+  // const {
+  //   intl,
+  //   dataHeader = [],
+  //   handleParams,
+  //   loading = false,
+  //   err = false,
+  //   children,
+  //   countData = 0,
+  //   hecto = 1,
+  //   onChangePage,
+  //   onChangePerPage,
+  //   isAddendum,
+  // } = props;
+
   const [paginations, setPaginations] = React.useState({
     numberColum: 0,
     page: 0,
     count: countData,
     rowsPerPage: 10,
-  })
+  });
+
+  useEffect(() => {
+    func(paginations.page, paginations.rowsPerPage);
+  }, [paginations]);
 
   const [sortData, setSortData] = React.useState({
     name:
@@ -88,8 +106,8 @@ const Tables = (props) => {
         : null,
   });
 
-  console.log('isi dataHeader', dataHeader)
-  console.log('ini isi state sort data', sortData)
+  console.log("isi dataHeader", dataHeader);
+  console.log("ini isi state sort data", sortData);
 
   const [filterTable, setFilterTable] = React.useState({});
   const [filterSort, setFilterSort] = React.useState({ filter: {}, sort: {} });
@@ -242,9 +260,7 @@ const Tables = (props) => {
   return (
     <React.Fragment>
       <div>
-        
         <form id="filter-form-all" className="panel-filter-table mb-1">
-          
           <span className="mr-2 mt-1 float-left">
             {/* Filter by */}
             <FormattedMessage id="TITLE.FILTER.TABLE" />
@@ -470,51 +486,55 @@ const Tables = (props) => {
               </button>
             </div>
 
-            {isAddendum &&             
+            {isAddendum && (
               <div
                 style={{
-                  display: 'flex',
+                  display: "flex",
                   gap: 7,
-                  justifyContent: 'flex-end',
+                  justifyContent: "flex-end",
                   marginBottom: 20,
-                  marginTop: 40
+                  marginTop: 40,
                 }}
               >
                 <button
                   style={{
                     borderRadius: 8,
                     fontSize: 10,
-                    backgroundColor: '#14b571',
-                    border: 'none',
-                    color: 'white',
-                    padding: '8px 14px',
-                    display: 'flex',
-                    gap: 8
+                    backgroundColor: "#14b571",
+                    border: "none",
+                    color: "white",
+                    padding: "8px 14px",
+                    display: "flex",
+                    gap: 8,
                   }}
                 >
-                  <SVG src={toAbsoluteUrl('/media/svg/icons/All/download-excel.svg')} />
+                  <SVG
+                    src={toAbsoluteUrl(
+                      "/media/svg/icons/All/download-excel.svg"
+                    )}
+                  />
                   Download Excel
                 </button>
                 <button
                   style={{
                     borderRadius: 8,
                     fontSize: 10,
-                    backgroundColor: '#dc0526',
-                    border: 'none',
-                    color: 'white',
-                    padding: '8px 14px',
-                    display: 'flex',
-                    gap: 8
+                    backgroundColor: "#dc0526",
+                    border: "none",
+                    color: "white",
+                    padding: "8px 14px",
+                    display: "flex",
+                    gap: 8,
                   }}
                 >
-                  <SVG src={toAbsoluteUrl('/media/svg/icons/All/download-pdf.svg')} />
+                  <SVG
+                    src={toAbsoluteUrl("/media/svg/icons/All/download-pdf.svg")}
+                  />
                   Download PDF
                 </button>
               </div>
-            }
-
+            )}
           </div>
-
         </form>
 
         {/*  */}
@@ -528,17 +548,18 @@ const Tables = (props) => {
                   {dataHeader.map((item, index) => {
                     return (
                       <TableCell
-                      style={{
-                        position: item.name === 'action' ? 'sticky' : '',
-                        right: item.name === 'action' ? 0 : '',
-                        minWidth: item.name === 'action' ? 123 : '',
-                        minHeight: item.name === 'action' ? 71 : '',
-                        display: item.name === 'action' ? 'flex' : '',
-                        justifyContent: item.name === 'action' ? 'center' : '',
-                        alignItems: item.name === 'action' ? 'center' : '',
-                        border: item.name === 'action' ? 0 : 0,
-                        textAlign: item.name === 'action' ? 'center' : ''
-                      }}
+                        style={{
+                          position: item.name === "action" ? "sticky" : "",
+                          right: item.name === "action" ? 0 : "",
+                          minWidth: item.name === "action" ? 123 : "",
+                          minHeight: item.name === "action" ? 71 : "",
+                          display: item.name === "action" ? "flex" : "",
+                          justifyContent:
+                            item.name === "action" ? "center" : "",
+                          alignItems: item.name === "action" ? "center" : "",
+                          border: item.name === "action" ? 0 : 0,
+                          textAlign: item.name === "action" ? "center" : "",
+                        }}
                         className={`
                           bg-primary 
                           ${item?.td ? item?.td : ""} 
@@ -566,8 +587,7 @@ const Tables = (props) => {
                             <span>{item.title}</span>
                           </TableSortLabel>
                         ) : (
-                          <span
-                          >{item.title}</span>
+                          <span>{item.title}</span>
                         )}
                       </TableCell>
                     );
@@ -606,7 +626,6 @@ const Tables = (props) => {
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
         </div>
-
       </div>
     </React.Fragment>
   );
