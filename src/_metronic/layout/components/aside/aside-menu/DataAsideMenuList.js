@@ -1,8 +1,38 @@
 // Menu Client / Internal
 export const DataAsideMenuListClient = [
+  
+
+  // addendum contract
+  {
+    rootPath: "/client/addendum-contract",
+    // yang salah adalah file SVG nya
+    icon: "/All/New_Addendum_Contract.svg",
+    // icon: "/All/New_Delivery_Monitoring.svg",
+    // icon: "/Communication/user-solid.svg",
+    title: "MENU.ADDENDUM_CONTRACT",
+    subMenu: [
+      {
+        rootPath: "/client/addendum-contract/list-contract-po",
+        title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+        subMenu: null
+      },
+      {
+        rootPath: '/client/addendum-contract/list-addendum-request',
+        title: "MENU.ADDENDUM_CONTRACT.LIST_ADDENDUM_REQUEST",
+        subMenu: null
+      },
+      {
+        rootPath: '/client/addendum-contract/list-of-addendum',
+        title: "MENU.ADDENDUM_CONTRACT.LIST_ADDENDUM",
+        subMenu: null
+      }
+    ]
+  },
+
+  // delivery monitoring
   {
     rootPath: "/client/delivery-monitoring",
-    icon: "/All/route-solid.svg",
+    icon: "/All/New_Delivery_Monitoring.svg",
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       {
@@ -37,9 +67,26 @@ export const DataAsideMenuListClient = [
       // },
     ],
   },
+
+  // contract management
+  {
+    rootPath: "/client/management",
+    icon: "/All/New_Contract_Management.svg",
+    title: "MENU.ADDENDUM_CONTRACT.CONTRACT_MANAGEMENT",
+  },
+
+  // monitoring contract & addendum
+  {
+    rootPath: "/client/monitoring-contract-addendum",
+    icon: "/All/New_Monitoring_Contract_Addendum.svg",
+    title: "MENU.MONITORING_CONTRACT_ADDENDUM",
+  },
+  
+  // client invoice monitoring
   {
     rootPath: "/client/invoice_monitoring",
-    icon: "/All/file-invoice-dollar-solid.svg",
+    // icon: "/All/file-invoice-dollar-solid.svg",
+    icon: "/All/New_Invoice_Monitoring.svg",
     title: "MENU.INVOICE_MONITORING",
     subMenu: [
       {
@@ -88,24 +135,28 @@ export const DataAsideMenuListClient = [
       },
     ],
   },
+  
   {
     rootPath: "/client/user-profile",
     icon: "/Communication/user-solid.svg",
     title: "MENU.USER_PROFILE",
     subMenu: null,
   },
+
   {
     rootPath: "/client/reports",
     icon: "/Communication/Archive.svg",
     title: "MENU.REPORTS",
     subMenu: null,
   },
+
   {
     rootPath: "/client/user-management",
     icon: "/All/users-solid.svg",
     title: "MENU.USER_MANAGEMENT",
     subMenu: null,
   },
+
   {
     rootPath: "/client/master",
     icon: "/All/table-solid.svg",
@@ -163,13 +214,29 @@ export const DataAsideMenuListClient = [
       },
     ],
   },
-];
+
+]
 
 // Menu Vendor / External
 export const DataAsideMenuListVendor = [
+  
+  {
+    rootPath: "/vendor/addendum-contract",
+    // icon: "/All/New_Addendum_Contract.svg",
+    icon: "/All/New_Delivery_Monitoring.svg",
+    title: "MENU.ADDENDUM_CONTRACT",
+    subMenu: [
+      {
+        rootPath: "/vendor/addendum-contract/list-addendum-request",
+        title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
+        subMenu: null
+      }
+    ]
+  },
+
   {
     rootPath: "/vendor/delivery-monitoring",
-    icon: "/All/route-solid.svg",
+    icon: "/All/New_Delivery_Monitoring.svg",
     title: "MENU.DELIVERY_MONITORING",
     subMenu: [
       // {
@@ -219,6 +286,7 @@ export const DataAsideMenuListVendor = [
       // },
     ],
   },
+
   {
     rootPath: "/vendor/invoice_monitoring",
     icon: "/All/file-invoice-dollar-solid.svg",
@@ -236,10 +304,12 @@ export const DataAsideMenuListVendor = [
       },
     ],
   },
+
   {
     rootPath: "/vendor/user-profile",
     icon: "/All/users-solid.svg",
     title: "MENU.USER_MANAGEMENT",
     subMenu: null,
   },
-];
+
+]

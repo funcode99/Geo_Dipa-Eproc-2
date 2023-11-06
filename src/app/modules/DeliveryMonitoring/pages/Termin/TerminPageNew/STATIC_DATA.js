@@ -29,7 +29,7 @@ export const KEYS_TERMIN = {
   // approve
   p_t_approve_do_doc: "post-termin-upload-do-document",
   // reject
-};
+}
 
 export const KEYS_ACTION = {
   upload: "upload",
@@ -72,6 +72,7 @@ export const TERMIN_TAB_LIST = [
   },
 ];
 
+// gak jalan disini
 export const DUMMY_STEPPER = [
   {
     label: "Create Term",

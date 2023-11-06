@@ -9,7 +9,7 @@ import {
 } from "../../../../../_metronic/_partials/controls";
 import Navs from "../../../../components/navs";
 import ContractInvoicePage from "./ContractBillingDocument/ContractInvoicePage";
-import ContractSprPage from "./ContractBillingDocument/ContractSprPage";
+import ContractSprPage from "app/modules/InvoiceMonitoring/Vendor/ListContract/ContractBillingDocument/ContractSprPage";
 import ContractReceiptPage from "./ContractBillingDocument/ContractReceiptPage";
 import ContractTaxPage from "./ContractBillingDocument/ContractTaxPage";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -360,10 +360,24 @@ function ItemContractInvoice(props) {
   useEffect(callApiContractSoftCopy, []);
   useEffect(getInvoicePeriodsData, []);
 
+  const seq = progressTermin?.seq * 1;
+  
+  if(seq < 2) {
+    navLists[0].invalid = true;
+    navLists[1].invalid = true;
+    navLists[2].invalid = true;
+    navLists[3].invalid = true;
+  } 
+
+  if(seq < 3) {
+    navLists[3].invalid = true;
+  } 
+
   return (
     <React.Fragment>
       <Toast />
       {loading && <LinearProgress color="secondary" className="rounded" />}
+      
       {/* Modal Upload NPWP */}
       <Dialog
         open={modalUpload.statusDialog}
@@ -496,6 +510,7 @@ function ItemContractInvoice(props) {
           </DialogActions>
         </form>
       </Dialog>
+      
       {/* Modal Upload Contract */}
       <Dialog
         open={modalUploadContract.statusDialog}
@@ -619,10 +634,12 @@ function ItemContractInvoice(props) {
           </DialogActions>
         </form>
       </Dialog>
+
       <ExpansionPanel
         defaultExpanded={true}
         className={classes.ExpansionPanelCard}
       >
+        
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           className={classes.ExpansionPanelHeader}
@@ -633,6 +650,8 @@ function ItemContractInvoice(props) {
             </span>
           </div>
         </ExpansionPanelSummary>
+
+ 
         <ExpansionPanelDetails className={classes.details}>
           <div style={{ width: "100%" }}>
             <TableOnly
@@ -720,7 +739,10 @@ function ItemContractInvoice(props) {
             </TableOnly>
           </div>
         </ExpansionPanelDetails>
+
       </ExpansionPanel>
+
+      {/* SPP, Invoice, Kwitansi, Faktur Pajak */}
       <Card>
         <CardHeader>
           <CardHeaderToolbar>
@@ -739,6 +761,7 @@ function ItemContractInvoice(props) {
           </CardHeaderToolbar>
         </CardHeader>
         <CardBody>
+
           <Navs
             navLists={navLists}
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
@@ -795,8 +818,10 @@ function ItemContractInvoice(props) {
               />
             </div>
           )}
+
         </CardBody>
       </Card>
+
     </React.Fragment>
   );
 }

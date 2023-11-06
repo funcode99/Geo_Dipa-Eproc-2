@@ -17,15 +17,18 @@ export const SubWrap = styled.div`
 const StyledSubheader = ({
   subText = "",
   text = "",
-  IconComponent = <BookmarkBorderOutlined style={{ color: "white" }} />,
+  IconComponent = ""
+  // IconComponent = <BookmarkBorderOutlined style={{ color: "white" }} />,
 }) => {
   return (
-    <div className="d-flex align-items-center mb-2">
+    <div className="d-flex align-items-center mb-2">  
+      {IconComponent &&       
       <SubWrap className="mr-2 iconWrap">
         <span className="svg-icon menu-icon">
           {IconComponent ? IconComponent : null}
         </span>
       </SubWrap>
+      }
       <div className="overflow-hidden flex-fill">
         <span className="text-truncate overflow-hidden">
           {subText}

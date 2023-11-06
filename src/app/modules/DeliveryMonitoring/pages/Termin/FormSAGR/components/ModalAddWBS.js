@@ -155,6 +155,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
       isCancel={false}
       maxWidth={"md"}
     >
+      {/* // validation={validateScheme} */}
       <FormBuilder
         ref={formRef}
         onSubmit={_handleSubmit}
@@ -177,9 +178,21 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
           },
         }}
       />
-
+      {/* untuk menambah dan mengurangi row */}
       <div className="d-flex justify-content-end">
-        {dataForm.length > 1 && (
+        {dataForm.length > 1 && 
+          (
+            <ButtonContained
+              className="mr-2"
+              baseColor="danger"
+              disabled={dataForm.length === 1}
+              onClick={subField}
+            >
+              Minus a row
+            </ButtonContained>
+          )
+        }
+        {!(dataForm.length === 10 || dist_value?.value === "") && (
           <ButtonContained
             className="mr-2"
             baseColor="danger"

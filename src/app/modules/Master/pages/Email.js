@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { makeStyles, TableRow, TableCell } from "@material-ui/core";
 import { Card, CardBody } from "../../../../_metronic/_partials/controls";
 import { FormattedMessage, injectIntl } from "react-intl";
-import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
+import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
 import { SubWrap } from "./style";
 import { getListEmail } from "../service/MasterCrud";

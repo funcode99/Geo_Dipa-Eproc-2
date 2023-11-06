@@ -8,7 +8,7 @@ import clsx from "clsx";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 // See https://github.com/PrismJS/prism-themes
 import {coy as highlightStyle} from "react-syntax-highlighter/dist/esm/styles/prism";
-import {useHtmlClassService, setLayoutConfig, getInitLayoutConfig} from "../../layout";
+import {useHtmlClassService, setLayoutConfig, getInitLayoutConfig} from "_metronic/layout/index";
 import {Card, CardBody, CardHeader, Notice} from "../controls";
 
 const localStorageActiveTabKey = "builderActiveTab";

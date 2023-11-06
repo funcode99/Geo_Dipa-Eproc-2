@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 // import { useSubheader } from "../../../../_metronic/layout";
 import DashboardListContract from "./ListContract/DashboardListContract";
-import ItemContract from "./ListContract/ItemContract";
+import ItemContract from "app/modules/InvoiceMonitoring/Vendor/ListContract/ItemContract";
 import ListTermContract from "./ListContract/ListTermContract";
 import DashboardListInvoice from "./ListInvoice/DashboardListInvoice";
 import { injectIntl } from "react-intl";
@@ -21,6 +21,7 @@ function RootVendorInvoiceMonitoring(props) {
         from="/vendor/invoice_monitoring"
         to="/vendor/invoice_monitoring/contract"
       />
+      {/* tandai ini */}
       <Route
         path="/vendor/invoice_monitoring/contract/:contract/:termin"
         component={(props) => <ItemContract {...props} />}

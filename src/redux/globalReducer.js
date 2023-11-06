@@ -1,20 +1,20 @@
 import { isEmpty } from "lodash";
 import { persistReducer } from "redux-persist";
 import { call, delay, put, takeEvery } from "redux-saga/effects";
-import apiHelper from "../app/service/helper/apiHelper";
-import { MODAL } from "../service/modalSession/ModalService";
-import { PERSIST_REDUCER } from "./BaseHost";
+import apiHelper from "app/service/helper/apiHelper";
+import { MODAL } from "../service/modalSession/ModalService"
+import { PERSIST_REDUCER } from "./BaseHost"
 
 const globalRedTypes = {
   SET_LOADING: "SET_LOADING",
   SET_LOADING_DONE: "SET_LOADING_DONE",
   FETCH_API_SAGA: "FETCH_API_SAGA",
   CLEAR_LOADING: "CLEAR_LOADING_STATE",
-};
+}
 
 const initialState = {
   loadings: [],
-};
+}
 
 export const reducer = persistReducer(
   PERSIST_REDUCER,
@@ -36,7 +36,7 @@ export const reducer = persistReducer(
           loadings: [],
         };
       default:
-        return state;
+        return state
     }
   }
 );
@@ -45,26 +45,27 @@ export const reducer = persistReducer(
 export const set_loading_rd = (payload) => ({
   type: globalRedTypes.SET_LOADING,
   payload,
-});
+})
 export const set_loading_done_rd = (payload) => ({
   type: globalRedTypes.SET_LOADING_DONE,
   payload,
-});
+})
 export const clean_loading_state_rd = (payload) => ({
   type: globalRedTypes.CLEAR_LOADING,
   payload,
-});
+})
+// fetch api saga
 export const fetch_api_sg = (payload) => ({
   type: globalRedTypes.FETCH_API_SAGA,
   payload,
-});
+})
 
 // selectors below
 export const getLoading = (state, key) => {
   const { loadings } = state.globalReducer;
   const loadState = loadings.includes(key);
   return loadState;
-};
+}
 
 export const getAuthorizedUser = ({ auth, deliveryMonitoring }) => {
   const plant_data = auth?.user?.data?.plant_data;
@@ -102,21 +103,22 @@ export const getFinanceUser = ({ auth }) => {
   onSuccess: optional,
   onFail: optional
  */
+
 export function* saga() {
   yield takeEvery(globalRedTypes.FETCH_API_SAGA, function* fetchApi(action) {
-    const { key, onSuccess, onFail, alertAppear = false } = action.payload;
-    if (key) yield put(set_loading_rd(key));
+    const { key, onSuccess, onFail, alertAppear = false } = action.payload
+    if (key) yield put(set_loading_rd(key))
     try {
-      let { data } = yield call(apiHelper.fetchGlobalApi, action.payload);
+      let { data } = yield call(apiHelper.fetchGlobalApi, action.payload)
       // let data = yield call(apiHelper.fetchGlobalApi, action.payload);
-      console.log(`resnew + ${key}`, data);
+      console.log(`resnew + ${key}`, data)
       if (data.status === true || data.status === "success") {
-        if (typeof onSuccess === "function") onSuccess(data);
+        if (typeof onSuccess === "function") onSuccess(data)
         if (alertAppear === "both")
-          MODAL.showSnackbar(data?.message ?? "Success", "success");
+          MODAL.showSnackbar(data?.message ?? "Success", "success")
       } else {
-        if (typeof onFail === "function") onFail(data);
-        MODAL.showSnackbar(data?.message ?? "Failed");
+        if (typeof onFail === "function") onFail(data)
+        MODAL.showSnackbar(data?.message ?? "Failed")
       }
     } catch (err) {
       console.log(`err gloReducer`, err);
@@ -132,7 +134,7 @@ export function* saga() {
         if (typeof onFail === "function") onFail(err.response?.data);
         MODAL.showSnackbar(
           err.response?.data?.message ?? "Error API, please contact developer!"
-        );
+        )
       } else {
         console.log(`err gloReducer3`, err);
         if (alertAppear === "never") return;
@@ -143,6 +145,6 @@ export function* saga() {
       }
     }
     // yield delay(1000);
-    if (key) yield put(set_loading_done_rd(key));
-  });
+    if (key) yield put(set_loading_done_rd(key))
+  })
 }
