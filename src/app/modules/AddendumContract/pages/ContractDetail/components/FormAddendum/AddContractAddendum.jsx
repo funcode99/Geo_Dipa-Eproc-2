@@ -150,6 +150,8 @@ export const AddContractAddendum = ({
   const [jobDirector, setJobDirector] = useState();
   const [jobSupervisor, setJobSupervisor] = useState();
   const [authorizedOfficial, setauthorizedOfficial] = useState();
+  const [secondAuthorizedOfficial, setSecondAuthorizedOfficial] = useState();
+  const [PICData, setPICData] = useState();
   const [tabActive, setTabActive] = React.useState(0);
   const [sequence, setSequence] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
@@ -377,6 +379,7 @@ export const AddContractAddendum = ({
           // addendum_percentage: res.data.addendum_percentage,
           // conclusion: res.data.conclusion,
         });
+        getSecondAuthorizedOfficial(res.data.vendor_id);
       },
     });
   };
@@ -389,6 +392,19 @@ export const AddContractAddendum = ({
       onSuccess: (res) => {
         console.log("apakah menarik data direksi", res.data);
         setauthorizedOfficial(res.data);
+      },
+    });
+  };
+
+  const getSecondAuthorizedOfficial = async (id) => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/refference/get-vendor/${id}`,
+      onSuccess: (res) => {
+        console.log("apakah menarik data direksi", res.data);
+        setSecondAuthorizedOfficial(res.data.officer_data);
+        setPICData(res.data.pic_data);
       },
     });
   };
@@ -788,8 +804,10 @@ export const AddContractAddendum = ({
             headerData={dataArr}
             jsonData={jsonData}
             authorizedOfficial={authorizedOfficial}
+            secondAuthorizedOfficial={secondAuthorizedOfficial}
             jobDirector={jobDirector}
             jobSupervisor={jobSupervisor}
+            PICData={PICData}
           />
 
           <div

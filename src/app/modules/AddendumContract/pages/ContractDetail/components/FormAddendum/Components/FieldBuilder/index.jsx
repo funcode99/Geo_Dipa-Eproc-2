@@ -1,25 +1,12 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import RenderInput from "../input/RenderInput";
+import RenderInput from "app/components/input/RenderInput";
 
-const FieldBuilder = ({
-  formData,
-  // values = {},
-  // errors,
-  // handleSubmit,
-  ...other
-}) => {
+const FieldBuilderAddendum = ({ formData, ...other }) => {
   const formProps = {
-    // values,
-    // errors,
-    // handleSubmit,
-    // readOnly,
-    // onChange: readOnly ? () => {} : undefined,
-    // disabled: readOnly,
     ...other,
   };
 
-  // console.log(`formProps`, formProps);
   return (
     <Row className={"mt-9"}>
       {formData &&
@@ -29,7 +16,19 @@ const FieldBuilder = ({
               <Col key={idx} md={12}>
                 <Row>
                   {item?.map((it, id) => (
-                    <Col key={id} md={6}>
+                    // <div>
+                    //   masuk kesini, dan input nya masih ada
+                    // </div>
+                    // isi nya label + form
+                    <Col
+                      key={id}
+                      md={
+                        it.typeInput === "CheckboxInput" ||
+                        it.label === undefined
+                          ? 3
+                          : 12
+                      }
+                    >
                       <RenderInput {...it} {...formProps} />
                     </Col>
                   ))}
@@ -51,4 +50,4 @@ const FieldBuilder = ({
   );
 };
 
-export default FieldBuilder;
+export default FieldBuilderAddendum;

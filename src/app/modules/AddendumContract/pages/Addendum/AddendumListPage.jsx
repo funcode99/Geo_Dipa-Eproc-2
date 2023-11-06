@@ -106,7 +106,7 @@ const tableHeaderAddendum = [
   },
   {
     name: "req_status",
-    title: "Request Addendum Status",
+    title: "Status",
     order: { active: true, status: true, type: true },
     filter: { active: true, type: "text" },
   },
@@ -169,20 +169,25 @@ export const AddendumListPage = ({ fetch_api_sg, loadings, status }) => {
             adnm_request_date: item?.add_request_date,
             adnm_type: item?.doc_type,
             contract_no: item?.contract.contract_no,
-            // po_number belom ada
-            // po_number: item?.purch_order_no,
-            procurement_title: item?.contract_name,
+            po_number: item?.contract.purch_order.number,
+            procurement_title: item?.contract.contract_name,
             // po_date belom ada, harus nya dari issued
-            // po_date:
-            //   item?.issued_date !== null
-            //     ? formatDate(new Date(item?.issued_date))
-            //     : null,
-            // contract_start_date:
-            // contract_end_date:
+            po_date:
+              item?.contract.issued_date !== null
+                ? formatDate(new Date(item?.contract.issued_date))
+                : null,
+            contract_start_date:
+              item?.contract.from_time !== null
+                ? formatDate(new Date(item?.contract.from_time))
+                : null,
+            contract_end_date:
+              item?.contract.thru_time !== null
+                ? formatDate(new Date(item?.contract.thru_time))
+                : null,
             // group: item?.user_group?.party?.full_name,
             // vendor: item?.vendor?.party?.full_name,
             group: item?.contract?.user_group?.party?.full_name,
-            group: item?.contract?.vendor?.party?.full_name,
+            vendor: item?.contract?.vendor?.party?.full_name,
             // status: item?.state,
             status: item?.status,
             action: (
