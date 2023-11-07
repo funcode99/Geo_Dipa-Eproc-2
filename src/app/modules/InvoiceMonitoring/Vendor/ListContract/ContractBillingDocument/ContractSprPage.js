@@ -973,7 +973,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                       }
                       {...formik.getFieldProps("spr_no")}
                       // keren sih ini, disimpan ke localStorage lewat redux persist
@@ -1003,7 +1003,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                       }
                       {...formik.getFieldProps("spr_date")}
                       onChange={(e) => {
@@ -1040,7 +1040,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -1064,7 +1064,7 @@ function ContractSprPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                      sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                         ? ""
                         : "pointer"
                     }`}
@@ -1078,7 +1078,7 @@ function ContractSprPage(props) {
                     )}
                     <span
                       className={`form-control text-truncate ${
-                        sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                        sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -1120,7 +1120,7 @@ function ContractSprPage(props) {
                     disabled={
                       loading ||
                       sppStatus ||
-                      (!invoicePeriodsStatus && !isOnMismatch)
+                      (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                     }
                     onBlur={formik.handleBlur}
                     onChange={(e) => handleUpload(e)}
@@ -1149,7 +1149,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !isOnMismatch)
+                          (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                         }
                         onChange={handleRadio}
                         checked={bankReference}
@@ -1168,7 +1168,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !isOnMismatch)
+                          (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                         }
                         onChange={handleRadio}
                         checked={!bankReference}
@@ -1197,7 +1197,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !isOnMismatch)
+                          (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                         }
                         className="custom-select custom-select-sm"
                         value={sppData.bank_account_no}
@@ -1232,7 +1232,7 @@ function ContractSprPage(props) {
                         disabled={
                           loading ||
                           sppStatus ||
-                          (!invoicePeriodsStatus && !isOnMismatch)
+                          (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                         }
                         {...formik.getFieldProps("bank_account_no")}
                       />
@@ -1262,7 +1262,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                       }
                       defaultValue={sppData.bank_account_name}
                       {...formik.getFieldProps("bank_account_name")}
@@ -1292,7 +1292,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                       }
                       {...formik.getFieldProps("bank_name")}
                     />
@@ -1320,7 +1320,7 @@ function ContractSprPage(props) {
                         loading ||
                         bankReference ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                       }
                       {...formik.getFieldProps("bank_address")}
                     ></textarea>
@@ -1344,7 +1344,7 @@ function ContractSprPage(props) {
                     <label
                       htmlFor="upload_bank"
                       className={`input-group mb-3 col-sm-8 ${
-                        sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                        sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                           ? ""
                           : "pointer"
                       }`}
@@ -1358,7 +1358,7 @@ function ContractSprPage(props) {
                       )}
                       <span
                         className={`form-control text-truncate h-100 ${
-                          sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                          sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                             ? classes.textDisabled
                             : ""
                         }`}
@@ -1398,7 +1398,7 @@ function ContractSprPage(props) {
                       disabled={
                         loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                       }
                       onChange={(e) => handleUploadBank(e)}
                     />
@@ -1500,7 +1500,7 @@ function ContractSprPage(props) {
               className="btn btn-primary mx-1"
               disabled={
                 (formik.touched && !formik.isValid) ||
-                loading || sppStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                loading || sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
               }
             >
               {/* benar */}

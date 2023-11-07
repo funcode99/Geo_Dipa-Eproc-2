@@ -1053,10 +1053,13 @@ function ContractHardCopyDoc(props) {
                           content?.task_gr_new &&
                           content?.task_gr_new.length > 0
                             ? `(${
-                                content?.task_gr_new.filter(
+                              (content?.task_gr_new.filter(
+                                (value) =>
+                                  value.material_document === item.doc_no
+                              ) ? content?.task_gr_new.filter(
                                   (value) =>
                                     value.material_document === item.doc_no
-                                )[0].type
+                                )[0].type : "")
                               })`
                             : ""}
                         </TableCell>

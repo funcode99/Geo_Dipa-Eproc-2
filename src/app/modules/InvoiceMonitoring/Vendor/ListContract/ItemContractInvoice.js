@@ -360,6 +360,19 @@ function ItemContractInvoice(props) {
   useEffect(callApiContractSoftCopy, []);
   useEffect(getInvoicePeriodsData, []);
 
+  const seq = progressTermin?.seq * 1;
+  
+  if(seq < 2) {
+    navLists[0].invalid = true;
+    navLists[1].invalid = true;
+    navLists[2].invalid = true;
+    navLists[3].invalid = true;
+  } 
+
+  if(seq < 3) {
+    navLists[3].invalid = true;
+  } 
+
   return (
     <React.Fragment>
       <Toast />

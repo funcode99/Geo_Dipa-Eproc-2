@@ -45,7 +45,6 @@ const DetailGRPage = ({ fetch_api_sg, loading, authStatus }) => {
           <CircularProgress size="0.875rem" className="mr-3" color="inherit" />
         ) : (
           <DetailGoodRcpt
-            news={content?.task?.news}
             header={content?.gr_header}
             fullData={content?.task}
             items={content?.gr_items}

@@ -350,6 +350,7 @@ function ContractInvoicePage(props) {
 
     getInvoice(contract_id, termin)
       .then((response) => {
+        console.log(response["data"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "invoice_no",
@@ -792,7 +793,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                       }
                     >
                       <FormattedMessage id="TITLE.ADD" />
@@ -818,7 +819,7 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !isOnMismatch)
+                            (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                           }
                           required={true}
                         />
@@ -828,7 +829,7 @@ function ContractInvoicePage(props) {
                           id={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !isOnMismatch)
+                            (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                               ? "NumberFormat-text"
                               : "NumberFormat-input"
                           }
@@ -836,7 +837,7 @@ function ContractInvoicePage(props) {
                           displayType={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !isOnMismatch)
+                            (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                               ? "text"
                               : "input"
                           }
@@ -880,7 +881,7 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !isOnMismatch)
+                            (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                           }
                         >
                           <FormattedMessage id="BUTTON.DELETE" />
@@ -921,7 +922,7 @@ function ContractInvoicePage(props) {
                 disabled={
                   loading ||
                   invoiceStatus ||
-                  (!invoicePeriodsStatus && !isOnMismatch)
+                  (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                 }
               >
                 <span>
@@ -965,7 +966,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                       }
                       defaultValue={
                         invoiceData ? invoiceData["invoice_no"] : null
@@ -1000,7 +1001,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("from_time")}
@@ -1038,7 +1039,7 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                       }
                       defaultValue={
                         invoiceData ? invoiceData["description"] : null
@@ -1065,7 +1066,7 @@ function ContractInvoicePage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      invoiceStatus || (!invoicePeriodsStatus && !isOnMismatch)
+                      invoiceStatus || (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                         ? ""
                         : "pointer"
                     }`}
@@ -1080,7 +1081,7 @@ function ContractInvoicePage(props) {
                     <span
                       className={`form-control text-truncate ${
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch)
+                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -1127,7 +1128,7 @@ function ContractInvoicePage(props) {
                     disabled={
                       loading ||
                       invoiceStatus ||
-                      (!invoicePeriodsStatus && !isOnMismatch)
+                      (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                     }
                     onChange={(e) => handleUpload(e)}
                   />
@@ -1351,7 +1352,7 @@ function ContractInvoicePage(props) {
                 (formik.touched && !formik.isValid) ||
                 loading ||
                 invoiceStatus ||
-                (!invoicePeriodsStatus && !isOnMismatch)
+                (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
               }
             >
               <FormattedMessage id="TITLE.SAVE" />

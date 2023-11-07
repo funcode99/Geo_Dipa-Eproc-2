@@ -28,12 +28,16 @@ import {
   softcopy_save,
   getTerminProgress,
   getInvoice,
-  getInvoiceProgress
+  getInvoiceProgress,
 } from "../../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../../components/toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { rupiah,formatCurrency, currencySign } from "../../../../../libs/currency";
+import {
+  rupiah,
+  formatCurrency,
+  currencySign,
+} from "../../../../../libs/currency";
 import { Document, Page } from "react-pdf";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { DialogTitleFile } from "../ItemContractInvoice";
@@ -204,7 +208,8 @@ function ContractReceiptPage(props) {
         if (response.data.data) {
           getHistoryReceiptData(response["data"]["data"]["id"]);
         }
-        if(response?.data?.data?.currency?.code) setCurrencyCode(response?.data?.data?.currency?.code);
+        if (response?.data?.data?.currency?.code)
+          setCurrencyCode(response?.data?.data?.currency?.code);
         setLoadingRcpt(false);
       })
       .catch((error) => {
@@ -319,18 +324,19 @@ function ContractReceiptPage(props) {
   ]);
 
   const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      const data = response?.data?.data;
+    getInvoiceProgress(termin)
+      .then((response) => {
+        const data = response?.data?.data;
 
-      if(data) {
-        setIsInvoiceComplete(true);
-      }
-      else {
-        setIsInvoiceComplete(false);
-      }
-    }).catch((err) => {
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
+        if (data) {
+          setIsInvoiceComplete(true);
+        } else {
+          setIsInvoiceComplete(false);
+        }
+      })
+      .catch((err) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   }, [termin, intl, setToast]);
 
   // useEffect(getInvoiceProgressData, []);
@@ -355,7 +361,6 @@ function ContractReceiptPage(props) {
   //   receiptData === null,
   //   !props.billingStaffStatus,
   //   progressTermin?.ident_name !== "BILLING_SOFTCOPY", "<<<<<");
-  
 
   return (
     <React.Fragment>
@@ -855,7 +860,13 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="createdAt"
-                    defaultValue={receiptData?.created_at ? moment(receiptData?.created_at).format('DD/MM/YYYY hh:mm:ss') : ""}
+                    defaultValue={
+                      receiptData?.created_at
+                        ? moment(receiptData?.created_at).format(
+                            "DD/MM/YYYY hh:mm:ss"
+                          )
+                        : ""
+                    }
                     disabled
                   />
                 </div>
@@ -874,7 +885,10 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.contract_value
+                    )}
                     disabled
                   />
                 </div>
@@ -905,7 +919,10 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value
+                    )}
                     disabled
                   />
                 </div>
@@ -915,7 +932,35 @@ function ContractReceiptPage(props) {
                   <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
                 </label>
                 <div className="col-sm-8">
-                  <button
+                  {addtionalPayment.length > 0 ? (
+                    <table className="table table-sm mb-4">
+                      <thead>
+                        <tr>
+                          <th style={{ width: "10%" }}>#</th>
+                          <th style={{ width: "50%" }}>
+                            <FormattedMessage id="TITLE.DESCRIPTION" />
+                          </th>
+                          <th style={{ width: "30%" }}>
+                            <FormattedMessage id="TITLE.VALUE" />
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {addtionalPayment.map((item, index) => {
+                          return (
+                            <tr>
+                              <td>{index + 1}</td>
+                              <td>{item.description}</td>
+                              <td>
+                                {formatCurrency(currencyCode, item.value)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  ) : <FormattedMessage id="TITLE.TABLE.NO_DATA_AVAILABLE" />}
+                  {/* <button
                     type="button"
                     className="btn btn-sm btn-primary w-100"
                     onClick={() => {
@@ -923,7 +968,7 @@ function ContractReceiptPage(props) {
                     }}
                   >
                     <FormattedMessage id="TITLE.SELECT" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
               <div className="form-group row">
@@ -935,7 +980,11 @@ function ContractReceiptPage(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    value={formatCurrency(currencyCode, contractData?.termin_value, totalAddtionalPayment())}
+                    value={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value,
+                      totalAddtionalPayment()
+                    )}
                     onChange={() => {}}
                     disabled
                   />
@@ -953,7 +1002,7 @@ function ContractReceiptPage(props) {
               receiptData?.state === "REJECTED" ||
               receiptData?.state === "APPROVED" ||
               receiptData === null ||
-              !props.billingStaffStatus 
+              !props.billingStaffStatus
               // ||
               // progressTermin?.ident_name !== "BILLING_SOFTCOPY"
             }

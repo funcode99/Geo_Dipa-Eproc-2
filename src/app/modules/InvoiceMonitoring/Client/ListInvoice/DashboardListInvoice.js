@@ -163,6 +163,20 @@ function DashboardListInvoice(props) {
     },
     {
       title: intl.formatMessage({
+        id: "TITLE.DATE_OF_SEND_DATE",
+      }),
+      name: "date_send_date",
+      order: {
+        active: true,
+        status: false,
+      },
+      filter: {
+        active: true,
+        type: "date",
+      },
+    },
+    {
+      title: intl.formatMessage({
         id: "TITLE.HARDCOPY_RECEIVE",
       }),
       name: "hardcopy_received",
@@ -405,6 +419,13 @@ function DashboardListInvoice(props) {
                     {item.invoice_date
                       ? window
                           .moment(new Date(item.invoice_date))
+                          .format("DD MMM YYYY")
+                      : ""}
+                  </TableCell>
+                  <TableCell>
+                    {item.created_at
+                      ? window
+                          .moment(new Date(item.created_at))
                           .format("DD MMM YYYY")
                       : ""}
                   </TableCell>
