@@ -542,6 +542,13 @@ const FormParameter = ({
   const [dataArrFine, setDataArrFine] = useState([]);
   const [currencies, setDataCurrencies] = useState([]);
   const [placeman, setPlaceman] = useState({
+    initialWorkDirector: {},
+    initialWorkSupervisor: {
+      position: "",
+      address: "",
+      phone: "",
+      fax: "",
+    },
     initialSecondWorkDirector: {
       position: "",
       address: "",
@@ -556,6 +563,8 @@ const FormParameter = ({
     },
     workDirector: [],
     workSupervisor: [],
+    secondWorkDirector: [],
+    secondWorkSupervisor: [],
   });
   const [stagePayment, setStagePayment] = useState({
     payment: [],
@@ -669,6 +678,16 @@ const FormParameter = ({
   const openCloseWorkDirector = React.useRef();
   const showAddWorkDirector = () => {
     openCloseWorkDirector.current.open();
+  };
+
+  const openCloseSecondWorkSupervisor = React.useRef();
+  const showAddSecondWorkSupervisor = () => {
+    openCloseSecondWorkSupervisor.current.open();
+  };
+
+  const openCloseSecondWorkDirector = React.useRef();
+  const showAddSecondWorkDirector = () => {
+    openCloseSecondWorkDirector.current.open();
   };
 
   return (
@@ -998,6 +1017,400 @@ const FormParameter = ({
             </div>
           </div>
         </div>
+      </DialogGlobal>
+
+      {/* modal tambah pengawas pekerjaan pihak kedua */}
+      <DialogGlobal
+        ref={openCloseSecondWorkSupervisor}
+        isCancel={false}
+        isSubmit={false}
+        yesButton={false}
+        noButton={false}
+      >
+        <Formik
+          initialValues={{
+            position: "",
+            address: "",
+            phone: "",
+            fax: "",
+          }}
+          onSubmit={(values) => {
+            setPlaceman((placeman) => {
+              return {
+                ...placeman,
+                secondWorkSupervisor: [
+                  ...placeman.secondWorkSupervisor,
+                  createNewPlaceman(
+                    "",
+                    "",
+                    values?.position,
+                    values?.address,
+                    values?.phone,
+                    values?.fax
+                  ),
+                ],
+              };
+            });
+            openCloseSecondWorkSupervisor.current.close();
+          }}
+        >
+          {() => (
+            <>
+              <Form>
+                <div
+                  style={{
+                    padding: "0 17%",
+                  }}
+                >
+                  <h1
+                    style={{
+                      marginBottom: 40,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      textAlign: "center",
+                    }}
+                  >
+                    Tambah Pengawas Pekerjaan Pihak Kedua
+                  </h1>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Jabatan
+                      </span>
+                      <Field
+                        type="text"
+                        name="position"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Alamat
+                      </span>
+                      <Field
+                        type="text"
+                        name="address"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Telp
+                      </span>
+                      <Field
+                        type="text"
+                        name="phone"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Fax
+                      </span>
+                      <Field
+                        type="text"
+                        name="fax"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: 52,
+                    padding: "0 7%",
+                  }}
+                >
+                  <button type="submit" className="btn btn-primary">
+                    Save
+                  </button>
+                </div>
+              </Form>
+            </>
+          )}
+        </Formik>
+      </DialogGlobal>
+
+      {/* modal tambah direksi pekerjaan pihak kedua */}
+      <DialogGlobal
+        ref={openCloseSecondWorkDirector}
+        isCancel={false}
+        isSubmit={false}
+        yesButton={false}
+        noButton={false}
+      >
+        <Formik
+          initialValues={{
+            position: "",
+            address: "",
+            phone: "",
+            fax: "",
+          }}
+          onSubmit={(values) => {
+            setPlaceman((placeman) => {
+              return {
+                ...placeman,
+                secondWorkDirector: [
+                  ...placeman.secondWorkDirector,
+                  createNewPlaceman(
+                    "",
+                    "",
+                    values?.position,
+                    values?.address,
+                    values?.phone,
+                    values?.fax
+                  ),
+                ],
+              };
+            });
+            openCloseSecondWorkSupervisor.current.close();
+          }}
+        >
+          {() => (
+            <>
+              <Form>
+                <div
+                  style={{
+                    padding: "0 17%",
+                  }}
+                >
+                  <h1
+                    style={{
+                      marginBottom: 40,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      textAlign: "center",
+                    }}
+                  >
+                    Tambah Direksi Pekerjaan Pihak Kedua
+                  </h1>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Jabatan
+                      </span>
+                      <Field
+                        type="text"
+                        name="position"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Alamat
+                      </span>
+                      <Field
+                        type="text"
+                        name="address"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Telp
+                      </span>
+                      <Field
+                        type="text"
+                        name="phone"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Fax
+                      </span>
+                      <Field
+                        type="text"
+                        name="fax"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: 52,
+                    padding: "0 7%",
+                  }}
+                >
+                  <button type="submit" className="btn btn-primary">
+                    Save
+                  </button>
+                </div>
+              </Form>
+            </>
+          )}
+        </Formik>
       </DialogGlobal>
 
       {/* modal tambah denda */}
@@ -1477,16 +1890,18 @@ const FormParameter = ({
                     inputAuthorizedOfficial.official_sk_kemenkumham_no,
                   official_sk_kemenkumham_date:
                     inputAuthorizedOfficial.official_sk_kemenkumham_date,
+                  body_data: partiesBodyClauseData,
+                  initial_attachment_data: partiesInitialAttachmentClauseData,
+                  attachment_data: partiesAttachmentClauseData,
                   initialJobDirector: placeman.initialWorkDirector,
                   initialJobSupervisor: placeman.initialWorkSupervisor,
                   jobDirector: placeman.workDirector,
                   jobSupervisor: placeman.workSupervisor,
-                  body_data: partiesBodyClauseData,
-                  initial_attachment_data: partiesInitialAttachmentClauseData,
-                  attachment_data: partiesAttachmentClauseData,
                   initialSecondJobDirector: placeman.initialSecondWorkDirector,
                   initialSecondJobSupervisor:
                     placeman.initialSecondWorkSupervisor,
+                  secondJobDirector: placeman.secondWorkDirector,
+                  secondJobSupervisor: placeman.secondWorkSupervisor,
                 }}
                 onSubmit={(values) => {
                   values.attachment_data.unshift(
@@ -1532,9 +1947,9 @@ const FormParameter = ({
                         </span>
                       </div>
 
-                      {/* Baris pihak pertama */}
+                      {/* Baris pihak pertama sebelum addendum */}
                       <div className="row col-md-12">
-                        {/* Pihak pertama */}
+                        {/* Pihak pertama sebelum addendum */}
                         <div
                           className="col-md-6"
                           style={{
@@ -2773,7 +3188,11 @@ const FormParameter = ({
                                 }}
                               >
                                 <span>Jabatan</span>
-                                <input type="text" className="form-control" />
+                                <Field
+                                  type="text"
+                                  className="form-control"
+                                  name="initialJobSupervisor.position"
+                                />
                               </label>
                             </div>
 
@@ -2811,6 +3230,7 @@ const FormParameter = ({
                                       ? jobSupervisor[jobSupervisorIndex]?.phone
                                       : null
                                   }
+                                  style={{ backgroundColor: "#e8f4fb" }}
                                   disabled
                                 />
                               </label>
@@ -2833,6 +3253,7 @@ const FormParameter = ({
                                       ? jobSupervisor[jobSupervisorIndex]?.phone
                                       : null
                                   }
+                                  style={{ backgroundColor: "#e8f4fb" }}
                                   disabled
                                 />
                               </label>
@@ -3723,8 +4144,9 @@ const FormParameter = ({
                                 Addendum Direksi pekerjaan
                               </h1>
                               <button
+                                type="button"
                                 className="btn btn-primary mx-1"
-                                onClick={showAddWorkDirector}
+                                onClick={showAddSecondWorkDirector}
                               >
                                 Tambah
                               </button>
@@ -3833,6 +4255,90 @@ const FormParameter = ({
                                 />
                               </label>
                             </div>
+
+                            {placeman.secondWorkDirector &&
+                              placeman.secondWorkDirector.map((item, index) => {
+                                return (
+                                  <>
+                                    <div>
+                                      <label
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          rowGap: 4,
+                                          height: 65.5,
+                                        }}
+                                      >
+                                        <span>Jabatan</span>
+                                        <input
+                                          type="text"
+                                          value={`${item.position}`}
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
+                                        />
+                                      </label>
+                                    </div>
+
+                                    <div>
+                                      <label
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          rowGap: 4,
+                                        }}
+                                      >
+                                        <span>Alamat</span>
+                                        <input
+                                          type="text"
+                                          value={`${item.address}`}
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
+                                        />
+                                      </label>
+                                    </div>
+
+                                    <div>
+                                      <label
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          rowGap: 4,
+                                        }}
+                                      >
+                                        <span>Telp</span>
+                                        <input
+                                          type="text"
+                                          value={`${item.phone_number}`}
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
+                                        />
+                                      </label>
+                                    </div>
+
+                                    <div>
+                                      <label
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          rowGap: 4,
+                                        }}
+                                      >
+                                        <span>FAX</span>
+                                        <input
+                                          type="text"
+                                          value={`${item.fax}`}
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
+                                        />
+                                      </label>
+                                    </div>
+                                  </>
+                                );
+                              })}
                           </div>
 
                           {/* Addendum Pengawas Pekerjaan Pihak Kedua */}
@@ -3860,7 +4366,7 @@ const FormParameter = ({
                               <button
                                 type="button"
                                 className="btn btn-primary mx-1"
-                                onClick={showAddWorkSupervisor}
+                                onClick={showAddSecondWorkSupervisor}
                               >
                                 Tambah
                               </button>
@@ -3969,6 +4475,100 @@ const FormParameter = ({
                                 />
                               </label>
                             </div>
+
+                            {placeman.secondWorkSupervisor &&
+                              placeman.secondWorkSupervisor.map(
+                                (item, index) => {
+                                  return (
+                                    <>
+                                      <div>
+                                        <label
+                                          style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            rowGap: 4,
+                                            height: 65.5,
+                                          }}
+                                        >
+                                          <span>Jabatan</span>
+                                          <input
+                                            type="text"
+                                            value={`${item.position}`}
+                                            className="form-control"
+                                            style={{
+                                              backgroundColor: "#e8f4fb",
+                                            }}
+                                            disabled
+                                          />
+                                        </label>
+                                      </div>
+
+                                      <div>
+                                        <label
+                                          style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            rowGap: 4,
+                                          }}
+                                        >
+                                          <span>Alamat</span>
+                                          <input
+                                            type="text"
+                                            value={`${item.address}`}
+                                            className="form-control"
+                                            style={{
+                                              backgroundColor: "#e8f4fb",
+                                            }}
+                                            disabled
+                                          />
+                                        </label>
+                                      </div>
+
+                                      <div>
+                                        <label
+                                          style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            rowGap: 4,
+                                          }}
+                                        >
+                                          <span>Telp</span>
+                                          <input
+                                            type="text"
+                                            value={`${item.phone_number}`}
+                                            className="form-control"
+                                            style={{
+                                              backgroundColor: "#e8f4fb",
+                                            }}
+                                            disabled
+                                          />
+                                        </label>
+                                      </div>
+
+                                      <div>
+                                        <label
+                                          style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            rowGap: 4,
+                                          }}
+                                        >
+                                          <span>FAX</span>
+                                          <input
+                                            type="text"
+                                            value={`${item.fax}`}
+                                            className="form-control"
+                                            style={{
+                                              backgroundColor: "#e8f4fb",
+                                            }}
+                                            disabled
+                                          />
+                                        </label>
+                                      </div>
+                                    </>
+                                  );
+                                }
+                              )}
                           </div>
                         </div>
                       </div>
