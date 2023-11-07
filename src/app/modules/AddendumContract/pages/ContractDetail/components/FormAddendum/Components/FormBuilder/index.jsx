@@ -4,9 +4,11 @@ import React from "react";
 import FieldBuilder from "./FieldBuilder";
 import { Send } from "@material-ui/icons";
 
-const FormBuilder = (
+// gua yakin sebenernya props ini dipakai semua, cuma oleh komponen yang berbeda2 dan semua props nya itu ditumpuk disini, sebaiknya jangan dihapus biar gak membingungkan saat menggunakan data lainnya
+const FormBuilderAddendum = (
   {
     onSubmit,
+    onDraft,
     formData,
     initial = {},
     validation,
@@ -15,16 +17,19 @@ const FormBuilder = (
     loading = false,
     disabledButton = false,
     withSubmit = true,
+    withDraft = false,
     btnChildren,
   },
   ref
 ) => {
   const formikRef = React.useRef();
   const _handleSubmit = React.useCallback(
+    // ada beberapa onSubmit yang mengirimkan fungsi, beberapa isi nya undefined
     (data) => typeof onSubmit === "function" && onSubmit(data),
     [onSubmit]
   );
-  // console.log(`formProps`, fieldProps);
+
+  console.log("isi children", children);
 
   React.useImperativeHandle(ref, () => formikRef.current);
   return (
@@ -39,12 +44,24 @@ const FormBuilder = (
         const { handleSubmit, isValid } = formikProps;
         return (
           <React.Fragment>
+            {/* isi children function _ref2 */}
             {typeof children === "function" ? (
+              // <div>
+              //   masuk ke children formikprops + fieldprops
+              // keduanya isi nya kosong, pantes aja form input nya masih ada
+              // </div>
               children({ ...formikProps, fieldProps })
             ) : (
+              // <div>
+              //   masuk ke field builder
+              // </div>
               <FieldBuilder formData={formData} {...fieldProps} />
             )}
-            <div className="d-flex justify-content-end w-100">
+            {/* button children & submit */}
+            <div
+              className="d-flex justify-content-end w-100"
+              style={{ gap: "20px" }}
+            >
               {btnChildren}
               {withSubmit && (
                 <Button
@@ -70,4 +87,4 @@ const FormBuilder = (
   );
 };
 
-export default React.forwardRef(FormBuilder);
+export default React.forwardRef(FormBuilderAddendum);

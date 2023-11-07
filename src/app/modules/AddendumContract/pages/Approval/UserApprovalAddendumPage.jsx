@@ -46,7 +46,7 @@ const navLists = [
   },
 ];
 
-const ApprovalAddendumPage = ({}) => {
+const UserApprovalAddendumPage = ({}) => {
   let status = useSelector(
     (state) => state.auth.user.data.status,
     shallowEqual
@@ -537,4 +537,4 @@ const ApprovalAddendumPage = ({}) => {
   );
 };
 
-export default ApprovalAddendumPage;
+export default UserApprovalAddendumPage;

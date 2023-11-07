@@ -4,7 +4,7 @@ import AddContractAddendum from "app/modules/AddendumContract/pages/ContractDeta
 import AddendumListPage from "./Addendum/AddendumListPage";
 import AddendumRequestListPage from "./AddendumRequest/AddendumRequestListPage";
 import DraftAddendumPage from "./Draft/DraftAddendumPage";
-import ApprovalAddendumPage from "./Approval/ApprovalAddendumPage";
+import UserApprovalAddendumPage from "./Approval/UserApprovalAddendumPage";
 
 export {
   ContractsAddendumPage,
@@ -13,5 +13,5 @@ export {
   AddendumListPage,
   AddendumRequestListPage,
   DraftAddendumPage,
-  ApprovalAddendumPage,
+  UserApprovalAddendumPage,
 };
