@@ -52,7 +52,7 @@ const RowTableSA = ({ item, index }) => {
         name: data[`wbs${i + 1}`].wbs_id,
         value: data[`value${i + 1}`],
       }));
-    // console.log(`datasss`, dataArr);
+    // console.log(`wbs add datasss`, dataArr);
     formikRef.current.setFieldValue("wbsdata", dataArr, true);
     setTimeout(() => {
       _handleBlur();
@@ -71,7 +71,7 @@ const RowTableSA = ({ item, index }) => {
     () => ({
       ...item,
       dist_type: item?.dist_type,
-      // wbsdata:
+      wbsdata: item?.wbsdata,
       gl_account: { value: item?.gl_account, label: item?.gl_account },
       cost_center: { value: item?.cost_center, label: item?.cost_center },
     }),
@@ -83,8 +83,8 @@ const RowTableSA = ({ item, index }) => {
       <ModalAddWBS
         innerRef={wbsRef}
         onSelected={_handleSelected}
+        data={formikRef?.current?.values?.wbsdata}
         onBlur={_handleBlur}
-        data={item?.wbsdata}
         dist_value={formikRef?.current?.values?.dist_type}
       />
       <Formik
