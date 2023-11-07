@@ -230,6 +230,7 @@ export const AddContractAddendum = ({
     },
   ]);
   const [checkedInitialValues, setCheckedInitialValues] = React.useState([]);
+  const [timePeriodData, setTimePeriodData] = useState();
 
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
@@ -378,6 +379,26 @@ export const AddContractAddendum = ({
           // decrease_job_price: res.data.decrease_job_price,
           // addendum_percentage: res.data.addendum_percentage,
           // conclusion: res.data.conclusion,
+        });
+        setTimePeriodData({
+          from_time: res?.data?.from_time,
+          thru_time: res?.data?.thru_time,
+          worked_start_date: res?.data?.worked_start_date,
+          worked_end_date: res?.data?.worked_end_date,
+          guarantee_start_date: res?.data?.guarantee_start_date,
+          guarantee_end_date: res?.data?.guarantee_end_date,
+          maintenance_start_date: res?.data?.maintenance_start_date,
+          maintenance_end_date: res?.data?.maintenance_end_date,
+          contract_period_type: res?.data?.contract_period_type,
+          work_period_type: res?.data?.work_period_type,
+          contract_period_range_day: res?.data?.contract_period_range_day,
+          contract_period_range_month: res?.data?.contract_period_range_month,
+          work_implement_period_day: res?.data?.work_implement_period_day,
+          work_implement_period_month: res?.data?.work_implement_period_month,
+          guarantee_period_day: res?.data?.guarantee_period_day,
+          guarantee_period_month: res?.data?.guarantee_period_month,
+          maintenance_period_day: res?.data?.maintenance_period_day,
+          maintenance_period_month: res?.data?.maintenance_period_month,
         });
         getSecondAuthorizedOfficial(res.data.vendor_id);
       },
@@ -808,6 +829,7 @@ export const AddContractAddendum = ({
             jobDirector={jobDirector}
             jobSupervisor={jobSupervisor}
             PICData={PICData}
+            timePeriodData={timePeriodData}
           />
 
           <div
