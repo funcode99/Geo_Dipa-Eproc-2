@@ -227,7 +227,7 @@ export const validationSchema_sa = object().shape({
     .max(25, "Maksimal 25 character"),
   // po_item: validation.require("PO Item"),
   // po_number: validation.require("PO Number"),
-  // doc_date: validation.require("Document Date"),
+  doc_date: validation.date("Tanggal harus diisi"),
   // score_qual: validation.require("Score Qual"),
   // score_time: validation.require("Score Time"),
 })

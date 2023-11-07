@@ -16,6 +16,7 @@ const navLists = [
 ];
 
 const FormSAGR = (props) => {
+  const [docDate, setDocDate] = React.useState(null);
   const [navActive, setNavActive] = React.useState("form-sa");
   const [dataSAGR, setDataSAGR] = React.useState({});
   const { func, task_id } = React.useContext(TerminPageContext);
@@ -32,8 +33,30 @@ const FormSAGR = (props) => {
     });
   };
 
+  const fetchTask = () => {
+    props.fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/delivery/task/${task_id}/news`,
+      onSuccess: (res) => {
+        const data = res?.data;
+        
+        if(data) {
+          if(data?.news_bast?.date) {
+            setDocDate(res?.data?.news_bast?.date);
+          }
+          else if(data?.news?.date) {
+            setDocDate(res?.data?.news?.date);
+          }
+        }
+      },
+    });
+  };
+
+  React.useEffect(() => fetchTask(), []);
   React.useEffect(() => funcRefresh(), []);
   const parentProps = {
+    docDate,
     dataSAGR,
     onRefresh: funcRefresh,
   };

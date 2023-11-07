@@ -38,6 +38,7 @@ const FormGR = ({
   onRefresh,
   keys,
   dataSAGR,
+  docDate,
   isItemExists,
 }) => {
   const refModal = React.useRef();
@@ -51,6 +52,7 @@ const FormGR = ({
 
   const _handleSubmit = (data) => {
     const params = {
+      doc_date: data.doc_date,
       gr_receipt: data.gr_receipt,
       unload_pt: data.unload_pt,
       header_txt: data.header_tx,
@@ -106,9 +108,10 @@ const FormGR = ({
         ],
         []
       ),
+      doc_date: dataGR?.doc_date ? formatUpdateDate(dataGR?.doc_date) : formatUpdateDate(docDate),
       ...dataGR,
     }),
-    [dataGR]
+    [dataGR, docDate, dataSAGR]
   );
 
   if (!isItemExists) {
