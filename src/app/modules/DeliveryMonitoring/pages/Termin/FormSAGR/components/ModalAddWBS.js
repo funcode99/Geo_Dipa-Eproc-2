@@ -69,18 +69,25 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
 
     const initialValues = {};
 
+    // console.log({ listWBS, data }, "modal data props");
+
     data.forEach((item, i) => {
       const indexRow = i + 1;
+
+      const lookup = listWBS.find(
+        (wbs) => item?.name === wbs?.work_breakdown_ap
+      );
       initialValues[`wbs${indexRow}`] = {
         value: item.name,
-        label: item.name,
+        label: `${lookup?.work_breakdown_ap} - ${lookup?.name}`,
+        // label: item.name,
         wbs_id: item.name,
       };
       initialValues[`value${indexRow}`] = item.value;
     });
 
     return initialValues;
-  }, [data]);
+  }, [data, listWBS]);
 
   const subField = () => {
     setDataForm((e) => {
@@ -113,8 +120,9 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
 
   const _initModal = () => {
     if (_.isEmpty(data)) return;
-  
+
     const rowsToAdd = data.length - dataForm.length;
+    const newValidateScheme = {};
     if (rowsToAdd > 0) {
       const newRows = Array.from({ length: rowsToAdd }, (_, index) => {
         const indexRow = dataForm.length + index + 1;
@@ -134,10 +142,19 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
           },
         ];
       });
+
       setDataForm([...dataForm, ...newRows]);
+
+      for (let i = 0; i <= rowsToAdd; i++) {
+        newValidateScheme[`wbs${i + 1}`] = validation.require(`WBS ${i + 1}`);
+        newValidateScheme[`value${i + 1}`] = validation.require(
+          `Value ${i + 1}`
+        );
+      }
+      setValidateScheme({ ...validateScheme, ...newValidateScheme });
     }
   };
-  
+
   useEffect(_initModal, [data]);
 
   const listWBSMapped = listWBS.map(({ id, work_breakdown_ap, name }) => ({
