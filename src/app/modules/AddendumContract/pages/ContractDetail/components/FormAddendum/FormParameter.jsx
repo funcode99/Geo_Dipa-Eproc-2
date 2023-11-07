@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Card, CardBody } from "_metronic/_partials/controls";
 import { Formik, Field, FieldArray, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -433,10 +433,8 @@ const FormParameter = ({
         add_guarantee_period_day: "123",
         add_maintenance_period_month: "6",
         add_maintenance_period_day: "123",
-        skpp_no: "",
-        skpp_date: "",
-        spmk_no: "",
-        spmk_date: "",
+        add_contract_period_type: "SKPP",
+        add_work_period_type: "SPMK",
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
@@ -566,6 +564,10 @@ const FormParameter = ({
     secondWorkDirector: [],
     secondWorkSupervisor: [],
   });
+
+  useEffect(() => {
+    console.log("placeman sekarang", placeman.workSupervisor);
+  }, [placeman]);
   const [stagePayment, setStagePayment] = useState({
     payment: [],
   });
@@ -625,14 +627,7 @@ const FormParameter = ({
       url: `/adendum/currencies`,
       onSuccess: (res) => {
         console.log("response currencies", res);
-        setDataCurrencies(
-          // res.data.map((item) => ({
-          //   id: item.id,
-          //   code: item.code,
-          //   name: item.name,
-          // }))
-          res
-        );
+        setDataCurrencies(res);
       },
     });
   };
@@ -696,134 +691,185 @@ const FormParameter = ({
       <DialogGlobal
         ref={openCloseWorkSupervisor}
         isCancel={false}
-        onYes={() => {
-          setPlaceman((placeman) => {
-            return {
-              ...placeman,
-              workSupervisor: [
-                ...placeman.workSupervisor,
-                createNewPlaceman(
-                  "",
-                  "",
-                  "EA",
-                  jobSupervisor[jobSupervisorIndex]?.address,
-                  jobSupervisor[jobSupervisorIndex]?.phone,
-                  jobSupervisor[jobSupervisorIndex]?.fax
-                ),
-              ],
-            };
-          });
-        }}
+        isSubmit={false}
+        yesButton={false}
+        noButton={false}
+        // onYes={() => {
+        //   setPlaceman((placeman) => {
+        //     return {
+        //       ...placeman,
+        //       workSupervisor: [
+        //         ...placeman.workSupervisor,
+        //         createNewPlaceman(
+        //           "",
+        //           "",
+        //           "EA",
+        //           jobSupervisor[jobSupervisorIndex]?.address,
+        //           jobSupervisor[jobSupervisorIndex]?.phone,
+        //           jobSupervisor[jobSupervisorIndex]?.fax
+        //         ),
+        //       ],
+        //     };
+        //   });
+        // }}
       >
-        <div
-          style={{
-            padding: "0 17%",
+        <Formik
+          initialValues={{
+            position: "",
+          }}
+          onSubmit={(values) => {
+            setPlaceman((placeman) => {
+              return {
+                ...placeman,
+                workSupervisor: [
+                  ...placeman.workSupervisor,
+                  createNewPlaceman(
+                    "",
+                    "",
+                    values?.position,
+                    jobSupervisor[jobSupervisorIndex]?.address,
+                    jobSupervisor[jobSupervisorIndex]?.phone,
+                    jobSupervisor[jobSupervisorIndex]?.fax
+                  ),
+                ],
+              };
+            });
+            openCloseWorkSupervisor.current.close();
           }}
         >
-          <h1
-            style={{
-              marginBottom: 40,
-              fontSize: 16,
-              fontWeight: 600,
-              textAlign: "center",
-            }}
-          >
-            Tambah Pengawas Pekerjaan
-          </h1>
+          {() => (
+            <>
+              <Form>
+                <div
+                  style={{
+                    padding: "0 17%",
+                  }}
+                >
+                  <h1
+                    style={{
+                      marginBottom: 40,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      textAlign: "center",
+                    }}
+                  >
+                    Tambah Pengawas Pekerjaan
+                  </h1>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 14,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <span>Jabatan</span>
-              <input
-                style={{
-                  padding: 8,
-                  borderRadius: 4,
-                  border: 1,
-                  borderStyle: "solid",
-                  borderColor: "#8c8a8a",
-                  opacity: 0.8,
-                }}
-              />
-            </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span>Jabatan</span>
+                      <Field
+                        type="text"
+                        name="position"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <span>Alamat</span>
-              <ReactSelect
-                data={jobSupervisor}
-                func={changeDataJobSupervisor}
-                labelName={"address"}
-              />
-            </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span>Alamat</span>
+                      <ReactSelect
+                        data={jobSupervisor}
+                        func={changeDataJobSupervisor}
+                        labelName={"address"}
+                      />
+                    </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <span>Telp</span>
-              <input
-                style={{
-                  padding: 8,
-                  borderRadius: 4,
-                  border: 1,
-                  borderStyle: "solid",
-                  borderColor: "#8c8a8a",
-                  opacity: 0.8,
-                }}
-                value={
-                  jobSupervisor
-                    ? jobSupervisor[jobSupervisorIndex]?.phone
-                    : null
-                }
-                disabled
-              />
-            </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span>Telp</span>
+                      <input
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                        value={
+                          jobSupervisor
+                            ? jobSupervisor[jobSupervisorIndex]?.phone
+                            : null
+                        }
+                        disabled
+                      />
+                    </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <span>Fax</span>
-              <input
-                style={{
-                  padding: 8,
-                  borderRadius: 4,
-                  border: 1,
-                  borderStyle: "solid",
-                  borderColor: "#8c8a8a",
-                  opacity: 0.8,
-                }}
-                value={
-                  jobSupervisor ? jobSupervisor[jobSupervisorIndex]?.fax : null
-                }
-                disabled
-              />
-            </div>
-          </div>
-        </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span>Fax</span>
+                      <input
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                        value={
+                          jobSupervisor
+                            ? jobSupervisor[jobSupervisorIndex]?.fax
+                            : null
+                        }
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: 52,
+                    padding: "0 7%",
+                  }}
+                >
+                  <button type="submit" className="btn btn-primary">
+                    Save
+                  </button>
+                </div>
+              </Form>
+            </>
+          )}
+        </Formik>
       </DialogGlobal>
 
       {/* modal tambah direksi pekerjaan */}
@@ -832,7 +878,7 @@ const FormParameter = ({
         isCancel={false}
         onYes={() => {
           setPlaceman((placeman) => {
-            console.log(jobDirectorIndex);
+            console.log("jobDirectorIndex", jobDirectorIndex);
 
             return {
               ...placeman,
@@ -844,21 +890,20 @@ const FormParameter = ({
                   jobDirector
                     ? jobDirector[jobDirectorIndex]?.position_name
                     : null,
-                  authorizedOfficial
-                    ? authorizedOfficial[authorizedOfficialIndex]?.address
+                  jobSupervisor
+                    ? jobSupervisor[jobSupervisorIndex]?.address
                     : null,
-                  authorizedOfficial
-                    ? authorizedOfficial[authorizedOfficialIndex]?.phone
+                  jobSupervisor
+                    ? jobSupervisor[jobSupervisorIndex]?.phone
                     : null,
-                  authorizedOfficial
-                    ? authorizedOfficial[authorizedOfficialIndex]?.fax
-                    : null
+                  jobSupervisor ? jobSupervisor[jobSupervisorIndex]?.fax : null
                 ),
               ],
             };
           });
         }}
       >
+        <Formik></Formik>
         <div
           style={{
             padding: "0 17%",
@@ -977,15 +1022,20 @@ const FormParameter = ({
                 <span>Telp</span>
                 <input
                   type="text"
-                  className="form-control"
+                  style={{
+                    padding: 8,
+                    borderRadius: 4,
+                    border: 1,
+                    borderStyle: "solid",
+                    borderColor: "#8c8a8a",
+                    opacity: 0.8,
+                    backgroundColor: "#e8f4fb",
+                  }}
                   value={
                     jobSupervisor
                       ? jobSupervisor[jobSupervisorIndex]?.phone
                       : null
                   }
-                  style={{
-                    backgroundColor: "#e8f4fb",
-                  }}
                   disabled
                 />
               </label>
@@ -1002,16 +1052,21 @@ const FormParameter = ({
                 <span>FAX</span>
                 <input
                   type="text"
-                  className="form-control"
+                  style={{
+                    padding: 8,
+                    borderRadius: 4,
+                    border: 1,
+                    borderStyle: "solid",
+                    borderColor: "#8c8a8a",
+                    opacity: 0.8,
+                    backgroundColor: "#e8f4fb",
+                  }}
                   value={
                     jobSupervisor
-                      ? jobSupervisor[jobSupervisorIndex]?.phone
+                      ? jobSupervisor[jobSupervisorIndex]?.fax
                       : null
                   }
                   disabled
-                  style={{
-                    backgroundColor: "#e8f4fb",
-                  }}
                 />
               </label>
             </div>
@@ -1248,10 +1303,9 @@ const FormParameter = ({
                 ],
               };
             });
-            openCloseSecondWorkSupervisor.current.close();
           }}
         >
-          {() => (
+          {({ values }) => (
             <>
               <Form>
                 <div
@@ -2870,13 +2924,8 @@ const FormParameter = ({
                               >
                                 <span>Nama Lengkap</span>
                                 <input
+                                  className="form-control"
                                   style={{
-                                    padding: 8,
-                                    borderRadius: 4,
-                                    border: 1,
-                                    borderStyle: "solid",
-                                    borderColor: "#8c8a8a",
-                                    opacity: 0.8,
                                     backgroundColor: "#e8f4fb",
                                   }}
                                   value={
@@ -2897,13 +2946,8 @@ const FormParameter = ({
                               >
                                 <span>Jabatan</span>
                                 <input
+                                  className="form-control"
                                   style={{
-                                    padding: 8,
-                                    borderRadius: 4,
-                                    border: 1,
-                                    borderStyle: "solid",
-                                    borderColor: "#8c8a8a",
-                                    opacity: 0.8,
                                     backgroundColor: "#e8f4fb",
                                   }}
                                   value={
@@ -3004,12 +3048,35 @@ const FormParameter = ({
                                           rowGap: 4,
                                         }}
                                       >
-                                        <span>Username</span>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                          }}
+                                        >
+                                          <span>Username</span>
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setPlaceman((placeman) => {
+                                                let data = { ...placeman };
+                                                data.workDirector.splice(
+                                                  index,
+                                                  1
+                                                );
+                                                return data;
+                                              });
+                                            }}
+                                          >
+                                            Hapus
+                                          </button>
+                                        </div>
                                         <input
                                           type="text"
                                           value={data.name}
                                           className="form-control"
                                           style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -3025,6 +3092,9 @@ const FormParameter = ({
                                         <span>Nama Lengkap</span>
                                         <input
                                           type="text"
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                           value={
                                             index === 0
                                               ? jobDirector
@@ -3033,8 +3103,6 @@ const FormParameter = ({
                                                 : null
                                               : data.fullname
                                           }
-                                          className="form-control"
-                                          style={{ backgroundColor: "#e8f4fb" }}
                                         />
                                       </label>
                                     </div>
@@ -3050,6 +3118,8 @@ const FormParameter = ({
                                         <span>Jabatan</span>
                                         <input
                                           type="text"
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
                                           value={
                                             index === 0
                                               ? jobDirector
@@ -3058,8 +3128,7 @@ const FormParameter = ({
                                                 : null
                                               : data.position
                                           }
-                                          className="form-control"
-                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -3075,6 +3144,8 @@ const FormParameter = ({
                                         <span>Alamat</span>
                                         <input
                                           type="text"
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
                                           value={
                                             index === 0
                                               ? authorizedOfficial
@@ -3084,8 +3155,7 @@ const FormParameter = ({
                                                 : null
                                               : data.address
                                           }
-                                          className="form-control"
-                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -3101,6 +3171,8 @@ const FormParameter = ({
                                         <span>Telp</span>
                                         <input
                                           type="text"
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
                                           value={
                                             index === 0
                                               ? authorizedOfficial
@@ -3110,8 +3182,7 @@ const FormParameter = ({
                                                 : null
                                               : data.phone_number
                                           }
-                                          className="form-control"
-                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -3127,6 +3198,8 @@ const FormParameter = ({
                                         <span>FAX</span>
                                         <input
                                           type="text"
+                                          className="form-control"
+                                          style={{ backgroundColor: "#e8f4fb" }}
                                           value={
                                             index === 0
                                               ? authorizedOfficial
@@ -3136,8 +3209,7 @@ const FormParameter = ({
                                                 : null
                                               : data.fax
                                           }
-                                          className="form-control"
-                                          style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -3177,7 +3249,7 @@ const FormParameter = ({
                               </button>
                             </div>
 
-                            {/* Pengawas Pekerjaan */}
+                            {/* Pengawas Pekerjaan Pihak Pertama */}
 
                             <div>
                               <label
@@ -3259,7 +3331,7 @@ const FormParameter = ({
                               </label>
                             </div>
 
-                            {/* Pengawas Pekerjaan */}
+                            {/* Pengawas Pekerjaan Pihak Pertama */}
                             {placeman.workSupervisor &&
                               placeman.workSupervisor.map((data, index) => {
                                 return (
@@ -3278,12 +3350,35 @@ const FormParameter = ({
                                           rowGap: 4,
                                         }}
                                       >
-                                        <span>Jabatan</span>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                          }}
+                                        >
+                                          <span>Jabatan</span>
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setPlaceman((placeman) => {
+                                                let data = { ...placeman };
+                                                data.workSupervisor.splice(
+                                                  index,
+                                                  1
+                                                );
+                                                return data;
+                                              });
+                                            }}
+                                          >
+                                            Hapus
+                                          </button>
+                                        </div>
                                         <input
                                           type="text"
-                                          value={`${data.position}`}
+                                          value={`${data?.position}`}
                                           className="form-control"
                                           style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -3304,9 +3399,10 @@ const FormParameter = ({
                                                   /> */}
                                         <input
                                           type="text"
-                                          value={`${data.address}`}
+                                          value={`${data?.address}`}
                                           className="form-control"
                                           style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -3322,15 +3418,17 @@ const FormParameter = ({
                                         <span>Telp</span>
                                         <input
                                           type="text"
-                                          value={
-                                            jobSupervisor
-                                              ? jobSupervisor[
-                                                  jobSupervisorIndex
-                                                ]?.phone
-                                              : null
-                                          }
+                                          // value={
+                                          //   jobSupervisor && data
+                                          //     ? jobSupervisor[
+                                          //         jobSupervisorIndex
+                                          //       ]?.phone
+                                          //     : null
+                                          // }
+                                          value={data?.phone_number}
                                           className="form-control"
                                           style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -3346,15 +3444,17 @@ const FormParameter = ({
                                         <span>FAX</span>
                                         <input
                                           type="text"
-                                          value={
-                                            jobSupervisor
-                                              ? jobSupervisor[
-                                                  jobSupervisorIndex
-                                                ]?.fax
-                                              : null
-                                          }
+                                          // value={
+                                          //   jobSupervisor && data
+                                          //     ? jobSupervisor[
+                                          //         jobSupervisorIndex
+                                          //       ]?.fax
+                                          //     : null
+                                          // }
+                                          value={data?.fax}
                                           className="form-control"
                                           style={{ backgroundColor: "#e8f4fb" }}
+                                          disabled
                                         />
                                       </label>
                                     </div>
@@ -4161,6 +4261,7 @@ const FormParameter = ({
                                 }}
                               >
                                 <span>Jabatan</span>
+
                                 <Field
                                   onChange={(e) =>
                                     setPlaceman((placeman) => ({
@@ -4269,7 +4370,30 @@ const FormParameter = ({
                                           height: 65.5,
                                         }}
                                       >
-                                        <span>Jabatan</span>
+                                        {/* <span>Jabatan</span> */}
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                          }}
+                                        >
+                                          <span>Jabatan</span>
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setPlaceman((placeman) => {
+                                                let data = { ...placeman };
+                                                data.secondWorkDirector.splice(
+                                                  index,
+                                                  1
+                                                );
+                                                return data;
+                                              });
+                                            }}
+                                          >
+                                            Hapus
+                                          </button>
+                                        </div>
                                         <input
                                           type="text"
                                           value={`${item.position}`}
@@ -4490,7 +4614,30 @@ const FormParameter = ({
                                             height: 65.5,
                                           }}
                                         >
-                                          <span>Jabatan</span>
+                                          {/* <span>Jabatan</span> */}
+                                          <div
+                                            style={{
+                                              display: "flex",
+                                              justifyContent: "space-between",
+                                            }}
+                                          >
+                                            <span>Jabatan</span>
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                setPlaceman((placeman) => {
+                                                  let data = { ...placeman };
+                                                  data.secondWorkSupervisor.splice(
+                                                    index,
+                                                    1
+                                                  );
+                                                  return data;
+                                                });
+                                              }}
+                                            >
+                                              Hapus
+                                            </button>
+                                          </div>
                                           <input
                                             type="text"
                                             value={`${item.position}`}
