@@ -19,7 +19,7 @@ const validationSchema = object().shape({
   // value: validation.require("Value"),
 });
 
-const RowTableSA = ({ item, index }) => {
+const RowTableSA = ({ wbs, poItem, item, index }) => {
   const formikRef = React.useRef();
   const wbsRef = React.useRef();
   const { setArrService, listWBS, readOnly, options } = useContext(
@@ -71,16 +71,20 @@ const RowTableSA = ({ item, index }) => {
     () => ({
       ...item,
       dist_type: item?.dist_type,
-      wbsdata: item?.wbsdata,
-      gl_account: { value: item?.gl_account, label: item?.gl_account },
+      wbsdata: item?.wbsdata || [],
+      gl_account: item?.gl_account ? { value: item?.gl_account, label: item?.gl_account } : null,
       cost_center: { value: item?.cost_center, label: item?.cost_center },
     }),
     [item]
   );
 
+  // console.log("WBS", item?.wbsdata)
+
   return (
     <React.Fragment key={item?.id}>
       <ModalAddWBS
+        wbs={wbs}
+        // poItem={poItem}
         innerRef={wbsRef}
         onSelected={_handleSelected}
         data={formikRef?.current?.values?.wbsdata}

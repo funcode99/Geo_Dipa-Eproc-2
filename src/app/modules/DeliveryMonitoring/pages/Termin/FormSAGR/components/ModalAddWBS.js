@@ -7,10 +7,10 @@ import ButtonContained from "../../../../../../components/button/ButtonGlobal";
 import { FormSAContext } from "./FormSA";
 import _ from "lodash";
 
-const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
+const ModalAddWBS = ({ wbs, innerRef, onSelected, dist_value, data }) => {
   const maxRows = 10;
   const formRef = React.useRef();
-  const { listWBS } = React.useContext(FormSAContext);
+  // const { listWBS } = React.useContext(FormSAContext);
 
   const [dataForm, setDataForm] = useState([
     [
@@ -74,7 +74,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
     data.forEach((item, i) => {
       const indexRow = i + 1;
 
-      const lookup = listWBS.find(
+      const lookup = wbs.find(
         (wbs) => item?.name === wbs?.work_breakdown_ap
       );
       initialValues[`wbs${indexRow}`] = {
@@ -87,7 +87,7 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
     });
 
     return initialValues;
-  }, [data, listWBS]);
+  }, [data, wbs]);
 
   const subField = () => {
     setDataForm((e) => {
@@ -157,11 +157,13 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
 
   useEffect(_initModal, [data]);
 
-  const listWBSMapped = listWBS.map(({ id, work_breakdown_ap, name }) => ({
+  const listWBSMapped = wbs?.map(({ id, work_breakdown_ap, name }) => ({
     value: id,
     label: `${work_breakdown_ap} - ${name}`,
     wbs_id: work_breakdown_ap,
   }));
+
+  // console.log({wbs, data});
 
   return (
     <DialogGlobal

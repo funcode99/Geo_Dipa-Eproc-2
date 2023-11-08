@@ -20,7 +20,7 @@ const TableSA = ({ itemJasa, itemSA }) => {
     ],
     []
   );
-  const { readOnly, dataSA, baseSA, saExist } = React.useContext(FormSAContext);
+  const { readOnly, dataSA, baseSA, saExist, listWBS } = React.useContext(FormSAContext);
 
   const dataUsed = readOnly ? dataSA.services : itemJasa;
   const poUsed = useMemo(
@@ -29,6 +29,12 @@ const TableSA = ({ itemJasa, itemSA }) => {
         (el) => el.po_item === itemSA.po_item
       )?.[0],
     [baseSA, itemSA]
+  );
+
+  const wbsUsed = useMemo(
+    () =>
+    listWBS.find((el) => el.po_item === itemSA.po_item)?.wbs_value,
+    [listWBS, itemSA]
   );
   // console.log(
   //   `dataUsed`,
@@ -39,6 +45,8 @@ const TableSA = ({ itemJasa, itemSA }) => {
   //   poUsed
   // );
 
+  // console.log(wbsUsed, "wbsUsed");
+
   return (
     <TablePaginationCustom
       headerRows={headerTableSA}
@@ -46,7 +54,7 @@ const TableSA = ({ itemJasa, itemSA }) => {
         name_service: el?.service?.short_text || "",
         service_id: el?.service?.id || "",
         qty: el?.qty,
-        wbsdata: saExist ? el?.wbs : [{ name: poUsed?.wbs_elem_e, value: 1 }],
+        wbsdata: saExist ? el?.wbs : null,
         // wbsdata: saExist ? el?.wbs : baseSA?.wbs,
         dist_type: saExist
           ? option_dist_type.filter(
@@ -68,7 +76,7 @@ const TableSA = ({ itemJasa, itemSA }) => {
         isEmpty(item) ? (
           <div key={index}></div>
         ) : (
-          <RowTableSA item={item} index={index} />
+          <RowTableSA wbs={wbsUsed} poItem={itemSA.po_item} item={item} index={index} />
         )
       }
       fieldProps={{
