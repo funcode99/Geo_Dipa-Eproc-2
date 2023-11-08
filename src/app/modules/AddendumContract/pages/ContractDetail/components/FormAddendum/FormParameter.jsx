@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, CardBody } from "_metronic/_partials/controls";
 import { Formik, Field, FieldArray, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import moment from "moment";
+
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "_metronic/_helpers/index";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
 import { rupiah } from "app/libs/currency";
+import { countdownMonths } from "app/libs/timeperioddate";
+import { countdownConverter } from "app/libs/timedateconverter";
 
 import ButtonAction from "app/components/buttonAction/ButtonAction";
 import DialogGlobal from "app/components/modals/DialogGlobal";
@@ -143,23 +145,6 @@ const FormParameter = ({
   // console.log("isi pengawas pekerjaan", jobSupervisor);
   // console.log("isi jsonData", jsonData);
 
-  const countdownMonths = (start, end) => {
-    let endDate = moment(end);
-    const timeBetween = moment.duration(endDate.diff(start));
-    return (
-      <>
-        <p className="counter">
-          <span>
-            {isNaN(timeBetween.months()) ? "X" : timeBetween.months()} Bulan{" "}
-          </span>
-          <span>
-            {isNaN(timeBetween.days()) ? "X" : timeBetween.days()} Hari{" "}
-          </span>
-        </p>
-      </>
-    );
-  };
-
   const timePeriodBeforeAddendum = [
     {
       title: "Jangka Waktu Perjanjian",
@@ -172,12 +157,12 @@ const FormParameter = ({
     },
     {
       title: "Jangka Waktu Pelaksanaan Pekerjaan",
-      startDate: timePeriodData?.worked_start_date,
-      endDate: timePeriodData?.worked_end_date,
+      startDate: timePeriodData?.work_start_date,
+      endDate: timePeriodData?.work_end_date,
       totalMonth: timePeriodData?.work_implement_period_month,
       calendarDay: timePeriodData?.work_implement_period_day,
       radio: timePeriodData?.work_period_type,
-      prefix: "worked",
+      prefix: "work",
     },
     {
       title: "Jangka Waktu Masa Garansi",
@@ -209,12 +194,12 @@ const FormParameter = ({
     },
     {
       title: "Jangka Waktu Pelaksanaan Pekerjaan",
-      startDate: timePeriodData?.worked_start_date,
-      endDate: timePeriodData?.worked_end_date,
+      startDate: timePeriodData?.work_start_date,
+      endDate: timePeriodData?.work_end_date,
       totalMonth: timePeriodData?.work_implement_period_month,
       calendarDay: timePeriodData?.work_implement_period_day,
       radio: timePeriodData?.work_period_type,
-      prefix: "worked",
+      prefix: "work",
     },
     {
       title: "Jangka Waktu Masa Garansi",
@@ -475,22 +460,22 @@ const FormParameter = ({
         add_contract_id: jsonData?.add_contracts[0]?.id,
         from_time: values?.contract_start_date,
         thru_time: values?.contract_end_date,
-        worked_start_date: values?.worked_start_date,
-        worked_end_date: values?.worked_end_date,
+        work_start_date: values?.work_start_date,
+        work_end_date: values?.work_end_date,
         guarantee_start_date: values?.guarantee_start_date,
         guarantee_end_date: values?.guarantee_end_date,
         maintenance_start_date: values?.maintenance_start_date,
         maintenance_end_date: values?.maintenance_end_date,
-        add_contract_periode_range_month: "6",
-        add_contract_periode_range_day: "123",
-        add_work_implement_period_month: "6",
-        add_work_implement_period_day: "123",
-        add_guarantee_period_month: "6",
-        add_guarantee_period_day: "123",
-        add_maintenance_period_month: "6",
-        add_maintenance_period_day: "123",
-        add_contract_period_type: "SKPP",
-        add_work_period_type: "SPMK",
+        add_contract_periode_range_month: values?.contract_range_month,
+        add_contract_periode_range_day: values?.contract_range_day,
+        add_work_implement_period_month: values?.work_range_month,
+        add_work_implement_period_day: values?.work_range_day,
+        add_guarantee_period_month: values?.guarantee_range_month,
+        add_guarantee_period_day: values?.guarantee_range_day,
+        add_maintenance_period_month: values?.maintenance_range_month,
+        add_maintenance_period_day: values?.maintenance_range_day,
+        add_contract_period_type: values?.add_contract_period_type,
+        add_work_period_type: values?.add_work_period_type,
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
@@ -596,7 +581,14 @@ const FormParameter = ({
   const [dataArrFine, setDataArrFine] = useState([]);
   const [currencies, setDataCurrencies] = useState([]);
   const [placeman, setPlaceman] = useState({
-    initialWorkDirector: {},
+    initialWorkDirector: {
+      username: "",
+      fullname: "",
+      position: "",
+      address: "",
+      phone: "",
+      fax: "",
+    },
     initialWorkSupervisor: {
       position: "",
       address: "",
@@ -2003,9 +1995,6 @@ const FormParameter = ({
                     inputAuthorizedOfficial.official_sk_kemenkumham_no,
                   official_sk_kemenkumham_date:
                     inputAuthorizedOfficial.official_sk_kemenkumham_date,
-                  body_data: partiesBodyClauseData,
-                  initial_attachment_data: partiesInitialAttachmentClauseData,
-                  attachment_data: partiesAttachmentClauseData,
                   initialJobDirector: placeman.initialWorkDirector,
                   initialJobSupervisor: placeman.initialWorkSupervisor,
                   jobDirector: placeman.workDirector,
@@ -2015,13 +2004,16 @@ const FormParameter = ({
                     placeman.initialSecondWorkSupervisor,
                   secondJobDirector: placeman.secondWorkDirector,
                   secondJobSupervisor: placeman.secondWorkSupervisor,
+                  body_data: partiesBodyClauseData,
+                  initial_attachment_data: partiesInitialAttachmentClauseData,
+                  attachment_data: partiesAttachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   values.attachment_data.unshift(
                     values.initial_attachment_data
                   );
                   console.log("isi values parties", values);
-                  // submitFormParameterContractParties(values);
+                  submitFormParameterContractParties(values);
                 }}
               >
                 {({ values }) => (
@@ -2974,6 +2966,20 @@ const FormParameter = ({
                                 />
                               </div>
 
+                              <Field
+                                className="form-control d-none"
+                                style={{
+                                  backgroundColor: "#e8f4fb",
+                                }}
+                                name="initialJobDirector.username"
+                                value={
+                                  jobDirector
+                                    ? jobDirector[jobDirectorIndex]?.username
+                                    : null
+                                }
+                                disabled
+                              />
+
                               <div
                                 style={{
                                   display: "flex",
@@ -2982,11 +2988,12 @@ const FormParameter = ({
                                 }}
                               >
                                 <span>Nama Lengkap</span>
-                                <input
+                                <Field
                                   className="form-control"
                                   style={{
                                     backgroundColor: "#e8f4fb",
                                   }}
+                                  name="initialJobDirector.fullname"
                                   value={
                                     jobDirector
                                       ? jobDirector[jobDirectorIndex]?.full_name
@@ -3009,6 +3016,7 @@ const FormParameter = ({
                                   style={{
                                     backgroundColor: "#e8f4fb",
                                   }}
+                                  name="initialJobDirector.position"
                                   value={
                                     jobDirector
                                       ? jobDirector[jobDirectorIndex]
@@ -3036,6 +3044,20 @@ const FormParameter = ({
                                 </label>
                               </div>
 
+                              <Field
+                                className="form-control d-none"
+                                style={{
+                                  backgroundColor: "#e8f4fb",
+                                }}
+                                name="initialJobDirector.address"
+                                value={
+                                  jobSupervisor
+                                    ? jobSupervisor[jobSupervisorIndex]?.address
+                                    : null
+                                }
+                                disabled
+                              />
+
                               <div>
                                 <label
                                   style={{
@@ -3048,6 +3070,7 @@ const FormParameter = ({
                                   <input
                                     type="text"
                                     className="form-control"
+                                    name="initialJobDirector.phone"
                                     value={
                                       jobSupervisor
                                         ? jobSupervisor[jobSupervisorIndex]
@@ -3074,10 +3097,10 @@ const FormParameter = ({
                                   <input
                                     type="text"
                                     className="form-control"
+                                    name="initialJobDirector.fax"
                                     value={
                                       jobSupervisor
-                                        ? jobSupervisor[jobSupervisorIndex]
-                                            ?.phone
+                                        ? jobSupervisor[jobSupervisorIndex]?.fax
                                         : null
                                     }
                                     disabled
@@ -5146,25 +5169,27 @@ const FormParameter = ({
               <Formik
                 enableReinitialize={true}
                 initialValues={{
-                  contract_start_date: "",
-                  contract_end_date: "",
-                  worked_start_date: "",
-                  worked_end_date: "",
-                  guarantee_start_date: "",
-                  guarantee_end_date: "",
-                  maintenance_start_date: "",
-                  maintenance_end_date: "",
-                  contract_range_month: "",
-                  contract_range_day: "",
-                  work_range_month: "",
-                  work_range_day: "",
-                  guarantee_range_month: "",
-                  guarantee_range_day: "",
-                  maintenance_range_month: "",
-                  maintenance_range_day: "",
+                  contract_range_month: timePeriodAddendum[0]?.totalMonth,
+                  contract_range_day: timePeriodAddendum[0]?.calendarDay,
+                  work_range_month: timePeriodAddendum[1]?.totalMonth,
+                  work_range_day: timePeriodAddendum[1]?.calendarDay,
+                  guarantee_range_month: timePeriodAddendum[2]?.totalMonth,
+                  guarantee_range_day: timePeriodAddendum[2]?.calendarDay,
+                  maintenance_range_month: timePeriodAddendum[3]?.totalMonth,
+                  maintenance_range_day: timePeriodAddendum[3]?.calendarDay,
+                  contract_start_date: timePeriodAddendum[0]?.startDate,
+                  contract_end_date: timePeriodAddendum[0]?.endDate,
+                  work_start_date: timePeriodAddendum[1]?.startDate,
+                  work_end_date: timePeriodAddendum[1]?.endDate,
+                  guarantee_start_date: timePeriodAddendum[2]?.startDate,
+                  guarantee_end_date: timePeriodAddendum[2]?.endDate,
+                  maintenance_start_date: timePeriodAddendum[3]?.startDate,
+                  maintenance_end_date: timePeriodAddendum[3]?.endDate,
                   body_data: timePeriodBodyClauseData,
                   initial_attachment_data: timePeriodInitialAttachmentClauseData,
                   attachment_data: timePeriodAttachmentClauseData,
+                  add_contract_period_type: timePeriodAddendum[0]?.radio,
+                  add_work_period_type: timePeriodAddendum[1]?.radio,
                 }}
                 onSubmit={(values) => {
                   console.log("isi jangka waktu", values);
@@ -5310,11 +5335,11 @@ const FormParameter = ({
                                   >
                                     {data.totalMonth !== null
                                       ? data.totalMonth
-                                      : "X"}{" "}
+                                      : 0}{" "}
                                     Bulan{" "}
                                     {data.calendarDay !== null
                                       ? data.calendarDay
-                                      : "X"}{" "}
+                                      : 0}{" "}
                                     Hari
                                   </p>
                                 </div>
@@ -5447,14 +5472,7 @@ const FormParameter = ({
                                         }}
                                         name={data.prefix + "_start_date"}
                                         //
-                                        value={
-                                          data.title ===
-                                            "Jangka Waktu Perjanjian" ||
-                                          data.title ===
-                                            "Jangka Waktu Pelaksanaan Pekerjaan"
-                                            ? data.startDate
-                                            : null
-                                        }
+                                        value={data.startDate}
                                         disabled={
                                           data.title ===
                                             "Jangka Waktu Perjanjian" ||
@@ -5490,8 +5508,6 @@ const FormParameter = ({
                                         padding: 0,
                                       }}
                                     >
-                                      <span></span>
-
                                       <Field
                                         type="date"
                                         style={{
@@ -5504,14 +5520,22 @@ const FormParameter = ({
                                         }}
                                         name={data.prefix + "_end_date"}
                                         value={data.endDate}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
                                           setTimePeriodAddendum((prev) => {
-                                            let newArr = [...prev];
-                                            newArr[index].endDate =
-                                              e.target.value;
-                                            return newArr;
-                                          })
-                                        }
+                                            if (e !== null) {
+                                              let newArr = [...prev];
+                                              newArr[index].endDate =
+                                                e.target.value;
+                                              let a = countdownConverter(
+                                                data?.startDate,
+                                                data?.endDate
+                                              );
+                                              newArr[index].totalMonth = a[0];
+                                              newArr[index].calendarDay = a[1];
+                                              return newArr;
+                                            }
+                                          });
+                                        }}
                                       />
                                     </div>
                                   </div>
@@ -5538,7 +5562,7 @@ const FormParameter = ({
                                 </div>
 
                                 {typeof data.radio !== "undefined" && (
-                                  <div
+                                  <label
                                     style={{
                                       display: "flex",
                                       gap: 20,
@@ -5547,7 +5571,7 @@ const FormParameter = ({
                                       minHeight: 41.5,
                                     }}
                                   >
-                                    <label
+                                    <div
                                       style={{
                                         margin: 0,
                                         display: "flex",
@@ -5556,15 +5580,15 @@ const FormParameter = ({
                                         columnGap: 8,
                                       }}
                                     >
-                                      <input
+                                      <Field
                                         type="radio"
-                                        name={`${index + 1}`}
+                                        name={`add_${data?.prefix}_period_type`}
                                         value={"SKPP"}
                                       />
                                       <span>SKPP</span>
-                                    </label>
+                                    </div>
 
-                                    <label
+                                    <div
                                       style={{
                                         margin: 0,
                                         display: "flex",
@@ -5573,14 +5597,14 @@ const FormParameter = ({
                                         columnGap: 8,
                                       }}
                                     >
-                                      <input
+                                      <Field
                                         type="radio"
-                                        name={`${index + 1}`}
+                                        name={`add_${data?.prefix}_period_type`}
                                         value={"SPMK"}
                                       />
                                       <span>SPMK</span>
-                                    </label>
-                                  </div>
+                                    </div>
+                                  </label>
                                 )}
                               </div>
                             </>
@@ -5713,16 +5737,13 @@ const FormParameter = ({
                                   <input
                                     style={{
                                       flex: 1,
-                                      // maxWidth: 500,
                                       padding: "10px 12px",
                                       borderRadius: 4,
                                     }}
                                     type="text"
                                     placeholder="Persentase"
                                     value={item?.percentage}
-                                    disabled={
-                                      addendumPaymentMethod !== "gradual"
-                                    }
+                                    disabled
                                   />
                                 </div>
                                 <div
@@ -5735,15 +5756,12 @@ const FormParameter = ({
                                   <textarea
                                     style={{
                                       flex: 1,
-                                      // maxWidth: 500,
                                       padding: "10px 12px",
                                       borderRadius: 4,
                                     }}
                                     placeholder="Deskripsi"
                                     value={item?.value}
-                                    disabled={
-                                      addendumPaymentMethod !== "gradual"
-                                    }
+                                    disabled
                                   ></textarea>
                                 </div>
                               </>
@@ -5827,7 +5845,9 @@ const FormParameter = ({
                                   type="text"
                                   placeholder="Persentase"
                                   value={item.percentage}
-                                  disabled={addendumPaymentMethod !== "gradual"}
+                                  disabled={
+                                    addendumPaymentMethod !== "gradually"
+                                  }
                                 />
                               </div>
                               <div
@@ -5845,7 +5865,9 @@ const FormParameter = ({
                                   }}
                                   placeholder="Deskripsi"
                                   value={item.value}
-                                  disabled={addendumPaymentMethod !== "gradual"}
+                                  disabled={
+                                    addendumPaymentMethod !== "gradually"
+                                  }
                                 ></textarea>
                               </div>
                             </>
@@ -5873,7 +5895,9 @@ const FormParameter = ({
                                   type="text"
                                   placeholder="Persentase"
                                   value={item.percentage}
-                                  disabled={addendumPaymentMethod !== "gradual"}
+                                  disabled={
+                                    addendumPaymentMethod !== "gradually"
+                                  }
                                 />
                               </div>
                               <div
@@ -5891,13 +5915,15 @@ const FormParameter = ({
                                   }}
                                   placeholder="Deskripsi"
                                   value={item.description}
-                                  disabled={addendumPaymentMethod !== "gradual"}
+                                  disabled={
+                                    addendumPaymentMethod !== "gradually"
+                                  }
                                 ></textarea>
                               </div>
                             </>
                           );
                         })}
-                        {addendumPaymentMethod === "gradual" && (
+                        {addendumPaymentMethod === "gradually" && (
                           <div
                             style={{
                               display: "flex",
