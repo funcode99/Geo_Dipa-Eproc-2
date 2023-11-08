@@ -825,12 +825,12 @@ export const AddContractAddendum = ({
             currentActiveTab={tabActive}
             headerData={dataArr}
             jsonData={jsonData}
-            authorizedOfficial={authorizedOfficial}
-            secondAuthorizedOfficial={secondAuthorizedOfficial}
             jobDirector={jobDirector}
             jobSupervisor={jobSupervisor}
-            PICData={PICData}
             timePeriodData={timePeriodData}
+            authorizedOfficial={authorizedOfficial}
+            secondAuthorizedOfficial={secondAuthorizedOfficial}
+            PICData={PICData}
           />
 
           <div

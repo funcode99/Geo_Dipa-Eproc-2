@@ -32,7 +32,10 @@ const FormPermohonan = (props) => {
       is_add_account_number: values.checked.includes("account_number")
         ? "1"
         : "0",
-      is_budget_availability: values.others.includes("Lainnya") ? "1" : "0",
+      // is_budget_availability: values.others.includes("Lainnya") ? "1" : "0",
+      is_budget_availability: values.checked.some((item) => item === "others")
+        ? "1"
+        : "0",
       other_note: values.note,
       initial_job_price: `${props?.headerData?.initial_contract_value}`,
       latest_addendum_job_price: values.latest_adnm_job_price,
@@ -294,14 +297,15 @@ const FormPermohonan = (props) => {
           <Formik
             initialValues={{
               checked: props.checkedValues,
-              others: [],
               additional_price: "0",
               substraction_price: "0",
               note: "",
               adnm_conclusion: "",
-              request_date: null,
+              request_date: dateDisplay,
+              is_availability_budget: false,
             }}
             onSubmit={(values) => {
+              console.log("isi submit values", values);
               props.checkedLength(values.checked.length);
               submitAddendumRequestForm(values);
             }}
@@ -343,7 +347,6 @@ const FormPermohonan = (props) => {
                       <Field
                         type="date"
                         name="request_date"
-                        // value={dateDisplay}
                         style={{
                           borderRadius: 4,
                           padding: "10px 12px",
@@ -353,7 +356,7 @@ const FormPermohonan = (props) => {
                           minWidth: 270,
                         }}
                         onChange={(e) => {
-                          //   setDateDisplay(formatDate(new Date(e.target.value)));
+                          setDateDisplay(formatDate(new Date(e.target.value)));
                         }}
                       />
                     </div>
@@ -540,8 +543,8 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="others"
-                          value="Lainnya"
+                          name="checked"
+                          value="others"
                           style={{
                             height: 20,
                             width: 20,
@@ -558,7 +561,11 @@ const FormPermohonan = (props) => {
                         type="text"
                         name="note"
                         placeholder="Masukkan perihal addendum lainnya"
-                        disabled={values.others.length === 0 ? true : false}
+                        disabled={
+                          values.checked.some((item) => item === "others")
+                            ? false
+                            : true
+                        }
                       />
                     </div>
                   </div>
@@ -662,8 +669,13 @@ const FormPermohonan = (props) => {
                             gap: 12,
                           }}
                         >
-                          <input
+                          <Field
                             type="checkbox"
+                            name="is_availability_budget"
+                            checked={
+                              values.additional_price !== "0" &&
+                              values.additional_price !== ""
+                            }
                             style={{
                               height: 20,
                               width: 20,
@@ -679,6 +691,7 @@ const FormPermohonan = (props) => {
                           <span style={{ color: "#dc0526" }}>
                             (jika penambahan harga pekerjaan diisi)
                           </span>
+                          {/* {`${values.is_availability_budget}`} */}
                         </div>
                       </div>
                     </Col>
