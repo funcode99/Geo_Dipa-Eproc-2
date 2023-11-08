@@ -186,7 +186,7 @@ export const rowTableSA_field = [
     name: "gl_account",
     label: "GL Account",
     typeInput: "SelectInputCustom",
-    isMulti: true,
+    // isMulti: true,
   },
   {
     name: "bus_area",
