@@ -9,16 +9,22 @@ const Checkbox = ({ children, ...props }) => (
   </label>
 );
 
-export const ReactSelect = ({ data, func, labelName }) => {
+export const ReactSelect = ({
+  data,
+  func,
+  labelName,
+  arrayIndex,
+  currentSelect,
+  type,
+}) => {
   const [isClearable, setIsClearable] = useState(true);
   const [isSearchable, setIsSearchable] = useState(true);
   const [userChoice, setUserChoice] = useState(0);
 
   useEffect(() => {
     if (func) {
-      func(userChoice);
+      func(userChoice, arrayIndex, data, type);
     }
-    console.log(userChoice);
   }, [userChoice]);
 
   console.log("isi data di react select", data);
@@ -36,7 +42,13 @@ export const ReactSelect = ({ data, func, labelName }) => {
       <Select
         className="basic-single"
         classNamePrefix="select"
-        defaultValue={typeof data !== "undefined" ? data[0] : colourOptions[0]}
+        defaultValue={
+          currentSelect
+            ? data[currentSelect]
+            : typeof data !== "undefined"
+            ? data[0]
+            : colourOptions[0]
+        }
         options={typeof data !== "undefined" ? data : colourOptions}
         isClearable={isClearable}
         isSearchable={isSearchable}
