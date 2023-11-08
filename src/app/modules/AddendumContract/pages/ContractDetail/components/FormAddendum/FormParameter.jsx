@@ -627,18 +627,21 @@ const FormParameter = ({
   const [stagePayment, setStagePayment] = useState({
     payment: [],
   });
-  const [earlyStagePayment, setEarlyStagePayment] = useState([
-    {
-      payment_stage: "Tahap 1",
-      percentage_value: 50,
-      description: "ini deskripsi tahap 1",
-    },
-    {
-      payment_stage: "Tahap 2",
-      percentage_value: 50,
-      description: "ini deskripsi tahap 2",
-    },
-  ]);
+  const [earlyStagePayment, setEarlyStagePayment] = useState(
+    jsonData?.payment_method_data
+    // [
+    // {
+    //   payment_stage: "Tahap 1",
+    //   percentage_value: 50,
+    //   description: "ini deskripsi tahap 1",
+    // },
+    // {
+    //   payment_stage: "Tahap 2",
+    //   percentage_value: 50,
+    //   description: "ini deskripsi tahap 2",
+    // },
+    // ]
+  );
   const [fine, setFine] = useState([]);
   const [accountNumber, setAccountNumber] = useState(
     jsonData?.data_bank[bankIndex]
@@ -5251,7 +5254,8 @@ const FormParameter = ({
                                           columnGap: 10,
                                         }}
                                         value={data.startDate}
-                                        readonly
+                                        // kalo ada value nya gak bisa diganti, kalo gak ada value bisa diganti
+                                        disabled
                                       />
                                     </div>
 
@@ -5273,8 +5277,6 @@ const FormParameter = ({
                                         padding: 0,
                                       }}
                                     >
-                                      <span></span>
-
                                       <input
                                         type="date"
                                         style={{
@@ -5287,7 +5289,7 @@ const FormParameter = ({
                                           columnGap: 10,
                                         }}
                                         value={data.endDate}
-                                        readonly
+                                        disabled
                                       />
                                     </div>
                                   </div>
@@ -5453,7 +5455,7 @@ const FormParameter = ({
                                             ? data.startDate
                                             : null
                                         }
-                                        readonly={
+                                        disabled={
                                           data.title ===
                                             "Jangka Waktu Perjanjian" ||
                                           data.title ===
@@ -5640,6 +5642,7 @@ const FormParameter = ({
                         display: "flex",
                         justifyContent: "space-between",
                         marginBottom: 40,
+                        columnGap: 100,
                       }}
                     >
                       {/* Metode Pembayaran Kontrak Awal */}
@@ -5674,7 +5677,7 @@ const FormParameter = ({
                               type="radio"
                               name="payment"
                               disabled
-                              checked
+                              checked={jsonData?.payment_method === "full"}
                             />
                             Full Pembayaran
                           </label>
@@ -5684,10 +5687,68 @@ const FormParameter = ({
                               gap: 12,
                             }}
                           >
-                            <input type="radio" name="payment" disabled />
+                            <input
+                              type="radio"
+                              name="payment"
+                              disabled
+                              checked={jsonData?.payment_method === "gradually"}
+                            />
                             Pembayaran Bertahap
                           </label>
                         </div>
+                        {jsonData?.payment_method_data &&
+                          jsonData?.payment_method_data.map((item) => {
+                            return (
+                              <>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    columnGap: 10,
+                                    placeItems: "center",
+                                    marginTop: 28,
+                                    marginBottom: 14,
+                                  }}
+                                >
+                                  Tahap {item?.payment}
+                                  <input
+                                    style={{
+                                      flex: 1,
+                                      // maxWidth: 500,
+                                      padding: "10px 12px",
+                                      borderRadius: 4,
+                                    }}
+                                    type="text"
+                                    placeholder="Persentase"
+                                    value={item?.percentage}
+                                    disabled={
+                                      addendumPaymentMethod !== "gradual"
+                                    }
+                                  />
+                                </div>
+                                <div
+                                  style={{
+                                    marginTop: 14,
+                                    marginBottom: 28,
+                                    display: "flex",
+                                  }}
+                                >
+                                  <textarea
+                                    style={{
+                                      flex: 1,
+                                      // maxWidth: 500,
+                                      padding: "10px 12px",
+                                      borderRadius: 4,
+                                    }}
+                                    placeholder="Deskripsi"
+                                    value={item?.value}
+                                    disabled={
+                                      addendumPaymentMethod !== "gradual"
+                                    }
+                                  ></textarea>
+                                </div>
+                              </>
+                            );
+                          })}
                       </div>
 
                       {/* Addendum Metode Pembayaran */}
@@ -5737,14 +5798,14 @@ const FormParameter = ({
                               type="radio"
                               name="payment_addendum"
                               onClick={() =>
-                                setAddendumPaymentMethod("gradual")
+                                setAddendumPaymentMethod("gradually")
                               }
-                              checked={addendumPaymentMethod === "gradual"}
+                              checked={addendumPaymentMethod === "gradually"}
                             />
                             Pembayaran Bertahap
                           </label>
                         </div>
-                        {earlyStagePayment.map((item, index) => {
+                        {earlyStagePayment.map((item) => {
                           return (
                             <>
                               <div
@@ -5756,7 +5817,7 @@ const FormParameter = ({
                                   marginBottom: 14,
                                 }}
                               >
-                                Tahap {index + 1}
+                                Tahap {item.payment}
                                 <input
                                   style={{
                                     flex: 1,
@@ -5783,7 +5844,7 @@ const FormParameter = ({
                                     borderRadius: 4,
                                   }}
                                   placeholder="Deskripsi"
-                                  value={item.description}
+                                  value={item.value}
                                   disabled={addendumPaymentMethod !== "gradual"}
                                 ></textarea>
                               </div>

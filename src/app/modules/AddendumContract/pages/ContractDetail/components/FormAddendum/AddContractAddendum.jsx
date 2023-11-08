@@ -351,7 +351,8 @@ export const AddContractAddendum = ({
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      url: `/adendum/contract-released/${contract_id}/show`,
+      // url: `/adendum/contract-released/${contract_id}/show`,
+      url: `/adendum/contract-released/25d8e945-1caa-4d90-b0bb-30052ecf564f/show`,
       onSuccess: (res) => {
         console.log("apakah menarik data", res.data.id);
         setJsonData(res.data);
