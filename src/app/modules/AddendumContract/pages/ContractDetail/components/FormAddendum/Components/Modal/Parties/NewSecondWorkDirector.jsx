@@ -6,10 +6,10 @@ const NewSecondWorkDirector = ({
   openCloseSecondWorkDirector,
   setPlaceman,
 }) => {
-  const createNewPlaceman = (position, address, phone_number, fax) => ({
+  const createNewPlaceman = (position, address, phone, fax) => ({
     position,
     address,
-    phone_number,
+    phone,
     fax,
   });
   return (
@@ -44,9 +44,10 @@ const NewSecondWorkDirector = ({
                 ],
               };
             });
+            openCloseSecondWorkDirector.current.close();
           }}
         >
-          {({ values }) => (
+          {() => (
             <>
               <Form>
                 <div
