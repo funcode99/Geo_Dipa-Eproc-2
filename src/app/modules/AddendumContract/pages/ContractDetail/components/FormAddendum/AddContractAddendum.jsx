@@ -152,6 +152,7 @@ export const AddContractAddendum = ({
   const [authorizedOfficial, setauthorizedOfficial] = useState();
   const [secondAuthorizedOfficial, setSecondAuthorizedOfficial] = useState();
   const [PICData, setPICData] = useState();
+  const [accountNumberBankData, setAccountNumberBankData] = useState();
   const [tabActive, setTabActive] = React.useState(0);
   const [sequence, setSequence] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
@@ -427,6 +428,7 @@ export const AddContractAddendum = ({
         console.log("apakah menarik data direksi", res.data);
         setSecondAuthorizedOfficial(res.data.officer_data);
         setPICData(res.data.pic_data);
+        setAccountNumberBankData(res.data.bank_data);
       },
     });
   };
@@ -831,6 +833,7 @@ export const AddContractAddendum = ({
             authorizedOfficial={authorizedOfficial}
             secondAuthorizedOfficial={secondAuthorizedOfficial}
             PICData={PICData}
+            accountNumberBankData={accountNumberBankData}
           />
 
           <div

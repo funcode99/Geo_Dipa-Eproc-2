@@ -2,7 +2,7 @@ import React from "react";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import { Formik, Field, Form } from "formik";
 
-const NewClause = () => {
+const NewClause = ({ openCloseAddClause, setAttachmentClauseData }) => {
   return (
     <>
       {/* modal tambah klausul */}
@@ -28,17 +28,7 @@ const NewClause = () => {
                 },
               ];
             };
-            // if (currentActiveTab === 0) setPartiesAttachmentClauseData(doSet);
-            if (currentActiveTab === 1) setJobPriceAttachmentClauseData(doSet);
-            if (currentActiveTab === 2)
-              setTimePeriodAttachmentClauseData(doSet);
-            if (currentActiveTab === 3)
-              setPaymentMethodAttachmentClauseData(doSet);
-            if (currentActiveTab === 4) setFineAttachmentClauseData(doSet);
-            if (currentActiveTab === 5) setGuaranteeAttachmentClauseData(doSet);
-            if (currentActiveTab === 6)
-              setAccountNumberAttachmentClauseData(doSet);
-            if (currentActiveTab === 7) setOtherAttachmentClauseData(doSet);
+            setAttachmentClauseData(doSet);
             openCloseAddClause.current.close();
           }}
         >
