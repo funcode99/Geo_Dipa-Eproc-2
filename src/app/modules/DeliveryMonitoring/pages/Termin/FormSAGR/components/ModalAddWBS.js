@@ -74,7 +74,7 @@ const ModalAddWBS = ({ wbs, innerRef, onSelected, dist_value, data }) => {
     data.forEach((item, i) => {
       const indexRow = i + 1;
 
-      const lookup = wbs.find(
+      const lookup = wbs?.find(
         (wbs) => item?.name === wbs?.work_breakdown_ap
       );
       initialValues[`wbs${indexRow}`] = {
@@ -163,7 +163,7 @@ const ModalAddWBS = ({ wbs, innerRef, onSelected, dist_value, data }) => {
     wbs_id: work_breakdown_ap,
   }));
 
-  
+  console.log({wbs});
 
   return (
     <DialogGlobal
