@@ -223,7 +223,7 @@ export const AddContractAddendum = ({
     },
 
     {
-      id: "other",
+      id: "others",
       // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
       label: "Lainnya",
       // icon: <FeaturedPlayList className="mb-0 mr-2" />,

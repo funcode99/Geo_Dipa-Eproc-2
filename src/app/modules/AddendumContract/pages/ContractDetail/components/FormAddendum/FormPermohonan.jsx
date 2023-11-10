@@ -13,10 +13,11 @@ const FormPermohonan = (props) => {
   const [conclusion, setConclusion] = useState("");
   const [adnm_percentage, set_adnm_percentage] = useState();
   const [disabledInput, setDisabledInput] = useState("both");
-  const [dateDisplay, setDateDisplay] = useState();
+  const [dateDisplay, setDateDisplay] = useState(null);
 
   const submitAddendumRequestForm = (values) => {
     console.log("isi values saat submit", values);
+
     submitAddendumRequest({
       // unauthorized karena contract id nya wkwk, dasar goblok
       contract_id: `${props.contractId}`,
@@ -41,8 +42,9 @@ const FormPermohonan = (props) => {
       latest_addendum_job_price: values.latest_adnm_job_price,
       increase_job_price: values.additional_price,
       decrease_job_price: values.substraction_price,
-      after_addendum_job_price: values.after_adnm_job_price,
+      after_addendum_job_price: values.total_price,
       conclusion: conclusion,
+      addendum_percentage: adnm_percentage,
       add_request_date: values.request_date,
     });
   };
@@ -303,11 +305,16 @@ const FormPermohonan = (props) => {
               adnm_conclusion: "",
               request_date: dateDisplay,
               is_availability_budget: false,
+              total_price: "0",
             }}
             onSubmit={(values) => {
               console.log("isi submit values", values);
-              props.checkedLength(values.checked.length);
-              submitAddendumRequestForm(values);
+              if (dateDisplay === null) {
+                alert("Silahkan isi Tanggal Dokumen Permohoan");
+              } else {
+                props.checkedLength(values.checked.length);
+                submitAddendumRequestForm(values);
+              }
             }}
           >
             {({ values }) => (
@@ -334,16 +341,22 @@ const FormPermohonan = (props) => {
                       A. Tanggal Dokumen Permohonan
                       <span style={{ color: "#dc0526" }}>*</span>
                     </h1>
-                    <span
+                    {dateDisplay === null && (
+                      <span
+                        style={{
+                          fontSize: 12,
+                          color: "#dc0526",
+                          fontWeight: 400,
+                        }}
+                      >
+                        Silahkan pilih tanggal permohonan
+                      </span>
+                    )}
+                    <div
                       style={{
-                        fontSize: 12,
-                        color: "#dc0526",
-                        fontWeight: 400,
+                        marginTop: 5,
                       }}
                     >
-                      Silahkan pilih tanggal permohonan
-                    </span>
-                    <div>
                       <Field
                         type="date"
                         name="request_date"
@@ -720,7 +733,8 @@ const FormPermohonan = (props) => {
                           Harga Pekerjaan Setelah Addendum
                         </label>
                         <div className="col-sm-8">
-                          <input
+                          <Field
+                            name="total_price"
                             className="form-control"
                             type="text"
                             value={`${

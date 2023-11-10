@@ -77,8 +77,13 @@ const guaranteeBeforeAddendum = [
   },
 ];
 
-const actionButton = (
+const actionButton = (id, deleteFine) => (
   <ButtonAction
+    handleAction={(_, __, type) => {
+      if (type === "Hapus") {
+        deleteFine(id);
+      }
+    }}
     style={{
       backgroundColor: "#e8f4fb",
     }}
@@ -95,8 +100,8 @@ const actionButton = (
   />
 );
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(id, fine_type, value, max_day, value_type) {
+  return { id, fine_type, value, max_day, value_type };
 }
 
 const FormParameter = ({
@@ -383,11 +388,17 @@ const FormParameter = ({
     );
   };
 
-  const [addendumRows, setAddendumRows] = useState([
+  const [fine, setFine] = useState([
     createData(1, "Keterlambatan Pekerjaan", 10, 30, "%"),
   ]);
-  // console.log('tab yang aktif sekarang', currentActiveTab)
-  console.log("isi jsonData", jsonData);
+
+  const deleteFine = (id) => {
+    setFine(() => {
+      return fine.filter((data) => {
+        return data.id !== id;
+      });
+    });
+  };
 
   const { contract_id } = useParams();
   const [dataArr, setDataArr] = useState([]);
@@ -401,7 +412,6 @@ const FormParameter = ({
   const [stagePayment, setStagePayment] = useState({
     payment: a,
   });
-  const [fine, setFine] = useState([]);
   const [accountNumber, setAccountNumber] = useState(
     jsonData?.data_bank[bankIndex]
   );
@@ -511,11 +521,11 @@ const FormParameter = ({
             value_type: "",
           }}
           onSubmit={(values) => {
-            setAddendumRows((data) => {
+            setFine((data) => {
               return [
                 ...data,
                 createData(
-                  1,
+                  fine.length + 1,
                   values.fine_type,
                   values.value,
                   values.max_day,
@@ -1702,7 +1712,7 @@ const FormParameter = ({
               <Formik
                 enableReinitialize={true}
                 initialValues={{
-                  fine_data: addendumRows,
+                  fine_data: fine,
                   body_data: fineBodyClauseData,
                   attachment_data: fineAttachmentClauseData,
                 }}
@@ -1846,7 +1856,7 @@ const FormParameter = ({
                               </TableRow>
                             </TableBody>
                             <TableBody>
-                              {addendumRows.map((row, index) => (
+                              {fine.map((row, index) => (
                                 <TableRow
                                   key={row.name}
                                   sx={{
@@ -1859,17 +1869,19 @@ const FormParameter = ({
                                     {index + 1}
                                   </TableCell>
                                   <TableCell align="left" scope="row">
-                                    {row.calories}
-                                  </TableCell>
-                                  <TableCell align="left">{row.fat}</TableCell>
-                                  <TableCell align="left">
-                                    {row.carbs}
+                                    {row.fine_type}
                                   </TableCell>
                                   <TableCell align="left">
-                                    {row.protein}
+                                    {row.value}
                                   </TableCell>
                                   <TableCell align="left">
-                                    {actionButton}
+                                    {row.max_day}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {row.value_type}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {actionButton(row.id, deleteFine)}
                                   </TableCell>
                                 </TableRow>
                               ))}
