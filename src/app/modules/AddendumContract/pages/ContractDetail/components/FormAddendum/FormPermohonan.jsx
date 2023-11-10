@@ -33,13 +33,14 @@ const FormPermohonan = (props) => {
       is_add_account_number: values.checked.includes("account_number")
         ? "1"
         : "0",
-      // is_budget_availability: values.others.includes("Lainnya") ? "1" : "0",
-      is_budget_availability: values.checked.some((item) => item === "others")
-        ? "1"
-        : "0",
+      is_budget_availability:
+        values.is_availability_budget === true ? "1" : "0",
+      // values.checked.some((item) => item === "others")
+      //   ? "1"
+      //   : "0",
       other_note: values.note,
       initial_job_price: `${props?.headerData?.initial_contract_value}`,
-      latest_addendum_job_price: values.latest_adnm_job_price,
+      latest_addendum_job_price: props?.headerData?.latest_contract_value,
       increase_job_price: values.additional_price,
       decrease_job_price: values.substraction_price,
       after_addendum_job_price: values.total_price,
@@ -310,7 +311,15 @@ const FormPermohonan = (props) => {
             onSubmit={(values) => {
               console.log("isi submit values", values);
               if (dateDisplay === null) {
-                alert("Silahkan isi Tanggal Dokumen Permohoan");
+                alert("Silahkan isi Tanggal Dokumen Permohonan");
+              } else if (
+                values.is_availability_budget === false &&
+                values.additional_price !== "0" &&
+                values.additional_price !== ""
+              ) {
+                alert(
+                  "Silahkan centang Ketersediaan Anggaran untuk menambah harga pekerjaan!"
+                );
               } else {
                 props.checkedLength(values.checked.length);
                 submitAddendumRequestForm(values);
@@ -685,10 +694,6 @@ const FormPermohonan = (props) => {
                           <Field
                             type="checkbox"
                             name="is_availability_budget"
-                            checked={
-                              values.additional_price !== "0" &&
-                              values.additional_price !== ""
-                            }
                             style={{
                               height: 20,
                               width: 20,
