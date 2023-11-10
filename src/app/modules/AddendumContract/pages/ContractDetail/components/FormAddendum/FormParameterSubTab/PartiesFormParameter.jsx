@@ -60,7 +60,7 @@ const PartiesFormParameter = ({
   const submitFormParameterContractParties = (values) => {
     submitParties(
       {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
+        add_contract_id: localStorage.getItem("add_contract_id"),
         party_1_autorized_username: values?.official_username,
         party_1_autorized_name: values?.official_name,
         party_1_autorized_position: values?.official_position,
