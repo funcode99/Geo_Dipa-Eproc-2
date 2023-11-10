@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, CardBody } from "_metronic/_partials/controls";
 import { Formik, Field, FieldArray, Form, ErrorMessage } from "formik";
 import { toAbsoluteUrl } from "_metronic/_helpers/index";
-import { rupiah } from "app/libs/currency";
 import { countdownMonths } from "app/libs/timeperioddate";
 import { countdownConverter } from "app/libs/timedateconverter";
 import { useParams } from "react-router-dom";
@@ -18,7 +17,6 @@ import { ReactSelect } from "percobaan/ReactSelect";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { connect } from "react-redux";
 import {
-  submitJobPrice,
   submitTimePeriod,
   submitPaymentMethod,
   submitFine,
@@ -31,14 +29,16 @@ import * as Yup from "yup";
 import SVG from "react-inlinesvg";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
 import PartiesFormParameter from "./FormParameterSubTab/PartiesFormParameter";
+import JobPriceFormParameter from "./FormParameterSubTab/JobPriceFormParameter";
 import ButtonAction from "app/components/buttonAction/ButtonAction";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
-import EditableTable from "./Components/EditableTable";
+import NewClause from "./Components/Modal/NewClause";
 
-const createNewPaymentStage = (description, percentage) => ({
-  description,
+const createNewPaymentStage = (value, percentage, payment) => ({
+  value,
   percentage,
+  payment,
 });
 
 const guaranteeBeforeAddendum = [
@@ -77,8 +77,13 @@ const guaranteeBeforeAddendum = [
   },
 ];
 
-const actionButton = (
+const actionButton = (id, deleteFine) => (
   <ButtonAction
+    handleAction={(_, __, type) => {
+      if (type === "Hapus") {
+        deleteFine(id);
+      }
+    }}
     style={{
       backgroundColor: "#e8f4fb",
     }}
@@ -95,14 +100,9 @@ const actionButton = (
   />
 );
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(id, fine_type, value, max_day, value_type) {
+  return { id, fine_type, value, max_day, value_type };
 }
-
-const rows = [
-  createData(1, "Keterlambatan Pekerjaan", 10, 30, "%"),
-  createData(2, "Keterlambatan Pekerjaan", 15, 60, "%"),
-];
 
 const FormParameter = ({
   fetch_api_sg,
@@ -115,6 +115,7 @@ const FormParameter = ({
   authorizedOfficial,
   secondAuthorizedOfficial,
   PICData,
+  accountNumberBankData,
 }) => {
   // console.log("isi pihak kedua", secondAuthorizedOfficial);
   // console.log("isi auth official", authorizedOfficial);
@@ -213,87 +214,53 @@ const FormParameter = ({
     clause_note: "",
   };
 
-  const [jobPriceBodyClauseData, setJobPriceBodyClauseData] = useState(
-    bodyClauseDataTemplate
-  );
-  const [
-    jobPriceInitialAttachmentClauseData,
-    setJobPriceInitialAttachmentClauseData,
-  ] = useState(attachmentClauseDataTemplate);
-  const [
-    jobPriceAttachmentClauseData,
-    setJobPriceAttachmentClauseData,
-  ] = useState([]);
-
   const [timePeriodBodyClauseData, setTimePeriodBodyClauseData] = useState(
     bodyClauseDataTemplate
   );
   const [
-    timePeriodInitialAttachmentClauseData,
-    setTimePeriodInitialAttachmentClauseData,
-  ] = useState(attachmentClauseDataTemplate);
-  const [
     timePeriodAttachmentClauseData,
     setTimePeriodAttachmentClauseData,
-  ] = useState([]);
+  ] = useState([attachmentClauseDataTemplate]);
 
   const [
     paymentMethodBodyClauseData,
     setPaymentMethodBodyClauseData,
   ] = useState(bodyClauseDataTemplate);
   const [
-    paymentMethodInitialAttachmentClauseData,
-    setPaymentMethodInitialAttachmentClauseData,
-  ] = useState(attachmentClauseDataTemplate);
-  const [
     paymentMethodAttachmentClauseData,
     setPaymentMethodAttachmentClauseData,
-  ] = useState([]);
+  ] = useState([attachmentClauseDataTemplate]);
 
   const [fineBodyClauseData, setFineBodyClauseData] = useState(
     bodyClauseDataTemplate
   );
-  const [
-    fineInitialAttachmentClauseData,
-    setFineInitialAttachmentClauseData,
-  ] = useState(attachmentClauseDataTemplate);
-  const [fineAttachmentClauseData, setFineAttachmentClauseData] = useState([]);
+  const [fineAttachmentClauseData, setFineAttachmentClauseData] = useState([
+    attachmentClauseDataTemplate,
+  ]);
 
   const [guaranteeBodyClauseData, setGuaranteeBodyClauseData] = useState(
     bodyClauseDataTemplate
   );
   const [
-    guaranteeInitialAttachmentClauseData,
-    setGuaranteeInitialAttachmentClauseData,
-  ] = useState(attachmentClauseDataTemplate);
-  const [
     guaranteeAttachmentClauseData,
     setGuaranteeAttachmentClauseData,
-  ] = useState([]);
+  ] = useState([attachmentClauseDataTemplate]);
 
   const [
     accountNumberBodyClauseData,
     setAccountNumberBodyClauseData,
   ] = useState(bodyClauseDataTemplate);
   const [
-    accountNumberInitialAttachmentClauseData,
-    setAccountNumberInitialAttachmentClauseData,
-  ] = useState(attachmentClauseDataTemplate);
-  const [
     accountNumberAttachmentClauseData,
     setAccountNumberAttachmentClauseData,
-  ] = useState([]);
+  ] = useState([attachmentClauseDataTemplate]);
 
   const [otherBodyClauseData, setOtherBodyClauseData] = useState(
     bodyClauseDataTemplate
   );
-  const [
-    otherInitialAttachmentClauseData,
-    setOtherInitialAttachmentClauseData,
-  ] = useState(attachmentClauseDataTemplate);
-  const [otherAttachmentClauseData, setOtherAttachmentClauseData] = useState(
-    []
-  );
+  const [otherAttachmentClauseData, setOtherAttachmentClauseData] = useState([
+    attachmentClauseDataTemplate,
+  ]);
 
   const [inputDataGuarantee, setInputDataGuarantee] = useState({
     dp_guarantee: "",
@@ -309,23 +276,6 @@ const FormParameter = ({
     maintenance_guarantee_end_date: "",
     maintenance_guarantee_evidence_file: "",
   });
-
-  const submitFormParameterJobPrice = (values) => {
-    submitJobPrice(
-      {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
-        product_title: "",
-        uom: "",
-        subtotal: "",
-        qty_total: "",
-        clause_note: "",
-        item_detail: [],
-        body_clause_data: values.body_data,
-        attachment_clause_data: values.attachment_data,
-      },
-      contract_id
-    );
-  };
 
   // bikin converter tanggal ke x hari & y bulan + skpp/spmk
   const submitFormParameterTimePeriod = (values) => {
@@ -438,24 +388,30 @@ const FormParameter = ({
     );
   };
 
-  const [addendumRows, setAddendumRows] = useState([
+  const [fine, setFine] = useState([
     createData(1, "Keterlambatan Pekerjaan", 10, 30, "%"),
   ]);
-  // console.log('tab yang aktif sekarang', currentActiveTab)
-  console.log("isi jsonData", jsonData);
+
+  const deleteFine = (id) => {
+    setFine(() => {
+      return fine.filter((data) => {
+        return data.id !== id;
+      });
+    });
+  };
 
   const { contract_id } = useParams();
   const [dataArr, setDataArr] = useState([]);
   const [dataArrFine, setDataArrFine] = useState([]);
   const [currencies, setDataCurrencies] = useState([]);
 
+  let a = jsonData?.payment_method_data;
+  let b = jsonData?.payment_method_data;
+
+  const earlyStagePayment = b;
   const [stagePayment, setStagePayment] = useState({
-    payment: [],
+    payment: a,
   });
-  const [earlyStagePayment, setEarlyStagePayment] = useState(
-    jsonData?.payment_method_data
-  );
-  const [fine, setFine] = useState([]);
   const [accountNumber, setAccountNumber] = useState(
     jsonData?.data_bank[bankIndex]
   );
@@ -515,7 +471,9 @@ const FormParameter = ({
     console.log("isi currencies", currencies);
   }, [dataArr, currencies]);
 
-  const [addendumPaymentMethod, setAddendumPaymentMethod] = useState("Full");
+  const [addendumPaymentMethod, setAddendumPaymentMethod] = useState(
+    jsonData?.payment_method
+  );
 
   const openCloseAddFine = React.useRef();
   const showAddFine = () => {
@@ -527,14 +485,21 @@ const FormParameter = ({
     openCloseAddClause.current.open();
   };
 
-  const openCloseAddDetail = React.useRef();
-  const showAddDetail = () => {
-    openCloseAddDetail.current.open();
-  };
-
   const openCloseAddPayment = React.useRef();
   const showAddPayment = () => {
     openCloseAddPayment.current.open();
+  };
+
+  const changePaymentMethodField = (index, value, type) => {
+    setStagePayment((state) => {
+      let newArr = [...state.payment];
+      if (type === "Percentage") newArr[index]["percentage"] = value;
+      if (type === "Description") newArr[index]["value"] = value;
+      return {
+        ...state,
+        payment: newArr,
+      };
+    });
   };
 
   return (
@@ -556,11 +521,11 @@ const FormParameter = ({
             value_type: "",
           }}
           onSubmit={(values) => {
-            setAddendumRows((data) => {
+            setFine((data) => {
               return [
                 ...data,
                 createData(
-                  1,
+                  fine.length + 1,
                   values.fine_type,
                   values.value,
                   values.max_day,
@@ -776,7 +741,11 @@ const FormParameter = ({
                 ...data,
                 payment: [
                   ...data.payment,
-                  createNewPaymentStage(values.description, values.percentage),
+                  createNewPaymentStage(
+                    values.description,
+                    values.percentage,
+                    data?.payment?.length + 1
+                  ),
                 ],
               };
             });
@@ -867,6 +836,41 @@ const FormParameter = ({
         </Formik>
       </DialogGlobal>
 
+      {currentActiveTab === 2 && (
+        <NewClause
+          openCloseAddClause={openCloseAddClause}
+          setAttachmentClauseData={setTimePeriodAttachmentClauseData}
+        />
+      )}
+
+      {currentActiveTab === 3 && (
+        <NewClause
+          openCloseAddClause={openCloseAddClause}
+          setAttachmentClauseData={setPaymentMethodAttachmentClauseData}
+        />
+      )}
+
+      {currentActiveTab === 4 && (
+        <NewClause
+          openCloseAddClause={openCloseAddClause}
+          setAttachmentClauseData={setFineAttachmentClauseData}
+        />
+      )}
+
+      {currentActiveTab === 5 && (
+        <NewClause
+          openCloseAddClause={openCloseAddClause}
+          setAttachmentClauseData={setGuaranteeAttachmentClauseData}
+        />
+      )}
+
+      {currentActiveTab === 6 && (
+        <NewClause
+          openCloseAddClause={openCloseAddClause}
+          setAttachmentClauseData={setAccountNumberAttachmentClauseData}
+        />
+      )}
+
       <Card>
         <CardBody>
           {/* Para Pihak */}
@@ -887,342 +891,11 @@ const FormParameter = ({
           {/* Harga Pekerjaan */}
           {currentActiveTab === 1 && (
             <>
-              <Formik
-                initialValues={{
-                  body_data: jobPriceBodyClauseData,
-                  initial_attachment_data: jobPriceInitialAttachmentClauseData,
-                  attachment_data: jobPriceAttachmentClauseData,
-                }}
-              >
-                {({ values }) => (
-                  <Form>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 40,
-                      }}
-                    >
-                      {/* Rincian Harga Pekerjaan */}
-                      <div
-                        className="job-price-section"
-                        style={{
-                          padding: 28,
-                          borderRadius: 14,
-                          border: 1,
-                          borderStyle: "solid",
-                          borderColor: "#8c8a8a",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 28,
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: 28,
-                            flexWrap: "wrap",
-                          }}
-                        >
-                          <label
-                            style={{
-                              flex: 1,
-                            }}
-                          >
-                            <p
-                              style={{
-                                marginBottom: 14,
-                                fontSize: 16,
-                                fontWeight: 600,
-                              }}
-                            >
-                              Nilai perjanjian kontrak awal
-                            </p>
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: 10,
-                              }}
-                            >
-                              <select
-                                style={{
-                                  borderRadius: 4,
-                                  padding: "10px 12px",
-                                }}
-                                disabled
-                              >
-                                {currencies?.count?.map((item) => {
-                                  return (
-                                    <option
-                                      selected={
-                                        item.code === headerData?.currency
-                                      }
-                                    >
-                                      {item.code}
-                                    </option>
-                                  );
-                                })}
-                              </select>
-                              <input
-                                className="form-control"
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderColor: "#d1d1d1",
-                                  backgroundColor: "#e8f4fb",
-                                }}
-                                value={rupiah(
-                                  headerData?.initial_contract_value
-                                )}
-                                disabled
-                              />
-                            </div>
-                          </label>
-
-                          <label
-                            style={{
-                              flex: 1,
-                            }}
-                          >
-                            <p
-                              style={{
-                                marginBottom: 14,
-                                fontSize: 16,
-                                fontWeight: 600,
-                              }}
-                            >
-                              A. Nilai perjanjian setelah addendum
-                            </p>
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: 10,
-                              }}
-                            >
-                              <select
-                                style={{
-                                  borderRadius: 4,
-                                  padding: "10px 12px",
-                                }}
-                              >
-                                {currencies.count.map((item) => {
-                                  return <option>{item.code}</option>;
-                                })}
-                              </select>
-                              <input
-                                className="form-control"
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderColor: "#d1d1d1",
-                                }}
-                              />
-                            </div>
-                          </label>
-                        </div>
-
-                        <TableContainer
-                          style={{
-                            padding: 10,
-                          }}
-                          component={Paper}
-                        >
-                          <h1
-                            style={{
-                              fontSize: 16,
-                              fontWeight: 600,
-                            }}
-                          >
-                            Rincian harga pekerjaan awal
-                          </h1>
-                          <Table
-                            sx={{ minWidth: 650 }}
-                            aria-label="simple table"
-                          >
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="left">No</TableCell>
-                                <TableCell align="left">
-                                  Deskripsi Item
-                                </TableCell>
-                                <TableCell align="left">QTY</TableCell>
-                                <TableCell align="left">Satuan</TableCell>
-                                <TableCell align="left">Harga Satuan</TableCell>
-                                <TableCell align="left">Harga Total</TableCell>
-                                <TableCell align="left">Keterangan</TableCell>
-                              </TableRow>
-                            </TableBody>
-                            <TableBody>
-                              {jsonData?.contract_items?.map((row, index) => (
-                                <TableRow
-                                  key={row.product_name}
-                                  sx={{
-                                    "&:last-child td, &:last-child th": {
-                                      border: 0,
-                                    },
-                                  }}
-                                >
-                                  <TableCell align="l">{index + 1}</TableCell>
-                                  <TableCell align="left">
-                                    {row.product_name}
-                                  </TableCell>
-                                  <TableCell align="left">{row.qty}</TableCell>
-                                  <TableCell align="left">{row.uom}</TableCell>
-                                  <TableCell align="left">
-                                    {row.unit_price}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.subtotal}
-                                  </TableCell>
-                                  <TableCell align="left">{row.note}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-
-                        <TableContainer
-                          style={{
-                            padding: 10,
-                          }}
-                          component={Paper}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <h1
-                              style={{
-                                fontSize: 16,
-                                fontWeight: 600,
-                              }}
-                            >
-                              Rincian harga PO-SAP
-                            </h1>
-
-                            <div>
-                              <button
-                                style={{
-                                  color: "white",
-                                  backgroundColor: "#ffc045",
-                                  borderRadius: 8,
-                                  border: "none",
-                                  padding: "8px 14px",
-                                }}
-                              >
-                                Get PO-SAP
-                              </button>
-                            </div>
-                          </div>
-                          <Table
-                            sx={{ minWidth: 650 }}
-                            aria-label="simple table"
-                          >
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="left">No</TableCell>
-                                <TableCell align="left">
-                                  Deskripsi Item
-                                </TableCell>
-                                <TableCell align="left">QTY</TableCell>
-                                <TableCell align="left">Satuan</TableCell>
-                                <TableCell align="left">Harga Satuan</TableCell>
-                                <TableCell align="left">Harga Total</TableCell>
-                                <TableCell align="left">Keterangan</TableCell>
-                              </TableRow>
-                            </TableBody>
-                            <TableBody>
-                              {rows.map((row) => (
-                                <TableRow
-                                  key={row.name}
-                                  sx={{
-                                    "&:last-child td, &:last-child th": {
-                                      border: 0,
-                                    },
-                                  }}
-                                >
-                                  <TableCell component="th">
-                                    {row.name}
-                                  </TableCell>
-                                  <TableCell align="left" scope="row">
-                                    {row.calories}
-                                  </TableCell>
-                                  <TableCell align="left">{row.fat}</TableCell>
-                                  <TableCell align="left">
-                                    {row.carbs}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.protein}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-
-                        <TableContainer>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <h1
-                              style={{
-                                fontSize: 16,
-                                fontWeight: 600,
-                              }}
-                            >
-                              B. Addendum Rincian Harga Pekerjaan
-                            </h1>
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: 14,
-                              }}
-                            >
-                              <button className="btn btn-success text-white">
-                                + Harga Pekerjaan By Excel
-                              </button>
-                              <button
-                                className="btn btn-primary text-white"
-                                onClick={showAddDetail}
-                              >
-                                + Tambah Rincian
-                              </button>
-                            </div>
-                          </div>
-
-                          <EditableTable
-                            openCloseAddDetail={openCloseAddDetail}
-                          />
-                        </TableContainer>
-                      </div>
-
-                      <PerubahanKlausulKontrak
-                        subTitle={"C"}
-                        title={"Harga Pekerjaan"}
-                        setBodyClauseData={setJobPriceBodyClauseData}
-                        setInitialAttachmentClauseData={
-                          setJobPriceInitialAttachmentClauseData
-                        }
-                        showAddClause={showAddClause}
-                        values={values}
-                      />
-                    </div>
-
-                    <UpdateButton />
-                  </Form>
-                )}
-              </Formik>
+              <JobPriceFormParameter
+                currencies={currencies}
+                headerData={headerData}
+                jsonData={jsonData}
+              />
             </>
           )}
 
@@ -1249,7 +922,6 @@ const FormParameter = ({
                   maintenance_start_date: timePeriodAddendum[3]?.startDate,
                   maintenance_end_date: timePeriodAddendum[3]?.endDate,
                   body_data: timePeriodBodyClauseData,
-                  initial_attachment_data: timePeriodInitialAttachmentClauseData,
                   attachment_data: timePeriodAttachmentClauseData,
                   add_contract_period_type: timePeriodAddendum[0]?.radio,
                   add_work_period_type: timePeriodAddendum[1]?.radio,
@@ -1647,6 +1319,14 @@ const FormParameter = ({
                                         type="radio"
                                         name={`add_${data?.prefix}_period_type`}
                                         value={"SKPP"}
+                                        onChange={(e) =>
+                                          setTimePeriodAddendum((prev) => {
+                                            let newArr = [...prev];
+                                            newArr[index].radio =
+                                              e.target.value;
+                                            return newArr;
+                                          })
+                                        }
                                       />
                                       <span>SKPP</span>
                                     </div>
@@ -1664,6 +1344,14 @@ const FormParameter = ({
                                         type="radio"
                                         name={`add_${data?.prefix}_period_type`}
                                         value={"SPMK"}
+                                        onChange={(e) =>
+                                          setTimePeriodAddendum((prev) => {
+                                            let newArr = [...prev];
+                                            newArr[index].radio =
+                                              e.target.value;
+                                            return newArr;
+                                          })
+                                        }
                                       />
                                       <span>SPMK</span>
                                     </div>
@@ -1679,8 +1367,8 @@ const FormParameter = ({
                       subTitle={"B"}
                       title={"Jangka Waktu"}
                       setBodyClauseData={setTimePeriodBodyClauseData}
-                      setInitialAttachmentClauseData={
-                        setTimePeriodInitialAttachmentClauseData
+                      setAttachmentClauseData={
+                        setTimePeriodAttachmentClauseData
                       }
                       showAddClause={showAddClause}
                       values={values}
@@ -1700,19 +1388,12 @@ const FormParameter = ({
                 enableReinitialize={true}
                 initialValues={{
                   payment_method: addendumPaymentMethod,
-                  early_payment_data: earlyStagePayment,
                   payment_data: stagePayment.payment,
                   body_data: paymentMethodBodyClauseData,
-                  initial_attachment_data: paymentMethodInitialAttachmentClauseData,
                   attachment_data: paymentMethodAttachmentClauseData,
                 }}
                 onSubmit={(values) => {
-                  values.early_payment_data.map((item, index) => {
-                    values.payment_data.unshift(
-                      values.early_payment_data[index]
-                    );
-                  });
-                  values.payment_data.reverse();
+                  // values.payment_data.reverse();
                   console.log("submit di metode pembayaran", values);
                   submitFormParameterPaymentMethod(values);
                 }}
@@ -1783,49 +1464,67 @@ const FormParameter = ({
                             Pembayaran Bertahap
                           </label>
                         </div>
-                        {jsonData?.payment_method_data &&
-                          jsonData?.payment_method_data?.map((item) => {
+                        {earlyStagePayment &&
+                          earlyStagePayment.map((item) => {
                             return (
                               <>
                                 <div
                                   style={{
                                     display: "flex",
+                                    flexWrap: "wrap",
                                     columnGap: 10,
-                                    placeItems: "center",
                                     marginTop: 28,
                                     marginBottom: 14,
                                   }}
                                 >
-                                  Tahap {item?.payment}
-                                  <input
+                                  <p
+                                    style={{
+                                      paddingTop: 12,
+                                    }}
+                                  >
+                                    Tahap {item.payment}
+                                  </p>
+                                  <div
                                     style={{
                                       flex: 1,
-                                      padding: "10px 12px",
-                                      borderRadius: 4,
                                     }}
-                                    type="text"
-                                    placeholder="Persentase"
-                                    value={item?.percentage}
-                                    disabled
-                                  />
-                                </div>
-                                <div
-                                  style={{
-                                    marginTop: 14,
-                                    marginBottom: 28,
-                                    display: "flex",
-                                  }}
-                                >
-                                  <textarea
-                                    style={{
-                                      flex: 1,
-                                      padding: "10px 12px",
-                                      borderRadius: 4,
-                                    }}
-                                    placeholder="Deskripsi"
-                                    value={item?.value}
-                                    disabled
-                                  ></textarea>
+                                  >
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                      }}
+                                    >
+                                      <input
+                                        style={{
+                                          flex: 1,
+                                          padding: "10px 12px",
+                                          borderRadius: 4,
+                                        }}
+                                        type="text"
+                                        placeholder="Persentase"
+                                        value={item.percentage}
+                                        disabled
+                                      />
+                                    </div>
+                                    <div
+                                      style={{
+                                        marginTop: 14,
+                                        marginBottom: 28,
+                                        display: "flex",
+                                      }}
+                                    >
+                                      <textarea
+                                        style={{
+                                          flex: 1,
+                                          padding: "10px 12px",
+                                          borderRadius: 4,
+                                        }}
+                                        placeholder="Deskripsi"
+                                        value={item.value}
+                                        disabled
+                                      ></textarea>
+                                    </div>
+                                  </div>
                                 </div>
                               </>
                             );
@@ -1886,106 +1585,89 @@ const FormParameter = ({
                             Pembayaran Bertahap
                           </label>
                         </div>
-                        {earlyStagePayment?.map((item) => {
-                          return (
-                            <>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  columnGap: 10,
-                                  placeItems: "center",
-                                  marginTop: 28,
-                                  marginBottom: 14,
-                                }}
-                              >
-                                Tahap {item.payment}
-                                <input
+                        {addendumPaymentMethod === "gradually" &&
+                          stagePayment?.payment?.map((item, index) => {
+                            return (
+                              <>
+                                <div
                                   style={{
-                                    flex: 1,
-                                    padding: "10px 12px",
-                                    borderRadius: 4,
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    columnGap: 10,
+                                    marginTop: 28,
+                                    marginBottom: 14,
                                   }}
-                                  type="text"
-                                  placeholder="Persentase"
-                                  value={item.percentage}
-                                  disabled={
-                                    addendumPaymentMethod !== "gradually"
-                                  }
-                                />
-                              </div>
-                              <div
-                                style={{
-                                  marginTop: 14,
-                                  marginBottom: 28,
-                                  display: "flex",
-                                }}
-                              >
-                                <textarea
-                                  style={{
-                                    flex: 1,
-                                    padding: "10px 12px",
-                                    borderRadius: 4,
-                                  }}
-                                  placeholder="Deskripsi"
-                                  value={item.value}
-                                  disabled={
-                                    addendumPaymentMethod !== "gradually"
-                                  }
-                                ></textarea>
-                              </div>
-                            </>
-                          );
-                        })}
-                        {stagePayment?.payment?.map((item, index) => {
-                          return (
-                            <>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  columnGap: 10,
-                                  placeItems: "center",
-                                  marginTop: "28px",
-                                  marginBottom: "14px",
-                                }}
-                              >
-                                Tahap {index + 3}
-                                <input
-                                  style={{
-                                    flex: 1,
-                                    padding: "10px 12px",
-                                    borderRadius: 4,
-                                  }}
-                                  type="text"
-                                  placeholder="Persentase"
-                                  value={item.percentage}
-                                  disabled={
-                                    addendumPaymentMethod !== "gradually"
-                                  }
-                                />
-                              </div>
-                              <div
-                                style={{
-                                  marginTop: 14,
-                                  marginBottom: 28,
-                                  display: "flex",
-                                }}
-                              >
-                                <textarea
-                                  style={{
-                                    flex: 1,
-                                    padding: "10px 12px",
-                                    borderRadius: 4,
-                                  }}
-                                  placeholder="Deskripsi"
-                                  value={item.description}
-                                  disabled={
-                                    addendumPaymentMethod !== "gradually"
-                                  }
-                                ></textarea>
-                              </div>
-                            </>
-                          );
-                        })}
+                                >
+                                  <p
+                                    style={{
+                                      paddingTop: 12,
+                                    }}
+                                  >
+                                    Tahap {item.payment}
+                                  </p>
+                                  <div
+                                    style={{
+                                      flex: 1,
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                      }}
+                                    >
+                                      <Field
+                                        style={{
+                                          flex: 1,
+                                          padding: "10px 12px",
+                                          borderRadius: 4,
+                                        }}
+                                        type="text"
+                                        placeholder="Persentase"
+                                        value={item.percentage}
+                                        onChange={(e) =>
+                                          changePaymentMethodField(
+                                            index,
+                                            e.target.value,
+                                            "Percentage"
+                                          )
+                                        }
+                                        disabled={
+                                          addendumPaymentMethod !== "gradually"
+                                        }
+                                      />
+                                    </div>
+                                    <div
+                                      style={{
+                                        marginTop: 14,
+                                        marginBottom: 28,
+                                        display: "flex",
+                                      }}
+                                    >
+                                      <textarea
+                                        style={{
+                                          flex: 1,
+                                          padding: "10px 12px",
+                                          borderRadius: 4,
+                                        }}
+                                        placeholder="Deskripsi"
+                                        value={item.value}
+                                        onChange={(e) =>
+                                          changePaymentMethodField(
+                                            index,
+                                            e.target.value,
+                                            "Description"
+                                          )
+                                        }
+                                        disabled={
+                                          addendumPaymentMethod !== "gradually"
+                                        }
+                                      ></textarea>
+                                    </div>
+                                  </div>
+                                </div>
+                              </>
+                            );
+                          })}
                         {addendumPaymentMethod === "gradually" && (
                           <div
                             style={{
@@ -2010,8 +1692,8 @@ const FormParameter = ({
                       subTitle={"B"}
                       title={"Metode Pembayaran"}
                       setBodyClauseData={setPaymentMethodBodyClauseData}
-                      setInitialAttachmentClauseData={
-                        setPaymentMethodInitialAttachmentClauseData
+                      setAttachmentClauseData={
+                        setPaymentMethodAttachmentClauseData
                       }
                       showAddClause={showAddClause}
                       values={values}
@@ -2030,15 +1712,11 @@ const FormParameter = ({
               <Formik
                 enableReinitialize={true}
                 initialValues={{
-                  fine_data: addendumRows,
+                  fine_data: fine,
                   body_data: fineBodyClauseData,
-                  initial_attachment_data: fineInitialAttachmentClauseData,
                   attachment_data: fineAttachmentClauseData,
                 }}
                 onSubmit={(values) => {
-                  values.attachment_data.unshift(
-                    values.initial_attachment_data
-                  );
                   submitFormParameterFine(values);
                   console.log("isi submit", values);
                 }}
@@ -2178,7 +1856,7 @@ const FormParameter = ({
                               </TableRow>
                             </TableBody>
                             <TableBody>
-                              {addendumRows.map((row, index) => (
+                              {fine.map((row, index) => (
                                 <TableRow
                                   key={row.name}
                                   sx={{
@@ -2191,17 +1869,19 @@ const FormParameter = ({
                                     {index + 1}
                                   </TableCell>
                                   <TableCell align="left" scope="row">
-                                    {row.calories}
-                                  </TableCell>
-                                  <TableCell align="left">{row.fat}</TableCell>
-                                  <TableCell align="left">
-                                    {row.carbs}
+                                    {row.fine_type}
                                   </TableCell>
                                   <TableCell align="left">
-                                    {row.protein}
+                                    {row.value}
                                   </TableCell>
                                   <TableCell align="left">
-                                    {actionButton}
+                                    {row.max_day}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {row.value_type}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {actionButton(row.id, deleteFine)}
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -2215,9 +1895,7 @@ const FormParameter = ({
                       subTitle={"B"}
                       title={"Denda"}
                       setBodyClauseData={setFineBodyClauseData}
-                      setInitialAttachmentClauseData={
-                        setFineInitialAttachmentClauseData
-                      }
+                      setAttachmentClauseData={setFineAttachmentClauseData}
                       showAddClause={showAddClause}
                       values={values}
                     />
@@ -2259,13 +1937,9 @@ const FormParameter = ({
                   maintenance_guarantee_evidence_file:
                     inputDataGuarantee.maintenance_guarantee_evidence_file,
                   body_data: guaranteeBodyClauseData,
-                  initial_attachment_data: guaranteeInitialAttachmentClauseData,
                   attachment_data: guaranteeAttachmentClauseData,
                 }}
                 onSubmit={(values) => {
-                  values.attachment_data.unshift(
-                    values.initial_attachment_data
-                  );
                   submitFormParameterGuarantee(values);
                 }}
               >
@@ -2723,9 +2397,7 @@ const FormParameter = ({
                       subTitle={"B"}
                       title={"Jaminan"}
                       setBodyClauseData={setGuaranteeBodyClauseData}
-                      setInitialAttachmentClauseData={
-                        setGuaranteeInitialAttachmentClauseData
-                      }
+                      setAttachmentClauseData={setGuaranteeAttachmentClauseData}
                       showAddClause={showAddClause}
                       values={values}
                     />
@@ -2745,13 +2417,9 @@ const FormParameter = ({
                 initialValues={{
                   data_bank: accountNumber,
                   body_data: accountNumberBodyClauseData,
-                  initial_attachment_data: accountNumberInitialAttachmentClauseData,
                   attachment_data: accountNumberAttachmentClauseData,
                 }}
                 onSubmit={(values) => {
-                  values.attachment_data.unshift(
-                    values.initial_attachment_data
-                  );
                   submitFormParameterAccountNumber(values);
                   console.log("values account number", values);
                 }}
@@ -2789,122 +2457,127 @@ const FormParameter = ({
                             Nomor rekening kontrak awal
                           </h1>
 
-                          <div
-                            style={{
-                              // display: 'grid',
-                              // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                              display: "flex",
-                              flexWrap: "wrap",
-                              gap: 24,
-                              fontSize: 14,
-                              fontWeight: 500,
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nomor rekening</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  backgroundColor: "#e8f4fb",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={"128574647483"}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nama rekening</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  backgroundColor: "#e8f4fb",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={"GOLDEN PRATAMA ENGINEERING"}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Nama bank</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  backgroundColor: "#e8f4fb",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={"MANDIRI"}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1,
-                              }}
-                            >
-                              <span>Alamat bank</span>
-                              <input
-                                type="text"
-                                style={{
-                                  width: "100%",
-                                  backgroundColor: "#e8f4fb",
-                                  padding: "10px 12px",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                disabled
-                                value={"Jl Warung Buncit Raya"}
-                              />
-                            </div>
-                          </div>
+                          {accountNumberBankData &&
+                            accountNumberBankData.map((item) => {
+                              return (
+                                <div
+                                  style={{
+                                    // display: 'grid',
+                                    // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    gap: 24,
+                                    fontSize: 14,
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      flex: 1,
+                                    }}
+                                  >
+                                    <span>Nomor rekening</span>
+                                    <input
+                                      type="text"
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "#e8f4fb",
+                                        padding: "10px 12px",
+                                        borderColor: "black",
+                                        border: 1,
+                                        borderStyle: "solid",
+                                        borderRadius: 4,
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        marginTop: 4,
+                                      }}
+                                      disabled
+                                      value={item?.account_number}
+                                    />
+                                  </div>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      flex: 1,
+                                    }}
+                                  >
+                                    <span>Nama rekening</span>
+                                    <input
+                                      type="text"
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "#e8f4fb",
+                                        padding: "10px 12px",
+                                        borderColor: "black",
+                                        border: 1,
+                                        borderStyle: "solid",
+                                        borderRadius: 4,
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        marginTop: 4,
+                                      }}
+                                      disabled
+                                      value={item?.account_holder_name}
+                                    />
+                                  </div>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      flex: 1,
+                                    }}
+                                  >
+                                    <span>Nama bank</span>
+                                    <input
+                                      type="text"
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "#e8f4fb",
+                                        padding: "10px 12px",
+                                        borderColor: "black",
+                                        border: 1,
+                                        borderStyle: "solid",
+                                        borderRadius: 4,
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        marginTop: 4,
+                                      }}
+                                      disabled
+                                      value={item?.bank?.full_name}
+                                    />
+                                  </div>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      flex: 1,
+                                    }}
+                                  >
+                                    <span>Alamat bank</span>
+                                    <input
+                                      type="text"
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "#e8f4fb",
+                                        padding: "10px 12px",
+                                        borderColor: "black",
+                                        border: 1,
+                                        borderStyle: "solid",
+                                        borderRadius: 4,
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        marginTop: 4,
+                                      }}
+                                      disabled
+                                      value={item?.address?.postal_address}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            })}
                         </div>
 
                         <div>
@@ -3139,8 +2812,8 @@ const FormParameter = ({
                       subTitle={"B"}
                       title={"Nomor Rekening"}
                       setBodyClauseData={setAccountNumberBodyClauseData}
-                      setInitialAttachmentClauseData={
-                        setAccountNumberInitialAttachmentClauseData
+                      setAttachmentClauseData={
+                        setAccountNumberAttachmentClauseData
                       }
                       showAddClause={showAddClause}
                       values={values}
@@ -3160,13 +2833,9 @@ const FormParameter = ({
                 enableReinitialize={true}
                 initialValues={{
                   body_data: otherBodyClauseData,
-                  initial_attachment_data: otherInitialAttachmentClauseData,
                   attachment_data: otherAttachmentClauseData,
                 }}
                 onSubmit={(values) => {
-                  values.attachment_data.unshift(
-                    values.initial_attachment_data
-                  );
                   submitFormParameterOther(values);
                 }}
               >
@@ -3176,9 +2845,7 @@ const FormParameter = ({
                       subTitle={"A"}
                       title={"Lainnya"}
                       setBodyClauseData={setOtherBodyClauseData}
-                      setInitialAttachmentClauseData={
-                        setOtherInitialAttachmentClauseData
-                      }
+                      setAttachmentClauseData={setOtherAttachmentClauseData}
                       showAddClause={showAddClause}
                       values={values}
                     />

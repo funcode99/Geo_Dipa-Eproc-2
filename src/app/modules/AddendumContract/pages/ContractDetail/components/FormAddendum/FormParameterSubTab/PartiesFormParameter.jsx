@@ -9,6 +9,8 @@ import NewWorkDirector from "../Components/Modal/Parties/NewWorkDirector";
 import NewWorkSupervisor from "../Components/Modal/Parties/NewWorkSupervisor";
 import NewSecondWorkDirector from "../Components/Modal/Parties/NewSecondWorkDirector";
 import NewSecondWorkSupervisor from "../Components/Modal/Parties/NewSecondWorkSupervisor";
+import NewClause from "../Components/Modal/NewClause";
+import { submitJobPrice } from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
 
 const PartiesFormParameter = ({
   jsonData,
@@ -149,8 +151,6 @@ const PartiesFormParameter = ({
 
   const [isSubmit, setIsSubmit] = useState(false);
   const changeDataJobDirectorDynamic = (num, arrIndex, data, type) => {
-    console.log("isi data nya biar bisa dicocokin", data);
-
     if (!isSubmit) {
       setPlaceman((placeman) => {
         if (type === "username") {
@@ -341,13 +341,9 @@ const PartiesFormParameter = ({
     bodyClauseDataTemplate
   );
   const [
-    partiesInitialAttachmentClauseData,
-    setPartiesInitialAttachmentClauseData,
-  ] = useState(attachmentClauseDataTemplate);
-  const [
     partiesAttachmentClauseData,
     setPartiesAttachmentClauseData,
-  ] = useState([]);
+  ] = useState([attachmentClauseDataTemplate]);
   const changeDataauthorizedOfficial = (num) => {
     setauthorizedOfficialIndex(num);
   };
@@ -358,6 +354,23 @@ const PartiesFormParameter = ({
   useEffect(() => {
     console.log("placeman sekarang", placeman);
   }, [placeman]);
+
+  const submitFormParameterJobPrice = (values) => {
+    submitJobPrice(
+      {
+        add_contract_id: jsonData?.add_contracts[0]?.id,
+        product_title: "",
+        uom: "",
+        subtotal: "",
+        qty_total: "",
+        clause_note: "",
+        item_detail: [],
+        body_clause_data: values.body_data,
+        attachment_clause_data: values.attachment_data,
+      },
+      contract_id
+    );
+  };
 
   return (
     <>
@@ -388,6 +401,10 @@ const PartiesFormParameter = ({
         openCloseSecondWorkSupervisor={openCloseSecondWorkSupervisor}
         setPlaceman={setPlaceman}
       />
+      <NewClause
+        openCloseAddClause={openCloseAddClause}
+        setAttachmentClauseData={setPartiesAttachmentClauseData}
+      />
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -414,7 +431,6 @@ const PartiesFormParameter = ({
           secondJobDirector: placeman.secondWorkDirector,
           secondJobSupervisor: placeman.secondWorkSupervisor,
           body_data: partiesBodyClauseData,
-          initial_attachment_data: partiesInitialAttachmentClauseData,
           attachment_data: partiesAttachmentClauseData,
         }}
         onSubmit={(values) => {
@@ -2837,9 +2853,7 @@ const PartiesFormParameter = ({
               subTitle={"C"}
               title={"Para Pihak"}
               setBodyClauseData={setPartiesBodyClauseData}
-              setInitialAttachmentClauseData={
-                setPartiesInitialAttachmentClauseData
-              }
+              setAttachmentClauseData={setPartiesAttachmentClauseData}
               showAddClause={showAddClause}
               values={values}
             />

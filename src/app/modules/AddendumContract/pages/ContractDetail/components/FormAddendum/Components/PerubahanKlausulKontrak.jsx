@@ -3,12 +3,42 @@ import { Field, FieldArray } from "formik";
 
 const PerubahanKlausulKontrak = ({
   setBodyClauseData,
-  setInitialAttachmentClauseData,
+  setAttachmentClauseData,
   showAddClause,
   values,
   title,
   subTitle,
 }) => {
+  const changeBodyClauseData = (value, type) => {
+    setBodyClauseData((data) => {
+      if (type === "clause number")
+        return {
+          ...data,
+          clause_number: value,
+        };
+      if (type === "before clause note")
+        return {
+          ...data,
+          before_clause_note: value,
+        };
+      if (type === "after clause note")
+        return {
+          ...data,
+          after_clause_note: value,
+        };
+    });
+  };
+
+  const changeFieldData = (index, value, type) => {
+    setAttachmentClauseData((data) => {
+      let newArr = [...data];
+      if (type === "attachment number")
+        newArr[index]["attachment_number"] = value;
+      if (type === "clause note") newArr[index]["clause_note"] = value;
+      return newArr;
+    });
+  };
+
   return (
     <>
       {/* Klausul Perubahan */}
@@ -58,10 +88,7 @@ const PerubahanKlausulKontrak = ({
                     type="text"
                     name={`body_data.clause_number`}
                     onChange={(e) =>
-                      setBodyClauseData((state) => ({
-                        ...state,
-                        clause_number: e.target.value,
-                      }))
+                      changeBodyClauseData(e.target.value, "clause number")
                     }
                     placeholder="Masukkan Nomor Pasal"
                     style={{
@@ -96,10 +123,10 @@ const PerubahanKlausulKontrak = ({
                       as="textarea"
                       name={`body_data.before_clause_note`}
                       onChange={(e) =>
-                        setBodyClauseData((state) => ({
-                          ...state,
-                          before_clause_note: e.target.value,
-                        }))
+                        changeBodyClauseData(
+                          e.target.value,
+                          "before clause note"
+                        )
                       }
                       placeholder="Masukkan Nomor Pasal"
                       style={{
@@ -126,10 +153,10 @@ const PerubahanKlausulKontrak = ({
                       as="textarea"
                       name={`body_data.after_clause_note`}
                       onChange={(e) =>
-                        setBodyClauseData((state) => ({
-                          ...state,
-                          after_clause_note: e.target.value,
-                        }))
+                        changeBodyClauseData(
+                          e.target.value,
+                          "after clause note"
+                        )
                       }
                       placeholder="Masukkan Nomor Pasal"
                       style={{
@@ -157,56 +184,21 @@ const PerubahanKlausulKontrak = ({
           )}
         </FieldArray>
 
-        <>
-          <div>
-            <Field
-              name={`initial_attachment_data.attachment_number`}
-              onChange={(e) =>
-                setInitialAttachmentClauseData((state) => ({
-                  ...state,
-                  attachment_number: e.target.value,
-                }))
-              }
-              type="text"
-              placeholder="Masukkan Angka Lampiran"
-              style={{
-                padding: 8,
-                borderRadius: 4,
-                minWidth: 400,
-              }}
-            />
-          </div>
-
-          <div>
-            <Field
-              className="form-control"
-              as="textarea"
-              name={`initial_attachment_data.clause_note`}
-              onChange={(e) =>
-                setInitialAttachmentClauseData((state) => ({
-                  ...state,
-                  clause_note: e.target.value,
-                }))
-              }
-              placeholder="Masukkan Nomor Pasal"
-              style={{
-                padding: 8,
-                borderRadius: 4,
-                minWidth: 400,
-              }}
-              rows="4"
-            />
-          </div>
-        </>
-
         <FieldArray name="body_attachment">
           {({ push }) => (
             <>
-              {values.attachment_data.map((a, index) => (
+              {values?.attachment_data?.map((a, index) => (
                 <>
                   <div>
                     <Field
                       name={`attachment_data.${index}.attachment_number`}
+                      onChange={(e) =>
+                        changeFieldData(
+                          index,
+                          e.target.value,
+                          "attachment number"
+                        )
+                      }
                       type="text"
                       placeholder="Masukkan Angka Lampiran"
                       style={{
@@ -222,6 +214,9 @@ const PerubahanKlausulKontrak = ({
                       className="form-control"
                       as="textarea"
                       name={`attachment_data.${index}.clause_note`}
+                      onChange={(e) =>
+                        changeFieldData(index, e.target.value, "clause note")
+                      }
                       placeholder="Masukkan Nomor Pasal"
                       style={{
                         padding: 8,
