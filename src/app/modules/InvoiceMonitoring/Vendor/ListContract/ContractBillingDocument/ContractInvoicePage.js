@@ -421,7 +421,7 @@ function ContractInvoicePage(props) {
               response["data"]["data"]["from_time"]
                 ? window
                     .moment(new Date(response["data"]["data"]["from_time"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
           }
@@ -995,7 +995,9 @@ function ContractInvoicePage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type="date"
+                      type={loading ||
+                        invoiceStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate) ? "text": "date"}
                       className="form-control"
                       id="dateInvoice"
                       disabled={

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { connect, shallowEqual, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import {
@@ -338,7 +338,7 @@ function ContractTaxPage(props) {
               response["data"]["data"]["tax_date"]
                 ? window
                     .moment(new Date(response["data"]["data"]["tax_date"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             formik.setFieldValue("npwp", response["data"]["data"]["npwp"]);
@@ -460,6 +460,12 @@ function ContractTaxPage(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [contract_id, termin, intl, setToast]);
+
+  // const disabled = useMemo(() => 
+  //   loading ||
+  //   taxStatus ||
+  //   (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
+  // , [invoicePeriodsStatus, isOnMismatch, loading, taxStatus, taxUpdate]);
 
   useEffect(getMismatchNotCompletedData, []);
   useEffect(getContractData, []);
@@ -735,14 +741,14 @@ function ContractTaxPage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type="date"
+                      type={loading ||
+                        taxStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate) ? "text" : "date"}
                       className="form-control"
                       id="dateTax"
-                      disabled={
-                        loading ||
+                      disabled={loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
-                      }
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)}
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("tax_date")}
                       onChange={(e) => {

@@ -238,7 +238,7 @@ function ContractReceiptPage(props) {
               response["data"]["data"]["receipt_date"]
                 ? window
                     .moment(new Date(response["data"]["data"]["receipt_date"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             formik.setFieldValue(
@@ -677,7 +677,9 @@ function ContractReceiptPage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type="date"
+                      type={loading ||
+                        receiptStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate) ? "text" : "date"}
                       className="form-control"
                       id="dateReceipt"
                       disabled={

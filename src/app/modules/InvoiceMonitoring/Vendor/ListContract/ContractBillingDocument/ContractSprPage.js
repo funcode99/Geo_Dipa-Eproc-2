@@ -362,7 +362,7 @@ function ContractSprPage(props) {
               response["data"]["data"]["spr_date"]
                 ? window
                     .moment(new Date(response["data"]["data"]["spr_date"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             formik.setFieldValue(
@@ -980,7 +980,9 @@ function ContractSprPage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type="date"
+                      type={loading ||
+                        sppStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate) ? "text" : "date"}
                       className="form-control"
                       id="dateSpp"
                       disabled={
