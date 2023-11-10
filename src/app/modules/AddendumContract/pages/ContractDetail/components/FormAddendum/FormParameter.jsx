@@ -281,7 +281,7 @@ const FormParameter = ({
   const submitFormParameterTimePeriod = (values) => {
     submitTimePeriod(
       {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
+        add_contract_id: localStorage.getItem("add_contract_id"),
         from_time: values?.contract_start_date,
         thru_time: values?.contract_end_date,
         work_start_date: values?.work_start_date,
@@ -311,7 +311,7 @@ const FormParameter = ({
   const submitFormParameterPaymentMethod = (values) => {
     submitPaymentMethod(
       {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
+        add_contract_id: localStorage.getItem("add_contract_id"),
         payment_method_name: values.payment_method,
         payment_method_data: values.payment_data,
         body_clause_data: values.body_data,
@@ -325,7 +325,7 @@ const FormParameter = ({
   const submitFormParameterFine = (values) => {
     submitFine(
       {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
+        add_contract_id: localStorage.getItem("add_contract_id"),
         penalty_fine_data: values.fine_data,
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
@@ -338,7 +338,7 @@ const FormParameter = ({
   const submitFormParameterGuarantee = (values) => {
     submitGuarantee(
       {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
+        add_contract_id: localStorage.getItem("add_contract_id"),
         down_payment_guarantee: values.dp_guarantee,
         down_payment_guarantee_start_date: values.dp_guarantee_start_date,
         down_payment_guarantee_end_date: values.dp_guarantee_end_date,
@@ -367,7 +367,7 @@ const FormParameter = ({
   const submitFormParameterAccountNumber = (values) => {
     submitAccountNumber(
       {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
+        add_contract_id: localStorage.getItem("add_contract_id"),
         data_bank: values.data_bank,
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_file,
@@ -380,7 +380,7 @@ const FormParameter = ({
   const submitFormParameterOther = (values) => {
     submitOther(
       {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
+        add_contract_id: localStorage.getItem("add_contract_id"),
         body_clause_data: [values.body_data],
         attachment_clause_data: values.attachment_data,
       },

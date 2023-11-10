@@ -16,8 +16,7 @@ const FormPermohonan = (props) => {
   const [dateDisplay, setDateDisplay] = useState(null);
 
   const submitAddendumRequestForm = (values) => {
-    console.log("isi values saat submit", values);
-
+    // console.log("isi values saat submit", values);
     submitAddendumRequest({
       // unauthorized karena contract id nya wkwk, dasar goblok
       contract_id: `${props.contractId}`,
@@ -43,10 +42,22 @@ const FormPermohonan = (props) => {
       latest_addendum_job_price: props?.headerData?.latest_contract_value,
       increase_job_price: values.additional_price,
       decrease_job_price: values.substraction_price,
-      after_addendum_job_price: values.total_price,
+      after_addendum_job_price:
+        values.additional_price === "0" || values.additional_price === ""
+          ? parseInt(props?.headerData?.initial_contract_value) -
+            parseInt(
+              values.substraction_price === "" ? "0" : values.substraction_price
+            )
+          : parseInt(props?.headerData?.initial_contract_value) +
+            parseInt(
+              values.additional_price === "" ? "0" : values.additional_price
+            ),
       conclusion: conclusion,
       addendum_percentage: adnm_percentage,
-      add_request_date: values.request_date,
+      add_request_date: dateDisplay,
+    }).then((value) => {
+      console.log("isi values saat submit", value);
+      localStorage.setItem("add_contract_id", value.data.data.id);
     });
   };
 
@@ -270,7 +281,6 @@ const FormPermohonan = (props) => {
                       id="po_number"
                       style={{ backgroundColor: "#c7d2d8" }}
                       disabled
-                      onChange={(e) => {}}
                       value={`${props?.headerData?.procurement_authority_group}`}
                     />
                   </div>
