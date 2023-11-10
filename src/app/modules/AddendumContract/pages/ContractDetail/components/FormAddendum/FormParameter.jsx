@@ -1484,6 +1484,7 @@ const FormParameter = ({
                                   >
                                     Tahap {item.payment}
                                   </p>
+
                                   <div
                                     style={{
                                       flex: 1,
@@ -1494,7 +1495,7 @@ const FormParameter = ({
                                         display: "flex",
                                       }}
                                     >
-                                      <input
+                                      <Field
                                         style={{
                                           flex: 1,
                                           padding: "10px 12px",
@@ -1513,7 +1514,8 @@ const FormParameter = ({
                                         display: "flex",
                                       }}
                                     >
-                                      <textarea
+                                      <Field
+                                        as="textarea"
                                         style={{
                                           flex: 1,
                                           padding: "10px 12px",
@@ -1522,7 +1524,8 @@ const FormParameter = ({
                                         placeholder="Deskripsi"
                                         value={item.value}
                                         disabled
-                                      ></textarea>
+                                      />
+                                      {/* </textarea> */}
                                     </div>
                                   </div>
                                 </div>
@@ -1598,13 +1601,27 @@ const FormParameter = ({
                                     marginBottom: 14,
                                   }}
                                 >
-                                  <p
-                                    style={{
-                                      paddingTop: 12,
-                                    }}
-                                  >
-                                    Tahap {item.payment}
-                                  </p>
+                                  <div>
+                                    <p
+                                      style={{
+                                        paddingTop: 12,
+                                      }}
+                                    >
+                                      Tahap {item.payment}
+                                    </p>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setStagePayment((placeman) => {
+                                          let data = { ...placeman };
+                                          data.payment.splice(index, 1);
+                                          return data;
+                                        });
+                                      }}
+                                    >
+                                      Hapus
+                                    </button>
+                                  </div>
                                   <div
                                     style={{
                                       flex: 1,

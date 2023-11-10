@@ -77,6 +77,31 @@ const PartiesFormParameter = ({
           values?.official_sk_kemenkumham_date,
         party_1_job_director: values?.jobDirector,
         party_1_job_supervisor: values?.jobSupervisor,
+        party_2_autorized_username: values.secondAuthorizedOfficial[0].fullname,
+        party_2_autorized_name: values.secondAuthorizedOfficial[0].fullname,
+        party_2_autorized_position:
+          values.secondAuthorizedOfficial[0].position_title,
+        party_2_autorized_address:
+          values.secondAuthorizedOfficial[0].phone_number,
+        party_2_autorized_telp: values.secondAuthorizedOfficial[0].address,
+        party_2_autorized_fax: values.secondAuthorizedOfficial[0].fax,
+        party_2_autorized_sk_no:
+          values.secondAuthorizedOfficial[0].sk_assign_number,
+        party_2_autorized_sk_date:
+          values.secondAuthorizedOfficial[0].sk_assign_date,
+        party_2_autorized_notary_act_name:
+          values.secondAuthorizedOfficial[0].notary_name,
+        party_2_autorized_notary_act_no:
+          values.secondAuthorizedOfficial[0].act_number,
+        party_2_autorized_notary_act_date:
+          values.secondAuthorizedOfficial[0].act_date,
+        party_2_autorized_kemenkumham_no:
+          values.secondAuthorizedOfficial[0].sk_kemenkumham_number,
+        party_2_autorized_kemenkumham_date:
+          values.secondAuthorizedOfficial[0].sk_kemenkumham_date,
+        party_2_pic_email: values.secondAuthorizedOfficial[0].PICEmail,
+        party_2_job_director: values.secondJobDirector,
+        party_2_job_supervisor: values.secondJobSupervisor,
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
