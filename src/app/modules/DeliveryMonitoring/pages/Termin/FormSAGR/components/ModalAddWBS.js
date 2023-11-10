@@ -163,7 +163,7 @@ const ModalAddWBS = ({ wbs, innerRef, onSelected, dist_value, data }) => {
     wbs_id: work_breakdown_ap,
   }));
 
-  // console.log({wbs, data});
+  
 
   return (
     <DialogGlobal
