@@ -699,7 +699,7 @@ function ContractSprPage(props) {
                     <span className="form-control-plaintext">
                       :{" "}
                       {moment(new Date(modalHistoryData["spr_date"])).format(
-                        "DD/MM/YYYY hh:mm:ss"
+                        "DD MMMM YYYY hh:mm:ss"
                       )}
                     </span>
                   </div>
@@ -722,7 +722,7 @@ function ContractSprPage(props) {
                     <span className="form-control-plaintext">
                       :{" "}
                       {moment(new Date(modalHistoryData["created_at"])).format(
-                        "YYDD/MM/YYYY hh:mm:ss"
+                        "YYDD MMMM YYYY hh:mm:ss"
                       )}
                     </span>
                   </div>
@@ -758,10 +758,10 @@ function ContractSprPage(props) {
                       {modalHistoryData["state"] === "REJECTED"
                         ? moment(
                             new Date(modalHistoryData["rejected_at"])
-                          ).format("DD/MM/YYYY hh:mm:ss")
+                          ).format("DD MMMM YYYY hh:mm:ss")
                         : moment(
                             new Date(modalHistoryData["approved_at"])
-                          ).format("DD/MM/YYYY hh:mm:ss")}
+                          ).format("DD MMMM YYYY hh:mm:ss")}
                     </span>
                   </div>
                 </div>
@@ -996,11 +996,15 @@ function ContractSprPage(props) {
                 </label>
                 <div className="col-sm-8">
                   <input
-                    type="date"
+                    type="text"
                     className="form-control"
                     id="dateSpp"
                     disabled
-                    defaultValue={sppData?.spr_date}
+                    defaultValue={
+                      sppData?.spr_date
+                        ? moment(sppData?.spr_date).format("DD MMMM YYYY")
+                        : ""
+                    }
                   />
                 </div>
               </div>
@@ -1200,7 +1204,7 @@ function ContractSprPage(props) {
                     defaultValue={
                       sppData?.created_at
                         ? moment(sppData?.created_at).format(
-                            "DD/MM/YYYY hh:mm:ss"
+                            "DD MMMM YYYY hh:mm:ss"
                           )
                         : ""
                     }
@@ -1382,7 +1386,11 @@ function ContractSprPage(props) {
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.spr_no}</TableCell>
-                  <TableCell>{item.spr_date}</TableCell>
+                  <TableCell>
+                    {item?.spr_date
+                      ? moment(item?.spr_date).format("DD MMMM YYYY")
+                      : ""}
+                  </TableCell>
                   <TableCell>
                     <a
                       onClick={() => {
@@ -1401,7 +1409,7 @@ function ContractSprPage(props) {
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
                     {moment(new Date(item.created_at)).format(
-                      "DD/MM/YYYY hh:mm:ss"
+                      "DD MMMM YYYY hh:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>
