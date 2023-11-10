@@ -20,20 +20,18 @@ const TableSA = ({ itemJasa, itemSA }) => {
     ],
     []
   );
-  const { readOnly, dataSA, baseSA, saExist, listWBS } = React.useContext(FormSAContext);
-
-  const dataUsed = readOnly ? dataSA.services : itemJasa;
-  const poUsed = useMemo(
-    () =>
-      baseSA?.po_account_assignment?.filter(
-        (el) => el.po_item === itemSA.po_item
-      )?.[0],
-    [baseSA, itemSA]
+  const { readOnly, dataSA, baseSA, saExist, listWBS } = React.useContext(
+    FormSAContext
   );
 
+  const dataUsed = readOnly ? dataSA?.services : itemJasa;
+
+  const poUsed = useMemo(
+    () => baseSA?.po_init?.find((el) => el.po_item === itemSA.po_item)?.data,
+    [baseSA, itemSA]
+  );
   const wbsUsed = useMemo(
-    () =>
-    listWBS.find((el) => el.po_item === itemSA.po_item)?.wbs_value,
+    () => listWBS.find((el) => el.po_item === itemSA.po_item)?.wbs_value,
     [listWBS, itemSA]
   );
   // console.log(
@@ -43,29 +41,56 @@ const TableSA = ({ itemJasa, itemSA }) => {
   //   baseSA,
   //   baseSA?.po_account_assignment,
   //   poUsed
-  // );
+  // );;
 
-  // console.log(wbsUsed, "wbsUsed");
+  console.log({ baseSA }, "<><<");
 
   return (
     <TablePaginationCustom
       headerRows={headerTableSA}
-      rows={dataUsed?.map((el) => ({
-        name_service: el?.service?.short_text || "",
-        service_id: el?.service?.id || "",
-        qty: el?.qty,
-        wbsdata: saExist ? el?.wbs : null,
-        // wbsdata: saExist ? el?.wbs : baseSA?.wbs,
-        dist_type: saExist
-          ? option_dist_type.filter(
-              (els) => els.value === el?.distribution_type
-            )?.[0]
-          : option_dist_type?.[0],
-        bus_area: saExist ? el?.bus_area : poUsed?.bus_area,
-        gl_account: saExist ? el?.gl_account : poUsed?.g_l_acct,
-        cost_center: saExist ? el?.costcenter : poUsed?.cost_ctr,
-        ...el,
-      }))}
+      rows={dataUsed?.map((el, i) => {
+        const service = poUsed?.find(
+          (ser) => ser?.line_no === el?.service?.line_no
+        )?.data;
+
+        let name_service = el?.service?.short_text || "";
+        let service_id = el?.service?.id || "";
+        let qty = el?.qty;
+        let dist_type = option_dist_type?.[0];
+
+        let wbsdata = [
+          {
+            name: service?.wbs?.work_breakdown_app,
+            value: service?.wbs?.value * 1,
+          },
+        ];
+        let bus_area = service?.bus_area;
+        let gl_account = service?.gl_account?.code;
+        let cost_center = service?.cost_center?.code;
+
+        if (saExist) {
+          wbsdata = el?.wbs;
+          dist_type = option_dist_type.filter(
+            (els) => els.value === el?.distribution_type
+          )?.[0];
+          bus_area = el?.bus_area;
+          gl_account = el?.g_l_acct;
+          cost_center = el?.costcenter;
+        }
+
+        return {
+          name_service,
+          service_id,
+          qty,
+          wbsdata,
+          // wbsdata: saExist ? el?.wbs : baseSA?.wbs,
+          dist_type,
+          bus_area,
+          gl_account,
+          cost_center,
+          ...el,
+        };
+      })}
       // rows={dataRow}
       width={2000}
       maxHeight={300}
@@ -76,7 +101,7 @@ const TableSA = ({ itemJasa, itemSA }) => {
         isEmpty(item) ? (
           <div key={index}></div>
         ) : (
-          <RowTableSA wbs={wbsUsed} poItem={itemSA.po_item} item={item} index={index} />
+          <RowTableSA wbs={wbsUsed} item={item} index={index} />
         )
       }
       fieldProps={{
