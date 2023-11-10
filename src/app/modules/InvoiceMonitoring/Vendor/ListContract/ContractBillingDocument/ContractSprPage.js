@@ -323,7 +323,7 @@ function ContractSprPage(props) {
             dataFormSprVendor.spr_date
               ? window
                   .moment(new Date(dataFormSprVendor.spr_date))
-                  .format("YYYY-MM-DD")
+                  .format("DD MMMM YYYY")
               : ""
           );
           formik.setFieldValue(
@@ -362,7 +362,7 @@ function ContractSprPage(props) {
               response["data"]["data"]["spr_date"]
                 ? window
                     .moment(new Date(response["data"]["data"]["spr_date"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             formik.setFieldValue(
@@ -764,7 +764,7 @@ function ContractSprPage(props) {
                     <span className="form-control-plaintext">
                       :{" "}
                       {moment(new Date(modalHistoryData["spr_date"])).format(
-                        "YYYY-MM-DD"
+                        "DD MMMM YYYY"
                       )}
                     </span>
                   </div>
@@ -787,7 +787,7 @@ function ContractSprPage(props) {
                     <span className="form-control-plaintext">
                       :{" "}
                       {moment(new Date(modalHistoryData["created_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                     </span>
                   </div>
@@ -823,10 +823,10 @@ function ContractSprPage(props) {
                       {modalHistoryData["state"] === "REJECTED"
                         ? moment(
                             new Date(modalHistoryData["rejected_at"])
-                          ).format("YYYY-MM-DD HH:mm:ss")
+                          ).format("DD MMMM YYYY HH:mm:ss")
                         : moment(
                             new Date(modalHistoryData["approved_at"])
-                          ).format("YYYY-MM-DD HH:mm:ss")}
+                          ).format("DD MMMM YYYY HH:mm:ss")}
                     </span>
                   </div>
                 </div>
@@ -992,13 +992,13 @@ function ContractSprPage(props) {
                       onChange={(e) => {
                         dataFormSprVendor.spr_date = window
                           .moment(new Date(e.target.value))
-                          .format("YYYY-MM-DD");
+                          .format("DD MMMM YYYY");
                         props.set_data_spr_vendor(dataFormSprVendor);
                         formik.setFieldValue(
                           "spr_date",
                           window
                             .moment(new Date(e.target.value))
-                            .format("YYYY-MM-DD")
+                            .format("DD MMMM YYYY")
                         );
                       }}
                     />
@@ -1503,7 +1503,7 @@ function ContractSprPage(props) {
                     <TableCell>{item.created_by_name}</TableCell>
                     <TableCell>
                       {moment(new Date(item.created_at)).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                     </TableCell>
                     <TableCell>

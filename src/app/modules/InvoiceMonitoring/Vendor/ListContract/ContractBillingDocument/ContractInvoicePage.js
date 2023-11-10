@@ -225,7 +225,7 @@ function ContractInvoicePage(props) {
                 responses["data"]["data"]["from_time"]
                   ? window
                       .moment(new Date(responses["data"]["data"]["from_time"]))
-                      .format("YYYY-MM-DD")
+                      .format("DD MMMM YYYY")
                   : ""
               );
               setUploadFilename(responses["data"]["data"]["file_name"]);
@@ -251,7 +251,7 @@ function ContractInvoicePage(props) {
               response["data"]["data"]["from_time"]
                 ? window
                     .moment(new Date(response["data"]["data"]["from_time"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             setUploadFilename(response["data"]["data"]["file_name"]);
@@ -361,7 +361,7 @@ function ContractInvoicePage(props) {
             dataFormInvoice.from_time
               ? window
                   .moment(new Date(dataFormInvoice.from_time))
-                  .format("YYYY-MM-DD")
+                  .format("DD MMMM YYYY")
               : ""
           );
           formik.setFieldValue(
@@ -421,7 +421,7 @@ function ContractInvoicePage(props) {
               response["data"]["data"]["from_time"]
                 ? window
                     .moment(new Date(response["data"]["data"]["from_time"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
           }
@@ -652,7 +652,7 @@ function ContractInvoicePage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["from_time"])).format(
-                    "YYYY-MM-DD"
+                    "DD MMMM YYYY"
                   )}
                 </span>
               </div>
@@ -675,7 +675,7 @@ function ContractInvoicePage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "YYYY-MM-DD HH:mm:ss"
+                    "DD MMMM YYYY HH:mm:ss"
                   )}
                 </span>
               </div>
@@ -710,10 +710,10 @@ function ContractInvoicePage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                 </span>
               </div>
@@ -1008,13 +1008,13 @@ function ContractInvoicePage(props) {
                       onChange={(e) => {
                         dataFormInvoice.from_time = window
                           .moment(new Date(e.target.value))
-                          .format("YYYY-MM-DD");
+                          .format("DD MMMM YYYY");
                         props.set_data_invoice_vendor(dataFormInvoice);
                         formik.setFieldValue(
                           "from_time",
                           window
                             .moment(new Date(e.target.value))
-                            .format("YYYY-MM-DD")
+                            .format("DD MMMM YYYY")
                         );
                       }}
                     />
@@ -1389,7 +1389,7 @@ function ContractInvoicePage(props) {
                     <TableCell>{item.created_by_name}</TableCell>
                     <TableCell>
                       {moment(new Date(item.created_at)).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                     </TableCell>
                     <TableCell>

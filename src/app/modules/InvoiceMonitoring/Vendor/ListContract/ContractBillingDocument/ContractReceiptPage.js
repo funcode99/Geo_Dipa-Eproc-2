@@ -195,7 +195,7 @@ function ContractReceiptPage(props) {
             dataFormReceiptVendor.receipt_date
               ? window
                   .moment(new Date(dataFormReceiptVendor.receipt_date))
-                  .format("YYYY-MM-DD")
+                  .format("DD MMMM YYYY")
               : ""
           );
           formik.setFieldValue(
@@ -238,7 +238,7 @@ function ContractReceiptPage(props) {
               response["data"]["data"]["receipt_date"]
                 ? window
                     .moment(new Date(response["data"]["data"]["receipt_date"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             formik.setFieldValue(
@@ -532,7 +532,7 @@ function ContractReceiptPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["receipt_date"])).format(
-                    "YYYY-MM-DD"
+                    "DD MMMM YYYY"
                   )}
                 </span>
               </div>
@@ -555,7 +555,7 @@ function ContractReceiptPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "YYYY-MM-DD HH:mm:ss"
+                    "DD MMMM YYYY HH:mm:ss"
                   )}
                 </span>
               </div>
@@ -590,10 +590,10 @@ function ContractReceiptPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                 </span>
               </div>
@@ -689,13 +689,13 @@ function ContractReceiptPage(props) {
                       onChange={(e) => {
                         dataFormReceiptVendor.receipt_date = window
                           .moment(new Date(e.target.value))
-                          .format("YYYY-MM-DD");
+                          .format("DD MMMM YYYY");
                         props.set_data_receipt_vendor(dataFormReceiptVendor);
                         formik.setFieldValue(
                           "receipt_date",
                           window
                             .moment(new Date(e.target.value))
-                            .format("YYYY-MM-DD")
+                            .format("DD MMMM YYYY")
                         );
                       }}
                     />
@@ -938,7 +938,7 @@ function ContractReceiptPage(props) {
                     <TableCell>{item.created_by_name}</TableCell>
                     <TableCell>
                       {moment(new Date(item.created_at)).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                     </TableCell>
                     <TableCell>

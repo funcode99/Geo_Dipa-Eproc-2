@@ -295,7 +295,7 @@ function ContractTaxPage(props) {
             dataFormTaxVendor.tax_date
               ? window
                   .moment(new Date(dataFormTaxVendor.tax_date))
-                  .format("YYYY-MM-DD")
+                  .format("DD MMMM YYYY")
               : ""
           );
           formik.setFieldValue(
@@ -338,7 +338,7 @@ function ContractTaxPage(props) {
               response["data"]["data"]["tax_date"]
                 ? window
                     .moment(new Date(response["data"]["data"]["tax_date"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             formik.setFieldValue("npwp", response["data"]["data"]["npwp"]);
@@ -582,7 +582,7 @@ function ContractTaxPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["tax_date"])).format(
-                    "YYYY-MM-DD"
+                    "DD MMMM YYYY"
                   )}
                 </span>
               </div>
@@ -605,7 +605,7 @@ function ContractTaxPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "YYYY-MM-DD HH:mm:ss"
+                    "DD MMMM YYYY HH:mm:ss"
                   )}
                 </span>
               </div>
@@ -640,10 +640,10 @@ function ContractTaxPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                 </span>
               </div>
@@ -748,13 +748,13 @@ function ContractTaxPage(props) {
                       onChange={(e) => {
                         dataFormTaxVendor.tax_date = window
                           .moment(new Date(e.target.value))
-                          .format("YYYY-MM-DD");
+                          .format("DD MMMM YYYY");
                         props.set_data_tax_vendor(dataFormTaxVendor);
                         formik.setFieldValue(
                           "tax_date",
                           window
                             .moment(new Date(e.target.value))
-                            .format("YYYY-MM-DD")
+                            .format("DD MMMM YYYY")
                         );
                       }}
                     />
@@ -1030,7 +1030,7 @@ function ContractTaxPage(props) {
                     <TableCell>{item.created_by_name}</TableCell>
                     <TableCell>
                       {moment(new Date(item.created_at)).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                     </TableCell>
                     <TableCell>
