@@ -251,7 +251,7 @@ function ContractInvoicePage(props) {
               response["data"]["data"]["from_time"]
                 ? window
                     .moment(new Date(response["data"]["data"]["from_time"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             setUploadFilename(response["data"]["data"]["file_name"]);
