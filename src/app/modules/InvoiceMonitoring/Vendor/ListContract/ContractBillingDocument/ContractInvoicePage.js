@@ -225,7 +225,7 @@ function ContractInvoicePage(props) {
                 responses["data"]["data"]["from_time"]
                   ? window
                       .moment(new Date(responses["data"]["data"]["from_time"]))
-                      .format("DD MMMM YYYY")
+                      .format("YYYY-MM-DD")
                   : ""
               );
               setUploadFilename(responses["data"]["data"]["file_name"]);
@@ -251,7 +251,7 @@ function ContractInvoicePage(props) {
               response["data"]["data"]["from_time"]
                 ? window
                     .moment(new Date(response["data"]["data"]["from_time"]))
-                    .format("DD MMMM YYYY")
+                    .format("YYYY-MM-DD")
                 : ""
             );
             setUploadFilename(response["data"]["data"]["file_name"]);
@@ -361,7 +361,7 @@ function ContractInvoicePage(props) {
             dataFormInvoice.from_time
               ? window
                   .moment(new Date(dataFormInvoice.from_time))
-                  .format("DD MMMM YYYY")
+                  .format("YYYY-MM-DD")
               : ""
           );
           formik.setFieldValue(
@@ -421,7 +421,7 @@ function ContractInvoicePage(props) {
               response["data"]["data"]["from_time"]
                 ? window
                     .moment(new Date(response["data"]["data"]["from_time"]))
-                    .format("DD MMMM YYYY")
+                    .format("YYYY-MM-DD")
                 : ""
             );
           }
@@ -652,7 +652,7 @@ function ContractInvoicePage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["from_time"])).format(
-                    "DD MMMM YYYY"
+                    "YYYY-MM-DD"
                   )}
                 </span>
               </div>
@@ -675,7 +675,7 @@ function ContractInvoicePage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "DD MMMM YYYY HH:mm:ss"
+                    "YYYY-MM-DD HH:mm:ss"
                   )}
                 </span>
               </div>
@@ -710,10 +710,10 @@ function ContractInvoicePage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "DD MMMM YYYY HH:mm:ss"
+                        "YYYY-MM-DD HH:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "DD MMMM YYYY HH:mm:ss"
+                        "YYYY-MM-DD HH:mm:ss"
                       )}
                 </span>
               </div>
@@ -1008,13 +1008,13 @@ function ContractInvoicePage(props) {
                       onChange={(e) => {
                         dataFormInvoice.from_time = window
                           .moment(new Date(e.target.value))
-                          .format("DD MMMM YYYY");
+                          .format("YYYY-MM-DD");
                         props.set_data_invoice_vendor(dataFormInvoice);
                         formik.setFieldValue(
                           "from_time",
                           window
                             .moment(new Date(e.target.value))
-                            .format("DD MMMM YYYY")
+                            .format("YYYY-MM-DD")
                         );
                       }}
                     />
@@ -1380,7 +1380,11 @@ function ContractInvoicePage(props) {
                   <TableRow key={index.toString()}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.invoice_no}</TableCell>
-                    <TableCell>{item.from_time}</TableCell>
+                    <TableCell>{
+                      item.from_time
+                        ? moment(item.from_time).format("DD MMMM YYYY")
+                        : ""
+                    }</TableCell>
                     <TableCell>
                       <a href={getFileInvoice + item.file_name}>
                         {item.file_name}
