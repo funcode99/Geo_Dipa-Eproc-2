@@ -12,6 +12,7 @@ import {
   TableContainer,
   TableRow,
   Paper,
+  makeStyles,
 } from "@material-ui/core";
 import { ReactSelect } from "percobaan/ReactSelect";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
@@ -34,6 +35,12 @@ import ButtonAction from "app/components/buttonAction/ButtonAction";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import NewClause from "./Components/Modal/NewClause";
+import {
+  getSorting,
+  searchFindMulti,
+  stableSort,
+} from "app/components/tables/TablePagination/TablePaginationCustom";
+import Tables from "app/components/tableCustomV1/table";
 
 const createNewPaymentStage = (value, percentage, payment) => ({
   value,
@@ -84,6 +91,69 @@ const FormParameter = ({
   // console.log("isi direksi pekerjaan", jobDirector);
   // console.log("isi pengawas pekerjaan", jobSupervisor);
   // console.log("isi jsonData", jsonData);
+
+  const tableHeaderFine = [
+    {
+      name: "number",
+      title: "No",
+      order: { active: false, status: true, type: true },
+      filter: { active: false, type: "text" },
+    },
+    {
+      name: "item_desc",
+      title: "Jenis Denda",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "qty",
+      title: "Nilai",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "uom",
+      title: "Maksimal Hari",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "unit_price",
+      title: "Tipe Nilai",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+  ];
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      width: "100%",
+      marginTop: theme.spacing(1),
+      overflowX: "auto",
+      padding: theme.spacing(2),
+    },
+    table: {
+      minWidth: 650,
+    },
+  }));
+  const classes = useStyles();
+  const handleFilter = (data, data2) => {
+    const sort = JSON.parse(data2.sort);
+    const filter = JSON.parse(data2.filter);
+    setOrder(sort.order ? "asc" : "desc");
+    setOrderBy(sort.name);
+    setFilterBy(filter);
+  };
+  function handleChangePage(newPage) {
+    setPage(newPage);
+  }
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(+event.target.value);
+  }
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("");
+  const [filterBy, setFilterBy] = React.useState({});
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const guaranteeBeforeAddendum = [
     {
@@ -1800,28 +1870,64 @@ const FormParameter = ({
                                         border: 0,
                                       },
                                     }}
-                                  >
-                                    <TableCell component="th">
-                                      {index + 1}
-                                    </TableCell>
-                                    <TableCell align="left" scope="row">
-                                      {data.pinalty_name}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {data.value}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {data.max_day}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {data.type === "1" ? "%" : "Nilai"}
-                                    </TableCell>
-                                  </TableRow>
+                                  ></TableRow>
                                 )
                               )}
                             </TableBody>
                           </Table>
                         </TableContainer>
+
+                        <Paper className={classes.root}>
+                          <Tables
+                            dataHeader={tableHeaderFine}
+                            handleParams={handleFilter}
+                            err={false}
+                            loading={false}
+                            countData={
+                              searchFindMulti(
+                                stableSort(
+                                  jsonData?.penalty_fine_data,
+                                  getSorting(order, orderBy)
+                                ),
+                                filterBy
+                              ).length
+                            }
+                            onChangePage={handleChangePage}
+                            onChangePerPage={handleChangeRowsPerPage}
+                          >
+                            {/* komponen table ada disini */}
+                            {searchFindMulti(
+                              stableSort(
+                                jsonData?.penalty_fine_data,
+                                getSorting(order, orderBy)
+                              ),
+                              filterBy
+                            )
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
+                              .map((data, index) => (
+                                <TableRow key={index.toString()}>
+                                  <TableCell component="th">
+                                    {index + 1}
+                                  </TableCell>
+                                  <TableCell align="left" scope="row">
+                                    {data.pinalty_name}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {data.value}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {data.max_day}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {data.type === "1" ? "%" : "Nilai"}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                          </Tables>
+                        </Paper>
 
                         <TableContainer
                           style={{
@@ -1870,7 +1976,6 @@ const FormParameter = ({
                                   Maksimal Hari
                                 </TableCell>
                                 <TableCell align="left">Tipe Nilai</TableCell>
-                                <TableCell align="left">Aksi</TableCell>
                               </TableRow>
                             </TableBody>
                             <TableBody>

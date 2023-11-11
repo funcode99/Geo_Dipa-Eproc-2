@@ -90,7 +90,7 @@ const PerubahanKlausulKontrak = ({
                     onChange={(e) =>
                       changeBodyClauseData(e.target.value, "clause number")
                     }
-                    placeholder="Masukkan Nomor Pasal"
+                    placeholder="Masukkan Nomor Klausul"
                     style={{
                       padding: 8,
                       borderRadius: 4,
@@ -128,7 +128,7 @@ const PerubahanKlausulKontrak = ({
                           "before clause note"
                         )
                       }
-                      placeholder="Masukkan Nomor Pasal"
+                      placeholder="Masukkan Klausul Kontrak"
                       style={{
                         padding: 8,
                         borderRadius: 4,
@@ -158,7 +158,7 @@ const PerubahanKlausulKontrak = ({
                           "after clause note"
                         )
                       }
-                      placeholder="Masukkan Nomor Pasal"
+                      placeholder="Masukkan Klausul Kontrak"
                       style={{
                         padding: 8,
                         borderRadius: 4,
@@ -200,7 +200,7 @@ const PerubahanKlausulKontrak = ({
                         )
                       }
                       type="text"
-                      placeholder="Masukkan Angka Lampiran"
+                      placeholder="Masukkan Nomor Lampiran"
                       style={{
                         padding: 8,
                         borderRadius: 4,
@@ -217,7 +217,7 @@ const PerubahanKlausulKontrak = ({
                       onChange={(e) =>
                         changeFieldData(index, e.target.value, "clause note")
                       }
-                      placeholder="Masukkan Nomor Pasal"
+                      placeholder="Masukkan Lampiran Klausul Kontrak"
                       style={{
                         padding: 8,
                         borderRadius: 4,
