@@ -13,6 +13,7 @@ import NewClause from "../Components/Modal/NewClause";
 import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/EditableTable/index";
 import PerubahanKlausulKontrak from "../Components/PerubahanKlausulKontrak";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
+import CurrencyInput from "react-currency-input-field";
 
 const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
   const bodyClauseDataTemplate = {
@@ -172,19 +173,24 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                           padding: "10px 12px",
                         }}
                       >
-                        {currencies.count.map((item) => {
+                        {currencies?.count?.map((item) => {
                           return <option>{item.code}</option>;
                         })}
                       </select>
-                      <input
+                      <CurrencyInput
                         className="form-control"
-                        type="text"
                         style={{
                           width: "100%",
                           border: 1,
                           borderStyle: "solid",
                           borderColor: "#d1d1d1",
                         }}
+                        placeholder="Please enter a number"
+                        defaultValue={1000}
+                        decimalsLimit={2}
+                        decimalSeparator=","
+                        groupSeparator="."
+                        onValueChange={(value) => console.log(value)}
                       />
                     </div>
                   </label>

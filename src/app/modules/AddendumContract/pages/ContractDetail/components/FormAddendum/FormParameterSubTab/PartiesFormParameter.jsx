@@ -19,6 +19,7 @@ const PartiesFormParameter = ({
   PICData,
   jobDirector,
   jobSupervisor,
+  jobSupervisor2,
   contract_id,
 }) => {
   const bodyClauseDataTemplate = {
@@ -58,6 +59,7 @@ const PartiesFormParameter = ({
   };
 
   const submitFormParameterContractParties = (values) => {
+    console.log("isi submit values parties", values);
     submitParties(
       {
         add_contract_id: localStorage.getItem("add_contract_id"),
@@ -81,9 +83,8 @@ const PartiesFormParameter = ({
         party_2_autorized_name: values.secondAuthorizedOfficial[0].fullname,
         party_2_autorized_position:
           values.secondAuthorizedOfficial[0].position_title,
-        party_2_autorized_address:
-          values.secondAuthorizedOfficial[0].phone_number,
-        party_2_autorized_telp: values.secondAuthorizedOfficial[0].address,
+        party_2_autorized_address: values.secondAuthorizedOfficial[0].address,
+        party_2_autorized_telp: values.secondAuthorizedOfficial[0].phone_number,
         party_2_autorized_fax: values.secondAuthorizedOfficial[0].fax,
         party_2_autorized_sk_no:
           values.secondAuthorizedOfficial[0].sk_assign_number,
@@ -109,6 +110,7 @@ const PartiesFormParameter = ({
     );
   };
 
+  // silahkan taro pejabat berwenang pihak pertama disini kalo mau di persist
   const [placeman, setPlaceman] = useState({
     secondAuthorizedOfficial: [
       {
@@ -131,10 +133,11 @@ const PartiesFormParameter = ({
     workDirector: [
       {
         usernameSelectIndex: 0,
-        addressSelectIndex: 0,
+        facilityNameSelectIndex: 0,
         username: "",
         fullname: "",
         position: "",
+        facility_name: "",
         address: "",
         phone: "",
         fax: "",
@@ -175,7 +178,33 @@ const PartiesFormParameter = ({
   };
 
   const [isSubmit, setIsSubmit] = useState(false);
+  const changeDataJobSupervisorDynamic = (
+    num,
+    arrIndex,
+    jobSupervisor2
+    // type
+  ) => {
+    if (!isSubmit) {
+      setPlaceman((placeman) => {
+        let newArr = [...placeman.workSupervisor];
+        newArr[arrIndex]["currentIndex"] = num;
+        newArr[arrIndex]["address"] = jobSupervisor2[num]?.address;
+        newArr[arrIndex]["phone"] = jobSupervisor2[num]?.phone;
+        newArr[arrIndex]["fax"] = jobSupervisor2[num]?.fax;
+        return {
+          ...placeman,
+          workSupervisor: newArr,
+        };
+      });
+    }
+    if (isSubmit) {
+      setIsSubmit(false);
+    }
+  };
   const changeDataJobDirectorDynamic = (num, arrIndex, data, type) => {
+    // berjalan sebanyak banyak nya fungsi yang dipanggil dari react select
+    // console.log("fungsi berjalan di awal");
+
     if (!isSubmit) {
       setPlaceman((placeman) => {
         if (type === "username") {
@@ -184,14 +213,18 @@ const PartiesFormParameter = ({
           newArr[arrIndex]["username"] = data[num]?.username;
           newArr[arrIndex]["fullname"] = data[num]?.full_name;
           newArr[arrIndex]["position"] = data[num]?.position_name;
+
+          // jobDirector.splice(num, 1);
+
           return {
             ...placeman,
             workDirector: newArr,
           };
         }
-        if (type === "address") {
+        if (type === "facilityName") {
           let newArr = [...placeman.workDirector];
-          newArr[arrIndex]["addressSelectIndex"] = num;
+          newArr[arrIndex]["facilityNameSelectIndex"] = num;
+          newArr[arrIndex]["facility_name"] = data[num]?.facility_name;
           newArr[arrIndex]["address"] = data[num]?.address;
           newArr[arrIndex]["phone"] = data[num]?.phone;
           newArr[arrIndex]["fax"] = data[num]?.fax;
@@ -206,29 +239,17 @@ const PartiesFormParameter = ({
       setIsSubmit(false);
     }
   };
-  const changeDataJobSupervisorDynamic = (num, arrIndex, jobSupervisor) => {
-    if (!isSubmit) {
-      setPlaceman((placeman) => {
-        let newArr = [...placeman.workSupervisor];
-        newArr[arrIndex]["currentIndex"] = num;
-        newArr[arrIndex]["address"] = jobSupervisor[num]?.address;
-        newArr[arrIndex]["phone"] = jobSupervisor[num]?.phone;
-        newArr[arrIndex]["fax"] = jobSupervisor[num]?.fax;
-        return {
-          ...placeman,
-          workSupervisor: newArr,
-        };
-      });
-    }
-    if (isSubmit) {
-      setIsSubmit(false);
-    }
-  };
+
+  // di option data nya sudah di hapus, tapi di select nya masih belum
+  useEffect(() => {
+    console.log("job Director sekarang", jobDirector);
+  }, [jobDirector]);
+
   const changeDataSecondAuthorizedOfficial = (num, unused, data) => {
     console.log("isi data data", data);
 
     setPlaceman((placeman) => {
-      let newArr = [...placeman.secondAuthorizedOfficial];
+      let newArr = [...placeman?.secondAuthorizedOfficial];
       newArr[0]["currentSelectIndex"] = num;
       newArr[0]["fullname"] = data[num]?.full_name;
       newArr[0]["position_title"] = data[num]?.position_title;
@@ -241,7 +262,7 @@ const PartiesFormParameter = ({
   };
   const changeInputValueSecondAuthorizedOfficial = (value, type) => {
     setPlaceman((placeman) => {
-      let newArr = [...placeman.secondAuthorizedOfficial];
+      let newArr = [...placeman?.secondAuthorizedOfficial];
       if (type === "Address") newArr[0]["address"] = value;
       if (type === "FAX") newArr[0]["fax"] = value;
       if (type === "SK ASSIGN NUMBER") newArr[0]["sk_assign_number"] = value;
@@ -289,7 +310,7 @@ const PartiesFormParameter = ({
 
   const changeDataSecondAuthorizedOfficialPICEmail = (num, unused, data) => {
     setPlaceman((placeman) => {
-      let newArr = [...placeman.secondAuthorizedOfficial];
+      let newArr = [...placeman?.secondAuthorizedOfficial];
       newArr[0]["PICEmail"] = data[num]?.email;
       return {
         ...placeman,
@@ -314,53 +335,7 @@ const PartiesFormParameter = ({
     });
   };
 
-  const [inputAuthorizedOfficial, setInputAuthorizedOfficial] = useState({
-    official_username: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]
-          ?.authorized_official_username
-      : null,
-    official_name: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]?.authorized_official_name
-      : null,
-    official_position: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]
-          ?.authorized_official_position
-      : null,
-    official_address: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]?.address
-      : null,
-    official_phone: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]?.phone
-      : null,
-    official_fax: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]?.fax
-      : null,
-    official_assignment_no: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_no
-      : null,
-    official_assignment_date: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_date
-      : null,
-    official_notary: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]
-          ?.name_notary_deed_of_authorized_official
-      : null,
-    official_deed_no: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]?.authorized_official_deed_no
-      : null,
-    official_deed_date: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]
-          ?.authorized_official_deed_date
-      : null,
-    official_sk_kemenkumham_no: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]
-          ?.authorized_official_sk_kemenkumham_no
-      : null,
-    official_sk_kemenkumham_date: authorizedOfficial
-      ? authorizedOfficial[authorizedOfficialIndex]
-          ?.authorized_official_sk_kemenkumham_date
-      : null,
-  });
+  const [authorizedOfficialIndex, setauthorizedOfficialIndex] = useState(0);
 
   const [partiesBodyClauseData, setPartiesBodyClauseData] = useState(
     bodyClauseDataTemplate
@@ -372,7 +347,7 @@ const PartiesFormParameter = ({
   const changeDataauthorizedOfficial = (num) => {
     setauthorizedOfficialIndex(num);
   };
-  const [authorizedOfficialIndex, setauthorizedOfficialIndex] = useState(0);
+
   const [jobDirectorIndex, setJobDirectorIndex] = useState(0);
   const [jobSupervisorIndex, setJobSupervisorIndex] = useState(0);
 
@@ -433,33 +408,63 @@ const PartiesFormParameter = ({
       <Formik
         enableReinitialize={true}
         initialValues={{
-          official_username: inputAuthorizedOfficial.official_username,
-          official_name: inputAuthorizedOfficial.official_name,
-          official_position: inputAuthorizedOfficial.official_position,
-          official_address: inputAuthorizedOfficial.official_address,
-          official_phone: inputAuthorizedOfficial.official_phone,
-          official_fax: inputAuthorizedOfficial.official_fax,
-          official_assignment_no:
-            inputAuthorizedOfficial.official_assignment_no,
-          official_assignment_date:
-            inputAuthorizedOfficial.official_assignment_date,
-          official_notary: inputAuthorizedOfficial.official_notary,
-          official_deed_no: inputAuthorizedOfficial.official_deed_no,
-          official_deed_date: inputAuthorizedOfficial.official_deed_date,
-          official_sk_kemenkumham_no:
-            inputAuthorizedOfficial.official_sk_kemenkumham_no,
-          official_sk_kemenkumham_date:
-            inputAuthorizedOfficial.official_sk_kemenkumham_date,
+          official_username: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_username
+            : null,
+          official_name: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_name
+            : null,
+          official_position: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_position
+            : null,
+          official_address: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]?.address
+            : null,
+          official_phone: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]?.phone
+            : null,
+          official_fax: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]?.fax
+            : null,
+          official_assignment_no: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_no
+            : null,
+          official_assignment_date: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_date
+            : null,
+          official_notary: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.name_notary_deed_of_authorized_official
+            : null,
+          official_deed_no: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_deed_no
+            : null,
+          official_deed_date: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_deed_date
+            : null,
+          official_sk_kemenkumham_no: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_sk_kemenkumham_no
+            : null,
+          official_sk_kemenkumham_date: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_sk_kemenkumham_date
+            : null,
+          // firstAuthorizedOfficial: placeman.firstAuthorizedOfficial,
           jobDirector: placeman.workDirector,
           jobSupervisor: placeman.workSupervisor,
-          secondAuthorizedOfficial: placeman.secondAuthorizedOfficial,
+          secondAuthorizedOfficial: placeman?.secondAuthorizedOfficial,
           secondJobDirector: placeman.secondWorkDirector,
           secondJobSupervisor: placeman.secondWorkSupervisor,
           body_data: partiesBodyClauseData,
           attachment_data: partiesAttachmentClauseData,
         }}
         onSubmit={(values) => {
-          values.attachment_data.unshift(values.initial_attachment_data);
           console.log("isi values parties", values);
           submitFormParameterContractParties(values);
         }}
@@ -1432,7 +1437,6 @@ const PartiesFormParameter = ({
                                 style={{
                                   backgroundColor: "#e8f4fb",
                                 }}
-                                // name="initialJobDirector.username"
                                 name={`jobDirector[${index}].username`}
                                 value={
                                   jobDirector
@@ -1456,7 +1460,6 @@ const PartiesFormParameter = ({
                                   style={{
                                     backgroundColor: "#e8f4fb",
                                   }}
-                                  // name="initialJobDirector.fullname"
                                   name={`jobDirector[${index}].fullname`}
                                   value={
                                     jobDirector
@@ -1502,13 +1505,13 @@ const PartiesFormParameter = ({
                                 >
                                   <span>Alamat</span>
                                   <Field
-                                    name={`jobDirector[${index}].adress`}
+                                    name={`jobDirector[${index}].facility_name`}
                                     data={jobSupervisor}
                                     func={changeDataJobDirectorDynamic}
-                                    labelName={"address"}
+                                    labelName={"facility_name"}
                                     arrayIndex={index}
-                                    currentSelect={data.addressSelectIndex}
-                                    type={"address"}
+                                    currentSelect={data.facilityNameSelectIndex}
+                                    type={"facilityName"}
                                     component={ReactSelect}
                                   />
                                 </label>
@@ -1529,8 +1532,9 @@ const PartiesFormParameter = ({
                                     name={`jobDirector[${index}].phone`}
                                     value={
                                       jobSupervisor
-                                        ? jobSupervisor[data.addressSelectIndex]
-                                            ?.phone
+                                        ? jobSupervisor[
+                                            data.facilityNameSelectIndex
+                                          ]?.phone
                                         : null
                                     }
                                     style={{
@@ -1556,8 +1560,9 @@ const PartiesFormParameter = ({
                                     name={`jobDirector[${index}].fax`}
                                     value={
                                       jobSupervisor
-                                        ? jobSupervisor[data.addressSelectIndex]
-                                            ?.fax
+                                        ? jobSupervisor[
+                                            data.facilityNameSelectIndex
+                                          ]?.fax
                                         : null
                                     }
                                     disabled
@@ -1659,14 +1664,15 @@ const PartiesFormParameter = ({
                                 }}
                               >
                                 <span>Alamat</span>
+                                {/* KOMPONEN INI NYENGGOL */}
                                 <Field
                                   name={`jobSupervisor[${index}].address`}
-                                  data={jobSupervisor}
+                                  data={jobSupervisor2}
                                   func={changeDataJobSupervisorDynamic}
                                   labelName={"address"}
                                   arrayIndex={index}
                                   currentSelect={data.currentIndex}
-                                  type={"jobSupervisor"}
+                                  // type={"jobSupervisor"}
                                   component={ReactSelect}
                                 />
                               </label>
@@ -1687,7 +1693,7 @@ const PartiesFormParameter = ({
                                   name={`jobSupervisor[${index}].phone`}
                                   value={
                                     jobSupervisor
-                                      ? jobSupervisor[data.currentIndex]?.phone
+                                      ? jobSupervisor2[data.currentIndex]?.phone
                                       : null
                                   }
                                   style={{ backgroundColor: "#e8f4fb" }}
@@ -1711,7 +1717,7 @@ const PartiesFormParameter = ({
                                   name={`jobSupervisor[${index}].fax`}
                                   value={
                                     jobSupervisor
-                                      ? jobSupervisor[data.currentIndex]?.fax
+                                      ? jobSupervisor2[data.currentIndex]?.fax
                                       : null
                                   }
                                   style={{ backgroundColor: "#e8f4fb" }}

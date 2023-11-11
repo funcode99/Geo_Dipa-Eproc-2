@@ -41,42 +41,6 @@ const createNewPaymentStage = (value, percentage, payment) => ({
   payment,
 });
 
-const guaranteeBeforeAddendum = [
-  {
-    title: "Jaminan Uang Muka",
-    startDate: "2023-09-19",
-    endDate: "2023-10-29",
-    filename: "bla_blah.pdf",
-    radio: "yes",
-    nameTitle: "dp_guarantee",
-    nameStart: "dp_guarantee_start_date",
-    nameEnd: "dp_guarantee_end_date",
-    nameEvidence: "dp_guarantee_evidence_file",
-  },
-  {
-    title: "Jaminan Pelaksanaan",
-    startDate: "2023-09-19",
-    endDate: "2023-10-29",
-    filename: "secret.docx",
-    radio: "no",
-    nameTitle: "implementation_guarantee",
-    nameStart: "implementation_guarantee_start_date",
-    nameEnd: "implementation_guarantee_end_date",
-    nameEvidence: "implementation_guarantee_evidence_file",
-  },
-  {
-    title: "Jaminan Pemeliharaan",
-    startDate: "2023-09-19",
-    endDate: "2023-10-29",
-    filename: "another_file.xlsx",
-    radio: "yes",
-    nameTitle: "maintenance_guarantee",
-    nameStart: "maintenance_guarantee_start_date",
-    nameEnd: "maintenance_guarantee_end_date",
-    nameEvidence: "maintenance_guarantee_evidence_file",
-  },
-];
-
 const actionButton = (id, deleteFine) => (
   <ButtonAction
     handleAction={(_, __, type) => {
@@ -90,9 +54,6 @@ const actionButton = (id, deleteFine) => (
     hoverLabel="More"
     data={"1"}
     ops={[
-      {
-        label: "Edit",
-      },
       {
         label: "Hapus",
       },
@@ -111,6 +72,7 @@ const FormParameter = ({
   jsonData,
   jobDirector,
   jobSupervisor,
+  jobSupervisor2,
   timePeriodData,
   authorizedOfficial,
   secondAuthorizedOfficial,
@@ -123,11 +85,47 @@ const FormParameter = ({
   // console.log("isi pengawas pekerjaan", jobSupervisor);
   // console.log("isi jsonData", jsonData);
 
+  const guaranteeBeforeAddendum = [
+    {
+      title: "Jaminan Uang Muka",
+      startDate: `${jsonData?.from_time}`,
+      endDate: `${jsonData?.thru_time}`,
+      filename: "bla_blah.pdf",
+      radio: `${jsonData?.down_payment_guarantee}`,
+      nameTitle: "dp_guarantee",
+      nameStart: "dp_guarantee_start_date",
+      nameEnd: "dp_guarantee_end_date",
+      nameEvidence: "dp_guarantee_evidence_file",
+    },
+    {
+      title: "Jaminan Pelaksanaan",
+      startDate: `${jsonData?.guarantee_start_date}`,
+      endDate: `${jsonData?.guarantee_end_date}`,
+      filename: "secret.docx",
+      radio: `${jsonData?.implementation_guarantee}`,
+      nameTitle: "implementation_guarantee",
+      nameStart: "implementation_guarantee_start_date",
+      nameEnd: "implementation_guarantee_end_date",
+      nameEvidence: "implementation_guarantee_evidence_file",
+    },
+    {
+      title: "Jaminan Pemeliharaan",
+      startDate: `${jsonData?.maintenance_start_date}`,
+      endDate: `${jsonData?.maintenance_start_date}`,
+      filename: "another_file.xlsx",
+      radio: `${jsonData?.maintenance_guarantee}`,
+      nameTitle: "maintenance_guarantee",
+      nameStart: "maintenance_guarantee_start_date",
+      nameEnd: "maintenance_guarantee_end_date",
+      nameEvidence: "maintenance_guarantee_evidence_file",
+    },
+  ];
+
   const timePeriodBeforeAddendum = [
     {
       title: "Jangka Waktu Perjanjian",
       startDate: timePeriodData?.from_time,
-      endDate: timePeriodData?.from_time,
+      endDate: timePeriodData?.thru_time,
       totalMonth: timePeriodData?.contract_period_range_month,
       calendarDay: timePeriodData?.contract_period_range_day,
       radio: timePeriodData?.contract_period_type,
@@ -135,8 +133,8 @@ const FormParameter = ({
     },
     {
       title: "Jangka Waktu Pelaksanaan Pekerjaan",
-      startDate: timePeriodData?.work_start_date,
-      endDate: timePeriodData?.work_end_date,
+      startDate: timePeriodData?.worked_start_date,
+      endDate: timePeriodData?.worked_end_date,
       totalMonth: timePeriodData?.work_implement_period_month,
       calendarDay: timePeriodData?.work_implement_period_day,
       radio: timePeriodData?.work_period_type,
@@ -164,7 +162,7 @@ const FormParameter = ({
     {
       title: "Jangka Waktu Perjanjian",
       startDate: timePeriodData?.from_time,
-      endDate: timePeriodData?.from_time,
+      endDate: timePeriodData?.thru_time,
       totalMonth: timePeriodData?.contract_period_range_month,
       calendarDay: timePeriodData?.contract_period_range_day,
       radio: timePeriodData?.contract_period_type,
@@ -172,8 +170,8 @@ const FormParameter = ({
     },
     {
       title: "Jangka Waktu Pelaksanaan Pekerjaan",
-      startDate: timePeriodData?.work_start_date,
-      endDate: timePeriodData?.work_end_date,
+      startDate: timePeriodData?.worked_start_date,
+      endDate: timePeriodData?.worked_end_date,
       totalMonth: timePeriodData?.work_implement_period_month,
       calendarDay: timePeriodData?.work_implement_period_day,
       radio: timePeriodData?.work_period_type,
@@ -405,12 +403,12 @@ const FormParameter = ({
   const [dataArrFine, setDataArrFine] = useState([]);
   const [currencies, setDataCurrencies] = useState([]);
 
-  let a = jsonData?.payment_method_data;
-  let b = jsonData?.payment_method_data;
+  const earlyStagePayment = {
+    payment: JSON.parse(localStorage.getItem("payment_method")),
+  };
 
-  const earlyStagePayment = b;
   const [stagePayment, setStagePayment] = useState({
-    payment: a,
+    payment: jsonData?.payment_method_data,
   });
   const [accountNumber, setAccountNumber] = useState(
     jsonData?.data_bank[bankIndex]
@@ -883,6 +881,7 @@ const FormParameter = ({
                 PICData={PICData}
                 jobDirector={jobDirector}
                 jobSupervisor={jobSupervisor}
+                jobSupervisor2={jobSupervisor2}
                 contract_id={contract_id}
               />
             </>
@@ -1206,13 +1205,14 @@ const FormParameter = ({
                                               : "",
                                         }}
                                         name={data.prefix + "_start_date"}
-                                        //
                                         value={data.startDate}
                                         disabled={
-                                          data.title ===
-                                            "Jangka Waktu Perjanjian" ||
-                                          data.title ===
-                                            "Jangka Waktu Pelaksanaan Pekerjaan"
+                                          (data.title ===
+                                            "Jangka Waktu Perjanjian" &&
+                                            data.startDate !== null) ||
+                                          (data.title ===
+                                            "Jangka Waktu Pelaksanaan Pekerjaan" &&
+                                            data.startDate !== null)
                                         }
                                         onChange={(e) =>
                                           setTimePeriodAddendum((prev) => {
@@ -1465,7 +1465,7 @@ const FormParameter = ({
                           </label>
                         </div>
                         {earlyStagePayment &&
-                          earlyStagePayment.map((item) => {
+                          earlyStagePayment?.payment?.map((item) => {
                             return (
                               <>
                                 <div
@@ -1607,13 +1607,14 @@ const FormParameter = ({
                                         paddingTop: 12,
                                       }}
                                     >
-                                      Tahap {item.payment}
+                                      {/* Tahap {item.payment} */}
+                                      Tahap {index + 1}
                                     </p>
                                     <button
                                       type="button"
                                       onClick={() => {
-                                        setStagePayment((placeman) => {
-                                          let data = { ...placeman };
+                                        setStagePayment((previous) => {
+                                          let data = { ...previous };
                                           data.payment.splice(index, 1);
                                           return data;
                                         });
@@ -1807,13 +1808,13 @@ const FormParameter = ({
                                       {data.pinalty_name}
                                     </TableCell>
                                     <TableCell align="left">
-                                      {data.nilai}
+                                      {data.value}
                                     </TableCell>
                                     <TableCell align="left">
                                       {data.max_day}
                                     </TableCell>
                                     <TableCell align="left">
-                                      {data.type_nilai}
+                                      {data.type === "1" ? "%" : "Nilai"}
                                     </TableCell>
                                   </TableRow>
                                 )
@@ -2011,6 +2012,7 @@ const FormParameter = ({
                                 </p>
 
                                 {/* ya / tidak */}
+                                {data.radio}
                                 <div
                                   style={{
                                     display: "flex",
@@ -2030,7 +2032,7 @@ const FormParameter = ({
                                     <input
                                       type="radio"
                                       name={`${index}_down_payment_guarantee`}
-                                      checked={data.radio === "yes"}
+                                      checked={data.radio == "1"}
                                     />
                                     <span>Ya</span>
                                   </label>
@@ -2047,7 +2049,7 @@ const FormParameter = ({
                                     <input
                                       type="radio"
                                       name={`${index}_down_payment_guarantee`}
-                                      checked={data.radio === "no"}
+                                      checked={data.radio == "0"}
                                     />
                                     <span>Tidak</span>
                                   </label>

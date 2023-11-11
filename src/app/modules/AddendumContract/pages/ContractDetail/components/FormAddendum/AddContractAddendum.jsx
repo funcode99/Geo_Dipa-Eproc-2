@@ -149,6 +149,7 @@ export const AddContractAddendum = ({
   const [jsonData, setJsonData] = useState();
   const [jobDirector, setJobDirector] = useState();
   const [jobSupervisor, setJobSupervisor] = useState();
+  const [jobSupervisor2, setJobSupervisor2] = useState();
   const [authorizedOfficial, setauthorizedOfficial] = useState();
   const [secondAuthorizedOfficial, setSecondAuthorizedOfficial] = useState();
   const [PICData, setPICData] = useState();
@@ -230,7 +231,7 @@ export const AddContractAddendum = ({
       addendum: false,
     },
   ]);
-  const [checkedInitialValues, setCheckedInitialValues] = React.useState([]);
+  const [checkedInitialValues, setCheckedInitialValues] = useState([]);
   const [timePeriodData, setTimePeriodData] = useState();
 
   const addCheckedField = (data, type) => {
@@ -336,6 +337,7 @@ export const AddContractAddendum = ({
     getauthorizedOfficial();
     getJobDirector();
     getJobSupervisor();
+    // getJobSupervisor2();
     setInitialSubmitItems();
     // eslint-disable-next-line
   }, []);
@@ -352,11 +354,14 @@ export const AddContractAddendum = ({
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      // url: `/adendum/contract-released/${contract_id}/show`,
-      url: `/adendum/contract-released/25d8e945-1caa-4d90-b0bb-30052ecf564f/show`,
+      url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
-        console.log("apakah menarik data", res.data.id);
-        setJsonData(res.data);
+        console.log("apakah menarik data", res?.data);
+        setJsonData(res?.data);
+        localStorage.setItem(
+          "payment_method",
+          JSON.stringify(res?.data?.payment_method_data)
+        );
         setDataArr({
           id: res.data.id,
           agreement_number: res.data.contract_no,
@@ -382,27 +387,32 @@ export const AddContractAddendum = ({
           // addendum_percentage: res.data.addendum_percentage,
           // conclusion: res.data.conclusion,
         });
-        setTimePeriodData({
-          from_time: res?.data?.from_time,
-          thru_time: res?.data?.thru_time,
-          worked_start_date: res?.data?.worked_start_date,
-          worked_end_date: res?.data?.worked_end_date,
-          guarantee_start_date: res?.data?.guarantee_start_date,
-          guarantee_end_date: res?.data?.guarantee_end_date,
-          maintenance_start_date: res?.data?.maintenance_start_date,
-          maintenance_end_date: res?.data?.maintenance_end_date,
-          contract_period_type: res?.data?.contract_period_type,
-          work_period_type: res?.data?.work_period_type,
-          contract_period_range_day: res?.data?.contract_period_range_day,
-          contract_period_range_month: res?.data?.contract_period_range_month,
-          work_implement_period_day: res?.data?.work_implement_period_day,
-          work_implement_period_month: res?.data?.work_implement_period_month,
-          guarantee_period_day: res?.data?.guarantee_period_day,
-          guarantee_period_month: res?.data?.guarantee_period_month,
-          maintenance_period_day: res?.data?.maintenance_period_day,
-          maintenance_period_month: res?.data?.maintenance_period_month,
-        });
-        getSecondAuthorizedOfficial(res.data.vendor_id);
+        localStorage.setItem(
+          "time_period",
+          JSON.stringify({
+            from_time: res?.data?.from_time,
+            thru_time: res?.data?.thru_time,
+            worked_start_date: res?.data?.worked_start_date,
+            worked_end_date: res?.data?.worked_end_date,
+            guarantee_start_date: res?.data?.guarantee_start_date,
+            guarantee_end_date: res?.data?.guarantee_end_date,
+            maintenance_start_date: res?.data?.maintenance_start_date,
+            maintenance_end_date: res?.data?.maintenance_end_date,
+            contract_period_type: res?.data?.contract_period_type,
+            work_period_type: res?.data?.work_period_type,
+            contract_period_range_day: res?.data?.contract_period_range_day,
+            contract_period_range_month: res?.data?.contract_period_range_month,
+            work_implement_period_day: res?.data?.work_implement_period_day,
+            work_implement_period_month: res?.data?.work_implement_period_month,
+            guarantee_period_day: res?.data?.guarantee_period_day,
+            guarantee_period_month: res?.data?.guarantee_period_month,
+            maintenance_period_day: res?.data?.maintenance_period_day,
+            maintenance_period_month: res?.data?.maintenance_period_month,
+          })
+        );
+        let timePeriodData = JSON.parse(localStorage.getItem("time_period"));
+        setTimePeriodData(timePeriodData);
+        getSecondAuthorizedOfficial(res?.data?.vendor_id);
       },
     });
   };
@@ -449,10 +459,12 @@ export const AddContractAddendum = ({
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      url: `/adendum/user-plants`,
+      url: `/adendum/refference/get-all-plants`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
+        // hasil respon akan SELALU PASS BY REFERENCE
         setJobSupervisor(res.data);
+        localStorage.setItem("job_supervisor", JSON.stringify(res.data));
+        setJobSupervisor2(JSON.parse(localStorage.getItem("job_supervisor")));
       },
     });
   };
@@ -829,6 +841,7 @@ export const AddContractAddendum = ({
             jsonData={jsonData}
             jobDirector={jobDirector}
             jobSupervisor={jobSupervisor}
+            jobSupervisor2={jobSupervisor2}
             timePeriodData={timePeriodData}
             authorizedOfficial={authorizedOfficial}
             secondAuthorizedOfficial={secondAuthorizedOfficial}
@@ -886,7 +899,7 @@ export const AddContractAddendum = ({
                 additionalSupportingData: [],
               }}
             >
-              {(formikProps) => {
+              {() => {
                 return (
                   <>
                     <h1

@@ -5,6 +5,7 @@ import CollapsibleRow from "../CollapsibleRow";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import { Formik, Field, Form } from "formik";
 import ButtonAction from "app/components/buttonAction/ButtonAction";
+import CurrencyInput from "react-currency-input-field";
 
 import IconButton from "@material-ui/core/IconButton";
 import DoneIcon from "@material-ui/icons/DoneAllTwoTone";
@@ -360,7 +361,9 @@ const EditableTable = ({ openCloseAddDetail }) => {
                       >
                         QTY
                       </span>
+
                       <Field
+                        disableGroupSeparators={true}
                         type="text"
                         name="quantity"
                         style={{
@@ -371,6 +374,10 @@ const EditableTable = ({ openCloseAddDetail }) => {
                           borderColor: "#8c8a8a",
                           opacity: 0.8,
                         }}
+                        defaultValue={0}
+                        decimalsLimit={0}
+                        onValueChange={(value) => console.log(value)}
+                        component={CurrencyInput}
                       />
                     </div>
 
@@ -390,6 +397,7 @@ const EditableTable = ({ openCloseAddDetail }) => {
                         Satuan
                       </span>
                       <Field
+                        disableGroupSeparators={true}
                         type="text"
                         name="uom"
                         style={{
@@ -400,6 +408,10 @@ const EditableTable = ({ openCloseAddDetail }) => {
                           borderColor: "#8c8a8a",
                           opacity: 0.8,
                         }}
+                        defaultValue={0}
+                        decimalsLimit={0}
+                        onValueChange={(value) => console.log(value)}
+                        component={CurrencyInput}
                       />
                     </div>
                   </div>
@@ -439,6 +451,12 @@ const EditableTable = ({ openCloseAddDetail }) => {
                           borderColor: "#8c8a8a",
                           opacity: 0.8,
                         }}
+                        defaultValue={0}
+                        decimalsLimit={2}
+                        decimalSeparator=","
+                        groupSeparator="."
+                        onValueChange={(value) => console.log(value)}
+                        component={CurrencyInput}
                       />
                     </div>
 
@@ -468,6 +486,12 @@ const EditableTable = ({ openCloseAddDetail }) => {
                           borderColor: "#8c8a8a",
                           opacity: 0.8,
                         }}
+                        defaultValue={0}
+                        decimalsLimit={2}
+                        decimalSeparator=","
+                        groupSeparator="."
+                        onValueChange={(value) => console.log(value)}
+                        component={CurrencyInput}
                       />
                     </div>
 
