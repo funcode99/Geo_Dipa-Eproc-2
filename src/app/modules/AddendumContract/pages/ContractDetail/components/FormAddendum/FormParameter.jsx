@@ -12,6 +12,7 @@ import {
   TableContainer,
   TableRow,
   Paper,
+  makeStyles,
 } from "@material-ui/core";
 import { ReactSelect } from "percobaan/ReactSelect";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
@@ -34,48 +35,18 @@ import ButtonAction from "app/components/buttonAction/ButtonAction";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import NewClause from "./Components/Modal/NewClause";
+import {
+  getSorting,
+  searchFindMulti,
+  stableSort,
+} from "app/components/tables/TablePagination/TablePaginationCustom";
+import Tables from "app/components/tableCustomV1/table";
 
 const createNewPaymentStage = (value, percentage, payment) => ({
   value,
   percentage,
   payment,
 });
-
-const guaranteeBeforeAddendum = [
-  {
-    title: "Jaminan Uang Muka",
-    startDate: "2023-09-19",
-    endDate: "2023-10-29",
-    filename: "bla_blah.pdf",
-    radio: "yes",
-    nameTitle: "dp_guarantee",
-    nameStart: "dp_guarantee_start_date",
-    nameEnd: "dp_guarantee_end_date",
-    nameEvidence: "dp_guarantee_evidence_file",
-  },
-  {
-    title: "Jaminan Pelaksanaan",
-    startDate: "2023-09-19",
-    endDate: "2023-10-29",
-    filename: "secret.docx",
-    radio: "no",
-    nameTitle: "implementation_guarantee",
-    nameStart: "implementation_guarantee_start_date",
-    nameEnd: "implementation_guarantee_end_date",
-    nameEvidence: "implementation_guarantee_evidence_file",
-  },
-  {
-    title: "Jaminan Pemeliharaan",
-    startDate: "2023-09-19",
-    endDate: "2023-10-29",
-    filename: "another_file.xlsx",
-    radio: "yes",
-    nameTitle: "maintenance_guarantee",
-    nameStart: "maintenance_guarantee_start_date",
-    nameEnd: "maintenance_guarantee_end_date",
-    nameEvidence: "maintenance_guarantee_evidence_file",
-  },
-];
 
 const actionButton = (id, deleteFine) => (
   <ButtonAction
@@ -90,9 +61,6 @@ const actionButton = (id, deleteFine) => (
     hoverLabel="More"
     data={"1"}
     ops={[
-      {
-        label: "Edit",
-      },
       {
         label: "Hapus",
       },
@@ -111,6 +79,7 @@ const FormParameter = ({
   jsonData,
   jobDirector,
   jobSupervisor,
+  jobSupervisor2,
   timePeriodData,
   authorizedOfficial,
   secondAuthorizedOfficial,
@@ -123,11 +92,110 @@ const FormParameter = ({
   // console.log("isi pengawas pekerjaan", jobSupervisor);
   // console.log("isi jsonData", jsonData);
 
+  const tableHeaderFine = [
+    {
+      name: "number",
+      title: "No",
+      order: { active: false, status: true, type: true },
+      filter: { active: false, type: "text" },
+    },
+    {
+      name: "item_desc",
+      title: "Jenis Denda",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "qty",
+      title: "Nilai",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "uom",
+      title: "Maksimal Hari",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "unit_price",
+      title: "Tipe Nilai",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+  ];
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      width: "100%",
+      marginTop: theme.spacing(1),
+      overflowX: "auto",
+      padding: theme.spacing(2),
+    },
+    table: {
+      minWidth: 650,
+    },
+  }));
+  const classes = useStyles();
+  const handleFilter = (data, data2) => {
+    const sort = JSON.parse(data2.sort);
+    const filter = JSON.parse(data2.filter);
+    setOrder(sort.order ? "asc" : "desc");
+    setOrderBy(sort.name);
+    setFilterBy(filter);
+  };
+  function handleChangePage(newPage) {
+    setPage(newPage);
+  }
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(+event.target.value);
+  }
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("");
+  const [filterBy, setFilterBy] = React.useState({});
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const guaranteeBeforeAddendum = [
+    {
+      title: "Jaminan Uang Muka",
+      startDate: `${jsonData?.from_time}`,
+      endDate: `${jsonData?.thru_time}`,
+      filename: "bla_blah.pdf",
+      radio: `${jsonData?.down_payment_guarantee}`,
+      nameTitle: "dp_guarantee",
+      nameStart: "dp_guarantee_start_date",
+      nameEnd: "dp_guarantee_end_date",
+      nameEvidence: "dp_guarantee_evidence_file",
+    },
+    {
+      title: "Jaminan Pelaksanaan",
+      startDate: `${jsonData?.guarantee_start_date}`,
+      endDate: `${jsonData?.guarantee_end_date}`,
+      filename: "secret.docx",
+      radio: `${jsonData?.implementation_guarantee}`,
+      nameTitle: "implementation_guarantee",
+      nameStart: "implementation_guarantee_start_date",
+      nameEnd: "implementation_guarantee_end_date",
+      nameEvidence: "implementation_guarantee_evidence_file",
+    },
+    {
+      title: "Jaminan Pemeliharaan",
+      startDate: `${jsonData?.maintenance_start_date}`,
+      endDate: `${jsonData?.maintenance_start_date}`,
+      filename: "another_file.xlsx",
+      radio: `${jsonData?.maintenance_guarantee}`,
+      nameTitle: "maintenance_guarantee",
+      nameStart: "maintenance_guarantee_start_date",
+      nameEnd: "maintenance_guarantee_end_date",
+      nameEvidence: "maintenance_guarantee_evidence_file",
+    },
+  ];
+
   const timePeriodBeforeAddendum = [
     {
       title: "Jangka Waktu Perjanjian",
       startDate: timePeriodData?.from_time,
-      endDate: timePeriodData?.from_time,
+      endDate: timePeriodData?.thru_time,
       totalMonth: timePeriodData?.contract_period_range_month,
       calendarDay: timePeriodData?.contract_period_range_day,
       radio: timePeriodData?.contract_period_type,
@@ -135,8 +203,8 @@ const FormParameter = ({
     },
     {
       title: "Jangka Waktu Pelaksanaan Pekerjaan",
-      startDate: timePeriodData?.work_start_date,
-      endDate: timePeriodData?.work_end_date,
+      startDate: timePeriodData?.worked_start_date,
+      endDate: timePeriodData?.worked_end_date,
       totalMonth: timePeriodData?.work_implement_period_month,
       calendarDay: timePeriodData?.work_implement_period_day,
       radio: timePeriodData?.work_period_type,
@@ -164,7 +232,7 @@ const FormParameter = ({
     {
       title: "Jangka Waktu Perjanjian",
       startDate: timePeriodData?.from_time,
-      endDate: timePeriodData?.from_time,
+      endDate: timePeriodData?.thru_time,
       totalMonth: timePeriodData?.contract_period_range_month,
       calendarDay: timePeriodData?.contract_period_range_day,
       radio: timePeriodData?.contract_period_type,
@@ -172,8 +240,8 @@ const FormParameter = ({
     },
     {
       title: "Jangka Waktu Pelaksanaan Pekerjaan",
-      startDate: timePeriodData?.work_start_date,
-      endDate: timePeriodData?.work_end_date,
+      startDate: timePeriodData?.worked_start_date,
+      endDate: timePeriodData?.worked_end_date,
       totalMonth: timePeriodData?.work_implement_period_month,
       calendarDay: timePeriodData?.work_implement_period_day,
       radio: timePeriodData?.work_period_type,
@@ -405,12 +473,12 @@ const FormParameter = ({
   const [dataArrFine, setDataArrFine] = useState([]);
   const [currencies, setDataCurrencies] = useState([]);
 
-  let a = jsonData?.payment_method_data;
-  let b = jsonData?.payment_method_data;
+  const earlyStagePayment = {
+    payment: JSON.parse(localStorage.getItem("payment_method")),
+  };
 
-  const earlyStagePayment = b;
   const [stagePayment, setStagePayment] = useState({
-    payment: a,
+    payment: jsonData?.payment_method_data,
   });
   const [accountNumber, setAccountNumber] = useState(
     jsonData?.data_bank[bankIndex]
@@ -883,6 +951,7 @@ const FormParameter = ({
                 PICData={PICData}
                 jobDirector={jobDirector}
                 jobSupervisor={jobSupervisor}
+                jobSupervisor2={jobSupervisor2}
                 contract_id={contract_id}
               />
             </>
@@ -1206,13 +1275,14 @@ const FormParameter = ({
                                               : "",
                                         }}
                                         name={data.prefix + "_start_date"}
-                                        //
                                         value={data.startDate}
                                         disabled={
-                                          data.title ===
-                                            "Jangka Waktu Perjanjian" ||
-                                          data.title ===
-                                            "Jangka Waktu Pelaksanaan Pekerjaan"
+                                          (data.title ===
+                                            "Jangka Waktu Perjanjian" &&
+                                            data.startDate !== null) ||
+                                          (data.title ===
+                                            "Jangka Waktu Pelaksanaan Pekerjaan" &&
+                                            data.startDate !== null)
                                         }
                                         onChange={(e) =>
                                           setTimePeriodAddendum((prev) => {
@@ -1465,7 +1535,7 @@ const FormParameter = ({
                           </label>
                         </div>
                         {earlyStagePayment &&
-                          earlyStagePayment.map((item) => {
+                          earlyStagePayment?.payment?.map((item) => {
                             return (
                               <>
                                 <div
@@ -1607,13 +1677,14 @@ const FormParameter = ({
                                         paddingTop: 12,
                                       }}
                                     >
-                                      Tahap {item.payment}
+                                      {/* Tahap {item.payment} */}
+                                      Tahap {index + 1}
                                     </p>
                                     <button
                                       type="button"
                                       onClick={() => {
-                                        setStagePayment((placeman) => {
-                                          let data = { ...placeman };
+                                        setStagePayment((previous) => {
+                                          let data = { ...previous };
                                           data.payment.splice(index, 1);
                                           return data;
                                         });
@@ -1799,28 +1870,64 @@ const FormParameter = ({
                                         border: 0,
                                       },
                                     }}
-                                  >
-                                    <TableCell component="th">
-                                      {index + 1}
-                                    </TableCell>
-                                    <TableCell align="left" scope="row">
-                                      {data.pinalty_name}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {data.nilai}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {data.max_day}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {data.type_nilai}
-                                    </TableCell>
-                                  </TableRow>
+                                  ></TableRow>
                                 )
                               )}
                             </TableBody>
                           </Table>
                         </TableContainer>
+
+                        <Paper className={classes.root}>
+                          <Tables
+                            dataHeader={tableHeaderFine}
+                            handleParams={handleFilter}
+                            err={false}
+                            loading={false}
+                            countData={
+                              searchFindMulti(
+                                stableSort(
+                                  jsonData?.penalty_fine_data,
+                                  getSorting(order, orderBy)
+                                ),
+                                filterBy
+                              ).length
+                            }
+                            onChangePage={handleChangePage}
+                            onChangePerPage={handleChangeRowsPerPage}
+                          >
+                            {/* komponen table ada disini */}
+                            {searchFindMulti(
+                              stableSort(
+                                jsonData?.penalty_fine_data,
+                                getSorting(order, orderBy)
+                              ),
+                              filterBy
+                            )
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
+                              .map((data, index) => (
+                                <TableRow key={index.toString()}>
+                                  <TableCell component="th">
+                                    {index + 1}
+                                  </TableCell>
+                                  <TableCell align="left" scope="row">
+                                    {data.pinalty_name}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {data.value}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {data.max_day}
+                                  </TableCell>
+                                  <TableCell align="left">
+                                    {data.type === "1" ? "%" : "Nilai"}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                          </Tables>
+                        </Paper>
 
                         <TableContainer
                           style={{
@@ -1869,7 +1976,6 @@ const FormParameter = ({
                                   Maksimal Hari
                                 </TableCell>
                                 <TableCell align="left">Tipe Nilai</TableCell>
-                                <TableCell align="left">Aksi</TableCell>
                               </TableRow>
                             </TableBody>
                             <TableBody>
@@ -2011,6 +2117,7 @@ const FormParameter = ({
                                 </p>
 
                                 {/* ya / tidak */}
+                                {data.radio}
                                 <div
                                   style={{
                                     display: "flex",
@@ -2030,7 +2137,7 @@ const FormParameter = ({
                                     <input
                                       type="radio"
                                       name={`${index}_down_payment_guarantee`}
-                                      checked={data.radio === "yes"}
+                                      checked={data.radio == "1"}
                                     />
                                     <span>Ya</span>
                                   </label>
@@ -2047,7 +2154,7 @@ const FormParameter = ({
                                     <input
                                       type="radio"
                                       name={`${index}_down_payment_guarantee`}
-                                      checked={data.radio === "no"}
+                                      checked={data.radio == "0"}
                                     />
                                     <span>Tidak</span>
                                   </label>

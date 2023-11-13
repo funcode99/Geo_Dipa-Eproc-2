@@ -8,13 +8,52 @@ import {
   TableContainer,
   TableRow,
   Paper,
+  makeStyles,
 } from "@material-ui/core";
 import NewClause from "../Components/Modal/NewClause";
 import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/EditableTable/index";
 import PerubahanKlausulKontrak from "../Components/PerubahanKlausulKontrak";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
+import CurrencyInput from "react-currency-input-field";
+import Tables from "app/components/tableCustomV1/table";
+import {
+  getSorting,
+  searchFindMulti,
+  stableSort,
+} from "app/components/tables/TablePagination/TablePaginationCustom";
 
 const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      width: "100%",
+      marginTop: theme.spacing(1),
+      overflowX: "auto",
+      padding: theme.spacing(2),
+    },
+    table: {
+      minWidth: 650,
+    },
+  }));
+  const classes = useStyles();
+  const handleFilter = (data, data2) => {
+    const sort = JSON.parse(data2.sort);
+    const filter = JSON.parse(data2.filter);
+    setOrder(sort.order ? "asc" : "desc");
+    setOrderBy(sort.name);
+    setFilterBy(filter);
+  };
+  function handleChangePage(newPage) {
+    setPage(newPage);
+  }
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(+event.target.value);
+  }
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("");
+  const [filterBy, setFilterBy] = React.useState({});
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
   const bodyClauseDataTemplate = {
     clause_number: "",
     before_clause_note: "",
@@ -48,6 +87,51 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
   const rows = [
     createData(1, "Keterlambatan Pekerjaan", 10, 30, "%"),
     createData(2, "Keterlambatan Pekerjaan", 15, 60, "%"),
+  ];
+
+  const tableHeaderJobPrice = [
+    {
+      name: "number",
+      title: "No",
+      order: { active: false, status: true, type: true },
+      filter: { active: false, type: "text" },
+    },
+    {
+      name: "item_desc",
+      title: "Deskripsi Item",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "qty",
+      title: "QTY",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "uom",
+      title: "Satuan",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "unit_price",
+      title: "Harga Satuan",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "total_price",
+      title: "Harga Total",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
+    {
+      name: "note",
+      title: "Keterangan",
+      order: { active: false, status: true, type: true },
+      filter: { active: true, type: "text" },
+    },
   ];
 
   return (
@@ -172,25 +256,30 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                           padding: "10px 12px",
                         }}
                       >
-                        {currencies.count.map((item) => {
+                        {currencies?.count?.map((item) => {
                           return <option>{item.code}</option>;
                         })}
                       </select>
-                      <input
+                      <CurrencyInput
                         className="form-control"
-                        type="text"
                         style={{
                           width: "100%",
                           border: 1,
                           borderStyle: "solid",
                           borderColor: "#d1d1d1",
                         }}
+                        placeholder="Please enter a number"
+                        defaultValue={1000}
+                        decimalsLimit={2}
+                        decimalSeparator=","
+                        groupSeparator="."
+                        onValueChange={(value) => console.log(value)}
                       />
                     </div>
                   </label>
                 </div>
 
-                <TableContainer
+                {/* <TableContainer
                   style={{
                     padding: 10,
                   }}
@@ -237,7 +326,51 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                       ))}
                     </TableBody>
                   </Table>
-                </TableContainer>
+                </TableContainer> */}
+
+                <Paper className={classes.root}>
+                  <Tables
+                    dataHeader={tableHeaderJobPrice}
+                    handleParams={handleFilter}
+                    err={false}
+                    loading={false}
+                    countData={
+                      searchFindMulti(
+                        stableSort(
+                          jsonData?.contract_items,
+                          getSorting(order, orderBy)
+                        ),
+                        filterBy
+                      ).length
+                    }
+                    onChangePage={handleChangePage}
+                    onChangePerPage={handleChangeRowsPerPage}
+                  >
+                    {/* komponen table ada disini */}
+                    {searchFindMulti(
+                      stableSort(
+                        jsonData?.contract_items,
+                        getSorting(order, orderBy)
+                      ),
+                      filterBy
+                    )
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => (
+                        <TableRow key={index.toString()}>
+                          <TableCell align="l">{index + 1}</TableCell>
+                          <TableCell align="left">{row.product_name}</TableCell>
+                          <TableCell align="left">{row.qty}</TableCell>
+                          <TableCell align="left">{row.uom}</TableCell>
+                          <TableCell align="left">{row.unit_price}</TableCell>
+                          <TableCell align="left">{row.subtotal}</TableCell>
+                          <TableCell align="left">{row.note}</TableCell>
+                        </TableRow>
+                      ))}
+                  </Tables>
+                </Paper>
 
                 <TableContainer
                   style={{

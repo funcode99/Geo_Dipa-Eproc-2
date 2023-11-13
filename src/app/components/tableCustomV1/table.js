@@ -32,32 +32,18 @@ export const rupiah = (number) => format("id-ID", "IDR", number);
 
 const Tables = ({
   intl,
-  dataHeader = [],
   handleParams,
-  loading = false,
-  err = false,
   children,
-  countData = 0,
-  hecto = 1,
   onChangePage,
   onChangePerPage,
   isAddendum,
   func = () => {},
+  hecto = 1,
+  countData = 0,
+  err = false,
+  loading = false,
+  dataHeader = [],
 }) => {
-  // const {
-  //   intl,
-  //   dataHeader = [],
-  //   handleParams,
-  //   loading = false,
-  //   err = false,
-  //   children,
-  //   countData = 0,
-  //   hecto = 1,
-  //   onChangePage,
-  //   onChangePerPage,
-  //   isAddendum,
-  // } = props;
-
   const [paginations, setPaginations] = React.useState({
     numberColum: 0,
     page: 0,

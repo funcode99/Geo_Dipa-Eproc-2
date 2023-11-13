@@ -6,6 +6,7 @@ import { rupiah } from "app/libs/currency";
 import { formatDate } from "app/libs/date";
 import { submitAddendumRequest } from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
 import { setDate } from "date-fns";
+import CurrencyInput from "react-currency-input-field";
 
 const FormPermohonan = (props) => {
   console.log("isi props", props);
@@ -14,6 +15,10 @@ const FormPermohonan = (props) => {
   const [adnm_percentage, set_adnm_percentage] = useState();
   const [disabledInput, setDisabledInput] = useState("both");
   const [dateDisplay, setDateDisplay] = useState(null);
+  const [price, setPrice] = useState({
+    additional_price: "0",
+    substraction_price: "0",
+  });
 
   const submitAddendumRequestForm = (values) => {
     // console.log("isi values saat submit", values);
@@ -33,25 +38,32 @@ const FormPermohonan = (props) => {
         ? "1"
         : "0",
       is_budget_availability:
-        values.is_availability_budget === true ? "1" : "0",
-      // values.checked.some((item) => item === "others")
-      //   ? "1"
-      //   : "0",
+        values.is_availability_budget === true &&
+        values.checked.includes("job_price")
+          ? "1"
+          : "0",
       other_note: values.note,
       initial_job_price: `${props?.headerData?.initial_contract_value}`,
       latest_addendum_job_price: props?.headerData?.latest_contract_value,
-      increase_job_price: values.additional_price,
-      decrease_job_price: values.substraction_price,
-      after_addendum_job_price:
-        values.additional_price === "0" || values.additional_price === ""
+      increase_job_price: values.checked.includes("job_price")
+        ? values?.additional_price
+        : "0",
+      decrease_job_price: values.checked.includes("job_price")
+        ? values?.substraction_price
+        : "0",
+      after_addendum_job_price: values.checked.includes("job_price")
+        ? values.additional_price === "0" || values.additional_price === ""
           ? parseInt(props?.headerData?.initial_contract_value) -
             parseInt(
-              values.substraction_price === "" ? "0" : values.substraction_price
+              values?.substraction_price === ""
+                ? "0"
+                : values?.substraction_price
             )
           : parseInt(props?.headerData?.initial_contract_value) +
             parseInt(
-              values.additional_price === "" ? "0" : values.additional_price
-            ),
+              values?.additional_price === "" ? "0" : values?.additional_price
+            )
+        : "0",
       conclusion: conclusion,
       addendum_percentage: adnm_percentage,
       add_request_date: dateDisplay,
@@ -308,13 +320,15 @@ const FormPermohonan = (props) => {
           </Card>
 
           <Formik
+            enableReinitialize
             initialValues={{
               checked: props.checkedValues,
-              additional_price: "0",
-              substraction_price: "0",
+              additional_price: price.additional_price,
+              substraction_price: price.substraction_price,
+              request_date: dateDisplay,
+              // note & is availability budget di input manual
               note: "",
               adnm_conclusion: "",
-              request_date: dateDisplay,
               is_availability_budget: false,
               total_price: "0",
             }}
@@ -662,85 +676,120 @@ const FormPermohonan = (props) => {
                       </Row>
                     </Col>
                   </Row>
-                  <Row>
-                    <Col md={12}>
-                      <div className="form-group row">
-                        <label className="col-sm-4 col-form-label">
-                          Penambahan Harga Pekerjaan
-                        </label>
-                        <div className="col-sm-8">
-                          <Field
-                            className="form-control"
-                            type="text"
-                            name="additional_price"
-                            disabled={disabledInput === "add"}
-                          />
-                          {/* // component={}
-                                                                // onChange={e => rupiah(e.target.value)}
-                                                                // onKeyUp={e => values.additional_price = rupiah(e.target.value)} */}
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md={12}>
-                      <div
-                        className={`form-group row ${
-                          values.additional_price !== "0" &&
-                          values.additional_price !== ""
-                            ? ""
-                            : "d-none"
-                        }`}
-                      >
-                        <label className="col-sm-4 col-form-label"></label>
-                        <div
-                          className="col-sm-8"
-                          style={{
-                            display: "flex",
-                            placeItems: "center",
-                            gap: 12,
-                          }}
-                        >
-                          <Field
-                            type="checkbox"
-                            name="is_availability_budget"
-                            style={{
-                              height: 20,
-                              width: 20,
-                            }}
-                          />
-                          <label
-                            style={{
-                              margin: 0,
-                            }}
+                  {values.checked.includes("job_price") && (
+                    <>
+                      <Row>
+                        <Col md={12}>
+                          <div className="form-group row">
+                            <label className="col-sm-4 col-form-label">
+                              Penambahan Harga Pekerjaan
+                            </label>
+                            <div className="col-sm-8">
+                              {/* <Field
+                                className="form-control"
+                                type="text"
+                                name="additional_price"
+                                disabled={disabledInput === "add"}
+                              /> */}
+                              <Field
+                                disableGroupSeparators={true}
+                                name="additional_price"
+                                className="form-control"
+                                defaultValue={0}
+                                decimalsLimit={0}
+                                disabled={disabledInput === "add"}
+                                component={CurrencyInput}
+                                onValueChange={(value) => {
+                                  setPrice((previous) => {
+                                    return {
+                                      ...previous,
+                                      additional_price: value,
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md={12}>
+                          <div
+                            className={`form-group row ${
+                              values.additional_price !== "0" &&
+                              values.additional_price !== ""
+                                ? ""
+                                : "d-none"
+                            }`}
                           >
-                            Ketersediaan Anggaran*
-                          </label>
-                          <span style={{ color: "#dc0526" }}>
-                            (jika penambahan harga pekerjaan diisi)
-                          </span>
-                          {/* {`${values.is_availability_budget}`} */}
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md={12}>
-                      <div className="form-group row">
-                        <label className="col-sm-4 col-form-label">
-                          Pengurangan Harga Pekerjaan
-                        </label>
-                        <div className="col-sm-8">
-                          <Field
-                            className="form-control"
-                            type="text"
-                            name="substraction_price"
-                            disabled={disabledInput === "sub"}
-                          />
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
+                            <label className="col-sm-4 col-form-label"></label>
+                            <div
+                              className="col-sm-8"
+                              style={{
+                                display: "flex",
+                                placeItems: "center",
+                                gap: 12,
+                              }}
+                            >
+                              <Field
+                                type="checkbox"
+                                name="is_availability_budget"
+                                style={{
+                                  height: 20,
+                                  width: 20,
+                                }}
+                              />
+                              <label
+                                style={{
+                                  margin: 0,
+                                }}
+                              >
+                                Ketersediaan Anggaran*
+                              </label>
+                              <span style={{ color: "#dc0526" }}>
+                                (jika penambahan harga pekerjaan diisi)
+                              </span>
+                              {/* {`${values.is_availability_budget}`} */}
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md={12}>
+                          <div className="form-group row">
+                            <label className="col-sm-4 col-form-label">
+                              Pengurangan Harga Pekerjaan
+                            </label>
+                            <div className="col-sm-8">
+                              {/* <Field
+                                className="form-control"
+                                type="text"
+                                name="substraction_price"
+                                disabled={disabledInput === "sub"}
+                              /> */}
+                              <Field
+                                disableGroupSeparators={true}
+                                name="substraction_price"
+                                className="form-control"
+                                defaultValue={0}
+                                decimalsLimit={0}
+                                disabled={disabledInput === "sub"}
+                                component={CurrencyInput}
+                                onValueChange={(value) => {
+                                  setPrice((previous) => {
+                                    return {
+                                      ...previous,
+                                      substraction_price: value,
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                    </>
+                  )}
                   <Row>
                     <Col md={12}>
                       <div className="form-group row">
