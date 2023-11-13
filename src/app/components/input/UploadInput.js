@@ -12,6 +12,7 @@ const UploadInput = ({
 }) => {
   const _handleChange = React.useCallback(
     (e) => {
+      console.log("isi upload", e.target.value, e.target.files[0]);
       onChange({ path: e.target.value, data: e.target.files[0] });
     },
     [onChange]

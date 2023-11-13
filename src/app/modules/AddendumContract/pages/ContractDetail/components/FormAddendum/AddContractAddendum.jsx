@@ -533,6 +533,18 @@ export const AddContractAddendum = ({
     setCheckedInitialValues(values);
   };
 
+  function resizeTextArea(textarea) {
+    const { style, value } = textarea;
+
+    // The 4 corresponds to the 2 2px borders (top and bottom):
+    style.height = style.minHeight = "auto";
+    style.minHeight = `${Math.min(
+      textarea.scrollHeight + 4,
+      parseInt(textarea.style.maxHeight)
+    )}px`;
+    style.height = `${textarea.scrollHeight + 4}px`;
+  }
+
   return (
     <React.Fragment>
       <Toast />
@@ -912,157 +924,114 @@ export const AddContractAddendum = ({
                     >
                       A. Dokumen Pendukung
                     </h1>
-                    <SupportingDocumentInput
+                    {/* <SupportingDocumentInput
                       title={supportingDocumentDefault}
-                    />
-                    <Formik
-                      initialValues={{
-                        additional_document: [linksGroup],
-                      }}
-                      onSubmit={async (values, actions) => {
-                        alert(JSON.stringify(values, null, 2));
+                    /> */}
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 14,
                       }}
                     >
-                      {({ values }) => (
-                        <>
-                          <FieldArray name="additional_document">
-                            {({ push, remove }) => (
-                              <Grid
-                                container
-                                spacing={2}
-                                sx={{ marginTop: 2, paddingX: 2 }}
-                              >
-                                {values.additional_document.map((_, index) => (
-                                  <>
-                                    <Grid item md={12}>
-                                      <div>
-                                        <p
-                                          style={{
-                                            fontWeight: 500,
-                                            fontSize: 14,
-                                            marginBottom: 0,
-                                          }}
-                                        >
-                                          {_.documentname}
-                                        </p>
-                                      </div>
-                                    </Grid>
-
-                                    <Grid item md={4}>
-                                      <p
-                                        style={{
-                                          fontWeight: 500,
-                                          fontSize: 14,
-                                          marginBottom: 0,
-                                        }}
-                                      >
-                                        No Dokumen
-                                      </p>
-                                      <Field
-                                        fullWidth
-                                        name={`links.${index}.documentnumber`}
-                                        component={RenderInput}
-                                        placeholder={"Masukan No Dokumen Anda"}
-                                        value={`${_.documentnumber}`}
-                                      />
-                                    </Grid>
-                                    <Grid item md={3}>
-                                      <p
-                                        style={{
-                                          fontWeight: 500,
-                                          fontSize: 14,
-                                          marginBottom: 0,
-                                        }}
-                                      >
-                                        Tanggal Dokumen
-                                      </p>
-                                      <Field
-                                        fullWidth
-                                        name={`links.${index}.documentdate`}
-                                        component={SelectDateInput}
-                                        value={`${_.documentdate}`}
-                                      />
-                                    </Grid>
-                                    <Grid item md={3}>
-                                      <p
-                                        style={{
-                                          fontWeight: 500,
-                                          fontSize: 14,
-                                          marginBottom: 0,
-                                        }}
-                                      >
-                                        Upload Dokumen
-                                      </p>
-                                      <Field
-                                        fullWidth
-                                        name={`links.${index}.documentfileupload`}
-                                        component={UploadInput}
-                                        // gaperlu pakai backtick, malah dianggap string bukan objek
-                                        value={{ path: _.documentfileupload }}
-                                      />
-                                    </Grid>
-                                    {index > 0 && (
-                                      <Grid item md={2}>
-                                        {/* color="error" */}
-                                        <p
-                                          style={{
-                                            fontWeight: 500,
-                                            fontSize: 14,
-                                            marginBottom: 0,
-                                          }}
-                                        ></p>
-                                        <Button
-                                          variant="outlined"
-                                          onClick={() => remove(index)}
-                                        >
-                                          Delete
-                                        </Button>
-                                      </Grid>
-                                    )}
-                                    <Grid item md={12}>
-                                      <Field
-                                        name={`links.${index}.about`}
-                                        component={TextAreaInput}
-                                        value={`${_.about}`}
-                                      />
-                                    </Grid>
-                                  </>
-                                ))}
-                                <Grid item xs={12}>
-                                  {/* <Button
-                                    variant="outlined"
-                                    
-                                    onClick={() => push()}
-                                  >
-                                    Add Link
-                                  </Button> */}
-
-                                  {/* <Button
-                                    variant="contained"
-                                    color="primary"
-                                    size="medium"
-                                    onClick={showAddDocument}
-                                  >
-                                    Tambah Dokumen
-                                  </Button> */}
-
-                                  <button
-                                    className="btn btn-primary"
-                                    onClick={showAddDocument}
-                                  >
-                                    Tambah Dokumen
-                                  </button>
-
-                                  {/* <button className="d-none" ref={toPush} onClick={() => push(linksGroup)}>
-                                      Klik Disini
-                                  </button> */}
-                                </Grid>
-                              </Grid>
-                            )}
-                          </FieldArray>
-                        </>
-                      )}
-                    </Formik>
+                      <div
+                        style={{
+                          display: "flex",
+                          columnGap: 28,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <div
+                          style={{
+                            flex: 1,
+                          }}
+                        >
+                          <p
+                            style={{
+                              marginBottom: 4,
+                            }}
+                          >
+                            No Dokumen
+                          </p>
+                          <input
+                            type="text"
+                            style={{
+                              borderRadius: 4,
+                              padding: 8,
+                              width: "100%",
+                            }}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            flex: 1,
+                          }}
+                        >
+                          <p
+                            style={{
+                              marginBottom: 4,
+                            }}
+                          >
+                            Tanggal Dokumen
+                          </p>
+                          <input
+                            type="date"
+                            style={{
+                              borderRadius: 4,
+                              padding: 8,
+                              width: "100%",
+                            }}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            flex: 1,
+                          }}
+                        >
+                          <p
+                            style={{
+                              marginBottom: 4,
+                            }}
+                          >
+                            Upload Dokumen
+                          </p>
+                          <input
+                            type="file"
+                            style={{
+                              border: 1,
+                              borderColor: "black",
+                              borderStyle: "solid",
+                              borderRadius: 4,
+                              padding: 8,
+                              width: "100%",
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <p
+                            style={{
+                              marginBottom: 4,
+                            }}
+                          >
+                            Perihal
+                          </p>
+                          <textarea
+                            onChange={(e) => {
+                              // console.log("isi event textarea", e.target);
+                              resizeTextArea(e.target);
+                            }}
+                            style={{
+                              maxHeight: 160,
+                              width: "100%",
+                              padding: 8,
+                            }}
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
 
                     <div className="mt-5">
                       <p
