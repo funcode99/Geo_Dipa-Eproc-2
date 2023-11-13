@@ -871,7 +871,6 @@ const mapState = (state) => {
     status: auth.user.data.status,
     contract: deliveryMonitoring.dataContractById,
     taskNews: deliveryMonitoring.dataTask?.news,
-    taskNewsBast: deliveryMonitoring.dataTask?.news_bast,
     taskId: deliveryMonitoring.dataTask?.id,
     loadings: {
       upload_s: getLoading(state, keys.upload_s),
