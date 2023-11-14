@@ -1,5 +1,10 @@
 import React from "react";
-import { FormDetail, Item, ModalDelete, ModalTerm } from "./index";
+import {
+  FormDetail,
+  Item,
+  ModalDelete,
+  ModalTerm,
+} from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/index";
 import { Container } from "@material-ui/core";
 import ButtonAction from "../../../../../../components/buttonAction/ButtonAction";
 import { formatDate } from "../../../../../../libs/date";
@@ -229,7 +234,10 @@ const DetailPage = ({
         // console.log(tempSubmitItems);
         let totalPrice = 0;
 
-        if(tempSubmitItems.task_services.length === 0 && tempSubmitItems.task_items.length === 0) {
+        if (
+          tempSubmitItems.task_services.length === 0 &&
+          tempSubmitItems.task_items.length === 0
+        ) {
           return setToast("Tidak ada data dipilih", 3000);
         }
 
@@ -619,7 +627,7 @@ const DetailPage = ({
       />
 
       {showForm && <FormDetail contractId={contractId} />}
-      
+
       <div className="p-8">
         <GRAccord
           id={"title.termtable"}
@@ -645,9 +653,7 @@ const DetailPage = ({
         <ExpansionBox title={"TITLE.TERM_TABLE"}>
         </ExpansionBox>
       </Container> */}
-
     </React.Fragment>
-
   ) : (
     <div />
   );

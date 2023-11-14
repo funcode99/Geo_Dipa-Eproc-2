@@ -47,10 +47,11 @@ const PerubahanKlausulKontrak = ({
       fieldIndex: fieldIndex,
     });
     // setAttachmentClauseData((data) => {
-    //   let newArr = [...data];
-    //   if (type === "attachment number")
+    // let newArr = [...dataNewClause]
+    // let newArr = [...data];
+    // if (type === "attachment number")
     //     newArr[index]["attachment_number"] = value;
-    //   if (type === "clause note") newArr[index]["clause_note"] = value;
+    // if (type === "clause note") newArr[index]["clause_note"] = value;
     //   return newArr;
     // });
   };

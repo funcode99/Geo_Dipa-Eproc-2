@@ -512,6 +512,7 @@ const FormParameter = ({
       key: keys.fetch,
       type: "get",
       url: `/adendum/refference/get-party-bank/${contract_id}`,
+      // url: `/adendum/refference/get-party-bank/973412af-2d3a-4e4b-9609-b2283e322360`,
       onSuccess: (res) => {
         setDataArrFine(
           res.data.map((item) => ({
