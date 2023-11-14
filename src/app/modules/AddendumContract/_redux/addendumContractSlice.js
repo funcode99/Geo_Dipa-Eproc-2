@@ -2,10 +2,33 @@ import { persistReducer } from "redux-persist";
 import { PERSIST_REDUCER } from "redux/BaseHost";
 import { actionTypes } from "./addendumContractAction";
 
+const bodyClauseDataTemplate = {
+  clause_number: "",
+  before_clause_note: "",
+  after_clause_note: "",
+};
+
+const attachmentClauseDataTemplate = {
+  attachment_number: "",
+  clause_note: "",
+};
+
+// const [partiesBodyClauseData, setPartiesBodyClauseData] = useState(
+//   bodyClauseDataTemplate
+// );
+// const [partiesAttachmentClauseData, setPartiesAttachmentClauseData] = useState([
+//   attachmentClauseDataTemplate,
+// ]);
+
 const initialDelivMonitoringState = {
   dataDeverableDoc: null,
   dataContractById: [],
-  dataNewClause: [],
+  dataNewClause: {
+    bodyClauseData: "",
+    attachmentClauseData: "",
+    // parties: {
+    // },
+  },
   dataJasa: [],
   dataBarang: [],
   dataDocuments: [],
@@ -65,10 +88,23 @@ export const reducer = persistReducer(
       }
 
       case actionTypes.SetDataClause: {
-        return {
-          ...state,
-          setDataClause: action.payload,
-        };
+        if (action.fieldType === "attachment number") {
+          return {
+            ...state,
+            dataNewClause: {
+              ...state.dataNewClause,
+              attachmentClauseData: action.payload,
+            },
+          };
+        } else if (action.fieldType === "clause note") {
+          return {
+            ...state,
+            dataNewClause: {
+              ...state.dataNewClause,
+              bodyClauseData: action.payload,
+            },
+          };
+        }
       }
 
       case actionTypes.SetSubmitItemsByContractId: {

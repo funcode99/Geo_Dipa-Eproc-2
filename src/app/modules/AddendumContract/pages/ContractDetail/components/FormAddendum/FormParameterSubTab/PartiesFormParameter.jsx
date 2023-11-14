@@ -22,17 +22,6 @@ const PartiesFormParameter = ({
   jobSupervisor2,
   contract_id,
 }) => {
-  const bodyClauseDataTemplate = {
-    clause_number: "",
-    before_clause_note: "",
-    after_clause_note: "",
-  };
-
-  const attachmentClauseDataTemplate = {
-    attachment_number: "",
-    clause_note: "",
-  };
-
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
     openCloseWorkSupervisor.current.open();
@@ -115,10 +104,23 @@ const PartiesFormParameter = ({
     secondAuthorizedOfficial: [
       {
         currentSelectIndex: 0,
+        // party_2_autorized_username: "",
+        // party_2_autorized_position: "",
+        // party_2_autorized_telp: "",
+        // party_2_autorized_address: "",
+        // party_2_autorized_fax: "",
+        // party_2_autorized_sk_no: "",
+        // party_2_autorized_sk_date: null,
+        // party_2_autorized_notary_act_name: "",
+        // party_2_autorized_notary_act_no: "",
+        // party_2_autorized_notary_act_date: null,
+        // party_2_autorized_kemenkumham_no: "",
+        // party_2_autorized__kemenkumham_date: null,
+        // party_2_pic_email: "",
         fullname: "",
         position_title: "",
-        phone_number: "",
         address: "",
+        phone_number: "",
         fax: "",
         sk_assign_number: "",
         sk_assign_date: null,
@@ -128,44 +130,45 @@ const PartiesFormParameter = ({
         sk_kemenkumham_number: "",
         sk_kemenkumham_date: null,
         PICEmail: "",
+        // party_2_pic_email: "",
       },
     ],
     workDirector: [
       {
         usernameSelectIndex: 0,
         facilityNameSelectIndex: 0,
-        username: "",
-        fullname: "",
-        position: "",
+        party_1_job_director_username: "",
+        party_1_job_director_fullname: "",
+        party_1_job_director_position: "",
+        party_1_job_director_address: "",
+        party_1_job_director_telp: "",
+        party_1_job_director_fax: "",
         facility_name: "",
-        address: "",
-        phone: "",
-        fax: "",
       },
     ],
     workSupervisor: [
       {
         currentIndex: 0,
-        position: "",
-        address: "",
-        phone: "",
-        fax: "",
+        party_1_job_supervisor_position: "",
+        party_1_job_supervisor_address: "",
+        party_1_job_supervisor_telp: "",
+        party_1_job_supervisor_fax: "",
       },
     ],
     secondWorkDirector: [
       {
-        position: "",
-        address: "",
-        phone: "",
-        fax: "",
+        party_2_job_director_position: "",
+        party_2_job_director_address: "",
+        party_2_job_director_telp: "",
+        party_2_job_director_fax: "",
       },
     ],
     secondWorkSupervisor: [
       {
-        position: "",
-        address: "",
-        phone: "",
-        fax: "",
+        party_2_job_supervisor_position: "",
+        party_2_job_supervisor_address: "",
+        party_2_job_supervisor_telp: "",
+        party_2_job_supervisor_fax: "",
       },
     ],
   });
@@ -188,9 +191,12 @@ const PartiesFormParameter = ({
       setPlaceman((placeman) => {
         let newArr = [...placeman.workSupervisor];
         newArr[arrIndex]["currentIndex"] = num;
-        newArr[arrIndex]["address"] = jobSupervisor2[num]?.address;
-        newArr[arrIndex]["phone"] = jobSupervisor2[num]?.phone;
-        newArr[arrIndex]["fax"] = jobSupervisor2[num]?.fax;
+        newArr[arrIndex]["party_1_job_supervisor_address"] =
+          jobSupervisor2[num]?.address;
+        newArr[arrIndex]["party_1_job_supervisor_telp"] =
+          jobSupervisor2[num]?.phone;
+        newArr[arrIndex]["party_1_job_supervisor_fax"] =
+          jobSupervisor2[num]?.fax;
         return {
           ...placeman,
           workSupervisor: newArr,
@@ -210,9 +216,12 @@ const PartiesFormParameter = ({
         if (type === "username") {
           let newArr = [...placeman.workDirector];
           newArr[arrIndex]["usernameSelectIndex"] = num;
-          newArr[arrIndex]["username"] = data[num]?.username;
-          newArr[arrIndex]["fullname"] = data[num]?.full_name;
-          newArr[arrIndex]["position"] = data[num]?.position_name;
+          newArr[arrIndex]["party_1_job_director_username"] =
+            data[num]?.username;
+          newArr[arrIndex]["party_1_job_director_fullname"] =
+            data[num]?.full_name;
+          newArr[arrIndex]["party_1_job_director_position"] =
+            data[num]?.position_name;
 
           // jobDirector.splice(num, 1);
 
@@ -225,9 +234,9 @@ const PartiesFormParameter = ({
           let newArr = [...placeman.workDirector];
           newArr[arrIndex]["facilityNameSelectIndex"] = num;
           newArr[arrIndex]["facility_name"] = data[num]?.facility_name;
-          newArr[arrIndex]["address"] = data[num]?.address;
-          newArr[arrIndex]["phone"] = data[num]?.phone;
-          newArr[arrIndex]["fax"] = data[num]?.fax;
+          newArr[arrIndex]["party_1_job_director_address"] = data[num]?.address;
+          newArr[arrIndex]["party_1_job_director_telp"] = data[num]?.phone;
+          newArr[arrIndex]["party_1_job_director_fax"] = data[num]?.fax;
           return {
             ...placeman,
             workDirector: newArr,
@@ -284,7 +293,7 @@ const PartiesFormParameter = ({
   const changeDataPosition = (index, value) => {
     setPlaceman((placeman) => {
       let newArr = [...placeman.workSupervisor];
-      newArr[index]["position"] = value;
+      newArr[index]["party_1_job_supervisor_position"] = value;
       return {
         ...placeman,
         workSupervisor: newArr,
@@ -296,10 +305,12 @@ const PartiesFormParameter = ({
     setPlaceman((placeman) => {
       let newArr = [...placeman.secondWorkDirector];
 
-      if (type === "Position") newArr[index]["position"] = value;
-      if (type === "Address") newArr[index]["address"] = value;
-      if (type === "Phone") newArr[index]["phone"] = value;
-      if (type === "Fax") newArr[index]["fax"] = value;
+      if (type === "Position")
+        newArr[index]["party_2_job_director_position"] = value;
+      if (type === "Address")
+        newArr[index]["party_2_job_director_address"] = value;
+      if (type === "Phone") newArr[index]["party_2_job_director_telp"] = value;
+      if (type === "Fax") newArr[index]["party_2_job_director_fax"] = value;
 
       return {
         ...placeman,
@@ -323,10 +334,13 @@ const PartiesFormParameter = ({
     setPlaceman((placeman) => {
       let newArr = [...placeman.secondWorkSupervisor];
 
-      if (type === "Position") newArr[index]["position"] = value;
-      if (type === "Address") newArr[index]["address"] = value;
-      if (type === "Phone") newArr[index]["phone"] = value;
-      if (type === "Fax") newArr[index]["fax"] = value;
+      if (type === "Position")
+        newArr[index]["party_2_job_supervisor_position"] = value;
+      if (type === "Address")
+        newArr[index]["party_2_job_supervisor_address"] = value;
+      if (type === "Phone")
+        newArr[index]["party_2_job_supervisor_telp"] = value;
+      if (type === "Fax") newArr[index]["party_2_job_supervisor_fax"] = value;
 
       return {
         ...placeman,
@@ -337,13 +351,6 @@ const PartiesFormParameter = ({
 
   const [authorizedOfficialIndex, setauthorizedOfficialIndex] = useState(0);
 
-  const [partiesBodyClauseData, setPartiesBodyClauseData] = useState(
-    bodyClauseDataTemplate
-  );
-  const [
-    partiesAttachmentClauseData,
-    setPartiesAttachmentClauseData,
-  ] = useState([attachmentClauseDataTemplate]);
   const changeDataauthorizedOfficial = (num) => {
     setauthorizedOfficialIndex(num);
   };
@@ -354,23 +361,6 @@ const PartiesFormParameter = ({
   useEffect(() => {
     console.log("placeman sekarang", placeman);
   }, [placeman]);
-
-  const submitFormParameterJobPrice = (values) => {
-    submitJobPrice(
-      {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
-        product_title: "",
-        uom: "",
-        subtotal: "",
-        qty_total: "",
-        clause_note: "",
-        item_detail: [],
-        body_clause_data: values.body_data,
-        attachment_clause_data: values.attachment_data,
-      },
-      contract_id
-    );
-  };
 
   return (
     <>
@@ -403,7 +393,7 @@ const PartiesFormParameter = ({
       />
       <NewClause
         openCloseAddClause={openCloseAddClause}
-        setAttachmentClauseData={setPartiesAttachmentClauseData}
+        // setAttachmentClauseData={setPartiesAttachmentClauseData}
       />
       <Formik
         enableReinitialize={true}
@@ -461,8 +451,8 @@ const PartiesFormParameter = ({
           secondAuthorizedOfficial: placeman?.secondAuthorizedOfficial,
           secondJobDirector: placeman.secondWorkDirector,
           secondJobSupervisor: placeman.secondWorkSupervisor,
-          body_data: partiesBodyClauseData,
-          attachment_data: partiesAttachmentClauseData,
+          // body_data: partiesBodyClauseData,
+          // attachment_data: partiesAttachmentClauseData,
         }}
         onSubmit={(values) => {
           console.log("isi values parties", values);
@@ -1421,7 +1411,7 @@ const PartiesFormParameter = ({
                                   </button>
                                 </div>
                                 <Field
-                                  name={`jobDirector[${index}].username`}
+                                  name={`jobDirector[${index}].party_1_job_director_username`}
                                   data={jobDirector}
                                   func={changeDataJobDirectorDynamic}
                                   labelName={"username"}
@@ -1437,7 +1427,7 @@ const PartiesFormParameter = ({
                                 style={{
                                   backgroundColor: "#e8f4fb",
                                 }}
-                                name={`jobDirector[${index}].username`}
+                                name={`jobDirector[${index}].party_1_job_director_username`}
                                 value={
                                   jobDirector
                                     ? jobDirector[data.usernameSelectIndex]
@@ -1460,7 +1450,7 @@ const PartiesFormParameter = ({
                                   style={{
                                     backgroundColor: "#e8f4fb",
                                   }}
-                                  name={`jobDirector[${index}].fullname`}
+                                  name={`jobDirector[${index}].party_1_job_director_fullname`}
                                   value={
                                     jobDirector
                                       ? jobDirector[data.usernameSelectIndex]
@@ -1484,7 +1474,7 @@ const PartiesFormParameter = ({
                                   style={{
                                     backgroundColor: "#e8f4fb",
                                   }}
-                                  name={`jobDirector[${index}].position`}
+                                  name={`jobDirector[${index}].party_1_job_director_position`}
                                   value={
                                     jobDirector
                                       ? jobDirector[data.usernameSelectIndex]
@@ -1529,7 +1519,7 @@ const PartiesFormParameter = ({
                                   <Field
                                     type="text"
                                     className="form-control"
-                                    name={`jobDirector[${index}].phone`}
+                                    name={`jobDirector[${index}].party_1_job_director_telp`}
                                     value={
                                       jobSupervisor
                                         ? jobSupervisor[
@@ -1557,7 +1547,7 @@ const PartiesFormParameter = ({
                                   <Field
                                     type="text"
                                     className="form-control"
-                                    name={`jobDirector[${index}].fax`}
+                                    name={`jobDirector[${index}].party_1_job_director_fax`}
                                     value={
                                       jobSupervisor
                                         ? jobSupervisor[
@@ -1647,7 +1637,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`jobSupervisor[${index}].position`}
+                                  name={`jobSupervisor[${index}].party_1_job_supervisor_position`}
                                   onChange={(e) =>
                                     changeDataPosition(index, e.target.value)
                                   }
@@ -1666,7 +1656,7 @@ const PartiesFormParameter = ({
                                 <span>Alamat</span>
                                 {/* KOMPONEN INI NYENGGOL */}
                                 <Field
-                                  name={`jobSupervisor[${index}].address`}
+                                  name={`jobSupervisor[${index}].party_1_job_supervisor_address`}
                                   data={jobSupervisor2}
                                   func={changeDataJobSupervisorDynamic}
                                   labelName={"address"}
@@ -1690,7 +1680,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`jobSupervisor[${index}].phone`}
+                                  name={`jobSupervisor[${index}].party_1_job_supervisor_telp`}
                                   value={
                                     jobSupervisor
                                       ? jobSupervisor2[data.currentIndex]?.phone
@@ -1714,7 +1704,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`jobSupervisor[${index}].fax`}
+                                  name={`jobSupervisor[${index}].party_1_job_supervisor_fax`}
                                   value={
                                     jobSupervisor
                                       ? jobSupervisor2[data.currentIndex]?.fax
@@ -2632,7 +2622,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`secondJobDirector[${index}].position`}
+                                  name={`secondJobDirector[${index}].party_2_job_director_position`}
                                   onChange={(e) =>
                                     changeDataSecondJobDirector(
                                       index,
@@ -2656,7 +2646,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`secondJobDirector[${index}].address`}
+                                  name={`secondJobDirector[${index}].party_2_job_director_address`}
                                   onChange={(e) =>
                                     changeDataSecondJobDirector(
                                       index,
@@ -2680,7 +2670,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`secondJobDirector[${index}].phone`}
+                                  name={`secondJobDirector[${index}].party_2_job_director_telp`}
                                   onChange={(e) =>
                                     changeDataSecondJobDirector(
                                       index,
@@ -2704,7 +2694,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`secondJobDirector[${index}].fax`}
+                                  name={`secondJobDirector[${index}].party_2_job_director_fax`}
                                   onChange={(e) =>
                                     changeDataSecondJobDirector(
                                       index,
@@ -2789,7 +2779,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`secondJobSupervisor[${index}].position`}
+                                  name={`secondJobSupervisor[${index}].party_2_job_supervisor_position`}
                                   onChange={(e) =>
                                     changeDataSecondJobSupervisor(
                                       index,
@@ -2813,7 +2803,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`secondJobSupervisor[${index}].address`}
+                                  name={`secondJobSupervisor[${index}].party_2_job_supervisor_address`}
                                   onChange={(e) =>
                                     changeDataSecondJobSupervisor(
                                       index,
@@ -2837,7 +2827,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`secondJobSupervisor[${index}].phone`}
+                                  name={`secondJobSupervisor[${index}].party_2_job_supervisor_telp`}
                                   onChange={(e) =>
                                     changeDataSecondJobSupervisor(
                                       index,
@@ -2861,7 +2851,7 @@ const PartiesFormParameter = ({
                                 <Field
                                   type="text"
                                   className="form-control"
-                                  name={`secondJobSupervisor[${index}].fax`}
+                                  name={`secondJobSupervisor[${index}].party_2_job_supervisor_fax`}
                                   onChange={(e) =>
                                     changeDataSecondJobSupervisor(
                                       index,
@@ -2883,8 +2873,8 @@ const PartiesFormParameter = ({
             <PerubahanKlausulKontrak
               subTitle={"C"}
               title={"Para Pihak"}
-              setBodyClauseData={setPartiesBodyClauseData}
-              setAttachmentClauseData={setPartiesAttachmentClauseData}
+              // setBodyClauseData={setPartiesBodyClauseData}
+              // setAttachmentClauseData={setPartiesAttachmentClauseData}
               showAddClause={showAddClause}
               values={values}
             />

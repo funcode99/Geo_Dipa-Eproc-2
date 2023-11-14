@@ -6,11 +6,16 @@ const NewSecondWorkSupervisor = ({
   openCloseSecondWorkSupervisor,
   setPlaceman,
 }) => {
-  const createNewPlaceman = (position, address, phone_number, fax) => ({
-    position,
-    address,
-    phone_number,
-    fax,
+  const createNewPlaceman = (
+    party_2_job_supervisor_position,
+    party_2_job_supervisor_address,
+    party_2_job_supervisor_telp,
+    party_2_job_supervisor_fax
+  ) => ({
+    party_2_job_supervisor_position,
+    party_2_job_supervisor_address,
+    party_2_job_supervisor_telp,
+    party_2_job_supervisor_fax,
   });
   return (
     <>
@@ -24,10 +29,10 @@ const NewSecondWorkSupervisor = ({
       >
         <Formik
           initialValues={{
-            position: "",
-            address: "",
-            phone: "",
-            fax: "",
+            party_2_job_supervisor_position: "",
+            party_2_job_supervisor_address: "",
+            party_2_job_supervisor_telp: "",
+            party_2_job_supervisor_fax: "",
           }}
           onSubmit={(values) => {
             setPlaceman((placeman) => {
@@ -36,10 +41,10 @@ const NewSecondWorkSupervisor = ({
                 secondWorkSupervisor: [
                   ...placeman.secondWorkSupervisor,
                   createNewPlaceman(
-                    values?.position,
-                    values?.address,
-                    values?.phone,
-                    values?.fax
+                    values?.party_2_job_supervisor_position,
+                    values?.party_2_job_supervisor_address,
+                    values?.party_2_job_supervisor_telp,
+                    values?.party_2_job_supervisor_fax
                   ),
                 ],
               };
@@ -90,7 +95,7 @@ const NewSecondWorkSupervisor = ({
                       </span>
                       <Field
                         type="text"
-                        name="position"
+                        name="party_2_job_supervisor_position"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -119,7 +124,7 @@ const NewSecondWorkSupervisor = ({
                       </span>
                       <Field
                         type="text"
-                        name="address"
+                        name="party_2_job_supervisor_address"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -148,7 +153,7 @@ const NewSecondWorkSupervisor = ({
                       </span>
                       <Field
                         type="text"
-                        name="phone"
+                        name="party_2_job_supervisor_telp"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -177,7 +182,7 @@ const NewSecondWorkSupervisor = ({
                       </span>
                       <Field
                         type="text"
-                        name="fax"
+                        name="party_2_job_supervisor_fax"
                         style={{
                           padding: 8,
                           borderRadius: 4,

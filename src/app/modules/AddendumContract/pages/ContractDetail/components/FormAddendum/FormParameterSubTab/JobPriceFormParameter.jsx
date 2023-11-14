@@ -134,6 +134,23 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
     },
   ];
 
+  // const submitFormParameterJobPrice = (values) => {
+  //   submitJobPrice(
+  //     {
+  //       add_contract_id: jsonData?.add_contracts[0]?.id,
+  //       product_title: "",
+  //       uom: "",
+  //       subtotal: "",
+  //       qty_total: "",
+  //       clause_note: "",
+  //       item_detail: [],
+  //       body_clause_data: values.body_data,
+  //       attachment_clause_data: values.attachment_data,
+  //     },
+  //     contract_id
+  //   );
+  // };
+
   return (
     <>
       <NewClause

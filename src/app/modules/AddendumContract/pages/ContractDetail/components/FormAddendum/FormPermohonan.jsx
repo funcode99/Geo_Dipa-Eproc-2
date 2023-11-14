@@ -40,7 +40,7 @@ const FormPermohonan = (props) => {
   }, [price]);
 
   const submitAddendumRequestForm = (values) => {
-    // console.log("isi values saat submit", values);
+    console.log("isi values saat submit", values);
     submitAddendumRequest({
       // unauthorized karena contract id nya wkwk, dasar goblok
       contract_id: `${props.contractId}`,
@@ -408,7 +408,8 @@ const FormPermohonan = (props) => {
               is_availability_budget: false,
               total_price: "0",
             }}
-            onSubmit={({ values }) => {
+            // JANGAN PERNAH KASIH KURUNG KURAWAL DI VALUES
+            onSubmit={(values) => {
               console.log("isi submit values", values);
               if (dateDisplay === null) {
                 alert("Silahkan isi Tanggal Dokumen Permohonan");

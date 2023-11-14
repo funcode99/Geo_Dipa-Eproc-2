@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 
 import { useLocation, useParams, withRouter } from "react-router-dom";
 import { compose } from "redux";
-import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
+// useSelector,
+// shallowEqual,
+import { useDispatch, connect } from "react-redux";
 
 import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
@@ -18,9 +20,7 @@ import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 
 import SVG from "react-inlinesvg";
-
 import { Col, Row } from "react-bootstrap";
-
 import { Formik, Field, FieldArray } from "formik";
 import { Grid } from "@material-ui/core";
 // import { FormStepper } from "./FormStepper";
@@ -41,7 +41,7 @@ import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/com
 import Steppers from "app/components/steppersCustom/Steppers";
 import { DUMMY_STEPPER_CONTRACT } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
 
-import { fetch_api_sg, getLoading } from "redux/globalReducer";
+import { fetch_api_sg } from "redux/globalReducer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,24 +114,11 @@ const useStyles = makeStyles((theme) => ({
 
 // ]
 
-// ternyata dataContractById ini props
-
 export const AddContractAddendum = ({
   dataContractById,
   authStatus,
-  // getBanksById,
   fetch_api_sg,
 }) => {
-  // isinya kosong
-  console.log(
-    "isi dataContractById",
-    dataContractById,
-    "isi authStatus",
-    authStatus // client
-    // "isi getBanksById",
-    // getBanksById
-  );
-
   const [
     supportingDocumentDefaultData,
     setSupportingDocumentDefaultData,
@@ -317,26 +304,6 @@ export const AddContractAddendum = ({
     }
   };
 
-  // const getBanksById = async (contract_id) => {
-  //   try {
-  //     setLoading(true);
-  //   } catch (error) {
-  //     if (
-  //       error.response?.status !== 400 &&
-  //       error.response?.data.message !== "TokenExpiredError"
-  //     ) {
-  //       if (
-  //         error.response?.status !== 400 &&
-  //         error.response?.data.message !== "TokenExpiredError"
-  //       ) {
-  //         setToast("Error API, please contact developer!");
-  //       }
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   React.useEffect(() => {
     // kalo dipanggil bisa
     getContractById(contract_id);
@@ -356,7 +323,6 @@ export const AddContractAddendum = ({
   }
 
   const getDataContractHeader = async () => {
-    // console.log('masuk ke data header')
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
@@ -512,8 +478,6 @@ export const AddContractAddendum = ({
     }
   }, [location]);
 
-  // console.log("dataContractById", dataContractById);
-
   const checkLength = (lengthValue) => {
     // console.log('checked length is', lengthValue)
     if (lengthValue > 0) {
@@ -541,7 +505,7 @@ export const AddContractAddendum = ({
   };
 
   function resizeTextArea(textarea) {
-    const { style, value } = textarea;
+    const { style } = textarea;
 
     // The 4 corresponds to the 2 2px borders (top and bottom):
     style.height = style.minHeight = "auto";
@@ -562,7 +526,7 @@ export const AddContractAddendum = ({
         </div>
       ) : null}
 
-      {/* open close add document */}
+      {/* tambah upload dokumen pendukung */}
       <DialogGlobal
         ref={openCloseAddDocument}
         isCancel={false}
@@ -630,8 +594,6 @@ export const AddContractAddendum = ({
       {/* ${dataContractById?.contract_no} */}
       <Subheader
         text={
-          // dataContractById
-          // Kontrak
           dataArr
             ? `Formulir Permohonan Addendum ${
                 dataArr?.contract_no?.substring(4, 7) === "SPK"
@@ -653,7 +615,6 @@ export const AddContractAddendum = ({
             label: "List of Contract & SPK",
             to: `/${authStatus}/addendum-contract/list-contract-po`,
           },
-          // dataContractById?.contract_name
           {
             label: `${dataArr ? dataArr?.agreement_number : "x"}`,
             to: "/",
@@ -1128,10 +1089,9 @@ export const AddContractAddendum = ({
 
 // ngirim data
 const mapState = ({ auth, addendumContract }) => ({
-  // ini isi local storage nya ah elah goblok bat sih gue wkwkwkwwkwk
+  // ini isi local storage nya ternyata ah elah goblok bat sih gue wkwkwkwwkwk
   authStatus: auth.user.data.status,
   dataContractById: addendumContract.dataContractById,
-  // getBanksById: addendumContract.notifMeta.page,
 });
 
 // ngirim fungsi

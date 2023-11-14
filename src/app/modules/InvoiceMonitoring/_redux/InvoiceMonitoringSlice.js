@@ -1,6 +1,6 @@
-import { persistReducer } from "redux-persist"
-import { PERSIST_REDUCER } from "redux/BaseHost"
-import { actionTypes } from "./InvoiceMonitoringAction"
+import { persistReducer } from "redux-persist";
+import { PERSIST_REDUCER } from "redux/BaseHost";
+import { actionTypes } from "./InvoiceMonitoringAction";
 
 const initialInvoiceState = {
   dataInvoiceVendor: {},
@@ -55,6 +55,8 @@ export const reducer = persistReducer(
   }
 );
 
+// import * as reducer
+// reducer.actions
 export const actions = {
   set_data_invoice_vendor: (payload) => ({
     type: actionTypes.SetDataInvoiceVendor,

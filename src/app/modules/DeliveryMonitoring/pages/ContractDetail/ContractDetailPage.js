@@ -119,8 +119,6 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
     dataContractById
   );
 
-  // console.log()
-
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, tab: forceTabActive } = useParams();
@@ -250,8 +248,6 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
       }, 500);
     }
   }, [location]);
-
-  console.log("dataContractById", dataContractById);
 
   return (
     <React.Fragment>
