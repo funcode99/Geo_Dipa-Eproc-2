@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyledModal } from '../../../../components/modals';
+import React from "react";
+import { StyledModal } from "../../../../components/modals";
 import {
   SelectStyled,
   CheckBoxStyled,
@@ -7,14 +7,14 @@ import {
   StyledTableHead,
   StyledHead,
   StyledTableRow,
-} from './style';
-import { useSelector, useDispatch } from 'react-redux';
-import { actionTypes } from '../../_redux/deliveryMonitoringAction';
-import { Card, CardBody } from '../../../../../_metronic/_partials/controls';
-import { TableCell, TableBody } from '@material-ui/core';
-import * as documentOption from '../../../../service/Document';
-import * as deliveryMonitoring from '../../service/DeliveryMonitoringCrud';
-import useToast from '../../../../components/toast';
+} from "./style";
+import { useSelector, useDispatch } from "react-redux";
+import { actionTypes } from "../../_redux/addendumContractAction";
+import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
+import { TableCell, TableBody } from "@material-ui/core";
+import * as documentOption from "../../../../service/Document";
+import * as deliveryMonitoring from "../../service/AddendumContractCrudService";
+import useToast from "../../../../components/toast";
 
 // const docOptions = [
 //   {
@@ -115,18 +115,18 @@ import useToast from '../../../../components/toast';
 // ];
 
 const theadDocuments = [
-  { id: 'action', label: '' },
-  { id: 'scope-of-work', label: 'Scope of Work' },
-  { id: 'delivery-date', label: 'Delivery Date' },
-  { id: 'bobot', label: 'Bobot(%)' },
-  { id: 'harga-pekerjaan', label: 'Harga Pekerjaan' },
-  { id: 'progress', label: 'Project Progress(%)' },
-  { id: 'dokumen-progress', label: 'Dokumen Progress' },
-  { id: 'deliv-dokumen', label: 'Deliverable Dokumen' },
-  { id: 'aksi', label: 'Action' },
+  { id: "action", label: "" },
+  { id: "scope-of-work", label: "Scope of Work" },
+  { id: "delivery-date", label: "Delivery Date" },
+  { id: "bobot", label: "Bobot(%)" },
+  { id: "harga-pekerjaan", label: "Harga Pekerjaan" },
+  { id: "progress", label: "Project Progress(%)" },
+  { id: "dokumen-progress", label: "Dokumen Progress" },
+  { id: "deliv-dokumen", label: "Deliverable Dokumen" },
+  { id: "aksi", label: "Action" },
 ];
 
-export default function Documents({ taskId = '' }) {
+export default function Documents({ taskId = "" }) {
   const [docTypeId, setDocTypeId] = React.useState(0);
   const [docTypeOptions, setDocTypeOptions] = React.useState([]);
   const [docOptions, setDocOptions] = React.useState([]);
@@ -146,7 +146,7 @@ export default function Documents({ taskId = '' }) {
       } = await documentOption.getDocTypeOptions();
       setDocTypeOptions(data.document_types);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -168,7 +168,7 @@ export default function Documents({ taskId = '' }) {
         setDocOptions(data);
       }
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -186,7 +186,7 @@ export default function Documents({ taskId = '' }) {
         payload: data.task_documents,
       });
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }

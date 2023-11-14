@@ -8,11 +8,10 @@ import { compose } from "redux";
 import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
 
 import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
-import { actionTypes } from "app/modules/AddendumContract/_redux/deliveryMonitoringAction";
-import * as addendumContract from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
+import * as addendumContract from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 import DialogGlobal from "app/components/modals/DialogGlobal";
-import RenderInput from "app/components/input/RenderInput";
 import TabsAddendum from "./Components/Tabs";
 import useToast from "app/components/toast/index";
 import Subheader from "app/components/subheader";
@@ -31,7 +30,6 @@ import { Grid } from "@material-ui/core";
 // import FormBuilder from "app/components/builder/FormBuilder";
 
 import { supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData";
-import SupportingDocumentInput from "app/components/input/SupportingDocumentInput";
 
 import UploadInput from "app/components/input/UploadInput";
 import SelectDateInput from "app/components/input/SelectDateInput";
@@ -41,11 +39,7 @@ import FormPermohonan from "app/modules/AddendumContract/pages/ContractDetail/co
 import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameter";
 
 import Steppers from "app/components/steppersCustom/Steppers";
-import {
-  DUMMY_STEPPER,
-  DUMMY_STEPPER_CONTRACT,
-  STATE_STEPPER,
-} from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
+import { DUMMY_STEPPER_CONTRACT } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 
@@ -125,10 +119,23 @@ const useStyles = makeStyles((theme) => ({
 export const AddContractAddendum = ({
   dataContractById,
   authStatus,
+  // getBanksById,
   fetch_api_sg,
 }) => {
   // isinya kosong
-  // console.log('isi dataContractById', dataContractById)
+  console.log(
+    "isi dataContractById",
+    dataContractById,
+    "isi authStatus",
+    authStatus // client
+    // "isi getBanksById",
+    // getBanksById
+  );
+
+  const [
+    supportingDocumentDefaultData,
+    setSupportingDocumentDefaultData,
+  ] = useState(supportingDocumentDefault);
 
   const showAddDocument = () => {
     openCloseAddDocument.current.open();
@@ -310,25 +317,25 @@ export const AddContractAddendum = ({
     }
   };
 
-  const getBanksById = async (contract_id) => {
-    try {
-      setLoading(true);
-    } catch (error) {
-      if (
-        error.response?.status !== 400 &&
-        error.response?.data.message !== "TokenExpiredError"
-      ) {
-        if (
-          error.response?.status !== 400 &&
-          error.response?.data.message !== "TokenExpiredError"
-        ) {
-          setToast("Error API, please contact developer!");
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const getBanksById = async (contract_id) => {
+  //   try {
+  //     setLoading(true);
+  //   } catch (error) {
+  //     if (
+  //       error.response?.status !== 400 &&
+  //       error.response?.data.message !== "TokenExpiredError"
+  //     ) {
+  //       if (
+  //         error.response?.status !== 400 &&
+  //         error.response?.data.message !== "TokenExpiredError"
+  //       ) {
+  //         setToast("Error API, please contact developer!");
+  //       }
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   React.useEffect(() => {
     // kalo dipanggil bisa
@@ -337,7 +344,6 @@ export const AddContractAddendum = ({
     getauthorizedOfficial();
     getJobDirector();
     getJobSupervisor();
-    // getJobSupervisor2();
     setInitialSubmitItems();
     // eslint-disable-next-line
   }, []);
@@ -364,12 +370,13 @@ export const AddContractAddendum = ({
         );
         setDataArr({
           id: res.data.id,
+          contract_no: res.data.contract_no,
           agreement_number: res.data.contract_no,
           procurement_title: res.data.contract_name,
           po_number: res.data.purch_order_no,
           po_note: res.data.purch_order.name,
-          // agreement_format: '',
-          // agreement_type: '',
+          agreement_format: res.data?.contract_format?.name,
+          agreement_type: res.data?.contract_type?.name,
           procurement_authority: res.data.authority.facility.name,
           procurement_authority_group: res.data.authority_group.party.full_name,
           user: res.data.user.facility.name,
@@ -627,8 +634,8 @@ export const AddContractAddendum = ({
           // Kontrak
           dataArr
             ? `Formulir Permohonan Addendum ${
-                dataArr?.contract_no?.substring(4, 6) === "KTR"
-                  ? "Kontrak"
+                dataArr?.contract_no?.substring(4, 7) === "SPK"
+                  ? "SPK"
                   : "Perjanjian"
               }  No : 
             ${dataArr?.agreement_number}
@@ -919,7 +926,6 @@ export const AddContractAddendum = ({
                         fontSize: 16,
                         fontWeight: 600,
                         color: "#2e1f22",
-                        marginBottom: 14,
                       }}
                     >
                       A. Dokumen Pendukung
@@ -928,110 +934,126 @@ export const AddContractAddendum = ({
                       title={supportingDocumentDefault}
                     /> */}
 
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 14,
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          columnGap: 28,
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        <div
-                          style={{
-                            flex: 1,
-                          }}
-                        >
-                          <p
-                            style={{
-                              marginBottom: 4,
-                            }}
-                          >
-                            No Dokumen
-                          </p>
-                          <input
-                            type="text"
-                            style={{
-                              borderRadius: 4,
-                              padding: 8,
-                              width: "100%",
-                            }}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            flex: 1,
-                          }}
-                        >
-                          <p
-                            style={{
-                              marginBottom: 4,
-                            }}
-                          >
-                            Tanggal Dokumen
-                          </p>
-                          <input
-                            type="date"
-                            style={{
-                              borderRadius: 4,
-                              padding: 8,
-                              width: "100%",
-                            }}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            flex: 1,
-                          }}
-                        >
-                          <p
-                            style={{
-                              marginBottom: 4,
-                            }}
-                          >
-                            Upload Dokumen
-                          </p>
-                          <input
-                            type="file"
-                            style={{
-                              border: 1,
-                              borderColor: "black",
-                              borderStyle: "solid",
-                              borderRadius: 4,
-                              padding: 8,
-                              width: "100%",
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <div>
-                          <p
-                            style={{
-                              marginBottom: 4,
-                            }}
-                          >
-                            Perihal
-                          </p>
-                          <textarea
-                            onChange={(e) => {
-                              // console.log("isi event textarea", e.target);
-                              resizeTextArea(e.target);
-                            }}
-                            style={{
-                              maxHeight: 160,
-                              width: "100%",
-                              padding: 8,
-                            }}
-                          ></textarea>
-                        </div>
-                      </div>
-                    </div>
+                    {supportingDocumentDefaultData &&
+                      supportingDocumentDefaultData.map((item, index) => {
+                        return (
+                          <>
+                            <h1
+                              style={{
+                                fontSize: 14,
+                                fontWeight: 500,
+                                marginTop: 14,
+                              }}
+                            >
+                              {index + 1} {item.name}
+                            </h1>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 14,
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  columnGap: 28,
+                                  flexWrap: "wrap",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    flex: 1,
+                                  }}
+                                >
+                                  <p
+                                    style={{
+                                      marginBottom: 4,
+                                    }}
+                                  >
+                                    No Dokumen
+                                  </p>
+                                  <input
+                                    type="text"
+                                    style={{
+                                      borderRadius: 4,
+                                      padding: 8,
+                                      width: "100%",
+                                    }}
+                                  />
+                                </div>
+                                <div
+                                  style={{
+                                    flex: 1,
+                                  }}
+                                >
+                                  <p
+                                    style={{
+                                      marginBottom: 4,
+                                    }}
+                                  >
+                                    Tanggal Dokumen
+                                  </p>
+                                  <input
+                                    type="date"
+                                    style={{
+                                      borderRadius: 4,
+                                      padding: 8,
+                                      width: "100%",
+                                    }}
+                                  />
+                                </div>
+                                <div
+                                  style={{
+                                    flex: 1,
+                                  }}
+                                >
+                                  <p
+                                    style={{
+                                      marginBottom: 4,
+                                    }}
+                                  >
+                                    Upload Dokumen
+                                  </p>
+                                  <input
+                                    type="file"
+                                    style={{
+                                      border: 1,
+                                      borderColor: "black",
+                                      borderStyle: "solid",
+                                      borderRadius: 4,
+                                      padding: 8,
+                                      width: "100%",
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <p
+                                    style={{
+                                      marginBottom: 4,
+                                    }}
+                                  >
+                                    Perihal
+                                  </p>
+                                  <textarea
+                                    onChange={(e) => {
+                                      // console.log("isi event textarea", e.target);
+                                      resizeTextArea(e.target);
+                                    }}
+                                    style={{
+                                      maxHeight: 160,
+                                      width: "100%",
+                                      padding: 8,
+                                    }}
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })}
 
                     <div className="mt-5">
                       <p
@@ -1104,12 +1126,15 @@ export const AddContractAddendum = ({
   );
 };
 
+// ngirim data
 const mapState = ({ auth, addendumContract }) => ({
+  // ini isi local storage nya ah elah goblok bat sih gue wkwkwkwwkwk
   authStatus: auth.user.data.status,
   dataContractById: addendumContract.dataContractById,
-  getBanksById: addendumContract.dataBanksById,
+  // getBanksById: addendumContract.notifMeta.page,
 });
 
+// ngirim fungsi
 const mapDispatch = {
   fetch_api_sg,
 };

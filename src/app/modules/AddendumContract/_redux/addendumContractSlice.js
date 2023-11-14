@@ -1,10 +1,11 @@
 import { persistReducer } from "redux-persist";
 import { PERSIST_REDUCER } from "redux/BaseHost";
-import { actionTypes } from "./deliveryMonitoringAction";
+import { actionTypes } from "./addendumContractAction";
 
 const initialDelivMonitoringState = {
   dataDeverableDoc: null,
   dataContractById: [],
+  dataNewClause: [],
   dataJasa: [],
   dataBarang: [],
   dataDocuments: [],
@@ -60,6 +61,13 @@ export const reducer = persistReducer(
         return {
           ...state,
           dataContractById: action.payload,
+        };
+      }
+
+      case actionTypes.SetDataClause: {
+        return {
+          ...state,
+          setDataClause: action.payload,
         };
       }
 

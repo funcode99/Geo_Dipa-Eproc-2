@@ -19,7 +19,7 @@ import { FormattedMessage } from "react-intl";
 import { StyledModal } from "../../../../../../components/modals";
 import { Form } from "react-bootstrap";
 import { connect } from "react-redux";
-import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "../../../../_redux/addendumContractAction";
 import DialogGlobal from "../../../../../../components/modals/DialogGlobal";
 import { isEmpty } from "lodash";
 

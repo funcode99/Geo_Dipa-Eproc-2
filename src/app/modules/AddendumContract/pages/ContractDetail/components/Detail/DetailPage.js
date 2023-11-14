@@ -1,12 +1,17 @@
 import React from "react";
-import { FormDetail, Item, ModalDelete, ModalTerm } from "app/modules/AddendumContract/pages/ContractDetail/components/Detail/index"
+import {
+  FormDetail,
+  Item,
+  ModalDelete,
+  ModalTerm,
+} from "app/modules/AddendumContract/pages/ContractDetail/components/Detail/index";
 import { Container } from "@material-ui/core";
 import ButtonAction from "../../../../../../components/buttonAction/ButtonAction";
 import { formatDate } from "../../../../../../libs/date";
 import { format } from "date-fns";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "../../../../_redux/addendumContractAction";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../../../libs/currency";
@@ -204,11 +209,8 @@ const DetailPage = ({
   });
 
   const handleModal = React.useCallback(
-    
     async (type, items) => {
-      
       if (type === "update") {
-
         // console.log(`type: ${type}`);
         // console.log(items);
         // console.log(items.due_date);
@@ -225,9 +227,7 @@ const DetailPage = ({
             : format(new Date(), "yyy-MM-dd"),
           status: items.task_status_id,
         });
-
       } else if (type === "create") {
-
         const tempSubmitItems = dataSubmitItems;
         // console.log(tempSubmitItems);
         let totalPrice = 0;
@@ -244,23 +244,20 @@ const DetailPage = ({
 
         tempSubmitItems.total_price = totalPrice;
 
-        saveSubmitItems(tempSubmitItems)
+        saveSubmitItems(tempSubmitItems);
 
-        formik.setValues(initialValues)
-        setUpdate({ id: "", update: false })
-
+        formik.setValues(initialValues);
+        setUpdate({ id: "", update: false });
       }
 
-      setModals(true)
+      setModals(true);
 
       // buka modal nya disini
-      submitRef.current.open()
-    
+      submitRef.current.open();
     },
 
     [dataSubmitItems, formik, initialValues, saveSubmitItems]
-
-  )
+  );
 
   const handleAction = React.useCallback(
     (type, data) => {
@@ -582,7 +579,6 @@ const DetailPage = ({
 
   return show ? (
     <React.Fragment>
-
       <ModalTerm
         innerRef={submitRef}
         visible={modals}
@@ -624,13 +620,13 @@ const DetailPage = ({
       />
 
       {showForm && <FormDetail contractId={contractId} />}
-      
+
       <div className="p-8">
         <GRAccord
           id={"title.termtable"}
           label={<FormattedMessage id="TITLE.ITEM_TABLE" />}
         >
-        {/* tombol submit nya ada di sini */}
+          {/* tombol submit nya ada di sini */}
           <Item handleClick={() => handleModal("create")} />
         </GRAccord>
         <GRAccord
@@ -651,7 +647,6 @@ const DetailPage = ({
         <ExpansionBox title={"TITLE.TERM_TABLE"}>
         </ExpansionBox>
       </Container> */}
-      
     </React.Fragment>
   ) : (
     <div />

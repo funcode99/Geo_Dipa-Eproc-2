@@ -21,9 +21,9 @@ import Tabs from "../../../../../../components/tabs";
 import useToast from "../../../../../../components/toast";
 import Subheader from "../../../../../../components/subheader";
 import SubBreadcrumbs from "../../../../../../components/SubBreadcrumbs";
-import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
+import * as addendumContractCRUD from "../../../../service/AddendumContractCrudService";
 
-import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { FormattedMessage } from "react-intl";
 
 import ParaPihak from "../ParaPihak";
@@ -164,44 +164,37 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
   };
 
   // get data contract detail from api
-  // const getContractById = async (contract_id) => {
-  //   try {
-  //     // dispatch({
-  //     //   type: actionTypes.SetContractById,
-  //     //   payload: [],
-  //     // });
-
-  //     setLoading(true);
-  //     const {
-  //       data: { data },
-  //     } = await deliveryMonitoring.getContractById(contract_id);
-
-  //     addCheckedField(data?.services, "jasa");
-  //     addCheckedField(data?.items, "barang");
-
-  //     dispatch({
-  //       type: actionTypes.SetContractById,
-  //       payload: data,
-  //     });
-  //   } catch (error) {
-  //     if (
-  //       error.response?.status !== 400 &&
-  //       error.response?.data.message !== "TokenExpiredError"
-  //     ) {
-  //       if (
-  //         error.response?.status !== 400 &&
-  //         error.response?.data.message !== "TokenExpiredError"
-  //       ) {
-  //         setToast("Error API, please contact developer!");
-  //       }
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const getContractById = async (contract_id) => {
+    try {
+      setLoading(true);
+      const {
+        data: { data },
+      } = await addendumContractCRUD.getContractById(contract_id);
+      addCheckedField(data?.services, "jasa");
+      addCheckedField(data?.items, "barang");
+      dispatch({
+        type: actionTypes.SetContractById,
+        payload: data,
+      });
+    } catch (error) {
+      if (
+        error.response?.status !== 400 &&
+        error.response?.data.message !== "TokenExpiredError"
+      ) {
+        if (
+          error.response?.status !== 400 &&
+          error.response?.data.message !== "TokenExpiredError"
+        ) {
+          setToast("Error API, please contact developer!");
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   React.useEffect(() => {
-    // getContractById(contract_id);
+    getContractById(contract_id);
     setInitialSubmitItems();
     // eslint-disable-next-line
   }, []);

@@ -16,7 +16,7 @@ import {
 } from "@material-ui/icons";
 import { Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { actionTypes } from "../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "../../_redux/addendumContractAction";
 import useToast from "../../../../components/toast";
 import { Card, CardBody } from "../../../../../_metronic/_partials/controls";
 import { rupiah } from "../../../../libs/currency";

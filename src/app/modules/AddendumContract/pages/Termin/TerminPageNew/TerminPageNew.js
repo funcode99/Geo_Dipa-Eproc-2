@@ -10,7 +10,7 @@ import {
 import {
   save_data_task,
   set_contract_id,
-} from "../../../_redux/deliveryMonitoringAction";
+} from "../../../_redux/addendumContractAction";
 import TerminPaper from "./components/TerminPaper";
 import { KEYS_TERMIN, STATE_STEPPER } from "./STATIC_DATA";
 

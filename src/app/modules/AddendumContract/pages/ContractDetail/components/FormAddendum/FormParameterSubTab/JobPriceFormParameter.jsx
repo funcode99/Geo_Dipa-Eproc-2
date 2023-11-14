@@ -269,7 +269,7 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                           borderColor: "#d1d1d1",
                         }}
                         placeholder="Please enter a number"
-                        defaultValue={1000}
+                        defaultValue={0}
                         decimalsLimit={2}
                         decimalSeparator=","
                         groupSeparator="."

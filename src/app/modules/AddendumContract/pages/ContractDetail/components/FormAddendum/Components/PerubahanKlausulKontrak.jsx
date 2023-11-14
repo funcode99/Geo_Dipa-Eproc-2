@@ -184,8 +184,9 @@ const PerubahanKlausulKontrak = ({
           )}
         </FieldArray>
 
+        {/* Lampiran */}
         <FieldArray name="body_attachment">
-          {({ push }) => (
+          {() => (
             <>
               {values?.attachment_data?.map((a, index) => (
                 <>

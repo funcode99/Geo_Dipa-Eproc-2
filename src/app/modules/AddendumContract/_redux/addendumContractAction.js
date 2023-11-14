@@ -8,15 +8,16 @@ export const actionTypes = {
   SetDataOrderItems: "[Set Data Order Items] Action",
   SetDataTempOrderItems: "[Set Data Temp Order Items] Action",
   SetDataUpdateOrderItems: "[Set Data Update Order Items] Action",
+  SetDataClause: "[Set Data Clause] Action",
   saveNotifDM: "SAVE_NOTIFICATION_DM",
-}
+};
 
 export const save_data_task = (payload) => ({
   type: actionTypes.SetDataTask,
   payload,
-})
+});
 
 export const set_contract_id = (payload) => ({
   type: actionTypes.SetContractById,
   payload,
-})
+});

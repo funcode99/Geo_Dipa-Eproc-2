@@ -17,7 +17,7 @@ import useToast from "../../../../../components/toast";
 import { formatDate, formatInitialDate } from "../../../../../libs/date";
 import { openLinkTab } from "../../../../../service/helper/urlHelper";
 import validation from "../../../../../service/helper/validationHelper";
-import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "../../../_redux/addendumContractAction";
 import AlertFormGR from "../DeliveryOrder.js/components/AlertFormGR";
 import { TerminPageContext } from "../TerminPageNew/TerminPageNew";
 import ModalPreview from "./components/ModalPreview";
@@ -117,7 +117,7 @@ const BappPage = ({
       nomor_contract: contract?.contract_no,
       nomor_po: contract?.purch_order_no,
       hasil_pekerjaan: taskNews?.review_text || "",
-      party1_name : taskNews?.bapp_authorize_officer || "",
+      party1_name: taskNews?.bapp_authorize_officer || "",
       party1_jabatan: taskNews?.bapp_authorize_position || "",
       party2_name: contract?.contract_party?.party_2_autorize_name,
       party2_jabatan: contract?.contract_party?.party_2_position,
@@ -706,7 +706,7 @@ const BappPage = ({
                   return (
                     <div className="mt-2">
                       {/* {!isClient  && */}
-                      {(  
+                      {
                         <Button
                           variant="contained"
                           color="secondary"
@@ -714,7 +714,7 @@ const BappPage = ({
                         >
                           <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
                         </Button>
-                      )}
+                      }
                       {/* <Button
                         variant="outlined"
                         color="secondary"

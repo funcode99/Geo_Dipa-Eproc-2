@@ -1,7 +1,7 @@
 import React, { createContext } from "react";
 import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import TableDoc from "./components/TableDoc";
-import * as deliveryMonitoring from "../../../service/DeliveryMonitoringCrud";
+import * as deliveryMonitoring from "../../../service/AddendumContractCrudService";
 import ModalDeleteDoc from "./components/ModalDeleteDoc";
 import useToast from "../../../../../components/toast";
 import ModalAddDeliverables from "./components/ModalAddDeliverables";
@@ -233,11 +233,11 @@ const Documents = ({
               .then(handleSuccess)
               .catch(handleError)
               .finally(() => {
-                handleLoading(type, false)
-                handleVisible(type)
-              })
+                handleLoading(type, false);
+                handleVisible(type);
+              });
           }
-          break
+          break;
         case "upload":
           fetch_api_sg({
             key: keys.upload,

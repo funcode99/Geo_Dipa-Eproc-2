@@ -2,7 +2,7 @@ import { all } from "redux-saga/effects";
 import { combineReducers } from "redux";
 
 import * as auth from "../app/modules/Auth/_redux/authRedux";
-import * as addendumContract from "app/modules/AddendumContract/_redux/deliveryMonitoringSlice"
+import * as addendumContract from "app/modules/AddendumContract/_redux/addendumContractSlice";
 import * as deliveryMonitoring from "../app/modules/DeliveryMonitoring/_redux/deliveryMonitoringSlice";
 import * as globalReducer from "./globalReducer";
 import * as invoiceMonitoring from "../app/modules/InvoiceMonitoring/_redux/InvoiceMonitoringSlice";
@@ -16,7 +16,7 @@ export const rootReducer = combineReducers({
   deliveryMonitoring: deliveryMonitoring.reducer,
   globalReducer: globalReducer.reducer,
   invoiceMonitoring: invoiceMonitoring.reducer,
-  addendumContract: addendumContract.reducer
+  addendumContract: addendumContract.reducer,
   // products: productsSlice.reducer,
   // remarks: remarksSlice.reducer,
   // specifications: specificationsSlice.reducer

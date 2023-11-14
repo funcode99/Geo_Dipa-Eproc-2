@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch, connect } from "react-redux";
-import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "../../../../_redux/addendumContractAction";
 import { Form, Container, Row, Col } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import { rupiah } from "../../../../../../libs/currency";
@@ -9,10 +9,17 @@ import useToast from "../../../../../../components/toast";
 // import TableItem from "./TableItem";
 import TableItemNew from "./TableItemNew";
 // import { StyledTableRow } from "../../../../../../components/tables/style";
-import { TableCell, TableRow, Checkbox, Button, 
-        Dialog, DialogActions,
+import {
+  TableCell,
+  TableRow,
+  Checkbox,
+  Button,
+  Dialog,
+  DialogActions,
   DialogContent,
-        DialogTitle, Slide } from "@material-ui/core";
+  DialogTitle,
+  Slide,
+} from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import RowAccordion from "./RowAccordion";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
@@ -23,7 +30,7 @@ import {
   asyncHistory,
   asyncItem,
   asyncSchedule,
-  asyncPo
+  asyncPo,
 } from "../../../../../Master/service/MasterCrud";
 
 const navLists = [
@@ -33,29 +40,29 @@ const navLists = [
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
-})
+});
 
 const Item = ({ handleClick, status }) => {
   const { dataContractById, dataSubmitItems } = useSelector(
     (state) => state.deliveryMonitoring
-  )
-  const dispatch = useDispatch()
-  const [Toast, setToast] = useToast()
-  const [navActive, setNavActive] = React.useState(navLists[0].id)
-  const [loading, setLoading] = React.useState(false)
-  const [qtyErrors, setQtyErrors] = React.useState([])
-  const isClient = status === "client"
-  const [stateSync, stateErrSync] = useState("")
-  const [poAsync, setPoAsync] = useState(false)
-  const [poAsync_, setPoAsync_] = useState(false)
-  const [statusSync, setStatusSync] = useState(false)
-  const [errSync, setErrSync] = useState({ status: false, message: "" })
-  const [loadingSync, setLoadingSync] = useState(false)
-  const [errLoadingSync, setErrLoadingSync] = useState(false)
-  const [titleSync, setTitleSync] = useState()
+  );
+  const dispatch = useDispatch();
+  const [Toast, setToast] = useToast();
+  const [navActive, setNavActive] = React.useState(navLists[0].id);
+  const [loading, setLoading] = React.useState(false);
+  const [qtyErrors, setQtyErrors] = React.useState([]);
+  const isClient = status === "client";
+  const [stateSync, stateErrSync] = useState("");
+  const [poAsync, setPoAsync] = useState(false);
+  const [poAsync_, setPoAsync_] = useState(false);
+  const [statusSync, setStatusSync] = useState(false);
+  const [errSync, setErrSync] = useState({ status: false, message: "" });
+  const [loadingSync, setLoadingSync] = useState(false);
+  const [errLoadingSync, setErrLoadingSync] = useState(false);
+  const [titleSync, setTitleSync] = useState();
 
   const changeChecked = (item) => {
-    item.checked = !item.checked
+    item.checked = !item.checked;
   };
 
   const addSubmitItems = (items, type) => {
@@ -428,18 +435,20 @@ const Item = ({ handleClick, status }) => {
 
       {/* <Container>
         <ExpansionBox title={"TITLE.ITEM_TABLE"}> */}
-      <div className="mb-5" style={{display:'flex'  }}>
+      <div className="mb-5" style={{ display: "flex" }}>
         <Navs
           navLists={navLists}
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
         />
-        <div style={{ 'marginLeft' : 'auto' }}>
+        <div style={{ marginLeft: "auto" }}>
           <span
             className="mr-1 btn btn-success btn-sm"
             onClick={() => {
               stateErrSync("service");
               setPoAsync(true);
-              setTitleSync(<FormattedMessage id="TITLE.SYNCHRONIZE_SERVICES" />);
+              setTitleSync(
+                <FormattedMessage id="TITLE.SYNCHRONIZE_SERVICES" />
+              );
             }}
           >
             <i className="fas fa-sync "></i>
@@ -642,9 +651,7 @@ const Item = ({ handleClick, status }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {titleSync}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{titleSync}</DialogTitle>
         <Form id="asyncData" onSubmit={handleAsync}>
           <DialogContent>
             <Row>

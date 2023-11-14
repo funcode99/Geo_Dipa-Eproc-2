@@ -3,14 +3,14 @@ import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
 // FieldArray, ErrorMessage
 import { Formik, Field, Form } from "formik";
 import { ReactSelect } from "percobaan/ReactSelect";
-import { submitParties } from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
+import { submitParties } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import NewWorkDirector from "../Components/Modal/Parties/NewWorkDirector";
 import NewWorkSupervisor from "../Components/Modal/Parties/NewWorkSupervisor";
 import NewSecondWorkDirector from "../Components/Modal/Parties/NewSecondWorkDirector";
 import NewSecondWorkSupervisor from "../Components/Modal/Parties/NewSecondWorkSupervisor";
 import NewClause from "../Components/Modal/NewClause";
-import { submitJobPrice } from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
+import { submitJobPrice } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const PartiesFormParameter = ({
   jsonData,
