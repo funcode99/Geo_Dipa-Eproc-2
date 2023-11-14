@@ -6,11 +6,16 @@ const NewSecondWorkDirector = ({
   openCloseSecondWorkDirector,
   setPlaceman,
 }) => {
-  const createNewPlaceman = (position, address, phone, fax) => ({
-    position,
-    address,
-    phone,
-    fax,
+  const createNewPlaceman = (
+    party_2_job_director_position,
+    party_2_job_director_address,
+    party_2_job_director_telp,
+    party_2_job_director_fax
+  ) => ({
+    party_2_job_director_position,
+    party_2_job_director_address,
+    party_2_job_director_telp,
+    party_2_job_director_fax,
   });
   return (
     <>
@@ -24,10 +29,10 @@ const NewSecondWorkDirector = ({
       >
         <Formik
           initialValues={{
-            position: "",
-            address: "",
-            phone: "",
-            fax: "",
+            party_2_job_director_position: "",
+            party_2_job_director_address: "",
+            party_2_job_director_telp: "",
+            party_2_job_director_fax: "",
           }}
           onSubmit={(values) => {
             setPlaceman((placeman) => {
@@ -36,10 +41,10 @@ const NewSecondWorkDirector = ({
                 secondWorkDirector: [
                   ...placeman.secondWorkDirector,
                   createNewPlaceman(
-                    values?.position,
-                    values?.address,
-                    values?.phone,
-                    values?.fax
+                    values?.party_2_job_director_position,
+                    values?.party_2_job_director_address,
+                    values?.party_2_job_director_telp,
+                    values?.party_2_job_director_fax
                   ),
                 ],
               };
@@ -90,7 +95,7 @@ const NewSecondWorkDirector = ({
                       </span>
                       <Field
                         type="text"
-                        name="position"
+                        name="party_2_job_director_position"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -119,7 +124,7 @@ const NewSecondWorkDirector = ({
                       </span>
                       <Field
                         type="text"
-                        name="address"
+                        name="party_2_job_director_address"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -148,7 +153,7 @@ const NewSecondWorkDirector = ({
                       </span>
                       <Field
                         type="text"
-                        name="phone"
+                        name="party_2_job_director_telp"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -177,7 +182,7 @@ const NewSecondWorkDirector = ({
                       </span>
                       <Field
                         type="text"
-                        name="fax"
+                        name="party_2_job_director_fax"
                         style={{
                           padding: 8,
                           borderRadius: 4,

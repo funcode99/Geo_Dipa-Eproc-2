@@ -1,5 +1,9 @@
 import React from "react";
 import { Field, FieldArray } from "formik";
+import { useLocation, useParams, withRouter } from "react-router-dom";
+import { compose } from "redux";
+import { useDispatch, connect } from "react-redux";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const PerubahanKlausulKontrak = ({
   setBodyClauseData,
@@ -8,7 +12,9 @@ const PerubahanKlausulKontrak = ({
   values,
   title,
   subTitle,
+  dataNewClause,
 }) => {
+  const dispatch = useDispatch();
   const changeBodyClauseData = (value, type) => {
     setBodyClauseData((data) => {
       if (type === "clause number")
@@ -29,14 +35,24 @@ const PerubahanKlausulKontrak = ({
     });
   };
 
-  const changeFieldData = (index, value, type) => {
-    setAttachmentClauseData((data) => {
-      let newArr = [...data];
-      if (type === "attachment number")
-        newArr[index]["attachment_number"] = value;
-      if (type === "clause note") newArr[index]["clause_note"] = value;
-      return newArr;
+  const changeFieldData = (fieldIndex, value, fieldType) => {
+    // action.type
+    // action.payload
+    // action.fieldType
+    // action.fieldIndex
+    dispatch({
+      type: actionTypes.SetDataClause,
+      payload: value,
+      fieldType: fieldType,
+      fieldIndex: fieldIndex,
     });
+    // setAttachmentClauseData((data) => {
+    //   let newArr = [...data];
+    //   if (type === "attachment number")
+    //     newArr[index]["attachment_number"] = value;
+    //   if (type === "clause note") newArr[index]["clause_note"] = value;
+    //   return newArr;
+    // });
   };
 
   return (
@@ -188,27 +204,40 @@ const PerubahanKlausulKontrak = ({
         <FieldArray name="body_attachment">
           {() => (
             <>
-              {values?.attachment_data?.map((a, index) => (
+              <Field
+                // name={`attachment_data.${index}.attachment_number`}
+                onChange={(e) =>
+                  changeFieldData(0, e.target.value, "attachment number")
+                }
+                value={dataNewClause?.attachmentClauseData}
+                type="text"
+                placeholder="Masukkan Nomor Lampiran"
+                style={{
+                  padding: 8,
+                  borderRadius: 4,
+                  minWidth: 400,
+                }}
+              />
+
+              <Field
+                // name={`attachment_data.${index}.attachment_number`}
+                className="form-control"
+                as="textarea"
+                onChange={(e) =>
+                  changeFieldData(0, e.target.value, "clause note")
+                }
+                value={dataNewClause?.bodyClauseData}
+                type="text"
+                placeholder="Masukkan Nomor Lampiran"
+                style={{
+                  padding: 8,
+                  borderRadius: 4,
+                  minWidth: 400,
+                }}
+              />
+              {/* {values?.attachment_data?.map((a, index) => (
                 <>
-                  <div>
-                    <Field
-                      name={`attachment_data.${index}.attachment_number`}
-                      onChange={(e) =>
-                        changeFieldData(
-                          index,
-                          e.target.value,
-                          "attachment number"
-                        )
-                      }
-                      type="text"
-                      placeholder="Masukkan Nomor Lampiran"
-                      style={{
-                        padding: 8,
-                        borderRadius: 4,
-                        minWidth: 400,
-                      }}
-                    />
-                  </div>
+                  <div></div>
 
                   <div>
                     <Field
@@ -228,7 +257,7 @@ const PerubahanKlausulKontrak = ({
                     />
                   </div>
                 </>
-              ))}
+              ))} */}
             </>
           )}
         </FieldArray>
@@ -251,4 +280,20 @@ const PerubahanKlausulKontrak = ({
   );
 };
 
-export default PerubahanKlausulKontrak;
+// ngirim data
+const mapState = ({ dataNewClause }) => ({
+  dataNewClause,
+  // ini isi local storage nya ternyata ah elah goblok bat sih gue wkwkwkwwkwk
+  // authStatus: auth.user.data.status,
+  // dataContractById: addendumContract.dataContractById,
+});
+
+// ngirim fungsi
+const mapDispatch = {
+  // fetch_api_sg,
+};
+
+export default compose(
+  withRouter,
+  connect(mapState, mapDispatch)
+)(PerubahanKlausulKontrak);
