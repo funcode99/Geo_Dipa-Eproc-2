@@ -41,6 +41,18 @@ const FormPermohonan = (props) => {
 
   const submitAddendumRequestForm = (values) => {
     console.log("isi values saat submit", values);
+    let afterValue = values.checked.includes("job_price")
+      ? values.additional_price === "0" || values.additional_price === ""
+        ? parseInt(props?.headerData?.initial_contract_value) -
+          parseInt(
+            values?.substraction_price === "" ? "0" : values?.substraction_price
+          )
+        : parseInt(props?.headerData?.initial_contract_value) +
+          parseInt(
+            values?.additional_price === "" ? "0" : values?.additional_price
+          )
+      : "0";
+    localStorage.setItem("value_after_addendum", JSON.stringify(afterValue));
     submitAddendumRequest({
       // unauthorized karena contract id nya wkwk, dasar goblok
       contract_id: `${props.contractId}`,

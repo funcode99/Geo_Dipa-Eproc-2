@@ -10,6 +10,9 @@ import {
   Paper,
   makeStyles,
 } from "@material-ui/core";
+import GRAccord from "app/modules/DeliveryMonitoring/pages/Termin/ServiceAccGR/components/GRAccord";
+import { FormattedMessage } from "react-intl";
+import Item from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/Item";
 import NewClause from "../Components/Modal/NewClause";
 import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/EditableTable/index";
 import PerubahanKlausulKontrak from "../Components/PerubahanKlausulKontrak";
@@ -151,6 +154,8 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
   //   );
   // };
 
+  let a = JSON.parse(localStorage.getItem("value_after_addendum"));
+
   return (
     <>
       <NewClause
@@ -231,9 +236,8 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                           );
                         })}
                       </select>
-                      <input
+                      <CurrencyInput
                         className="form-control"
-                        type="text"
                         style={{
                           width: "100%",
                           border: 1,
@@ -241,7 +245,11 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                           borderColor: "#d1d1d1",
                           backgroundColor: "#e8f4fb",
                         }}
-                        value={rupiah(headerData?.initial_contract_value)}
+                        placeholder="Please enter a number"
+                        decimalsLimit={2}
+                        decimalSeparator=","
+                        groupSeparator="."
+                        value={headerData?.initial_contract_value}
                         disabled
                       />
                     </div>
@@ -272,9 +280,16 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                           borderRadius: 4,
                           padding: "10px 12px",
                         }}
+                        disabled
                       >
                         {currencies?.count?.map((item) => {
-                          return <option>{item.code}</option>;
+                          return (
+                            <option
+                              selected={item.code === headerData?.currency}
+                            >
+                              {item.code}
+                            </option>
+                          );
                         })}
                       </select>
                       <CurrencyInput
@@ -284,13 +299,14 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                           border: 1,
                           borderStyle: "solid",
                           borderColor: "#d1d1d1",
+                          backgroundColor: "#e8f4fb",
                         }}
                         placeholder="Please enter a number"
-                        defaultValue={0}
                         decimalsLimit={2}
                         decimalSeparator=","
                         groupSeparator="."
-                        onValueChange={(value) => console.log(value)}
+                        value={a}
+                        disabled
                       />
                     </div>
                   </label>
@@ -389,7 +405,7 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                   </Tables>
                 </Paper>
 
-                <TableContainer
+                {/* <TableContainer
                   style={{
                     padding: 10,
                   }}
@@ -458,7 +474,15 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                       ))}
                     </TableBody>
                   </Table>
-                </TableContainer>
+                </TableContainer> */}
+
+                <GRAccord
+                  id={"title.termtable"}
+                  label={<FormattedMessage id="TITLE.ITEM_TABLE" />}
+                >
+                  {/* handleClick={() => handleModal("create")} */}
+                  <Item />
+                </GRAccord>
 
                 <TableContainer>
                   <div

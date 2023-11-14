@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch, connect } from "react-redux";
-import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "app/modules/DeliveryMonitoring/_redux/deliveryMonitoringAction";
 import { Form, Container, Row, Col } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import { rupiah } from "../../../../../../libs/currency";
-import Navs from "../../../../../../components/navs";
-import useToast from "../../../../../../components/toast";
+import { rupiah } from "app/libs/currency";
+import Navs from "app/components/navs/index";
+import useToast from "app/components/toast/index";
 // import TableItem from "./TableItem";
 import TableItemNew from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/TableItemNew";
 // import { StyledTableRow } from "../../../../../../components/tables/style";
@@ -21,12 +21,7 @@ import {
   Slide,
 } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
-import RowAccordion from "./RowAccordion";
-import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
-import {
-  theadService,
-  theadItem,
-} from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/fieldData";
+import RowAccordion from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/RowAccordion";
 
 import {
   asyncService,
@@ -34,7 +29,32 @@ import {
   asyncItem,
   asyncSchedule,
   asyncPo,
-} from "../../../../../Master/service/MasterCrud";
+} from "app/modules/Master/service/MasterCrud";
+
+const theadService = [
+  { id: "keterangan", label: <FormattedMessage id="TITLE.DESCRIPTION" /> },
+  {
+    id: "due-date",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />,
+  },
+  { id: "qty", label: "Qty Total" },
+  { id: "qty_avail", label: <FormattedMessage id="TITLE.QTY_AVAILABLE" /> },
+  { id: "uom", label: "Uom" },
+  { id: "gr_price", label: "Gross Value" },
+  { id: "net_value", label: <FormattedMessage id="TITLE.NET_VALUE" /> },
+];
+
+const theadItem = [
+  { id: "keterangan", label: <FormattedMessage id="TITLE.DESCRIPTION" /> },
+  {
+    id: "due-date",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TABLE_HEAD.DUE_DATE" />,
+  },
+  { id: "qty", label: "Qty Total" },
+  { id: "qty_avail", label: <FormattedMessage id="TITLE.QTY_AVAILABLE" /> },
+  { id: "uom", label: "Uom" },
+  { id: "unit-price", label: <FormattedMessage id="TITLE.UNIT_PRICE" /> },
+];
 
 const navLists = [
   { id: "link-jasa", label: <FormattedMessage id="SUMMARY.NAV.SERVICE" /> },
@@ -47,7 +67,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const Item = ({ handleClick, status }) => {
   const { dataContractById, dataSubmitItems } = useSelector(
-    (state) => state.deliveryMonitoring
+    (state) => state.addendumContract
   );
   const dispatch = useDispatch();
   const [Toast, setToast] = useToast();
@@ -444,7 +464,7 @@ const Item = ({ handleClick, status }) => {
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
         />
         {/* buat button synchronize */}
-        <div style={{ marginLeft: "auto" }}>
+        {/* <div style={{ marginLeft: "auto" }}>
           <span
             className="mr-1 btn btn-success btn-sm"
             onClick={() => {
@@ -469,7 +489,7 @@ const Item = ({ handleClick, status }) => {
             <i className="fas fa-sync "></i>
             <FormattedMessage id="TITLE.SYNCHRONIZE_ITEM" />
           </span>
-        </div>
+        </div> */}
       </div>
 
       {/* {navActive === "link-jasa" && ( */}
@@ -503,7 +523,7 @@ const Item = ({ handleClick, status }) => {
                       // }
                       key={item2?.id}
                     >
-                      <TableCell>
+                      {/* <TableCell>
                         <Checkbox
                           name={`checkbox-${item2.id}`}
                           id={`checkbox-${item2.id}`}
@@ -514,13 +534,12 @@ const Item = ({ handleClick, status }) => {
                                 id: el.id,
                                 type: "jasa",
                               })
-                            // console.log(e)
                           }
                           size="small"
                           checked={item2.checked}
                           disabled={item2.qty_available === 0 ? true : false}
                         />
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell>{item2?.short_text}</TableCell>
                       <TableCell></TableCell>
                       <TableCell>{item2?.quantity}</TableCell>
@@ -575,7 +594,7 @@ const Item = ({ handleClick, status }) => {
         renderRows={({ item, index }) => {
           return (
             <TableRow hover key={item?.id}>
-              <TableCell>
+              {/* <TableCell>
                 <Checkbox
                   name={`checkbox-${item.id}`}
                   id={`checkbox-${item.id}`}
@@ -590,7 +609,7 @@ const Item = ({ handleClick, status }) => {
                   checked={item.checked}
                   disabled={item.qty_available === 0 ? true : false}
                 />
-              </TableCell>
+              </TableCell> */}
               <TableCell>{item?.desc}</TableCell>
               <TableCell></TableCell>
               <TableCell>{item?.qty}</TableCell>
@@ -628,7 +647,7 @@ const Item = ({ handleClick, status }) => {
         }}
       />
       {/* )} */}
-      {isClient && (
+      {/* {isClient && (
         <div className="d-flex justify-content-end w-100 mt-4">
           <Button
             variant="contained"
@@ -642,10 +661,10 @@ const Item = ({ handleClick, status }) => {
             <Send />
           </Button>
         </div>
-      )}
+      )} */}
       {/* </ExpansionBox>
       </Container> */}
-      <Dialog
+      {/* <Dialog
         open={poAsync}
         keepMounted
         maxWidth={"sm"}
@@ -747,7 +766,7 @@ const Item = ({ handleClick, status }) => {
             </button>
           </DialogActions>
         </Form>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 };

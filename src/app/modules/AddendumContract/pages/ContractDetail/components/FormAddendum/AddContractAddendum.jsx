@@ -327,6 +327,7 @@ export const AddContractAddendum = ({
       key: keys.fetch,
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
+      // url: `/adendum/contract-released/bce5e09d-95f1-43f7-8534-8ddf8c116278/show`,
       onSuccess: (res) => {
         console.log("apakah menarik data", res?.data);
         setJsonData(res?.data);
