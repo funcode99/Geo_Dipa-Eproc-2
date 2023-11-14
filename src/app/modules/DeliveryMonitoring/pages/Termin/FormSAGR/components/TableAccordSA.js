@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { FormSAContext } from "./FormSA";
 import TableSA from "./TableSA";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TableAccordSA = () => {
   const classes = useStyles();
-  const { itemJasa, saExist, dataSA } = React.useContext(FormSAContext);
+  const { itemJasa, saExist, dataSA, baseSA } = React.useContext(FormSAContext);
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -65,7 +66,12 @@ const TableAccordSA = () => {
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              {dataItemJasa.length > 0 ? (
+              {!baseSA ? (
+                <div className="d-flex align-items-center justify-content-center w-100">
+                  <span className="spinner-border spinner-border-sm mr-2"></span>
+                  <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+                </div>
+              ) : baseSA && dataItemJasa.length > 0 ? (
                 <TableSA itemJasa={dataItemJasa} itemSA={item} />
               ) : (
                 "Item tidak tersedia"

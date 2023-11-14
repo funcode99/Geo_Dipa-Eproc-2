@@ -213,7 +213,7 @@
   "TITLE.FILE": "File",
   "TITLE.STATUS": "Status",
   "TITLE.UPDATE_DATA_SUCCESS": "Perubahan berhasil disimpan",
-  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE": "Catatan: Untuk dapat upload Dokumen Tagihan, Dokumen Kontrak dan Dokumen Hasil Kerja harus sudah disetujui terlebih dahulu dan berada pada periode upload Dokumen Tagihan (Tanggal {start_day} sampai Tanggal {end_day})\n\n- Pastikan dokumen sudah released\n- Pastikan sudah ada dokumen SA/GR",
+  "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE": "Catatan: Untuk dapat upload Dokumen Tagihan, Dokumen Kontrak dan Dokumen Hasil Kerja harus sudah disetujui terlebih dahulu dan berada pada periode upload Dokumen Tagihan (Tanggal {start_day} sampai Tanggal {end_day})\n\n- Pastikan dokumen (SPP, Invoice, Kwitansi, Tax) sudah released\n- Pastikan sudah ada dokumen SA/GR",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.CONTRACT_AMMOUNT": "Harga Pekerjaan",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.PO_NUMBER": "Nomor PO",
   "TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.TERMIN_VALUE": "Harga Pekerjaan {termin}",
