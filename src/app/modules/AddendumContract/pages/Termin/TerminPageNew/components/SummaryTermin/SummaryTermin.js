@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import {
   TableCell,
   TableRow,
@@ -8,31 +8,28 @@ import {
   Table,
   TableHead,
   IconButton,
-} from "@material-ui/core"
+} from "@material-ui/core";
 import {
   ExpandLessOutlined,
   ExpandMoreOutlined,
   Send,
-} from "@material-ui/icons"
-import { Form } from "react-bootstrap"
-import { useSelector, useDispatch } from "react-redux"
-import { actionTypes } from "../../../../../_redux/deliveryMonitoringAction"
+} from "@material-ui/icons";
+import { Form } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { actionTypes } from "../../../../../_redux/addendumContractAction";
 // import { actionTypes } from "../../_redux/deliveryMonitoringAction"
-import useToast from "app/components/toast"
+import useToast from "app/components/toast";
 import {
   Card,
   CardBody,
-} from "../../../../../../../../_metronic/_partials/controls"
-import { rupiah } from "../../../../../../../libs/currency"
-import Navs from "../../../../../../../components/navs"
-import { FormattedMessage } from "react-intl"
-import TablePaginationCustom from "../../../../../../../components/tables/TablePagination"
-import DialogGlobal from "../../../../../../../components/modals/DialogGlobal"
-import { connect } from "react-redux"
-import {
-  fetch_api_sg,
-  getLoading
-} from "redux/globalReducer"
+} from "../../../../../../../../_metronic/_partials/controls";
+import { rupiah } from "../../../../../../../libs/currency";
+import Navs from "../../../../../../../components/navs";
+import { FormattedMessage } from "react-intl";
+import TablePaginationCustom from "../../../../../../../components/tables/TablePagination";
+import DialogGlobal from "../../../../../../../components/modals/DialogGlobal";
+import { connect } from "react-redux";
+import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { NAV_LISTS, TABLE_HEAD_DATA, TABLE_ITEMS } from "./SUMMARY_DUMMY";
 import { TerminPageContext } from "../../TerminPageNew";
 
@@ -93,8 +90,8 @@ function SummaryTermin({ loadings, fetch_api_sg, status }) {
   const addShowField = (data) => {
     data.forEach((item) => {
       item.show = false;
-    })
-  }
+    });
+  };
 
   const addCheckedAndErrorField = (data, type) => {
     if (type === "barang") {
@@ -106,7 +103,7 @@ function SummaryTermin({ loadings, fetch_api_sg, status }) {
           item.checked = true;
           item.error = "";
         }
-      })
+      });
     }
 
     if (type === "jasa") {

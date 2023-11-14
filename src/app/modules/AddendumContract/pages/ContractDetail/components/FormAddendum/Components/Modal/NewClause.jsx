@@ -85,8 +85,9 @@ const NewClause = ({ openCloseAddClause, setAttachmentClauseData }) => {
                       gap: 10,
                     }}
                   >
-                    <span>Nomor Pasal</span>
+                    <span>Isi perubahan klausul</span>
                     <Field
+                      as="textarea"
                       style={{
                         padding: 8,
                         borderRadius: 4,

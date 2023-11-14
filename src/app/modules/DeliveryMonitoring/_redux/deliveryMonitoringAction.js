@@ -9,14 +9,20 @@ export const actionTypes = {
   SetDataTempOrderItems: "[Set Data Temp Order Items] Action",
   SetDataUpdateOrderItems: "[Set Data Update Order Items] Action",
   saveNotifDM: "SAVE_NOTIFICATION_DM",
-}
+};
 
-export const save_data_task = (payload) => ({
-  type: actionTypes.SetDataTask,
-  payload,
-})
+export const save_data_task = (payload) => {
+  // [Set Data Task] Action
+  return {
+    type: actionTypes.SetDataTask,
+    payload,
+  };
+};
 
-export const set_contract_id = (payload) => ({
-  type: actionTypes.SetContractById,
-  payload,
-})
+export const set_contract_id = (payload) => {
+  // [Set Contract By Id] Action
+  return {
+    type: actionTypes.SetContractById,
+    payload,
+  };
+};

@@ -16,7 +16,7 @@ import apiHelper from "../../../../../../service/helper/apiHelper";
 import urlHelper, {
   openLinkTab,
 } from "../../../../../../service/helper/urlHelper";
-import { set_contract_id } from "../../../../_redux/deliveryMonitoringSlice";
+import { set_contract_id } from "app/modules/AddendumContract/_redux/addendumContractSlice";
 import TableGuarantee from "./components/TableGuarantee";
 
 const BASE_MODAL_CONF = [

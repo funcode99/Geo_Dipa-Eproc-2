@@ -8,7 +8,7 @@ import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import UploadInput from "../../../../../components/input/UploadInput";
 import useToast from "../../../../../components/toast";
 import apiHelper from "../../../../../service/helper/apiHelper";
-import { uploadGuarantee } from "../../../service/DeliveryMonitoringCrud";
+import { uploadGuarantee } from "../../../service/AddendumContractCrudService";
 
 const ItemSwitch = React.memo(({ label, value, onChange }) => {
   const [active, setActive] = React.useState(false);
@@ -23,8 +23,6 @@ const ItemSwitch = React.memo(({ label, value, onChange }) => {
     },
     [onChange]
   );
-
-  // console.log(`type`, value);
 
   const valueUsed = active;
 

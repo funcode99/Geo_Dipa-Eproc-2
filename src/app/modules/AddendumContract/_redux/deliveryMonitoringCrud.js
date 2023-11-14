@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { actionTypes } from './deliveryMonitoringAction';
+import axios from "axios";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 // import { DEV_NODE, DEV_RUBY } from '../../../../redux/BaseHost';
 export const URL = `http://172.18.1.112:3000/api/get-docs-deliverable/1/8000003554`;
 const TEMP_URL = `http://geo.abdmandhan.com`;

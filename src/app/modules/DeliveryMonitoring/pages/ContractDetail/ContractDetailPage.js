@@ -173,19 +173,17 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   // get data contract detail from api
   const getContractById = async (contract_id) => {
     try {
-      // dispatch({
-      //   type: actionTypes.SetContractById,
-      //   payload: [],
-      // });
-
       setLoading(true);
       const {
         data: { data },
-      } = await deliveryMonitoring.getContractById(contract_id);
+      } =
+        // ini asalnya dari folder service
+        await deliveryMonitoring.getContractById(contract_id);
 
       addCheckedField(data?.services, "jasa");
       addCheckedField(data?.items, "barang");
 
+      // type = mau dikirim kemana, payload = isi datanya apa
       dispatch({
         type: actionTypes.SetContractById,
         payload: data,
@@ -287,7 +285,9 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
           },
           {
             label: `${
-              dataContractById ? dataContractById?.contract_name : "x"
+              dataContractById?.contract_name
+                ? dataContractById?.contract_name
+                : "x"
             }`,
             to: "/",
           },
@@ -341,7 +341,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
 
 const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
-  dataContractById: deliveryMonitoring.getContractById,
+  dataContractById: deliveryMonitoring.dataContractById,
 });
 
 export default compose(withRouter, connect(mapState))(ContractDetailPage);

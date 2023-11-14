@@ -15,7 +15,7 @@ import Documents from "./Documents";
 import DeliveryOrder from "./DeliveryOrder.js";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
 import { useSelector, shallowEqual, useDispatch, connect } from "react-redux";
-import { actionTypes } from "../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "../../_redux/addendumContractAction";
 import { useHistory, useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 // import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";

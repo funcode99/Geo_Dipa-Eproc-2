@@ -4,7 +4,7 @@ import { Formik, Field, Form, useFormikContext } from "formik";
 import { Card, CardBody } from "_metronic/_partials/controls";
 import { rupiah } from "app/libs/currency";
 import { formatDate } from "app/libs/date";
-import { submitAddendumRequest } from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
+import { submitAddendumRequest } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import { setDate } from "date-fns";
 import CurrencyInput from "react-currency-input-field";
 
@@ -19,6 +19,25 @@ const FormPermohonan = (props) => {
     additional_price: "0",
     substraction_price: "0",
   });
+
+  useEffect(() => {
+    console.log("isi additional price", price.additional_price);
+    if (price.additional_price === undefined) {
+      setPrice((previous) => {
+        return {
+          ...previous,
+          additional_price: "0",
+        };
+      });
+    } else if (price.substraction_price === undefined) {
+      setPrice((previous) => {
+        return {
+          ...previous,
+          substraction_price: "0",
+        };
+      });
+    }
+  }, [price]);
 
   const submitAddendumRequestForm = (values) => {
     // console.log("isi values saat submit", values);
@@ -66,7 +85,7 @@ const FormPermohonan = (props) => {
         : "0",
       conclusion: conclusion,
       addendum_percentage: adnm_percentage,
-      add_request_date: dateDisplay,
+      add_request_date: formatDate(new Date(dateDisplay)),
     }).then((value) => {
       console.log("isi values saat submit", value);
       localStorage.setItem("add_contract_id", value.data.data.id);
@@ -123,7 +142,9 @@ const FormPermohonan = (props) => {
                       className="col-form-label"
                       style={{ fontWeight: 500, fontSize: 14 }}
                     >
-                      Nomor Perjanjian
+                      {props?.headerData?.contract_no?.substring(4, 7) !== "SPK"
+                        ? "Nomor Perjanjian"
+                        : "Nomor SPK"}
                     </label>
                     <input
                       type="text"
@@ -151,24 +172,27 @@ const FormPermohonan = (props) => {
                       value={`${props?.headerData?.po_number}`}
                     />
                   </div>
-                  <div className="form-group row">
-                    <label
-                      htmlFor="agreement_format"
-                      className="col-form-label"
-                      style={{ fontWeight: 500, fontSize: 14 }}
-                    >
-                      Format Perjanjian
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="agreement_format"
-                      style={{ backgroundColor: "#c7d2d8" }}
-                      disabled
-                      onChange={(e) => {}}
-                      value={"Isi format perjanjian"}
-                    />
-                  </div>
+                  {props?.headerData?.contract_no?.substring(4, 7) !==
+                    "SPK" && (
+                    <div className="form-group row">
+                      <label
+                        htmlFor="agreement_format"
+                        className="col-form-label"
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        Format Perjanjian
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="agreement_format"
+                        style={{ backgroundColor: "#c7d2d8" }}
+                        disabled
+                        onChange={(e) => {}}
+                        value={`${props?.headerData?.agreement_format}`}
+                      />
+                    </div>
+                  )}
                   <div className="form-group row">
                     <label
                       htmlFor="procurement_authority"
@@ -205,24 +229,52 @@ const FormPermohonan = (props) => {
                       value={`${props?.headerData?.user}`}
                     />
                   </div>
-                  <div className="form-group row">
-                    <label
-                      htmlFor="provider"
-                      className="col-form-label"
-                      style={{ fontWeight: 500, fontSize: 14 }}
-                    >
-                      Penyedia
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="provider"
-                      style={{ backgroundColor: "#c7d2d8" }}
-                      disabled
-                      onChange={(e) => {}}
-                      value={`${props?.headerData?.provider}`}
-                    />
-                  </div>
+                  {props?.headerData?.contract_no?.substring(4, 7) !==
+                    "SPK" && (
+                    <div className="form-group row">
+                      <label
+                        htmlFor="provider"
+                        className="col-form-label"
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        Penyedia
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="provider"
+                        style={{ backgroundColor: "#c7d2d8" }}
+                        disabled
+                        onChange={(e) => {}}
+                        value={`${props?.headerData?.provider}`}
+                      />
+                    </div>
+                  )}
+                  {props?.headerData?.contract_no?.substring(4, 7) ===
+                    "SPK" && (
+                    <div className="form-group row">
+                      <label
+                        htmlFor="agreement_format"
+                        className="col-form-label"
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        Format SPK
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="agreement_format"
+                        style={{ backgroundColor: "#c7d2d8" }}
+                        disabled
+                        onChange={(e) => {}}
+                        value={`${
+                          props?.headerData?.agreement_format === null
+                            ? ""
+                            : props?.headerData?.agreement_format
+                        }`}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-md-7">
@@ -262,23 +314,26 @@ const FormPermohonan = (props) => {
                       value={`${props?.headerData?.po_note}`}
                     />
                   </div>
-                  <div className="form-group row">
-                    <label
-                      htmlFor="agreement_type"
-                      className="col-form-label"
-                      style={{ fontWeight: 500, fontSize: 14 }}
-                    >
-                      Jenis Perjanjian
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="agreement_type"
-                      style={{ backgroundColor: "#c7d2d8" }}
-                      disabled
-                      value={"Perjanjian"}
-                    />
-                  </div>
+                  {props?.headerData?.contract_no?.substring(4, 7) !==
+                    "SPK" && (
+                    <div className="form-group row">
+                      <label
+                        htmlFor="agreement_type"
+                        className="col-form-label"
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        Jenis Perjanjian
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="agreement_type"
+                        style={{ backgroundColor: "#c7d2d8" }}
+                        disabled
+                        value={`${props?.headerData?.agreement_type}`}
+                      />
+                    </div>
+                  )}
                   <div className="form-group row">
                     <label
                       htmlFor="po_number"
@@ -314,6 +369,27 @@ const FormPermohonan = (props) => {
                       value={`${props?.headerData?.user_group}`}
                     />
                   </div>
+                  {props?.headerData?.contract_no?.substring(4, 7) ===
+                    "SPK" && (
+                    <div className="form-group row">
+                      <label
+                        htmlFor="provider"
+                        className="col-form-label"
+                        style={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        Penyedia
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="provider"
+                        style={{ backgroundColor: "#c7d2d8" }}
+                        disabled
+                        onChange={(e) => {}}
+                        value={`${props?.headerData?.provider}`}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </form>
@@ -332,7 +408,7 @@ const FormPermohonan = (props) => {
               is_availability_budget: false,
               total_price: "0",
             }}
-            onSubmit={(values) => {
+            onSubmit={({ values }) => {
               console.log("isi submit values", values);
               if (dateDisplay === null) {
                 alert("Silahkan isi Tanggal Dokumen Permohonan");
@@ -401,8 +477,9 @@ const FormPermohonan = (props) => {
                           columnGap: 10,
                           minWidth: 270,
                         }}
+                        // value={dateDisplay}
                         onChange={(e) => {
-                          setDateDisplay(formatDate(new Date(e.target.value)));
+                          setDateDisplay(e.target.value);
                         }}
                       />
                     </div>
@@ -692,11 +769,12 @@ const FormPermohonan = (props) => {
                                 disabled={disabledInput === "add"}
                               /> */}
                               <Field
-                                disableGroupSeparators={true}
                                 name="additional_price"
                                 className="form-control"
                                 defaultValue={0}
                                 decimalsLimit={0}
+                                decimalSeparator=","
+                                groupSeparator="."
                                 disabled={disabledInput === "add"}
                                 component={CurrencyInput}
                                 onValueChange={(value) => {
@@ -761,19 +839,14 @@ const FormPermohonan = (props) => {
                               Pengurangan Harga Pekerjaan
                             </label>
                             <div className="col-sm-8">
-                              {/* <Field
-                                className="form-control"
-                                type="text"
-                                name="substraction_price"
-                                disabled={disabledInput === "sub"}
-                              /> */}
                               <Field
-                                disableGroupSeparators={true}
                                 name="substraction_price"
                                 className="form-control"
                                 defaultValue={0}
                                 decimalsLimit={0}
                                 disabled={disabledInput === "sub"}
+                                decimalSeparator=","
+                                groupSeparator="."
                                 component={CurrencyInput}
                                 onValueChange={(value) => {
                                   setPrice((previous) => {

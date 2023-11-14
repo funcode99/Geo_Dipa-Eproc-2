@@ -48,7 +48,7 @@ const KickOffDetail = ({
   contractStart,
   status,
   saveContractById,
-  setToast
+  setToast,
 }) => {
   const isClient = status === "client";
 

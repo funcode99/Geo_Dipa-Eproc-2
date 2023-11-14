@@ -12,12 +12,12 @@ import {
   getLoading,
 } from "../../../../../../../redux/globalReducer";
 import { formatInitialDate } from "../../../../../../libs/date";
+import { DEV_NODE } from "../../../../../../../redux/BaseHost";
 import validation from "../../../../../../service/helper/validationHelper";
 import { FormattedMessage } from "react-intl";
 import * as Yup from "yup";
-import { set_contract_id } from "../../../../_redux/deliveryMonitoringSlice";
-import { DEV_NODE } from "../../../../../../../redux/BaseHost";
-import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { set_contract_id } from "app/modules/AddendumContract/_redux/addendumContractSlice";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const formValidation = Yup.object().shape({
   // po_document: validation.string(
@@ -48,7 +48,7 @@ const KickOffDetail = ({
   contractStart,
   status,
   saveContractById,
-  setToast
+  setToast,
 }) => {
   const isClient = status === "client";
 

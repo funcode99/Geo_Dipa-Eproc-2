@@ -5,6 +5,7 @@ import { toAbsoluteUrl } from "_metronic/_helpers/index";
 import { countdownMonths } from "app/libs/timeperioddate";
 import { countdownConverter } from "app/libs/timedateconverter";
 import { useParams } from "react-router-dom";
+import CurrencyInput from "react-currency-input-field";
 import {
   Table,
   TableBody,
@@ -24,7 +25,7 @@ import {
   submitGuarantee,
   submitAccountNumber,
   submitOther,
-} from "app/modules/AddendumContract/service/DeliveryMonitoringCrud";
+} from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 import * as Yup from "yup";
 import SVG from "react-inlinesvg";
@@ -237,6 +238,7 @@ const FormParameter = ({
       calendarDay: timePeriodData?.contract_period_range_day,
       radio: timePeriodData?.contract_period_type,
       prefix: "contract",
+      selectableStart: timePeriodData?.from_time !== null ? true : false,
     },
     {
       title: "Jangka Waktu Pelaksanaan Pekerjaan",
@@ -246,6 +248,8 @@ const FormParameter = ({
       calendarDay: timePeriodData?.work_implement_period_day,
       radio: timePeriodData?.work_period_type,
       prefix: "work",
+      selectableStart:
+        timePeriodData?.worked_start_date !== null ? true : false,
     },
     {
       title: "Jangka Waktu Masa Garansi",
@@ -352,8 +356,8 @@ const FormParameter = ({
         add_contract_id: localStorage.getItem("add_contract_id"),
         from_time: values?.contract_start_date,
         thru_time: values?.contract_end_date,
-        work_start_date: values?.work_start_date,
-        work_end_date: values?.work_end_date,
+        work_start_date: values?.worked_start_date,
+        work_end_date: values?.worked_end_date,
         guarantee_start_date: values?.guarantee_start_date,
         guarantee_end_date: values?.guarantee_end_date,
         maintenance_start_date: values?.maintenance_start_date,
@@ -377,6 +381,9 @@ const FormParameter = ({
 
   // CLEAR!, tinggal skenario yang Full
   const submitFormParameterPaymentMethod = (values) => {
+    if (stagePayment?.payment.length < 1) {
+      alert("Silahkan tambah tahap pembayaran anda");
+    }
     submitPaymentMethod(
       {
         add_contract_id: localStorage.getItem("add_contract_id"),
@@ -569,6 +576,8 @@ const FormParameter = ({
       };
     });
   };
+  const [percentage, setPercentage] = useState(0);
+  const [description, setDescription] = useState("");
 
   return (
     <>
@@ -798,9 +807,10 @@ const FormParameter = ({
         noButton={false}
       >
         <Formik
+          enableReinitialize
           initialValues={{
-            percentage: "",
-            description: "",
+            percentage: percentage,
+            description: description,
           }}
           onSubmit={(values) => {
             setStagePayment((data) => {
@@ -817,90 +827,107 @@ const FormParameter = ({
                 ],
               };
             });
+            setDescription("");
             openCloseAddPayment.current.close();
           }}
         >
-          <Form>
-            <div
-              style={{
-                padding: "0 17%",
-              }}
-            >
-              <h1
-                style={{
-                  marginBottom: 40,
-                  fontSize: 16,
-                  fontWeight: 600,
-                  textAlign: "center",
-                }}
-              >
-                Tambah pembayaran bertahap
-              </h1>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 14,
-                }}
-              >
+          {(values) => {
+            return (
+              <Form>
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
+                    padding: "0 17%",
                   }}
                 >
-                  <span>Persentase</span>
-                  <Field
+                  <h1
                     style={{
-                      padding: 8,
-                      borderRadius: 4,
-                      border: 1,
-                      borderStyle: "solid",
-                      borderColor: "#8c8a8a",
-                      opacity: 0.8,
+                      marginBottom: 40,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      textAlign: "center",
                     }}
-                    name="percentage"
-                  />
+                  >
+                    Tambah pembayaran bertahap
+                  </h1>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span>Persentase</span>
+                      <Field
+                        name="percentage"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                        defaultValue={0}
+                        decimalsLimit={0}
+                        maxLength={3}
+                        decimalSeparator=","
+                        groupSeparator="."
+                        component={CurrencyInput}
+                        onValueChange={(value) => {
+                          setPercentage(value);
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span>Deskripsi</span>
+                      <Field
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                        name="description"
+                        onChange={(e) => {
+                          setDescription(e.target.value);
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div
                   style={{
                     display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
+                    justifyContent: "flex-end",
+                    marginTop: 52,
+                    padding: "0 7%",
                   }}
                 >
-                  <span>Deskripsi</span>
-                  <Field
-                    style={{
-                      padding: 8,
-                      borderRadius: 4,
-                      border: 1,
-                      borderStyle: "solid",
-                      borderColor: "#8c8a8a",
-                      opacity: 0.8,
-                    }}
-                    name="description"
-                  />
+                  <button type="submit" className="btn btn-primary">
+                    Save
+                  </button>
                 </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: 52,
-                padding: "0 7%",
-              }}
-            >
-              <button type="submit" className="btn btn-primary">
-                Save
-              </button>
-            </div>
-          </Form>
+              </Form>
+            );
+          }}
         </Formik>
       </DialogGlobal>
 
@@ -1267,10 +1294,12 @@ const FormParameter = ({
                                           flexDirection: "row-reverse",
                                           columnGap: 10,
                                           backgroundColor:
-                                            data.title ===
-                                              "Jangka Waktu Perjanjian" ||
-                                            data.title ===
-                                              "Jangka Waktu Pelaksanaan Pekerjaan"
+                                            (data.title ===
+                                              "Jangka Waktu Perjanjian" &&
+                                              data.startDate !== null) ||
+                                            (data.title ===
+                                              "Jangka Waktu Pelaksanaan Pekerjaan" &&
+                                              data.startDate !== null)
                                               ? "#e8f4fb"
                                               : "",
                                         }}
@@ -1279,10 +1308,10 @@ const FormParameter = ({
                                         disabled={
                                           (data.title ===
                                             "Jangka Waktu Perjanjian" &&
-                                            data.startDate !== null) ||
+                                            data.selectableStart) ||
                                           (data.title ===
                                             "Jangka Waktu Pelaksanaan Pekerjaan" &&
-                                            data.startDate !== null)
+                                            data.selectableStart)
                                         }
                                         onChange={(e) =>
                                           setTimePeriodAddendum((prev) => {
@@ -1453,345 +1482,343 @@ const FormParameter = ({
 
           {/* Metode Pembayaran */}
           {currentActiveTab === 3 && (
-            <>
-              <Formik
-                enableReinitialize={true}
-                initialValues={{
-                  payment_method: addendumPaymentMethod,
-                  payment_data: stagePayment.payment,
-                  body_data: paymentMethodBodyClauseData,
-                  attachment_data: paymentMethodAttachmentClauseData,
-                }}
-                onSubmit={(values) => {
-                  // values.payment_data.reverse();
-                  console.log("submit di metode pembayaran", values);
-                  submitFormParameterPaymentMethod(values);
-                }}
-              >
-                {({ values }) => (
-                  <Form>
+            <Formik
+              enableReinitialize={true}
+              initialValues={{
+                payment_method: addendumPaymentMethod,
+                payment_data: stagePayment.payment,
+                body_data: paymentMethodBodyClauseData,
+                attachment_data: paymentMethodAttachmentClauseData,
+              }}
+              onSubmit={(values) => {
+                // values.payment_data.reverse();
+                console.log("submit di metode pembayaran", values);
+                submitFormParameterPaymentMethod(values);
+              }}
+            >
+              {({ values }) => (
+                <Form>
+                  <div
+                    style={{
+                      padding: 28,
+                      borderRadius: 14,
+                      border: 1,
+                      borderStyle: "solid",
+                      borderColor: "#8c8a8a",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: 40,
+                      columnGap: 100,
+                    }}
+                  >
+                    {/* Metode Pembayaran Kontrak Awal */}
                     <div
                       style={{
-                        padding: 28,
-                        borderRadius: 14,
-                        border: 1,
-                        borderStyle: "solid",
-                        borderColor: "#8c8a8a",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginBottom: 40,
-                        columnGap: 100,
+                        flex: 1,
                       }}
                     >
-                      {/* Metode Pembayaran Kontrak Awal */}
-                      <div
+                      <h1
                         style={{
-                          flex: 1,
+                          fontSize: 16,
+                          fontWeight: 600,
                         }}
                       >
-                        <h1
-                          style={{
-                            fontSize: 16,
-                            fontWeight: 600,
-                          }}
-                        >
-                          Metode pembayaran kontrak awal
-                        </h1>
-                        <div
+                        Metode pembayaran kontrak awal
+                      </h1>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          rowGap: 14,
+                          paddingTop: 14,
+                        }}
+                      >
+                        <label
                           style={{
                             display: "flex",
-                            flexDirection: "column",
-                            rowGap: 14,
-                            paddingTop: 14,
+                            gap: 12,
                           }}
                         >
-                          <label
-                            style={{
-                              display: "flex",
-                              gap: 12,
-                            }}
-                          >
-                            <input
-                              type="radio"
-                              name="payment"
-                              disabled
-                              checked={jsonData?.payment_method === "full"}
-                            />
-                            Full Pembayaran
-                          </label>
-                          <label
-                            style={{
-                              display: "flex",
-                              gap: 12,
-                            }}
-                          >
-                            <input
-                              type="radio"
-                              name="payment"
-                              disabled
-                              checked={jsonData?.payment_method === "gradually"}
-                            />
-                            Pembayaran Bertahap
-                          </label>
-                        </div>
-                        {earlyStagePayment &&
-                          earlyStagePayment?.payment?.map((item) => {
-                            return (
-                              <>
-                                <div
+                          <input
+                            type="radio"
+                            name="payment"
+                            disabled
+                            checked={jsonData?.payment_method === "full"}
+                          />
+                          Full Pembayaran
+                        </label>
+                        <label
+                          style={{
+                            display: "flex",
+                            gap: 12,
+                          }}
+                        >
+                          <input
+                            type="radio"
+                            name="payment"
+                            disabled
+                            checked={jsonData?.payment_method === "gradually"}
+                          />
+                          Pembayaran Bertahap
+                        </label>
+                      </div>
+                      {earlyStagePayment &&
+                        earlyStagePayment?.payment?.map((item) => {
+                          return (
+                            <>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  columnGap: 10,
+                                  marginTop: 28,
+                                  marginBottom: 14,
+                                }}
+                              >
+                                <p
                                   style={{
-                                    display: "flex",
-                                    flexWrap: "wrap",
-                                    columnGap: 10,
-                                    marginTop: 28,
-                                    marginBottom: 14,
+                                    paddingTop: 12,
                                   }}
                                 >
+                                  Tahap {item.payment}
+                                </p>
+
+                                <div
+                                  style={{
+                                    flex: 1,
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                    }}
+                                  >
+                                    <Field
+                                      style={{
+                                        flex: 1,
+                                        padding: "10px 12px",
+                                        borderRadius: 4,
+                                      }}
+                                      type="text"
+                                      placeholder="Persentase"
+                                      value={item.percentage}
+                                      disabled
+                                    />
+                                  </div>
+                                  <div
+                                    style={{
+                                      marginTop: 14,
+                                      marginBottom: 28,
+                                      display: "flex",
+                                    }}
+                                  >
+                                    <Field
+                                      as="textarea"
+                                      style={{
+                                        flex: 1,
+                                        padding: "10px 12px",
+                                        borderRadius: 4,
+                                      }}
+                                      placeholder="Deskripsi"
+                                      value={item.value}
+                                      disabled
+                                    />
+                                    {/* </textarea> */}
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          );
+                        })}
+                    </div>
+
+                    {/* Addendum Metode Pembayaran */}
+                    <div
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <h1
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 600,
+                        }}
+                      >
+                        A. Addendum metode pembayaran
+                      </h1>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          rowGap: 14,
+                          paddingTop: 14,
+                        }}
+                      >
+                        <label
+                          style={{
+                            display: "flex",
+                            gap: 12,
+                          }}
+                        >
+                          <input
+                            type="radio"
+                            name="payment_addendum"
+                            onClick={() => setAddendumPaymentMethod("full")}
+                            checked={addendumPaymentMethod === "full"}
+                          />
+                          Full Pembayaran
+                        </label>
+                        <label
+                          style={{
+                            display: "flex",
+                            gap: 12,
+                            margin: 0,
+                          }}
+                        >
+                          <input
+                            type="radio"
+                            name="payment_addendum"
+                            onClick={() =>
+                              setAddendumPaymentMethod("gradually")
+                            }
+                            checked={addendumPaymentMethod === "gradually"}
+                          />
+                          Pembayaran Bertahap
+                        </label>
+                      </div>
+                      {addendumPaymentMethod === "gradually" &&
+                        stagePayment?.payment?.map((item, index) => {
+                          return (
+                            <>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  columnGap: 10,
+                                  marginTop: 28,
+                                  marginBottom: 14,
+                                }}
+                              >
+                                <div>
                                   <p
                                     style={{
                                       paddingTop: 12,
                                     }}
                                   >
-                                    Tahap {item.payment}
+                                    {/* Tahap {item.payment} */}
+                                    Tahap {index + 1}
                                   </p>
-
-                                  <div
-                                    style={{
-                                      flex: 1,
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setStagePayment((previous) => {
+                                        let data = { ...previous };
+                                        data.payment.splice(index, 1);
+                                        return data;
+                                      });
                                     }}
                                   >
-                                    <div
+                                    Hapus
+                                  </button>
+                                </div>
+                                <div
+                                  style={{
+                                    flex: 1,
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                    }}
+                                  >
+                                    <Field
                                       style={{
-                                        display: "flex",
+                                        flex: 1,
+                                        padding: "10px 12px",
+                                        borderRadius: 4,
                                       }}
-                                    >
-                                      <Field
-                                        style={{
-                                          flex: 1,
-                                          padding: "10px 12px",
-                                          borderRadius: 4,
-                                        }}
-                                        type="text"
-                                        placeholder="Persentase"
-                                        value={item.percentage}
-                                        disabled
-                                      />
-                                    </div>
-                                    <div
+                                      type="text"
+                                      placeholder="Persentase"
+                                      value={item.percentage}
+                                      onChange={(e) =>
+                                        changePaymentMethodField(
+                                          index,
+                                          e.target.value,
+                                          "Percentage"
+                                        )
+                                      }
+                                      disabled={
+                                        addendumPaymentMethod !== "gradually"
+                                      }
+                                    />
+                                  </div>
+                                  <div
+                                    style={{
+                                      marginTop: 14,
+                                      marginBottom: 28,
+                                      display: "flex",
+                                    }}
+                                  >
+                                    <textarea
                                       style={{
-                                        marginTop: 14,
-                                        marginBottom: 28,
-                                        display: "flex",
+                                        flex: 1,
+                                        padding: "10px 12px",
+                                        borderRadius: 4,
                                       }}
-                                    >
-                                      <Field
-                                        as="textarea"
-                                        style={{
-                                          flex: 1,
-                                          padding: "10px 12px",
-                                          borderRadius: 4,
-                                        }}
-                                        placeholder="Deskripsi"
-                                        value={item.value}
-                                        disabled
-                                      />
-                                      {/* </textarea> */}
-                                    </div>
+                                      placeholder="Deskripsi"
+                                      value={item.value}
+                                      onChange={(e) =>
+                                        changePaymentMethodField(
+                                          index,
+                                          e.target.value,
+                                          "Description"
+                                        )
+                                      }
+                                      disabled={
+                                        addendumPaymentMethod !== "gradually"
+                                      }
+                                    ></textarea>
                                   </div>
                                 </div>
-                              </>
-                            );
-                          })}
-                      </div>
-
-                      {/* Addendum Metode Pembayaran */}
-                      <div
-                        style={{
-                          flex: 1,
-                        }}
-                      >
-                        <h1
-                          style={{
-                            fontSize: 16,
-                            fontWeight: 600,
-                          }}
-                        >
-                          A. Addendum metode pembayaran
-                        </h1>
+                              </div>
+                            </>
+                          );
+                        })}
+                      {addendumPaymentMethod === "gradually" && (
                         <div
                           style={{
                             display: "flex",
-                            flexDirection: "column",
-                            rowGap: 14,
-                            paddingTop: 14,
+                            justifyContent: "flex-end",
+                            marginTop: 28,
                           }}
                         >
-                          <label
-                            style={{
-                              display: "flex",
-                              gap: 12,
-                            }}
+                          <button
+                            type="button"
+                            className="btn btn-primary mx-1"
+                            onClick={showAddPayment}
                           >
-                            <input
-                              type="radio"
-                              name="payment_addendum"
-                              onClick={() => setAddendumPaymentMethod("full")}
-                              checked={addendumPaymentMethod === "full"}
-                            />
-                            Full Pembayaran
-                          </label>
-                          <label
-                            style={{
-                              display: "flex",
-                              gap: 12,
-                              margin: 0,
-                            }}
-                          >
-                            <input
-                              type="radio"
-                              name="payment_addendum"
-                              onClick={() =>
-                                setAddendumPaymentMethod("gradually")
-                              }
-                              checked={addendumPaymentMethod === "gradually"}
-                            />
-                            Pembayaran Bertahap
-                          </label>
+                            Tambah
+                          </button>
                         </div>
-                        {addendumPaymentMethod === "gradually" &&
-                          stagePayment?.payment?.map((item, index) => {
-                            return (
-                              <>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    flexWrap: "wrap",
-                                    columnGap: 10,
-                                    marginTop: 28,
-                                    marginBottom: 14,
-                                  }}
-                                >
-                                  <div>
-                                    <p
-                                      style={{
-                                        paddingTop: 12,
-                                      }}
-                                    >
-                                      {/* Tahap {item.payment} */}
-                                      Tahap {index + 1}
-                                    </p>
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        setStagePayment((previous) => {
-                                          let data = { ...previous };
-                                          data.payment.splice(index, 1);
-                                          return data;
-                                        });
-                                      }}
-                                    >
-                                      Hapus
-                                    </button>
-                                  </div>
-                                  <div
-                                    style={{
-                                      flex: 1,
-                                    }}
-                                  >
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                      }}
-                                    >
-                                      <Field
-                                        style={{
-                                          flex: 1,
-                                          padding: "10px 12px",
-                                          borderRadius: 4,
-                                        }}
-                                        type="text"
-                                        placeholder="Persentase"
-                                        value={item.percentage}
-                                        onChange={(e) =>
-                                          changePaymentMethodField(
-                                            index,
-                                            e.target.value,
-                                            "Percentage"
-                                          )
-                                        }
-                                        disabled={
-                                          addendumPaymentMethod !== "gradually"
-                                        }
-                                      />
-                                    </div>
-                                    <div
-                                      style={{
-                                        marginTop: 14,
-                                        marginBottom: 28,
-                                        display: "flex",
-                                      }}
-                                    >
-                                      <textarea
-                                        style={{
-                                          flex: 1,
-                                          padding: "10px 12px",
-                                          borderRadius: 4,
-                                        }}
-                                        placeholder="Deskripsi"
-                                        value={item.value}
-                                        onChange={(e) =>
-                                          changePaymentMethodField(
-                                            index,
-                                            e.target.value,
-                                            "Description"
-                                          )
-                                        }
-                                        disabled={
-                                          addendumPaymentMethod !== "gradually"
-                                        }
-                                      ></textarea>
-                                    </div>
-                                  </div>
-                                </div>
-                              </>
-                            );
-                          })}
-                        {addendumPaymentMethod === "gradually" && (
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-end",
-                              marginTop: 28,
-                            }}
-                          >
-                            <button
-                              type="button"
-                              className="btn btn-primary mx-1"
-                              onClick={showAddPayment}
-                            >
-                              Tambah
-                            </button>
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
+                  </div>
 
-                    <PerubahanKlausulKontrak
-                      subTitle={"B"}
-                      title={"Metode Pembayaran"}
-                      setBodyClauseData={setPaymentMethodBodyClauseData}
-                      setAttachmentClauseData={
-                        setPaymentMethodAttachmentClauseData
-                      }
-                      showAddClause={showAddClause}
-                      values={values}
-                    />
+                  <PerubahanKlausulKontrak
+                    subTitle={"B"}
+                    title={"Metode Pembayaran"}
+                    setBodyClauseData={setPaymentMethodBodyClauseData}
+                    setAttachmentClauseData={
+                      setPaymentMethodAttachmentClauseData
+                    }
+                    showAddClause={showAddClause}
+                    values={values}
+                  />
 
-                    <UpdateButton />
-                  </Form>
-                )}
-              </Formik>
-            </>
+                  <UpdateButton />
+                </Form>
+              )}
+            </Formik>
           )}
 
           {/* Denda */}
@@ -1845,89 +1872,58 @@ const FormParameter = ({
                           >
                             Denda Kontrak Awal
                           </h1>
-                          <Table
-                            sx={{ minWidth: 650 }}
-                            aria-label="simple table"
-                          >
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="left">No</TableCell>
-                                <TableCell align="left">Jenis Denda</TableCell>
-                                <TableCell align="left">Nilai</TableCell>
-                                <TableCell align="left">
-                                  Maksimal Hari
-                                </TableCell>
-                                <TableCell align="left">Type Nilai</TableCell>
-                              </TableRow>
-                            </TableBody>
-                            <TableBody>
-                              {jsonData?.penalty_fine_data?.map(
-                                (data, index) => (
-                                  <TableRow
-                                    key={data.id}
-                                    sx={{
-                                      "&:last-child td, &:last-child th": {
-                                        border: 0,
-                                      },
-                                    }}
-                                  ></TableRow>
-                                )
-                              )}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-
-                        <Paper className={classes.root}>
-                          <Tables
-                            dataHeader={tableHeaderFine}
-                            handleParams={handleFilter}
-                            err={false}
-                            loading={false}
-                            countData={
-                              searchFindMulti(
+                          <Paper className={classes.root}>
+                            <Tables
+                              dataHeader={tableHeaderFine}
+                              handleParams={handleFilter}
+                              err={false}
+                              loading={false}
+                              countData={
+                                searchFindMulti(
+                                  stableSort(
+                                    jsonData?.penalty_fine_data,
+                                    getSorting(order, orderBy)
+                                  ),
+                                  filterBy
+                                ).length
+                              }
+                              onChangePage={handleChangePage}
+                              onChangePerPage={handleChangeRowsPerPage}
+                            >
+                              {/* komponen table ada disini */}
+                              {searchFindMulti(
                                 stableSort(
                                   jsonData?.penalty_fine_data,
                                   getSorting(order, orderBy)
                                 ),
                                 filterBy
-                              ).length
-                            }
-                            onChangePage={handleChangePage}
-                            onChangePerPage={handleChangeRowsPerPage}
-                          >
-                            {/* komponen table ada disini */}
-                            {searchFindMulti(
-                              stableSort(
-                                jsonData?.penalty_fine_data,
-                                getSorting(order, orderBy)
-                              ),
-                              filterBy
-                            )
-                              .slice(
-                                page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
                               )
-                              .map((data, index) => (
-                                <TableRow key={index.toString()}>
-                                  <TableCell component="th">
-                                    {index + 1}
-                                  </TableCell>
-                                  <TableCell align="left" scope="row">
-                                    {data.pinalty_name}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {data.value}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {data.max_day}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {data.type === "1" ? "%" : "Nilai"}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                          </Tables>
-                        </Paper>
+                                .slice(
+                                  page * rowsPerPage,
+                                  page * rowsPerPage + rowsPerPage
+                                )
+                                .map((data, index) => (
+                                  <TableRow key={index.toString()}>
+                                    <TableCell component="th">
+                                      {index + 1}
+                                    </TableCell>
+                                    <TableCell align="left" scope="row">
+                                      {data.pinalty_name}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      {data.value}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      {data.max_day}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      {data.type === "1" ? "%" : "Nilai"}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                            </Tables>
+                          </Paper>
+                        </TableContainer>
 
                         <TableContainer
                           style={{

@@ -14,9 +14,9 @@ import validation from "../../../../../../service/helper/validationHelper";
 import { connect, useSelector } from "react-redux";
 import { StyledTableRow } from "../../../../../../components/builder/TableBuilder/styledComponent";
 import { Button, ButtonGroup, TableCell } from "@material-ui/core";
-import * as deliveryMonitoring from "../../../../service/DeliveryMonitoringCrud";
+import * as deliveryMonitoring from "../../../../service/AddendumContractCrudService";
 import useToast from "../../../../../../components/toast";
-import { actionTypes } from "../../../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "../../../../_redux/addendumContractAction";
 import { formatDate } from "../../../../../../libs/date";
 import { FormattedMessage } from "react-intl";
 import TablePaginationCustom from "../../../../../../components/tables/TablePagination";
@@ -241,7 +241,6 @@ const BastPage = ({
       alertAppear: "both",
       url,
       onSuccess: (res) => {
-
         fetchData();
       },
       onFail: (err) => console.log("err baru", err),
@@ -544,7 +543,7 @@ const BastPage = ({
                 case 1:
                   return (
                     <div className="mt-2">
-                      {(
+                      {
                         <Button
                           variant="contained"
                           color="secondary"
@@ -552,7 +551,7 @@ const BastPage = ({
                         >
                           <FormattedMessage id="TITLE.UPLOAD_SIGNED_DOCUMENT" />
                         </Button>
-                      )}
+                      }
                       {/* <Button
                         variant="outlined"
                         color="secondary"

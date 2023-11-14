@@ -1,7 +1,7 @@
 import { Card, CardContent, IconButton } from "@material-ui/core";
 import React, { createContext } from "react";
 import { connect } from "react-redux";
-import { actionTypes } from "../../../_redux/deliveryMonitoringAction";
+import { actionTypes } from "../../../_redux/addendumContractAction";
 import {
   ModalSubmit,
   ModalDetail,
