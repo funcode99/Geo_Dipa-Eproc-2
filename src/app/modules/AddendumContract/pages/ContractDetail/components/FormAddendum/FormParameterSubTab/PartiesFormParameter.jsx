@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
+import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 // FieldArray, ErrorMessage
 import { Formik, Field, Form } from "formik";
 import { ReactSelect } from "percobaan/ReactSelect";
@@ -10,7 +10,6 @@ import NewWorkSupervisor from "../Components/Modal/Parties/NewWorkSupervisor";
 import NewSecondWorkDirector from "../Components/Modal/Parties/NewSecondWorkDirector";
 import NewSecondWorkSupervisor from "../Components/Modal/Parties/NewSecondWorkSupervisor";
 import NewClause from "../Components/Modal/NewClause";
-import { submitJobPrice } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const PartiesFormParameter = ({
   jsonData,
@@ -393,6 +392,8 @@ const PartiesFormParameter = ({
       />
       <NewClause
         openCloseAddClause={openCloseAddClause}
+        fromWhere={"parties"}
+        fieldType={"clause_attachment"}
         // setAttachmentClauseData={setPartiesAttachmentClauseData}
       />
       <Formik
@@ -2873,13 +2874,12 @@ const PartiesFormParameter = ({
             <PerubahanKlausulKontrak
               subTitle={"C"}
               title={"Para Pihak"}
-              // setBodyClauseData={setPartiesBodyClauseData}
-              // setAttachmentClauseData={setPartiesAttachmentClauseData}
               showAddClause={showAddClause}
+              fromWhere={"parties"}
               values={values}
             />
 
-            <UpdateButton />
+            <UpdateButton fromWhere={"parties"} />
           </Form>
         )}
       </Formik>

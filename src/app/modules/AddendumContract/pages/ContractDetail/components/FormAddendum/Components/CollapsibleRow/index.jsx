@@ -27,6 +27,8 @@ const CollapsibleRow = ({
   onToggleEditChildMode,
   row,
 }) => {
+  console.log("isi row", row);
+
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
@@ -42,7 +44,7 @@ const CollapsibleRow = ({
           >
             {`${index + 1}`}
             {/* it work like a charm! */}
-            {row.children.length > 0 && (
+            {row.item_detail.length > 0 && (
               <button {...getToggleProps()}>
                 {isExpanded ? (
                   <KeyboardArrowUpIcon />
@@ -53,9 +55,9 @@ const CollapsibleRow = ({
             )}
           </div>
         </TableCell>
-        <CustomTableCell {...{ row, name: "item_desc", onChange }} />
-        <CustomTableCell {...{ row, name: "qty", onChange }} />
-        <CustomTableCell {...{ row, name: "unit", onChange }} />
+        <CustomTableCell {...{ row, name: "product_title", onChange }} />
+        <CustomTableCell {...{ row, name: "qty_total", onChange }} />
+        <CustomTableCell {...{ row, name: "uom", onChange }} />
         <CustomTableCell {...{ row, name: "unit_price", onChange }} />
         <CustomTableCell {...{ row, name: "total_price", onChange }} />
         <CustomTableCell {...{ row, name: "information", onChange }} />
@@ -92,9 +94,6 @@ const CollapsibleRow = ({
                 {
                   label: "Hapus",
                 },
-                // {
-                //   label: "Tambah",
-                // },
                 {
                   label: "Tambah Sub Item",
                 },
@@ -105,8 +104,8 @@ const CollapsibleRow = ({
       </TableRow>
 
       {/* children table */}
-      {row?.children &&
-        row.children.map((data, childIndex) => (
+      {row?.item_detail &&
+        row.item_detail.map((data, childIndex) => (
           <TableRow key={index} {...getCollapseProps()}>
             <TableCell>
               <div></div>
@@ -114,63 +113,64 @@ const CollapsibleRow = ({
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.item_desc}
-                  name={"item_desc"}
+                  value={data.product_title}
+                  name={"product_title"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.item_desc
+                data.product_title
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.calories}
-                  name={"calories"}
+                  value={data.qty_total}
+                  name={"qty_total"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.calories
+                data.qty_total
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.fat}
-                  name={"fat"}
+                  value={data.uom}
+                  name={"uom"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.fat
+                data.uom
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.carbs}
-                  name={"carbs"}
+                  value={data.unit_price}
+                  name={"unit_price"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.carbs
+                data.unit_price
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.protein}
-                  name={"protein"}
+                  value={data.total_price}
+                  name={"total_price"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.protein
+                data.total_price
               )}
             </TableCell>
+            <TableCell>Tidak ada</TableCell>
 
             {/* error karena data nya gak sampai kesini dulu */}
 

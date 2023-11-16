@@ -56,7 +56,9 @@ export const ReactSelect = ({
         isClearable={isClearable}
         isSearchable={isSearchable}
         name="color"
-        onChange={(choice) => setUserChoice(choice.value)}
+        onChange={(choice) => {
+          setUserChoice(choice.value);
+        }}
         style={{
           marginTop: "4px",
         }}

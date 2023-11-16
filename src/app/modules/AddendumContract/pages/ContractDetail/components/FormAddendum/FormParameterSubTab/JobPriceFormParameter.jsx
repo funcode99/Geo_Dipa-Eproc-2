@@ -16,7 +16,7 @@ import Item from "app/modules/AddendumContract/pages/ContractDetail/components/F
 import NewClause from "../Components/Modal/NewClause";
 import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/EditableTable/index";
 import PerubahanKlausulKontrak from "../Components/PerubahanKlausulKontrak";
-import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
+import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import CurrencyInput from "react-currency-input-field";
 import Tables from "app/components/tableCustomV1/table";
 import {
@@ -160,7 +160,9 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
     <>
       <NewClause
         openCloseAddClause={openCloseAddClause}
-        setAttachmentClauseData={setJobPriceAttachmentClauseData}
+        // setAttachmentClauseData={setJobPriceAttachmentClauseData}
+        fromWhere={"job_price"}
+        fieldType={"clause_attachment"}
       />
       <Formik
         enableReinitialize={true}
@@ -518,21 +520,23 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
                     </div>
                   </div>
 
-                  <EditableTable openCloseAddDetail={openCloseAddDetail} />
+                  <EditableTable
+                    openCloseAddDetail={openCloseAddDetail}
+                    previousData={jsonData?.contract_items}
+                  />
                 </TableContainer>
               </div>
 
               <PerubahanKlausulKontrak
                 subTitle={"C"}
                 title={"Harga Pekerjaan"}
-                setBodyClauseData={setJobPriceBodyClauseData}
-                setAttachmentClauseData={setJobPriceAttachmentClauseData}
                 showAddClause={showAddClause}
+                fromWhere={"job_price"}
                 values={values}
               />
             </div>
 
-            <UpdateButton />
+            <UpdateButton fromWhere={"job_price"} />
           </Form>
         )}
       </Formik>
