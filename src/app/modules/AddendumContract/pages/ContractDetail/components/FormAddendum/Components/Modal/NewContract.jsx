@@ -6,7 +6,7 @@ import { useDispatch, connect } from "react-redux";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { Formik, Field, Form } from "formik";
 
-const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
+const NewContract = ({ openCloseAddContract, fromWhere, fieldType }) => {
   const dispatch = useDispatch();
 
   return (
@@ -14,7 +14,7 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
       {/* modal tambah klausul */}
 
       <DialogGlobal
-        ref={openCloseAddClause}
+        ref={openCloseAddContract}
         isCancel={false}
         isSubmit={false}
         yesButton={false}
@@ -22,13 +22,15 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
       >
         <Formik
           initialValues={{
-            attachment_number: "",
-            clause_note: "",
+            clause_number: "",
+            before_clause_note: "",
+            after_clause_note: "",
           }}
           onSubmit={(values) => {
             const doSet = {
-              attachment_number: values.attachment_number,
-              clause_note: values.clause_note,
+              clause_number: values.clause_number,
+              before_clause_note: values.before_clause_note,
+              after_clause_note: values.after_clause_note,
             };
             dispatch({
               type: actionTypes.SetDataClause,
@@ -36,7 +38,7 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
               fieldType: fieldType,
               fromWhere: fromWhere,
             });
-            openCloseAddClause.current.close();
+            openCloseAddContract.current.close();
           }}
         >
           <Form>
@@ -54,7 +56,7 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
                     textAlign: "center",
                   }}
                 >
-                  Tambah klausul lampiran
+                  Tambah body kontrak
                 </h1>
 
                 <div
@@ -71,7 +73,7 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
                       gap: 10,
                     }}
                   >
-                    <span>Angka Lampiran</span>
+                    <span>Nomor Klausul</span>
                     <Field
                       style={{
                         padding: 8,
@@ -81,7 +83,7 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
                         borderColor: "#8c8a8a",
                         opacity: 0.8,
                       }}
-                      name="attachment_number"
+                      name="clause_number"
                     />
                   </div>
 
@@ -92,7 +94,7 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
                       gap: 10,
                     }}
                   >
-                    <span>Isi perubahan klausul</span>
+                    <span>Pasal Sebelum Addendum</span>
                     <Field
                       as="textarea"
                       style={{
@@ -103,7 +105,29 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
                         borderColor: "#8c8a8a",
                         opacity: 0.8,
                       }}
-                      name="clause_note"
+                      name="before_clause_note"
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 10,
+                    }}
+                  >
+                    <span>Pasal Setelah Addendum</span>
+                    <Field
+                      as="textarea"
+                      style={{
+                        padding: 8,
+                        borderRadius: 4,
+                        border: 1,
+                        borderStyle: "solid",
+                        borderColor: "#8c8a8a",
+                        opacity: 0.8,
+                      }}
+                      name="after_clause_note"
                     />
                   </div>
                 </div>
@@ -133,4 +157,4 @@ const mapState = ({ addendumContract }) => ({
   dataNewClause: addendumContract.dataNewClause,
 });
 
-export default compose(withRouter, connect(mapState, null))(NewClause);
+export default compose(withRouter, connect(mapState, null))(NewContract);

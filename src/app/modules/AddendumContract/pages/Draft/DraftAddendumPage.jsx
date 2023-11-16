@@ -1653,7 +1653,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
               variant="scrollable"
             />
           </div>
-          <FormParameter currentActiveTab={tabActive} />
+          {/* <FormParameter currentActiveTab={tabActive} /> */}
         </>
       )}
 

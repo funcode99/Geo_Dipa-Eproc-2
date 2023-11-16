@@ -29,13 +29,14 @@ import {
 
 import * as Yup from "yup";
 import SVG from "react-inlinesvg";
-import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
+import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import PartiesFormParameter from "./FormParameterSubTab/PartiesFormParameter";
 import JobPriceFormParameter from "./FormParameterSubTab/JobPriceFormParameter";
 import ButtonAction from "app/components/buttonAction/ButtonAction";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import NewClause from "./Components/Modal/NewClause";
+import NewContract from "./Components/Modal/NewContract";
 import {
   getSorting,
   searchFindMulti,
@@ -86,6 +87,7 @@ const FormParameter = ({
   secondAuthorizedOfficial,
   PICData,
   accountNumberBankData,
+  dataNewClause,
 }) => {
   // console.log("isi pihak kedua", secondAuthorizedOfficial);
   // console.log("isi auth official", authorizedOfficial);
@@ -159,8 +161,8 @@ const FormParameter = ({
   const guaranteeBeforeAddendum = [
     {
       title: "Jaminan Uang Muka",
-      startDate: `${jsonData?.from_time}`,
-      endDate: `${jsonData?.thru_time}`,
+      startDate: null,
+      endDate: null,
       filename: "bla_blah.pdf",
       radio: `${jsonData?.down_payment_guarantee}`,
       nameTitle: "dp_guarantee",
@@ -170,8 +172,8 @@ const FormParameter = ({
     },
     {
       title: "Jaminan Pelaksanaan",
-      startDate: `${jsonData?.guarantee_start_date}`,
-      endDate: `${jsonData?.guarantee_end_date}`,
+      startDate: null,
+      endDate: null,
       filename: "secret.docx",
       radio: `${jsonData?.implementation_guarantee}`,
       nameTitle: "implementation_guarantee",
@@ -181,8 +183,8 @@ const FormParameter = ({
     },
     {
       title: "Jaminan Pemeliharaan",
-      startDate: `${jsonData?.maintenance_start_date}`,
-      endDate: `${jsonData?.maintenance_start_date}`,
+      startDate: null,
+      endDate: null,
       filename: "another_file.xlsx",
       radio: `${jsonData?.maintenance_guarantee}`,
       nameTitle: "maintenance_guarantee",
@@ -286,13 +288,13 @@ const FormParameter = ({
     clause_note: "",
   };
 
-  const [timePeriodBodyClauseData, setTimePeriodBodyClauseData] = useState(
-    bodyClauseDataTemplate
-  );
-  const [
-    timePeriodAttachmentClauseData,
-    setTimePeriodAttachmentClauseData,
-  ] = useState([attachmentClauseDataTemplate]);
+  // const [timePeriodBodyClauseData, setTimePeriodBodyClauseData] = useState(
+  //   bodyClauseDataTemplate
+  // );
+  // const [
+  //   timePeriodAttachmentClauseData,
+  //   setTimePeriodAttachmentClauseData,
+  // ] = useState([attachmentClauseDataTemplate]);
 
   const [
     paymentMethodBodyClauseData,
@@ -559,6 +561,11 @@ const FormParameter = ({
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
     openCloseAddClause.current.open();
+  };
+
+  const openCloseAddContract = React.useRef();
+  const showAddContract = () => {
+    openCloseAddContract.current.open();
   };
 
   const openCloseAddPayment = React.useRef();
@@ -935,36 +942,56 @@ const FormParameter = ({
       {currentActiveTab === 2 && (
         <NewClause
           openCloseAddClause={openCloseAddClause}
-          setAttachmentClauseData={setTimePeriodAttachmentClauseData}
+          fromWhere={"time_period"}
+          fieldType={"clause_attachment"}
         />
       )}
 
       {currentActiveTab === 3 && (
         <NewClause
           openCloseAddClause={openCloseAddClause}
-          setAttachmentClauseData={setPaymentMethodAttachmentClauseData}
+          fromWhere={"payment_method"}
+          fieldType={"clause_attachment"}
         />
       )}
 
       {currentActiveTab === 4 && (
         <NewClause
           openCloseAddClause={openCloseAddClause}
-          setAttachmentClauseData={setFineAttachmentClauseData}
+          fromWhere={"fine"}
+          fieldType={"clause_attachment"}
         />
       )}
 
       {currentActiveTab === 5 && (
         <NewClause
           openCloseAddClause={openCloseAddClause}
-          setAttachmentClauseData={setGuaranteeAttachmentClauseData}
+          fromWhere={"guarantee"}
+          fieldType={"clause_attachment"}
         />
       )}
 
       {currentActiveTab === 6 && (
         <NewClause
           openCloseAddClause={openCloseAddClause}
-          setAttachmentClauseData={setAccountNumberAttachmentClauseData}
+          fromWhere={"account_number"}
+          fieldType={"clause_attachment"}
         />
+      )}
+
+      {currentActiveTab === 7 && (
+        <>
+          <NewClause
+            openCloseAddClause={openCloseAddClause}
+            fromWhere={"other"}
+            fieldType={"clause_attachment"}
+          />
+          <NewContract
+            openCloseAddContract={openCloseAddContract}
+            fromWhere={"other"}
+            fieldType={"contract_body"}
+          />
+        </>
       )}
 
       <Card>
@@ -1018,8 +1045,9 @@ const FormParameter = ({
                   guarantee_end_date: timePeriodAddendum[2]?.endDate,
                   maintenance_start_date: timePeriodAddendum[3]?.startDate,
                   maintenance_end_date: timePeriodAddendum[3]?.endDate,
-                  body_data: timePeriodBodyClauseData,
-                  attachment_data: timePeriodAttachmentClauseData,
+                  body_data: dataNewClause.time_period.bodyClauseData,
+                  attachment_data:
+                    dataNewClause.time_period.attachmentClauseData,
                   add_contract_period_type: timePeriodAddendum[0]?.radio,
                   add_work_period_type: timePeriodAddendum[1]?.radio,
                 }}
@@ -1466,15 +1494,12 @@ const FormParameter = ({
                     <PerubahanKlausulKontrak
                       subTitle={"B"}
                       title={"Jangka Waktu"}
-                      setBodyClauseData={setTimePeriodBodyClauseData}
-                      setAttachmentClauseData={
-                        setTimePeriodAttachmentClauseData
-                      }
+                      fromWhere={"time_period"}
                       showAddClause={showAddClause}
                       values={values}
                     />
 
-                    <UpdateButton />
+                    <UpdateButton fromWhere={"time_period"} />
                   </Form>
                 )}
               </Formik>
@@ -1488,11 +1513,11 @@ const FormParameter = ({
               initialValues={{
                 payment_method: addendumPaymentMethod,
                 payment_data: stagePayment.payment,
-                body_data: paymentMethodBodyClauseData,
-                attachment_data: paymentMethodAttachmentClauseData,
+                body_data: dataNewClause.payment_method.bodyClauseData,
+                attachment_data:
+                  dataNewClause.payment_method.attachmentClauseData,
               }}
               onSubmit={(values) => {
-                // values.payment_data.reverse();
                 console.log("submit di metode pembayaran", values);
                 submitFormParameterPaymentMethod(values);
               }}
@@ -1808,15 +1833,12 @@ const FormParameter = ({
                   <PerubahanKlausulKontrak
                     subTitle={"B"}
                     title={"Metode Pembayaran"}
-                    setBodyClauseData={setPaymentMethodBodyClauseData}
-                    setAttachmentClauseData={
-                      setPaymentMethodAttachmentClauseData
-                    }
+                    fromWhere={"payment_method"}
                     showAddClause={showAddClause}
                     values={values}
                   />
 
-                  <UpdateButton />
+                  <UpdateButton fromWhere={"payment_method"} />
                 </Form>
               )}
             </Formik>
@@ -1829,8 +1851,8 @@ const FormParameter = ({
                 enableReinitialize={true}
                 initialValues={{
                   fine_data: fine,
-                  body_data: fineBodyClauseData,
-                  attachment_data: fineAttachmentClauseData,
+                  body_data: dataNewClause.fine.bodyClauseData,
+                  attachment_data: dataNewClause.fine.attachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   submitFormParameterFine(values);
@@ -2014,13 +2036,12 @@ const FormParameter = ({
                     <PerubahanKlausulKontrak
                       subTitle={"B"}
                       title={"Denda"}
-                      setBodyClauseData={setFineBodyClauseData}
-                      setAttachmentClauseData={setFineAttachmentClauseData}
+                      fromWhere={"fine"}
                       showAddClause={showAddClause}
                       values={values}
                     />
 
-                    <UpdateButton />
+                    <UpdateButton fromWhere={"fine"} />
                   </Form>
                 )}
               </Formik>
@@ -2056,8 +2077,8 @@ const FormParameter = ({
                     inputDataGuarantee.maintenance_guarantee_end_date,
                   maintenance_guarantee_evidence_file:
                     inputDataGuarantee.maintenance_guarantee_evidence_file,
-                  body_data: guaranteeBodyClauseData,
-                  attachment_data: guaranteeAttachmentClauseData,
+                  body_data: dataNewClause.guarantee.bodyClauseData,
+                  attachment_data: dataNewClause.guarantee.attachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   submitFormParameterGuarantee(values);
@@ -2517,13 +2538,12 @@ const FormParameter = ({
                     <PerubahanKlausulKontrak
                       subTitle={"B"}
                       title={"Jaminan"}
-                      setBodyClauseData={setGuaranteeBodyClauseData}
-                      setAttachmentClauseData={setGuaranteeAttachmentClauseData}
+                      fromWhere={"guarantee"}
                       showAddClause={showAddClause}
                       values={values}
                     />
 
-                    <UpdateButton />
+                    <UpdateButton fromWhere={"guarantee"} />
                   </Form>
                 )}
               </Formik>
@@ -2537,8 +2557,9 @@ const FormParameter = ({
                 enableReinitialize={true}
                 initialValues={{
                   data_bank: accountNumber,
-                  body_data: accountNumberBodyClauseData,
-                  attachment_data: accountNumberAttachmentClauseData,
+                  body_data: dataNewClause.account_number.bodyClauseData,
+                  attachment_data:
+                    dataNewClause.account_number.attachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   submitFormParameterAccountNumber(values);
@@ -2885,44 +2906,6 @@ const FormParameter = ({
                                 )}
                               />
                             </div>
-
-                            {/* <div>
-                                                        <label
-                                                            htmlFor="upload"
-                                                            className={`input-group mb-3 col-sm-3 pointer`}
-                                                            style={{
-                                                                padding: 0
-                                                            }}
-                                                        >
-                                                            <span
-                                                                            className={`form-control text-truncate`} 
-                                                                            style={{
-                                                                                backgroundColor: '#e8f4fb'
-                                                                            }}
-                                                                            >
-                                                                            nama_file_upload.pdf
-                                                            </span>
-                                                            <div 
-                                                                                className="input-group-prepend"
-                                                                            >
-                                                                                <span className="input-group-text"
-                                                                                    style={{
-                                                                                        backgroundColor: '#e8f4fb'
-                                                                                    }}    
-                                                                                >
-                                                                                <i className="fas fa-file-upload"></i>
-                                                                                </span>
-                                                            </div>
-                                                        </label>
-                                                        <input
-                                                            type="file"
-                                                            className="d-none"
-                                                            id="upload"
-                                                            style={{
-                                                                backgroundColor: '#E8F4FB'
-                                                            }}
-                                                        />
-                                                    </div> */}
                           </div>
                           <div></div>
                         </div>
@@ -2932,15 +2915,12 @@ const FormParameter = ({
                     <PerubahanKlausulKontrak
                       subTitle={"B"}
                       title={"Nomor Rekening"}
-                      setBodyClauseData={setAccountNumberBodyClauseData}
-                      setAttachmentClauseData={
-                        setAccountNumberAttachmentClauseData
-                      }
+                      fromWhere={"account_number"}
                       showAddClause={showAddClause}
                       values={values}
                     />
 
-                    <UpdateButton />
+                    <UpdateButton fromWhere={"account_number"} />
                   </Form>
                 )}
               </Formik>
@@ -2953,8 +2933,8 @@ const FormParameter = ({
               <Formik
                 enableReinitialize={true}
                 initialValues={{
-                  body_data: otherBodyClauseData,
-                  attachment_data: otherAttachmentClauseData,
+                  body_data: dataNewClause.other.bodyClauseData,
+                  attachment_data: dataNewClause.other.attachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   submitFormParameterOther(values);
@@ -2965,13 +2945,13 @@ const FormParameter = ({
                     <PerubahanKlausulKontrak
                       subTitle={"A"}
                       title={"Lainnya"}
-                      setBodyClauseData={setOtherBodyClauseData}
-                      setAttachmentClauseData={setOtherAttachmentClauseData}
+                      fromWhere={"other"}
                       showAddClause={showAddClause}
+                      showAddContract={showAddContract}
                       values={values}
                     />
 
-                    <UpdateButton />
+                    <UpdateButton fromWhere={"other"} />
                   </Form>
                 )}
               </Formik>
@@ -2992,6 +2972,7 @@ const mapState = (state) => ({
     fetch: getLoading(state, keys.fetch),
   },
   status: state.auth.user.data.status,
+  dataNewClause: state.addendumContract.dataNewClause,
 });
 
 const mapDispatch = {
