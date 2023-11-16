@@ -1019,6 +1019,7 @@ const FormParameter = ({
                 currencies={currencies}
                 headerData={headerData}
                 jsonData={jsonData}
+                contract_id={contract_id}
               />
             </>
           )}
@@ -2897,8 +2898,6 @@ const FormParameter = ({
                                   bottom: 0,
                                   left: 12,
                                   margin: "auto 0",
-                                  // width:10,
-                                  // height:10
                                 }}
                                 src={toAbsoluteUrl(
                                   "/media/svg/icons/All/upload.svg"

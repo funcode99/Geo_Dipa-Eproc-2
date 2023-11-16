@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import CustomTableCell from "../CustomTableCell";
 import CollapsibleRow from "../CollapsibleRow";
 import DialogGlobal from "app/components/modals/DialogGlobal";
@@ -77,13 +77,14 @@ const createNewData = (product_name, qty, uom, unit_price, subtotal, note) => ({
   item_detail: [],
 });
 
-const EditableTable = ({ openCloseAddDetail, previousData }) => {
-  // previousData.map((item, index) => {
-
-  // })
-  const [rows, setRows] = React.useState(previousData);
+const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
+  const [rows, setRows] = useState(previousData);
   const [previous, setPrevious] = React.useState({});
   const classes = useStyles();
+
+  useEffect(() => {
+    func(rows);
+  }, [rows]);
 
   const onToggleEditMode = (id) => {
     setRows((state) => {

@@ -25,13 +25,16 @@ import {
   searchFindMulti,
   stableSort,
 } from "app/components/tables/TablePagination/TablePaginationCustom";
+import { submitJobPrice } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const JobPriceFormParameter = ({
   currencies,
   headerData,
   jsonData,
   dataNewClause,
+  contract_id,
 }) => {
+  console.log("isi currencies", currencies.count);
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
@@ -63,24 +66,6 @@ const JobPriceFormParameter = ({
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  // const bodyClauseDataTemplate = {
-  //   clause_number: "",
-  //   before_clause_note: "",
-  //   after_clause_note: "",
-  // };
-
-  // const attachmentClauseDataTemplate = {
-  //   attachment_number: "",
-  //   clause_note: "",
-  // };
-  // const [jobPriceBodyClauseData, setJobPriceBodyClauseData] = useState(
-  //   bodyClauseDataTemplate
-  // );
-  // const [
-  //   jobPriceAttachmentClauseData,
-  //   setJobPriceAttachmentClauseData,
-  // ] = useState([attachmentClauseDataTemplate]);
-
   const openCloseAddDetail = React.useRef();
   const showAddDetail = () => {
     openCloseAddDetail.current.open();
@@ -89,14 +74,6 @@ const JobPriceFormParameter = ({
   const showAddClause = () => {
     openCloseAddClause.current.open();
   };
-
-  // function createData(name, calories, fat, carbs, protein) {
-  //   return { name, calories, fat, carbs, protein };
-  // }
-  // const rows = [
-  //   createData(1, "Keterlambatan Pekerjaan", 10, 30, "%"),
-  //   createData(2, "Keterlambatan Pekerjaan", 15, 60, "%"),
-  // ];
 
   const tableHeaderJobPrice = [
     {
@@ -143,40 +120,49 @@ const JobPriceFormParameter = ({
     },
   ];
 
-  // const submitFormParameterJobPrice = (values) => {
-  //   submitJobPrice(
-  //     {
-  //       add_contract_id: jsonData?.add_contracts[0]?.id,
-  //       product_title: "",
-  //       uom: "",
-  //       subtotal: "",
-  //       qty_total: "",
-  //       clause_note: "",
-  //       item_detail: [],
-  //       body_clause_data: values.body_data,
-  //       attachment_clause_data: values.attachment_data,
-  //     },
-  //     contract_id
-  //   );
-  // };
-
+  let currenciesIndex = 0;
+  let dummy = currencies?.count?.map((item, index) => {
+    if (item.code === headerData?.currency) {
+      currenciesIndex = index;
+    }
+  });
+  const submitFormParameterJobPrice = (values) => {
+    submitJobPrice(
+      {
+        add_contract_id: jsonData?.add_contracts[0]?.id,
+        currency_id: currencies.count[currenciesIndex].id,
+        item: values.data,
+        body_clause_data: values.body_data,
+        attachment_clause_data: values.attachment_data,
+      },
+      contract_id
+    );
+  };
   let a = JSON.parse(localStorage.getItem("value_after_addendum"));
+
+  // let submitData = [];
+  const [item, setItem] = useState([]);
+  // const setItem = (data) => {
+  //   submitData = data;
+  // };
 
   return (
     <>
       <NewClause
         openCloseAddClause={openCloseAddClause}
-        // setAttachmentClauseData={setJobPriceAttachmentClauseData}
         fromWhere={"job_price"}
         fieldType={"clause_attachment"}
       />
       <Formik
         enableReinitialize={true}
         initialValues={{
-          // body_data: jobPriceBodyClauseData,
-          // attachment_data: jobPriceAttachmentClauseData,
+          data: item,
           body_data: dataNewClause.job_price.bodyClauseData,
           attachment_data: dataNewClause.job_price.attachmentClauseData,
+        }}
+        onSubmit={(values) => {
+          console.log("submit di harga pekerjaan", values);
+          submitFormParameterJobPrice(values);
         }}
       >
         {({ values }) => (
@@ -322,55 +308,6 @@ const JobPriceFormParameter = ({
                   </label>
                 </div>
 
-                {/* <TableContainer
-                  style={{
-                    padding: 10,
-                  }}
-                  component={Paper}
-                >
-                  <h1
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 600,
-                    }}
-                  >
-                    Rincian harga pekerjaan awal
-                  </h1>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align="left">No</TableCell>
-                        <TableCell align="left">Deskripsi Item</TableCell>
-                        <TableCell align="left">QTY</TableCell>
-                        <TableCell align="left">Satuan</TableCell>
-                        <TableCell align="left">Harga Satuan</TableCell>
-                        <TableCell align="left">Harga Total</TableCell>
-                        <TableCell align="left">Keterangan</TableCell>
-                      </TableRow>
-                    </TableBody>
-                    <TableBody>
-                      {jsonData?.contract_items?.map((row, index) => (
-                        <TableRow
-                          key={row.product_name}
-                          sx={{
-                            "&:last-child td, &:last-child th": {
-                              border: 0,
-                            },
-                          }}
-                        >
-                          <TableCell align="l">{index + 1}</TableCell>
-                          <TableCell align="left">{row.product_name}</TableCell>
-                          <TableCell align="left">{row.qty}</TableCell>
-                          <TableCell align="left">{row.uom}</TableCell>
-                          <TableCell align="left">{row.unit_price}</TableCell>
-                          <TableCell align="left">{row.subtotal}</TableCell>
-                          <TableCell align="left">{row.note}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer> */}
-
                 <Paper className={classes.root}>
                   <Tables
                     dataHeader={tableHeaderJobPrice}
@@ -415,82 +352,10 @@ const JobPriceFormParameter = ({
                   </Tables>
                 </Paper>
 
-                {/* <TableContainer
-                  style={{
-                    padding: 10,
-                  }}
-                  component={Paper}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <h1
-                      style={{
-                        fontSize: 16,
-                        fontWeight: 600,
-                      }}
-                    >
-                      Rincian harga PO-SAP
-                    </h1>
-
-                    <div>
-                      <button
-                        style={{
-                          color: "white",
-                          backgroundColor: "#ffc045",
-                          borderRadius: 8,
-                          border: "none",
-                          padding: "8px 14px",
-                        }}
-                      >
-                        Get PO-SAP
-                      </button>
-                    </div>
-                  </div>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align="left">No</TableCell>
-                        <TableCell align="left">Deskripsi Item</TableCell>
-                        <TableCell align="left">QTY</TableCell>
-                        <TableCell align="left">Satuan</TableCell>
-                        <TableCell align="left">Harga Satuan</TableCell>
-                        <TableCell align="left">Harga Total</TableCell>
-                        <TableCell align="left">Keterangan</TableCell>
-                      </TableRow>
-                    </TableBody>
-                    <TableBody>
-                      {rows.map((row) => (
-                        <TableRow
-                          key={row.name}
-                          sx={{
-                            "&:last-child td, &:last-child th": {
-                              border: 0,
-                            },
-                          }}
-                        >
-                          <TableCell component="th">{row.name}</TableCell>
-                          <TableCell align="left" scope="row">
-                            {row.calories}
-                          </TableCell>
-                          <TableCell align="left">{row.fat}</TableCell>
-                          <TableCell align="left">{row.carbs}</TableCell>
-                          <TableCell align="left">{row.protein}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer> */}
-
                 <GRAccord
                   id={"title.termtable"}
                   label={<FormattedMessage id="TITLE.ITEM_TABLE" />}
                 >
-                  {/* handleClick={() => handleModal("create")} */}
                   <Item />
                 </GRAccord>
 
@@ -531,6 +396,7 @@ const JobPriceFormParameter = ({
                   <EditableTable
                     openCloseAddDetail={openCloseAddDetail}
                     previousData={jsonData?.contract_items}
+                    func={setItem}
                   />
                 </TableContainer>
               </div>
