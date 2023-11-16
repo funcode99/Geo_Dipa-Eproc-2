@@ -21,11 +21,12 @@ const CollapsibleRow = ({
   onChangeChild,
   onDeleteMode,
   onDeleteChildMode,
-  onRevert,
-  onRevertChild,
+  // onRevert,
+  // onRevertChild,
   onToggleEditMode,
   onToggleEditChildMode,
   row,
+  parentIndex,
 }) => {
   console.log("isi row", row);
 
@@ -35,7 +36,12 @@ const CollapsibleRow = ({
     <>
       {/* parent table */}
       <TableRow>
-        <TableCell className={classes.tableCell}>
+        <TableCell
+          sx={{
+            width: 130,
+            height: 40,
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -55,12 +61,12 @@ const CollapsibleRow = ({
             )}
           </div>
         </TableCell>
-        <CustomTableCell {...{ row, name: "product_title", onChange }} />
-        <CustomTableCell {...{ row, name: "qty_total", onChange }} />
+        <CustomTableCell {...{ row, name: "product_name", onChange }} />
+        <CustomTableCell {...{ row, name: "qty", onChange }} />
         <CustomTableCell {...{ row, name: "uom", onChange }} />
         <CustomTableCell {...{ row, name: "unit_price", onChange }} />
-        <CustomTableCell {...{ row, name: "total_price", onChange }} />
-        <CustomTableCell {...{ row, name: "information", onChange }} />
+        <CustomTableCell {...{ row, name: "subtotal", onChange }} />
+        <CustomTableCell {...{ row, name: "note", onChange }} />
         {row.isEditMode ? (
           <TableCell>
             <IconButton
@@ -69,9 +75,9 @@ const CollapsibleRow = ({
             >
               <DoneIcon />
             </IconButton>
-            <IconButton aria-label="revert" onClick={() => onRevert(row.id)}>
+            {/* <IconButton aria-label="revert" onClick={() => onRevert(row.id)}>
               <RevertIcon />
-            </IconButton>
+            </IconButton> */}
           </TableCell>
         ) : (
           <TableCell>
@@ -107,31 +113,38 @@ const CollapsibleRow = ({
       {row?.item_detail &&
         row.item_detail.map((data, childIndex) => (
           <TableRow key={index} {...getCollapseProps()}>
-            <TableCell>
-              <div></div>
+            <TableCell
+              sx={{
+                width: 130,
+                height: 40,
+              }}
+            >
+              {parentIndex}.{childIndex + 1}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.product_title}
-                  name={"product_title"}
+                  value={data.product_name}
+                  name={"product_name"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
+                  onKeyUp={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.product_title
+                data.product_name
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.qty_total}
-                  name={"qty_total"}
+                  value={data.qty}
+                  name={"qty"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
+                  onKeyUp={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.qty_total
+                data.qty
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
@@ -140,6 +153,7 @@ const CollapsibleRow = ({
                   value={data.uom}
                   name={"uom"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
+                  onKeyUp={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
@@ -152,6 +166,7 @@ const CollapsibleRow = ({
                   value={data.unit_price}
                   name={"unit_price"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
+                  onKeyUp={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
@@ -159,18 +174,21 @@ const CollapsibleRow = ({
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
+              {data.subtotal}
+            </TableCell>
+            <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.total_price}
-                  name={"total_price"}
+                  value={data.note}
+                  name={"note"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
+                  onKeyUp={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.total_price
+                data.note
               )}
             </TableCell>
-            <TableCell>Tidak ada</TableCell>
 
             {/* error karena data nya gak sampai kesini dulu */}
 
@@ -182,12 +200,12 @@ const CollapsibleRow = ({
                 >
                   <DoneIcon />
                 </IconButton>
-                <IconButton
+                {/* <IconButton
                   aria-label="revert-child"
                   onClick={() => onRevertChild(data.id, index)}
                 >
                   <RevertIcon />
-                </IconButton>
+                </IconButton> */}
               </TableCell>
             ) : (
               <TableCell>

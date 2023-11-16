@@ -2241,7 +2241,7 @@ const FormParameter = ({
                                 </div>
 
                                 {/* evidence */}
-                                <div
+                                {/* <div
                                   className="col-md-5"
                                   style={{
                                     padding: 0,
@@ -2269,7 +2269,6 @@ const FormParameter = ({
                                             backgroundColor: "#e8f4fb",
                                           }}
                                         >
-                                          {/* nama_file_upload.pdf */}
                                           {data.filename}
                                         </span>
                                         <div className="input-group-prepend">
@@ -2294,7 +2293,7 @@ const FormParameter = ({
                                       />
                                     </div>
                                   </label>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                           </>

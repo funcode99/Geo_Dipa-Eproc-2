@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Formik, Field, FieldArray, Form, ErrorMessage } from "formik";
 import { rupiah } from "app/libs/currency";
+import { connect } from "react-redux";
 import {
   Table,
   TableBody,
@@ -25,7 +26,12 @@ import {
   stableSort,
 } from "app/components/tables/TablePagination/TablePaginationCustom";
 
-const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
+const JobPriceFormParameter = ({
+  currencies,
+  headerData,
+  jsonData,
+  dataNewClause,
+}) => {
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
@@ -57,23 +63,23 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const bodyClauseDataTemplate = {
-    clause_number: "",
-    before_clause_note: "",
-    after_clause_note: "",
-  };
+  // const bodyClauseDataTemplate = {
+  //   clause_number: "",
+  //   before_clause_note: "",
+  //   after_clause_note: "",
+  // };
 
-  const attachmentClauseDataTemplate = {
-    attachment_number: "",
-    clause_note: "",
-  };
-  const [jobPriceBodyClauseData, setJobPriceBodyClauseData] = useState(
-    bodyClauseDataTemplate
-  );
-  const [
-    jobPriceAttachmentClauseData,
-    setJobPriceAttachmentClauseData,
-  ] = useState([attachmentClauseDataTemplate]);
+  // const attachmentClauseDataTemplate = {
+  //   attachment_number: "",
+  //   clause_note: "",
+  // };
+  // const [jobPriceBodyClauseData, setJobPriceBodyClauseData] = useState(
+  //   bodyClauseDataTemplate
+  // );
+  // const [
+  //   jobPriceAttachmentClauseData,
+  //   setJobPriceAttachmentClauseData,
+  // ] = useState([attachmentClauseDataTemplate]);
 
   const openCloseAddDetail = React.useRef();
   const showAddDetail = () => {
@@ -84,13 +90,13 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
     openCloseAddClause.current.open();
   };
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
-  const rows = [
-    createData(1, "Keterlambatan Pekerjaan", 10, 30, "%"),
-    createData(2, "Keterlambatan Pekerjaan", 15, 60, "%"),
-  ];
+  // function createData(name, calories, fat, carbs, protein) {
+  //   return { name, calories, fat, carbs, protein };
+  // }
+  // const rows = [
+  //   createData(1, "Keterlambatan Pekerjaan", 10, 30, "%"),
+  //   createData(2, "Keterlambatan Pekerjaan", 15, 60, "%"),
+  // ];
 
   const tableHeaderJobPrice = [
     {
@@ -167,8 +173,10 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
       <Formik
         enableReinitialize={true}
         initialValues={{
-          body_data: jobPriceBodyClauseData,
-          attachment_data: jobPriceAttachmentClauseData,
+          // body_data: jobPriceBodyClauseData,
+          // attachment_data: jobPriceAttachmentClauseData,
+          body_data: dataNewClause.job_price.bodyClauseData,
+          attachment_data: dataNewClause.job_price.attachmentClauseData,
         }}
       >
         {({ values }) => (
@@ -544,4 +552,9 @@ const JobPriceFormParameter = ({ currencies, headerData, jsonData }) => {
   );
 };
 
-export default JobPriceFormParameter;
+// export default JobPriceFormParameter;
+const mapState = (state) => ({
+  dataNewClause: state.addendumContract.dataNewClause,
+});
+
+export default connect(mapState, null)(JobPriceFormParameter);

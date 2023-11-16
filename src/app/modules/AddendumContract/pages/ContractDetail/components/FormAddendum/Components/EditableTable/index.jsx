@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useEffect } from "react";
 import CustomTableCell from "../CustomTableCell";
 import CollapsibleRow from "../CollapsibleRow";
 import DialogGlobal from "app/components/modals/DialogGlobal";
@@ -47,72 +48,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const createChildData = (
-  product_title,
-  qty_total,
+  product_name,
+  qty,
   uom,
   unit_price,
-  total_price,
-  information
+  subtotal,
+  note
 ) => ({
-  id: product_title.replace(" ", "_"),
-  product_title,
-  qty_total,
+  id: product_name.replace(" ", "_"),
+  product_name,
+  qty,
   uom,
   unit_price,
-  total_price,
-  information,
+  subtotal,
+  note,
   isEditMode: false,
 });
 
-const createNewData = (
-  product_title,
-  qty_total,
+const createNewData = (product_name, qty, uom, unit_price, subtotal, note) => ({
+  id: product_name.replace(" ", "_"),
+  product_name,
+  qty,
   uom,
   unit_price,
-  total_price,
-  information
-) => ({
-  id: product_title.replace(" ", "_"),
-  product_title,
-  qty_total,
-  uom,
-  unit_price,
-  total_price,
-  information,
+  subtotal,
+  note,
   isEditMode: false,
   item_detail: [],
 });
 
 const EditableTable = ({ openCloseAddDetail, previousData }) => {
-  const [rows, setRows] = React.useState(
-    previousData
-    //   [
-    //   createNewData(
-    //     "TX-76543 -- 001 ABCDEFFGH",
-    //     10,
-    //     "EA",
-    //     "100.000.000",
-    //     "1.000.000.000",
-    //     "Tidak Ada"
-    //   ),
-    //   createNewData(
-    //     "TX-76543 -- 002 ABCDEFFGH",
-    //     10,
-    //     "EA",
-    //     "100.000.000",
-    //     "1.000.000.000",
-    //     "Tidak Ada"
-    //   ),
-    //   createNewData(
-    //     "TX-76543 -- 003 ABCDEFFGH",
-    //     10,
-    //     "EA",
-    //     "100.000.000",
-    //     "1.000.000.000",
-    //     "Tidak Ada"
-    //   ),
-    // ]
-  );
+  // previousData.map((item, index) => {
+
+  // })
+  const [rows, setRows] = React.useState(previousData);
   const [previous, setPrevious] = React.useState({});
   const classes = useStyles();
 
@@ -153,22 +122,25 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
     setRows(newRows);
   };
 
-  const onRevert = (id) => {
-    const newRows = rows.map((row) => {
-      if (row.id === id) {
-        return previous[id] ? previous[id] : row;
-      }
-      return row;
-    });
-    // console.log('isi previous', previous[id])
-    // console.log('isi new rows', newRows)
-    setRows(newRows);
-    setPrevious((state) => {
-      delete state[id];
-      return state;
-    });
-    onToggleEditMode(id);
-  };
+  // const onRevert = (id) => {
+  // const newRows = rows.map((row) => {
+
+  //   console.log('isi previous', previous)
+
+  //   if (row.id === id) {
+  //     return previous[id] ? previous[id] : row;
+  //   }
+  //   return row;
+  // });
+  // console.log('isi previous', previous[id])
+  // console.log('isi new rows', newRows)
+  // setRows(newRows);
+  // setPrevious((state) => {
+  //   delete state[id];
+  //   return state;
+  // });
+  // onToggleEditMode(id);
+  // };
 
   const onAddMode = (a, b, c, d, e, f) => {
     setRows((state) => [...state, createNewData(a, b, c, d, e, f)]);
@@ -203,7 +175,7 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
 
   const onChangeChild = (e, row, parentIndex, childIndex) => {
     console.log("isi row di onchangechild", row);
-
+    // OALAH TERNYATA DISINI CARA PAKAI OBJEK SEBAGAI NAMA PROPERTI
     if (!previous[row.id]) {
       setPrevious((state) => ({ ...state, [row.id]: row }));
     }
@@ -212,7 +184,16 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
     const name = e.target.name;
     const { id } = row;
     const newRows = rows[parentIndex].item_detail.map((item) => {
-      return { ...row, [name]: value };
+      if (name === "unit_price" || name === "qty") {
+        let newSubtotal = parseInt(row.qty) + parseInt(row.unit_price);
+        return {
+          ...row,
+          subtotal: newSubtotal,
+          [name]: parseInt(value),
+        };
+      } else {
+        return { ...row, [name]: value };
+      }
     });
 
     console.log("isi new rows", newRows);
@@ -228,17 +209,28 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
     let result = rows.map((row) => {
       if (row.id === parentId) {
         if (row.item_detail) {
+          console.log("masuk ke kondisi 1 (kedua)");
           return {
             ...row,
             item_detail: [
               ...row.item_detail,
-              createChildData("Pudding", 591, 9.1, 60, 7.2),
+              createChildData("Pudding", 60, "mL", 60, 6000, "isi keterangan"),
             ],
           };
         } else {
+          console.log("masuk ke kondisi 2 (pertama)");
           return {
             ...row,
-            item_detail: [createChildData("Pudding", 591, 9.1, 60, 7.2)],
+            item_detail: [
+              createChildData(
+                "Pudding",
+                60,
+                "L",
+                12000,
+                24000,
+                "isi keterangan"
+              ),
+            ],
           };
         }
       }
@@ -248,21 +240,21 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
     setRows(result);
   };
 
-  const onRevertChild = (id, index) => {
-    // const newRows = rows[index].children.map(row => {
-    //     if (row.id === id) {
-    //       return previous[id] ? previous[id] : row;
-    //     }
-    //     return row;
-    //   })
-    //   setRows(newRows);
-    //   setPrevious(state => {
-    //     delete state[index].children[id];
-    //     return state[index];
-    //   })
+  // const onRevertChild = (id, index) => {
+  // const newRows = rows[index].children.map(row => {
+  //     if (row.id === id) {
+  //       return previous[id] ? previous[id] : row;
+  //     }
+  //     return row;
+  //   })
+  //   setRows(newRows);
+  //   setPrevious(state => {
+  //     delete state[index].children[id];
+  //     return state[index];
+  //   })
 
-    onToggleEditChildMode(id, index);
-  };
+  // onToggleEditChildMode(id, index);
+  // };
 
   return (
     <>
@@ -277,20 +269,20 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
       >
         <Formik
           initialValues={{
-            product_title: "",
-            qty_total: "",
+            product_name: "",
+            qty: "",
             uom: "",
             unit_price: "",
-            total_price: "",
+            subtotal: "",
             note: "",
           }}
           onSubmit={(values) => {
             onAddMode(
-              values?.product_title,
-              values?.qty_total,
+              values?.product_name,
+              values?.qty,
               values?.uom,
               values?.unit_price,
-              values?.total_price,
+              values?.subtotal,
               values?.note
             );
           }}
@@ -351,7 +343,7 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
                       </span>
                       <Field
                         type="text"
-                        name="product_title"
+                        name="product_name"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -382,7 +374,7 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
                       <Field
                         disableGroupSeparators={true}
                         type="text"
-                        name="qty_total"
+                        name="qty"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -494,7 +486,7 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
                       </span>
                       <Field
                         type="text"
-                        name="total_price"
+                        name="subtotal"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -591,18 +583,21 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
                     onChangeChild={onChangeChild}
                     onDeleteMode={onDeleteMode}
                     onDeleteChildMode={onDeleteChildMode}
-                    onRevert={onRevert}
-                    onRevertChild={onRevertChild}
+                    // onRevert={onRevert}
+                    // onRevertChild={onRevertChild}
                     onToggleEditChildMode={onToggleEditChildMode}
                     onToggleEditMode={onToggleEditMode}
+                    parentIndex={index + 1}
                   />
                 </>
               ) : (
                 <>
-                  {/* selalu masuk kesini */}
-                  {/* <CustomTableCell {...{ row, name: "protein", onChange }} /> */}
+                  {/* selalu masuk kesini diawal */}
+                  {/* kalo pake tablerow gak rapih */}
                   <TableRow key={row.id}>
-                    <TableCell>{index + 1}</TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {index + 1}
+                    </TableCell>
                     <CustomTableCell
                       {...{ row, name: "product_name", onChange }}
                     />
@@ -622,12 +617,12 @@ const EditableTable = ({ openCloseAddDetail, previousData }) => {
                           >
                             <DoneIcon />
                           </IconButton>
-                          <IconButton
+                          {/* <IconButton
                             aria-label="revert"
                             onClick={() => onRevert(row.id)}
                           >
                             <RevertIcon />
-                          </IconButton>
+                          </IconButton> */}
                         </>
                       ) : (
                         <ButtonAction
