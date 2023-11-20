@@ -77,8 +77,30 @@ const createNewData = (product_name, qty, uom, unit_price, subtotal, note) => ({
   item_detail: [],
 });
 
-const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
-  const [rows, setRows] = useState(previousData);
+const EditableTable = ({
+  openCloseAddDetail,
+  previousData,
+  func,
+  grandTotal,
+}) => {
+  // let jobPriceData = localStorage.setItem("job_price", previousData)
+  let jobPriceData = previousData;
+  const [init, setInit] = useState(0);
+  let parsedJobPrice = null;
+  if (init === 0) {
+    parsedJobPrice = jobPriceData.map((item) => {
+      return {
+        ...item,
+        subtotal: Math.round(item?.subtotal),
+        unit_price: Math.round(item?.unit_price),
+        item_detail: [],
+      };
+    });
+    setInit(1);
+  }
+  let result = parsedJobPrice;
+  // console.log("parsedJobPrice", parsedJobPrice);
+  const [rows, setRows] = useState(result);
   const [previous, setPrevious] = React.useState({});
   const classes = useStyles();
 
@@ -143,8 +165,8 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
   // onToggleEditMode(id);
   // };
 
-  const onAddMode = (a, b, c, d, e, f) => {
-    setRows((state) => [...state, createNewData(a, b, c, d, e, f)]);
+  const onAddMode = (a, b, c, d, e, f, g) => {
+    setRows((state) => [...state, createNewData(a, b, c, d, e, f, g)]);
   };
 
   const onToggleEditChildMode = (id, index) => {
@@ -157,6 +179,23 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
         return row;
       });
       newState[index].item_detail = changedData;
+      let changedParentSubtotal = "";
+      let changedParentQuantity = "";
+      if (newState[index].item_detail) {
+        function sum(total, data) {
+          return total + Math.round(data.subtotal);
+        }
+        function sumQuantity(total, data) {
+          return total + Math.round(data.qty);
+        }
+        changedParentSubtotal = newState[index].item_detail.reduce(sum, 0);
+        changedParentQuantity = newState[index].item_detail.reduce(
+          sumQuantity,
+          0
+        );
+      }
+      newState[index].subtotal = changedParentSubtotal;
+      newState[index].qty = changedParentQuantity;
       return [...newState];
     });
   };
@@ -175,29 +214,35 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
   };
 
   const onChangeChild = (e, row, parentIndex, childIndex) => {
-    console.log("isi row di onchangechild", row);
+    // console.log("isi row di onchangechild", row);
     // OALAH TERNYATA DISINI CARA PAKAI OBJEK SEBAGAI NAMA PROPERTI
     if (!previous[row.id]) {
       setPrevious((state) => ({ ...state, [row.id]: row }));
     }
 
-    const value = e.target.value;
+    const value = e.target.value === "" ? 0 : e.target.value;
     const name = e.target.name;
-    const { id } = row;
-    const newRows = rows[parentIndex].item_detail.map((item) => {
-      if (name === "unit_price" || name === "qty") {
-        let newSubtotal = parseInt(row.qty) + parseInt(row.unit_price);
-        return {
-          ...row,
-          subtotal: newSubtotal,
-          [name]: parseInt(value),
-        };
+    const newRows = rows[parentIndex].item_detail.map((item, index) => {
+      if (index === childIndex) {
+        if (name === "unit_price" || name === "qty") {
+          let newSubtotal = parseInt(row.qty) * parseInt(row.unit_price);
+          return {
+            ...row,
+            subtotal: newSubtotal,
+            [name]: parseInt(value),
+          };
+        } else {
+          return {
+            ...row,
+            [name]: value,
+          };
+        }
       } else {
-        return { ...row, [name]: value };
+        return {
+          ...item,
+        };
       }
     });
-
-    console.log("isi new rows", newRows);
 
     setRows((prev) => {
       const newState = prev;
@@ -215,7 +260,7 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
             ...row,
             item_detail: [
               ...row.item_detail,
-              createChildData("Pudding", 60, "mL", 60, 6000, "isi keterangan"),
+              createChildData("Item 1", 0, "mL", 0, 0, "Keterangan"),
             ],
           };
         } else {
@@ -257,6 +302,17 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
   // onToggleEditChildMode(id, index);
   // };
 
+  // const [grandTotal, setGrandTotal] = useState(0);
+
+  // useEffect(() => {
+  //   function sum(total, data) {
+  //     return total + Math.round(data.subtotal);
+  //   }
+  //   // grandTotal = rows.reduce(sum, 0);
+  //   setGrandTotal(rows?.reduce(sum, 0));
+  //   console.log("grandTotal", grandTotal);
+  // }, [rows]);
+
   return (
     <>
       {/* modal tambah rincian harga pekerjaan */}
@@ -276,6 +332,7 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
             unit_price: "",
             subtotal: "",
             note: "",
+            item_detail: [],
           }}
           onSubmit={(values) => {
             onAddMode(
@@ -284,7 +341,8 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
               values?.uom,
               values?.unit_price,
               values?.subtotal,
-              values?.note
+              values?.note,
+              values?.item_detail
             );
           }}
         >
@@ -356,7 +414,7 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
                       />
                     </div>
 
-                    <div
+                    {/* <div
                       style={{
                         display: "flex",
                         flexDirection: "column",
@@ -423,7 +481,7 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
                         onValueChange={(value) => console.log(value)}
                         component={CurrencyInput}
                       />
-                    </div>
+                    </div> */}
                   </div>
 
                   <div
@@ -434,7 +492,7 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
                       flex: 1,
                     }}
                   >
-                    <div
+                    {/* <div
                       style={{
                         display: "flex",
                         flexDirection: "column",
@@ -503,7 +561,7 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
                         onValueChange={(value) => console.log(value)}
                         component={CurrencyInput}
                       />
-                    </div>
+                    </div> */}
 
                     <div
                       style={{
@@ -654,6 +712,13 @@ const EditableTable = ({ openCloseAddDetail, previousData, func }) => {
                 </>
               )
             )}
+          </TableBody>
+
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={5}>Grand Total</TableCell>
+              <TableCell colSpan={3}>{grandTotal}</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </Paper>

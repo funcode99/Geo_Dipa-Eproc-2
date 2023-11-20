@@ -2,7 +2,6 @@ import { MODAL } from "../service/modalSession/ModalService";
 import { DEV_NODE } from "./BaseHost";
 export default function setupAxios(axios, store) {
   axios.defaults.baseURL = DEV_NODE;
-  axios.defaults.headers.post["Content-Type"] = "application/json";
   axios.interceptors.request.use(
     (config) => {
       const {
@@ -14,6 +13,8 @@ export default function setupAxios(axios, store) {
       }
 
       config.headers.post["Access-Control-Allow-Origin"] = "*";
+      config.headers.post["Content-Type"] = "application/json";
+      // config.headers.post["Content-Type"] = "multipart/form-data";
 
       return config;
     },

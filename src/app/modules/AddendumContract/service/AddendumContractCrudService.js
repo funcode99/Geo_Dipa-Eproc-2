@@ -47,19 +47,41 @@ export function submitFine(params, contract_id) {
   return axios.post(`/adendum/add-contract-fine/${contract_id}`, params);
 }
 
-export function submitGuarantee(params, contract_id) {
-  return axios.post(`/adendum/add-contract-guarantee/${contract_id}`, params);
+export async function submitGuarantee(params, contract_id) {
+  const res = await axios.post(
+    `/adendum/add-contract-guarantee/${contract_id}`,
+    params,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  // res.json();
 }
 
 export function submitAccountNumber(params, contract_id) {
   return axios.post(
     `/adendum/add-contract-account-number/${contract_id}`,
     params
+    // {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // }
   );
 }
 
 export function submitOther(params, contract_id) {
   return axios.post(`/adendum/add-contract-other/${contract_id}`, params);
+}
+
+export function submitSupportingDocument(params, contract_id) {
+  return axios.post(`/adendum/add-contracts/${contract_id}/submitted`, params, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 }
 
 // Tasks

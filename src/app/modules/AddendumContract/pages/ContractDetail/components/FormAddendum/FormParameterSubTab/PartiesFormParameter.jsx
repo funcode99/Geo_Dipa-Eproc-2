@@ -10,16 +10,18 @@ import NewWorkSupervisor from "../Components/Modal/Parties/NewWorkSupervisor";
 import NewSecondWorkDirector from "../Components/Modal/Parties/NewSecondWorkDirector";
 import NewSecondWorkSupervisor from "../Components/Modal/Parties/NewSecondWorkSupervisor";
 import NewClause from "../Components/Modal/NewClause";
+import { connect } from "react-redux";
 
 const PartiesFormParameter = ({
   jsonData,
-  authorizedOfficial,
+  authorizedOfficialData,
   secondAuthorizedOfficial,
   PICData,
   jobDirector,
   jobSupervisor,
   jobSupervisor2,
   contract_id,
+  dataNewClause,
 }) => {
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
@@ -348,6 +350,10 @@ const PartiesFormParameter = ({
     console.log("placeman sekarang", placeman);
   }, [placeman]);
 
+  const [authorizedOfficial, setAuthorizedOfficial] = useState(
+    authorizedOfficialData
+  );
+
   return (
     <>
       <NewWorkDirector
@@ -386,61 +392,150 @@ const PartiesFormParameter = ({
       <Formik
         enableReinitialize={true}
         initialValues={{
-          official_username: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]
-                ?.authorized_official_username
-            : null,
-          official_name: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]
-                ?.authorized_official_name
-            : null,
-          official_position: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]
-                ?.authorized_official_position
-            : null,
-          official_address: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]?.address
-            : null,
-          official_phone: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]?.phone
-            : null,
-          official_fax: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]?.fax
-            : null,
-          official_assignment_no: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_no
-            : null,
-          official_assignment_date: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_date
-            : null,
-          official_notary: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]
-                ?.name_notary_deed_of_authorized_official
-            : null,
-          official_deed_no: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]
-                ?.authorized_official_deed_no
-            : null,
-          official_deed_date: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]
-                ?.authorized_official_deed_date
-            : null,
-          official_sk_kemenkumham_no: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]
-                ?.authorized_official_sk_kemenkumham_no
-            : null,
-          official_sk_kemenkumham_date: authorizedOfficial
-            ? authorizedOfficial[authorizedOfficialIndex]
-                ?.authorized_official_sk_kemenkumham_date
-            : null,
+          official_username:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_username !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.authorized_official_username
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].authorized_official_username =
+                    "kosong";
+                  return newArr;
+                }),
+          official_name:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_name !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.authorized_official_name
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].authorized_official_name =
+                    "kosong";
+                  return newArr;
+                }),
+          official_position:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_position !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.authorized_official_position
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].authorized_official_position =
+                    "kosong";
+                  return newArr;
+                }),
+          official_address:
+            authorizedOfficial[authorizedOfficialIndex]?.address !== null
+              ? authorizedOfficial[authorizedOfficialIndex]?.address
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].address = "kosong";
+                  return newArr;
+                }),
+          official_phone:
+            authorizedOfficial[authorizedOfficialIndex]?.phone !== null
+              ? authorizedOfficial[authorizedOfficialIndex]?.phone
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].phone = "kosong";
+                  return newArr;
+                }),
+          official_fax:
+            authorizedOfficial[authorizedOfficialIndex]?.fax !== null
+              ? authorizedOfficial[authorizedOfficialIndex]?.fax
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].fax = "kosong";
+                  return newArr;
+                }),
+          official_assignment_no:
+            authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_no !==
+            null
+              ? authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_no
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].assignment_deed_no = "kosong";
+                  return newArr;
+                }),
+          official_assignment_date:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.assignment_deed_date !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.assignment_deed_date
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].assignment_deed_date =
+                    "kosong";
+                  return newArr;
+                }),
+          official_notary:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.name_notary_deed_of_authorized_official !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.name_notary_deed_of_authorized_official
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[
+                    authorizedOfficialIndex
+                  ].name_notary_deed_of_authorized_official = "kosong";
+                  return newArr;
+                }),
+          official_deed_no:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_deed_no !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.authorized_official_deed_no
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[authorizedOfficialIndex].authorized_official_deed_no =
+                    "kosong";
+                  return newArr;
+                }),
+          official_deed_date:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_deed_date !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.authorized_official_deed_date
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[
+                    authorizedOfficialIndex
+                  ].authorized_official_deed_date = "kosong";
+                  return newArr;
+                }),
+          official_sk_kemenkumham_no:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_sk_kemenkumham_no !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.authorized_official_sk_kemenkumham_no
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[
+                    authorizedOfficialIndex
+                  ].authorized_official_sk_kemenkumham_no = "kosong";
+                  return newArr;
+                }),
+          official_sk_kemenkumham_date:
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_sk_kemenkumham_date !== null
+              ? authorizedOfficial[authorizedOfficialIndex]
+                  ?.authorized_official_sk_kemenkumham_date
+              : setAuthorizedOfficial((previous) => {
+                  let newArr = [...previous];
+                  newArr[
+                    authorizedOfficialIndex
+                  ].authorized_official_sk_kemenkumham_date = "kosong";
+                  return newArr;
+                }),
           // firstAuthorizedOfficial: placeman.firstAuthorizedOfficial,
           jobDirector: placeman.workDirector,
           jobSupervisor: placeman.workSupervisor,
           secondAuthorizedOfficial: placeman?.secondAuthorizedOfficial,
           secondJobDirector: placeman.secondWorkDirector,
           secondJobSupervisor: placeman.secondWorkSupervisor,
-          // body_data: partiesBodyClauseData,
-          // attachment_data: partiesAttachmentClauseData,
+          body_data: dataNewClause.parties.bodyClauseData,
+          attachment_data: dataNewClause.parties.attachmentClauseData,
         }}
         onSubmit={(values) => {
           console.log("isi values parties", values);
@@ -1047,10 +1142,16 @@ const PartiesFormParameter = ({
                             backgroundColor: "#e8f4fb",
                           }}
                           value={
-                            authorizedOfficial
-                              ? authorizedOfficial[authorizedOfficialIndex]
-                                  ?.authorized_official_name
-                              : null
+                            authorizedOfficial[authorizedOfficialIndex]
+                              ?.authorized_official_name
+                            // :
+                            // setAuthorizedOfficial((previous) => {
+                            //     let newArr = [...previous];
+                            //     newArr[
+                            //       authorizedOfficialIndex
+                            //     ].authorized_official_name = "kosong";
+                            //     return newArr;
+                            //   })
                           }
                           disabled
                         />
@@ -1072,7 +1173,7 @@ const PartiesFormParameter = ({
                             authorizedOfficial
                               ? authorizedOfficial[authorizedOfficialIndex]
                                   ?.authorized_official_position
-                              : null
+                              : ""
                           }
                           className="form-control"
                           style={{ backgroundColor: "#e8f4fb" }}
@@ -1097,7 +1198,7 @@ const PartiesFormParameter = ({
                             authorizedOfficial
                               ? authorizedOfficial[authorizedOfficialIndex]
                                   ?.address
-                              : null
+                              : ""
                           }
                           style={{ backgroundColor: "#e8f4fb" }}
                           disabled
@@ -1121,7 +1222,7 @@ const PartiesFormParameter = ({
                             authorizedOfficial
                               ? authorizedOfficial[authorizedOfficialIndex]
                                   ?.phone
-                              : null
+                              : ""
                           }
                           style={{ backgroundColor: "#e8f4fb" }}
                           disabled
@@ -1144,7 +1245,7 @@ const PartiesFormParameter = ({
                           value={
                             authorizedOfficial
                               ? authorizedOfficial[authorizedOfficialIndex]?.fax
-                              : null
+                              : ""
                           }
                           style={{ backgroundColor: "#e8f4fb" }}
                           disabled
@@ -1171,10 +1272,17 @@ const PartiesFormParameter = ({
                           <input
                             type="text"
                             value={
-                              authorizedOfficial
-                                ? authorizedOfficial[authorizedOfficialIndex]
-                                    ?.assignment_deed_no
-                                : null
+                              // authorizedOfficial
+                              //   ?
+                              authorizedOfficial[authorizedOfficialIndex]
+                                ?.assignment_deed_no
+                              // : setAuthorizedOfficial((previous) => {
+                              //     let newArr = [...previous];
+                              //     newArr[
+                              //       authorizedOfficialIndex
+                              //     ].assignment_deed_no = "kosong";
+                              //     return newArr;
+                              //   })
                             }
                             className="form-control"
                             style={{
@@ -1186,10 +1294,18 @@ const PartiesFormParameter = ({
                           <input
                             type="date"
                             value={
-                              authorizedOfficial
-                                ? authorizedOfficial[authorizedOfficialIndex]
-                                    ?.assignment_deed_date
-                                : null
+                              // authorizedOfficial[authorizedOfficialIndex]
+                              //       ?.assignment_deed_date
+                              //   ?
+                              authorizedOfficial[authorizedOfficialIndex]
+                                ?.assignment_deed_date
+                              // : setAuthorizedOfficial((previous) => {
+                              //     let newArr = [...previous];
+                              //     newArr[
+                              //       authorizedOfficialIndex
+                              //     ].assignment_deed_date = "kosong";
+                              //     return newArr;
+                              //   })
                             }
                             className="form-control"
                             style={{
@@ -1216,7 +1332,7 @@ const PartiesFormParameter = ({
                             authorizedOfficial
                               ? authorizedOfficial[authorizedOfficialIndex]
                                   ?.name_notary_deed_of_authorized_official
-                              : null
+                              : ""
                           }
                           className="form-control"
                           style={{ backgroundColor: "#e8f4fb" }}
@@ -1247,7 +1363,7 @@ const PartiesFormParameter = ({
                               authorizedOfficial
                                 ? authorizedOfficial[authorizedOfficialIndex]
                                     ?.authorized_official_deed_no
-                                : null
+                                : ""
                             }
                             className="form-control"
                             style={{
@@ -1262,7 +1378,7 @@ const PartiesFormParameter = ({
                               authorizedOfficial
                                 ? authorizedOfficial[authorizedOfficialIndex]
                                     ?.authorized_official_deed_date
-                                : null
+                                : ""
                             }
                             className="form-control"
                             style={{
@@ -1296,7 +1412,7 @@ const PartiesFormParameter = ({
                               authorizedOfficial
                                 ? authorizedOfficial[authorizedOfficialIndex]
                                     ?.authorized_official_sk_kemenkumham_no
-                                : null
+                                : ""
                             }
                             className="form-control"
                             style={{
@@ -1311,7 +1427,7 @@ const PartiesFormParameter = ({
                               authorizedOfficial
                                 ? authorizedOfficial[authorizedOfficialIndex]
                                     ?.authorized_official_sk_kemenkumham_date
-                                : null
+                                : ""
                             }
                             className="form-control"
                             style={{
@@ -2874,4 +2990,10 @@ const PartiesFormParameter = ({
   );
 };
 
-export default PartiesFormParameter;
+// export default PartiesFormParameter;
+
+const mapState = (state) => ({
+  dataNewClause: state.addendumContract.dataNewClause,
+});
+
+export default connect(mapState, null)(PartiesFormParameter);

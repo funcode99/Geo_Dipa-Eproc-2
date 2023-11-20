@@ -127,24 +127,36 @@ const JobPriceFormParameter = ({
     }
   });
   const submitFormParameterJobPrice = (values) => {
-    submitJobPrice(
-      {
-        add_contract_id: jsonData?.add_contracts[0]?.id,
-        currency_id: currencies.count[currenciesIndex].id,
-        item: values.data,
-        body_clause_data: values.body_data,
-        attachment_clause_data: values.attachment_data,
-      },
-      contract_id
-    );
+    if (valueAfterAddendum === grandTotal) {
+      submitJobPrice(
+        {
+          add_contract_id: jsonData?.add_contracts[0]?.id,
+          currency_id: currencies.count[currenciesIndex].id,
+          item: values.data,
+          body_clause_data: values.body_data,
+          attachment_clause_data: values.attachment_data,
+        },
+        contract_id
+      );
+    } else {
+      alert(
+        "Jumlah rincian pekerjaan anda belum sama dengan nilai perjanjian setelah addendum!"
+      );
+    }
   };
-  let a = JSON.parse(localStorage.getItem("value_after_addendum"));
-
-  // let submitData = [];
+  let valueAfterAddendum = JSON.parse(
+    localStorage.getItem("value_after_addendum")
+  );
   const [item, setItem] = useState([]);
-  // const setItem = (data) => {
-  //   submitData = data;
-  // };
+
+  const [grandTotal, setGrandTotal] = useState(0);
+  useEffect(() => {
+    function sum(total, data) {
+      return total + Math.round(data.subtotal);
+    }
+    setGrandTotal(item?.reduce(sum, 0));
+    console.log("grandTotal", grandTotal);
+  }, [item]);
 
   return (
     <>
@@ -301,7 +313,7 @@ const JobPriceFormParameter = ({
                         decimalsLimit={2}
                         decimalSeparator=","
                         groupSeparator="."
-                        value={a}
+                        value={valueAfterAddendum}
                         disabled
                       />
                     </div>
@@ -381,10 +393,14 @@ const JobPriceFormParameter = ({
                         gap: 14,
                       }}
                     >
-                      <button className="btn btn-success text-white">
+                      <button
+                        type="button"
+                        className="btn btn-success text-white"
+                      >
                         + Harga Pekerjaan By Excel
                       </button>
                       <button
+                        type="button"
                         className="btn btn-primary text-white"
                         onClick={showAddDetail}
                       >
@@ -397,6 +413,7 @@ const JobPriceFormParameter = ({
                     openCloseAddDetail={openCloseAddDetail}
                     previousData={jsonData?.contract_items}
                     func={setItem}
+                    grandTotal={grandTotal}
                   />
                 </TableContainer>
               </div>

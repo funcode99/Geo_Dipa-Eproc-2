@@ -28,7 +28,7 @@ const CollapsibleRow = ({
   row,
   parentIndex,
 }) => {
-  console.log("isi row", row);
+  // console.log("isi row", row);
 
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
@@ -62,10 +62,14 @@ const CollapsibleRow = ({
           </div>
         </TableCell>
         <CustomTableCell {...{ row, name: "product_name", onChange }} />
-        <CustomTableCell {...{ row, name: "qty", onChange }} />
+        <CustomTableCell
+          {...{ row, name: "qty", onChange, isDisabled: true }}
+        />
         <CustomTableCell {...{ row, name: "uom", onChange }} />
         <CustomTableCell {...{ row, name: "unit_price", onChange }} />
-        <CustomTableCell {...{ row, name: "subtotal", onChange }} />
+        <CustomTableCell
+          {...{ row, name: "subtotal", onChange, isDisabled: true }}
+        />
         <CustomTableCell {...{ row, name: "note", onChange }} />
         {row.isEditMode ? (
           <TableCell>
