@@ -251,41 +251,36 @@ export const AddContractAddendum = ({
   };
 
   const submitSupportingData = (values) => {
-    // console.log("hasil submit values", values);
-    // const obj = {
-    //   hello: "world"
-    // };
-    // const json = JSON.stringify(obj);
-    // const blob = new Blob([json], {
-    //   type: 'application/json'
-    // });
-    // const data = new FormData();
-    // data.append("document", blob);
-    // axios({
-    //   method: 'post',
-    //   url: '/sample',
-    //   data: data,
-    // })
+    let data_new = new FormData();
+    // item.noDokumen
+    // item.tglDokumen
+    data_new.append("drafter_code", 1);
+    data_new.append("add_drafter", "Supply Chain Management (SCM) Division");
+    // data_new.append(`noDokumen[${index}]`, "");
+    // data_new.append(`tglDokumen[${index}]`, "");
+    // data_new.append(`fileDokumen[${index}]`, item.fileDokumen);
+    // data_new.append(`id[${index}]`, index);
+    // data_new.append(`seq[${index}]`, index);
+    // data_new.append(`tipeDokumen[${index}]`, index);
+    // data_new.append(`namaDokumen[${index}]`, index);
+    // data_new.append(`namaDokumenEng[${index}]`, index);
+    // data_new.append(`perihal[${index}]`, index);
 
-    // let forSubmit = [];
-    // values.supportDocumentData.map((item) => {
-    //   const json = JSON.stringify(item);
-    //   const blob = new Blob([json], {
-    //     type: "application/json",
-    //   });
-    //   const data = new FormData();
-    //   data.append("document", blob);
-    //   forSubmit.push(data);
-    // });
-    // console.log("forSubmit", forSubmit);
-    submitSupportingDocument(
-      {
-        drafter_code: 1,
-        add_drafter: "Supply Chain Management (SCM) Division",
-        add_support_document_data: values.supportDocumentData,
-      },
-      contract_id
-    );
+    console.log("isi dokumen", values.fileDokumen);
+
+    // data_new.append("id[0]", "12131141");
+    // data_new.append("seq[0]", "1");
+    // data_new.append("noDokumen[0]", "12131141");
+    // data_new.append("tglDokumen[0]", "2023-09-08");
+    // data_new.append("tipeDokumen[0]", "PERJANJIAN/SPK");
+    // data_new.append("fileDokumen[0]", values.fileDokumen);
+    // data_new.append("namaDokumen[0]", "Surat Permohonan Addendum dari Vendor");
+    // data_new.append("namaDokumenEng[0]", "Addendum Request Letter from Vendor");
+    // data_new.append("perihal[0]", "ini");
+    data_new.append("add_support_document_data", values.fileDokumen);
+    // values.supportDocumentData.map((item, index) => {});
+
+    submitSupportingDocument(data_new, contract_id);
   };
 
   let [linksGroup, setLinksGroup] = useState({
@@ -925,7 +920,9 @@ export const AddContractAddendum = ({
           >
             <Formik
               initialValues={{
-                supportDocumentData: supportingDocumentDefaultData,
+                // supportDocumentData: supportingDocumentDefaultData,
+                // documentFile: supportingDocumentDefault,
+                fileDokumen: "",
               }}
               onSubmit={(values) => {
                 // console.log("hasil dari formik", values);
@@ -989,7 +986,7 @@ export const AddContractAddendum = ({
                                     </p>
                                     <Field
                                       type="text"
-                                      name={`supportDocumentData[${index}].doc_num_field`}
+                                      name={`supportDocumentData[${index}].noDokumen`}
                                       style={{
                                         borderRadius: 4,
                                         padding: 8,
@@ -1011,7 +1008,7 @@ export const AddContractAddendum = ({
                                     </p>
                                     <Field
                                       type="date"
-                                      name={`supportDocumentData[${index}].date_field`}
+                                      name={`supportDocumentData[${index}].tglDokumen`}
                                       style={{
                                         borderRadius: 4,
                                         padding: 8,
@@ -1043,8 +1040,9 @@ export const AddContractAddendum = ({
                                       }}
                                       onChange={(event) => {
                                         setFieldValue(
-                                          `supportDocumentData[${index}].doc_upload_field`,
-                                          event.target.files[0]
+                                          // `supportDocumentData[${index}].fileDokumen`,
+                                          "fileDokumen",
+                                          event.currentTarget.files[0]
                                         );
                                       }}
                                     />

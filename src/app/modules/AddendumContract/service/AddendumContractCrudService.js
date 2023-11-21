@@ -1,7 +1,11 @@
 import axios from "axios";
 // import { DEV_NODE, DEV_RUBY } from '../../../../redux/BaseHost';
-export const URL = `http://172.18.1.112:3000/api/get-docs-deliverable/1/8000003554`;
+import store from "redux/store";
+const {
+  auth: { authToken },
+} = store.getState();
 
+export const URL = `http://172.18.1.112:3000/api/get-docs-deliverable/1/8000003554`;
 const TEMP_URL = `http://geo.abdmandhan.com`;
 
 export function dataBanksById() {
@@ -50,12 +54,12 @@ export function submitFine(params, contract_id) {
 export async function submitGuarantee(params, contract_id) {
   const res = await axios.post(
     `/adendum/add-contract-guarantee/${contract_id}`,
-    params,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
+    params
+    // {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // }
   );
   // res.json();
 }
@@ -64,11 +68,6 @@ export function submitAccountNumber(params, contract_id) {
   return axios.post(
     `/adendum/add-contract-account-number/${contract_id}`,
     params
-    // {
-    //   headers: {
-    //     "Content-Type": "multipart/form-data",
-    //   },
-    // }
   );
 }
 
@@ -76,12 +75,34 @@ export function submitOther(params, contract_id) {
   return axios.post(`/adendum/add-contract-other/${contract_id}`, params);
 }
 
-export function submitSupportingDocument(params, contract_id) {
-  return axios.post(`/adendum/add-contracts/${contract_id}/submitted`, params, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+export async function submitSupportingDocument(params, contract_id) {
+  return await axios.post(
+    `/adendum/add-contracts/${contract_id}/submitted`,
+    params,
+    {
+      headers: {
+        // "Content-Type": "multipart/form-data",
+        "Content-Type": "x-www-form-urlencoded",
+      },
+    }
+  );
+  // fetch(
+  //   `http://192.168.0.168:5000/adendum/add-contracts/${contract_id}/submitted`,
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer ${authToken}`,
+  //     },
+  //     method: "POST",
+  //     body: params,
+  //   }
+  // ).then((response) => response.json());
+  // let sendData = new Promise((resolve, reject) => {
+  // });
+  // sendData
+  //   .then((result) => {
+  //     console.log("submit result", result);
+  //   })
+  //   .catch((err) => console.log("submit error", err));
 }
 
 // Tasks

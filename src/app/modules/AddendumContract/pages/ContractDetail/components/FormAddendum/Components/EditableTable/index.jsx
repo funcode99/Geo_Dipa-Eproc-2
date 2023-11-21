@@ -53,7 +53,8 @@ const createChildData = (
   uom,
   unit_price,
   subtotal,
-  note
+  note,
+  row
 ) => ({
   id: product_name.replace(" ", "_"),
   product_name,
@@ -200,15 +201,33 @@ const EditableTable = ({
     });
   };
 
-  const onDeleteChildMode = (childId, index) => {
+  const onDeleteChildMode = (childIndex, index) => {
     // akhirnya bisa juga ngentiaw
     setRows((prev) => {
       const newState = prev;
-      const items = rows[index].item_detail.filter(
-        (variant) => variant.id !== childId
-      );
-      console.log("setelah filter", items);
-      newState[index].item_detail = items;
+      // const items = rows[index].item_detail.filter(
+      //   (variant) => variant.id !== childId
+      // );
+      newState[index].item_detail.splice(childIndex, 1);
+      // console.log("setelah filter", items);
+      // newState[index].item_detail = items;
+      let changedParentSubtotal = "";
+      let changedParentQuantity = "";
+      if (newState[index].item_detail) {
+        function sum(total, data) {
+          return total + Math.round(data.subtotal);
+        }
+        function sumQuantity(total, data) {
+          return total + Math.round(data.qty);
+        }
+        changedParentSubtotal = newState[index].item_detail.reduce(sum, 0);
+        changedParentQuantity = newState[index].item_detail.reduce(
+          sumQuantity,
+          0
+        );
+      }
+      newState[index].subtotal = changedParentSubtotal;
+      newState[index].qty = changedParentQuantity;
       return [...newState];
     });
   };
@@ -260,7 +279,7 @@ const EditableTable = ({
             ...row,
             item_detail: [
               ...row.item_detail,
-              createChildData("Item 1", 0, "mL", 0, 0, "Keterangan"),
+              createChildData("Item 1", 0, "mL", 0, 0, "Keterangan", row),
             ],
           };
         } else {
@@ -274,7 +293,8 @@ const EditableTable = ({
                 "L",
                 12000,
                 24000,
-                "isi keterangan"
+                "isi keterangan",
+                row
               ),
             ],
           };

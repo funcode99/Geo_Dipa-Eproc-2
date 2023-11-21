@@ -459,15 +459,19 @@ const FormParameter = ({
 
   // CLEAR!
   const submitFormParameterAccountNumber = (values) => {
-    submitAccountNumber(
-      {
-        add_contract_id: localStorage.getItem("add_contract_id"),
-        data_bank: values.data_bank,
-        body_clause_data: values.body_data,
-        attachment_clause_data: values.attachment_data,
-      },
-      contract_id
+    let data_new = new FormData();
+    data_new.append("add_contract_id", localStorage.getItem("add_contract_id"));
+    data_new.append("data_bank", JSON.stringify(values.data_bank));
+    data_new.append("bank_statement_file", values.bank_statement_file);
+    data_new.append("body_clause_data", JSON.stringify(values.body_data));
+    data_new.append(
+      "attachment_clause_data",
+      JSON.stringify(values.attachment_data)
     );
+    // for (let key in values) {
+    //   data_new.append(key, values[key]);
+    // }
+    submitAccountNumber(data_new, contract_id);
   };
 
   // CLEAR!
@@ -2645,6 +2649,7 @@ const FormParameter = ({
                 enableReinitialize={true}
                 initialValues={{
                   data_bank: accountNumber,
+                  bank_statement_file: "",
                   body_data: dataNewClause.account_number.bodyClauseData,
                   attachment_data:
                     dataNewClause.account_number.attachmentClauseData,
@@ -3004,9 +3009,13 @@ const FormParameter = ({
                                     width: "100%",
                                   }}
                                   onChange={(event) => {
+                                    console.log(
+                                      "isi currentTarget",
+                                      event.currentTarget.files
+                                    );
                                     setFieldValue(
-                                      `data_bank.bank_statement_file`,
-                                      event.target.files[0]
+                                      "bank_statement_file",
+                                      event.currentTarget.files[0]
                                     );
                                   }}
                                 />

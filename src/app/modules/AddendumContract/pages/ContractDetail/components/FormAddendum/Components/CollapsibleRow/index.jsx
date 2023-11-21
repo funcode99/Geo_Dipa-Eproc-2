@@ -216,7 +216,7 @@ const CollapsibleRow = ({
                 <ButtonAction
                   handleAction={(a, b, c) => {
                     if (c === "Hapus") {
-                      onDeleteChildMode(data.id, index);
+                      onDeleteChildMode(childIndex, index);
                     } else if (c === "Edit") {
                       onToggleEditChildMode(data.id, index);
                     }
