@@ -19,6 +19,7 @@ import SelectDateInput from "app/components/input/SelectDateInput";
 import TextAreaInput from "app/components/input/TextAreaInput";
 import RenderInput from "app/components/input/RenderInput";
 import { connect } from "react-redux";
+import Summary from "./Summary";
 
 // bentrok antara button mui & bootstrap
 
@@ -42,6 +43,13 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
   let isAdmin = getClientStatus();
 
   const TabLists = [
+    {
+      id: "summary",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+      label: "Summary",
+      // icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
+      addendum: true,
+    },
     {
       id: "kick-off",
       // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
@@ -1654,6 +1662,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
             />
           </div>
           {/* <FormParameter currentActiveTab={tabActive} /> */}
+          <Summary />
         </>
       )}
 
