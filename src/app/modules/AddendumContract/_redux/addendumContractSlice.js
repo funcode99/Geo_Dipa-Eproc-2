@@ -761,10 +761,7 @@ export const reducer = persistReducer(
                 ...state.dataNewClause,
                 other: {
                   ...state.dataNewClause.other,
-                  bodyClauseData: {
-                    ...state.dataNewClause.other.bodyClauseData,
-                    clause_number: action.payload,
-                  },
+                  bodyClauseData: action.payload,
                 },
               },
             };
@@ -775,10 +772,7 @@ export const reducer = persistReducer(
                 ...state.dataNewClause,
                 other: {
                   ...state.dataNewClause.other,
-                  bodyClauseData: {
-                    ...state.dataNewClause.other.bodyClauseData,
-                    before_clause_note: action.payload,
-                  },
+                  bodyClauseData: action.payload,
                 },
               },
             };
@@ -789,10 +783,7 @@ export const reducer = persistReducer(
                 ...state.dataNewClause,
                 other: {
                   ...state.dataNewClause.other,
-                  bodyClauseData: {
-                    ...state.dataNewClause.other.bodyClauseData,
-                    after_clause_note: action.payload,
-                  },
+                  bodyClauseData: action.payload,
                 },
               },
             };

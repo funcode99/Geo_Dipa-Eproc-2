@@ -28,6 +28,7 @@ const PerubahanKlausulKontrak = ({
       payload: newArr,
       fieldType: fieldType,
       fieldIndex: fieldIndex,
+      fromWhere: fromWhere,
     });
   };
 
@@ -51,6 +52,8 @@ const PerubahanKlausulKontrak = ({
       payload: newArr,
       fieldType: fieldType,
       fieldIndex: fieldIndex,
+      // LUPA PAKE FROMWHERE CUK!
+      fromWhere: fromWhere,
     });
   };
 

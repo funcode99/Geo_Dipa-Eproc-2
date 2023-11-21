@@ -65,6 +65,8 @@ function ItemContractPaid(props) {
   const initialValues = {
     paid_date: "",
     term_id: termin,
+    // kenapa di initialValues nya gak ada file? tapi bisa masuk?
+    // file: null ?????
   };
 
   const PaymentSchema = Yup.object().shape({
@@ -147,14 +149,14 @@ function ItemContractPaid(props) {
   const getContractData = useCallback(() => {
     getTerminPaid(termin)
       .then((response) => {
-
         setContractData(response.data.data);
         if (response.data.data?.paid_date) {
           formik.setFieldValue("paid_date", response.data.data.paid_date);
           formik.setTouched({ ...formik.touched, paid_date: true });
         }
 
-        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
+        if (response?.data?.data?.currency_code)
+          setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -181,23 +183,26 @@ function ItemContractPaid(props) {
         }
       })
       .catch((error) => {
-        
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   }, [termin, intl, setToast]);
 
   const getInvoiceProgressData = useCallback(() => {
-    getInvoiceProgress(termin).then((response) => {
-      if(!response?.data?.data) return;
+    getInvoiceProgress(termin)
+      .then((response) => {
+        if (!response?.data?.data) return;
 
-      const responseData = response?.data?.data;
-      const parkByr = responseData.data.find((item) => item.ident_name === "PARK_BAYAR");
-      // const paid = responseData.data.find((item) => item.ident_name === "PAID");
+        const responseData = response?.data?.data;
+        const parkByr = responseData.data.find(
+          (item) => item.ident_name === "PARK_BAYAR"
+        );
+        // const paid = responseData.data.find((item) => item.ident_name === "PAID");
 
-      setpayedStatus(parkByr?.status === "COMPLETE");
-    }).catch((err) => {
-      setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
-    })
+        setpayedStatus(parkByr?.status === "COMPLETE");
+      })
+      .catch((err) => {
+        setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
+      });
   }, [termin, intl, setToast]);
 
   useEffect(getInvoiceProgressData, []);
@@ -264,7 +269,10 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData?.total_amount || 0)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.total_amount || 0
+                      )}
                       disabled
                     />
                   </div>
@@ -281,7 +289,10 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceStep1"
-                      defaultValue={formatCurrency(currencyCode, contractData?.termin_value || 0)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.termin_value || 0
+                      )}
                       disabled
                     />
                   </div>
@@ -299,7 +310,10 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      defaultValue={formatCurrency(currencyCode, contractData?.termin_net_value || 0)}
+                      defaultValue={formatCurrency(
+                        currencyCode,
+                        contractData?.termin_net_value || 0
+                      )}
                       disabled
                     />
                   </div>
@@ -319,7 +333,10 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={formatCurrency(currencyCode, contractData?.penalty || 0)}
+                      value={formatCurrency(
+                        currencyCode,
+                        contractData?.penalty || 0
+                      )}
                       disabled
                     />
                   </div>
@@ -337,7 +354,10 @@ function ItemContractPaid(props) {
                       type="text"
                       className="form-control"
                       id="priceContract"
-                      value={formatCurrency(currencyCode, contractData?.tax_value || 0)}
+                      value={formatCurrency(
+                        currencyCode,
+                        contractData?.tax_value || 0
+                      )}
                       disabled
                     />
                   </div>
@@ -418,7 +438,7 @@ function ItemContractPaid(props) {
                 (formik.touched && !formik.isValid) ||
                 !taxStaffStatus ||
                 statusPaidNoStarted > 0 ||
-                !isEmpty(contractData?.file) || 
+                !isEmpty(contractData?.file) ||
                 !payedStatus
               }
             >

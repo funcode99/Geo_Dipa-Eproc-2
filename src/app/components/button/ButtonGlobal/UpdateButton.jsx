@@ -17,6 +17,7 @@ const UpdateButton = ({ dataNewClause, fromWhere }) => {
     >
       <button
         type="submit"
+        // tidak menerima komentar wkwk, auto ga jalan atribut nya
         disabled={
           dataNewClause[fromWhere].attachmentClauseData[0].attachment_number ===
             "" ||
@@ -24,6 +25,8 @@ const UpdateButton = ({ dataNewClause, fromWhere }) => {
           dataNewClause[fromWhere].bodyClauseData.after_clause_note === "" ||
           dataNewClause[fromWhere].bodyClauseData.before_clause_note === "" ||
           dataNewClause[fromWhere].bodyClauseData.clause_number === ""
+          // ? "#8c8a8a"
+          // : "#3699ff"
         }
         style={{
           color: "white",
@@ -56,4 +59,4 @@ const mapState = ({ addendumContract }) => ({
   dataNewClause: addendumContract.dataNewClause,
 });
 
-export default compose(withRouter, connect(mapState, null))(UpdateButton);
+export default connect(mapState, null)(UpdateButton);

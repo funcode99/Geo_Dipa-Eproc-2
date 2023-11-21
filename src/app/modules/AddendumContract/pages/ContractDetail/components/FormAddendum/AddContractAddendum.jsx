@@ -21,8 +21,9 @@ import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 
 import SVG from "react-inlinesvg";
 import { Col, Row } from "react-bootstrap";
-import { Formik, Field, FieldArray } from "formik";
+import { Formik, Form, Field, FieldArray, useFormikContext } from "formik";
 import { Grid } from "@material-ui/core";
+import { submitSupportingDocument } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 // import { FormStepper } from "./FormStepper";
 
 // import { Card, CardBody } from "_metronic/_partials/controls";
@@ -43,6 +44,8 @@ import { DUMMY_STEPPER_CONTRACT } from "app/modules/AddendumContract/pages/Termi
 
 import { fetch_api_sg } from "redux/globalReducer";
 
+// const { setFieldValue } = useFormikContext;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -53,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 650,
   },
 }));
+
+const handleChange = (e) => {
+  console.log("isi upload", e.target.value, e.target.files[0]);
+};
 
 // const TabLists = [
 
@@ -243,6 +250,39 @@ export const AddContractAddendum = ({
     }
   };
 
+  const submitSupportingData = (values) => {
+    let data_new = new FormData();
+    // item.noDokumen
+    // item.tglDokumen
+    data_new.append("drafter_code", 1);
+    data_new.append("add_drafter", "Supply Chain Management (SCM) Division");
+    // data_new.append(`noDokumen[${index}]`, "");
+    // data_new.append(`tglDokumen[${index}]`, "");
+    // data_new.append(`fileDokumen[${index}]`, item.fileDokumen);
+    // data_new.append(`id[${index}]`, index);
+    // data_new.append(`seq[${index}]`, index);
+    // data_new.append(`tipeDokumen[${index}]`, index);
+    // data_new.append(`namaDokumen[${index}]`, index);
+    // data_new.append(`namaDokumenEng[${index}]`, index);
+    // data_new.append(`perihal[${index}]`, index);
+
+    console.log("isi dokumen", values.fileDokumen);
+
+    // data_new.append("id[0]", "12131141");
+    // data_new.append("seq[0]", "1");
+    // data_new.append("noDokumen[0]", "12131141");
+    // data_new.append("tglDokumen[0]", "2023-09-08");
+    // data_new.append("tipeDokumen[0]", "PERJANJIAN/SPK");
+    // data_new.append("fileDokumen[0]", values.fileDokumen);
+    // data_new.append("namaDokumen[0]", "Surat Permohonan Addendum dari Vendor");
+    // data_new.append("namaDokumenEng[0]", "Addendum Request Letter from Vendor");
+    // data_new.append("perihal[0]", "ini");
+    data_new.append("add_support_document_data", values.fileDokumen);
+    // values.supportDocumentData.map((item, index) => {});
+
+    submitSupportingDocument(data_new, contract_id);
+  };
+
   let [linksGroup, setLinksGroup] = useState({
     documentname: "document",
     documentnumber: "012345",
@@ -361,6 +401,10 @@ export const AddContractAddendum = ({
           // addendum_percentage: res.data.addendum_percentage,
           // conclusion: res.data.conclusion,
         });
+        localStorage.setItem(
+          "fine",
+          JSON.stringify(res?.data?.penalty_fine_data)
+        );
         localStorage.setItem(
           "time_period",
           JSON.stringify({
@@ -876,207 +920,222 @@ export const AddContractAddendum = ({
           >
             <Formik
               initialValues={{
-                initialSupportingData: [],
-                additionalSupportingData: [],
+                // supportDocumentData: supportingDocumentDefaultData,
+                // documentFile: supportingDocumentDefault,
+                fileDokumen: "",
+              }}
+              onSubmit={(values) => {
+                // console.log("hasil dari formik", values);
+                submitSupportingData(values);
               }}
             >
-              {() => {
+              {(props) => {
+                const { setFieldValue } = props;
+
                 return (
                   <>
-                    <h1
-                      style={{
-                        fontSize: 16,
-                        fontWeight: 600,
-                        color: "#2e1f22",
-                      }}
-                    >
-                      A. Dokumen Pendukung
-                    </h1>
-                    {/* <SupportingDocumentInput
-                      title={supportingDocumentDefault}
-                    /> */}
+                    <Form>
+                      <h1
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 600,
+                          color: "#2e1f22",
+                        }}
+                      >
+                        A. Dokumen Pendukung
+                      </h1>
 
-                    {supportingDocumentDefaultData &&
-                      supportingDocumentDefaultData.map((item, index) => {
-                        return (
-                          <>
-                            <h1
-                              style={{
-                                fontSize: 14,
-                                fontWeight: 500,
-                                marginTop: 14,
-                              }}
-                            >
-                              {index + 1} {item.name}
-                            </h1>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 14,
-                              }}
-                            >
+                      {supportingDocumentDefaultData &&
+                        supportingDocumentDefaultData.map((item, index) => {
+                          return (
+                            <>
+                              <h1
+                                style={{
+                                  fontSize: 14,
+                                  fontWeight: 500,
+                                  marginTop: 14,
+                                }}
+                              >
+                                {index + 1} {item.name}
+                              </h1>
                               <div
                                 style={{
                                   display: "flex",
-                                  columnGap: 28,
-                                  flexWrap: "wrap",
+                                  flexDirection: "column",
+                                  gap: 14,
                                 }}
                               >
                                 <div
                                   style={{
-                                    flex: 1,
+                                    display: "flex",
+                                    columnGap: 28,
+                                    flexWrap: "wrap",
                                   }}
                                 >
-                                  <p
+                                  <div
                                     style={{
-                                      marginBottom: 4,
+                                      flex: 1,
                                     }}
                                   >
-                                    No Dokumen
-                                  </p>
-                                  <input
-                                    type="text"
+                                    <p
+                                      style={{
+                                        marginBottom: 4,
+                                      }}
+                                    >
+                                      No Dokumen
+                                    </p>
+                                    <Field
+                                      type="text"
+                                      name={`supportDocumentData[${index}].noDokumen`}
+                                      style={{
+                                        borderRadius: 4,
+                                        padding: 8,
+                                        width: "100%",
+                                      }}
+                                    />
+                                  </div>
+                                  <div
                                     style={{
-                                      borderRadius: 4,
-                                      padding: 8,
-                                      width: "100%",
-                                    }}
-                                  />
-                                </div>
-                                <div
-                                  style={{
-                                    flex: 1,
-                                  }}
-                                >
-                                  <p
-                                    style={{
-                                      marginBottom: 4,
-                                    }}
-                                  >
-                                    Tanggal Dokumen
-                                  </p>
-                                  <input
-                                    type="date"
-                                    style={{
-                                      borderRadius: 4,
-                                      padding: 8,
-                                      width: "100%",
-                                    }}
-                                  />
-                                </div>
-                                <div
-                                  style={{
-                                    flex: 1,
-                                  }}
-                                >
-                                  <p
-                                    style={{
-                                      marginBottom: 4,
+                                      flex: 1,
                                     }}
                                   >
-                                    Upload Dokumen
-                                  </p>
-                                  <input
-                                    type="file"
+                                    <p
+                                      style={{
+                                        marginBottom: 4,
+                                      }}
+                                    >
+                                      Tanggal Dokumen
+                                    </p>
+                                    <Field
+                                      type="date"
+                                      name={`supportDocumentData[${index}].tglDokumen`}
+                                      style={{
+                                        borderRadius: 4,
+                                        padding: 8,
+                                        width: "100%",
+                                      }}
+                                    />
+                                  </div>
+                                  <div
                                     style={{
-                                      border: 1,
-                                      borderColor: "black",
-                                      borderStyle: "solid",
-                                      borderRadius: 4,
-                                      padding: 8,
-                                      width: "100%",
+                                      flex: 1,
                                     }}
-                                  />
+                                  >
+                                    <p
+                                      style={{
+                                        marginBottom: 4,
+                                      }}
+                                    >
+                                      Upload Dokumen
+                                    </p>
+                                    <input
+                                      type="file"
+                                      style={{
+                                        border: 1,
+                                        borderColor: "black",
+                                        borderStyle: "solid",
+                                        borderRadius: 4,
+                                        padding: 8,
+                                        width: "100%",
+                                      }}
+                                      onChange={(event) => {
+                                        setFieldValue(
+                                          // `supportDocumentData[${index}].fileDokumen`,
+                                          "fileDokumen",
+                                          event.currentTarget.files[0]
+                                        );
+                                      }}
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                              <div>
                                 <div>
-                                  <p
-                                    style={{
-                                      marginBottom: 4,
-                                    }}
-                                  >
-                                    Perihal
-                                  </p>
-                                  <textarea
-                                    onChange={(e) => {
-                                      // console.log("isi event textarea", e.target);
-                                      resizeTextArea(e.target);
-                                    }}
-                                    style={{
-                                      maxHeight: 160,
-                                      width: "100%",
-                                      padding: 8,
-                                    }}
-                                  ></textarea>
+                                  <div>
+                                    <p
+                                      style={{
+                                        marginBottom: 4,
+                                      }}
+                                    >
+                                      Perihal
+                                    </p>
+                                    <textarea
+                                      onChange={(e) => {
+                                        resizeTextArea(e.target);
+                                      }}
+                                      style={{
+                                        maxHeight: 160,
+                                        width: "100%",
+                                        padding: 8,
+                                      }}
+                                    ></textarea>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </>
-                        );
-                      })}
+                            </>
+                          );
+                        })}
 
-                    <div className="mt-5">
-                      <p
-                        className="mb-0"
-                        style={{
-                          color: "#2e1f22",
-                          fontSize: 14,
-                          fontWeight: 500,
-                        }}
-                      >
-                        Permintaan Penerbitan Draft Addendum Kepada:
-                      </p>
-                      <select
-                        style={{
-                          padding: "10px 12px",
-                          fontSize: 12,
-                          backgroundColor: "#e8f4fb",
-                          borderRadius: 4,
-                        }}
-                        value={"Supply Chain Management (SCM) Division"}
-                      >
-                        <option
-                        // style={{
-                        //   padding: '10px 12px',
-                        //   fontSize: 12,
-                        //   backgroundColor: '#e8f4fb',
-                        //   borderRadius: 4
-                        // }}
+                      <div className="mt-5">
+                        <p
+                          className="mb-0"
+                          style={{
+                            color: "#2e1f22",
+                            fontSize: 14,
+                            fontWeight: 500,
+                          }}
                         >
-                          Supply Chain Management (SCM) Division
-                        </option>
-                        <option>Corporate Legal & Compliance Division</option>
-                        <option>Pengguna (Direksi Pekerjaan)</option>
-                      </select>
-                    </div>
+                          Permintaan Penerbitan Draft Addendum Kepada:
+                        </p>
+                        <select
+                          style={{
+                            padding: "10px 12px",
+                            fontSize: 12,
+                            backgroundColor: "#e8f4fb",
+                            borderRadius: 4,
+                          }}
+                          value={"Supply Chain Management (SCM) Division"}
+                        >
+                          <option
+                          // style={{
+                          //   padding: '10px 12px',
+                          //   fontSize: 12,
+                          //   backgroundColor: '#e8f4fb',
+                          //   borderRadius: 4
+                          // }}
+                          >
+                            Supply Chain Management (SCM) Division
+                          </option>
+                          <option>Corporate Legal & Compliance Division</option>
+                          <option>Pengguna (Direksi Pekerjaan)</option>
+                        </select>
+                      </div>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        gap: 28,
-                        padding: "2rem 2.25rem",
-                      }}
-                    >
-                      <Button
-                        className="text-primary btn btn-white border border-primary"
+                      <div
                         style={{
-                          minWidth: 100,
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          gap: 28,
+                          padding: "2rem 2.25rem",
                         }}
                       >
-                        Save Draft
-                      </Button>
-                      <Button
-                        style={{
-                          minWidth: 100,
-                        }}
-                        // onClick={() => TabLists.length-1 ? setTabActive(tabActive+1) : setTabActive(tabActive) }
-                      >
-                        Submit
-                      </Button>
-                    </div>
+                        <Button
+                          className="text-primary btn btn-white border border-primary"
+                          style={{
+                            minWidth: 100,
+                          }}
+                        >
+                          Save Draft
+                        </Button>
+                        <Button
+                          type="submit"
+                          style={{
+                            minWidth: 100,
+                          }}
+                          // onClick={() => TabLists.length-1 ? setTabActive(tabActive+1) : setTabActive(tabActive) }
+                        >
+                          Submit
+                        </Button>
+                      </div>
+                    </Form>
                   </>
                 );
               }}
