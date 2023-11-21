@@ -1,5 +1,5 @@
 import React from "react";
-import { useCollapse } from "react-collapsed";
+import useCollapse from "react-collapsed";
 import { TableCell, TableRow } from "@material-ui/core";
 
 import ButtonAction from "app/components/buttonAction/ButtonAction";
@@ -11,6 +11,8 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import CustomTableCell from "../CustomTableCell";
+
+// const { useCollapse } = require("react-collapsed");
 
 const CollapsibleRow = ({
   classes,
