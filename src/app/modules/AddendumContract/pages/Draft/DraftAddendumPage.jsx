@@ -22,10 +22,16 @@ import RenderInput from "app/components/input/RenderInput";
 import { connect } from "react-redux";
 import Summary from "./Summary";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
+import { FormattedMessage } from "react-intl";
 
 // bentrok antara button mui & bootstrap
 
-const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) => {
+const DraftAddendumPage = ({
+  loadings,
+  fetch_api_sg,
+  loginStatus,
+  rolesEproc,
+}) => {
   const [inputValue, setInputValue] = useState("Upload File");
   const [tabActive, setTabActive] = React.useState(0);
   const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0);
@@ -37,13 +43,13 @@ const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) 
   const [contract, setContract] = useState({});
   const { draft_id } = useParams();
 
-  // const getClientStatus = () => {
-  //   const client_role = "ADMIN_CONTRACT";
-  //   const filteredData = rolesEproc?.filter(
-  //     ({ ident_name }) => ident_name === client_role
-  //   );
-  //   return !!filteredData?.length > 0;
-  // };
+  const getClientStatus = () => {
+    const client_role = "ADMIN_CONTRACT";
+    const filteredData = rolesEproc?.filter(
+      ({ ident_name }) => ident_name === client_role
+    );
+    return !!filteredData?.length > 0;
+  };
 
   const getAddendum = async () => {
     fetch_api_sg({
@@ -57,13 +63,12 @@ const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) 
     });
   };
 
-  console.log({loadings});
 
   useEffect(() => {
     getAddendum();
   }, []);
 
-  let isAdmin = false;//getClientStatus();
+  let isAdmin = getClientStatus();
 
   const TabLists = [
     {
@@ -1410,7 +1415,7 @@ const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) 
                   id="po_number"
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
-                  value={contract?.purch_order_no}
+                  value={contract?.purch_order?.po_sap}
                 />
               </div>
               <div className="form-group row">
@@ -1428,7 +1433,7 @@ const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) 
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={"Isi format perjanjian"}
+                  value={contract?.contract_format?.name}
                 />
               </div>
               <div className="form-group row">
@@ -1503,9 +1508,7 @@ const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) 
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={
-                    contract?.contract_name
-                  }
+                  value={contract?.contract_name}
                 />
               </div>
               <div className="form-group row">
@@ -1523,9 +1526,7 @@ const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) 
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={
-                    "Pengadaan Material Gasket Spiral Wound & Rupture Disk"
-                  }
+                  value={contract?.purch_order?.name}
                 />
               </div>
               <div className="form-group row">
@@ -1685,7 +1686,11 @@ const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) 
             />
           </div>
           {/* <FormParameter currentActiveTab={tabActive} /> */}
-          {!loadings.getAddendumDetail && <Summary data={data} />}
+          {!loadings.getAddendumDetail ? (
+            <Summary data={data} />
+          ) : (
+            <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+          )}
         </>
       )}
 
@@ -4114,8 +4119,8 @@ const DraftAddendumPage = ({ loadings, fetch_api_sg, loginStatus, rolesEproc }) 
 };
 
 const keys = {
-  getAddendumDetail: "get-addendum-contract-by-id "
-}
+  getAddendumDetail: "get-addendum-contract-by-id ",
+};
 const mapState = (state) => ({
   loadings: {
     getAddendumDetail: getLoading(state, keys.getAddendumDetail),

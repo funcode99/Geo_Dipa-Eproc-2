@@ -4,17 +4,14 @@ import { rupiah } from "app/libs/currency";
 import SVG from "react-inlinesvg";
 import moment from "moment";
 import { toAbsoluteUrl } from "_metronic/_helpers";
+import { DEV_NODE } from "redux/BaseHost";
 
 const Summary = ({ data }) => {
   return (
     <div className="bg-white p-10">
       <h4 className="mb-2">A. Addendum jangka waktu</h4>
       <div className="mb-5">
-        {moment(data?.add_contract_time_period?.worked_end_date).format(
-          "DD/MMM/yyyy"
-        )}
-
-        {/* TODO: need to check right json object */}
+        {moment(data?.add_request_date).format("DD/MMM/yyyy")}
       </div>
       <h4 className="mb-2">B. Perihal Addendum</h4>
       <Row className="mb-5">
@@ -150,14 +147,13 @@ const Summary = ({ data }) => {
             <span className="mr-2">
               {i + 1}. {document?.namaDokumen}
             </span>
-            {/* <small>
-              diupload :{" "}
-              {moment("2023-11-16T18:41:41.000Z").format("DD MMM yyyy hh:mm")}
-            </small> */}
-            {/* TODO: need to check upload or submit date */}
+            <small>
+              diupload :
+              {moment(document?.tglUploadDokumen).format("DD MMM yyyy hh:mm")}
+            </small>
           </div>
 
-          <Row className="mb-3">
+          <Row className="ml-3 mb-3">
             <Col md={4}>
               <div className="mb-3">
                 <b className="d-block">No Dokumen</b>
@@ -175,9 +171,14 @@ const Summary = ({ data }) => {
             <Col md={4}>
               <div className="mb-3">
                 <b className="d-block">Upload Dokumen</b>
-                {/* TODO: change url */}
                 <a
-                  href={document?.fileDokumen}
+                  onClick={() => {
+                    window.open(
+                      `${DEV_NODE}/support_document/${document?.fileDokumen}`,
+                      "_blank"
+                    );
+                  }}
+                  href="/#"
                   className="overflow-hidden d-flex align-items-center"
                 >
                   <SVG
@@ -205,7 +206,7 @@ const Summary = ({ data }) => {
       <div className="mb-5">{data?.add_drafter || "-"}</div>
       <h4 className="mb-2">F. Catatan Addendum (Opsional)</h4>
       <div className="mb-5">
-        <textarea className="form-control">
+        <textarea className="form-control" disabled>
           {data?.request_note || "-"}
         </textarea>
       </div>
