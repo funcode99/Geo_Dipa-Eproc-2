@@ -1,62 +1,93 @@
-import React, { useState, useRef, useEffect } from "react";
-import { connect } from "react-redux";
+import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { rupiah } from "app/libs/currency";
 import SVG from "react-inlinesvg";
 import moment from "moment";
 import { toAbsoluteUrl } from "_metronic/_helpers";
 
-const Summary = ({ loginStatus, rolesEproc }) => {
-  // const get = async () => {
-  //     fetch_api_sg({
-  //       key: keys.fetch,
-  //       type: "get",
-  //       url: `/adendum/refference/get-all-pinalties`,
-  //       onSuccess: (res) => {
-  //         setDataArr(
-  //           res.data.map((item) => ({
-  //             id: item.id,
-  //             name: item.pinalty_name,
-  //           }))
-  //         );
-  //       },
-  //     });
-  //   };
-
-  useEffect(() => {}, []);
+const Summary = ({ data }) => {
   return (
     <div className="bg-white p-10">
       <h4 className="mb-2">A. Addendum jangka waktu</h4>
       <div className="mb-5">
-        {moment("2023-11-16T18:41:41.000Z").format("DD/MMM/yyyy")}
+        {moment(data?.add_contract_time_period?.worked_end_date).format(
+          "DD/MMM/yyyy"
+        )}
+
+        {/* TODO: need to check right json object */}
       </div>
       <h4 className="mb-2">B. Perihal Addendum</h4>
       <Row className="mb-5">
         <Col md={3}>
-          <Form.Check className="mb-3" label={"Data Para Pihak"} disabled />
+          <Form.Check
+            className="mb-3"
+            label={"Data Para Pihak"}
+            checked={data?.is_add_parties}
+            disabled
+          />
         </Col>
         <Col md={3}>
-          <Form.Check className="mb-3" label={"Metode Pembayaran"} disabled />
+          <Form.Check
+            className="mb-3"
+            label={"Metode Pembayaran"}
+            checked={data?.is_add_payment_method}
+            disabled
+          />
         </Col>
         <Col md={3}>
-          <Form.Check className="mb-3" label={"Denda"} disabled />
+          <Form.Check
+            className="mb-3"
+            label={"Denda"}
+            checked={data?.is_add_fine}
+            disabled
+          />
         </Col>
         <Col md={3}>
-          <Form.Check className="mb-3" label={"Nomor Rekening"} disabled />
+          <Form.Check
+            className="mb-3"
+            label={"Nomor Rekening"}
+            checked={data?.is_add_account_number}
+            disabled
+          />
         </Col>
         <Col md={3}>
-          <Form.Check className="mb-3" label={"Harga Pekerjaan"} disabled />
+          <Form.Check
+            className="mb-3"
+            label={"Harga Pekerjaan"}
+            checked={data?.is_add_job_price}
+            disabled
+          />
         </Col>
         <Col md={3}>
-          <Form.Check className="mb-3" label={"Jangka Waktu"} disabled />
+          <Form.Check
+            className="mb-3"
+            label={"Jangka Waktu"}
+            checked={data?.is_add_time_period}
+            disabled
+          />
         </Col>
         <Col md={3}>
-          <Form.Check className="mb-3" label={"Jaminan"} disabled />
+          <Form.Check
+            className="mb-3"
+            label={"Jaminan"}
+            checked={data?.is_add_guarantee}
+            disabled
+          />
         </Col>
         <Col md={12}>
           <div className="d-flex align-items-center mb-3">
-            <Form.Check className="mr-2" label={"Harga Pekerjaan"} disabled />
-            <input placeholder="Masukkan perihal addendum lainnya" disabled />
+            <Form.Check
+              className="mr-2"
+              label={"Harga Pekerjaan"}
+              checked={data?.other_note}
+              disabled
+            />
+            <input
+              className="form-control col-4"
+              value={data?.other_note}
+              placeholder="Masukkan perihal addendum lainnya"
+              disabled
+            />
           </div>
         </Col>
       </Row>
@@ -64,81 +95,106 @@ const Summary = ({ loginStatus, rolesEproc }) => {
 
       <Row className="mb-3">
         <Col md={6}>Harga Pekerjaan Awal</Col>
-        <Col md={6}>{rupiah(7422000000)}</Col>
+        <Col md={6}>
+          {data?.initial_job_price ? rupiah(data?.initial_job_price * 1) : "-"}
+        </Col>
       </Row>
       <Row className="mb-3">
         <Col md={6}>Harga Pekerjaan Addendum Terakhir</Col>
-        <Col md={6}>{rupiah(0)}</Col>
+        <Col md={6}>
+          {data?.latest_addendum_job_price
+            ? rupiah(data?.latest_addendum_job_price * 1)
+            : "-"}
+        </Col>
       </Row>
       <Row className="mb-3">
         <Col md={6}>Penambahan Harga Pekerjaan</Col>
-        <Col md={6}>{rupiah(0)}</Col>
+        <Col md={6}>
+          {data?.increase_job_price
+            ? rupiah(data?.increase_job_price * 1)
+            : "-"}
+        </Col>
       </Row>
       <Row className="mb-3">
         <Col md={6}>Pengurangan Harga Pekerjaan</Col>
-        <Col md={6}>{rupiah(0)}</Col>
+        <Col md={6}>
+          {data?.decrease_job_price
+            ? rupiah(data?.decrease_job_price * 1)
+            : "-"}
+        </Col>
       </Row>
       <Row className="mb-3">
         <Col md={6}>Harga Pekerjaan Setelah Addendum</Col>
-        <Col md={6}>{rupiah(0)}</Col>
+        <Col md={6}>
+          {data?.after_addendum_job_price
+            ? rupiah(data?.after_addendum_job_price * 1)
+            : "-"}
+        </Col>
       </Row>
       <Row className="mb-3">
         <Col md={6}>Persentase Addendum</Col>
-        <Col md={6}>2%</Col>
+        <Col md={6}>{data?.addendum_percentage || 0}%</Col>
       </Row>
-      <Row className="mb-3">
+      <Row className="mb-5">
         <Col md={6}>Kesimpulan</Col>
-        <Col md={6}>
-          Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal
-        </Col>
+        <Col md={6}>{data?.conclusion || "-"}</Col>
       </Row>
 
       <h4 className="mb-2">D. Dokumen Pendukung</h4>
-      {[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}].map((document, i) => (
+      {!data?.add_support_document_data && (
+        <div className="mb-3">Dokumen kosong</div>
+      )}
+      {data?.add_support_document_data?.map((document, i) => (
         <>
-          <div className="d-flex align-items-center mb-3">
+          <div className="d-flex align-items-center mb-2">
             <span className="mr-2">
-              {i + 1}. Surat Permohonan Addendum dari Pihak Kedua
+              {i + 1}. {document?.namaDokumen}
             </span>
-            <small>
+            {/* <small>
               diupload :{" "}
               {moment("2023-11-16T18:41:41.000Z").format("DD MMM yyyy hh:mm")}
-            </small>
+            </small> */}
+            {/* TODO: need to check upload or submit date */}
           </div>
 
-          <Row className="mb-5">
+          <Row className="mb-3">
             <Col md={4}>
               <div className="mb-3">
                 <b className="d-block">No Dokumen</b>
-                <span>017.SPV/PST.100-GDE/I/2023</span>
+                <span>{document?.noDokumen}</span>
               </div>
             </Col>
             <Col md={4}>
               <div className="mb-3">
                 <b className="d-block">Tanggal Dokumen</b>
                 <span>
-                  {moment("2023-11-16T18:41:41.000Z").format("DD/MMM/yyyy")}
+                  {moment(document?.tglDokumen).format("DD/MMM/yyyy")}
                 </span>
               </div>
             </Col>
             <Col md={4}>
               <div className="mb-3">
                 <b className="d-block">Upload Dokumen</b>
-                <a href="#" className="d-flex align-items-center">
+                {/* TODO: change url */}
+                <a
+                  href={document?.fileDokumen}
+                  className="overflow-hidden d-flex align-items-center"
+                >
                   <SVG
                     src={toAbsoluteUrl(
                       "/media/svg/icons/files/PDF_download.svg"
                     )}
+                    style={{ flex: "none" }}
                     className="mr-2"
                   />
-                  <span>PADD_Surat Permohonan Addendum .pdf</span>
+                  <span className="text-truncate">{document?.fileDokumen}</span>
                 </a>
               </div>
             </Col>
             <Col md={4}>
               <div className="mb-3">
                 <b className="d-block">Perihal</b>
-                <span>Dokumen</span>
+                <span>{document?.perihal || "-"}</span>
               </div>
             </Col>
           </Row>
@@ -146,18 +202,15 @@ const Summary = ({ loginStatus, rolesEproc }) => {
       ))}
 
       <h4 className="mb-2">E. Permintaan Penerbitan Draft Addendum Kepada :</h4>
-      <div className="mb-5">Supply Chain Management (SCM) Division</div>
+      <div className="mb-5">{data?.add_drafter || "-"}</div>
       <h4 className="mb-2">F. Catatan Addendum (Opsional)</h4>
       <div className="mb-5">
-        Berisi Catatan Adendum baik di approve / direject
+        <textarea className="form-control">
+          {data?.request_note || "-"}
+        </textarea>
       </div>
     </div>
   );
 };
 
-const mapState = (state) => ({
-  loginStatus: state.auth.user.data.status,
-  rolesEproc: state.auth.user.data.roles_eproc,
-});
-
-export default connect(mapState)(Summary);
+export default Summary;
