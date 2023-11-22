@@ -11,7 +11,7 @@ const Summary = ({ data }) => {
     <div className="bg-white p-10">
       <h4 className="mb-2">A. Addendum jangka waktu</h4>
       <div className="mb-5">
-        {moment(data?.add_request_date).format("DD/MMM/yyyy")}
+        {data?.add_request_date ? moment(data?.add_request_date).format("DD/MMM/yyyy") : "-"}
       </div>
       <h4 className="mb-2">B. Perihal Addendum</h4>
       <Row className="mb-5">
@@ -75,7 +75,7 @@ const Summary = ({ data }) => {
           <div className="d-flex align-items-center mb-3">
             <Form.Check
               className="mr-2"
-              label={"Harga Pekerjaan"}
+              label={"Lainnya"}
               checked={data?.other_note}
               disabled
             />
