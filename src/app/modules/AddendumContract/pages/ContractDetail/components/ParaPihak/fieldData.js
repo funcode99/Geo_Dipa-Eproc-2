@@ -162,6 +162,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
   {
     id: "2",
@@ -169,6 +170,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
   {
     id: "3",
@@ -176,6 +178,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
   {
     id: "4",
@@ -183,6 +186,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
   {
     id: "5",
@@ -190,6 +194,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
   {
     id: "6",
@@ -197,6 +202,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
   {
     id: "7",
@@ -204,6 +210,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
   {
     id: "8",
@@ -211,6 +218,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
   {
     id: "9",
@@ -218,6 +226,7 @@ export const supportingDocumentDefault = [
     noDokumen: "",
     tglDokumen: "",
     fileDokumen: "",
+    perihal: "",
   },
 ];
 
