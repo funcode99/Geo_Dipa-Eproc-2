@@ -75,7 +75,7 @@ const Summary = ({ data }) => {
           <div className="d-flex align-items-center mb-3">
             <Form.Check
               className="mr-2"
-              label={"Harga Pekerjaan"}
+              label={"Lainnya"}
               checked={data?.other_note}
               disabled
             />
