@@ -1,3 +1,4 @@
+import { Header } from "_metronic/layout/components/header/Header";
 import axios from "axios";
 // import { DEV_NODE, DEV_RUBY } from '../../../../redux/BaseHost';
 import store from "redux/store";
@@ -70,39 +71,25 @@ export function submitAccountNumber(params, contract_id) {
     params
   );
 }
+// `/adendum/add-contracts/${contract_id}/submitted`,
 
 export function submitOther(params, contract_id) {
   return axios.post(`/adendum/add-contract-other/${contract_id}`, params);
 }
 
-export async function submitSupportingDocument(params, contract_id) {
-  return await axios.post(
-    `/adendum/add-contracts/${contract_id}/submitted`,
-    params,
-    {
-      headers: {
-        // "Content-Type": "multipart/form-data",
-        "Content-Type": "x-www-form-urlencoded",
-      },
-    }
-  );
-  // fetch(
-  //   `http://192.168.0.168:5000/adendum/add-contracts/${contract_id}/submitted`,
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${authToken}`,
-  //     },
-  //     method: "POST",
-  //     body: params,
-  //   }
-  // ).then((response) => response.json());
-  // let sendData = new Promise((resolve, reject) => {
-  // });
-  // sendData
-  //   .then((result) => {
-  //     console.log("submit result", result);
-  //   })
-  //   .catch((err) => console.log("submit error", err));
+export function resetSupportDocument(contract_id) {
+  return axios.post(`/adendum/add-contracts/${contract_id}/reset-document`);
+}
+
+// export function uploadSuppDoc(params, contract_id) {
+//   return axios.post(
+//     `/adendum/add-contracts/${contract_id}/submitted`,
+//     params
+//   );
+// }
+
+export function uploadSuppDoc(params, contract_id) {
+  return axios.post(`/adendum/add-contracts/${contract_id}/submitted`, params);
 }
 
 // Tasks

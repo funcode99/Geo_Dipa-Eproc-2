@@ -468,9 +468,6 @@ const FormParameter = ({
       "attachment_clause_data",
       JSON.stringify(values.attachment_data)
     );
-    // for (let key in values) {
-    //   data_new.append(key, values[key]);
-    // }
     submitAccountNumber(data_new, contract_id);
   };
 
@@ -2649,6 +2646,7 @@ const FormParameter = ({
                 enableReinitialize={true}
                 initialValues={{
                   data_bank: accountNumber,
+                  // wajib dipasang state
                   bank_statement_file: "",
                   body_data: dataNewClause.account_number.bodyClauseData,
                   attachment_data:

@@ -18,19 +18,18 @@ import TabsAddendum from "./Components/Tabs";
 import useToast from "app/components/toast/index";
 import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
+import UploadDokumenPendukung from "./UploadDokumenPendukung";
 
 import SVG from "react-inlinesvg";
 import { Col, Row } from "react-bootstrap";
-import { Formik, Form, Field, FieldArray, useFormikContext } from "formik";
 import { Grid } from "@material-ui/core";
-import { submitSupportingDocument } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 // import { FormStepper } from "./FormStepper";
 
 // import { Card, CardBody } from "_metronic/_partials/controls";
 // import FieldBuilder from "app/components/builder/FieldBuilder";
 // import FormBuilder from "app/components/builder/FormBuilder";
 
-import { supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData";
+// import { supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData";
 
 import UploadInput from "app/components/input/UploadInput";
 import SelectDateInput from "app/components/input/SelectDateInput";
@@ -56,10 +55,6 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 650,
   },
 }));
-
-const handleChange = (e) => {
-  console.log("isi upload", e.target.value, e.target.files[0]);
-};
 
 // const TabLists = [
 
@@ -126,11 +121,6 @@ export const AddContractAddendum = ({
   authStatus,
   fetch_api_sg,
 }) => {
-  const [
-    supportingDocumentDefaultData,
-    setSupportingDocumentDefaultData,
-  ] = useState(supportingDocumentDefault);
-
   const showAddDocument = () => {
     openCloseAddDocument.current.open();
   };
@@ -250,39 +240,6 @@ export const AddContractAddendum = ({
     }
   };
 
-  const submitSupportingData = (values) => {
-    let data_new = new FormData();
-    // item.noDokumen
-    // item.tglDokumen
-    data_new.append("drafter_code", 1);
-    data_new.append("add_drafter", "Supply Chain Management (SCM) Division");
-    // data_new.append(`noDokumen[${index}]`, "");
-    // data_new.append(`tglDokumen[${index}]`, "");
-    // data_new.append(`fileDokumen[${index}]`, item.fileDokumen);
-    // data_new.append(`id[${index}]`, index);
-    // data_new.append(`seq[${index}]`, index);
-    // data_new.append(`tipeDokumen[${index}]`, index);
-    // data_new.append(`namaDokumen[${index}]`, index);
-    // data_new.append(`namaDokumenEng[${index}]`, index);
-    // data_new.append(`perihal[${index}]`, index);
-
-    console.log("isi dokumen", values.fileDokumen);
-
-    // data_new.append("id[0]", "12131141");
-    // data_new.append("seq[0]", "1");
-    // data_new.append("noDokumen[0]", "12131141");
-    // data_new.append("tglDokumen[0]", "2023-09-08");
-    // data_new.append("tipeDokumen[0]", "PERJANJIAN/SPK");
-    // data_new.append("fileDokumen[0]", values.fileDokumen);
-    // data_new.append("namaDokumen[0]", "Surat Permohonan Addendum dari Vendor");
-    // data_new.append("namaDokumenEng[0]", "Addendum Request Letter from Vendor");
-    // data_new.append("perihal[0]", "ini");
-    data_new.append("add_support_document_data", values.fileDokumen);
-    // values.supportDocumentData.map((item, index) => {});
-
-    submitSupportingDocument(data_new, contract_id);
-  };
-
   let [linksGroup, setLinksGroup] = useState({
     documentname: "document",
     documentnumber: "012345",
@@ -352,6 +309,8 @@ export const AddContractAddendum = ({
     getJobDirector();
     getJobSupervisor();
     setInitialSubmitItems();
+    getFinalDraftData();
+    getAddContractDocument();
     // eslint-disable-next-line
   }, []);
 
@@ -362,12 +321,26 @@ export const AddContractAddendum = ({
     setTabActive(newTabActive);
   }
 
+  const [finalDraftData, setFinalDraftData] = useState();
+
+  const getFinalDraftData = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      // url: `/adendum/contract-final-draft/${contract_id}/show`,
+      url: `/adendum/contract-final-draft/d086f59c-838a-440f-a262-d8f21f8fc4e1/show`,
+      onSuccess: (res) => {
+        console.log("isi respon 2.23", res.data);
+        setFinalDraftData(res.data);
+      },
+    });
+  };
+
   const getDataContractHeader = async () => {
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
-      // url: `/adendum/contract-released/bce5e09d-95f1-43f7-8534-8ddf8c116278/show`,
       onSuccess: (res) => {
         console.log("apakah menarik data", res?.data);
         setJsonData(res?.data);
@@ -549,17 +522,20 @@ export const AddContractAddendum = ({
     setCheckedInitialValues(values);
   };
 
-  function resizeTextArea(textarea) {
-    const { style } = textarea;
+  const [supportDocumentFetch, setSupportDocumentFetch] = useState();
 
-    // The 4 corresponds to the 2 2px borders (top and bottom):
-    style.height = style.minHeight = "auto";
-    style.minHeight = `${Math.min(
-      textarea.scrollHeight + 4,
-      parseInt(textarea.style.maxHeight)
-    )}px`;
-    style.height = `${textarea.scrollHeight + 4}px`;
-  }
+  const getAddContractDocument = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/add-contract-document`,
+      onSuccess: (res) => {
+        setSupportDocumentFetch(res.data);
+      },
+    });
+  };
+
+  const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
 
   return (
     <React.Fragment>
@@ -695,58 +671,83 @@ export const AddContractAddendum = ({
               width: 310,
               backgroundColor: "#e8f4fb",
             }}
+            onChange={(e) => setFinalDraftSelectValue(e.target.value)}
           >
-            <option>Final Draft Kontrak</option>
-            <option>Final Draft Addendum</option>
+            <option value="Kontrak">Final Draft Kontrak</option>
+            <option value="Addendum">Final Draft Addendum</option>
           </select>
 
-          <div
-            style={{
-              minHeight: 100,
-              marginTop: 10,
-              marginBottom: 10,
-              fontSize: 12,
-              fontWeight: 400,
-              color: "#3699ff",
-            }}
-          >
+          {finalDraftSelectValue === "Kontrak" && (
             <div
               style={{
-                display: "flex",
-                gap: 6,
+                minHeight: 100,
+                marginTop: 10,
+                marginBottom: 10,
+                fontSize: 12,
+                fontWeight: 400,
+                color: "#3699ff",
               }}
             >
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")}
-              />
-              <p>{jsonData?.form_review?.spk_name}</p>
-            </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <p>{jsonData?.form_review?.spk_name}</p>
+              </div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: 6,
-              }}
-            >
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")}
-              />
-              {/* <p>Lampiran 1.doc</p> */}
-              <p>{jsonData?.form_review?.lampiran_1_name}</p>
-            </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                {/* <p>Lampiran 1.doc</p> */}
+                <p>{jsonData?.form_review?.lampiran_1_name}</p>
+              </div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: 6,
-              }}
-            >
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")}
-              />
-              <p>{jsonData?.form_review?.lampiran_2_name}</p>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <p>{jsonData?.form_review?.lampiran_2_name}</p>
+              </div>
             </div>
-          </div>
+          )}
+
+          {finalDraftSelectValue === "Addendum" &&
+            // finalDraftData?.add_contracts?.map((item, index) => {
+            //   return (
+            //     <>
+            //       <p>{item.final_draft}</p>
+            //     </>
+            //   )
+            // })
+            finalDraftData.add_contracts[0].final_draft.map((item, index) => {
+              return (
+                <>
+                  <p>{item.body_file_name}</p>
+                </>
+              );
+            })}
         </div>
       ) : (
         <div className="d-flex justify-content-center m-5 border-danger">
@@ -912,236 +913,7 @@ export const AddContractAddendum = ({
       )}
 
       {sequence === 2 && (
-        <Paper className={classes.root}>
-          <div
-            style={{
-              padding: "2rem 2.25rem",
-            }}
-          >
-            <Formik
-              initialValues={{
-                // supportDocumentData: supportingDocumentDefaultData,
-                // documentFile: supportingDocumentDefault,
-                fileDokumen: "",
-              }}
-              onSubmit={(values) => {
-                // console.log("hasil dari formik", values);
-                submitSupportingData(values);
-              }}
-            >
-              {(props) => {
-                const { setFieldValue } = props;
-
-                return (
-                  <>
-                    <Form>
-                      <h1
-                        style={{
-                          fontSize: 16,
-                          fontWeight: 600,
-                          color: "#2e1f22",
-                        }}
-                      >
-                        A. Dokumen Pendukung
-                      </h1>
-
-                      {supportingDocumentDefaultData &&
-                        supportingDocumentDefaultData.map((item, index) => {
-                          return (
-                            <>
-                              <h1
-                                style={{
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 14,
-                                }}
-                              >
-                                {index + 1} {item.name}
-                              </h1>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: 14,
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    columnGap: 28,
-                                    flexWrap: "wrap",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      flex: 1,
-                                    }}
-                                  >
-                                    <p
-                                      style={{
-                                        marginBottom: 4,
-                                      }}
-                                    >
-                                      No Dokumen
-                                    </p>
-                                    <Field
-                                      type="text"
-                                      name={`supportDocumentData[${index}].noDokumen`}
-                                      style={{
-                                        borderRadius: 4,
-                                        padding: 8,
-                                        width: "100%",
-                                      }}
-                                    />
-                                  </div>
-                                  <div
-                                    style={{
-                                      flex: 1,
-                                    }}
-                                  >
-                                    <p
-                                      style={{
-                                        marginBottom: 4,
-                                      }}
-                                    >
-                                      Tanggal Dokumen
-                                    </p>
-                                    <Field
-                                      type="date"
-                                      name={`supportDocumentData[${index}].tglDokumen`}
-                                      style={{
-                                        borderRadius: 4,
-                                        padding: 8,
-                                        width: "100%",
-                                      }}
-                                    />
-                                  </div>
-                                  <div
-                                    style={{
-                                      flex: 1,
-                                    }}
-                                  >
-                                    <p
-                                      style={{
-                                        marginBottom: 4,
-                                      }}
-                                    >
-                                      Upload Dokumen
-                                    </p>
-                                    <input
-                                      type="file"
-                                      style={{
-                                        border: 1,
-                                        borderColor: "black",
-                                        borderStyle: "solid",
-                                        borderRadius: 4,
-                                        padding: 8,
-                                        width: "100%",
-                                      }}
-                                      onChange={(event) => {
-                                        setFieldValue(
-                                          // `supportDocumentData[${index}].fileDokumen`,
-                                          "fileDokumen",
-                                          event.currentTarget.files[0]
-                                        );
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-                                <div>
-                                  <div>
-                                    <p
-                                      style={{
-                                        marginBottom: 4,
-                                      }}
-                                    >
-                                      Perihal
-                                    </p>
-                                    <textarea
-                                      onChange={(e) => {
-                                        resizeTextArea(e.target);
-                                      }}
-                                      style={{
-                                        maxHeight: 160,
-                                        width: "100%",
-                                        padding: 8,
-                                      }}
-                                    ></textarea>
-                                  </div>
-                                </div>
-                              </div>
-                            </>
-                          );
-                        })}
-
-                      <div className="mt-5">
-                        <p
-                          className="mb-0"
-                          style={{
-                            color: "#2e1f22",
-                            fontSize: 14,
-                            fontWeight: 500,
-                          }}
-                        >
-                          Permintaan Penerbitan Draft Addendum Kepada:
-                        </p>
-                        <select
-                          style={{
-                            padding: "10px 12px",
-                            fontSize: 12,
-                            backgroundColor: "#e8f4fb",
-                            borderRadius: 4,
-                          }}
-                          value={"Supply Chain Management (SCM) Division"}
-                        >
-                          <option
-                          // style={{
-                          //   padding: '10px 12px',
-                          //   fontSize: 12,
-                          //   backgroundColor: '#e8f4fb',
-                          //   borderRadius: 4
-                          // }}
-                          >
-                            Supply Chain Management (SCM) Division
-                          </option>
-                          <option>Corporate Legal & Compliance Division</option>
-                          <option>Pengguna (Direksi Pekerjaan)</option>
-                        </select>
-                      </div>
-
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          gap: 28,
-                          padding: "2rem 2.25rem",
-                        }}
-                      >
-                        <Button
-                          className="text-primary btn btn-white border border-primary"
-                          style={{
-                            minWidth: 100,
-                          }}
-                        >
-                          Save Draft
-                        </Button>
-                        <Button
-                          type="submit"
-                          style={{
-                            minWidth: 100,
-                          }}
-                          // onClick={() => TabLists.length-1 ? setTabActive(tabActive+1) : setTabActive(tabActive) }
-                        >
-                          Submit
-                        </Button>
-                      </div>
-                    </Form>
-                  </>
-                );
-              }}
-            </Formik>
-          </div>
-        </Paper>
+        <UploadDokumenPendukung supportDocumentFetch={supportDocumentFetch} />
       )}
     </React.Fragment>
   );
