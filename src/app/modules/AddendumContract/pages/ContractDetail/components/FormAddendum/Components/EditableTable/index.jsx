@@ -122,11 +122,11 @@ const EditableTable = ({
     });
   };
 
-  const onDeleteMode = (id) => {
-    setRows(() => {
-      return rows.filter((row) => {
-        return row.id !== id;
-      });
+  const onDeleteMode = (index) => {
+    setRows((prev) => {
+      const newState = [...prev];
+      newState.splice(index, 1);
+      return newState;
     });
   };
 
@@ -205,10 +205,10 @@ const EditableTable = ({
     // akhirnya bisa juga ngentiaw
     setRows((prev) => {
       const newState = prev;
+      newState[index].item_detail.splice(childIndex, 1);
       // const items = rows[index].item_detail.filter(
       //   (variant) => variant.id !== childId
       // );
-      newState[index].item_detail.splice(childIndex, 1);
       // console.log("setelah filter", items);
       // newState[index].item_detail = items;
       let changedParentSubtotal = "";
@@ -364,6 +364,7 @@ const EditableTable = ({
               values?.note,
               values?.item_detail
             );
+            openCloseAddDetail.current.close();
           }}
         >
           {() => (
@@ -635,9 +636,16 @@ const EditableTable = ({
       <Paper className={classes.root}>
         <Table className={classes.table} aria-label="caption table">
           {/* Table Header */}
+          {/* <TableBody>
+            <TableRow>
+            </TableRow>
+          </TableBody> */}
+          {/* <TableCell align="1">No.</TableCell> */}
+          {/* <TableCell align="left">No.</TableCell> */}
+
           <TableBody>
             <TableRow>
-              <TableCell size="small">No.</TableCell>
+              <TableCell>No.</TableCell>
               <TableCell align="left">Deskripsi Item</TableCell>
               <TableCell align="left">QTY</TableCell>
               <TableCell align="left">Satuan</TableCell>
@@ -674,9 +682,8 @@ const EditableTable = ({
                   {/* selalu masuk kesini diawal */}
                   {/* kalo pake tablerow gak rapih */}
                   <TableRow key={row.id}>
-                    <TableCell align="left" className={classes.tableCell}>
-                      {index + 1}
-                    </TableCell>
+                    {/* <TableCell align="1">{index + 1}</TableCell> */}
+                    <TableCell>{index + 1}</TableCell>
                     <CustomTableCell
                       {...{ row, name: "product_name", onChange }}
                     />
@@ -707,7 +714,7 @@ const EditableTable = ({
                         <ButtonAction
                           handleAction={(a, b, c) => {
                             if (c === "Hapus") {
-                              onDeleteMode(row.id);
+                              onDeleteMode(index);
                             } else if (c === "Edit") {
                               onToggleEditMode(row.id);
                             } else if (c === "Tambah Sub Item") {

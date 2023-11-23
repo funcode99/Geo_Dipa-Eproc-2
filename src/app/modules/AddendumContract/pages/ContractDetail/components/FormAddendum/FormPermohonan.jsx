@@ -39,6 +39,26 @@ const FormPermohonan = (props) => {
     }
   }, [price]);
 
+  const [afterAddendumJobPrice, setAfterAddendumJobPrice] = useState(0);
+
+  useEffect(() => {
+    let a = props.checkedValues.includes("job_price")
+      ? price.additional_price === "0" || price.additional_price === ""
+        ? setAfterAddendumJobPrice(
+            parseInt(props?.headerData?.initial_contract_value) -
+              parseInt(
+                price.substraction_price === "" ? "0" : price.substraction_price
+              )
+          )
+        : setAfterAddendumJobPrice(
+            parseInt(props?.headerData?.initial_contract_value) +
+              parseInt(
+                price.additional_price === "" ? "0" : price.additional_price
+              )
+          )
+      : "0";
+  }, [price.additional_price, price.substraction_price]);
+
   const submitAddendumRequestForm = (values) => {
     console.log("isi values saat submit", values);
     let afterValue = values.checked.includes("job_price")
@@ -101,6 +121,7 @@ const FormPermohonan = (props) => {
     }).then((value) => {
       console.log("isi values saat submit", value);
       localStorage.setItem("add_contract_id", value.data.data.id);
+      localStorage.setItem("conclusion", conclusion);
     });
   };
 
@@ -134,8 +155,6 @@ const FormPermohonan = (props) => {
 
   return (
     <>
-      {/* <EditableTable /> */}
-
       <Card>
         <CardBody>
           <Card>
@@ -999,10 +1018,20 @@ const FormPermohonan = (props) => {
                           <input
                             className="d-none"
                             value={`${
-                              parseInt(
-                                props?.headerData?.initial_contract_value
-                              ) < 5000000000 &&
-                              parseInt(Math.abs(adnm_percentage)) < 10
+                              parseInt(afterAddendumJobPrice) > 5000000000 &&
+                              parseInt(Math.abs(adnm_percentage)) > 10
+                                ? setConclusion(
+                                    "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)"
+                                  )
+                                : parseInt(afterAddendumJobPrice) >
+                                    5000000000 &&
+                                  parseInt(Math.abs(adnm_percentage)) < 10
+                                ? setConclusion(
+                                    "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M"
+                                  )
+                                : parseInt(afterAddendumJobPrice) <
+                                    5000000000 &&
+                                  parseInt(Math.abs(adnm_percentage)) < 10
                                 ? setConclusion(
                                     "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal"
                                   )
