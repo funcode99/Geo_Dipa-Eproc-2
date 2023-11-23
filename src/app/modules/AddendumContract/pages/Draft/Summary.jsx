@@ -9,7 +9,7 @@ import { DEV_NODE } from "redux/BaseHost";
 const Summary = ({ data }) => {
   return (
     <div className="bg-white p-10">
-      <h4 className="mb-2">A. Addendum jangka waktu</h4>
+      <h4 className="mb-2">A. Tanggal Dokumen Permohonan</h4>
       <div className="mb-5">
         {data?.add_request_date ? moment(data?.add_request_date).format("DD/MMM/yyyy") : "-"}
       </div>
@@ -149,7 +149,8 @@ const Summary = ({ data }) => {
             </span>
             <small>
               diupload :
-              {moment(document?.tglUploadDokumen).format("DD MMM yyyy hh:mm")}
+              {document?.tglUploadDokumen}
+              {/* {moment(document?.tglUploadDokumen).format("DD MMM yyyy hh:mm")} FIX: This line will be update after BE converting into UTC clock */}
             </small>
           </div>
 
@@ -170,7 +171,7 @@ const Summary = ({ data }) => {
             </Col>
             <Col md={4}>
               <div className="mb-3">
-                <b className="d-block">Upload Dokumen</b>
+                <b className="d-block">Dokumen</b>
                 <a
                   onClick={() => {
                     window.open(

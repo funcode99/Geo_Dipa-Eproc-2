@@ -99,7 +99,6 @@ const DraftAddendumPage = ({
       label: "Jangka Waktu",
       // icon: <PeopleAlt className="mb-0 mr-2" />,
     },
-
     {
       id: "dokumen-kontrak",
       // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
@@ -121,11 +120,17 @@ const DraftAddendumPage = ({
       // icon: <QueryBuilderSharp className="mb-0 mr-2" />,
       addendum: true,
     },
-
     {
       id: "jaminan",
       // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
       label: "Nomor Rekening",
+      // icon: <FeaturedPlayList className="mb-0 mr-2" />,
+      addendum: true,
+    },
+    {
+      id: "other",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+      label: "Lainnya",
       // icon: <FeaturedPlayList className="mb-0 mr-2" />,
       addendum: true,
     },
