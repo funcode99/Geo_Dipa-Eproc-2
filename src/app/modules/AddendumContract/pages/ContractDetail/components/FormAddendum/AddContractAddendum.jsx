@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { Formik, Form, Field } from "formik";
 
 import { useLocation, useParams, withRouter } from "react-router-dom";
 import { compose } from "redux";
@@ -42,6 +43,7 @@ import Steppers from "app/components/steppersCustom/Steppers";
 import { DUMMY_STEPPER_CONTRACT } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
 
 import { fetch_api_sg } from "redux/globalReducer";
+import { values } from "lodash";
 
 // const { setFieldValue } = useFormikContext;
 
@@ -121,6 +123,7 @@ export const AddContractAddendum = ({
   authStatus,
   fetch_api_sg,
 }) => {
+  const openCloseAddDocument = React.useRef();
   const showAddDocument = () => {
     openCloseAddDocument.current.open();
   };
@@ -224,6 +227,7 @@ export const AddContractAddendum = ({
   ]);
   const [checkedInitialValues, setCheckedInitialValues] = useState([]);
   const [timePeriodData, setTimePeriodData] = useState();
+  const [initialData, setInitialData] = useState();
 
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
@@ -248,7 +252,6 @@ export const AddContractAddendum = ({
     about: "wah",
   });
 
-  const openCloseAddDocument = React.useRef();
   const toPush = useRef();
 
   const setPush = (e) => {
@@ -523,6 +526,9 @@ export const AddContractAddendum = ({
   };
 
   const [supportDocumentFetch, setSupportDocumentFetch] = useState();
+  useEffect(() => {
+    console.log("data sekarang", supportDocumentFetch);
+  }, [supportDocumentFetch]);
 
   const getAddContractDocument = async () => {
     fetch_api_sg({
@@ -531,6 +537,7 @@ export const AddContractAddendum = ({
       url: `/adendum/add-contract-document`,
       onSuccess: (res) => {
         setSupportDocumentFetch(res.data);
+        setInitialData(res.data);
       },
     });
   };
@@ -551,68 +558,113 @@ export const AddContractAddendum = ({
       <DialogGlobal
         ref={openCloseAddDocument}
         isCancel={false}
-        isSubmit={true}
-        // onYes={setPush}
+        isSubmit={false}
       >
-        <div>
-          <Row>
-            <Col md={4}>
-              Nama Dokumen
-              <BasicInput
-                placeholder={"Dokumen A"}
-                // value={linksGroup.documentname}
-                // onChange={(e) =>
-                //   setLinksGroup({ ...linksGroup, documentname: e })
-                // }
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={4}>
-              No Dokumen
-              <BasicInput
-                placeholder={"Masukan No Dokumen Anda"}
-                // value={linksGroup.documentnumber}
-                // onChange={(e) =>
-                //   setLinksGroup({ ...linksGroup, documentnumber: e })
-                // }
-              />
-            </Col>
-            <Col md={3}>
-              Tanggal Dokumen
-              <SelectDateInput
-              // value={linksGroup.documentdate}
-              // onChange={(e) =>
-              //   setLinksGroup({ ...linksGroup, documentdate: e })
-              // }
-              />
-            </Col>
-            <Col md={5}>
-              Upload Dokumen
-              <UploadInput
-              // value={linksGroup.documentfileupload}
-              // onChange={(e) =>
-              //   setLinksGroup({
-              //     ...linksGroup,
-              //     documentfileupload: { path: e.path },
-              //   })
-              // }
-              />
-            </Col>
-          </Row>
-          <Row className={"mb-9 mt-3 mx-2"}>
-            Perihal
-            <TextAreaInput
-              className={"border border-dark form-control"}
-              placeholder={""}
-              value={linksGroup.about}
-              onChange={(e) => setLinksGroup({ ...linksGroup, about: e })}
-            />
-          </Row>
-        </div>
+        <Formik
+          initialValues={{
+            namaDokumen: "",
+            noDokumen: "",
+            tglDokumen: "",
+            fileDokumen: "",
+            perihal: "",
+          }}
+          onSubmit={(values) => {
+            setSupportDocumentFetch((previous) => {
+              return [
+                ...previous,
+                {
+                  idDokumen: "0",
+                  document_name: values.namaDokumen,
+                  noDokumen: values.noDokumen,
+                  tglDokumen: values.tglDokumen,
+                  fileDokumen: values.fileDokumen,
+                  seq: supportDocumentFetch.length + 1,
+                },
+              ];
+            });
+            openCloseAddDocument.current.close();
+          }}
+        >
+          {(props) => {
+            const { setFieldValue } = props;
+            return (
+              <Form>
+                <div>
+                  <Row>
+                    <Col md={4}>
+                      Nama Dokumen
+                      <Field type="text" name={`namaDokumen`} />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={4}>
+                      No Dokumen
+                      <Field type="text" name={`noDokumen`} />
+                    </Col>
+                    <Col md={3}>
+                      Tanggal Dokumen
+                      <Field type="date" name={`tglDokumen`} />
+                    </Col>
+                    <Col md={5}>
+                      Upload Dokumen
+                      <input
+                        type="file"
+                        style={{
+                          border: 1,
+                          borderColor: "black",
+                          borderStyle: "solid",
+                          borderRadius: 4,
+                          padding: 8,
+                          width: "100%",
+                        }}
+                        onChange={(event) => {
+                          setFieldValue(
+                            `fileDokumen`,
+                            event.currentTarget.files[0]
+                          );
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className={"mb-9 mt-3 mx-2"}>
+                    Perihal
+                    <Field
+                      as="textarea"
+                      name={`perihal`}
+                      // onKeyUp={(e) => {
+                      //   resizeTextArea(e.target);
+                      // }}
+                      style={{
+                        maxHeight: 160,
+                        width: "100%",
+                        padding: 8,
+                      }}
+                    />
+                  </Row>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: 28,
+                    padding: "2rem 2.25rem",
+                  }}
+                >
+                  <Button
+                    type="submit"
+                    style={{
+                      minWidth: 100,
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
       </DialogGlobal>
 
-      {/* ${dataContractById?.contract_no} */}
       <Subheader
         text={
           dataArr
@@ -733,7 +785,7 @@ export const AddContractAddendum = ({
             </div>
           )}
 
-          {finalDraftSelectValue === "Addendum" &&
+          {finalDraftSelectValue === "Addendum" && (
             // finalDraftData?.add_contracts?.map((item, index) => {
             //   return (
             //     <>
@@ -741,13 +793,43 @@ export const AddContractAddendum = ({
             //     </>
             //   )
             // })
-            finalDraftData.add_contracts[0].final_draft.map((item, index) => {
-              return (
-                <>
-                  <p>{item.body_file_name}</p>
-                </>
-              );
-            })}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                // rowGap: 14,
+                marginTop: 14,
+              }}
+            >
+              <p>Perihal: {finalDraftData.add_contracts[0].perihal}</p>
+              <a
+                style={{
+                  fontSize: 12,
+                  fontWeight: 400,
+                  color: "#3699ff",
+                  marginBottom: "1rem",
+                }}
+                href={`http://192.168.0.168:5000/${finalDraftData.add_contracts[0].final_draft[0].body_file_name}`}
+              >
+                {finalDraftData.add_contracts[0].final_draft[0].body_file_name}
+              </a>
+              {finalDraftData.add_contracts[0].final_draft[0].lampiran_data.map(
+                (item) => {
+                  return (
+                    <p
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 400,
+                        color: "#3699ff",
+                      }}
+                    >
+                      {item.lampiran_file_name}
+                    </p>
+                  );
+                }
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div className="d-flex justify-content-center m-5 border-danger">
@@ -913,7 +995,12 @@ export const AddContractAddendum = ({
       )}
 
       {sequence === 2 && (
-        <UploadDokumenPendukung supportDocumentFetch={supportDocumentFetch} />
+        <UploadDokumenPendukung
+          supportDocumentFetch={supportDocumentFetch}
+          openCloseAddDocument={openCloseAddDocument}
+          showAddDocument={showAddDocument}
+          initialData={initialData}
+        />
       )}
     </React.Fragment>
   );

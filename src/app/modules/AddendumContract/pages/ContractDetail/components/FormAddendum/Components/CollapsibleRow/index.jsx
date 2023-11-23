@@ -90,7 +90,7 @@ const CollapsibleRow = ({
             <ButtonAction
               handleAction={(a, b, c) => {
                 if (c === "Hapus") {
-                  onDeleteMode(row.id);
+                  onDeleteMode(index);
                 } else if (c === "Edit") {
                   onToggleEditMode(row.id);
                 } else if (c === "Tambah") {

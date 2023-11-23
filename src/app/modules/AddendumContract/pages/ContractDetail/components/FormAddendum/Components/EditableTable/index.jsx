@@ -122,11 +122,14 @@ const EditableTable = ({
     });
   };
 
-  const onDeleteMode = (id) => {
-    setRows(() => {
-      return rows.filter((row) => {
-        return row.id !== id;
-      });
+  const onDeleteMode = (index) => {
+    setRows((prev) => {
+      const newState = prev;
+      newState[index].item_detail.splice(index, 1);
+      // return rows.filter((row) => {
+      //   return row.id !== id;
+      // });
+      return [...newState];
     });
   };
 
@@ -205,10 +208,10 @@ const EditableTable = ({
     // akhirnya bisa juga ngentiaw
     setRows((prev) => {
       const newState = prev;
+      newState[index].item_detail.splice(childIndex, 1);
       // const items = rows[index].item_detail.filter(
       //   (variant) => variant.id !== childId
       // );
-      newState[index].item_detail.splice(childIndex, 1);
       // console.log("setelah filter", items);
       // newState[index].item_detail = items;
       let changedParentSubtotal = "";
@@ -707,7 +710,7 @@ const EditableTable = ({
                         <ButtonAction
                           handleAction={(a, b, c) => {
                             if (c === "Hapus") {
-                              onDeleteMode(row.id);
+                              onDeleteMode(index);
                             } else if (c === "Edit") {
                               onToggleEditMode(row.id);
                             } else if (c === "Tambah Sub Item") {

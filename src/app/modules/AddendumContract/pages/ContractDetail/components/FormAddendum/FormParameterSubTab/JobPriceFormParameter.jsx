@@ -130,7 +130,7 @@ const JobPriceFormParameter = ({
     if (valueAfterAddendum === grandTotal) {
       submitJobPrice(
         {
-          add_contract_id: jsonData?.add_contracts[0]?.id,
+          add_contract_id: localStorage.getItem("add_contract_id"),
           currency_id: currencies.count[currenciesIndex].id,
           item: values.data,
           body_clause_data: values.body_data,

@@ -1,28 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Paper, makeStyles } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 import { Button } from "react-bootstrap";
 import { uploadSuppDoc } from "app/modules/AddendumContract/service/AddendumContractCrudService";
-import { supportingDocumentDefault } from "../ParaPihak/fieldData";
 
-const UploadDokumenPendukung = ({ supportDocumentFetch }) => {
-  const [supportingDocument, setSupportingDocument] = useState(
-    supportDocumentFetch
-  );
+const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
+  // AARRGHGH PASS BY REFERENCE
+  const [supportingDocument, setSupportingDocument] = useState();
+  // disini SLICE TIDAK MENGHAPUS ARRAY YANG SUDAH ADA
+  let kondisiA = supportDocumentFetch.slice(0, 4);
+  let pelengkapA = supportDocumentFetch.slice(8);
+  let pelengkapB = supportDocumentFetch.slice(4, 7);
+  let lengkapA = [...kondisiA, ...pelengkapA];
+  let lengkapB = [...lengkapA, ...pelengkapB];
+  let conclusion = localStorage.getItem("conclusion");
+
+  useEffect(() => {
+    if (supportDocumentFetch.length > initialData.length) {
+      let additionalDocument = supportDocumentFetch.slice(
+        9,
+        supportDocumentFetch.length + 1
+      );
+      setSupportingDocument((previous) => {
+        return [...previous, additionalDocument];
+      });
+    }
+  }, [supportDocumentFetch]);
+
+  useEffect(() => {
+    if (
+      conclusion ===
+      "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal"
+    ) {
+      setSupportingDocument(lengkapA);
+    } else if (
+      conclusion ===
+      "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai Kontrak di bawah Rp 5M)"
+    ) {
+      setSupportingDocument(lengkapB);
+    } else {
+      setSupportingDocument(supportDocumentFetch);
+    }
+  }, []);
+
   const submitData = (values) => {
     let formDataNew = new FormData();
-    formDataNew.append("drafter_code", "1");
-    formDataNew.append("add_drafter", "Supply Chain Management (SCM) Division");
+    formDataNew.append("drafter_code", values.drafterCode[1]);
+    formDataNew.append("add_drafter", values.drafterCode[0]);
     values.supportDocumentData.map((item, index) => {
-      formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
-      formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
-      formDataNew.append(`fileDokumen[${index}]`, item.fileDokumen);
-      formDataNew.append(`perihal[${index}]`, item.perihal);
-      formDataNew.append(`idDokumen[${index}]`, `1123456`);
-      formDataNew.append(`seq[${index}]`, index);
-      formDataNew.append(`tipeDokumen[${index}]`, index);
-      formDataNew.append(`namaDokumen[${index}]`, index);
-      formDataNew.append(`namaDokumenEng[${index}]`, index);
+      formDataNew.append(
+        `noDokumen[${index}]`,
+        typeof item.noDokumen === "undefined" ? null : item.noDokumen
+      );
+      formDataNew.append(
+        `tglDokumen[${index}]`,
+        typeof item.tglDokumen === "undefined" ? null : item.tglDokumen
+      );
+      formDataNew.append(
+        `fileDokumen[${index}]`,
+        typeof item.fileDokumen === "undefined" ? null : item.fileDokumen
+      );
+      formDataNew.append(
+        `perihal[${index}]`,
+        typeof item.perihal === "undefined" ? null : item.perihal
+      );
+      formDataNew.append(
+        `idDokumen[${index}]`,
+        typeof item.id === "0" ? null : item.id
+      );
+      formDataNew.append(`seq[${index}]`, item.seq);
+      formDataNew.append(
+        `tipeDokumen[${index}]`,
+        typeof item.document_type === "undefined" ? null : item.document_type
+      );
+      formDataNew.append(`namaDokumen[${index}]`, item.document_name);
+      formDataNew.append(
+        `namaDokumenEng[${index}]`,
+        typeof item.document_name_eng === "undefined"
+          ? null
+          : item.document_name_eng
+      );
     });
     uploadSuppDoc(formDataNew, localStorage.getItem("add_contract_id"));
   };
@@ -60,11 +117,9 @@ const UploadDokumenPendukung = ({ supportDocumentFetch }) => {
             enableReinitialize={true}
             initialValues={{
               supportDocumentData: supportingDocument,
-              drafterCode: "Supply Chain Management (SCM) Division",
-              addDrafter: "",
+              drafterCode: ["Supply Chain Management (SCM) Division", 1],
             }}
             onSubmit={(values) => {
-              // console.log("hasil dari formik", values);
               submitData(values);
             }}
           >
@@ -93,7 +148,15 @@ const UploadDokumenPendukung = ({ supportDocumentFetch }) => {
                               marginTop: 14,
                             }}
                           >
-                            {index + 1} {item.document_name}
+                            {index + 1}{" "}
+                            {item.document_name !== "" ? (
+                              item.document_name
+                            ) : (
+                              <Field
+                                type="text"
+                                name={`supportDocumentData[${index}].document_name`}
+                              />
+                            )}
                           </h1>
                           <div
                             style={{
@@ -196,9 +259,6 @@ const UploadDokumenPendukung = ({ supportDocumentFetch }) => {
                                 <Field
                                   as="textarea"
                                   name={`supportDocumentData[${index}].perihal`}
-                                  // onChange={(e) => {
-                                  //   resizeTextArea(e.target);
-                                  // }}
                                   onKeyUp={(e) => {
                                     resizeTextArea(e.target);
                                   }}
@@ -216,6 +276,26 @@ const UploadDokumenPendukung = ({ supportDocumentFetch }) => {
                     })}
 
                   <div className="mt-5">
+                    <Button
+                      className="mb-7"
+                      onClick={() =>
+                        setSupportingDocument((previous) => {
+                          return [
+                            ...previous,
+                            {
+                              idDokumen: "0",
+                              document_name: "",
+                              noDokumen: "",
+                              tglDokumen: "",
+                              fileDokumen: "",
+                              seq: supportDocumentFetch.length + 1,
+                            },
+                          ];
+                        })
+                      }
+                    >
+                      + Tambah Dokumen
+                    </Button>
                     <p
                       className="mb-0"
                       style={{
@@ -238,17 +318,24 @@ const UploadDokumenPendukung = ({ supportDocumentFetch }) => {
                       value={values.drafterCode}
                     >
                       <option
-                      // style={{
-                      //   padding: '10px 12px',
-                      //   fontSize: 12,
-                      //   backgroundColor: '#e8f4fb',
-                      //   borderRadius: 4
-                      // }}
+                        // style={{
+                        //   padding: '10px 12px',
+                        //   fontSize: 12,
+                        //   backgroundColor: '#e8f4fb',
+                        //   borderRadius: 4
+                        // }}
+                        value={["Supply Chain Management (SCM) Division", 1]}
                       >
                         Supply Chain Management (SCM) Division
                       </option>
-                      <option>Corporate Legal & Compliance Division</option>
-                      <option>Pengguna (Direksi Pekerjaan)</option>
+                      <option
+                        value={["Corporate Legal & Compliance Division", 2]}
+                      >
+                        Corporate Legal & Compliance Division
+                      </option>
+                      <option value={["Pengguna (Direksi Pekerjaan)", 2]}>
+                        Pengguna (Direksi Pekerjaan)
+                      </option>
                     </Field>
                   </div>
 
