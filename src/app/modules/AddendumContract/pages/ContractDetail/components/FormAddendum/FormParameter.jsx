@@ -6,6 +6,7 @@ import { countdownMonths } from "app/libs/timeperioddate";
 import { countdownConverter } from "app/libs/timedateconverter";
 import { useParams } from "react-router-dom";
 import CurrencyInput from "react-currency-input-field";
+import { DEV_NODE } from "redux/BaseHost";
 import {
   Table,
   TableBody,
@@ -2302,6 +2303,12 @@ const FormParameter = ({
                                             style={{
                                               backgroundColor: "#e8f4fb",
                                             }}
+                                            onClick={() =>
+                                              window.open(
+                                                `${DEV_NODE}/guarantee/${data.filename}`,
+                                                "_blank"
+                                              )
+                                            }
                                           >
                                             {data.filename}
                                           </span>

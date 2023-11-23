@@ -3,6 +3,8 @@ import { Modal, Button } from "react-bootstrap";
 import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
+import { DEV_NODE } from "redux/BaseHost";
+import { API_EPROC } from "redux/BaseHost";
 
 import { useLocation, useParams, withRouter } from "react-router-dom";
 import { compose } from "redux";
@@ -751,7 +753,19 @@ export const AddContractAddendum = ({
                     "/media/svg/icons/All/file-final-draft.svg"
                   )}
                 />
-                <p>{jsonData?.form_review?.spk_name}</p>
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${jsonData?.form_review?.spk_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {jsonData?.form_review?.spk_name}
+                </a>
               </div>
 
               <div
@@ -766,7 +780,19 @@ export const AddContractAddendum = ({
                   )}
                 />
                 {/* <p>Lampiran 1.doc</p> */}
-                <p>{jsonData?.form_review?.lampiran_1_name}</p>
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${jsonData?.form_review?.lampiran_1_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {jsonData?.form_review?.lampiran_1_name}
+                </a>
               </div>
 
               <div
@@ -780,7 +806,19 @@ export const AddContractAddendum = ({
                     "/media/svg/icons/All/file-final-draft.svg"
                   )}
                 />
-                <p>{jsonData?.form_review?.lampiran_2_name}</p>
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${jsonData?.form_review?.lampiran_2_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {jsonData?.form_review?.lampiran_2_name}
+                </a>
               </div>
             </div>
           )}
@@ -802,29 +840,68 @@ export const AddContractAddendum = ({
               }}
             >
               <p>Perihal: {finalDraftData.add_contracts[0].perihal}</p>
-              <a
+              <div
                 style={{
-                  fontSize: 12,
-                  fontWeight: 400,
-                  color: "#3699ff",
-                  marginBottom: "1rem",
+                  display: "flex",
+                  gap: 6,
                 }}
-                href={`http://192.168.0.168:5000/${finalDraftData.add_contracts[0].final_draft[0].body_file_name}`}
               >
-                {finalDraftData.add_contracts[0].final_draft[0].body_file_name}
-              </a>
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 400,
+                    color: "#3699ff",
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${DEV_NODE}/final_draft/${finalDraftData.add_contracts[0].final_draft[0].body_file_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {
+                    finalDraftData.add_contracts[0].final_draft[0]
+                      .body_file_name
+                  }
+                </a>
+              </div>
               {finalDraftData.add_contracts[0].final_draft[0].lampiran_data.map(
                 (item) => {
                   return (
-                    <p
+                    <div
                       style={{
-                        fontSize: 12,
-                        fontWeight: 400,
-                        color: "#3699ff",
+                        display: "flex",
+                        gap: 6,
                       }}
                     >
-                      {item.lampiran_file_name}
-                    </p>
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/file-final-draft.svg"
+                        )}
+                      />
+                      <a
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          color: "#3699ff",
+                          marginBottom: "1rem",
+                        }}
+                        onClick={() =>
+                          window.open(
+                            `${DEV_NODE}/final_draft/lampiran/${item.lampiran_file_name}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {item.lampiran_file_name}
+                      </a>
+                    </div>
                   );
                 }
               )}

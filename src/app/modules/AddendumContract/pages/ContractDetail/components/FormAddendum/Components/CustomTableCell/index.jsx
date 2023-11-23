@@ -7,7 +7,6 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(() => ({
   // HANYA TERPAKAI YANG INI, SISA NYA ENGGAK!
   tableCell: {
-    width: 130,
     height: 40,
   },
 }));

@@ -124,12 +124,9 @@ const EditableTable = ({
 
   const onDeleteMode = (index) => {
     setRows((prev) => {
-      const newState = prev;
-      newState[index].item_detail.splice(index, 1);
-      // return rows.filter((row) => {
-      //   return row.id !== id;
-      // });
-      return [...newState];
+      const newState = [...prev];
+      newState.splice(index, 1);
+      return newState;
     });
   };
 
@@ -367,6 +364,7 @@ const EditableTable = ({
               values?.note,
               values?.item_detail
             );
+            openCloseAddDetail.current.close();
           }}
         >
           {() => (
@@ -638,9 +636,16 @@ const EditableTable = ({
       <Paper className={classes.root}>
         <Table className={classes.table} aria-label="caption table">
           {/* Table Header */}
+          {/* <TableBody>
+            <TableRow>
+            </TableRow>
+          </TableBody> */}
+          {/* <TableCell align="1">No.</TableCell> */}
+          {/* <TableCell align="left">No.</TableCell> */}
+
           <TableBody>
             <TableRow>
-              <TableCell size="small">No.</TableCell>
+              <TableCell>No.</TableCell>
               <TableCell align="left">Deskripsi Item</TableCell>
               <TableCell align="left">QTY</TableCell>
               <TableCell align="left">Satuan</TableCell>
@@ -677,9 +682,8 @@ const EditableTable = ({
                   {/* selalu masuk kesini diawal */}
                   {/* kalo pake tablerow gak rapih */}
                   <TableRow key={row.id}>
-                    <TableCell align="left" className={classes.tableCell}>
-                      {index + 1}
-                    </TableCell>
+                    {/* <TableCell align="1">{index + 1}</TableCell> */}
+                    <TableCell>{index + 1}</TableCell>
                     <CustomTableCell
                       {...{ row, name: "product_name", onChange }}
                     />

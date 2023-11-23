@@ -208,9 +208,11 @@ const JobPriceFormParameter = ({
                   }}
                 >
                   <label
-                    style={{
-                      flex: 1,
-                    }}
+                    style={
+                      {
+                        // flex: 1,
+                      }
+                    }
                   >
                     <p
                       style={{
@@ -258,62 +260,6 @@ const JobPriceFormParameter = ({
                         decimalSeparator=","
                         groupSeparator="."
                         value={headerData?.initial_contract_value}
-                        disabled
-                      />
-                    </div>
-                  </label>
-
-                  <label
-                    style={{
-                      flex: 1,
-                    }}
-                  >
-                    <p
-                      style={{
-                        marginBottom: 14,
-                        fontSize: 16,
-                        fontWeight: 600,
-                      }}
-                    >
-                      A. Nilai perjanjian setelah addendum
-                    </p>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: 10,
-                      }}
-                    >
-                      <select
-                        style={{
-                          borderRadius: 4,
-                          padding: "10px 12px",
-                        }}
-                        disabled
-                      >
-                        {currencies?.count?.map((item) => {
-                          return (
-                            <option
-                              selected={item.code === headerData?.currency}
-                            >
-                              {item.code}
-                            </option>
-                          );
-                        })}
-                      </select>
-                      <CurrencyInput
-                        className="form-control"
-                        style={{
-                          width: "100%",
-                          border: 1,
-                          borderStyle: "solid",
-                          borderColor: "#d1d1d1",
-                          backgroundColor: "#e8f4fb",
-                        }}
-                        placeholder="Please enter a number"
-                        decimalsLimit={2}
-                        decimalSeparator=","
-                        groupSeparator="."
-                        value={valueAfterAddendum}
                         disabled
                       />
                     </div>
@@ -372,6 +318,63 @@ const JobPriceFormParameter = ({
                 </GRAccord>
 
                 <TableContainer>
+                  <label
+                    style={{
+                      flex: 1,
+                      marginBottom: 34.5,
+                    }}
+                  >
+                    <p
+                      style={{
+                        marginBottom: 14,
+                        fontSize: 16,
+                        fontWeight: 600,
+                      }}
+                    >
+                      A. Nilai perjanjian setelah addendum
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                      }}
+                    >
+                      <select
+                        style={{
+                          borderRadius: 4,
+                          padding: "10px 12px",
+                        }}
+                        disabled
+                      >
+                        {currencies?.count?.map((item) => {
+                          return (
+                            <option
+                              selected={item.code === headerData?.currency}
+                            >
+                              {item.code}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <CurrencyInput
+                        className="form-control"
+                        style={{
+                          width: "100%",
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#d1d1d1",
+                          backgroundColor: "#e8f4fb",
+                        }}
+                        placeholder="Please enter a number"
+                        decimalsLimit={2}
+                        decimalSeparator=","
+                        groupSeparator="."
+                        value={valueAfterAddendum}
+                        disabled
+                      />
+                    </div>
+                  </label>
+
                   <div
                     style={{
                       display: "flex",

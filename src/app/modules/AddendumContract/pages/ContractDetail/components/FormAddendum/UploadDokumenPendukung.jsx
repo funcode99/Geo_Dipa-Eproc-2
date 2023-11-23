@@ -6,6 +6,13 @@ import { uploadSuppDoc } from "app/modules/AddendumContract/service/AddendumCont
 
 const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
   // AARRGHGH PASS BY REFERENCE
+  supportDocumentFetch.map((item) => {
+    if (item.seq === 1 || item.seq === 2 || item.seq === 4 || item.seq === 8) {
+      item.required = false;
+    } else {
+      item.required = true;
+    }
+  });
   const [supportingDocument, setSupportingDocument] = useState();
   // disini SLICE TIDAK MENGHAPUS ARRAY YANG SUDAH ADA
   let kondisiA = supportDocumentFetch.slice(0, 4);
@@ -30,7 +37,7 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
   useEffect(() => {
     if (
       conclusion ===
-      "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal"
+      "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai Kontrak di bawah Rp 5M)"
     ) {
       setSupportingDocument(lengkapA);
     } else if (
@@ -47,40 +54,48 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
     let formDataNew = new FormData();
     formDataNew.append("drafter_code", values.drafterCode[1]);
     formDataNew.append("add_drafter", values.drafterCode[0]);
-    values.supportDocumentData.map((item, index) => {
-      formDataNew.append(
-        `noDokumen[${index}]`,
-        typeof item.noDokumen === "undefined" ? null : item.noDokumen
-      );
-      formDataNew.append(
-        `tglDokumen[${index}]`,
-        typeof item.tglDokumen === "undefined" ? null : item.tglDokumen
-      );
-      formDataNew.append(
-        `fileDokumen[${index}]`,
-        typeof item.fileDokumen === "undefined" ? null : item.fileDokumen
-      );
-      formDataNew.append(
-        `perihal[${index}]`,
-        typeof item.perihal === "undefined" ? null : item.perihal
-      );
-      formDataNew.append(
-        `idDokumen[${index}]`,
-        typeof item.id === "0" ? null : item.id
-      );
-      formDataNew.append(`seq[${index}]`, item.seq);
-      formDataNew.append(
-        `tipeDokumen[${index}]`,
-        typeof item.document_type === "undefined" ? null : item.document_type
-      );
-      formDataNew.append(`namaDokumen[${index}]`, item.document_name);
-      formDataNew.append(
-        `namaDokumenEng[${index}]`,
-        typeof item.document_name_eng === "undefined"
-          ? null
-          : item.document_name_eng
-      );
-    });
+    values.supportDocumentData.some(
+      (item) =>
+        item.required === true &&
+        (typeof item.noDokumen === "undefined" ||
+          typeof item.tglDokumen === "undefined" ||
+          typeof item.fileDokumen === "undefined" ||
+          typeof item.perihal === "undefined")
+    )
+      ? alert("Silahkan isi form mandatory yang masih kosong")
+      : values.supportDocumentData.map((item, index) => {
+          if (
+            typeof item.noDokumen === "undefined" ||
+            typeof item.tglDokumen === "undefined" ||
+            typeof item.fileDokumen === "undefined" ||
+            typeof item.perihal === "undefined"
+          ) {
+            return;
+          } else {
+            formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
+            formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
+            formDataNew.append(`fileDokumen[${index}]`, item.fileDokumen);
+            formDataNew.append(`perihal[${index}]`, item.perihal);
+            formDataNew.append(
+              `idDokumen[${index}]`,
+              typeof item.id === "0" ? null : item.id
+            );
+            formDataNew.append(`seq[${index}]`, item.seq);
+            formDataNew.append(
+              `tipeDokumen[${index}]`,
+              typeof item.document_type === "undefined"
+                ? null
+                : item.document_type
+            );
+            formDataNew.append(`namaDokumen[${index}]`, item.document_name);
+            formDataNew.append(
+              `namaDokumenEng[${index}]`,
+              typeof item.document_name_eng === "undefined"
+                ? null
+                : item.document_name_eng
+            );
+          }
+        });
     uploadSuppDoc(formDataNew, localStorage.getItem("add_contract_id"));
   };
   function resizeTextArea(textarea) {
@@ -141,23 +156,55 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                     supportingDocument.map((item, index) => {
                       return (
                         <>
-                          <h1
+                          <div
                             style={{
-                              fontSize: 14,
-                              fontWeight: 500,
+                              display: "flex",
+                              justifyContent: "space-between",
                               marginTop: 14,
                             }}
                           >
-                            {index + 1}{" "}
-                            {item.document_name !== "" ? (
-                              item.document_name
-                            ) : (
-                              <Field
-                                type="text"
-                                name={`supportDocumentData[${index}].document_name`}
-                              />
+                            <div
+                              style={{
+                                fontSize: 14,
+                                fontWeight: 500,
+                                height: 25.06,
+                                display: "flex",
+                              }}
+                            >
+                              {index + 1}.
+                              {item.document_name !== "" ? (
+                                <p>
+                                  {item.document_name}{" "}
+                                  {item.required ? (
+                                    <span style={{ color: "#dc0526" }}>*</span>
+                                  ) : (
+                                    ""
+                                  )}
+                                </p>
+                              ) : (
+                                <Field
+                                  type="text"
+                                  name={`supportDocumentData[${index}].document_name`}
+                                />
+                              )}
+                            </div>
+                            {item.document_name === "" && (
+                              <button
+                                style={{
+                                  height: 25.06,
+                                }}
+                                onClick={() => {
+                                  setSupportingDocument((previous) => {
+                                    const newState = [...previous];
+                                    newState.splice(index, 1);
+                                    return newState;
+                                  });
+                                }}
+                              >
+                                Hapus
+                              </button>
                             )}
-                          </h1>
+                          </div>
                           <div
                             style={{
                               display: "flex",
