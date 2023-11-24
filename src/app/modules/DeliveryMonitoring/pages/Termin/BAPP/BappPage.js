@@ -106,7 +106,6 @@ const BappPage = ({
   const [content, setContent] = React.useState([]);
   const isClient = status === "client";
   const isApproved = taskNews?.approve_status?.code === "approved";
-
   const initialValues = React.useMemo(
     () => ({
       nomor_bapp: taskNews?.no || "",
@@ -119,8 +118,8 @@ const BappPage = ({
       hasil_pekerjaan: taskNews?.review_text || "",
       party1_name : taskNews?.bapp_authorize_officer || "",
       party1_jabatan: taskNews?.bapp_authorize_position || "",
-      party2_name: contract?.contract_party?.party_2_autorize_name,
-      party2_jabatan: contract?.contract_party?.party_2_position,
+      party2_name: taskNews?.bapp_authorize_official_name || contract?.contract_party?.party_2_autorize_name,
+      party2_jabatan: taskNews?.bapp_authorize_official_position || contract?.contract_party?.party_2_position,
     }),
     [taskNews, contract]
   );
