@@ -48,7 +48,6 @@ const KickOffDetail = ({
   contractStart,
   status,
   saveContractById,
-  setToast,
 }) => {
   const isClient = status === "client";
 
@@ -140,7 +139,7 @@ const KickOffDetail = ({
             loading={loadings.post}
             onSubmit={_handleSubmit}
             validation={formValidation}
-            formData={fieldKickOff(setToast)}
+            formData={fieldKickOff}
             initial={initValues}
             fieldProps={{
               listOptions: docOptions,

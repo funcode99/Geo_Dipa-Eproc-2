@@ -1,2 +1,2 @@
-import WelcomeBox from "app/components/boxes/WelcomeBox/WelcomeBox";
+import WelcomeBox from "./WelcomeBox";
 export default WelcomeBox;

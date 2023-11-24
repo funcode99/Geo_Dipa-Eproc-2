@@ -1,11 +1,11 @@
-import { persistReducer } from "redux-persist"
-import { put, takeLatest } from "redux-saga/effects"
-import { getUserByToken } from "./authCrud"
-import { PERSIST_REDUCER } from "redux/BaseHost"
+import { persistReducer } from "redux-persist";
+import { put, takeLatest } from "redux-saga/effects";
+import { getUserByToken } from "./authCrud";
+import { PERSIST_REDUCER } from "../../../../redux/BaseHost";
 // Author: Jeffry Azhari Rosman
 // Email: Jeffryazhari@gmail.com
 // Penambahan Encryption pada Redux agar Tidak Dapat Dilihat Isinya.
-// import { encryptTransform } from 'redux-persist-transform-encrypt'
+// import { encryptTransform } from 'redux-persist-transform-encrypt';
 
 export const actionTypes = {
   Login: "[Login] Action",
@@ -15,12 +15,12 @@ export const actionTypes = {
   UserLoaded: "[Load User] Auth API",
   SetUser: "[Set User] Action",
   UpdateProfile: "[Update Profile] Request API",
-}
+};
 
 const initialAuthState = {
   user: undefined,
   authToken: undefined,
-}
+};
 
 // Author: Jeffry Azhari Rosman
 // Email: Jeffryazhari@gmail.com
@@ -55,19 +55,15 @@ export const reducer = persistReducer(
 
       case actionTypes.UserLoaded: {
         const { user } = action.payload;
-        // saat login ini yang jalan
-        console.log('isi userloaded', { ...state, user})
         return { ...state, user };
       }
 
       case actionTypes.SetUser: {
         const { user } = action.payload;
-        console.log('isi setuser', { ...state, user})
         return { ...state, user };
       }
 
       case actionTypes.UpdateProfile: {
-        console.log('isi updateprofile', { ...state, user})
         const { user } = action.payload;
         return { ...state, user };
       }
@@ -96,15 +92,15 @@ export const actions = {
 
 export function* saga() {
   yield takeLatest(actionTypes.Login, function* loginSaga() {
-    yield put(actions.requestUser())
-  })
+    yield put(actions.requestUser());
+  });
 
   yield takeLatest(actionTypes.Register, function* registerSaga() {
-    yield put(actions.requestUser())
-  })
+    yield put(actions.requestUser());
+  });
 
   yield takeLatest(actionTypes.UserRequested, function* userRequested() {
-    const { data: user } = yield getUserByToken()
-    yield put(actions.fulfillUser(user.data))
-  })
+    const { data: user } = yield getUserByToken();
+    yield put(actions.fulfillUser(user.data));
+  });
 }

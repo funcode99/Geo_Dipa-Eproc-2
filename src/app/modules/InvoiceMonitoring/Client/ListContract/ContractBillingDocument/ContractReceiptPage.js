@@ -562,7 +562,7 @@ function ContractReceiptPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["receipt_date"])).format(
-                    "DD/MM/YYYY"
+                    "DD MMMM YYYY"
                   )}
                 </span>
               </div>
@@ -585,7 +585,7 @@ function ContractReceiptPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "DD/MM/YYYY hh:mm:ss"
+                    "DD MMMM YYYY hh:mm:ss"
                   )}
                 </span>
               </div>
@@ -620,10 +620,10 @@ function ContractReceiptPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "DD/MM/YYYY hh:mm:ss"
+                        "DD MMMM YYYY hh:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "DD/MM/YYYY hh:mm:ss"
+                        "DD MMMM YYYY hh:mm:ss"
                       )}
                 </span>
               </div>
@@ -793,11 +793,15 @@ function ContractReceiptPage(props) {
                 </label>
                 <div className="col-sm-8">
                   <input
-                    type="date"
+                    type="text"
                     className="form-control"
                     id="dateReceipt"
                     disabled
-                    defaultValue={receiptData?.receipt_date}
+                    defaultValue={
+                      receiptData?.receipt_date
+                        ? moment(receiptData?.receipt_date).format("DD MMMM YYYY")
+                        : ""
+                    }
                   />
                 </div>
               </div>
@@ -863,7 +867,7 @@ function ContractReceiptPage(props) {
                     defaultValue={
                       receiptData?.created_at
                         ? moment(receiptData?.created_at).format(
-                            "DD/MM/YYYY hh:mm:ss"
+                            "DD MMMM YYYY hh:mm:ss"
                           )
                         : ""
                     }
@@ -1043,7 +1047,9 @@ function ContractReceiptPage(props) {
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.receipt_no}</TableCell>
-                  <TableCell>{item.receipt_date}</TableCell>
+                  <TableCell>{item?.receipt_date
+                      ? moment(item?.receipt_date).format("DD MMMM YYYY")
+                      : ""}</TableCell>
                   <TableCell>
                     <a
                       onClick={() => {
@@ -1061,7 +1067,7 @@ function ContractReceiptPage(props) {
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
                     {moment(new Date(item.created_at)).format(
-                      "DD/MM/YYYY hh:mm:ss"
+                      "DD MMMM YYYY hh:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>

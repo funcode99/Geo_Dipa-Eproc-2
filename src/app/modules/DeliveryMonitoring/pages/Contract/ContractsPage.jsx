@@ -1,29 +1,24 @@
-// import axios from "axios"
-// import TablePaginationCustom from "../../../../components/tables/TablePagination"
-// import { DEV_NODE2 } from "../../../../../redux/BaseHost"
-
-import { makeStyles, Paper } from "@material-ui/core"
-import React from "react"
-import SVG from "react-inlinesvg"
-import { FormattedMessage } from "react-intl"
-import { TableRow, TableCell } from "@material-ui/core"
-import { NavLink } from "react-router-dom"
-import { connect } from "react-redux"
-import { toAbsoluteUrl } from "_metronic/_helpers"
-
-import ButtonAction from "app/components/buttonAction/ButtonAction"
-import { formatDate } from "app/libs/date"
-import Subheader from "app/components/subheader"
-import Tables from "app/components/tableCustomV1/table"
+import { makeStyles, Paper } from "@material-ui/core";
+import React from "react";
+import SVG from "react-inlinesvg";
+import { FormattedMessage } from "react-intl";
+import { TableRow, TableCell } from "@material-ui/core";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import ButtonAction from "../../../../components/buttonAction/ButtonAction";
+import Subheader from "../../../../components/subheader";
+import TablePaginationCustom from "../../../../components/tables/TablePagination";
+import { formatDate } from "../../../../libs/date";
+import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
+import { fetch_api_sg, getLoading } from "../../../../../redux/globalReducer";
+import Tables from "../../../../components/tableCustomV1/table";
 import {
   getSorting,
   searchFindMulti,
   stableSort,
-} from "app/components/tables/TablePagination/TablePaginationCustom"
-import { 
-  fetch_api_sg, 
-  getLoading 
-} from "redux/globalReducer"
+} from "../../../../components/tables/TablePagination/TablePaginationCustom";
+import axios from "axios";
+import { DEV_NODE2 } from "../../../../../redux/BaseHost";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
-}))
+}));
 
 const tableHeaderContractsNew = [
   {
@@ -92,34 +87,34 @@ const tableHeaderContractsNew = [
     order: { active: false, status: false },
     filter: { active: false, type: "text" },
   },
-]
+];
 
 const keys = {
   fetch: "get-data-contracts",
-}
+};
 
 export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
-  const classes = useStyles()
-  const [dataArr, setDataArr] = React.useState([])
-  const [order, setOrder] = React.useState("asc")
-  const [orderBy, setOrderBy] = React.useState("")
-  const [filterBy, setFilterBy] = React.useState({})
-  const [newContent, setNewContent] = React.useState([])
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const classes = useStyles();
+  const [dataArr, setDataArr] = React.useState([]);
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("");
+  const [filterBy, setFilterBy] = React.useState({});
+  const [newContent, setNewContent] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const generateTableContent = (data) => {
     setNewContent(dataArr);
-  }
+  };
 
   const handleFilter = (data, data2) => {
-    const sort = JSON.parse(data2.sort)
-    const filter = JSON.parse(data2.filter)
-    setOrder(sort.order ? "asc" : "desc")
-    setOrderBy(sort.name)
-    setFilterBy(filter)
-    console.log(`datazzz`, filter, data2)
-  }
+    const sort = JSON.parse(data2.sort);
+    const filter = JSON.parse(data2.filter);
+    setOrder(sort.order ? "asc" : "desc");
+    setOrderBy(sort.name);
+    setFilterBy(filter);
+    console.log(`datazzz`, filter, data2);
+  };
 
   function handleChangePage(newPage) {
     setPage(newPage);
@@ -177,18 +172,16 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
         );
       },
     });
-  }
+  };
 
   React.useEffect(() => {
     getDataContracts();
-  }, [])
+  }, []);
 
   return (
     <>
-
-      {/* terpakai disini, ada judul & icon yang dikirim ke komponen subheader */}
       <Subheader
-        text="Daftar Kontrak & POS"
+        text="Daftar Kontrak & PO"
         IconComponent={
           <SVG
             src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")}
@@ -245,20 +238,19 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
           loading={loadings.fetch}
         /> */}
       </Paper>
-
     </>
-  )
-}
+  );
+};
 
 const mapState = (state) => ({
   loadings: {
     fetch: getLoading(state, keys.fetch),
   },
   status: state.auth.user.data.status,
-})
+});
 
 const mapDispatch = {
   fetch_api_sg,
-}
+};
 
-export default connect(mapState, mapDispatch)(ContractsPage)
+export default connect(mapState, mapDispatch)(ContractsPage);

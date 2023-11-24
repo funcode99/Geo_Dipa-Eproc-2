@@ -34,7 +34,7 @@ function getSteps() {
       label: "Data 7",
       status: "NO STARTED",
     },
-  ]
+  ];
 }
 
 const Steppers = (props) => {
@@ -65,6 +65,6 @@ const Steppers = (props) => {
       )}
     </React.Fragment>
   );
-}
+};
 
-export default injectIntl(connect(null, null)(Steppers))
+export default injectIntl(connect(null, null)(Steppers));
