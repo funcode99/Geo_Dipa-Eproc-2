@@ -27,7 +27,6 @@ function RootVendorDelivery(props) {
   suhbeader.setTitle("Delivery Monitoring");
   return (
     <Switch>
-      
       <Redirect
         from="/vendor/delivery-monitoring"
         exact={true}

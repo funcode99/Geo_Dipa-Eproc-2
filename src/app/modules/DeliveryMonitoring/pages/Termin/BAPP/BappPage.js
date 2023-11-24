@@ -316,7 +316,6 @@ const BappPage = ({
   React.useEffect(() => {
     // const isApproved = taskNews?.approve_status?.code === "approved";
     // setStepActive(1);
-    // hardcode mode on
     if (taskNews?.approve_status) {
       if (isApproved) setStepActive(3);
       else if (taskNews?.file_upload) {

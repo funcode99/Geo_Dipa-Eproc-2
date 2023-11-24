@@ -1,50 +1,49 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect, useCallback } from "react"
-import { useLocation } from "react-router"
-import { NavLink } from "react-router-dom"
-import SVG from "react-inlinesvg"
-import { toAbsoluteUrl, checkIsActive } from "_metronic/_helpers"
+import React, { useState, useEffect, useCallback } from "react";
+import { useLocation } from "react-router";
+import { NavLink } from "react-router-dom";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl, checkIsActive } from "../../../../_helpers";
 import {
   FormattedMessage,
   // injectIntl
-} from "react-intl"
-import { useSelector, shallowEqual, useDispatch } from "react-redux"
+} from "react-intl";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import {
   DataAsideMenuListClient,
-  DataAsideMenuListVendor
-} from '_metronic/layout/components/aside/aside-menu/DataAsideMenuList'
-import { getRolesAdmin } from "app/modules/Master/service/MasterCrud"
+  DataAsideMenuListVendor,
+} from "./DataAsideMenuList";
+import { getRolesAdmin } from "../../../../../app/modules/Master/service/MasterCrud";
 import {
   clean_loading_state_rd,
-  getFinanceUser
-} from "redux/globalReducer"
+  getFinanceUser,
+} from "../../../../../redux/globalReducer";
 
 export function AsideMenuList({ layoutProps }) {
-  const location = useLocation()
-  const dispatch = useDispatch()
+  const location = useLocation();
+  const dispatch = useDispatch();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)
       ? ` ${!hasSubmenu &&
           "menu-item-active"} menu-item-open menu-item-not-hightlighted`
-      : ""
+      : "";
   };
   let status = useSelector(
     (state) => state.auth.user.data.status,
     shallowEqual
   );
-  const isClient = status === "client"
-  // const isClient = false
-  let isFinance = useSelector((state) => getFinanceUser(state))
-  const dataUser = useSelector((state) => state.auth.user.data)
+  const isClient = status === "client";
+  let isFinance = useSelector((state) => getFinanceUser(state));
+  const dataUser = useSelector((state) => state.auth.user.data);
   let monitoring_role = dataUser.monitoring_role
     ? dataUser.monitoring_role
-    : []
-  const [asideMenu, setAsideMenu] = useState([])
+    : [];
+  const [asideMenu, setAsideMenu] = useState([]);
   // let asideMenu =
   //   status === "client" ? DataAsideMenuListClient : DataAsideMenuListVendor;
 
-  // asideMenu = asidefilter(function (obj) {
+  // asideMenu = asideMenu.filter(function (obj) {
   //   return obj.title !== "MENU.USER_MANAGEMENT";
   // });
 
@@ -54,7 +53,7 @@ export function AsideMenuList({ layoutProps }) {
       const userNonFinance = isClient && !isFinance;
       if (isClient && !isFinance) {
         // replace sub menu invoice monitoring, if only user is not finance department
-        newList = DataAsideMenuListClient.reduce((acc, item) => {
+        newList = DataAsideMenuListClient.reduce((acc, item, index, arr) => {
           if (item.title === "MENU.INVOICE_MONITORING")
             return [
               ...acc,
@@ -63,7 +62,6 @@ export function AsideMenuList({ layoutProps }) {
                 subMenu: [
                   {
                     rootPath: "/client/invoice_monitoring/contract",
-                    // dikasih delivery monitoring kenapa ini ? asalnya dari i18n/messages/en.json
                     title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
                     subMenu: null,
                   },
@@ -101,16 +99,13 @@ export function AsideMenuList({ layoutProps }) {
   }, [isFinance, isClient]);
 
   useEffect(() => {
-    getRolesAdminData()
-    dispatch(clean_loading_state_rd())
-  }, [])
-
-  console.log('isi asidemenu',asideMenu)
+    getRolesAdminData();
+    dispatch(clean_loading_state_rd());
+  }, []);
 
   return (
     <>
       <ul className={`menu-nav ${layoutProps.ulClasses}`}>
-        
         <li
           className={`menu-item ${getMenuItemActive(
             `/${status}/dashboard`,
@@ -120,12 +115,11 @@ export function AsideMenuList({ layoutProps }) {
         >
           <NavLink className="menu-link" to={`/${status}/dashboard`}>
             <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/All/New_Dashboard.svg")} />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")} />
             </span>
             <span className="menu-text">Dashboard</span>
           </NavLink>
         </li>
-
         {asideMenu.map((item, index) => {
           return (
             <li
@@ -138,7 +132,6 @@ export function AsideMenuList({ layoutProps }) {
               aria-haspopup="true"
               data-menu-toggle="hover"
             >
-              
               <NavLink
                 className={
                   item.subMenu && item.subMenu.length > 0
@@ -157,7 +150,6 @@ export function AsideMenuList({ layoutProps }) {
                   <i className="menu-arrow" />
                 )}
               </NavLink>
-
               {item.subMenu && item.subMenu.length > 0 && (
                 <div className="menu-submenu ">
                   <i className="menu-arrow" />
@@ -239,11 +231,9 @@ export function AsideMenuList({ layoutProps }) {
                   </ul>
                 </div>
               )}
-
             </li>
           );
         })}
-
       </ul>
     </>
   );

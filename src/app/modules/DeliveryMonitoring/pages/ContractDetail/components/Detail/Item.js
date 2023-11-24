@@ -7,33 +7,23 @@ import { rupiah } from "../../../../../../libs/currency";
 import Navs from "../../../../../../components/navs";
 import useToast from "../../../../../../components/toast";
 // import TableItem from "./TableItem";
-import TableItemNew from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/TableItemNew";
+import TableItemNew from "./TableItemNew";
 // import { StyledTableRow } from "../../../../../../components/tables/style";
-import {
-  TableCell,
-  TableRow,
-  Checkbox,
-  Button,
-  Dialog,
-  DialogActions,
+import { TableCell, TableRow, Checkbox, Button, 
+        Dialog, DialogActions,
   DialogContent,
-  DialogTitle,
-  Slide,
-} from "@material-ui/core";
+        DialogTitle, Slide } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import RowAccordion from "./RowAccordion";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
-import {
-  theadService,
-  theadItem,
-} from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/fieldData";
+import { theadService, theadItem } from "./fieldData";
 
 import {
   asyncService,
   asyncHistory,
   asyncItem,
   asyncSchedule,
-  asyncPo,
+  asyncPo
 } from "../../../../../Master/service/MasterCrud";
 
 const navLists = [
@@ -438,21 +428,18 @@ const Item = ({ handleClick, status }) => {
 
       {/* <Container>
         <ExpansionBox title={"TITLE.ITEM_TABLE"}> */}
-      <div className="mb-5" style={{ display: "flex" }}>
+      <div className="mb-5" style={{display:'flex'  }}>
         <Navs
           navLists={navLists}
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
         />
-        {/* buat button synchronize */}
-        <div style={{ marginLeft: "auto" }}>
+        <div style={{ 'marginLeft' : 'auto' }}>
           <span
             className="mr-1 btn btn-success btn-sm"
             onClick={() => {
               stateErrSync("service");
               setPoAsync(true);
-              setTitleSync(
-                <FormattedMessage id="TITLE.SYNCHRONIZE_SERVICES" />
-              );
+              setTitleSync(<FormattedMessage id="TITLE.SYNCHRONIZE_SERVICES" />);
             }}
           >
             <i className="fas fa-sync "></i>
@@ -654,7 +641,9 @@ const Item = ({ handleClick, status }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{titleSync}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {titleSync}
+        </DialogTitle>
         <Form id="asyncData" onSubmit={handleAsync}>
           <DialogContent>
             <Row>

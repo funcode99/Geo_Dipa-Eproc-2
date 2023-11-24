@@ -14,7 +14,6 @@ const colourOptions = [
   { value: "slate", label: "Slate", color: "#253858" },
   { value: "silver", label: "Silver", color: "#666666" },
 ];
-
 const groupedOptions = [
   {
     label: "Colours",
@@ -77,4 +76,4 @@ const SelectInputCustom = ({
   );
 };
 
-export default SelectInputCustom
+export default SelectInputCustom;
