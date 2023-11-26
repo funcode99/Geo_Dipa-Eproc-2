@@ -20,7 +20,9 @@ import SelectDateInput from "app/components/input/SelectDateInput";
 import TextAreaInput from "app/components/input/TextAreaInput";
 import RenderInput from "app/components/input/RenderInput";
 import { connect } from "react-redux";
-import Summary from "./Summary";
+import SummaryTab from "./tabs/Summary";
+import ParaPihakTab from "./tabs/ParaPihak";
+
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { FormattedMessage } from "react-intl";
 
@@ -43,6 +45,8 @@ const DraftAddendumPage = ({
   const [contract, setContract] = useState({});
   const { draft_id } = useParams();
 
+  console.log({ sequence });
+
   const getClientStatus = () => {
     const client_role = "ADMIN_CONTRACT";
     const filteredData = rolesEproc?.filter(
@@ -62,7 +66,6 @@ const DraftAddendumPage = ({
       },
     });
   };
-
 
   useEffect(() => {
     getAddendum();
@@ -265,6 +268,7 @@ const DraftAddendumPage = ({
 
   // sengaja dikasih event biar yang diambil value nya
   function handleChangeTab(event, newTabActive) {
+    console.log({ newTabActive });
     setTabActive(newTabActive);
   }
 
@@ -1691,15 +1695,12 @@ const DraftAddendumPage = ({
             />
           </div>
           {/* <FormParameter currentActiveTab={tabActive} /> */}
-          {!loadings.getAddendumDetail ? (
-            <Summary data={data} />
-          ) : (
-            <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
-          )}
+          {tabActive === 0 && <SummaryTab data={data} />}
+          {tabActive === 1 && <ParaPihakTab data={data} />}
         </>
       )}
 
-      {sequence === 1 && (
+      {/* {sequence === 1 && (
         <>
           <div
             style={{
@@ -1796,7 +1797,7 @@ const DraftAddendumPage = ({
             <button className="btn btn-primary">Submit</button>
           </div>
         </>
-      )}
+      )} */}
 
       {sequence === 2 && (
         <>
