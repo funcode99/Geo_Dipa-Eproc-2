@@ -36,8 +36,8 @@ export default function ButtonAction({
     setAnchorEl(null);
   }
   const handleChange = React.useCallback(
-    (type, data) => {
-      if (typeof handleAction === "function") handleAction(type, data);
+    (type, data, label) => {
+      if (typeof handleAction === "function") handleAction(type, data, label);
       handleClose();
     },
     [handleAction, handleClose]

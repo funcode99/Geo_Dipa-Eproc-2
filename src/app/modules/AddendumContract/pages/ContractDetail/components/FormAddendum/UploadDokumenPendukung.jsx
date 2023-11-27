@@ -5,12 +5,32 @@ import { Button } from "react-bootstrap";
 import { uploadSuppDoc } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
-  // AARRGHGH PASS BY REFERENCE
+  // AARRGHGH PASS BY REFERENCE\
+  console.log("isi supportDocumentFetch", supportDocumentFetch);
   supportDocumentFetch.map((item) => {
-    if (item.seq === 1 || item.seq === 2 || item.seq === 4 || item.seq === 8) {
-      item.required = false;
-    } else {
+    if (
+      (item.document_name ===
+        "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor" &&
+        localStorage.getItem("isAddJobPrice") === true) ||
+      item.document_name === "Berita Acara Kesepakatan Addendum" ||
+      (item.document_name === "Justifikasi" &&
+        localStorage.getItem("conclusion") ===
+          "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
+      (item.document_name === "Kajian Hukum dari Fungsi Legal" &&
+        localStorage.getItem("conclusion") ===
+          "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
+      (item.document_name ===
+        "Kajian Risk Management dari Fungsi Risk Management" &&
+        localStorage.getItem("conclusion") ===
+          "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
+      (item.document_name === "Hasil Keputusan Rapat Direksi" &&
+        localStorage.getItem("conclusion") ===
+          "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)") ||
+      item.document_name === "Memo/Surat Permohonan Addendum"
+    ) {
       item.required = true;
+    } else {
+      item.required = false;
     }
   });
   const [supportingDocument, setSupportingDocument] = useState({
@@ -79,10 +99,10 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
   const submitData = (values) => {
     console.log("isi values saat submit upload", supportingDocument?.data);
     let formDataNew = new FormData();
-    formDataNew.append("drafter_code", values.drafterCode[1]);
-    formDataNew.append("add_drafter", values.drafterCode[0]);
+    formDataNew.append("drafter_code", values.drafterCode);
+    formDataNew.append("add_drafter", values.addDrafter);
     if (
-      supportingDocument?.data.some(
+      supportingDocument?.data?.some(
         (item) =>
           item.required === true &&
           (typeof item.noDokumen === "undefined" ||
@@ -151,7 +171,6 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
       minWidth: 650,
     },
   }));
-
   const setNewDocumentValue = (index, event, name) => {
     setSupportingDocument((previous) => {
       let newState = [...previous.data];
@@ -162,7 +181,6 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
       };
     });
   };
-
   const classes = useStyles();
   return (
     <>
@@ -176,7 +194,10 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
             enableReinitialize={true}
             initialValues={{
               supportDocumentData: supportingDocument?.data,
-              drafterCode: ["Supply Chain Management (SCM) Division", 1],
+              drafterSelectValue: {
+                drafterCode: "",
+                addDrafter: "",
+              },
             }}
             onSubmit={(values) => {
               submitData(values);
@@ -387,7 +408,7 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                 </p>
                                 <Field
                                   as="textarea"
-                                  // name={`supportDocumentData[${index}].perihal`}
+                                  name={`supportDocumentData[${index}].perihal`}
                                   value={supportingDocument.data[index].perihal}
                                   onChange={(e) => {
                                     setNewDocumentValue(
@@ -464,16 +485,27 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                         //   backgroundColor: '#e8f4fb',
                         //   borderRadius: 4
                         // }}
-                        value={["Supply Chain Management (SCM) Division", 1]}
+                        value={{
+                          drafterCode: "Supply Chain Management (SCM) Division",
+                          addDrafter: 1,
+                        }}
                       >
                         Supply Chain Management (SCM) Division
                       </option>
                       <option
-                        value={["Corporate Legal & Compliance Division", 2]}
+                        value={{
+                          drafterCode: "Corporate Legal & Compliance Division",
+                          addDrafter: 2,
+                        }}
                       >
                         Corporate Legal & Compliance Division
                       </option>
-                      <option value={["Pengguna (Direksi Pekerjaan)", 2]}>
+                      <option
+                        value={{
+                          drafterCode: "Pengguna (Direksi Pekerjaan)",
+                          addDrafter: 3,
+                        }}
+                      >
                         Pengguna (Direksi Pekerjaan)
                       </option>
                     </Field>
