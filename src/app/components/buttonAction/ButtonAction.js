@@ -99,12 +99,7 @@ export default function ButtonAction({
                       <i className={el.icon}></i>
                     </ListItemIcon>
                     <ListItemText
-                      primary={
-                        el.label
-                          ? // <FormattedMessage id={el.label} />
-                            "a"
-                          : "b"
-                      }
+                      primary={<FormattedMessage id={el.label} />}
                     />
                   </MenuItem>
                 </Link>

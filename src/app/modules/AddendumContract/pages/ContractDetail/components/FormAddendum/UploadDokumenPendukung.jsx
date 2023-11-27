@@ -5,12 +5,32 @@ import { Button } from "react-bootstrap";
 import { uploadSuppDoc } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
-  // AARRGHGH PASS BY REFERENCE
+  // AARRGHGH PASS BY REFERENCE\
+  console.log("isi supportDocumentFetch", supportDocumentFetch);
   supportDocumentFetch.map((item) => {
-    if (item.seq === 1 || item.seq === 2 || item.seq === 4 || item.seq === 8) {
-      item.required = false;
-    } else {
+    if (
+      (item.document_name ===
+        "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor" &&
+        localStorage.getItem("isAddJobPrice") === true) ||
+      item.document_name === "Berita Acara Kesepakatan Addendum" ||
+      (item.document_name === "Justifikasi" &&
+        localStorage.getItem("conclusion") ===
+          "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
+      (item.document_name === "Kajian Hukum dari Fungsi Legal" &&
+        localStorage.getItem("conclusion") ===
+          "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
+      (item.document_name ===
+        "Kajian Risk Management dari Fungsi Risk Management" &&
+        localStorage.getItem("conclusion") ===
+          "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
+      (item.document_name === "Hasil Keputusan Rapat Direksi" &&
+        localStorage.getItem("conclusion") ===
+          "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)") ||
+      item.document_name === "Memo/Surat Permohonan Addendum"
+    ) {
       item.required = true;
+    } else {
+      item.required = false;
     }
   });
   const [supportingDocument, setSupportingDocument] = useState({

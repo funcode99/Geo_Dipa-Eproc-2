@@ -72,6 +72,7 @@ const FormPermohonan = (props) => {
           )
       : "0";
     localStorage.setItem("value_after_addendum", JSON.stringify(afterValue));
+    localStorage.setItem("isAddJobPrice", values.checked.includes("job_price"));
     submitAddendumRequest({
       // unauthorized karena contract id nya wkwk, dasar goblok
       contract_id: `${props.contractId}`,
@@ -1017,7 +1018,7 @@ const FormPermohonan = (props) => {
                           <input
                             className="d-none"
                             value={`${
-                              parseInt(afterAddendumJobPrice) > 5000000000 &&
+                              parseInt(afterAddendumJobPrice) >= 5000000000 &&
                               parseInt(Math.abs(adnm_percentage)) > 10
                                 ? setConclusion(
                                     "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)"
@@ -1026,16 +1027,16 @@ const FormPermohonan = (props) => {
                                     5000000000 &&
                                   parseInt(Math.abs(adnm_percentage)) < 10
                                 ? setConclusion(
-                                    "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M"
+                                    "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)"
                                   )
                                 : parseInt(afterAddendumJobPrice) <
                                     5000000000 &&
                                   parseInt(Math.abs(adnm_percentage)) < 10
                                 ? setConclusion(
-                                    "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal"
+                                    "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)"
                                   )
                                 : setConclusion(
-                                    "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai Kontrak di bawah Rp 5M)"
+                                    "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)"
                                   )
                             }`}
                           />
