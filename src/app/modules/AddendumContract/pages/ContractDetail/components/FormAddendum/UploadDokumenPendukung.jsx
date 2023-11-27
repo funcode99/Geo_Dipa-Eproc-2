@@ -216,7 +216,7 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                               }}
                             >
                               {index + 1}.
-                              {item.document_name !== "" ? (
+                              {item.additional !== true ? (
                                 <p>
                                   {item.document_name}{" "}
                                   {item.required ? (
@@ -232,7 +232,13 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                   value={
                                     supportingDocument.data[index].document_name
                                   }
-                                  onChange={(e) => {}}
+                                  onChange={(e) => {
+                                    setNewDocumentValue(
+                                      index,
+                                      e.target.value,
+                                      "document_name"
+                                    );
+                                  }}
                                 />
                               )}
                             </div>
@@ -421,6 +427,7 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                 tglDokumen: "",
                                 fileDokumenKirim: "",
                                 seq: supportDocumentFetch.length + 1,
+                                additional: true,
                               },
                             ],
                           };
