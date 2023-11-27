@@ -31,9 +31,6 @@ const RenderInput = ({
   onFocus,
   onBlur,
   onChange,
-  inputValue,
-  setChecked,
-  fieldInfo,
   ...otherProps
 }) => {
   const isSelect = typeInput === "SelectInputCustom";
@@ -62,32 +59,10 @@ const RenderInput = ({
     <div>
       {name && (
         <div>
-          <div
-            className={`form-group row ${
-              typeInput === "CheckboxInput" ? "abcd" : ""
-            }`}
-          >
-            <div>
-              {/* ini input nya */}
-              <Component
-                value={inputValue || ""}
-                name={name}
-                onChange={() =>
-                  setChecked((oldValue) => [...oldValue, inputValue])
-                }
-                onFocus={_handleFocus}
-                onBlur={_handleBlur}
-                {...selectProps}
-                {...otherProps}
-              />
-              <small className="form-text text-muted">{fieldInfo}</small>
-              {/* <ErrorMessage name={name} /> */}
-              {!!!touched[name] && (
-                <span className={"text-danger mt-2"}>{errors[name]}</span>
-              )}
-            </div>
-
-            <label className={`col-form-label`}>{label}</label>
+          <div className="form-group row">
+            <label className={`col-sm-${labelSize} col-form-label`}>
+              {label}
+            </label>
             <div className={`col-sm-${formInputSize}`}>
               <Component
                 // labelClass="mb-1"

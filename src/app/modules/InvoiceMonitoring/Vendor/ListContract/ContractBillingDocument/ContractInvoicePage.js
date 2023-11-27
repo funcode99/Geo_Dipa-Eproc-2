@@ -251,7 +251,7 @@ function ContractInvoicePage(props) {
               response["data"]["data"]["from_time"]
                 ? window
                     .moment(new Date(response["data"]["data"]["from_time"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             setUploadFilename(response["data"]["data"]["file_name"]);
@@ -421,7 +421,7 @@ function ContractInvoicePage(props) {
               response["data"]["data"]["from_time"]
                 ? window
                     .moment(new Date(response["data"]["data"]["from_time"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
           }
@@ -995,7 +995,9 @@ function ContractInvoicePage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type="date"
+                      type={loading ||
+                        invoiceStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate) ? "text": "date"}
                       className="form-control"
                       id="dateInvoice"
                       disabled={
@@ -1380,7 +1382,11 @@ function ContractInvoicePage(props) {
                   <TableRow key={index.toString()}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.invoice_no}</TableCell>
-                    <TableCell>{item.from_time}</TableCell>
+                    <TableCell>{
+                      item.from_time
+                        ? moment(item.from_time).format("DD MMMM YYYY")
+                        : ""
+                    }</TableCell>
                     <TableCell>
                       <a href={getFileInvoice + item.file_name}>
                         {item.file_name}
@@ -1389,7 +1395,7 @@ function ContractInvoicePage(props) {
                     <TableCell>{item.created_by_name}</TableCell>
                     <TableCell>
                       {moment(new Date(item.created_at)).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                     </TableCell>
                     <TableCell>

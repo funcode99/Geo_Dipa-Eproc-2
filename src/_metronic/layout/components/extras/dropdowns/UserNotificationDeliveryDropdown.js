@@ -137,23 +137,23 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
     [dispatch, fetch_api_sg]
   );
 
-  // const getContractById = React.useCallback(
-  //   (contractId, link) => {
-  //     dispatch(
-  //       fetch_api_sg({
-  //         keys: key_contract,
-  //         type: "get",
-  //         url: `/delivery/contract/${contractId}`,
-  //         onSuccess: (res) => {
-  //           console.log(`res`, res?.data);
-  //           saveContractById(res?.data);
-  //           history.push(link);
-  //         },
-  //       })
-  //     );
-  //   },
-  //   [saveContractById, fetch_api_sg, history]
-  // );
+  const getContractById = React.useCallback(
+    (contractId, link) => {
+      dispatch(
+        fetch_api_sg({
+          keys: key_contract,
+          type: "get",
+          url: `/delivery/contract/${contractId}`,
+          onSuccess: (res) => {
+            console.log(`res`, res?.data);
+            saveContractById(res?.data);
+            history.push(link);
+          },
+        })
+      );
+    },
+    [saveContractById, fetch_api_sg, history]
+  );
 
   // re-fetch if there is changes. will fetch new notif after 10 seconds
   const reFetchNotif = debounce(() => fetchNotif({ refresh: true }), 10000);
@@ -261,10 +261,10 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                           key={index.toString()}
                           onClick={() => {
                             // fetchDetailNotif({ id: item?._id });
-                            // getContractById(
-                            //   item?.data?.contract_id,
-                            //   !!isContractPage ? linkContract : linkTermin
-                            // );
+                            getContractById(
+                              item?.data?.contract_id,
+                              !!isContractPage ? linkContract : linkTermin
+                            );
                             // tabInvoice.tab = item.menu_tab || 0;
                             // tabInvoice.tabInvoice = item.sub_menu_tab || 0;
                             // props.set_data_tab_invaoice(tabInvoice);

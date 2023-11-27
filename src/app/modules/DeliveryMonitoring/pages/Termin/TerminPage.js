@@ -100,7 +100,6 @@ const TerminPage = ({
     ? TabLists
     : TabLists.filter((item) => item.id !== "delivery-order");
 
-    // gak jalan disini juga
   const dataProgress = [
     {
       label: "Create Term",

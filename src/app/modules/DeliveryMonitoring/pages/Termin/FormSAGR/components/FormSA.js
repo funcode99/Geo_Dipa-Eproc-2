@@ -33,7 +33,8 @@ const FormSA = ({
     fetch_api_sg({
       key: keys.fetch_wbs,
       type: "get",
-      url: `delivery/wbs/${dataContractById?.id}`,
+      // url: `delivery/wbs/${dataContractById?.id}`,
+      url: `delivery/wbs-task/${dataContractById?.id}`,
       onSuccess: (res) => {
         console.log("reswbs", res);
         setlistWBS(res.data);
@@ -72,6 +73,8 @@ const FormSA = ({
           wbs: item.wbsdata,
         })),
       };
+
+      // console.log({params});
       fetch_api_sg({
         key: keys.upload_sa,
         type: "post",
@@ -178,7 +181,6 @@ const FormSA = ({
       >
         {/* <TableSA /> */}
         {/* {itemJasa.length > 0 && <TableSA />} */}
-        test formSA
         {itemJasa.length > 0 && <TableAccordSA />}
         {/* {saExist && !loadings_sg[keys.fetch_sagr] && ( */}
         <FormBuilder

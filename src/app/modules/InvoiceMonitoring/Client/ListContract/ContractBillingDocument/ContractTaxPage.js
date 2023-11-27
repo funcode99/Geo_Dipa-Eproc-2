@@ -1294,7 +1294,7 @@ function ContractTaxPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["tax_date"])).format(
-                    "DD/MM/YYYY hh:mm:ss"
+                    "DD MMMM YYYY hh:mm:ss"
                   )}
                 </span>
               </div>
@@ -1317,7 +1317,7 @@ function ContractTaxPage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "DD/MM/YYYY hh:mm:ss"
+                    "DD MMMM YYYY hh:mm:ss"
                   )}
                 </span>
               </div>
@@ -1352,10 +1352,10 @@ function ContractTaxPage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "DD/MM/YYYY hh:mm:ss"
+                        "DD MMMM YYYY hh:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "DD/MM/YYYY hh:mm:ss"
+                        "DD MMMM YYYY hh:mm:ss"
                       )}
                 </span>
               </div>
@@ -1419,11 +1419,15 @@ function ContractTaxPage(props) {
                 </label>
                 <div className="col-sm-8">
                   <input
-                    type="date"
+                    type="text"
                     className="form-control"
                     id="dateTax"
                     disabled
-                    defaultValue={taxData?.tax_date}
+                    defaultValue={
+                      taxData?.tax_date
+                        ? moment(taxData?.tax_date).format("DD MMMM YYYY")
+                        : ""
+                    }
                   />
                 </div>
               </div>
@@ -1551,7 +1555,7 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="createdAt"
-                    defaultValue={taxData?.created_at ? moment(taxData?.created_at).format('DD/MM/YYYY hh:mm:ss') : ""}
+                    defaultValue={taxData?.created_at ? moment(taxData?.created_at).format('DD MMMM YYYY hh:mm:ss') : ""}
                     disabled
                   />
                 </div>
@@ -1865,7 +1869,9 @@ function ContractTaxPage(props) {
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.tax_no}</TableCell>
-                  <TableCell>{item.tax_date}</TableCell>
+                  <TableCell>{item?.tax_date
+                      ? moment(item?.tax_date).format("DD MMMM YYYY")
+                      : ""}</TableCell>
                   <TableCell>
                     <a
                       onClick={() => {
@@ -1883,7 +1889,7 @@ function ContractTaxPage(props) {
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
                     {moment(new Date(item.created_at)).format(
-                      "DD/MM/YYYY hh:mm:ss"
+                      "DD MMMM YYYY hh:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>

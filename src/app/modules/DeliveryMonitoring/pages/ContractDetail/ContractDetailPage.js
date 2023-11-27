@@ -13,37 +13,33 @@ import {
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
-import { useLocation, useParams, withRouter } from "react-router-dom";
-import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
-
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
-import Tabs from "app/components/tabs/index";
-import useToast from "app/components/toast/index";
-import Subheader from "app/components/subheader";
+import { useLocation, useParams, withRouter } from "react-router-dom";
+import Tabs from "../../../../components/tabs";
+import * as deliveryMonitoring from "../../service/DeliveryMonitoringCrud";
+import useToast from "../../../../components/toast";
+import Subheader from "../../../../components/subheader";
 import SubBreadcrumbs from "../../../../components/SubBreadcrumbs";
-import * as deliveryMonitoring from "app/modules/DeliveryMonitoring/service/DeliveryMonitoringCrud";
-
+import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
 import { actionTypes } from "../../_redux/deliveryMonitoringAction";
 import { FormattedMessage } from "react-intl";
-
-import ParaPihak from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/ParaPihak";
-import ParaPihak2 from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/ParaPihak/ParaPihak2";
+import ParaPihak from "./components/ParaPihak";
+import ParaPihak2 from "./components/ParaPihak/ParaPihak2";
 import DokContract from "./components/DokContract";
 import HargaPekerjaan from "./components/HargaPekerjaan";
 import JangkaWaktu from "./components/JangkaWaktu";
 import Jaminan from "./components/Jaminan";
 import Denda from "./components/Denda";
 import BAST from "./components/BAST";
-import Steppers from "app/components/steppersCustom/Steppers";
 import DetailPage from "./components/Detail/DetailPage";
-import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail";
-
 import { compose } from "redux";
+import KickOffDetail from "./components/Detail/KickOffDetail";
+import Steppers from "../../../../components/steppersCustom/Steppers";
 import {
   DUMMY_STEPPER,
   DUMMY_STEPPER_CONTRACT,
   STATE_STEPPER,
-} from "app/modules/DeliveryMonitoring/pages/Termin/TerminPageNew/STATIC_DATA";
+} from "../Termin/TerminPageNew/STATIC_DATA";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -112,13 +108,6 @@ const TabLists = [
 ];
 
 export const ContractDetailPage = ({ dataContractById, authStatus }) => {
-  // ada isinya
-  // ini selalu kosong, why?
-  console.log(
-    "isi data contract by id di delivery monitoring",
-    dataContractById
-  );
-
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, tab: forceTabActive } = useParams();
@@ -141,7 +130,6 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   //   (state) => state.auth.user.data.status,
   //   shallowEqual
   // );
-
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
       data.map((services) => {
@@ -171,17 +159,19 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   // get data contract detail from api
   const getContractById = async (contract_id) => {
     try {
+      // dispatch({
+      //   type: actionTypes.SetContractById,
+      //   payload: [],
+      // });
+
       setLoading(true);
       const {
         data: { data },
-      } =
-        // ini asalnya dari folder service
-        await deliveryMonitoring.getContractById(contract_id);
+      } = await deliveryMonitoring.getContractById(contract_id);
 
       addCheckedField(data?.services, "jasa");
       addCheckedField(data?.items, "barang");
 
-      // type = mau dikirim kemana, payload = isi datanya apa
       dispatch({
         type: actionTypes.SetContractById,
         payload: data,
@@ -204,7 +194,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
   };
 
   React.useEffect(() => {
-    getContractById(contract_id);
+    // getContractById(contract_id);
     setInitialSubmitItems();
     // eslint-disable-next-line
   }, []);
@@ -249,6 +239,8 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
     }
   }, [location]);
 
+  console.log("dataContractById", dataContractById);
+
   return (
     <React.Fragment>
       <Toast />
@@ -281,9 +273,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
           },
           {
             label: `${
-              dataContractById?.contract_name
-                ? dataContractById?.contract_name
-                : "x"
+              dataContractById ? dataContractById?.contract_name : "x"
             }`,
             to: "/",
           },
@@ -310,9 +300,8 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
             variant="scrollable"
           />
         </Container>
-
         <hr className="p-0 m-0" />
-        {tabActive === 0 && <KickOffDetail setToast={setToast} />}
+        {tabActive === 0 && <KickOffDetail />}
         <DetailPage
           show={tabActive === 1}
           refresh={old.needRefresh}
@@ -329,7 +318,7 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
         {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
           <ParaPihak2 />
         )}
-        {tabActive === 8 && <BAST />}
+        {/* {tabActive === 8 && <BAST />} */}
       </Paper>
     </React.Fragment>
   );

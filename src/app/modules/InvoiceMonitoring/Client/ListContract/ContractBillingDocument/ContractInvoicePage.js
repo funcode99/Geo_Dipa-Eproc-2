@@ -551,7 +551,7 @@ function ContractInvoicePage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["from_time"])).format(
-                    "DD/MM/YYYY"
+                    "DD MMMM YYYY"
                   )}
                 </span>
               </div>
@@ -574,7 +574,7 @@ function ContractInvoicePage(props) {
                 <span className="form-control-plaintext">
                   :{" "}
                   {moment(new Date(modalHistoryData["created_at"])).format(
-                    "DD/MM/YYYY hh:mm:ss"
+                    "DD MMMM YYYY hh:mm:ss"
                   )}
                 </span>
               </div>
@@ -609,10 +609,10 @@ function ContractInvoicePage(props) {
                   :{" "}
                   {modalHistoryData["state"] === "REJECTED"
                     ? moment(new Date(modalHistoryData["rejected_at"])).format(
-                        "DD/MM/YYYY hh:mm:ss"
+                        "DD MMMM YYYY hh:mm:ss"
                       )
                     : moment(new Date(modalHistoryData["approved_at"])).format(
-                        "DD/MM/YYYY hh:mm:ss"
+                        "DD MMMM YYYY hh:mm:ss"
                       )}
                 </span>
               </div>
@@ -880,11 +880,15 @@ function ContractInvoicePage(props) {
                 </label>
                 <div className="col-sm-8">
                   <input
-                    type="date"
+                    type="text"
                     className="form-control"
                     id="dateInvoice"
                     disabled
-                    defaultValue={invoiceData?.from_time}
+                    defaultValue={
+                      invoiceData?.from_time
+                        ? moment(invoiceData?.from_time).format("DD MMMM YYYY")
+                        : ""
+                    }
                   />
                 </div>
               </div>
@@ -964,7 +968,7 @@ function ContractInvoicePage(props) {
                     defaultValue={
                       invoiceData?.created_at
                         ? moment(invoiceData?.created_at).format(
-                            "DD/MM/YYYY hh:mm:ss"
+                            "DD MMMM YYYY hh:mm:ss"
                           )
                         : ""
                     }
@@ -1224,7 +1228,9 @@ function ContractInvoicePage(props) {
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.invoice_no}</TableCell>
-                  <TableCell>{item.from_time}</TableCell>
+                  <TableCell>{item?.from_time
+                      ? moment(item?.from_time).format("DD MMMM YYYY")
+                      : ""}</TableCell>
                   <TableCell>
                     <a
                       onClick={() => {
@@ -1242,7 +1248,7 @@ function ContractInvoicePage(props) {
                   <TableCell>{item.created_by_name}</TableCell>
                   <TableCell>
                     {moment(new Date(item.created_at)).format(
-                      "DD/MM/YYYY hh:mm:ss"
+                      "DD MMMM YYYY hh:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>
