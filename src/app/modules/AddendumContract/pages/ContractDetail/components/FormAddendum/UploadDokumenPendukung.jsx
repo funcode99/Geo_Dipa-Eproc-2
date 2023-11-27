@@ -13,7 +13,9 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
       item.required = true;
     }
   });
-  const [supportingDocument, setSupportingDocument] = useState();
+  const [supportingDocument, setSupportingDocument] = useState({
+    data: "",
+  });
   // disini SLICE TIDAK MENGHAPUS ARRAY YANG SUDAH ADA
   let kondisiA = supportDocumentFetch.slice(0, 4);
   let pelengkapA = supportDocumentFetch.slice(8);
@@ -29,7 +31,10 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
         supportDocumentFetch.length + 1
       );
       setSupportingDocument((previous) => {
-        return [...previous, additionalDocument];
+        // return [...previous, additionalDocument];
+        return {
+          data: [...previous, additionalDocument],
+        };
       });
     }
   }, [supportDocumentFetch]);
@@ -39,63 +44,90 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
       conclusion ===
       "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai Kontrak di bawah Rp 5M)"
     ) {
-      setSupportingDocument(lengkapA);
+      setSupportingDocument(() => {
+        return {
+          data: lengkapA,
+        };
+      });
     } else if (
       conclusion ===
       "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai Kontrak di bawah Rp 5M)"
     ) {
-      setSupportingDocument(lengkapB);
+      setSupportingDocument(() => {
+        return {
+          data: lengkapB,
+        };
+      });
+    } else if (
+      "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M" ||
+      "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)"
+    ) {
+      setSupportingDocument(() => {
+        return {
+          data: supportDocumentFetch,
+        };
+      });
     } else {
-      setSupportingDocument(supportDocumentFetch);
+      setSupportingDocument(() => {
+        return {
+          data: lengkapA,
+        };
+      });
     }
   }, []);
 
   const submitData = (values) => {
+    console.log("isi values saat submit upload", supportingDocument?.data);
     let formDataNew = new FormData();
     formDataNew.append("drafter_code", values.drafterCode[1]);
     formDataNew.append("add_drafter", values.drafterCode[0]);
-    values.supportDocumentData.some(
-      (item) =>
-        item.required === true &&
-        (typeof item.noDokumen === "undefined" ||
-          typeof item.tglDokumen === "undefined" ||
-          typeof item.fileDokumen === "undefined" ||
-          typeof item.perihal === "undefined")
-    )
-      ? alert("Silahkan isi form mandatory yang masih kosong")
-      : values.supportDocumentData.map((item, index) => {
-          if (
-            typeof item.noDokumen === "undefined" ||
+    if (
+      supportingDocument?.data.some(
+        (item) =>
+          item.required === true &&
+          (typeof item.noDokumen === "undefined" ||
             typeof item.tglDokumen === "undefined" ||
-            typeof item.fileDokumen === "undefined" ||
-            typeof item.perihal === "undefined"
-          ) {
-            return;
-          } else {
-            formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
-            formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
-            formDataNew.append(`fileDokumen[${index}]`, item.fileDokumen);
-            formDataNew.append(`perihal[${index}]`, item.perihal);
-            formDataNew.append(
-              `idDokumen[${index}]`,
-              typeof item.id === "0" ? null : item.id
-            );
-            formDataNew.append(`seq[${index}]`, item.seq);
-            formDataNew.append(
-              `tipeDokumen[${index}]`,
-              typeof item.document_type === "undefined"
-                ? null
-                : item.document_type
-            );
-            formDataNew.append(`namaDokumen[${index}]`, item.document_name);
-            formDataNew.append(
-              `namaDokumenEng[${index}]`,
-              typeof item.document_name_eng === "undefined"
-                ? null
-                : item.document_name_eng
-            );
-          }
-        });
+            typeof item.fileDokumenKirim === "undefined" ||
+            typeof item.perihal === "undefined")
+      )
+    ) {
+      alert("Silahkan isi form mandatory yang masih kosong");
+    } else {
+      let a = supportingDocument?.data?.map((item, index) => {
+        if (
+          typeof item.noDokumen === "undefined" ||
+          typeof item.tglDokumen === "undefined" ||
+          typeof item.fileDokumenKirim === "undefined" ||
+          typeof item.perihal === "undefined"
+        ) {
+          console.log("kosong");
+        } else {
+          formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
+          formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
+          formDataNew.append(`fileDokumen[${index}]`, item.fileDokumenKirim);
+          formDataNew.append(`perihal[${index}]`, item.perihal);
+          formDataNew.append(
+            `idDokumen[${index}]`,
+            typeof item.id === "0" ? null : item.id
+          );
+          formDataNew.append(`seq[${index}]`, item.seq);
+          formDataNew.append(
+            `tipeDokumen[${index}]`,
+            typeof item.document_type === "undefined"
+              ? null
+              : item.document_type
+          );
+          formDataNew.append(`namaDokumen[${index}]`, item.document_name);
+          formDataNew.append(
+            `namaDokumenEng[${index}]`,
+            typeof item.document_name_eng === "undefined"
+              ? null
+              : item.document_name_eng
+          );
+        }
+      });
+    }
+
     uploadSuppDoc(formDataNew, localStorage.getItem("add_contract_id"));
   };
   function resizeTextArea(textarea) {
@@ -119,6 +151,18 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
       minWidth: 650,
     },
   }));
+
+  const setNewDocumentValue = (index, event, name) => {
+    setSupportingDocument((previous) => {
+      let newState = [...previous.data];
+      console.log("newState", newState);
+      newState[index][name] = event;
+      return {
+        data: newState,
+      };
+    });
+  };
+
   const classes = useStyles();
   return (
     <>
@@ -131,7 +175,7 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
           <Formik
             enableReinitialize={true}
             initialValues={{
-              supportDocumentData: supportingDocument,
+              supportDocumentData: supportingDocument?.data,
               drafterCode: ["Supply Chain Management (SCM) Division", 1],
             }}
             onSubmit={(values) => {
@@ -152,8 +196,8 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                     A. Dokumen Pendukung
                   </h1>
 
-                  {supportingDocument &&
-                    supportingDocument.map((item, index) => {
+                  {supportingDocument?.data &&
+                    supportingDocument?.data?.map((item, index) => {
                       return (
                         <>
                           <div
@@ -172,7 +216,7 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                               }}
                             >
                               {index + 1}.
-                              {item.document_name !== "" ? (
+                              {item.additional !== true ? (
                                 <p>
                                   {item.document_name}{" "}
                                   {item.required ? (
@@ -184,7 +228,17 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                               ) : (
                                 <Field
                                   type="text"
-                                  name={`supportDocumentData[${index}].document_name`}
+                                  name={`supportDocumentData.data[${index}].document_name`}
+                                  value={
+                                    supportingDocument.data[index].document_name
+                                  }
+                                  onChange={(e) => {
+                                    setNewDocumentValue(
+                                      index,
+                                      e.target.value,
+                                      "document_name"
+                                    );
+                                  }}
                                 />
                               )}
                             </div>
@@ -195,8 +249,8 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                 }}
                                 onClick={() => {
                                   setSupportingDocument((previous) => {
-                                    const newState = [...previous];
-                                    newState.splice(index, 1);
+                                    const newState = { ...previous };
+                                    newState.data.splice(index, 1);
                                     return newState;
                                   });
                                 }}
@@ -234,6 +288,16 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                 <Field
                                   type="text"
                                   name={`supportDocumentData[${index}].noDokumen`}
+                                  value={
+                                    supportingDocument.data[index].noDokumen
+                                  }
+                                  onChange={(e) => {
+                                    setNewDocumentValue(
+                                      index,
+                                      e.target.value,
+                                      "noDokumen"
+                                    );
+                                  }}
                                   style={{
                                     borderRadius: 4,
                                     padding: 8,
@@ -256,6 +320,16 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                 <Field
                                   type="date"
                                   name={`supportDocumentData[${index}].tglDokumen`}
+                                  value={
+                                    supportingDocument.data[index].tglDokumen
+                                  }
+                                  onChange={(e) => {
+                                    setNewDocumentValue(
+                                      index,
+                                      e.target.value,
+                                      "tglDokumen"
+                                    );
+                                  }}
                                   style={{
                                     borderRadius: 4,
                                     padding: 8,
@@ -285,10 +359,18 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                     padding: 8,
                                     width: "100%",
                                   }}
+                                  value={
+                                    supportingDocument.data[index].fileDokumen
+                                  }
                                   onChange={(event) => {
                                     setFieldValue(
                                       `supportDocumentData[${index}].fileDokumen`,
                                       event.currentTarget.files[0]
+                                    );
+                                    setNewDocumentValue(
+                                      index,
+                                      event.currentTarget.files[0],
+                                      "fileDokumenKirim"
                                     );
                                   }}
                                 />
@@ -305,7 +387,15 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                 </p>
                                 <Field
                                   as="textarea"
-                                  name={`supportDocumentData[${index}].perihal`}
+                                  // name={`supportDocumentData[${index}].perihal`}
+                                  value={supportingDocument.data[index].perihal}
+                                  onChange={(e) => {
+                                    setNewDocumentValue(
+                                      index,
+                                      e.target.value,
+                                      "perihal"
+                                    );
+                                  }}
                                   onKeyUp={(e) => {
                                     resizeTextArea(e.target);
                                   }}
@@ -327,17 +417,20 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                       className="mb-7"
                       onClick={() =>
                         setSupportingDocument((previous) => {
-                          return [
-                            ...previous,
-                            {
-                              idDokumen: "0",
-                              document_name: "",
-                              noDokumen: "",
-                              tglDokumen: "",
-                              fileDokumen: "",
-                              seq: supportDocumentFetch.length + 1,
-                            },
-                          ];
+                          return {
+                            data: [
+                              ...previous.data,
+                              {
+                                idDokumen: "0",
+                                document_name: "",
+                                noDokumen: "",
+                                tglDokumen: "",
+                                fileDokumenKirim: "",
+                                seq: supportDocumentFetch.length + 1,
+                                additional: true,
+                              },
+                            ],
+                          };
                         })
                       }
                     >

@@ -5,7 +5,6 @@ import { Card, CardBody } from "_metronic/_partials/controls";
 import { rupiah } from "app/libs/currency";
 import { formatDate } from "app/libs/date";
 import { submitAddendumRequest } from "app/modules/AddendumContract/service/AddendumContractCrudService";
-import { setDate } from "date-fns";
 import CurrencyInput from "react-currency-input-field";
 
 const FormPermohonan = (props) => {

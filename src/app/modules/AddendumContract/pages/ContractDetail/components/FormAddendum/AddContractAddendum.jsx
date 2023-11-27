@@ -34,10 +34,6 @@ import { Grid } from "@material-ui/core";
 
 // import { supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData";
 
-import UploadInput from "app/components/input/UploadInput";
-import SelectDateInput from "app/components/input/SelectDateInput";
-import TextAreaInput from "app/components/input/TextAreaInput";
-import BasicInput from "app/components/input/BasicInput";
 import FormPermohonan from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormPermohonan";
 import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameter";
 
@@ -245,14 +241,6 @@ export const AddContractAddendum = ({
       });
     }
   };
-
-  let [linksGroup, setLinksGroup] = useState({
-    documentname: "document",
-    documentnumber: "012345",
-    documentdate: null,
-    documentfileupload: "test.jpg",
-    about: "wah",
-  });
 
   const toPush = useRef();
 
@@ -502,7 +490,6 @@ export const AddContractAddendum = ({
   }, [location]);
 
   const checkLength = (lengthValue) => {
-    // console.log('checked length is', lengthValue)
     if (lengthValue > 0) {
       setSequence(1);
     }
@@ -824,13 +811,6 @@ export const AddContractAddendum = ({
           )}
 
           {finalDraftSelectValue === "Addendum" && (
-            // finalDraftData?.add_contracts?.map((item, index) => {
-            //   return (
-            //     <>
-            //       <p>{item.final_draft}</p>
-            //     </>
-            //   )
-            // })
             <div
               style={{
                 display: "flex",
@@ -944,7 +924,6 @@ export const AddContractAddendum = ({
           className="d-flex align-items-center justify-content-center"
           style={{
             backgroundColor: sequence === 0 ? "#3699ff" : "white",
-
             flexGrow: 1,
             borderTopLeftRadius: 14,
             cursor: "pointer",
@@ -1048,9 +1027,7 @@ export const AddContractAddendum = ({
                 minWidth: 100,
               }}
               onClick={() =>
-                tabActive > 0
-                  ? setTabActive(tabActive - 1)
-                  : setTabActive(tabActive)
+                tabActive > 0 ? setTabActive(tabActive - 1) : setSequence(0)
               }
             >
               {`<< Back`}
