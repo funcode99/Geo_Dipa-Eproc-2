@@ -8,9 +8,9 @@ import { connect } from "react-redux";
 import SVG from "react-inlinesvg";
 import { NavLink } from "react-router-dom";
 import { toAbsoluteUrl } from "_metronic/_helpers";
+import { formatDate } from "app/libs/date";
 
 import ButtonAction from "app/components/buttonAction/ButtonAction";
-import { formatDate } from "app/libs/date";
 import Subheader from "app/components/subheader";
 import Tables from "app/components/tableCustomV1/table";
 import {
@@ -105,7 +105,12 @@ const keys = {
   fetch: "get-data-contracts",
 };
 
-export const AddendumRequestListPage = ({ fetch_api_sg, loadings, status }) => {
+export const AddendumRequestListPage = ({
+  fetch_api_sg,
+  loadings,
+  status,
+  purch_group_id,
+}) => {
   const classes = useStyles();
   const [dataArr, setDataArr] = React.useState([]);
   const [order, setOrder] = React.useState("asc");
@@ -142,6 +147,7 @@ export const AddendumRequestListPage = ({ fetch_api_sg, loadings, status }) => {
       type: "get",
       url: `/adendum/add-contracts-request`,
       onSuccess: (res) => {
+        console.log("hasil respon di add contracts request", res.data);
         setDataArr(
           res.data.map((item) => ({
             id: item.id,
@@ -154,6 +160,8 @@ export const AddendumRequestListPage = ({ fetch_api_sg, loadings, status }) => {
             group: item?.contract?.user_group?.party?.full_name,
             vendor: item?.contract?.vendor?.party?.full_name,
             addnm_req_status: item?.status,
+            admin_test: item?.admin_purch_group_id === purch_group_id,
+            user_test: item?.user_purch_group_id === purch_group_id,
 
             // add_request_date
             // add_request_approval_date
@@ -166,12 +174,13 @@ export const AddendumRequestListPage = ({ fetch_api_sg, loadings, status }) => {
             // worked_start_end_date
 
             action: (
+              // item?.admin_purch_group_id === purch_group_id
               <ButtonAction
                 hoverLabel="More"
                 data={"1"}
                 ops={[
                   {
-                    label: "CONTRACT.TABLE_ACTION.APPROVAL_REQUEST",
+                    label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
                     to: {
                       url: `/${status}/addendum-contract/approval/${item.id}`,
                       style: {
@@ -179,6 +188,23 @@ export const AddendumRequestListPage = ({ fetch_api_sg, loadings, status }) => {
                       },
                     },
                   },
+                  {
+                    label: "CONTRACT.TABLE_ACTION.SEE_DETAILS",
+                    to: {
+                      url: `/${status}/addendum-contract/approval/${item.id}`,
+                      style: {
+                        color: "black",
+                      },
+                    },
+                  },
+                  // item?.user_purch_group_id === purch_group_id
+                  //   ?
+                  //   : ""
+                  //   ,
+                  // item?.user_purch_group_id === purch_group_id
+                  //   ?
+
+                  //   : "",
                 ]}
               />
             ),
@@ -249,6 +275,8 @@ export const AddendumRequestListPage = ({ fetch_api_sg, loadings, status }) => {
                     minHeight: 65,
                   }}
                 >
+                  {/* item?.admin_test === false ||
+                    item?.user_test === false && */}
                   {item.action}
                 </TableCell>
               </TableRow>
@@ -264,6 +292,7 @@ const mapState = (state) => ({
     fetch: getLoading(state, keys.fetch),
   },
   status: state.auth.user.data.status,
+  purch_group_id: state.addendumContract.dataContractById.purch_group_id,
 });
 
 const mapDispatch = {

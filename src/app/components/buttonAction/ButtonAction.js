@@ -37,13 +37,13 @@ export default function ButtonAction({
   }
   const handleChange = React.useCallback(
     (type, data, label) => {
-      if (typeof handleAction === "function") handleAction(type, data, label)
+      if (typeof handleAction === "function") handleAction(type, data, label);
       handleClose();
     },
     [handleAction, handleClose]
   );
 
-  const listUsed = ops
+  const listUsed = ops;
 
   return (
     <div>
@@ -99,15 +99,18 @@ export default function ButtonAction({
                       <i className={el.icon}></i>
                     </ListItemIcon>
                     <ListItemText
-                      primary={<FormattedMessage id={el.label} />}
+                      primary={
+                        el.label
+                          ? // <FormattedMessage id={el.label} />
+                            "a"
+                          : "b"
+                      }
                     />
                   </MenuItem>
                 </Link>
               );
             } else {
-
               return (
-
                 <MenuItem
                   key={id}
                   onClick={() => handleChange(el.type, data, el.label)}

@@ -79,10 +79,10 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
   const submitData = (values) => {
     console.log("isi values saat submit upload", supportingDocument?.data);
     let formDataNew = new FormData();
-    formDataNew.append("drafter_code", values.drafterCode[1]);
-    formDataNew.append("add_drafter", values.drafterCode[0]);
+    formDataNew.append("drafter_code", values.drafterCode);
+    formDataNew.append("add_drafter", values.addDrafter);
     if (
-      supportingDocument?.data.some(
+      supportingDocument?.data?.some(
         (item) =>
           item.required === true &&
           (typeof item.noDokumen === "undefined" ||
@@ -151,7 +151,6 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
       minWidth: 650,
     },
   }));
-
   const setNewDocumentValue = (index, event, name) => {
     setSupportingDocument((previous) => {
       let newState = [...previous.data];
@@ -162,7 +161,6 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
       };
     });
   };
-
   const classes = useStyles();
   return (
     <>
@@ -176,7 +174,10 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
             enableReinitialize={true}
             initialValues={{
               supportDocumentData: supportingDocument?.data,
-              drafterCode: ["Supply Chain Management (SCM) Division", 1],
+              drafterSelectValue: {
+                drafterCode: "",
+                addDrafter: "",
+              },
             }}
             onSubmit={(values) => {
               submitData(values);
@@ -387,7 +388,7 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                                 </p>
                                 <Field
                                   as="textarea"
-                                  // name={`supportDocumentData[${index}].perihal`}
+                                  name={`supportDocumentData[${index}].perihal`}
                                   value={supportingDocument.data[index].perihal}
                                   onChange={(e) => {
                                     setNewDocumentValue(
@@ -464,16 +465,27 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
                         //   backgroundColor: '#e8f4fb',
                         //   borderRadius: 4
                         // }}
-                        value={["Supply Chain Management (SCM) Division", 1]}
+                        value={{
+                          drafterCode: "Supply Chain Management (SCM) Division",
+                          addDrafter: 1,
+                        }}
                       >
                         Supply Chain Management (SCM) Division
                       </option>
                       <option
-                        value={["Corporate Legal & Compliance Division", 2]}
+                        value={{
+                          drafterCode: "Corporate Legal & Compliance Division",
+                          addDrafter: 2,
+                        }}
                       >
                         Corporate Legal & Compliance Division
                       </option>
-                      <option value={["Pengguna (Direksi Pekerjaan)", 2]}>
+                      <option
+                        value={{
+                          drafterCode: "Pengguna (Direksi Pekerjaan)",
+                          addDrafter: 3,
+                        }}
+                      >
                         Pengguna (Direksi Pekerjaan)
                       </option>
                     </Field>
