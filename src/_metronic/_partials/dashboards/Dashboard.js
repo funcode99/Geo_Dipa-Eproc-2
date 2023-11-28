@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import objectPath from "object-path";
-import { useHtmlClassService } from "_metronic/layout"
+import { useHtmlClassService } from "../../layout";
 import { Demo1Dashboard } from "./Demo1Dashboard";
-import WelcomeBox from "app/components/boxes/WelcomeBox/WelcomeBox"
+import WelcomeBox from "../../../app/components/boxes/WelcomeBox";
 // import { Demo2Dashboard } from "./Demo2Dashboard";
 // import { Demo3Dashboard } from "./Demo3Dashboard";
 // import { Demo4Dashboard } from "./Demo4Dashboard";

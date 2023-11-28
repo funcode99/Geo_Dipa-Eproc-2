@@ -108,7 +108,7 @@ export default function ButtonAction({
               return (
                 <MenuItem
                   key={id}
-                  onClick={() => handleChange(el.type, data, el.label)}
+                  onClick={() => handleChange(el.type, data)}
                   disabled={el.disabled}
                 >
                   <ListItemIcon>

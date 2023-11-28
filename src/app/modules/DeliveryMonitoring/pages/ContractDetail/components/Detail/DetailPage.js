@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  FormDetail,
-  Item,
-  ModalDelete,
-  ModalTerm,
-} from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/index";
+import { FormDetail, Item, ModalDelete, ModalTerm } from "./index";
 import { Container } from "@material-ui/core";
 import ButtonAction from "../../../../../../components/buttonAction/ButtonAction";
 import { formatDate } from "../../../../../../libs/date";
@@ -27,7 +22,6 @@ import { MODAL } from "../../../../../../../service/modalSession/ModalService";
 import StatusRemarks from "../../../../../../components/StatusRemarks";
 import { Button } from "react-bootstrap";
 import apiHelper from "../../../../../../service/helper/apiHelper";
-import useToast from "../../../../../../components/toast";
 import GRAccord from "../../../Termin/ServiceAccGR/components/GRAccord";
 
 const tableHeaderTerminNew = [
@@ -127,7 +121,6 @@ const DetailPage = ({
   refresh,
   show,
 }) => {
-  const [Toast, setToast] = useToast();
   const [newContent, setNewContent] = React.useState([]);
   const [confirm, setConfirm] = React.useState({ show: false, id: "" });
   const [modals, setModals] = React.useState(false);
@@ -234,13 +227,6 @@ const DetailPage = ({
         // console.log(tempSubmitItems);
         let totalPrice = 0;
 
-        if (
-          tempSubmitItems.task_services.length === 0 &&
-          tempSubmitItems.task_items.length === 0
-        ) {
-          return setToast("Tidak ada data dipilih", 3000);
-        }
-
         tempSubmitItems.task_services.forEach((item) => {
           console.log("item task_services", item);
           totalPrice += parseFloat(item?.price * item.qty);
@@ -262,7 +248,7 @@ const DetailPage = ({
       setModals(true);
       submitRef.current.open();
     },
-    [dataSubmitItems, formik, initialValues, saveSubmitItems, setToast]
+    [dataSubmitItems, formik, initialValues, saveSubmitItems]
   );
 
   const handleAction = React.useCallback(
@@ -585,7 +571,6 @@ const DetailPage = ({
 
   return show ? (
     <React.Fragment>
-      <Toast />
       <ModalTerm
         innerRef={submitRef}
         visible={modals}
@@ -601,14 +586,12 @@ const DetailPage = ({
         loading={loadings.approve}
         onSubmit={(e) => handleApi("approve", e)}
       />
-
       <ModalApproveTermin
         ref={rejectRef}
         loading={loadings.reject}
         onSubmit={(e) => handleApi("reject", e)}
         isReject={true}
       />
-
       <ModalApproveTermin
         ref={revisionRef}
         loading={loadings.revision}
@@ -625,9 +608,7 @@ const DetailPage = ({
         onSubmit={() => handleDelete()}
         loading={loadings.delete}
       />
-
       {showForm && <FormDetail contractId={contractId} />}
-
       <div className="p-8">
         <GRAccord
           id={"title.termtable"}
@@ -648,7 +629,6 @@ const DetailPage = ({
           />
         </GRAccord>
       </div>
-
       {/* <Container>
         <ExpansionBox title={"TITLE.TERM_TABLE"}>
         </ExpansionBox>

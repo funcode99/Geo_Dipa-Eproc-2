@@ -367,7 +367,7 @@ function ContractSprPage(props) {
               response["data"]["data"]["spr_date"]
                 ? window
                     .moment(new Date(response["data"]["data"]["spr_date"]))
-                    .format("YYYY-MM-DD")
+                    .format("DD MMMM YYYY")
                 : ""
             );
             formik.setFieldValue(
@@ -997,7 +997,9 @@ function ContractSprPage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type="date"
+                      type={loading ||
+                        sppStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate) ? "text" : "date"}
                       className="form-control"
                       id="dateSpp"
                       disabled={
@@ -1531,14 +1533,18 @@ function ContractSprPage(props) {
                   <TableRow key={index.toString()}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.spr_no}</TableCell>
-                    <TableCell>{item.spr_date}</TableCell>
+                    <TableCell>{
+                      item.spr_date
+                        ? moment(item.spr_date).format("DD MMMM YYYY")
+                        : ""
+                    }</TableCell>
                     <TableCell>
                       <a href={getFileSpp + item.file_name}>{item.file_name}</a>
                     </TableCell>
                     <TableCell>{item.created_by_name}</TableCell>
                     <TableCell>
                       {moment(new Date(item.created_at)).format(
-                        "YYYY-MM-DD HH:mm:ss"
+                        "DD MMMM YYYY HH:mm:ss"
                       )}
                     </TableCell>
                     <TableCell>

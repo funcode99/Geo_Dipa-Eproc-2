@@ -11,30 +11,16 @@ import {
   CircularProgress,
   Slide,
 } from "@material-ui/core";
-
-import {
-  compose,
-  spacing,
-  palette,
-  styleFunctionSx
-} from "@material-ui/system"
-
-import { styled } from "@material-ui/styles"
-
-import CloseIcon from "@material-ui/icons/Close"
-import { FormattedMessage } from "react-intl"
-
-const styleFunction = styleFunctionSx(compose(spacing, palette))
-const DialogActionsCustom = styled(MuiDialogActions)(styleFunction)
-const DialogContentCustom = styled(MuiDialogContent)(styleFunction)
+// import MuiDialogTitle from "@material-ui/core/DialogTitle";
+// import MuiDialogContent from "@material-ui/core/DialogContent";
+// import MuiDialogActions from "@material-ui/core/DialogActions";
+import CloseIcon from "@material-ui/icons/Close";
+import { FormattedMessage } from "react-intl";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  console.log(props)
-  console.log(ref)
-  return <Slide direction="up" ref={ref} {...props} />
-})
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-// oalah ternyata seperti ini cara styling nya
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -48,22 +34,11 @@ const styles = (theme) => ({
   },
 });
 
-const customStyles = () => ({
-  root: {
-    minHeight: 0
-  }
-})
-
-
-
 const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose } = props
+  const { children, classes, onClose } = props;
   return (
-    
     <MuiDialogTitle disableTypography className={classes.root}>
-      
       <Typography variant="h6">{children}</Typography>
-      
       {onClose ? (
         <IconButton
           aria-label="Close"
@@ -73,9 +48,7 @@ const DialogTitle = withStyles(styles)((props) => {
           <CloseIcon />
         </IconButton>
       ) : null}
-
     </MuiDialogTitle>
-    
   );
 });
 
@@ -95,31 +68,31 @@ const DialogActions = withStyles((theme) => ({
 class DialogGlobal extends React.PureComponent {
   state = {
     open: false,
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     const { visible } = this.props;
     if (visible !== undefined) {
-      if (visible !== prevProps.visible) this.setState({ open: visible })
+      if (visible !== prevProps.visible) this.setState({ open: visible });
     }
   }
 
   open = () => {
     this.setState({
       open: true,
-    })
-  }
+    });
+  };
 
   close = () => {
-    const { onClose } = this.props
-    if (typeof onClose === "function") onClose()
-    this.setState({ open: false })
-  }
+    const { onClose } = this.props;
+    if (typeof onClose === "function") onClose();
+    this.setState({ open: false });
+  };
 
   handleYes = () => {
     const { onYes } = this.props;
     if (typeof onYes === "function") onYes();
-    this.close();
+    // this.close();
   };
   handleNo = () => {
     const { onNo } = this.props;
@@ -141,13 +114,10 @@ class DialogGlobal extends React.PureComponent {
       isSubmit = true,
       isCancel = true,
       maxWidth,
-      yesButton = false,
-      noButton = false
-    } = this.props
+    } = this.props;
     return (
       <div>
         <Dialog
-          // style={{backgroundColor: '#3699ff', opacity: .2}}
           onClose={this.close}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
@@ -156,77 +126,24 @@ class DialogGlobal extends React.PureComponent {
           disableBackdropClick={disableBackdropClick}
           TransitionComponent={Transition}
         >
-          
           <DialogTitle id="customized-dialog-title" onClose={this.close}>
             {title}
           </DialogTitle>
-
-          {
-            !yesButton && (
-              <DialogContent dividers>{this.state.open && children}</DialogContent>
-            )
-          }
-
-          {
-            yesButton && (
-              <DialogContentCustom
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  fontSize: '16px',
-                  fontWeight: '600'
-                }}
-              >
-                {children}
-              </DialogContentCustom>
-            )
-          }
-
-
-          <DialogActionsCustom
-            sx={{
-              justifyContent: 'center',
-              gap: '10px 40px',
-              flexWrap: 'wrap'
-            }}
-          >
-            
-              {yesButton && (
-                  <Button
-                    variant="contained"
-                    className={"bg-primary text-light border border-light shadow-none"}
-                  >
-                    Yes
-                  </Button>
-              )}
-
-              {noButton && (  
-                  <Button
-                    variant="contained"
-                    className={"bg-light text-primary border border-primary shadow-none"}
-                    onClick={this.close}
-                  >
-                    No
-                  </Button>
-              )}
-
-          </DialogActionsCustom>
+          <DialogContent dividers>{this.state.open && children}</DialogContent>
 
           <DialogActions>
-            
             {btnAction}
 
             {isCancel && (
               <Button
                 variant="contained"
-                className={"bg-danger text-light"}
+                className={"bg-danger text-light "}
                 onClick={this.close}
                 {...btnNoProps}
               >
                 {textNo ? textNo : <FormattedMessage id="TITLE.CANCEL" />}
               </Button>
             )}
-
             {isSubmit && (
               <Button
                 variant="contained"
@@ -245,9 +162,7 @@ class DialogGlobal extends React.PureComponent {
                 {textYes ? textYes : <FormattedMessage id="TITLE.SAVE" />}
               </Button>
             )}
-
           </DialogActions>
-
         </Dialog>
       </div>
     );

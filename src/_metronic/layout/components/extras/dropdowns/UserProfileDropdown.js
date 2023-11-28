@@ -36,9 +36,8 @@ export function UserProfileDropdown(props) {
             "btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg px-2"
           }
         >
-          {/* ada di sini namanya */}
           <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
-            Hi, bro/sis
+            Hi,
           </span>{" "}
           <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
             {user.data.full_name}

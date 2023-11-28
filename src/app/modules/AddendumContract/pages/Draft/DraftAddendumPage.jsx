@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Tabs from "app/components/tabs";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import { Col, Row } from "react-bootstrap";
@@ -19,10 +20,18 @@ import SelectDateInput from "app/components/input/SelectDateInput";
 import TextAreaInput from "app/components/input/TextAreaInput";
 import RenderInput from "app/components/input/RenderInput";
 import { connect } from "react-redux";
+import Summary from "./Summary";
+import { fetch_api_sg, getLoading } from "redux/globalReducer";
+import { FormattedMessage } from "react-intl";
 
 // bentrok antara button mui & bootstrap
 
-const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
+const DraftAddendumPage = ({
+  loadings,
+  fetch_api_sg,
+  loginStatus,
+  rolesEproc,
+}) => {
   const [inputValue, setInputValue] = useState("Upload File");
   const [tabActive, setTabActive] = React.useState(0);
   const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0);
@@ -30,6 +39,9 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
   const [sequence, setSequence] = React.useState(0);
   const [reviewSequence, setReviewSequence] = React.useState(0);
   const [distributionSequence, setDistributionSequence] = React.useState(0);
+  const [data, setData] = useState({});
+  const [contract, setContract] = useState({});
+  const { draft_id } = useParams();
 
   const getClientStatus = () => {
     const client_role = "ADMIN_CONTRACT";
@@ -39,9 +51,33 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
     return !!filteredData?.length > 0;
   };
 
+  const getAddendum = async () => {
+    fetch_api_sg({
+      key: keys.getAddendumDetail,
+      type: "get",
+      url: `/adendum/add-contracts/${draft_id}`,
+      onSuccess: (res) => {
+        setContract(res?.data?.contract);
+        setData(res?.data);
+      },
+    });
+  };
+
+
+  useEffect(() => {
+    getAddendum();
+  }, []);
+
   let isAdmin = getClientStatus();
 
   const TabLists = [
+    {
+      id: "summary",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+      label: "Summary",
+      // icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
+      addendum: true,
+    },
     {
       id: "kick-off",
       // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
@@ -63,7 +99,6 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
       label: "Jangka Waktu",
       // icon: <PeopleAlt className="mb-0 mr-2" />,
     },
-
     {
       id: "dokumen-kontrak",
       // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
@@ -85,11 +120,17 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
       // icon: <QueryBuilderSharp className="mb-0 mr-2" />,
       addendum: true,
     },
-
     {
       id: "jaminan",
       // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
       label: "Nomor Rekening",
+      // icon: <FeaturedPlayList className="mb-0 mr-2" />,
+      addendum: true,
+    },
+    {
+      id: "other",
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+      label: "Lainnya",
       // icon: <FeaturedPlayList className="mb-0 mr-2" />,
       addendum: true,
     },
@@ -1362,7 +1403,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   id="agreement_number"
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
-                  value={"015.PJ/PST.100-GDE/I/2023"}
+                  value={contract?.contract_no}
                 />
               </div>
               <div className="form-group row">
@@ -1379,7 +1420,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   id="po_number"
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
-                  value={"8000007360"}
+                  value={contract?.purch_order?.po_sap}
                 />
               </div>
               <div className="form-group row">
@@ -1397,7 +1438,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={"Isi format perjanjian"}
+                  value={contract?.contract_format?.name}
                 />
               </div>
               <div className="form-group row">
@@ -1415,7 +1456,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={"Plant Dieng"}
+                  value={contract?.authority?.facility?.name}
                 />
               </div>
               <div className="form-group row">
@@ -1433,7 +1474,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={"Plant Dieng"}
+                  value={contract?.user?.facility?.name}
                 />
               </div>
               <div className="form-group row">
@@ -1451,7 +1492,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={"Plant Dieng"}
+                  value={contract?.vendor?.party?.full_name}
                 />
               </div>
             </div>
@@ -1472,9 +1513,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={
-                    "Pengadaan Material Gasket Spiral Wound & Rupture Disk"
-                  }
+                  value={contract?.contract_name}
                 />
               </div>
               <div className="form-group row">
@@ -1492,9 +1531,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={
-                    "Pengadaan Material Gasket Spiral Wound & Rupture Disk"
-                  }
+                  value={contract?.purch_order?.name}
                 />
               </div>
               <div className="form-group row">
@@ -1511,7 +1548,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   id="agreement_type"
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
-                  value={"Perjanjian"}
+                  value={data?.doc_type}
                 />
               </div>
               <div className="form-group row">
@@ -1529,7 +1566,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={"961242390"}
+                  value={contract?.authority_group?.party?.full_name}
                 />
               </div>
               <div className="form-group row">
@@ -1547,7 +1584,7 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
                   style={{ backgroundColor: "#c7d2d8" }}
                   disabled
                   onChange={(e) => {}}
-                  value={"961242390"}
+                  value={contract?.user_group?.party?.full_name}
                 />
               </div>
             </div>
@@ -1654,6 +1691,11 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
             />
           </div>
           {/* <FormParameter currentActiveTab={tabActive} /> */}
+          {!loadings.getAddendumDetail ? (
+            <Summary data={data} />
+          ) : (
+            <FormattedMessage id="TITLE.TABLE.WAITING_DATA" />
+          )}
         </>
       )}
 
@@ -4081,9 +4123,19 @@ const DraftAddendumPage = ({ loginStatus, rolesEproc }) => {
   );
 };
 
+const keys = {
+  getAddendumDetail: "get-addendum-contract-by-id ",
+};
 const mapState = (state) => ({
+  loadings: {
+    getAddendumDetail: getLoading(state, keys.getAddendumDetail),
+  },
   loginStatus: state.auth.user.data.status,
   rolesEproc: state.auth.user.data.roles_eproc,
 });
 
-export default connect(mapState)(DraftAddendumPage);
+const mapDispatch = {
+  fetch_api_sg,
+};
+
+export default connect(mapState, mapDispatch)(DraftAddendumPage);
