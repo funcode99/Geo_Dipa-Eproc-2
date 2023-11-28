@@ -174,37 +174,39 @@ export const AddendumRequestListPage = ({
             // worked_start_end_date
 
             action: (
-              // item?.admin_purch_group_id === purch_group_id
               <ButtonAction
                 hoverLabel="More"
                 data={"1"}
+                exclude={["another"]}
                 ops={[
-                  {
-                    label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
-                    to: {
-                      url: `/${status}/addendum-contract/approval/${item.id}`,
-                      style: {
-                        color: "black",
+                  item?.admin_purch_group_id === purch_group_id
+                    ? {
+                        label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
+                        to: {
+                          url: `/${status}/addendum-contract/approval/${item.id}`,
+                          style: {
+                            color: "black",
+                          },
+                        },
+                      }
+                    : {
+                        label: "CONTRACT.TABLE_ACTION.DRAFTING",
+                        type: "another",
                       },
-                    },
-                  },
-                  {
-                    label: "CONTRACT.TABLE_ACTION.SEE_DETAILS",
-                    to: {
-                      url: `/${status}/addendum-contract/approval/${item.id}`,
-                      style: {
-                        color: "black",
+                  item?.user_purch_group_id === purch_group_id
+                    ? {
+                        label: "CONTRACT.TABLE_ACTION.SEE_DETAILS",
+                        to: {
+                          url: `/${status}/addendum-contract/approval/${item.id}`,
+                          style: {
+                            color: "black",
+                          },
+                        },
+                      }
+                    : {
+                        label: "CONTRACT_DETAIL.LABEL.PO_DATE",
+                        type: "another",
                       },
-                    },
-                  },
-                  // item?.user_purch_group_id === purch_group_id
-                  //   ?
-                  //   : ""
-                  //   ,
-                  // item?.user_purch_group_id === purch_group_id
-                  //   ?
-
-                  //   : "",
                 ]}
               />
             ),
@@ -292,7 +294,7 @@ const mapState = (state) => ({
     fetch: getLoading(state, keys.fetch),
   },
   status: state.auth.user.data.status,
-  purch_group_id: state.addendumContract.dataContractById.purch_group_id,
+  purch_group_id: state.auth.user.data.purch_group,
 });
 
 const mapDispatch = {
