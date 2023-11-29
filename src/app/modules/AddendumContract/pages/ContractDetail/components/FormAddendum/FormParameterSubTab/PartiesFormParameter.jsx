@@ -1119,6 +1119,7 @@ const PartiesFormParameter = ({
                           rowGap: 4,
                         }}
                       >
+                        <span>Username</span>
                         <ReactSelect
                           data={authorizedOfficial}
                           func={changeDataauthorizedOfficial}

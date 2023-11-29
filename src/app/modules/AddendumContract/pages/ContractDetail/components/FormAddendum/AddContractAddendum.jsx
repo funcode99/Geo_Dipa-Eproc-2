@@ -41,7 +41,6 @@ import Steppers from "app/components/steppersCustom/Steppers";
 import { DUMMY_STEPPER_CONTRACT } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
 
 import { fetch_api_sg } from "redux/globalReducer";
-import { values } from "lodash";
 
 // const { setFieldValue } = useFormikContext;
 
@@ -533,6 +532,31 @@ export const AddContractAddendum = ({
 
   const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
 
+  const LOCAL_STEPPER_CONTRACT = [
+    {
+      label: "Isi form permohonan",
+      status: sequence === 0 ? "ON PROGRESS" : "COMPLETE",
+    },
+    {
+      label: "Isi form parameter",
+      status:
+        sequence < 1
+          ? "NO STARTED"
+          : sequence === 1
+          ? "ON PROGRESS"
+          : "COMPLETE",
+    },
+    {
+      label: "Upload dokumen pendukung",
+      status:
+        sequence < 2
+          ? "NO STARTED"
+          : sequence === 2
+          ? "ON PROGRESS"
+          : "COMPLETE",
+    },
+  ];
+
   return (
     <React.Fragment>
       <Toast />
@@ -684,7 +708,7 @@ export const AddContractAddendum = ({
         ]}
       />
 
-      <Steppers steps={DUMMY_STEPPER_CONTRACT} />
+      <Steppers steps={LOCAL_STEPPER_CONTRACT} />
 
       {jsonData?.form_review ? (
         <div
@@ -1054,6 +1078,8 @@ export const AddContractAddendum = ({
           openCloseAddDocument={openCloseAddDocument}
           showAddDocument={showAddDocument}
           initialData={initialData}
+          // conclusion={localStorage.getItem("conclusion")}
+          // isAddJobPrice={localStorage.getItem("isAddJobPrice")}
         />
       )}
     </React.Fragment>
