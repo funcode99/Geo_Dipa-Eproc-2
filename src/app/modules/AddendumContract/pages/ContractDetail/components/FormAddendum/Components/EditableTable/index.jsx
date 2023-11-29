@@ -53,8 +53,7 @@ const createChildData = (
   uom,
   unit_price,
   subtotal,
-  note,
-  row
+  note
 ) => ({
   id: product_name.replace(" ", "_"),
   product_name,
@@ -84,7 +83,6 @@ const EditableTable = ({
   func,
   grandTotal,
 }) => {
-  // let jobPriceData = localStorage.setItem("job_price", previousData)
   let jobPriceData = previousData;
   const [init, setInit] = useState(0);
   let parsedJobPrice = null;
@@ -123,6 +121,7 @@ const EditableTable = ({
   };
 
   const onDeleteMode = (index) => {
+    console.log("masuk ke delete mode");
     setRows((prev) => {
       const newState = [...prev];
       newState.splice(index, 1);
@@ -271,6 +270,7 @@ const EditableTable = ({
   };
 
   const onAddChildMode = (parentId, index) => {
+    console.log("masuk ke fungsi onaddchildmode", parentId);
     let result = rows.map((row) => {
       if (row.id === parentId) {
         if (row.item_detail) {
@@ -682,7 +682,6 @@ const EditableTable = ({
                   {/* selalu masuk kesini diawal */}
                   {/* kalo pake tablerow gak rapih */}
                   <TableRow key={row.id}>
-                    {/* <TableCell align="1">{index + 1}</TableCell> */}
                     <TableCell>{index + 1}</TableCell>
                     <CustomTableCell
                       {...{ row, name: "product_name", onChange }}
@@ -712,24 +711,25 @@ const EditableTable = ({
                         </>
                       ) : (
                         <ButtonAction
-                          handleAction={(a, b, c) => {
-                            if (c === "Hapus") {
+                          handleAction={(type, data, label) => {
+                            console.log("masuk ke handleAction", label);
+                            if (label === "Delete") {
                               onDeleteMode(index);
-                            } else if (c === "Edit") {
+                            } else if (label === "Edit") {
                               onToggleEditMode(row.id);
-                            } else if (c === "Tambah Sub Item") {
+                            } else if (label === "Add Sub Item") {
                               onAddChildMode(row.id, index);
                             }
                           }}
                           ops={[
                             {
-                              label: "Edit",
+                              label: "JOB_PRICE.TABLE_ACTION.EDIT",
                             },
                             {
-                              label: "Hapus",
+                              label: "JOB_PRICE.TABLE_ACTION.DELETE",
                             },
                             {
-                              label: "Tambah Sub Item",
+                              label: "JOB_PRICE.TABLE_ACTION.ADD_SUB_ITEM",
                             },
                           ]}
                         ></ButtonAction>

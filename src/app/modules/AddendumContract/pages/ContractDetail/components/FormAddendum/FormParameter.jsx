@@ -71,8 +71,8 @@ const actionButton = (id, deleteFine) => (
   />
 );
 
-function createData(id, fine_type, value, max_day, value_type) {
-  return { id, fine_type, value, max_day, value_type };
+function createData(id, pinalty_name, value, max_day, value_type) {
+  return { id, pinalty_name, value, max_day, value_type };
 }
 
 const FormParameter = ({
@@ -400,14 +400,18 @@ const FormParameter = ({
 
   // CLEAR!, tinggal skenario yang Full
   const submitFormParameterPaymentMethod = (values) => {
-    if (stagePayment?.payment.length < 1) {
+    if (
+      stagePayment?.payment.length < 1 &&
+      values.payment_method === "gradually"
+    ) {
       alert("Silahkan tambah tahap pembayaran anda");
     }
     submitPaymentMethod(
       {
         add_contract_id: localStorage.getItem("add_contract_id"),
         payment_method_name: values.payment_method,
-        payment_method_data: values.payment_data,
+        payment_method_data:
+          values.payment_method === "gradually" ? values.payment_data : null,
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
@@ -619,7 +623,7 @@ const FormParameter = ({
       >
         <Formik
           initialValues={{
-            fine_type: "",
+            pinalty_name: "",
             value: "",
             max_day: "",
             value_type: "",
@@ -630,7 +634,7 @@ const FormParameter = ({
                 ...data,
                 createData(
                   fine.length + 1,
-                  values.fine_type,
+                  values.pinalty_name,
                   values.value,
                   values.max_day,
                   values.value_type
@@ -683,7 +687,7 @@ const FormParameter = ({
                       </span>
                       <Field
                         as="select"
-                        name="fine_type"
+                        name="pinalty_name"
                         style={{
                           padding: "10px 0",
                           backgroundColor: "#e8f4fb",
@@ -2032,7 +2036,7 @@ const FormParameter = ({
                                     {index + 1}
                                   </TableCell>
                                   {/* <TableCell align="left" scope="row">
-                                    {row.fine_type}
+                                    {row.pinalty_name}
                                   </TableCell>
                                   <TableCell align="left">
                                     {row.value}
@@ -2118,7 +2122,7 @@ const FormParameter = ({
                 }}
               >
                 {(props) => {
-                  const { values, setFieldValue } = props;
+                  const { values } = props;
                   return (
                     <Form>
                       <div
@@ -3016,11 +3020,11 @@ const FormParameter = ({
                                   onChange={(event) => {
                                     console.log(
                                       "isi currentTarget",
-                                      event.currentTarget.files
+                                      event.target.files
                                     );
                                     setFieldValue(
                                       "bank_statement_file",
-                                      event.currentTarget.files[0]
+                                      event.target.files[0]
                                     );
                                   }}
                                 />

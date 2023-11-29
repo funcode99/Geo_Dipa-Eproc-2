@@ -477,14 +477,14 @@ const UploadDokumenPendukung = ({
                     </p>
                     <Field
                       as="select"
-                      name="drafterCode"
+                      name="drafterSelectValue"
                       style={{
                         padding: "10px 12px",
                         fontSize: 12,
                         backgroundColor: "#e8f4fb",
                         borderRadius: 4,
                       }}
-                      value={values.drafterCode}
+                      value={values.drafterSelectValue.drafterCode}
                     >
                       <option
                         // style={{
