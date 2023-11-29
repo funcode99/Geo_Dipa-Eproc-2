@@ -58,7 +58,6 @@ const UploadDokumenPendukung = ({
         supportDocumentFetch.length + 1
       );
       setSupportingDocument((previous) => {
-        // return [...previous, additionalDocument];
         return {
           data: [...previous, additionalDocument],
         };
@@ -86,8 +85,10 @@ const UploadDokumenPendukung = ({
         };
       });
     } else if (
-      "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M" ||
-      "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)"
+      conclusion ===
+        "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M" ||
+      conclusion ===
+        "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)"
     ) {
       setSupportingDocument(() => {
         return {
