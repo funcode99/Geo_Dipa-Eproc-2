@@ -187,7 +187,7 @@ export default function TablePaginationCustom({
 
   React.useEffect(() => {
     setRowsPerPage(rows?.length || initialRowsPerPage || 5);
-  }, [showAllData, initialRowsPerPage, rows.length]);
+  }, [showAllData, initialRowsPerPage]);
   return (
     <div className={clsx(classes.root, classContainer)}>
       {withSearch && <SearchBox onChange={handleChangeQuery} />}

@@ -128,6 +128,7 @@ export const GRPage = ({ fetch_api_sg, loadings, status }) => {
           headerRows={tableHeaderContractsNew}
           rows={newContent}
           loading={loadings.fetch}
+          initialRowsPerPage={10}
         />
       </Paper>
     </>
