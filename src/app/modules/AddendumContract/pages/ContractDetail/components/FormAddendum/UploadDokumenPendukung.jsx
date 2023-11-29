@@ -3,28 +3,36 @@ import { Paper, makeStyles } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 import { Button } from "react-bootstrap";
 import { uploadSuppDoc } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import { compose } from "redux";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
+const UploadDokumenPendukung = ({
+  supportDocumentFetch,
+  initialData,
+  isAddJobPrice,
+  conclusion,
+}) => {
   // AARRGHGH PASS BY REFERENCE\
   console.log("isi supportDocumentFetch", supportDocumentFetch);
   supportDocumentFetch.map((item) => {
     if (
       (item.document_name ===
         "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor" &&
-        localStorage.getItem("isAddJobPrice") === true) ||
+        isAddJobPrice) ||
       item.document_name === "Berita Acara Kesepakatan Addendum" ||
-      (item.document_name === "Justifikasi" &&
-        localStorage.getItem("conclusion") ===
+      (item.document_name === "Justifikasi " &&
+        conclusion ===
           "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
       (item.document_name === "Kajian Hukum dari Fungsi Legal" &&
-        localStorage.getItem("conclusion") ===
+        conclusion ===
           "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
       (item.document_name ===
         "Kajian Risk Management dari Fungsi Risk Management" &&
-        localStorage.getItem("conclusion") ===
+        conclusion ===
           "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)") ||
       (item.document_name === "Hasil Keputusan Rapat Direksi" &&
-        localStorage.getItem("conclusion") ===
+        conclusion ===
           "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)") ||
       item.document_name === "Memo/Surat Permohonan Addendum"
     ) {
@@ -42,7 +50,6 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
   let pelengkapB = supportDocumentFetch.slice(4, 7);
   let lengkapA = [...kondisiA, ...pelengkapA];
   let lengkapB = [...lengkapA, ...pelengkapB];
-  let conclusion = localStorage.getItem("conclusion");
 
   useEffect(() => {
     if (supportDocumentFetch.length > initialData.length) {
@@ -546,4 +553,15 @@ const UploadDokumenPendukung = ({ supportDocumentFetch, initialData }) => {
   );
 };
 
-export default UploadDokumenPendukung;
+// export default UploadDokumenPendukung;
+
+const mapState = ({ addendumContract }) => ({
+  // ini isi local storage nya ternyata ah elah goblok bat sih gue wkwkwkwwkwk
+  isAddJobPrice: addendumContract.isAddJobPrice,
+  conclusion: addendumContract.conclusion,
+});
+
+export default compose(
+  withRouter,
+  connect(mapState, null)
+)(UploadDokumenPendukung);

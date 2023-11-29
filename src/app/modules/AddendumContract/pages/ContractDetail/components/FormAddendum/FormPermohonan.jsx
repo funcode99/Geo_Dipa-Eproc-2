@@ -5,10 +5,13 @@ import { Card, CardBody } from "_metronic/_partials/controls";
 import { rupiah } from "app/libs/currency";
 import { formatDate } from "app/libs/date";
 import { submitAddendumRequest } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import { useDispatch, connect } from "react-redux";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import CurrencyInput from "react-currency-input-field";
 
 const FormPermohonan = (props) => {
   console.log("isi props", props);
+  const dispatch = useDispatch();
 
   const [conclusion, setConclusion] = useState("");
   const [adnm_percentage, set_adnm_percentage] = useState();
@@ -72,7 +75,7 @@ const FormPermohonan = (props) => {
           )
       : "0";
     localStorage.setItem("value_after_addendum", JSON.stringify(afterValue));
-    localStorage.setItem("isAddJobPrice", values.checked.includes("job_price"));
+    // localStorage.setItem("isAddJobPrice", values.checked.includes("job_price"));
     submitAddendumRequest({
       // unauthorized karena contract id nya wkwk, dasar goblok
       contract_id: `${props.contractId}`,
@@ -121,7 +124,14 @@ const FormPermohonan = (props) => {
     }).then((value) => {
       console.log("isi values saat submit", value);
       localStorage.setItem("add_contract_id", value.data.data.id);
-      localStorage.setItem("conclusion", conclusion);
+      dispatch({
+        type: actionTypes.SetConclusion,
+        payload: conclusion,
+      });
+      dispatch({
+        type: actionTypes.SetIsAddJobPrice,
+        payload: values.checked.includes("job_price"),
+      });
     });
   };
 
@@ -1018,19 +1028,23 @@ const FormPermohonan = (props) => {
                           <input
                             className="d-none"
                             value={`${
-                              parseInt(afterAddendumJobPrice) >= 5000000000 &&
+                              parseInt(
+                                props?.headerData?.initial_contract_value
+                              ) >= 5000000000 &&
                               parseInt(Math.abs(adnm_percentage)) > 10
                                 ? setConclusion(
                                     "Harga pekerjaan setelah addendum diatas 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)"
                                   )
-                                : parseInt(afterAddendumJobPrice) >
-                                    5000000000 &&
+                                : parseInt(
+                                    props?.headerData?.initial_contract_value
+                                  ) > 5000000000 &&
                                   parseInt(Math.abs(adnm_percentage)) < 10
                                 ? setConclusion(
                                     "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di atas Rp 5M)"
                                   )
-                                : parseInt(afterAddendumJobPrice) <
-                                    5000000000 &&
+                                : parseInt(
+                                    props?.headerData?.initial_contract_value
+                                  ) < 5000000000 &&
                                   parseInt(Math.abs(adnm_percentage)) < 10
                                 ? setConclusion(
                                     "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal (Nilai kontrak di bawah Rp 5M)"

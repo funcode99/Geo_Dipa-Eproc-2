@@ -14,6 +14,8 @@ const attachmentClauseDataTemplate = {
 };
 
 const initialDelivMonitoringState = {
+  isAddJobPrice: false,
+  conclusion: "",
   dataDeverableDoc: null,
   dataContractById: [],
   dataNewClause: {
@@ -791,7 +793,7 @@ export const reducer = persistReducer(
         }
       }
 
-      // kalo case di atas gagal return bakal turun kebawah case & return nya
+      // kalo case di atas gagal return bakal turun kebawah case & masuk ke return nya
       case actionTypes.SetSubmitItemsByContractId: {
         return {
           ...state,
@@ -833,6 +835,20 @@ export const reducer = persistReducer(
           ...state,
           notifDeliveryMonitoring: list,
           notifMeta: meta,
+        };
+      }
+
+      case actionTypes.SetIsAddJobPrice: {
+        return {
+          ...state,
+          isAddJobPrice: action.payload,
+        };
+      }
+
+      case actionTypes.SetConclusion: {
+        return {
+          ...state,
+          conclusion: action.payload,
         };
       }
 

@@ -1054,6 +1054,8 @@ export const AddContractAddendum = ({
           openCloseAddDocument={openCloseAddDocument}
           showAddDocument={showAddDocument}
           initialData={initialData}
+          // conclusion={localStorage.getItem("conclusion")}
+          // isAddJobPrice={localStorage.getItem("isAddJobPrice")}
         />
       )}
     </React.Fragment>
