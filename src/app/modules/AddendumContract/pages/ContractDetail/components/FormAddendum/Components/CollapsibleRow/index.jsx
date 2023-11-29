@@ -88,26 +88,53 @@ const CollapsibleRow = ({
         ) : (
           <TableCell>
             <ButtonAction
-              handleAction={(a, b, c) => {
-                if (c === "Hapus") {
+              // handleAction={(a, b, c) => {
+              //   if (c === "Hapus") {
+              //     onDeleteMode(index);
+              //   } else if (c === "Edit") {
+              //     onToggleEditMode(row.id);
+              //   } else if (c === "Tambah") {
+              //     onAddMode();
+              //   } else if (c === "Tambah Sub Item") {
+              //     onAddChildMode(row.id, index);
+              //   }
+              // }}
+              // ops={[
+              //   {
+              //     label: "Edit",
+              //   },
+              //   {
+              //     label: "Hapus",
+              //   },
+              //   {
+              //     label: "Tambah Sub Item",
+              //   },
+              // ]}
+
+              handleAction={(type, data, label) => {
+                console.log(
+                  "masuk ke handleAction collapsible row",
+                  type,
+                  data,
+                  label
+                );
+                if (label === "JOB_PRICE.TABLE_ACTION.DELETE") {
                   onDeleteMode(index);
-                } else if (c === "Edit") {
+                } else if (label === "JOB_PRICE.TABLE_ACTION.EDIT") {
                   onToggleEditMode(row.id);
-                } else if (c === "Tambah") {
-                  onAddMode();
-                } else if (c === "Tambah Sub Item") {
+                } else if (label === "JOB_PRICE.TABLE_ACTION.ADD_SUB_ITEM") {
                   onAddChildMode(row.id, index);
                 }
               }}
               ops={[
                 {
-                  label: "Edit",
+                  label: "JOB_PRICE.TABLE_ACTION.EDIT",
                 },
                 {
-                  label: "Hapus",
+                  label: "JOB_PRICE.TABLE_ACTION.DELETE",
                 },
                 {
-                  label: "Tambah Sub Item",
+                  label: "JOB_PRICE.TABLE_ACTION.ADD_SUB_ITEM",
                 },
               ]}
             ></ButtonAction>
