@@ -22,6 +22,8 @@ import RenderInput from "app/components/input/RenderInput";
 import { connect } from "react-redux";
 import SummaryTab from "./tabs/Summary";
 import ParaPihakTab from "./tabs/ParaPihak";
+import HargaPekerjaanTab from "./tabs/HargaPekerjaan/HargaPekerjaan";
+import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { FormattedMessage } from "react-intl";
@@ -33,7 +35,9 @@ const DraftAddendumPage = ({
   fetch_api_sg,
   loginStatus,
   rolesEproc,
+  headerData,
 }) => {
+  const { contract_id } = useParams();
   const [inputValue, setInputValue] = useState("Upload File");
   const [tabActive, setTabActive] = React.useState(0);
   const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0);
@@ -43,9 +47,9 @@ const DraftAddendumPage = ({
   const [distributionSequence, setDistributionSequence] = React.useState(0);
   const [data, setData] = useState({});
   const [contract, setContract] = useState({});
+  const [dataContractById, setDataContractById] = useState({});
+  const [currencies, setDataCurrencies] = useState([]);
   const { draft_id } = useParams();
-
-  console.log({ sequence });
 
   const getClientStatus = () => {
     const client_role = "ADMIN_CONTRACT";
@@ -63,12 +67,36 @@ const DraftAddendumPage = ({
       onSuccess: (res) => {
         setContract(res?.data?.contract);
         setData(res?.data);
+        getContractById(res.data.contract_id);
+      },
+    });
+  };
+  const getContractById = async (id) => {
+    fetch_api_sg({
+      key: keys.getAddendumDetail,
+      type: "get",
+      url: `/adendum/contract-released/${id}/show`,
+      onSuccess: (res) => {
+        setDataContractById(res?.data);
+      },
+    });
+  };
+
+  const getCurrencies = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/currencies`,
+      onSuccess: (res) => {
+        console.log("response currencies", res);
+        setDataCurrencies(res);
       },
     });
   };
 
   useEffect(() => {
     getAddendum();
+    getCurrencies();
   }, []);
 
   let isAdmin = getClientStatus();
@@ -1697,6 +1725,21 @@ const DraftAddendumPage = ({
           {/* <FormParameter currentActiveTab={tabActive} /> */}
           {tabActive === 0 && <SummaryTab data={data} />}
           {tabActive === 1 && <ParaPihakTab data={data} />}
+          {tabActive === 2 && (
+            <HargaPekerjaanTab
+              data={dataContractById}
+              dataAfterAdendum={data}
+              contract_id={contract_id}
+              currencies={currencies}
+            />
+            // <JobPriceFormParameter
+            //   jsonData={dataContractById}
+            //   dataAfterAdendum={data}
+            //   currencies={currencies}
+            //   headerData={headerData}
+            //   contract_id={contract_id}
+            // />
+          )}
         </>
       )}
 

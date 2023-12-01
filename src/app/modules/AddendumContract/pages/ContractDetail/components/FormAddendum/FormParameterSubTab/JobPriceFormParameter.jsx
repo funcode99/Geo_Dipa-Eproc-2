@@ -221,7 +221,7 @@ const JobPriceFormParameter = ({
                         fontWeight: 600,
                       }}
                     >
-                      Nilai perjanjian kontrak awal
+                      Nilai perjanjian kontrak awal nya
                     </p>
                     <div
                       style={{
