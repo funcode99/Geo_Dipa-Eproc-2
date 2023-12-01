@@ -37,6 +37,7 @@ export default function ButtonAction({
   }
   const handleChange = React.useCallback(
     (type, data, label) => {
+      console.log("isi handle change", type, data, label);
       if (typeof handleAction === "function") handleAction(type, data, label);
       handleClose();
     },
@@ -108,7 +109,7 @@ export default function ButtonAction({
               return (
                 <MenuItem
                   key={id}
-                  onClick={() => handleChange(el.type, data)}
+                  onClick={() => handleChange(el.type, data, el.label)}
                   disabled={el.disabled}
                 >
                   <ListItemIcon>

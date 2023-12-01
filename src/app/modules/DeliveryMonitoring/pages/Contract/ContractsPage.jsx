@@ -6,7 +6,6 @@ import { TableRow, TableCell } from "@material-ui/core";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import ButtonAction from "../../../../components/buttonAction/ButtonAction";
 import Subheader from "../../../../components/subheader";
-import TablePaginationCustom from "../../../../components/tables/TablePagination";
 import { formatDate } from "../../../../libs/date";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
@@ -17,8 +16,6 @@ import {
   searchFindMulti,
   stableSort,
 } from "../../../../components/tables/TablePagination/TablePaginationCustom";
-import axios from "axios";
-import { DEV_NODE2 } from "../../../../../redux/BaseHost";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,13 +96,8 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("");
   const [filterBy, setFilterBy] = React.useState({});
-  const [newContent, setNewContent] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const generateTableContent = (data) => {
-    setNewContent(dataArr);
-  };
 
   const handleFilter = (data, data2) => {
     const sort = JSON.parse(data2.sort);
@@ -231,12 +223,6 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
               </TableRow>
             ))}
         </Tables>
-        {/* <TablePaginationCustom
-          headerRows={tableHeaderContractsNew}
-          rows={newContent}
-          width={1500}
-          loading={loadings.fetch}
-        /> */}
       </Paper>
     </>
   );

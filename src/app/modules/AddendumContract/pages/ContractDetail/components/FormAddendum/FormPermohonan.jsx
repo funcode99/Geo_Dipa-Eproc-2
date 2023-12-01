@@ -14,6 +14,7 @@ const FormPermohonan = (props) => {
   const dispatch = useDispatch();
 
   const [conclusion, setConclusion] = useState("");
+  const [note, setNote] = useState("");
   const [adnm_percentage, set_adnm_percentage] = useState();
   const [disabledInput, setDisabledInput] = useState("both");
   const [dateDisplay, setDateDisplay] = useState(null);
@@ -444,7 +445,7 @@ const FormPermohonan = (props) => {
               substraction_price: price.substraction_price,
               request_date: dateDisplay,
               // note & is availability budget di input manual
-              note: "",
+              note: note,
               adnm_conclusion: "",
               is_availability_budget: false,
               total_price: "0",
@@ -725,7 +726,11 @@ const FormPermohonan = (props) => {
                         }}
                         type="text"
                         name="note"
+                        value={note}
                         placeholder="Masukkan perihal addendum lainnya"
+                        onChange={(e) => {
+                          setNote(e.target.value);
+                        }}
                         disabled={
                           values.checked.some((item) => item === "others")
                             ? false
