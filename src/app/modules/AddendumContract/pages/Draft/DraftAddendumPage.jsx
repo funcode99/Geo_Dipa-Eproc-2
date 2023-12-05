@@ -3,10 +3,16 @@ import { useParams } from "react-router-dom";
 import Tabs from "app/components/tabs";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import { Col, Row } from "react-bootstrap";
-import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameter";
+import { DEV_NODE } from "redux/BaseHost";
+import { API_EPROC } from "redux/BaseHost";
+import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import { Card, CardBody } from "_metronic/_partials/controls";
 import Steppers from "app/components/steppersCustom/Steppers";
-import { STEPPER_ADDENDUM_CONTRACT } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
+import {
+  DUMMY_STEPPER,
+  DUMMY_STEPPER_CONTRACT,
+  STATE_STEPPER,
+} from "../Termin/TerminPageNew/STATIC_DATA";
 import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
@@ -16,10 +22,10 @@ import { Formik, Field, FieldArray } from "formik";
 // import { Button } from "react-bootstrap"
 import { Grid, Button } from "@material-ui/core";
 import UploadInput from "app/components/input/UploadInput";
-import SelectDateInput from "app/components/input/SelectDateInput";
-import TextAreaInput from "app/components/input/TextAreaInput";
-import RenderInput from "app/components/input/RenderInput";
 import { connect } from "react-redux";
+import TextAreaInput from "app/components/input/TextAreaInput";
+import SelectDateInput from "app/components/input/SelectDateInput";
+import RenderInput from "app/components/input/RenderInput";
 import SummaryTab from "./tabs/Summary";
 import ParaPihakTab from "./tabs/ParaPihak";
 import HargaPekerjaanTab from "./tabs/HargaPekerjaan/HargaPekerjaan";
@@ -28,6 +34,7 @@ import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/For
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { FormattedMessage } from "react-intl";
+import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
 
 // bentrok antara button mui & bootstrap
 
@@ -37,8 +44,9 @@ const DraftAddendumPage = ({
   loginStatus,
   rolesEproc,
   headerData,
+  dataNewClause,
 }) => {
-  const { contract_id } = useParams();
+  const { draft_id } = useParams();
   const [inputValue, setInputValue] = useState("Upload File");
   const [tabActive, setTabActive] = React.useState(0);
   const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0);
@@ -48,9 +56,11 @@ const DraftAddendumPage = ({
   const [distributionSequence, setDistributionSequence] = React.useState(0);
   const [data, setData] = useState({});
   const [contract, setContract] = useState({});
+  const [finalDraftData, setFinalDraftData] = useState();
+  const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
   const [dataContractById, setDataContractById] = useState({});
   const [currencies, setDataCurrencies] = useState([]);
-  const { draft_id } = useParams();
+  const [jsonData, setJsonData] = useState();
 
   const getClientStatus = () => {
     const client_role = "ADMIN_CONTRACT";
@@ -434,6 +444,41 @@ const DraftAddendumPage = ({
       ],
     },
   ];
+
+  const getFinalDraftData = async (contract_id) => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/contract-final-draft/${contract_id}/show`,
+      onSuccess: (res) => {
+        setFinalDraftData(res.data);
+      },
+    });
+  };
+
+  const getDataContractHeader = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/add-contracts/${draft_id}`,
+      onSuccess: (res) => {
+        console.log("apakah menarik data", res?.data.contract.id);
+        getFinalDraftData(res?.data?.contract?.id);
+      },
+    });
+  };
+
+  React.useEffect(() => {
+    // kalo dipanggil bisa
+    // getContractById(draft_id);
+    getDataContractHeader();
+    // getauthorizedOfficial();
+    // getJobDirector();
+    // getJobSupervisor();
+    // setInitialSubmitItems();
+    // getAddContractDocument();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
@@ -1280,7 +1325,17 @@ const DraftAddendumPage = ({
         ]}
       />
 
-      <Steppers steps={STEPPER_ADDENDUM_CONTRACT} />
+      <Steppers
+        // steps={data?.steppers}
+        steps={
+          data?.steppers
+            ? DUMMY_STEPPER_CONTRACT
+            : data?.steppers?.map((el) => ({
+                label: el.label,
+                status: STATE_STEPPER[el.state],
+              }))
+        }
+      />
 
       <br />
 
@@ -1414,6 +1469,7 @@ const DraftAddendumPage = ({
             </div>
           </div>
 
+          {/* Header Form Parameter */}
           <div
             style={{
               display: "flex",
@@ -1645,6 +1701,7 @@ const DraftAddendumPage = ({
               variant="scrollable"
             />
           </div>
+          {/* <DraftingFormParameter jsonData={jsonData} /> */}
           {/* <FormParameter currentActiveTab={tabActive} /> */}
           {tabActive === 0 && <SummaryTab data={data} />}
           {tabActive === 1 && <ParaPihakTab data={data} />}
@@ -1652,9 +1709,10 @@ const DraftAddendumPage = ({
             <HargaPekerjaanTab
               data={dataContractById}
               dataAfterAdendum={data}
-              contract_id={contract_id}
+              contract_id={draft_id}
               currencies={currencies}
             />
+            // lo buat disini buat perbandingan yak?
             // <JobPriceFormParameter
             //   jsonData={dataContractById}
             //   dataAfterAdendum={data}
@@ -4100,6 +4158,7 @@ const mapState = (state) => ({
   },
   loginStatus: state.auth.user.data.status,
   rolesEproc: state.auth.user.data.roles_eproc,
+  dataNewClause: state.addendumContract.dataNewClause,
 });
 
 const mapDispatch = {
