@@ -29,12 +29,16 @@ import RenderInput from "app/components/input/RenderInput";
 import SummaryTab from "./tabs/Summary";
 import ParaPihakTab from "./tabs/ParaPihak";
 import HargaPekerjaanTab from "./tabs/HargaPekerjaan/HargaPekerjaan";
-import TemplateKlausul from "./TemplateKlausul";
-import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
+import JangkaWaktuTab from "./tabs/JangkaWaktu";
+import MetodePembayaranTab from "./tabs/MetodePembayaran";
+import DendaTab from "./tabs/Denda";
+import JaminanTab from "./tabs/Jaminan";
+// import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { FormattedMessage } from "react-intl";
-import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
+import Jaminan from "./tabs/Jaminan";
+// import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
 
 // bentrok antara button mui & bootstrap
 
@@ -1721,7 +1725,38 @@ const DraftAddendumPage = ({
             //   contract_id={contract_id}
             // />
           )}
-          {tabActive === 3 && <JangkaWaktuTab data={data} />}
+          {tabActive === 3 && (
+            <JangkaWaktuTab
+              timePeriodAddendumCurrent={data?.add_contract_time_period}
+              timePeriodData={dataContractById}
+              contract_id={draft_id}
+              dataNewClause={dataNewClause}
+            />
+          )}
+          {tabActive === 4 && (
+            <MetodePembayaranTab
+              paymentMethodCurrent={data?.add_contract_payment_method}
+              jsonData={dataContractById}
+              contract_id={draft_id}
+              dataNewClause={dataNewClause}
+            />
+          )}
+          {tabActive === 5 && (
+            <DendaTab
+              fineCurrent={data?.add_contract_fine}
+              jsonData={dataContractById}
+              contract_id={draft_id}
+              dataNewClause={dataNewClause}
+            />
+          )}
+          {tabActive === 6 && (
+            <JaminanTab
+              guaranteeCurrent={data?.add_contract_guarantee}
+              jsonData={dataContractById}
+              contract_id={draft_id}
+              dataNewClause={dataNewClause}
+            />
+          )}
         </>
       )}
 

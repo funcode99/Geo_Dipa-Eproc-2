@@ -17,9 +17,9 @@ const UploadDokumenPendukung = ({
   console.log("isi supportDocumentFetch", supportDocumentFetch);
   supportDocumentFetch.map((item) => {
     if (
-      (item.document_name ===
-        "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor" &&
-        isAddJobPrice) ||
+      item.document_name ===
+        "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor" ||
+      // && isAddJobPrice
       item.document_name === "Berita Acara Kesepakatan Addendum" ||
       (item.document_name === "Justifikasi " &&
         conclusion ===
