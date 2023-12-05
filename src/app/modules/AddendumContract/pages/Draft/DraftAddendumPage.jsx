@@ -23,6 +23,7 @@ import { connect } from "react-redux";
 import SummaryTab from "./tabs/Summary";
 import ParaPihakTab from "./tabs/ParaPihak";
 import HargaPekerjaanTab from "./tabs/HargaPekerjaan/HargaPekerjaan";
+import TemplateKlausul from "./TemplateKlausul";
 import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
@@ -1342,7 +1343,7 @@ const DraftAddendumPage = ({
                   color: sequence === 1 ? "#3699ff" : "#8c8a8a",
                 }}
               >
-                Template Klausul
+                Template Klausul nya
               </h1>
             </div>
 
@@ -1626,85 +1627,7 @@ const DraftAddendumPage = ({
 
       {/* silahkan download file */}
 
-      {sequence < 2 && (
-        <div
-          style={{
-            backgroundColor: "white",
-            padding: 28,
-            marginTop: 24,
-            marginBottom: 24,
-            borderRadius: 5,
-          }}
-        >
-          <h1
-            style={{
-              fontSize: 12,
-              fontWeight: 400,
-            }}
-          >
-            Silahkan download file final draft dibawah ini:
-          </h1>
-
-          <select
-            style={{
-              borderRadius: 4,
-              padding: "10px 12px",
-              width: 310,
-              backgroundColor: "#e8f4fb",
-            }}
-          >
-            <option>Final Draft Kontrak</option>
-            <option>Final Draft Addendum</option>
-          </select>
-
-          <div
-            style={{
-              minHeight: 100,
-              marginTop: 10,
-              marginBottom: 10,
-              fontSize: 12,
-              fontWeight: 400,
-              color: "#3699ff",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                gap: 6,
-              }}
-            >
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")}
-              />
-              <p>Body Kontrak Perjanjian.doc</p>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                gap: 6,
-              }}
-            >
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")}
-              />
-              <p>Lampiran 1.doc</p>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                gap: 6,
-              }}
-            >
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/All/file-final-draft.svg")}
-              />
-              <p>Lampiran 2.doc</p>
-            </div>
-          </div>
-        </div>
-      )}
+      {sequence === 1 && <TemplateKlausul />}
 
       {sequence === 0 && (
         <>
@@ -1740,6 +1663,7 @@ const DraftAddendumPage = ({
             //   contract_id={contract_id}
             // />
           )}
+          {tabActive === 3 && <JangkaWaktuTab data={data} />}
         </>
       )}
 
