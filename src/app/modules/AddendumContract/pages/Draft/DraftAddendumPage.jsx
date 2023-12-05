@@ -37,6 +37,8 @@ import JaminanTab from "./tabs/Jaminan";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { FormattedMessage } from "react-intl";
+import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
+import JangkaWaktuTab from "./tabs/JangkaWaktu";
 import Jaminan from "./tabs/Jaminan";
 // import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
 
@@ -1402,7 +1404,7 @@ const DraftAddendumPage = ({
                   color: sequence === 1 ? "#3699ff" : "#8c8a8a",
                 }}
               >
-                Template Klausul nya
+                Template Klausul
               </h1>
             </div>
 
