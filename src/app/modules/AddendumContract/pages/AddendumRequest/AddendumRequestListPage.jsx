@@ -159,7 +159,7 @@ export const AddendumRequestListPage = ({
             // contract_end_date: item?,
             group: item?.contract?.user_group?.party?.full_name,
             vendor: item?.contract?.vendor?.party?.full_name,
-            addnm_req_status: item?.status,
+            addnm_req_status: item?.add_status.status,
             admin_test: item?.admin_purch_group_id === purch_group_id,
             user_test: item?.user_purch_group_id === purch_group_id,
 

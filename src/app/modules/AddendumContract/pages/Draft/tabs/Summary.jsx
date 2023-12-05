@@ -6,7 +6,7 @@ import moment from "moment";
 import { toAbsoluteUrl } from "_metronic/_helpers";
 import { DEV_NODE } from "redux/BaseHost";
 
-const Summary = ({ data }) => {
+const SummaryTab = ({ data }) => {
   return (
     <div className="bg-white p-10">
       <h4 className="mb-2">A. Tanggal Dokumen Permohonan</h4>
@@ -215,4 +215,4 @@ const Summary = ({ data }) => {
   );
 };
 
-export default Summary;
+export default SummaryTab;
