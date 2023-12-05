@@ -29,7 +29,7 @@ export const KEYS_TERMIN = {
   // approve
   p_t_approve_do_doc: "post-termin-upload-do-document",
   // reject
-}
+};
 
 export const KEYS_ACTION = {
   upload: "upload",
@@ -118,51 +118,51 @@ export const DUMMY_STEPPER = [
 // ];
 
 export const DUMMY_STEPPER_CONTRACT = [
-    {
-      label: "Isi Form Permohonan",
-      status: "NO STARTED"
-    },
-    {
-      label: "Isi Form Parameter",
-      status: "ON PROGRESS"
-    },
-    {
-      label: "Upload Dokumen Pendukung",
-      status: "COMPLETE"
-    },
-    {
-      label: "Verifikasi Permohonan",
-      status: "NO STARTED"
-    },
-    {
-      label: "Permohonan Disetujui",
-      status: "NO STARTED"
-    }
-]
+  {
+    label: "Isi Form Permohonan",
+    status: "NO STARTED",
+  },
+  {
+    label: "Isi Form Parameter",
+    status: "ON PROGRESS",
+  },
+  {
+    label: "Upload Dokumen Pendukung",
+    status: "COMPLETE",
+  },
+  {
+    label: "Verifikasi Permohonan",
+    status: "NO STARTED",
+  },
+  {
+    label: "Permohonan Disetujui",
+    status: "NO STARTED",
+  },
+];
 
 export const STEPPER_ADDENDUM_CONTRACT = [
   {
     label: "Drafting",
-    status: "ON PROGRESS"
+    status: "ON PROGRESS",
   },
   {
     label: "In Review",
-    status: "NO STARTED"
+    status: "NO STARTED",
   },
   {
     label: "Approval Vendor",
-    status: "NO STARTED"
+    status: "COMPLETE",
   },
   {
     label: "Approval User",
-    status: "NO STARTED"
+    status: "NO STARTED",
   },
   {
     label: "Final Draft",
-    status: "NO STARTED"
+    status: "NO STARTED",
   },
   {
     label: "Distribusi",
-    status: "NO STARTED"
-  }
-]
+    status: "NO STARTED",
+  },
+];

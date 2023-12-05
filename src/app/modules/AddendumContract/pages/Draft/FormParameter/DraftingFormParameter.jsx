@@ -7,6 +7,7 @@ import { countdownConverter } from "app/libs/timedateconverter";
 import { useParams } from "react-router-dom";
 import CurrencyInput from "react-currency-input-field";
 import { DEV_NODE } from "redux/BaseHost";
+
 import {
   Table,
   TableBody,
@@ -31,13 +32,15 @@ import {
 import * as Yup from "yup";
 import SVG from "react-inlinesvg";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
-import PartiesFormParameter from "./FormParameterSubTab/PartiesFormParameter";
-import JobPriceFormParameter from "./FormParameterSubTab/JobPriceFormParameter";
+import PartiesFormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameterSubTab/PartiesFormParameter";
+import JobPriceFormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
+
 import ButtonAction from "app/components/buttonAction/ButtonAction";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
-import NewClause from "./Components/Modal/NewClause";
-import NewContract from "./Components/Modal/NewContract";
+
+import NewClause from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/Modal/NewClause";
+import NewContract from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/Modal/NewContract";
 import {
   getSorting,
   searchFindMulti,
@@ -75,7 +78,7 @@ function createData(id, pinalty_name, value, max_day, value_type) {
   return { id, pinalty_name, value, max_day, value_type };
 }
 
-const FormParameter = ({
+const DraftingFormParameter = ({
   fetch_api_sg,
   currentActiveTab,
   headerData,
@@ -294,14 +297,6 @@ const FormParameter = ({
     setAccountNumber(jsonData?.data_bank[num]);
   };
 
-  // const [timePeriodBodyClauseData, setTimePeriodBodyClauseData] = useState(
-  //   bodyClauseDataTemplate
-  // );
-  // const [
-  //   timePeriodAttachmentClauseData,
-  //   setTimePeriodAttachmentClauseData,
-  // ] = useState([attachmentClauseDataTemplate]);
-
   const [inputDataGuarantee, setInputDataGuarantee] = useState({
     dp_guarantee: "0",
     dp_guarantee_start_date: "",
@@ -343,7 +338,7 @@ const FormParameter = ({
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
-      contract_id
+      draft_id
     );
   };
 
@@ -364,7 +359,7 @@ const FormParameter = ({
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
-      contract_id
+      draft_id
     );
   };
 
@@ -377,7 +372,7 @@ const FormParameter = ({
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
-      contract_id
+      draft_id
     );
   };
 
@@ -407,7 +402,7 @@ const FormParameter = ({
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
-      contract_id
+      draft_id
     );
   };
 
@@ -422,7 +417,7 @@ const FormParameter = ({
       "attachment_clause_data",
       JSON.stringify(values.attachment_data)
     );
-    submitAccountNumber(data_new, contract_id);
+    submitAccountNumber(data_new, draft_id);
   };
 
   // CLEAR!
@@ -433,7 +428,7 @@ const FormParameter = ({
         body_clause_data: [values.body_data],
         attachment_clause_data: values.attachment_data,
       },
-      contract_id
+      draft_id
     );
   };
 
@@ -447,7 +442,7 @@ const FormParameter = ({
     });
   };
 
-  const { contract_id } = useParams();
+  const { draft_id } = useParams();
   const [dataArr, setDataArr] = useState([]);
   const [dataArrFine, setDataArrFine] = useState([]);
   const [currencies, setDataCurrencies] = useState([]);
@@ -485,7 +480,7 @@ const FormParameter = ({
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      url: `/adendum/refference/get-party-bank/${contract_id}`,
+      url: `/adendum/refference/get-party-bank/${draft_id}`,
       // url: `/adendum/refference/get-party-bank/973412af-2d3a-4e4b-9609-b2283e322360`,
       onSuccess: (res) => {
         setDataArrFine(
@@ -512,7 +507,7 @@ const FormParameter = ({
 
   React.useEffect(() => {
     getDataPenalties();
-    getDataBankAccounts();
+    // getDataBankAccounts();
     getCurrencies();
   }, []);
 
@@ -979,7 +974,7 @@ const FormParameter = ({
                 jobDirector={jobDirector}
                 jobSupervisor={jobSupervisor}
                 jobSupervisor2={jobSupervisor2}
-                contract_id={contract_id}
+                contract_id={draft_id}
               />
             </>
           )}
@@ -991,7 +986,7 @@ const FormParameter = ({
                 currencies={currencies}
                 headerData={headerData}
                 jsonData={jsonData}
-                contract_id={contract_id}
+                contract_id={draft_id}
               />
             </>
           )}
@@ -2927,35 +2922,6 @@ const FormParameter = ({
                                   margin: 0,
                                 }}
                               >
-                                {/* <input
-                                style={{
-                                  width: "100%",
-                                  padding: "10px 12px 10px 46px",
-                                  color: "#3699ff",
-                                  borderColor: "black",
-                                  border: 1,
-                                  borderStyle: "solid",
-                                  borderRadius: 4,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  marginTop: 4,
-                                }}
-                                type="text"
-                                value={`surat_pernyataan_bank_bca.pdf`}
-                                disabled
-                              />
-                              <SVG
-                                style={{
-                                  position: "absolute",
-                                  top: 0,
-                                  bottom: 0,
-                                  left: 12,
-                                  margin: "auto 0",
-                                }}
-                                src={toAbsoluteUrl(
-                                  "/media/svg/icons/All/upload.svg"
-                                )}
-                              /> */}
                                 <input
                                   type="file"
                                   style={{
@@ -3052,4 +3018,4 @@ const mapDispatch = {
   fetch_api_sg,
 };
 
-export default connect(mapState, mapDispatch)(FormParameter);
+export default connect(mapState, mapDispatch)(DraftingFormParameter);

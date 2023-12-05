@@ -3,10 +3,16 @@ import { useParams } from "react-router-dom";
 import Tabs from "app/components/tabs";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import { Col, Row } from "react-bootstrap";
-import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameter";
+import { DEV_NODE } from "redux/BaseHost";
+import { API_EPROC } from "redux/BaseHost";
+import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import { Card, CardBody } from "_metronic/_partials/controls";
 import Steppers from "app/components/steppersCustom/Steppers";
-import { STEPPER_ADDENDUM_CONTRACT } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
+import {
+  DUMMY_STEPPER,
+  DUMMY_STEPPER_CONTRACT,
+  STATE_STEPPER,
+} from "../Termin/TerminPageNew/STATIC_DATA";
 import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
@@ -16,17 +22,20 @@ import { Formik, Field, FieldArray } from "formik";
 // import { Button } from "react-bootstrap"
 import { Grid, Button } from "@material-ui/core";
 import UploadInput from "app/components/input/UploadInput";
-import SelectDateInput from "app/components/input/SelectDateInput";
-import TextAreaInput from "app/components/input/TextAreaInput";
-import RenderInput from "app/components/input/RenderInput";
 import { connect } from "react-redux";
+import TextAreaInput from "app/components/input/TextAreaInput";
+import SelectDateInput from "app/components/input/SelectDateInput";
+import RenderInput from "app/components/input/RenderInput";
 import SummaryTab from "./tabs/Summary";
 import ParaPihakTab from "./tabs/ParaPihak";
 import HargaPekerjaanTab from "./tabs/HargaPekerjaan/HargaPekerjaan";
-import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
+import JangkaWaktuTab from "./tabs/JangkaWaktu";
+import MetodePembayaranTab from "./tabs/MetodePembayaran";
+// import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { FormattedMessage } from "react-intl";
+import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
 
 // bentrok antara button mui & bootstrap
 
@@ -36,8 +45,9 @@ const DraftAddendumPage = ({
   loginStatus,
   rolesEproc,
   headerData,
+  dataNewClause,
 }) => {
-  const { contract_id } = useParams();
+  const { draft_id } = useParams();
   const [inputValue, setInputValue] = useState("Upload File");
   const [tabActive, setTabActive] = React.useState(0);
   const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0);
@@ -47,9 +57,11 @@ const DraftAddendumPage = ({
   const [distributionSequence, setDistributionSequence] = React.useState(0);
   const [data, setData] = useState({});
   const [contract, setContract] = useState({});
+  const [finalDraftData, setFinalDraftData] = useState();
+  const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
   const [dataContractById, setDataContractById] = useState({});
   const [currencies, setDataCurrencies] = useState([]);
-  const { draft_id } = useParams();
+  const [jsonData, setJsonData] = useState();
 
   const getClientStatus = () => {
     const client_role = "ADMIN_CONTRACT";
@@ -433,6 +445,41 @@ const DraftAddendumPage = ({
       ],
     },
   ];
+
+  const getFinalDraftData = async (contract_id) => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/contract-final-draft/${contract_id}/show`,
+      onSuccess: (res) => {
+        setFinalDraftData(res.data);
+      },
+    });
+  };
+
+  const getDataContractHeader = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/add-contracts/${draft_id}`,
+      onSuccess: (res) => {
+        console.log("apakah menarik data", res?.data.contract.id);
+        getFinalDraftData(res?.data?.contract?.id);
+      },
+    });
+  };
+
+  React.useEffect(() => {
+    // kalo dipanggil bisa
+    // getContractById(draft_id);
+    getDataContractHeader();
+    // getauthorizedOfficial();
+    // getJobDirector();
+    // getJobSupervisor();
+    // setInitialSubmitItems();
+    // getAddContractDocument();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
@@ -1279,7 +1326,17 @@ const DraftAddendumPage = ({
         ]}
       />
 
-      <Steppers steps={STEPPER_ADDENDUM_CONTRACT} />
+      <Steppers
+        // steps={data?.steppers}
+        steps={
+          data?.steppers
+            ? DUMMY_STEPPER_CONTRACT
+            : data?.steppers?.map((el) => ({
+                label: el.label,
+                status: STATE_STEPPER[el.state],
+              }))
+        }
+      />
 
       <br />
 
@@ -1413,6 +1470,7 @@ const DraftAddendumPage = ({
             </div>
           </div>
 
+          {/* Header Form Parameter */}
           <div
             style={{
               display: "flex",
@@ -1626,7 +1684,7 @@ const DraftAddendumPage = ({
 
       {/* silahkan download file */}
 
-      {sequence < 2 && (
+      {/* {sequence < 2 && (
         <div
           style={{
             backgroundColor: "white",
@@ -1704,6 +1762,216 @@ const DraftAddendumPage = ({
             </div>
           </div>
         </div>
+      )} */}
+
+      {sequence < 2 && finalDraftData?.form_review ? (
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: 28,
+            marginTop: 24,
+            marginBottom: 24,
+            borderRadius: 5,
+          }}
+        >
+          <h1
+            style={{
+              fontSize: 12,
+              fontWeight: 400,
+            }}
+          >
+            Silahkan download file final draft dibawah ini:
+          </h1>
+
+          <select
+            style={{
+              borderRadius: 4,
+              padding: "10px 12px",
+              width: 310,
+              backgroundColor: "#e8f4fb",
+            }}
+            onChange={(e) => setFinalDraftSelectValue(e.target.value)}
+          >
+            <option value="Kontrak">Final Draft Kontrak</option>
+            <option value="Addendum">Final Draft Addendum</option>
+          </select>
+
+          {finalDraftSelectValue === "Kontrak" && (
+            <div
+              style={{
+                minHeight: 100,
+                marginTop: 10,
+                marginBottom: 10,
+                fontSize: 12,
+                fontWeight: 400,
+                color: "#3699ff",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${finalDraftData?.form_review?.spk_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {finalDraftData?.form_review?.spk_name}
+                </a>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                {/* <p>Lampiran 1.doc</p> */}
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${finalDraftData?.form_review?.lampiran_1_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {finalDraftData?.form_review?.lampiran_1_name}
+                </a>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${finalDraftData?.form_review?.lampiran_2_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {finalDraftData?.form_review?.lampiran_2_name}
+                </a>
+              </div>
+            </div>
+          )}
+
+          {finalDraftSelectValue === "Addendum" && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                // rowGap: 14,
+                marginTop: 14,
+              }}
+            >
+              <p>Perihal: {finalDraftData.add_contracts[0].perihal}</p>
+              {finalDraftData?.add_contracts[0]?.final_draft.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 6,
+                  }}
+                >
+                  <SVG
+                    src={toAbsoluteUrl(
+                      "/media/svg/icons/All/file-final-draft.svg"
+                    )}
+                  />
+                  <a
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 400,
+                      color: "#3699ff",
+                      marginBottom: "1rem",
+                    }}
+                    onClick={() =>
+                      window.open(
+                        `${DEV_NODE}/final_draft/${finalDraftData?.add_contracts[0]?.final_draft[0]?.body_file_name}`,
+                        "_blank"
+                      )
+                    }
+                  >
+                    {
+                      finalDraftData?.add_contracts[0]?.final_draft[0]
+                        ?.body_file_name
+                    }
+                  </a>
+                </div>
+              )}
+              {finalDraftData?.add_contracts[0]?.final_draft[0]?.lampiran_data?.map(
+                (item) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                      }}
+                    >
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/file-final-draft.svg"
+                        )}
+                      />
+                      <a
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          color: "#3699ff",
+                          marginBottom: "1rem",
+                        }}
+                        onClick={() =>
+                          window.open(
+                            `${DEV_NODE}/final_draft/lampiran/${item?.lampiran_file_name}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {item?.lampiran_file_name}
+                      </a>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="d-flex justify-content-center m-5 border-danger">
+          <CircularProgress />
+        </div>
       )}
 
       {sequence === 0 && (
@@ -1722,6 +1990,7 @@ const DraftAddendumPage = ({
               variant="scrollable"
             />
           </div>
+          {/* <DraftingFormParameter jsonData={jsonData} /> */}
           {/* <FormParameter currentActiveTab={tabActive} /> */}
           {tabActive === 0 && <SummaryTab data={data} />}
           {tabActive === 1 && <ParaPihakTab data={data} />}
@@ -1729,9 +1998,10 @@ const DraftAddendumPage = ({
             <HargaPekerjaanTab
               data={dataContractById}
               dataAfterAdendum={data}
-              contract_id={contract_id}
+              contract_id={draft_id}
               currencies={currencies}
             />
+            // lo buat disini buat perbandingan yak?
             // <JobPriceFormParameter
             //   jsonData={dataContractById}
             //   dataAfterAdendum={data}
@@ -1739,6 +2009,22 @@ const DraftAddendumPage = ({
             //   headerData={headerData}
             //   contract_id={contract_id}
             // />
+          )}
+          {tabActive === 3 && (
+            <JangkaWaktuTab
+              timePeriodAddendumCurrent={data?.add_contract_time_period}
+              timePeriodData={dataContractById}
+              contract_id={draft_id}
+              dataNewClause={dataNewClause}
+            />
+          )}
+          {tabActive === 4 && (
+            <MetodePembayaranTab
+              paymentMethodCurrent={data?.add_contract_payment_method}
+              jsonData={dataContractById}
+              contract_id={draft_id}
+              dataNewClause={dataNewClause}
+            />
           )}
         </>
       )}
@@ -4176,6 +4462,7 @@ const mapState = (state) => ({
   },
   loginStatus: state.auth.user.data.status,
   rolesEproc: state.auth.user.data.roles_eproc,
+  dataNewClause: state.addendumContract.dataNewClause,
 });
 
 const mapDispatch = {

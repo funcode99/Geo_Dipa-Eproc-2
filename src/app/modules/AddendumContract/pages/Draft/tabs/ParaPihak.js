@@ -1,4 +1,3 @@
-
 import { Search } from "@material-ui/icons";
 import { Formik } from "formik";
 import React from "react";
@@ -78,7 +77,9 @@ const ParaPihakTab = ({ data }) => {
                 <label>Username</label>
                 <div className="input-group">
                   <div class="input-group-prepend">
-                    <div class="input-group-text"><Search /></div>
+                    <div class="input-group-text">
+                      <Search />
+                    </div>
                   </div>
                   <input className="form-control" value="" />
                 </div>
@@ -173,7 +174,9 @@ const ParaPihakTab = ({ data }) => {
                 <label>Username</label>
                 <div className="input-group">
                   <div class="input-group-prepend">
-                    <div class="input-group-text"><Search /></div>
+                    <div class="input-group-text">
+                      <Search />
+                    </div>
                   </div>
                   <input className="form-control" value="" />
                 </div>
@@ -190,7 +193,9 @@ const ParaPihakTab = ({ data }) => {
                 <label>Alamat</label>
                 <div className="input-group">
                   <div class="input-group-prepend">
-                    <div class="input-group-text"><Search /></div>
+                    <div class="input-group-text">
+                      <Search />
+                    </div>
                   </div>
                   <input className="form-control" value="" />
                 </div>
@@ -324,7 +329,9 @@ const ParaPihakTab = ({ data }) => {
                 <label>Username</label>
                 <div className="input-group">
                   <div class="input-group-prepend">
-                    <div class="input-group-text"><Search /></div>
+                    <div class="input-group-text">
+                      <Search />
+                    </div>
                   </div>
                   <input className="form-control" value="" />
                 </div>
@@ -423,7 +430,9 @@ const ParaPihakTab = ({ data }) => {
                 <label>Username</label>
                 <div className="input-group">
                   <div class="input-group-prepend">
-                    <div class="input-group-text"><Search /></div>
+                    <div class="input-group-text">
+                      <Search />
+                    </div>
                   </div>
                   <input className="form-control" value="" />
                 </div>
@@ -510,11 +519,11 @@ const ParaPihakTab = ({ data }) => {
             />
           </div>
           <div className="form-group mb-3">
-            <label>Pasal Sebelum Addedndum</label>
+            <label>Pasal Sebelum Addendum</label>
             <textarea className="form-control"></textarea>
           </div>
           <div className="form-group mb-3">
-            <label>Pasal Stelah Addedndum</label>
+            <label>Pasal Setelah Addendum</label>
             <textarea className="form-control"></textarea>
           </div>
           <button className="btn btn-primary">Tambah Klausul Lampiran</button>
