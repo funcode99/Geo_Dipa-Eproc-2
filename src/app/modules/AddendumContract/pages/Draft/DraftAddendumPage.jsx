@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Tabs from "app/components/tabs";
 import DialogGlobal from "app/components/modals/DialogGlobal";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Container } from "react-bootstrap";
 import { DEV_NODE } from "redux/BaseHost";
 import { API_EPROC } from "redux/BaseHost";
 import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
@@ -68,10 +68,10 @@ const DraftAddendumPage = ({
   const [currencies, setDataCurrencies] = useState([]);
   const [jsonData, setJsonData] = useState();
 
-  const getClientStatus = () => {
+  const getClientStatus = (val) => {
     const client_role = "ADMIN_CONTRACT";
     const filteredData = rolesEproc?.filter(
-      ({ ident_name }) => ident_name === client_role
+      ({ ident_name }) => ident_name === val
     );
     return !!filteredData?.length > 0;
   };
@@ -116,7 +116,8 @@ const DraftAddendumPage = ({
     getCurrencies();
   }, []);
 
-  let isAdmin = getClientStatus();
+  const isAdmin = getClientStatus("ADMIN_CONTRACT");
+  const isVendor = getClientStatus("VENDOR");
 
   const TabLists = [
     {
@@ -1352,128 +1353,146 @@ const DraftAddendumPage = ({
           }}
         >
           {/* form parameter & template klausul */}
-          <div
-            style={{
-              height: 74,
-              fontSize: 14,
-              display: "grid",
-              gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-            }}
-          >
-            <div
-              className="d-flex flex-column align-items-center"
-              style={{
-                backgroundColor: "white",
-                flexGrow: 1,
-                borderTopLeftRadius: 14,
-                cursor: "pointer",
-                gap: 4,
-              }}
-              onClick={() => setSequence(0)}
-            >
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/All/form-parameter.svg")}
-              />
-              <h1
-                style={{
-                  fontSize: 14,
-                  color: sequence === 0 ? "#3699ff" : "#8c8a8a",
-                }}
-              >
-                Form Parameter
-              </h1>
-            </div>
 
-            <div
-              className="d-flex flex-column align-items-center"
-              style={{
-                backgroundColor: "white",
-                flexGrow: 1,
-                cursor: "pointer",
-                borderTopRightRadius: 14,
-                gap: 4,
-              }}
-              onClick={() => setSequence(1)}
-            >
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/All/clause-template.svg")}
-              />
-              <h1
-                style={{
-                  fontSize: 14,
-                  color: sequence === 1 ? "#3699ff" : "#8c8a8a",
-                }}
-              >
-                Template Klausul
-              </h1>
-            </div>
+          <Container>
+            <Row>
+              {!isVendor && (
+                <Col>
+                  <div
+                    className="d-flex flex-column align-items-center"
+                    style={{
+                      backgroundColor: "white",
+                      flexGrow: 1,
+                      borderTopLeftRadius: 14,
+                      cursor: "pointer",
+                      gap: 4,
+                    }}
+                    onClick={() => setSequence(0)}
+                  >
+                    <SVG
+                      src={toAbsoluteUrl(
+                        "/media/svg/icons/All/form-parameter.svg"
+                      )}
+                    />
+                    <h1
+                      style={{
+                        fontSize: 14,
+                        color: sequence === 0 ? "#3699ff" : "#8c8a8a",
+                      }}
+                    >
+                      Form Parameter
+                    </h1>
+                  </div>
+                </Col>
+              )}
 
-            <div
-              className="d-flex flex-column align-items-center"
-              style={{
-                backgroundColor: "white",
-                flexGrow: 1,
-                cursor: "pointer",
-                borderTopRightRadius: 14,
-                gap: 4,
-              }}
-              onClick={() => setSequence(2)}
-            >
-              <SVG src={toAbsoluteUrl("/media/svg/icons/All/review.svg")} />
-              <h1
-                style={{
-                  fontSize: 14,
-                  color: sequence === 2 ? "#3699ff" : "#8c8a8a",
-                }}
-              >
-                Review
-              </h1>
-            </div>
+              {isAdmin && (
+                <Col>
+                  <div
+                    className="d-flex flex-column align-items-center"
+                    style={{
+                      backgroundColor: "white",
+                      flexGrow: 1,
+                      cursor: "pointer",
+                      borderTopRightRadius: 14,
+                      gap: 4,
+                    }}
+                    onClick={() => setSequence(1)}
+                  >
+                    <SVG
+                      src={toAbsoluteUrl(
+                        "/media/svg/icons/All/clause-template.svg"
+                      )}
+                    />
+                    <h1
+                      style={{
+                        fontSize: 14,
+                        color: sequence === 1 ? "#3699ff" : "#8c8a8a",
+                      }}
+                    >
+                      Template Klausul
+                    </h1>
+                  </div>
+                </Col>
+              )}
 
-            <div
-              className="d-flex flex-column align-items-center"
-              style={{
-                backgroundColor: "white",
-                flexGrow: 1,
-                cursor: "pointer",
-                borderTopRightRadius: 14,
-                gap: 4,
-              }}
-              onClick={() => setSequence(3)}
-            >
-              <SVG src={toAbsoluteUrl("/media/svg/icons/All/approval.svg")} />
-              <h1
-                style={{
-                  fontSize: 14,
-                  color: sequence === 3 ? "#3699ff" : "#8c8a8a",
-                }}
-              >
-                Approval
-              </h1>
-            </div>
+              <Col>
+                <div
+                  className="d-flex flex-column align-items-center"
+                  style={{
+                    backgroundColor: "white",
+                    flexGrow: 1,
+                    cursor: "pointer",
+                    borderTopRightRadius: 14,
+                    gap: 4,
+                  }}
+                  onClick={() => setSequence(2)}
+                >
+                  <SVG src={toAbsoluteUrl("/media/svg/icons/All/review.svg")} />
+                  <h1
+                    style={{
+                      fontSize: 14,
+                      color: sequence === 2 ? "#3699ff" : "#8c8a8a",
+                    }}
+                  >
+                    Review
+                  </h1>
+                </div>
+              </Col>
 
-            <div
-              className="d-flex flex-column align-items-center"
-              style={{
-                backgroundColor: "white",
-                flexGrow: 1,
-                cursor: "pointer",
-                borderTopRightRadius: 14,
-                gap: 4,
-              }}
-              onClick={() => setSequence(4)}
-            >
-              <SVG src={toAbsoluteUrl("/media/svg/icons/All/distribusi.svg")} />
-              <h1
-                style={{
-                  fontSize: 14,
-                  color: sequence === 4 ? "#3699ff" : "#8c8a8a",
-                }}
-              >
-                Distribusi
-              </h1>
-            </div>
-          </div>
+              <Col>
+                <div
+                  className="d-flex flex-column align-items-center"
+                  style={{
+                    backgroundColor: "white",
+                    flexGrow: 1,
+                    cursor: "pointer",
+                    borderTopRightRadius: 14,
+                    gap: 4,
+                  }}
+                  onClick={() => setSequence(3)}
+                >
+                  <SVG
+                    src={toAbsoluteUrl("/media/svg/icons/All/approval.svg")}
+                  />
+                  <h1
+                    style={{
+                      fontSize: 14,
+                      color: sequence === 3 ? "#3699ff" : "#8c8a8a",
+                    }}
+                  >
+                    Approval
+                  </h1>
+                </div>
+              </Col>
+
+              <Col>
+                <div
+                  className="d-flex flex-column align-items-center"
+                  style={{
+                    backgroundColor: "white",
+                    flexGrow: 1,
+                    cursor: "pointer",
+                    borderTopRightRadius: 14,
+                    gap: 4,
+                  }}
+                  onClick={() => setSequence(4)}
+                >
+                  <SVG
+                    src={toAbsoluteUrl("/media/svg/icons/All/distribusi.svg")}
+                  />
+                  <h1
+                    style={{
+                      fontSize: 14,
+                      color: sequence === 4 ? "#3699ff" : "#8c8a8a",
+                    }}
+                  >
+                    Distribusi
+                  </h1>
+                </div>
+              </Col>
+            </Row>
+          </Container>
 
           {/* Header Form Parameter */}
           <div
@@ -1710,7 +1729,7 @@ const DraftAddendumPage = ({
           {/* <DraftingFormParameter jsonData={jsonData} /> */}
           {/* <FormParameter currentActiveTab={tabActive} /> */}
           {tabActive === 0 && <SummaryTab data={data} />}
-          {tabActive === 1 && <ParaPihakTab data={data} />}
+          {tabActive === 1 && <ParaPihakTab data={data} isAdmin={isAdmin} />}
           {tabActive === 2 && (
             <HargaPekerjaanTab
               data={dataContractById}
@@ -1733,6 +1752,7 @@ const DraftAddendumPage = ({
               timePeriodData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              isAdmin={isAdmin}
             />
           )}
           {tabActive === 4 && (
