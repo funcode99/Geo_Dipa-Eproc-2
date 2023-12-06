@@ -1,7 +1,5 @@
 // Menu Client / Internal
 export const DataAsideMenuListClient = [
-  
-
   // addendum contract
   {
     rootPath: "/client/addendum-contract",
@@ -14,19 +12,19 @@ export const DataAsideMenuListClient = [
       {
         rootPath: "/client/addendum-contract/list-contract-po",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
-        subMenu: null
+        subMenu: null,
       },
       {
-        rootPath: '/client/addendum-contract/list-addendum-request',
+        rootPath: "/client/addendum-contract/list-addendum-request",
         title: "MENU.ADDENDUM_CONTRACT.LIST_ADDENDUM_REQUEST",
-        subMenu: null
+        subMenu: null,
       },
       {
-        rootPath: '/client/addendum-contract/list-of-addendum',
+        rootPath: "/client/addendum-contract/list-of-addendum",
         title: "MENU.ADDENDUM_CONTRACT.LIST_ADDENDUM",
-        subMenu: null
-      }
-    ]
+        subMenu: null,
+      },
+    ],
   },
 
   // delivery monitoring
@@ -81,7 +79,7 @@ export const DataAsideMenuListClient = [
     icon: "/All/New_Monitoring_Contract_Addendum.svg",
     title: "MENU.MONITORING_CONTRACT_ADDENDUM",
   },
-  
+
   // client invoice monitoring
   {
     rootPath: "/client/invoice_monitoring",
@@ -135,7 +133,7 @@ export const DataAsideMenuListClient = [
       },
     ],
   },
-  
+
   {
     rootPath: "/client/user-profile",
     icon: "/Communication/user-solid.svg",
@@ -214,12 +212,10 @@ export const DataAsideMenuListClient = [
       },
     ],
   },
-
-]
+];
 
 // Menu Vendor / External
 export const DataAsideMenuListVendor = [
-  
   {
     rootPath: "/vendor/addendum-contract",
     // icon: "/All/New_Addendum_Contract.svg",
@@ -229,9 +225,14 @@ export const DataAsideMenuListVendor = [
       {
         rootPath: "/vendor/addendum-contract/list-addendum-request",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
-        subMenu: null
-      }
-    ]
+        subMenu: null,
+      },
+      {
+        rootPath: "/client/addendum-contract/list-of-addendum",
+        title: "MENU.ADDENDUM_CONTRACT.LIST_ADDENDUM",
+        subMenu: null,
+      },
+    ],
   },
 
   {
@@ -311,5 +312,4 @@ export const DataAsideMenuListVendor = [
     title: "MENU.USER_MANAGEMENT",
     subMenu: null,
   },
-
-]
+];
