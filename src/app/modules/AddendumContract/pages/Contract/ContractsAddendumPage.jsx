@@ -231,7 +231,6 @@ export const ContractsAddendumPage = ({ fetch_api_sg, loadings, status }) => {
       // url: `/adendum/contract-released?page=${page}&limit=${limit}`,
       url: urlName,
       onSuccess: (res) => {
-        console.log("apakah menarik data", res);
         setDataArr(
           res.data.map((item) => ({
             id: item.id,
@@ -255,35 +254,37 @@ export const ContractsAddendumPage = ({ fetch_api_sg, loadings, status }) => {
             vendor: item?.vendor?.party?.full_name,
             status: item?.state,
             action: (
-              <ButtonAction
-                hoverLabel="More"
-                data={"1"}
-                // handleAction={console.log(null)}
-                ops={[
-                  {
-                    // contract details ada disini
-                    label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
-                    // icon: "fas fa-search text-primary pointer",
-                    to: {
-                      url: `/${status}/addendum-contract/contract/${item.id}`,
-                      style: {
-                        color: "black",
+              <>
+                <ButtonAction
+                  hoverLabel="More"
+                  data={"1"}
+                  ops={[
+                    {
+                      label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
+                      to: {
+                        url: `/${status}/addendum-contract/contract/${item.id}`,
+                        style: {
+                          color: "black",
+                        },
                       },
                     },
-                  },
-                  {
-                    // mari kita tambahkan addendum disini
-                    label: "CONTRACT.TABLE_ACTION.ADD_ADDENDUM",
-                    // icon: "fas fa-search text-primary pointer",
-                    to: {
-                      url: `/${status}/addendum-contract/add-addendum/${item.id}`,
-                      style: {
-                        color: "black",
-                      },
-                    },
-                  },
-                ]}
-              />
+                    ...(item.add_contracts.length === 0 ||
+                    item.add_contracts[0]?.add_status?.status === "Released"
+                      ? [
+                          {
+                            label: "CONTRACT.TABLE_ACTION.ADD_ADDENDUM",
+                            to: {
+                              url: `/${status}/addendum-contract/add-addendum/${item.id}`,
+                              style: {
+                                color: "black",
+                              },
+                            },
+                          },
+                        ]
+                      : []),
+                  ]}
+                />
+              </>
             ),
           }))
         );

@@ -50,6 +50,7 @@ const DraftAddendumPage = ({
   loginStatus,
   rolesEproc,
   headerData,
+  purch_group,
   dataNewClause,
 }) => {
   const { draft_id } = useParams();
@@ -69,7 +70,6 @@ const DraftAddendumPage = ({
   const [jsonData, setJsonData] = useState();
 
   const getClientStatus = (val) => {
-    const client_role = "ADMIN_CONTRACT";
     const filteredData = rolesEproc?.filter(
       ({ ident_name }) => ident_name === val
     );
@@ -116,8 +116,16 @@ const DraftAddendumPage = ({
     getCurrencies();
   }, []);
 
-  const isAdmin = getClientStatus("ADMIN_CONTRACT");
+  const isAdmin =
+    getClientStatus("SUPERADMIN") ||
+    getClientStatus("ADMIN_CONTRACT") ||
+    getClientStatus("ADMIN_CONTRACT_UNIT") ||
+    purch_group === data?.admin_purch_group_id;
   const isVendor = getClientStatus("VENDOR");
+
+  console.log(rolesEproc, "rolesEproc");
+  console.log(data, "data");
+  console.log(purch_group, "purch_group");
 
   const TabLists = [
     {
@@ -532,7 +540,7 @@ const DraftAddendumPage = ({
                 textAlign: "center",
               }}
             >
-              <div>015.PJ/PST.100-GDE/I/2023</div>
+              <div>{data?.add_doc_number}</div>
               <div>Tanggal</div>
               <div>14 Jan 2021</div>
             </div>
@@ -1311,9 +1319,7 @@ const DraftAddendumPage = ({
         </p>
       </DialogGlobal>
 
-      <Subheader
-        text={`No Dokumen Addendum : ADD-01/015.PJ/PST.100-GDE/I/2023`}
-      />
+      <Subheader text={`No Dokumen Addendum : ${data?.add_doc_number}`} />
 
       <SubBreadcrumbs
         items={[
@@ -1326,8 +1332,7 @@ const DraftAddendumPage = ({
             to: `/client/addendum-contract/list-of-addendum`,
           },
           {
-            label:
-              "015.PJ/PST.100-GDE/I/2023 - Pengadaan Material Gasket Spiral Wound & Rupture Disk",
+            label: `${data?.add_doc_number} - ${data?.contract?.contract_name}`,
           },
         ]}
       />
@@ -4215,6 +4220,7 @@ const mapState = (state) => ({
   },
   loginStatus: state.auth.user.data.status,
   rolesEproc: state.auth.user.data.roles_eproc,
+  purch_group: state.auth.user.data.purch_group,
   dataNewClause: state.addendumContract.dataNewClause,
 });
 

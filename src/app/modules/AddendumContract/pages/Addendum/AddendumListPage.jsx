@@ -159,8 +159,6 @@ export const AddendumListPage = ({ fetch_api_sg, loadings, status }) => {
       type: "get",
       url: `/adendum/add-contracts`,
       onSuccess: (res) => {
-        console.log("apakah menarik data", res);
-        // console.log(`res.data`, res.data);
         // generateTableContent(res.data);
         setDataArr(
           res.data.map((item, index) => ({
@@ -189,7 +187,7 @@ export const AddendumListPage = ({ fetch_api_sg, loadings, status }) => {
             group: item?.contract?.user_group?.party?.full_name,
             vendor: item?.contract?.vendor?.party?.full_name,
             // status: item?.state,
-            status: item?.status,
+            status: item?.add_status?.status,
             action: (
               <ButtonAction
                 hoverLabel="More"
