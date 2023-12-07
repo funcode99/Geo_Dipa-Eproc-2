@@ -53,7 +53,8 @@ const Denda = ({ fineCurrent, jsonData, contract_id, dataNewClause }) => {
     openCloseAddFine.current.open();
   };
   const classes = useStyles();
-  const [fine, setFine] = useState(JSON.parse(localStorage.getItem("fine")));
+  // const [fine, setFine] = useState(JSON.parse(localStorage.getItem("fine")));
+  const [fine, setFine] = useState(fineCurrent?.penalty_fine_data);
   const handleFilter = (data, data2) => {
     const sort = JSON.parse(data2.sort);
     const filter = JSON.parse(data2.filter);
@@ -211,7 +212,7 @@ const Denda = ({ fineCurrent, jsonData, contract_id, dataNewClause }) => {
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage
                         )
-                        .map((data, index) => (
+                        ?.map((data, index) => (
                           <TableRow key={index.toString()}>
                             <TableCell component="th">{index + 1}</TableCell>
                             <TableCell align="left" scope="row">
@@ -274,7 +275,7 @@ const Denda = ({ fineCurrent, jsonData, contract_id, dataNewClause }) => {
                       </TableRow>
                     </TableBody>
                     <TableBody>
-                      {fine.map((row, index) => (
+                      {fine?.map((row, index) => (
                         <TableRow
                           key={row.name}
                           sx={{
@@ -297,12 +298,13 @@ const Denda = ({ fineCurrent, jsonData, contract_id, dataNewClause }) => {
                                     {row.value_type}
                                   </TableCell> */}
                           <TableCell align="left" scope="row">
-                            {row.pinalty_name}
+                            {/* {row.pinalty_name} */}
+                            {row.jenis_denda}
                           </TableCell>
-                          <TableCell align="left">{row.value}</TableCell>
+                          <TableCell align="left">{row.nilai}</TableCell>
                           <TableCell align="left">{row.max_day}</TableCell>
                           <TableCell align="left">
-                            {row.type === "1" ? "%" : "Nilai"}
+                            {row.type_nilai === "1" ? "%" : "Nilai"}
                           </TableCell>
                           <TableCell align="left">
                             {actionButton(row.id, deleteFine)}

@@ -12,8 +12,11 @@ const PerubahanKlausulKontrak = ({
   subTitle,
   dataNewClause,
   fromWhere,
+  isMandatory = false,
 }) => {
   const dispatch = useDispatch();
+
+  console.log("current fromWhere", fromWhere === "job_price");
 
   const changeOtherBodyClauseData = (fieldIndex, value, fieldType) => {
     let newArr = [...dataNewClause[fromWhere].bodyClauseData];
@@ -150,8 +153,12 @@ const PerubahanKlausulKontrak = ({
                     minWidth: 400,
                   }}
                 />
-                {dataNewClause[fromWhere].bodyClauseData.clause_number ===
-                  "" && <p>Wajib Diisi!</p>}
+                {dataNewClause[fromWhere].bodyClauseData.clause_number === "" &&
+                  isMandatory && (
+                    <p>
+                      <span style={{ color: "red" }}>*</span>Wajib Diisi
+                    </p>
+                  )}
               </div>
 
               {/* Pasal */}
@@ -192,7 +199,12 @@ const PerubahanKlausulKontrak = ({
                     rows="4"
                   />
                   {dataNewClause[fromWhere].bodyClauseData
-                    .before_clause_note === "" && <p>Wajib Diisi!</p>}
+                    .before_clause_note === "" &&
+                    isMandatory && (
+                      <p>
+                        <span style={{ color: "red" }}>*</span>Wajib Diisi
+                      </p>
+                    )}
                 </div>
 
                 {/* pasal setelah addendum */}
@@ -224,7 +236,12 @@ const PerubahanKlausulKontrak = ({
                     rows="4"
                   />
                   {dataNewClause[fromWhere].bodyClauseData.after_clause_note ===
-                    "" && <p>Wajib Diisi!</p>}
+                    "" &&
+                    isMandatory && (
+                      <p>
+                        <span style={{ color: "red" }}>*</span>Wajib Diisi
+                      </p>
+                    )}
                 </div>
               </div>
             </>
@@ -255,7 +272,12 @@ const PerubahanKlausulKontrak = ({
                       }}
                     />
                     {dataNewClause[fromWhere].bodyClauseData.clause_number ===
-                      "" && <p>Wajib Diisi!</p>}
+                      "" &&
+                      isMandatory && (
+                        <p>
+                          <span style={{ color: "red" }}>*</span>Wajib Diisi
+                        </p>
+                      )}
                   </div>
 
                   {/* Pasal */}
@@ -298,7 +320,12 @@ const PerubahanKlausulKontrak = ({
                         rows="4"
                       />
                       {dataNewClause[fromWhere].bodyClauseData
-                        .before_clause_note === "" && <p>Wajib Diisi!</p>}
+                        .before_clause_note === "" &&
+                        isMandatory && (
+                          <p>
+                            <span style={{ color: "red" }}>*</span>Wajib Diisi
+                          </p>
+                        )}
                     </div>
 
                     {/* pasal setelah addendum */}
@@ -332,7 +359,12 @@ const PerubahanKlausulKontrak = ({
                         rows="4"
                       />
                       {dataNewClause[fromWhere].bodyClauseData
-                        .after_clause_note === "" && <p>Wajib Diisi!</p>}
+                        .after_clause_note === "" &&
+                        isMandatory && (
+                          <p>
+                            <span style={{ color: "red" }}>*</span>Wajib Diisi
+                          </p>
+                        )}
                     </div>
                   </div>
                 </>
@@ -391,7 +423,12 @@ const PerubahanKlausulKontrak = ({
                 }}
               />
               {dataNewClause[fromWhere].attachmentClauseData[0]
-                .attachment_number === "" && <p>Wajib Diisi!</p>}
+                .attachment_number === "" &&
+                isMandatory && (
+                  <p>
+                    <span style={{ color: "red" }}>*</span>Wajib Diisi
+                  </p>
+                )}
 
               <Field
                 className="form-control"
@@ -409,7 +446,12 @@ const PerubahanKlausulKontrak = ({
                 }}
               />
               {dataNewClause[fromWhere].attachmentClauseData[0].clause_note ===
-                "" && <p>Wajib Diisi!</p>}
+                "" &&
+                isMandatory && (
+                  <p>
+                    <span style={{ color: "red" }}>*</span>Wajib Diisi
+                  </p>
+                )}
             </>
           ))}
 
