@@ -2,6 +2,11 @@ import React from "react";
 import Tables from "app/components/tableCustomV1/table";
 import { formatCurrencyIDR } from "../Helper/formartCurrencyIDR";
 import { TableCell, TableRow, Paper, makeStyles } from "@material-ui/core";
+import {
+  getSorting,
+  searchFindMulti,
+  stableSort,
+} from "app/components/tables/TablePagination/TablePaginationCustom";
 
 const TableRincianHargaPekerjaanAwal = ({ data }) => {
   const useStyles = makeStyles((theme) => ({
@@ -92,25 +97,36 @@ const TableRincianHargaPekerjaanAwal = ({ data }) => {
           handleParams={handleFilter}
           err={false}
           loading={false}
-          countData={data?.length}
+          // countData={data?.length}
+          countData={
+            searchFindMulti(
+              stableSort(data, getSorting(order, orderBy)),
+              filterBy
+            ).length
+          }
           onChangePage={handleChangePage}
           onChangePerPage={handleChangeRowsPerPage}
         >
-          {data?.map((item, index) => (
-            <TableRow>
-              <TableCell align="left">{index + 1}</TableCell>
-              <TableCell align="left">{item.product_name}</TableCell>
-              <TableCell align="left">{item.qty}</TableCell>
-              <TableCell align="left">{item.uom}</TableCell>
-              <TableCell align="left">
-                {formatCurrencyIDR(item.unit_price)}
-              </TableCell>
-              <TableCell align="left">
-                {formatCurrencyIDR(item.subtotal)}
-              </TableCell>
-              <TableCell align="left">{item.note}</TableCell>
-            </TableRow>
-          ))}
+          {searchFindMulti(
+            stableSort(data, getSorting(order, orderBy)),
+            filterBy
+          )
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((item, index) => (
+              <TableRow>
+                <TableCell align="left">{index + 1}</TableCell>
+                <TableCell align="left">{item.product_name}</TableCell>
+                <TableCell align="left">{item.qty}</TableCell>
+                <TableCell align="left">{item.uom}</TableCell>
+                <TableCell align="left">
+                  {formatCurrencyIDR(item.unit_price)}
+                </TableCell>
+                <TableCell align="left">
+                  {formatCurrencyIDR(item.subtotal)}
+                </TableCell>
+                <TableCell align="left">{item.note}</TableCell>
+              </TableRow>
+            ))}
           <TableRow>
             <TableCell align="left" colSpan={5}>
               Grand Total

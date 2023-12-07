@@ -239,12 +239,12 @@ export const AddendumRequestListPage = ({
           handleParams={handleFilter}
           err={false}
           loading={false}
-          countData={
-            searchFindMulti(
-              stableSort(dataArr, getSorting(order, orderBy)),
-              filterBy
-            ).length
-          }
+          // countData={
+          //   searchFindMulti(
+          //     stableSort(dataArr, getSorting(order, orderBy)),
+          //     filterBy
+          //   ).length
+          // }
           hecto={20}
           onChangePage={handleChangePage}
           onChangePerPage={handleChangeRowsPerPage}

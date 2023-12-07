@@ -33,6 +33,9 @@ import JangkaWaktuTab from "./tabs/JangkaWaktu";
 import MetodePembayaranTab from "./tabs/MetodePembayaran";
 import DendaTab from "./tabs/Denda";
 import JaminanTab from "./tabs/Jaminan";
+import NomorRekeningTab from "./tabs/NomorRekening";
+import TemplateKlausul from "./TemplateKlausul";
+import LainnyaTab from "./tabs/Lainnya";
 // import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
@@ -68,6 +71,7 @@ const DraftAddendumPage = ({
   const [dataContractById, setDataContractById] = useState({});
   const [currencies, setDataCurrencies] = useState([]);
   const [jsonData, setJsonData] = useState();
+  const [accountNumberBankData, setAccountNumberBankData] = useState();
 
   const getClientStatus = (val) => {
     const filteredData = rolesEproc?.filter(
@@ -88,6 +92,7 @@ const DraftAddendumPage = ({
       },
     });
   };
+
   const getContractById = async (id) => {
     fetch_api_sg({
       key: keys.getAddendumDetail,
@@ -95,6 +100,21 @@ const DraftAddendumPage = ({
       url: `/adendum/contract-released/${id}/show`,
       onSuccess: (res) => {
         setDataContractById(res?.data);
+        getSecondAuthorizedOfficial(res?.data?.vendor_id);
+      },
+    });
+  };
+
+  const getSecondAuthorizedOfficial = async (id) => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/refference/get-vendor/${id}`,
+      onSuccess: (res) => {
+        console.log("apakah menarik data direksi", res.data);
+        // setSecondAuthorizedOfficial(res.data.officer_data);
+        // setPICData(res.data.pic_data);
+        setAccountNumberBankData(res.data.bank_data);
       },
     });
   };
@@ -1782,6 +1802,21 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+            />
+          )}
+          {tabActive === 7 && (
+            <NomorRekeningTab
+              accountNumberCurrent={data?.add_contract_account_number}
+              jsonData={dataContractById}
+              contract_id={draft_id}
+              dataNewClause={dataNewClause}
+              accountNumberBankData={accountNumberBankData}
+            />
+          )}
+          {tabActive === 8 && (
+            <LainnyaTab
+              jsonData={dataContractById}
+              otherCurrent={data?.add_contract_others}
             />
           )}
         </>

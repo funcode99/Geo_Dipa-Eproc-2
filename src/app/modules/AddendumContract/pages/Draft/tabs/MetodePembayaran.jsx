@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { submitPaymentMethod } from "app/modules/AddendumContract/service/AddendumContractCrudService";
-import { Formik, Field, FieldArray, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form } from "formik";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
