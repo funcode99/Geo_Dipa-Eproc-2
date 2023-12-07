@@ -50,6 +50,7 @@ const DraftAddendumPage = ({
   loginStatus,
   rolesEproc,
   headerData,
+  purch_group,
   dataNewClause,
 }) => {
   const { draft_id } = useParams();
@@ -69,7 +70,6 @@ const DraftAddendumPage = ({
   const [jsonData, setJsonData] = useState();
 
   const getClientStatus = (val) => {
-    const client_role = "ADMIN_CONTRACT";
     const filteredData = rolesEproc?.filter(
       ({ ident_name }) => ident_name === val
     );
@@ -116,7 +116,10 @@ const DraftAddendumPage = ({
     getCurrencies();
   }, []);
 
-  const isAdmin = getClientStatus("ADMIN_CONTRACT");
+  const isAdmin =
+    getClientStatus("ADMIN_CONTRACT") ||
+    getClientStatus("ADMIN_CONTRACT_UNIT") ||
+    purch_group === data?.admin_purch_group_id;
   const isVendor = getClientStatus("VENDOR");
 
   const TabLists = [
@@ -4215,6 +4218,7 @@ const mapState = (state) => ({
   },
   loginStatus: state.auth.user.data.status,
   rolesEproc: state.auth.user.data.roles_eproc,
+  purch_group: state.auth.user.data.purch_group,
   dataNewClause: state.addendumContract.dataNewClause,
 });
 
