@@ -11,6 +11,7 @@ const JangkaWaktu = ({
   timePeriodAddendumCurrent,
   timePeriodData,
   dataNewClause,
+  isAdmin,
 }) => {
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {

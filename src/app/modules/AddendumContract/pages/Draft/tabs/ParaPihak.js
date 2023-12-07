@@ -2,7 +2,7 @@ import { Search } from "@material-ui/icons";
 import { Formik } from "formik";
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
-const ParaPihakTab = ({ data }) => {
+const ParaPihakTab = ({ data, isAdmin }) => {
   return (
     <div className="bg-white p-10">
       {/* <Formik> */}
@@ -81,7 +81,11 @@ const ParaPihakTab = ({ data }) => {
                       <Search />
                     </div>
                   </div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
@@ -98,39 +102,63 @@ const ParaPihakTab = ({ data }) => {
               </div>
               <div className="form-group mb-3">
                 <label>Telp</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
 
               <div className="form-group mb-3">
                 <label>FAX</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Nomor SK Penugasan</label>
                 <div className="d-flex align-items-center justify-content-between">
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                   <div className="mx-2">-</div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
                 <label>Nama Nomor Akta</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Nama Nomor Akta</label>
                 <div className="d-flex align-items-center justify-content-between">
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                   <div className="mx-2">-</div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
                 <label>Nomor SK Kemenkumham</label>
                 <div className="d-flex align-items-center justify-content-between">
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                   <div className="mx-2">-</div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
             </Col>
@@ -197,17 +225,21 @@ const ParaPihakTab = ({ data }) => {
                       <Search />
                     </div>
                   </div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
                 <label>Telp</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
 
               <div className="form-group mb-3">
                 <label>FAX</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
             </Col>
           </Row>
@@ -239,20 +271,20 @@ const ParaPihakTab = ({ data }) => {
               </div>
               <div className="form-group mb-3">
                 <label>Jabatan</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Alamat</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Telp</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
 
               <div className="form-group mb-3">
                 <label>FAX</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
             </Col>
           </Row>
@@ -333,12 +365,16 @@ const ParaPihakTab = ({ data }) => {
                       <Search />
                     </div>
                   </div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
                 <label>Nama</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Jabatan</label>
@@ -346,7 +382,7 @@ const ParaPihakTab = ({ data }) => {
               </div>
               <div className="form-group mb-3">
                 <label>Alamat</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Telp</label>
@@ -355,39 +391,63 @@ const ParaPihakTab = ({ data }) => {
 
               <div className="form-group mb-3">
                 <label>FAX</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Nomor SK Penugasan</label>
                 <div className="d-flex align-items-center justify-content-between">
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                   <div className="mx-2">-</div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
                 <label>Nama Nomor Akta</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Nama Akta</label>
                 <div className="d-flex align-items-center justify-content-between">
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                   <div className="mx-2">-</div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
                 <label>Nomor SK Kemenkumham</label>
                 <div className="d-flex align-items-center justify-content-between">
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                   <div className="mx-2">-</div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
                 <label>Email PIC</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
             </Col>
           </Row>
@@ -434,29 +494,33 @@ const ParaPihakTab = ({ data }) => {
                       <Search />
                     </div>
                   </div>
-                  <input className="form-control" value="" />
+                  <input
+                    className="form-control"
+                    value=""
+                    disabled={!isAdmin}
+                  />
                 </div>
               </div>
               <div className="form-group mb-3">
                 <label>Nama Lengkap</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Jabatan</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Alamat</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Telp</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
 
               <div className="form-group mb-3">
                 <label>FAX</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
             </Col>
           </Row>
@@ -488,20 +552,20 @@ const ParaPihakTab = ({ data }) => {
               </div>
               <div className="form-group mb-3">
                 <label>Jabatan</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Alamat</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
               <div className="form-group mb-3">
                 <label>Telp</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
 
               <div className="form-group mb-3">
                 <label>FAX</label>
-                <input className="form-control" value="" />
+                <input className="form-control" value="" disabled={!isAdmin} />
               </div>
             </Col>
           </Row>
@@ -516,15 +580,16 @@ const ParaPihakTab = ({ data }) => {
               className="form-control col-6"
               value=""
               placeholder="Masukan Nomor Pasal"
+              disabled={!isAdmin}
             />
           </div>
           <div className="form-group mb-3">
             <label>Pasal Sebelum Addendum</label>
-            <textarea className="form-control"></textarea>
+            <textarea className="form-control" disabled={!isAdmin}></textarea>
           </div>
           <div className="form-group mb-3">
             <label>Pasal Setelah Addendum</label>
-            <textarea className="form-control"></textarea>
+            <textarea className="form-control" disabled={!isAdmin}></textarea>
           </div>
           <button className="btn btn-primary">Tambah Klausul Lampiran</button>
         </div>
