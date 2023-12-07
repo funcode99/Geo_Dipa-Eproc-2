@@ -9,6 +9,7 @@ export const actionTypes = {
   SetDataTempOrderItems: "[Set Data Temp Order Items] Action",
   SetDataUpdateOrderItems: "[Set Data Update Order Items] Action",
   SetDataClause: "[Set Data Clause] Action",
+  SetDraftingClause: "[Set Drafting Clause] Action",
   SetIsAddJobPrice: "[Set Is Add Job Price] Action",
   SetConclusion: "[Set Conclusion] Action",
   saveNotifDM: "SAVE_NOTIFICATION_DM",

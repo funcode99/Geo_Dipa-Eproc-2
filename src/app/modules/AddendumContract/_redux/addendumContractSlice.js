@@ -793,6 +793,10 @@ export const reducer = persistReducer(
         }
       }
 
+      case actionTypes.SetDraftingClause: {
+        return {};
+      }
+
       // kalo case di atas gagal return bakal turun kebawah case & masuk ke return nya
       case actionTypes.SetSubmitItemsByContractId: {
         return {
