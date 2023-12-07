@@ -311,14 +311,14 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
         {tabActive === 2 && dataContractById?.contract_status === "PO" && (
           <ParaPihak />
         )}
+        {/* {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
+          <ParaPihak2 />
+        )} */}
         {tabActive === 3 && <DokContract />}
         {tabActive === 4 && <HargaPekerjaan />}
         {tabActive === 5 && <JangkaWaktu />}
         {tabActive === 6 && <Jaminan />}
         {tabActive === 7 && <Denda />}
-        {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
-          <ParaPihak2 />
-        )}
         {tabActive === 8 && <BAST />}
       </Paper>
     </React.Fragment>
