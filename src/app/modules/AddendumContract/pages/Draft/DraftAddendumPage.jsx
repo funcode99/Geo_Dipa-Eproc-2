@@ -117,10 +117,15 @@ const DraftAddendumPage = ({
   }, []);
 
   const isAdmin =
+    getClientStatus("SUPERADMIN") ||
     getClientStatus("ADMIN_CONTRACT") ||
     getClientStatus("ADMIN_CONTRACT_UNIT") ||
     purch_group === data?.admin_purch_group_id;
   const isVendor = getClientStatus("VENDOR");
+
+  console.log(rolesEproc, "rolesEproc");
+  console.log(data, "data");
+  console.log(purch_group, "purch_group");
 
   const TabLists = [
     {
@@ -535,7 +540,7 @@ const DraftAddendumPage = ({
                 textAlign: "center",
               }}
             >
-              <div>015.PJ/PST.100-GDE/I/2023</div>
+              <div>{data?.add_doc_number}</div>
               <div>Tanggal</div>
               <div>14 Jan 2021</div>
             </div>
@@ -1314,9 +1319,7 @@ const DraftAddendumPage = ({
         </p>
       </DialogGlobal>
 
-      <Subheader
-        text={`No Dokumen Addendum : ADD-01/015.PJ/PST.100-GDE/I/2023`}
-      />
+      <Subheader text={`No Dokumen Addendum : ${data?.add_doc_number}`} />
 
       <SubBreadcrumbs
         items={[
@@ -1329,8 +1332,7 @@ const DraftAddendumPage = ({
             to: `/client/addendum-contract/list-of-addendum`,
           },
           {
-            label:
-              "015.PJ/PST.100-GDE/I/2023 - Pengadaan Material Gasket Spiral Wound & Rupture Disk",
+            label: `${data?.add_doc_number} - ${data?.contract?.contract_name}`,
           },
         ]}
       />
