@@ -34,6 +34,7 @@ import JangkaWaktu from "../JangkaWaktu";
 import Jaminan from "../Jaminan";
 import Denda from "../Denda";
 import BAST from "../BAST";
+import ListAddendum from "../ListAddendum";
 import Steppers from "app/components/steppersCustom/Steppers";
 import DetailPage from "../Detail/DetailPage";
 import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail";
@@ -99,6 +100,11 @@ const TabLists = [
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />,
     icon: <Error className="mb-0 mr-2" />,
   },
+  {
+    id: "list-addendum",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.LIST_ADDENDUM" />,
+    icon: <Description className="mb-0 mr-2" />,
+  },
   //   {
   //     id: "para-pihak2",
   //     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
@@ -111,7 +117,12 @@ const TabLists = [
   // },
 ];
 
-export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
+export const ContractAddendumDetail = ({
+  dataContractById,
+  authStatus,
+  data,
+}) => {
+  console.log(data, "daya");
   // ada isinya
   // console.log('isi data contract by id di delivery monitoring', dataContractById)
   const classes = useStyles();
@@ -311,15 +322,17 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
         {tabActive === 2 && dataContractById?.contract_status === "PO" && (
           <ParaPihak />
         )}
+        {/* {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
+          <ParaPihak2 />
+        )} */}
         {tabActive === 3 && <DokContract />}
         {tabActive === 4 && <HargaPekerjaan />}
         {tabActive === 5 && <JangkaWaktu />}
         {tabActive === 6 && <Jaminan />}
         {tabActive === 7 && <Denda />}
-        {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
-          <ParaPihak2 />
+        {tabActive === 8 && (
+          <ListAddendum dataContractById={dataContractById} />
         )}
-        {tabActive === 8 && <BAST />}
       </Paper>
     </React.Fragment>
   );
@@ -327,6 +340,7 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
 
 const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
+  data: auth.user.data,
   dataContractById: deliveryMonitoring.dataContractById,
 });
 
