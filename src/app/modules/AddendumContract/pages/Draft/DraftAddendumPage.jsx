@@ -41,7 +41,6 @@ import LainnyaTab from "./tabs/Lainnya";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { FormattedMessage } from "react-intl";
 import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
-import TemplateKlausul from "./TemplateKlausul";
 import Jaminan from "./tabs/Jaminan";
 // import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
 
