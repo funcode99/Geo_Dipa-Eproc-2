@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import {
   Assignment,
@@ -15,7 +15,7 @@ import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { useLocation, useParams, withRouter } from "react-router-dom";
 import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
-
+import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import Tabs from "../../../../../../components/tabs";
 import useToast from "../../../../../../components/toast";
@@ -122,12 +122,13 @@ export const ContractAddendumDetail = ({
   authStatus,
   data,
 }) => {
-  console.log(data, "daya");
+  console.log(dataContractById, "dataContractById");
   // ada isinya
   // console.log('isi data contract by id di delivery monitoring', dataContractById)
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, tab: forceTabActive } = useParams();
+  console.log(contract_id, "contract_id");
   const [Toast, setToast] = useToast();
   // const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
@@ -174,13 +175,38 @@ export const ContractAddendumDetail = ({
     });
   };
 
+  const [dataAddContracts, setDataAddContracts] = useState({});
+  const getDataAddContract = async (contract_id) => {
+    fetch_api_sg({
+      key: keys.getAddendumDetail,
+      type: "get",
+      url: `/adendum/contract-released/${contract_id}/show`,
+      onSuccess: (res) => {
+        console.log(res, "res get addendum detail");
+        setDataAddContracts(res?.data);
+        // getSecondAuthorizedOfficial(res?.data?.vendor_id);
+      },
+    });
+  };
+
   // get data contract detail from api
   const getContractById = async (contract_id) => {
     try {
       setLoading(true);
+      fetch_api_sg({
+        key: keys.getAddendumDetail,
+        type: "get",
+        url: `/adendum/contract-released/${contract_id}/show`,
+        onSuccess: (res) => {
+          console.log(res, "res get addendum detail");
+          setDataAddContracts(res?.data);
+          // getSecondAuthorizedOfficial(res?.data?.vendor_id);
+        },
+      });
       const {
         data: { data },
       } = await addendumContractCRUD.getContractById(contract_id);
+      console.log(data, "data nyaaa");
       addCheckedField(data?.services, "jasa");
       addCheckedField(data?.items, "barang");
       dispatch({
@@ -233,7 +259,12 @@ export const ContractAddendumDetail = ({
         });
       }
     }
+
+    getDataAddContract(contract_id);
   }, [dataContractById, contract_id, forceTabActive]);
+
+  console.log(dataAddContracts, "dataAddContracts");
+  console.log(contract_id, "contract_id");
 
   React.useEffect(() => {
     if (location.pathname !== old.path) {
@@ -330,21 +361,28 @@ export const ContractAddendumDetail = ({
         {tabActive === 5 && <JangkaWaktu />}
         {tabActive === 6 && <Jaminan />}
         {tabActive === 7 && <Denda />}
-        {tabActive === 8 && (
-          <ListAddendum dataContractById={dataContractById} />
-        )}
+        {tabActive === 8 && <ListAddendum contract_id={contract_id} />}
       </Paper>
     </React.Fragment>
   );
 };
 
+const keys = {
+  getAddendumDetail: "get-addendum-contract-by-id ",
+};
+
+const mapDispatch = {
+  fetch_api_sg,
+};
 const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
   data: auth.user.data,
   dataContractById: deliveryMonitoring.dataContractById,
 });
 
-export default compose(withRouter, connect(mapState))(ContractAddendumDetail);
+// export default compose(withRouter, connect(mapState))(ContractAddendumDetail);
+
+export default connect(mapState, mapDispatch)(ContractAddendumDetail);
 
 // const ContractAddendumDetail = () => {
 //     return (
