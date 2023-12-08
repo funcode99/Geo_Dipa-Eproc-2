@@ -23,7 +23,7 @@ const MetodePembayaran = ({
   };
   const [stagePayment, setStagePayment] = useState({
     // payment: jsonData?.payment_method_data,
-    payment: paymentMethodCurrent.payment_method_data,
+    payment: paymentMethodCurrent?.payment_method_data,
   });
   const changePaymentMethodField = (index, value, type) => {
     setStagePayment((state) => {
@@ -381,9 +381,10 @@ const MetodePembayaran = ({
               fromWhere={"payment_method"}
               showAddClause={showAddClause}
               values={values}
+              isDrafting={true}
             />
 
-            <UpdateButton fromWhere={"payment_method"} />
+            <UpdateButton fromWhere={"payment_method"} isDrafting={true} />
           </Form>
         )}
       </Formik>

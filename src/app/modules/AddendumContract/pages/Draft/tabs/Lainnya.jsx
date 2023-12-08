@@ -44,9 +44,10 @@ const Lainnya = ({ jsonData, dataNewClause, contract_id, otherCurrent }) => {
             showAddClause={showAddClause}
             showAddContract={showAddContract}
             values={values}
+            isDrafting={true}
           />
 
-          <UpdateButton fromWhere={"other"} />
+          <UpdateButton fromWhere={"other"} isDrafting={true} />
         </Form>
       )}
     </Formik>

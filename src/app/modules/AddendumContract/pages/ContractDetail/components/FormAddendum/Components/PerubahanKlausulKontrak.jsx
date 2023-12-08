@@ -11,15 +11,18 @@ const PerubahanKlausulKontrak = ({
   title,
   subTitle,
   dataNewClause,
+  dataNewClauseDrafting,
   fromWhere,
   isMandatory = false,
+  isDrafting = false,
 }) => {
   const dispatch = useDispatch();
-
   console.log("current fromWhere", fromWhere === "job_price");
 
   const changeOtherBodyClauseData = (fieldIndex, value, fieldType) => {
-    let newArr = [...dataNewClause[fromWhere].bodyClauseData];
+    let newArr = isDrafting
+      ? [...dataNewClauseDrafting[fromWhere].bodyClauseData]
+      : [...dataNewClause[fromWhere].bodyClauseData];
     if (fieldType === "clause_number")
       newArr[fieldIndex]["clause_number"] = value;
     if (fieldType === "before_clause_note")
@@ -27,7 +30,9 @@ const PerubahanKlausulKontrak = ({
     if (fieldType === "after_clause_note")
       newArr[fieldIndex]["after_clause_note"] = value;
     dispatch({
-      type: actionTypes.SetDataClause,
+      type: isDrafting
+        ? actionTypes.SetDraftingClause
+        : actionTypes.SetDataClause,
       payload: newArr,
       fieldType: fieldType,
       fieldIndex: fieldIndex,
@@ -37,7 +42,9 @@ const PerubahanKlausulKontrak = ({
 
   const changeBodyClauseData = (value, fieldType) => {
     dispatch({
-      type: actionTypes.SetDataClause,
+      type: isDrafting
+        ? actionTypes.SetDraftingClause
+        : actionTypes.SetDataClause,
       payload: value,
       fieldType: fieldType,
       fromWhere: fromWhere,
@@ -46,12 +53,17 @@ const PerubahanKlausulKontrak = ({
 
   // data ini gak bisa di listen
   const changeFieldData = (fieldIndex, value, fieldType) => {
-    let newArr = [...dataNewClause[fromWhere].attachmentClauseData];
+    // let newArr = [...dataNewClause[fromWhere].attachmentClauseData];
+    let newArr = isDrafting
+      ? [...dataNewClauseDrafting[fromWhere].attachmentClauseData]
+      : [...dataNewClause[fromWhere].attachmentClauseData];
     if (fieldType === "attachment_number")
       newArr[fieldIndex]["attachment_number"] = value;
     if (fieldType === "clause_note") newArr[fieldIndex]["clause_note"] = value;
     dispatch({
-      type: actionTypes.SetDataClause,
+      type: isDrafting
+        ? actionTypes.SetDraftingClause
+        : actionTypes.SetDataClause,
       payload: newArr,
       fieldType: fieldType,
       fieldIndex: fieldIndex,
@@ -142,7 +154,12 @@ const PerubahanKlausulKontrak = ({
                 <Field
                   type="text"
                   name={`body_data.clause_number`}
-                  value={dataNewClause[fromWhere].bodyClauseData.clause_number}
+                  value={
+                    isDrafting
+                      ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                          .clause_number
+                      : dataNewClause[fromWhere].bodyClauseData.clause_number
+                  }
                   onChange={(e) =>
                     changeBodyClauseData(e.target.value, "clause number")
                   }
@@ -185,7 +202,11 @@ const PerubahanKlausulKontrak = ({
                     as="textarea"
                     name={`body_data.before_clause_note`}
                     value={
-                      dataNewClause[fromWhere].bodyClauseData.before_clause_note
+                      isDrafting
+                        ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                            .before_clause_note
+                        : dataNewClause[fromWhere].bodyClauseData
+                            .before_clause_note
                     }
                     onChange={(e) =>
                       changeBodyClauseData(e.target.value, "before clause note")
@@ -222,7 +243,11 @@ const PerubahanKlausulKontrak = ({
                     as="textarea"
                     name={`body_data.after_clause_note`}
                     value={
-                      dataNewClause[fromWhere].bodyClauseData.after_clause_note
+                      isDrafting
+                        ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                            .after_clause_note
+                        : dataNewClause[fromWhere].bodyClauseData
+                            .after_clause_note
                     }
                     onChange={(e) =>
                       changeBodyClauseData(e.target.value, "after clause note")
@@ -406,7 +431,59 @@ const PerubahanKlausulKontrak = ({
           </button>
         </div>
 
-        {dataNewClause[fromWhere].attachmentClauseData &&
+        {isDrafting &&
+          dataNewClauseDrafting[fromWhere].attachmentClauseData.map(
+            (item, index) => (
+              <>
+                <Field
+                  onChange={(e) =>
+                    changeFieldData(index, e.target.value, "attachment_number")
+                  }
+                  value={item.attachment_number}
+                  type="text"
+                  placeholder="Masukkan Nomor Lampiran"
+                  style={{
+                    padding: 8,
+                    borderRadius: 4,
+                    minWidth: 400,
+                  }}
+                />
+
+                {dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
+                  .attachment_number === "" &&
+                  isMandatory && (
+                    <p>
+                      <span style={{ color: "red" }}>*</span>Wajib Diisi
+                    </p>
+                  )}
+
+                <Field
+                  className="form-control"
+                  as="textarea"
+                  onChange={(e) =>
+                    changeFieldData(index, e.target.value, "clause_note")
+                  }
+                  value={item.clause_note}
+                  type="text"
+                  placeholder="Masukkan Lampiran Klausul"
+                  style={{
+                    padding: 8,
+                    borderRadius: 4,
+                    minWidth: 400,
+                  }}
+                />
+                {dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
+                  .clause_note === "" &&
+                  isMandatory && (
+                    <p>
+                      <span style={{ color: "red" }}>*</span>Wajib Diisi
+                    </p>
+                  )}
+              </>
+            )
+          )}
+
+        {!isDrafting &&
           dataNewClause[fromWhere].attachmentClauseData.map((item, index) => (
             <>
               <Field
@@ -482,6 +559,7 @@ const PerubahanKlausulKontrak = ({
 // ngirim data
 const mapState = ({ addendumContract }) => ({
   dataNewClause: addendumContract.dataNewClause,
+  dataNewClauseDrafting: addendumContract.dataNewClauseDrafting,
   // ini isi local storage nya ternyata ah elah goblok bat sih gue wkwkwkwwkwk
   // authStatus: auth.user.data.status,
   // dataContractById: addendumContract.dataContractById,

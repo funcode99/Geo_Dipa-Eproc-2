@@ -416,9 +416,10 @@ const NomorRekening = ({
               fromWhere={"account_number"}
               showAddClause={showAddClause}
               values={values}
+              isDrafting={true}
             />
 
-            <UpdateButton fromWhere={"account_number"} />
+            <UpdateButton fromWhere={"account_number"} isDrafting={true} />
           </Form>
         );
       }}

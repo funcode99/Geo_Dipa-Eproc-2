@@ -323,9 +323,10 @@ const Denda = ({ fineCurrent, jsonData, contract_id, dataNewClause }) => {
               fromWhere={"fine"}
               showAddClause={showAddClause}
               values={values}
+              isDrafting={true}
             />
 
-            <UpdateButton fromWhere={"fine"} />
+            <UpdateButton fromWhere={"fine"} isDrafting={true} />
           </Form>
         )}
       </Formik>

@@ -2981,6 +2981,7 @@ const PartiesFormParameter = ({
               showAddClause={showAddClause}
               fromWhere={"parties"}
               values={values}
+              isMandatory={true}
             />
 
             <UpdateButton fromWhere={"parties"} />

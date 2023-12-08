@@ -429,6 +429,7 @@ const JobPriceFormParameter = ({
                 showAddClause={showAddClause}
                 fromWhere={"job_price"}
                 values={values}
+                isMandatory={true}
               />
             </div>
 

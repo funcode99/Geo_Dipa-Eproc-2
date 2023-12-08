@@ -643,10 +643,11 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                 title={"Jaminan"}
                 fromWhere={"guarantee"}
                 showAddClause={showAddClause}
+                isDrafting={true}
                 values={values}
               />
 
-              <UpdateButton fromWhere={"guarantee"} />
+              <UpdateButton fromWhere={"guarantee"} isDrafting={true} />
             </Form>
           );
         }}

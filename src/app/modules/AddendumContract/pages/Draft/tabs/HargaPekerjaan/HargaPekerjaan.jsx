@@ -71,6 +71,7 @@ const HargaPekerjaan = ({
         openCloseAddClause={openCloseAddClause}
         fromWhere={"job_price"}
         fieldType={"clause_attachment"}
+        isDrafting={true}
       />
       <Formik
         enableReinitialize={true}
@@ -199,9 +200,14 @@ const HargaPekerjaan = ({
                 showAddClause={showAddClause}
                 fromWhere={"job_price"}
                 isMandatory={true}
+                isDrafting={true}
                 values={values}
               />
-              <UpdateButton fromWhere={"job_price"} />
+              <UpdateButton
+                fromWhere={"job_price"}
+                isDrafting={true}
+                isMandatory={true}
+              />
             </div>
           </Form>
         )}
