@@ -1,17 +1,10 @@
-import React from "react";
-import { TableBody, TableCell } from "@material-ui/core";
-
-import { FormControl, InputGroup } from "react-bootstrap";
-import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
-import {
-  StyledHead,
-  StyledTable,
-  StyledTableHead,
-  StyledTableRow,
-} from "../../Termin/style";
+import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
+import { fetch_api_sg } from "redux/globalReducer";
+import React, { useState, useEffect } from "react";
+import { Card, CardBody } from "../../../../../../_metronic/_partials/controls";
 import TablePaginationCustom from "../../../../../components/tables/TablePagination";
-import { useSelector } from "react-redux";
+import ButtonAction from "../../../../../../../src/app/components/buttonAction/ButtonAction";
 
 const tableHeaderContractsNew = [
   {
@@ -36,61 +29,67 @@ const tableHeaderContractsNew = [
   },
 ];
 
-// const RowNormal = () => {
-//   return (
-//     <StyledTableRow>
-//       {["1", "Denda Kecelakaan Kerja", ["2000000", "%"], "5"].map((el, idx) => (
-//         <TableCell key={idx} className="text-dark text-left">
-//           {Array.isArray(el) ? (
-//             <InputGroup className="mb-3">
-//               <FormControl disabled defaultValue={el[0]} aria-label="Days" />
-//               <InputGroup.Append>
-//                 <InputGroup.Text>{el[1]}</InputGroup.Text>
-//               </InputGroup.Append>
-//             </InputGroup>
-//           ) : (
-//             el
-//           )}
-//         </TableCell>
-//       ))}
-//     </StyledTableRow>
-//   );
-// };
+const ListAddendum = ({ contract_id, fetch_api_sg }) => {
+  const [dataAddContracts, setDataAddContracts] = useState({});
+  const getDataAddContract = async (contract_id) => {
+    fetch_api_sg({
+      key: keys.getAddendumDetail,
+      type: "get",
+      url: `/adendum/contract-released/${contract_id}/show`,
+      onSuccess: (res) => {
+        setDataAddContracts(res?.data);
+      },
+    });
+  };
 
-const ListAddendum = ({ dataContractById }) => {
-  const { authority_group } = useSelector(
-    (state) => state.deliveryMonitoring.dataContractById
-  );
-
-  console.log(authority_group, "authority_group");
-  console.log(dataContractById, "dataContractById");
+  useEffect(() => {
+    getDataAddContract(contract_id);
+  }, [contract_id]);
   return (
     <Card>
       <CardBody>
         <TablePaginationCustom
           headerRows={tableHeaderContractsNew}
           withSearch={false}
-          //   rows={penalty_fine_data.map((el, id) => ({
-          //     no: id + 1,
-          //     type: el?.pinalty_name,
-          //     value: (
-          //       <InputGroup className="mb-3">
-          //         <FormControl
-          //           disabled
-          //           defaultValue={el?.value}
-          //           aria-label="Days"
-          //         />
-          //         <InputGroup.Append>
-          //           <InputGroup.Text>%</InputGroup.Text>
-          //         </InputGroup.Append>
-          //       </InputGroup>
-          //     ),
-          //     max: el?.max_day,
-          //   }))}
+          rows={dataAddContracts?.add_contracts?.map((el, id) => ({
+            no: id + 1,
+            no_dokument: el.add_doc_number,
+            tanggal_addendum: el.add_request_date,
+            addendum_status: el.add_status?.status,
+            aksi: (
+              <ButtonAction
+                hoverLabel="More"
+                data={"1"}
+                ops={[
+                  {
+                    label: "Detail",
+                    to: {
+                      url: `/client/addendum-contract/draft/${el.id}`,
+                      style: {
+                        color: "black",
+                      },
+                    },
+                  },
+                ]}
+              />
+            ),
+          }))}
         />
       </CardBody>
     </Card>
   );
 };
+const keys = {
+  getAddendumDetail: "get-addendum-contract-by-id ",
+};
 
-export default ListAddendum;
+const mapDispatch = {
+  fetch_api_sg,
+};
+const mapState = ({ auth, deliveryMonitoring }) => ({
+  authStatus: auth.user.data.status,
+  data: auth.user.data,
+  dataContractById: deliveryMonitoring.dataContractById,
+});
+
+export default connect(mapState, mapDispatch)(ListAddendum);
