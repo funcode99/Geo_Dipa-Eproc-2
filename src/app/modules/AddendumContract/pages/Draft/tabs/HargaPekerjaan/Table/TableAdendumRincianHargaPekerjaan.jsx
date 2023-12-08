@@ -19,7 +19,7 @@ const TableAdendumRincianHargaPekerjaanAwal = ({
   grandTotal,
 }) => {
   const createChildData = (
-    product_name,
+    product_title,
     qty,
     uom,
     unit_price,
@@ -27,8 +27,8 @@ const TableAdendumRincianHargaPekerjaanAwal = ({
     note,
     row
   ) => ({
-    id: product_name.replace(" ", "_"),
-    product_name,
+    id: product_title.replace(" ", "_"),
+    product_title,
     qty,
     uom,
     unit_price,
@@ -38,15 +38,15 @@ const TableAdendumRincianHargaPekerjaanAwal = ({
   });
 
   const createNewData = (
-    product_name,
+    product_title,
     qty,
     uom,
     unit_price,
     subtotal,
     note
   ) => ({
-    id: product_name.replace(" ", "_"),
-    product_name,
+    id: product_title.replace(" ", "_"),
+    product_title,
     qty,
     uom,
     unit_price,
@@ -283,9 +283,11 @@ const TableAdendumRincianHargaPekerjaanAwal = ({
                   <TableRow key={row.id}>
                     <TableCell>{index + 1}</TableCell>
                     <CustomTableCell
-                      {...{ row, name: "product_name", onChange }}
+                      {...{ row, name: "product_title", onChange }}
                     />
-                    <CustomTableCell {...{ row, name: "qty", onChange }} />
+                    <CustomTableCell
+                      {...{ row, name: "qty_total", onChange }}
+                    />
                     <CustomTableCell {...{ row, name: "uom", onChange }} />
                     <CustomTableCell
                       {...{ row, name: "unit_price", onChange }}

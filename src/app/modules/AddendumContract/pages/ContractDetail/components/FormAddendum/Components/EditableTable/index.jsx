@@ -48,15 +48,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const createChildData = (
-  product_name,
+  product_title,
   qty,
   uom,
   unit_price,
   subtotal,
   note
 ) => ({
-  id: product_name.replace(" ", "_"),
-  product_name,
+  id: product_title.replace(" ", "_"),
+  product_title,
   qty,
   uom,
   unit_price,
@@ -65,9 +65,16 @@ const createChildData = (
   isEditMode: false,
 });
 
-const createNewData = (product_name, qty, uom, unit_price, subtotal, note) => ({
-  id: product_name.replace(" ", "_"),
-  product_name,
+const createNewData = (
+  product_title,
+  qty,
+  uom,
+  unit_price,
+  subtotal,
+  note
+) => ({
+  id: product_title.replace(" ", "_"),
+  product_title,
   qty,
   uom,
   unit_price,
@@ -85,10 +92,11 @@ const EditableTable = ({
   jobPriceCurrent,
 }) => {
   let jobPriceData = jobPriceCurrent;
+  console.log("isi jobPriceData", jobPriceData);
   const [init, setInit] = useState(0);
   let parsedJobPrice = null;
   if (init === 0) {
-    parsedJobPrice = jobPriceData?.map((item) => {
+    parsedJobPrice = jobPriceData?.items?.map((item) => {
       return {
         ...item,
         subtotal: Math.round(item?.subtotal),
@@ -354,7 +362,7 @@ const EditableTable = ({
       >
         <Formik
           initialValues={{
-            product_name: "",
+            product_title: "",
             qty: "",
             uom: "",
             unit_price: "",
@@ -364,7 +372,7 @@ const EditableTable = ({
           }}
           onSubmit={(values) => {
             onAddMode(
-              values?.product_name,
+              values?.product_title,
               values?.qty,
               values?.uom,
               values?.unit_price,
@@ -431,7 +439,7 @@ const EditableTable = ({
                       </span>
                       <Field
                         type="text"
-                        name="product_name"
+                        name="product_title"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -692,7 +700,7 @@ const EditableTable = ({
                   <TableRow key={row.id}>
                     <TableCell>{index + 1}</TableCell>
                     <CustomTableCell
-                      {...{ row, name: "product_name", onChange }}
+                      {...{ row, name: "product_title", onChange }}
                     />
                     <CustomTableCell {...{ row, name: "qty", onChange }} />
                     <CustomTableCell {...{ row, name: "uom", onChange }} />
