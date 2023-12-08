@@ -99,7 +99,7 @@ const EditableTable = ({
     setInit(1);
   }
   let result = parsedJobPrice;
-  // console.log("parsedJobPrice", parsedJobPrice);
+  console.log("parsedJobPrice", parsedJobPrice);
   const [rows, setRows] = useState(result);
   const [previous, setPrevious] = React.useState({});
   const classes = useStyles();
@@ -167,7 +167,14 @@ const EditableTable = ({
   // };
 
   const onAddMode = (a, b, c, d, e, f, g) => {
-    setRows((state) => [...state, createNewData(a, b, c, d, e, f, g)]);
+    setRows((state) => {
+      if (typeof state === "undefined") {
+        return [createNewData(a, b, c, d, e, f, g)];
+      } else {
+        return [...state, createNewData(a, b, c, d, e, f, g)];
+      }
+      console.log(state);
+    });
   };
 
   const onToggleEditChildMode = (id, index) => {

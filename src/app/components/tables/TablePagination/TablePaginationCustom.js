@@ -30,7 +30,7 @@ function desc(a, b, orderBy) {
 }
 
 export function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+  const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
     if (order !== 0) return order;
@@ -263,13 +263,11 @@ export default function TablePaginationCustom({
                                 style={
                                   headerRows?.[id]?.sticky === true
                                     ? {
-                                        left:
-                                          headerRows?.[id]?.left ?? 0,
+                                        left: headerRows?.[id]?.left ?? 0,
                                       }
                                     : headerRows?.[id]?.rightSticky === true
                                     ? {
-                                        right:
-                                          headerRows?.[id]?.right ?? 0,
+                                        right: headerRows?.[id]?.right ?? 0,
                                       }
                                     : {}
                                 }

@@ -59,7 +59,7 @@ const TableAdendumRincianHargaPekerjaanAwal = ({
   const [init, setInit] = useState(0);
   let parsedJobPrice = null;
   if (init === 0) {
-    parsedJobPrice = jobPriceData.map((item) => {
+    parsedJobPrice = jobPriceData?.map((item) => {
       return {
         ...item,
         subtotal: Math.round(item?.subtotal),
