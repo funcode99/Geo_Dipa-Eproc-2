@@ -496,7 +496,6 @@ export const AddContractAddendum = ({
 
   const assignTabLists = (values) => {
     console.log("isi values", values);
-    console.log("isi tablists", TabLists);
 
     TabLists.map((Tabitem) => {
       Tabitem.addendum = false;
@@ -529,6 +528,8 @@ export const AddContractAddendum = ({
       },
     });
   };
+
+  console.log("isi tablists", TabLists);
 
   const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
 
@@ -1034,6 +1035,7 @@ export const AddContractAddendum = ({
             authorizedOfficial={authorizedOfficial}
             secondAuthorizedOfficial={secondAuthorizedOfficial}
             PICData={PICData}
+            tabLists={TabLists}
             accountNumberBankData={accountNumberBankData}
           />
 
