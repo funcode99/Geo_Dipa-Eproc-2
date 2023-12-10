@@ -16,7 +16,9 @@ export const ReactSelect = ({
   arrayIndex,
   currentSelect,
   type,
+  disabled,
 }) => {
+  console.log(disabled, "disabled nya");
   const [isClearable, setIsClearable] = useState(true);
   const [isSearchable, setIsSearchable] = useState(true);
   const [userChoice, setUserChoice] = useState(0);
@@ -43,6 +45,7 @@ export const ReactSelect = ({
   return (
     <>
       <Select
+        isDisabled={disabled}
         className="basic-single"
         classNamePrefix="select"
         defaultValue={
