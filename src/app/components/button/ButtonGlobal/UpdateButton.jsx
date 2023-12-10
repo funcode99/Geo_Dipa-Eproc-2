@@ -1,7 +1,5 @@
 import React from "react";
-import { compose } from "redux";
-import { useDispatch, connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
 const UpdateButton = ({
   dataNewClause,
@@ -23,7 +21,28 @@ const UpdateButton = ({
         type="submit"
         // tidak menerima komentar wkwk, auto ga jalan atribut nya
         disabled={
-          isDrafting === false
+          fromWhere !== "other" && isDrafting === false
+            ? dataNewClause[fromWhere].attachmentClauseData[0]
+                .attachment_number === "" ||
+              dataNewClause[fromWhere].attachmentClauseData[0].clause_note ===
+                "" ||
+              dataNewClause[fromWhere].bodyClauseData.after_clause_note ===
+                "" ||
+              dataNewClause[fromWhere].bodyClauseData.before_clause_note ===
+                "" ||
+              dataNewClause[fromWhere].bodyClauseData.clause_number === ""
+            : fromWhere === "other" && isDrafting === true
+            ? dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
+                .attachment_number === "" ||
+              dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
+                .clause_note === "" ||
+              dataNewClauseDrafting[fromWhere].bodyClauseData[0]
+                .after_clause_note === "" ||
+              dataNewClauseDrafting[fromWhere].bodyClauseData[0]
+                .before_clause_note === "" ||
+              dataNewClauseDrafting[fromWhere].bodyClauseData[0]
+                .clause_number === ""
+            : fromWhere !== "other" && isDrafting === false
             ? dataNewClause[fromWhere].attachmentClauseData[0]
                 .attachment_number === "" ||
               dataNewClause[fromWhere].attachmentClauseData[0].clause_note ===
@@ -45,8 +64,6 @@ const UpdateButton = ({
               dataNewClauseDrafting[fromWhere].bodyClauseData.clause_number ===
                 ""
             : false
-          // ? "#8c8a8a"
-          // : "#3699ff"
         }
         style={{
           color: "white",
@@ -55,7 +72,32 @@ const UpdateButton = ({
           padding: "8px 14px",
           borderRadius: "8px",
           backgroundColor:
-            isDrafting === true
+            fromWhere === "other" && isDrafting === false
+              ? dataNewClause[fromWhere].attachmentClauseData[0]
+                  .attachment_number === "" ||
+                dataNewClause[fromWhere].attachmentClauseData[0].clause_note ===
+                  "" ||
+                dataNewClause[fromWhere].bodyClauseData[0].after_clause_note ===
+                  "" ||
+                dataNewClause[fromWhere].bodyClauseData[0]
+                  .before_clause_note === "" ||
+                dataNewClause[fromWhere].bodyClauseData[0].clause_number === ""
+                ? // "#8c8a8a"
+                  "green"
+                : "#3699ff"
+              : fromWhere !== "other" && isDrafting === false
+              ? dataNewClause[fromWhere].attachmentClauseData[0]
+                  .attachment_number === "" ||
+                dataNewClause[fromWhere].attachmentClauseData[0].clause_note ===
+                  "" ||
+                dataNewClause[fromWhere].bodyClauseData.after_clause_note ===
+                  "" ||
+                dataNewClause[fromWhere].bodyClauseData.before_clause_note ===
+                  "" ||
+                dataNewClause[fromWhere].bodyClauseData.clause_number === ""
+                ? "#8c8a8a"
+                : "#3699ff"
+              : isDrafting === true
               ? (dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
                   .attachment_number === "" ||
                   dataNewClauseDrafting[fromWhere].attachmentClauseData[0]

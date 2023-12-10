@@ -67,7 +67,7 @@ const createChildData = (
 
 const createNewData = (
   product_title,
-  qty,
+  qty_total,
   uom,
   unit_price,
   subtotal,
@@ -75,7 +75,7 @@ const createNewData = (
 ) => ({
   id: product_title.replace(" ", "_"),
   product_title,
-  qty,
+  qty_total,
   uom,
   unit_price,
   subtotal,
@@ -363,7 +363,7 @@ const EditableTable = ({
         <Formik
           initialValues={{
             product_title: "",
-            qty: "",
+            qty_total: "",
             uom: "",
             unit_price: "",
             subtotal: "",
@@ -373,7 +373,7 @@ const EditableTable = ({
           onSubmit={(values) => {
             onAddMode(
               values?.product_title,
-              values?.qty,
+              values?.qty_total,
               values?.uom,
               values?.unit_price,
               values?.subtotal,
@@ -702,7 +702,9 @@ const EditableTable = ({
                     <CustomTableCell
                       {...{ row, name: "product_title", onChange }}
                     />
-                    <CustomTableCell {...{ row, name: "qty", onChange }} />
+                    <CustomTableCell
+                      {...{ row, name: "qty_total", onChange }}
+                    />
                     <CustomTableCell {...{ row, name: "uom", onChange }} />
                     <CustomTableCell
                       {...{ row, name: "unit_price", onChange }}

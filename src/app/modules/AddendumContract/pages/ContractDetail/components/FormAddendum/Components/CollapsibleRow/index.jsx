@@ -65,7 +65,7 @@ const CollapsibleRow = ({
         </TableCell>
         <CustomTableCell {...{ row, name: "product_title", onChange }} />
         <CustomTableCell
-          {...{ row, name: "qty", onChange, isDisabled: true }}
+          {...{ row, name: "qty_total", onChange, isDisabled: true }}
         />
         <CustomTableCell {...{ row, name: "uom", onChange }} />
         <CustomTableCell {...{ row, name: "unit_price", onChange }} />

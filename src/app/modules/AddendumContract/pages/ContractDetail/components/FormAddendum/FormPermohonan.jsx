@@ -17,7 +17,8 @@ const FormPermohonan = (props) => {
   const [note, setNote] = useState("");
   const [adnm_percentage, set_adnm_percentage] = useState();
   const [disabledInput, setDisabledInput] = useState("both");
-  const [dateDisplay, setDateDisplay] = useState(null);
+  // gaboleh jadi null/undefined karena bakal jadi uncontrolled input
+  const [dateDisplay, setDateDisplay] = useState("");
   const [price, setPrice] = useState({
     additional_price: "0",
     substraction_price: "0",
@@ -453,7 +454,7 @@ const FormPermohonan = (props) => {
             // JANGAN PERNAH KASIH KURUNG KURAWAL DI VALUES
             onSubmit={(values) => {
               console.log("isi submit values", values);
-              if (dateDisplay === null) {
+              if (dateDisplay === "") {
                 alert("Silahkan isi Tanggal Dokumen Permohonan");
               } else if (
                 values.is_availability_budget === false &&

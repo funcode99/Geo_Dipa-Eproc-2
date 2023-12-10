@@ -696,6 +696,7 @@ export const AddContractAddendum = ({
         items={[
           {
             label: `Addendum Contract`,
+            to: `/${authStatus}/addendum-contract/list-contract-po`,
           },
           {
             label: "List of Contract & SPK",
