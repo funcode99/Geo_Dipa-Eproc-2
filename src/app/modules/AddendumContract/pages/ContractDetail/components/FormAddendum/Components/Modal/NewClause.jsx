@@ -6,7 +6,12 @@ import { useDispatch, connect } from "react-redux";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { Formik, Field, Form } from "formik";
 
-const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
+const NewClause = ({
+  openCloseAddClause,
+  fromWhere,
+  fieldType,
+  isDrafting = false,
+}) => {
   const dispatch = useDispatch();
 
   return (
@@ -31,7 +36,9 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
               clause_note: values.clause_note,
             };
             dispatch({
-              type: actionTypes.SetDataClause,
+              type: isDrafting
+                ? actionTypes.SetDraftingClause
+                : actionTypes.SetDataClause,
               payload: doSet,
               fieldType: fieldType,
               fromWhere: fromWhere,
@@ -129,8 +136,10 @@ const NewClause = ({ openCloseAddClause, fromWhere, fieldType }) => {
   );
 };
 
-const mapState = ({ addendumContract }) => ({
-  dataNewClause: addendumContract.dataNewClause,
+const mapState = ({ addendumContract, isDrafting }) => ({
+  dataNewClause: isDrafting
+    ? addendumContract.dataNewClauseDrafting
+    : addendumContract.dataNewClause,
 });
 
 export default compose(withRouter, connect(mapState, null))(NewClause);

@@ -84,8 +84,8 @@ const TableRincianHargaPekerjaanAwal = ({ data }) => {
     },
   ];
 
-  const grandTotal = data.reduce(
-    (total, item) => total + parseFloat(item.subtotal),
+  const grandTotal = data?.reduce(
+    (total, item) => total + parseFloat(item?.subtotal),
     0
   );
 
@@ -102,7 +102,7 @@ const TableRincianHargaPekerjaanAwal = ({ data }) => {
             searchFindMulti(
               stableSort(data, getSorting(order, orderBy)),
               filterBy
-            ).length
+            )?.length
           }
           onChangePage={handleChangePage}
           onChangePerPage={handleChangeRowsPerPage}
@@ -111,8 +111,8 @@ const TableRincianHargaPekerjaanAwal = ({ data }) => {
             stableSort(data, getSorting(order, orderBy)),
             filterBy
           )
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((item, index) => (
+            ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            ?.map((item, index) => (
               <TableRow>
                 <TableCell align="left">{index + 1}</TableCell>
                 <TableCell align="left">{item.product_name}</TableCell>

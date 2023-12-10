@@ -48,15 +48,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const createChildData = (
-  product_name,
+  product_title,
   qty,
   uom,
   unit_price,
   subtotal,
   note
 ) => ({
-  id: product_name.replace(" ", "_"),
-  product_name,
+  id: product_title.replace(" ", "_"),
+  product_title,
   qty,
   uom,
   unit_price,
@@ -65,10 +65,17 @@ const createChildData = (
   isEditMode: false,
 });
 
-const createNewData = (product_name, qty, uom, unit_price, subtotal, note) => ({
-  id: product_name.replace(" ", "_"),
-  product_name,
-  qty,
+const createNewData = (
+  product_title,
+  qty_total,
+  uom,
+  unit_price,
+  subtotal,
+  note
+) => ({
+  id: product_title.replace(" ", "_"),
+  product_title,
+  qty_total,
   uom,
   unit_price,
   subtotal,
@@ -82,13 +89,14 @@ const EditableTable = ({
   previousData,
   func,
   grandTotal,
-  isDisable,
+  jobPriceCurrent,
 }) => {
-  let jobPriceData = previousData;
+  let jobPriceData = jobPriceCurrent;
+  console.log("isi jobPriceData", jobPriceData);
   const [init, setInit] = useState(0);
   let parsedJobPrice = null;
   if (init === 0) {
-    parsedJobPrice = jobPriceData.map((item) => {
+    parsedJobPrice = jobPriceData?.items?.map((item) => {
       return {
         ...item,
         subtotal: Math.round(item?.subtotal),
@@ -99,7 +107,7 @@ const EditableTable = ({
     setInit(1);
   }
   let result = parsedJobPrice;
-  // console.log("parsedJobPrice", parsedJobPrice);
+  console.log("parsedJobPrice", parsedJobPrice);
   const [rows, setRows] = useState(result);
   const [previous, setPrevious] = React.useState({});
   const classes = useStyles();
@@ -167,7 +175,14 @@ const EditableTable = ({
   // };
 
   const onAddMode = (a, b, c, d, e, f, g) => {
-    setRows((state) => [...state, createNewData(a, b, c, d, e, f, g)]);
+    setRows((state) => {
+      if (typeof state === "undefined") {
+        return [createNewData(a, b, c, d, e, f, g)];
+      } else {
+        return [...state, createNewData(a, b, c, d, e, f, g)];
+      }
+      console.log(state);
+    });
   };
 
   const onToggleEditChildMode = (id, index) => {
@@ -347,8 +362,8 @@ const EditableTable = ({
       >
         <Formik
           initialValues={{
-            product_name: "",
-            qty: "",
+            product_title: "",
+            qty_total: "",
             uom: "",
             unit_price: "",
             subtotal: "",
@@ -357,8 +372,8 @@ const EditableTable = ({
           }}
           onSubmit={(values) => {
             onAddMode(
-              values?.product_name,
-              values?.qty,
+              values?.product_title,
+              values?.qty_total,
               values?.uom,
               values?.unit_price,
               values?.subtotal,
@@ -424,7 +439,7 @@ const EditableTable = ({
                       </span>
                       <Field
                         type="text"
-                        name="product_name"
+                        name="product_title"
                         style={{
                           padding: 8,
                           borderRadius: 4,
@@ -685,9 +700,11 @@ const EditableTable = ({
                   <TableRow key={row.id}>
                     <TableCell>{index + 1}</TableCell>
                     <CustomTableCell
-                      {...{ row, name: "product_name", onChange }}
+                      {...{ row, name: "product_title", onChange }}
                     />
-                    <CustomTableCell {...{ row, name: "qty", onChange }} />
+                    <CustomTableCell
+                      {...{ row, name: "qty_total", onChange }}
+                    />
                     <CustomTableCell {...{ row, name: "uom", onChange }} />
                     <CustomTableCell
                       {...{ row, name: "unit_price", onChange }}

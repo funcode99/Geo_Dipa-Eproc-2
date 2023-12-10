@@ -63,9 +63,9 @@ const CollapsibleRow = ({
             )}
           </div>
         </TableCell>
-        <CustomTableCell {...{ row, name: "product_name", onChange }} />
+        <CustomTableCell {...{ row, name: "product_title", onChange }} />
         <CustomTableCell
-          {...{ row, name: "qty", onChange, isDisabled: true }}
+          {...{ row, name: "qty_total", onChange, isDisabled: true }}
         />
         <CustomTableCell {...{ row, name: "uom", onChange }} />
         <CustomTableCell {...{ row, name: "unit_price", onChange }} />
@@ -157,14 +157,14 @@ const CollapsibleRow = ({
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.product_name}
-                  name={"product_name"}
+                  value={data.product_title}
+                  name={"product_title"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
                   onKeyUp={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.product_name
+                data.product_title
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>

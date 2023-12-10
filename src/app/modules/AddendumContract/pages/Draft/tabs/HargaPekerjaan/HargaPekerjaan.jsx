@@ -15,6 +15,7 @@ import Item from "app/modules/AddendumContract/pages/ContractDetail/components/F
 // import PerubahanKlausulKontrak from "../../../ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/EditableTable/index";
 import { submitJobPrice } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import PerubahanKlausulKontrak from "../../../ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const HargaPekerjaan = ({
   data,
@@ -22,12 +23,13 @@ const HargaPekerjaan = ({
   dataNewClause,
   contract_id,
   currencies,
+  jobPriceCurrent,
 }) => {
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
-  // const showAddClause = () => {
-  //   openCloseAddClause.current.open();
-  // };
+  const showAddClause = () => {
+    openCloseAddClause.current.open();
+  };
   const [item, setItem] = useState([]);
   const [grandTotal, setGrandTotal] = useState(0);
   let currenciesIndex = 0;
@@ -36,7 +38,7 @@ const HargaPekerjaan = ({
   );
   useEffect(() => {
     function sum(total, data) {
-      return total + Math.round(data.subtotal);
+      return total + Math.round(data?.subtotal);
     }
     setGrandTotal(item?.reduce(sum, 0));
   }, [item]);
@@ -69,6 +71,7 @@ const HargaPekerjaan = ({
         openCloseAddClause={openCloseAddClause}
         fromWhere={"job_price"}
         fieldType={"clause_attachment"}
+        isDrafting={true}
       />
       <Formik
         enableReinitialize={true}
@@ -105,8 +108,8 @@ const HargaPekerjaan = ({
                 <div className="nilai-perjanjian-kontrak-awal">
                   <Currency
                     title={"  Nilai perjanjian kontrak awal"}
-                    value={data.contract_value}
-                    currencyCode={data.currency.code}
+                    value={data?.contract_value}
+                    currencyCode={data?.currency?.code}
                   />
                 </div>
 
@@ -128,7 +131,7 @@ const HargaPekerjaan = ({
                 <div className="nilai-perjanjian-setelah-adendum mt-8">
                   <Currency
                     title={"A. Nilai Perjanjian Setelah Addendum"}
-                    value={dataAfterAdendum.after_addendum_job_price}
+                    value={dataAfterAdendum?.after_addendum_job_price}
                     currencyCode={
                       dataAfterAdendum?.add_contract_job_price?.currency_id
                     }
@@ -169,13 +172,14 @@ const HargaPekerjaan = ({
                     <EditableTable
                       openCloseAddDetail={openCloseAddDetail}
                       previousData={data?.contract_items}
+                      jobPriceCurrent={jobPriceCurrent}
                       func={setItem}
                       grandTotal={formatCurrencyIDR(grandTotal)}
                     />
                   </TableContainer>
                 </div>
               </div>
-              <div
+              {/* <div
                 className="mt-8"
                 style={{
                   display: "flex",
@@ -187,16 +191,23 @@ const HargaPekerjaan = ({
               >
                 <div className="perubahan-klausul mt-8">
                   <PerubahanKlausul />
-                  {/* <PerubahanKlausulKontrak
-                    subTitle={"C"}
-                    title={"Harga Pekerjaan"}
-                    showAddClause={showAddClause}
-                    fromWhere={"job_price"}
-                    values={values}
-                  /> */}
                 </div>
-              </div>
-              <UpdateButton fromWhere={"job_price"} />
+              </div> */}
+              <div className="mt-8"></div>
+              <PerubahanKlausulKontrak
+                subTitle={"C"}
+                title={"Harga Pekerjaan"}
+                showAddClause={showAddClause}
+                fromWhere={"job_price"}
+                isMandatory={true}
+                isDrafting={true}
+                values={values}
+              />
+              <UpdateButton
+                fromWhere={"job_price"}
+                isDrafting={true}
+                isMandatory={true}
+              />
             </div>
           </Form>
         )}

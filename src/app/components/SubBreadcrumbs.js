@@ -1,12 +1,12 @@
-import React from 'react';
-import { Breadcrumbs, Typography } from '@material-ui/core';
-import { Card } from '../../_metronic/_partials/controls';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Breadcrumbs, Typography } from "@material-ui/core";
+import { Card } from "../../_metronic/_partials/controls";
+import { Link } from "react-router-dom";
 
 const defaultItems = [
-  { label: 'Link 1', to: '/' },
-  { label: 'Link 2', to: '/' },
-  { label: 'Link 3', to: '/' },
+  { label: "Link 1", to: "/" },
+  { label: "Link 2", to: "/" },
+  { label: "Link 3", to: "/" },
 ];
 
 export default function SubBreadcrumbs(props) {
@@ -26,8 +26,8 @@ export default function SubBreadcrumbs(props) {
             </Link>
           ) : (
             <Typography
-              color="textPrimary"
               key={`breadcrumb-${index}-${item.label}`}
+              color="textPrimary"
             >
               {item.label}
             </Typography>

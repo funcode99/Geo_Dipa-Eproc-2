@@ -911,6 +911,7 @@ const DraftingFormParameter = ({
           openCloseAddClause={openCloseAddClause}
           fromWhere={"time_period"}
           fieldType={"clause_attachment"}
+          isDrafting={true}
         />
       )}
 
@@ -919,6 +920,7 @@ const DraftingFormParameter = ({
           openCloseAddClause={openCloseAddClause}
           fromWhere={"payment_method"}
           fieldType={"clause_attachment"}
+          isDrafting={true}
         />
       )}
 
@@ -927,6 +929,7 @@ const DraftingFormParameter = ({
           openCloseAddClause={openCloseAddClause}
           fromWhere={"fine"}
           fieldType={"clause_attachment"}
+          isDrafting={true}
         />
       )}
 
@@ -935,6 +938,7 @@ const DraftingFormParameter = ({
           openCloseAddClause={openCloseAddClause}
           fromWhere={"guarantee"}
           fieldType={"clause_attachment"}
+          isDrafting={true}
         />
       )}
 
@@ -943,6 +947,7 @@ const DraftingFormParameter = ({
           openCloseAddClause={openCloseAddClause}
           fromWhere={"account_number"}
           fieldType={"clause_attachment"}
+          isDrafting={true}
         />
       )}
 
@@ -952,11 +957,13 @@ const DraftingFormParameter = ({
             openCloseAddClause={openCloseAddClause}
             fromWhere={"other"}
             fieldType={"clause_attachment"}
+            isDrafting={true}
           />
           <NewContract
             openCloseAddContract={openCloseAddContract}
             fromWhere={"other"}
             fieldType={"contract_body"}
+            isDrafting={true}
           />
         </>
       )}
@@ -1467,7 +1474,7 @@ const DraftingFormParameter = ({
                       values={values}
                     />
 
-                    <UpdateButton fromWhere={"time_period"} />
+                    <UpdateButton fromWhere={"time_period"} isDrafting={true} />
                   </Form>
                 )}
               </Formik>
@@ -1806,7 +1813,10 @@ const DraftingFormParameter = ({
                     values={values}
                   />
 
-                  <UpdateButton fromWhere={"payment_method"} />
+                  <UpdateButton
+                    fromWhere={"payment_method"}
+                    isDrafting={true}
+                  />
                 </Form>
               )}
             </Formik>
@@ -2022,7 +2032,7 @@ const DraftingFormParameter = ({
                       values={values}
                     />
 
-                    <UpdateButton fromWhere={"fine"} />
+                    <UpdateButton fromWhere={"fine"} isDrafting={true} />
                   </Form>
                 )}
               </Formik>
@@ -2586,7 +2596,7 @@ const DraftingFormParameter = ({
                         values={values}
                       />
 
-                      <UpdateButton fromWhere={"guarantee"} />
+                      <UpdateButton fromWhere={"guarantee"} isDrafting={true} />
                     </Form>
                   );
                 }}
@@ -2958,7 +2968,10 @@ const DraftingFormParameter = ({
                         values={values}
                       />
 
-                      <UpdateButton fromWhere={"account_number"} />
+                      <UpdateButton
+                        fromWhere={"account_number"}
+                        isDrafting={true}
+                      />
                     </Form>
                   );
                 }}
@@ -2990,7 +3003,7 @@ const DraftingFormParameter = ({
                       values={values}
                     />
 
-                    <UpdateButton fromWhere={"other"} />
+                    <UpdateButton fromWhere={"other"} isDrafting={true} />
                   </Form>
                 )}
               </Formik>

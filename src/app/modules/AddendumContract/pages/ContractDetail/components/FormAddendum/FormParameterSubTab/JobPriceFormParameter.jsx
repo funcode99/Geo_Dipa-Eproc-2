@@ -221,7 +221,7 @@ const JobPriceFormParameter = ({
                         fontWeight: 600,
                       }}
                     >
-                      Nilai perjanjian kontrak awal nya
+                      Nilai perjanjian kontrak awal
                     </p>
                     <div
                       style={{
@@ -299,7 +299,9 @@ const JobPriceFormParameter = ({
                       .map((row, index) => (
                         <TableRow key={index.toString()}>
                           <TableCell align="l">{index + 1}</TableCell>
-                          <TableCell align="left">{row.product_name}</TableCell>
+                          <TableCell align="left">
+                            {row.product_title}
+                          </TableCell>
                           <TableCell align="left">{row.qty}</TableCell>
                           <TableCell align="left">{row.uom}</TableCell>
                           <TableCell align="left">{row.unit_price}</TableCell>
@@ -430,6 +432,7 @@ const JobPriceFormParameter = ({
                 showAddClause={showAddClause}
                 fromWhere={"job_price"}
                 values={values}
+                isMandatory={true}
               />
             </div>
 

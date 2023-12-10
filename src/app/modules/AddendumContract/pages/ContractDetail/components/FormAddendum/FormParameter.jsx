@@ -1483,6 +1483,7 @@ const FormParameter = ({
                       fromWhere={"time_period"}
                       showAddClause={showAddClause}
                       values={values}
+                      isMandatory={true}
                     />
 
                     <UpdateButton fromWhere={"time_period"} />
@@ -1829,6 +1830,7 @@ const FormParameter = ({
                     fromWhere={"payment_method"}
                     showAddClause={showAddClause}
                     values={values}
+                    isMandatory={true}
                   />
 
                   <UpdateButton fromWhere={"payment_method"} />
@@ -2046,6 +2048,7 @@ const FormParameter = ({
                       fromWhere={"fine"}
                       showAddClause={showAddClause}
                       values={values}
+                      isMandatory={true}
                     />
 
                     <UpdateButton fromWhere={"fine"} />
@@ -2615,6 +2618,7 @@ const FormParameter = ({
                         fromWhere={"guarantee"}
                         showAddClause={showAddClause}
                         values={values}
+                        isMandatory={true}
                       />
 
                       <UpdateButton fromWhere={"guarantee"} />
@@ -3019,6 +3023,7 @@ const FormParameter = ({
                         fromWhere={"account_number"}
                         showAddClause={showAddClause}
                         values={values}
+                        isMandatory={true}
                       />
 
                       <UpdateButton fromWhere={"account_number"} />
@@ -3052,6 +3057,7 @@ const FormParameter = ({
                       showAddClause={showAddClause}
                       showAddContract={showAddContract}
                       values={values}
+                      isMandatory={true}
                     />
 
                     <UpdateButton fromWhere={"other"} />

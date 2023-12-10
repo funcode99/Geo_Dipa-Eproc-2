@@ -1758,6 +1758,7 @@ const DraftAddendumPage = ({
             <HargaPekerjaanTab
               data={dataContractById}
               dataAfterAdendum={data}
+              jobPriceCurrent={data?.add_contract_job_price}
               contract_id={draft_id}
               currencies={currencies}
             />
@@ -1814,8 +1815,9 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 8 && (
             <LainnyaTab
-              jsonData={dataContractById}
               otherCurrent={data?.add_contract_others}
+              jsonData={dataContractById}
+              dataNewClause={dataNewClause}
             />
           )}
         </>

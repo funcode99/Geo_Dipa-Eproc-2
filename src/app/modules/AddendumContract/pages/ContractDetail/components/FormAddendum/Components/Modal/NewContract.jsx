@@ -6,7 +6,12 @@ import { useDispatch, connect } from "react-redux";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { Formik, Field, Form } from "formik";
 
-const NewContract = ({ openCloseAddContract, fromWhere, fieldType }) => {
+const NewContract = ({
+  openCloseAddContract,
+  fromWhere,
+  fieldType,
+  isDrafting = false,
+}) => {
   const dispatch = useDispatch();
 
   return (
@@ -33,7 +38,9 @@ const NewContract = ({ openCloseAddContract, fromWhere, fieldType }) => {
               after_clause_note: values.after_clause_note,
             };
             dispatch({
-              type: actionTypes.SetDataClause,
+              type: isDrafting
+                ? actionTypes.SetDraftingClause
+                : actionTypes.SetDataClause,
               payload: doSet,
               fieldType: fieldType,
               fromWhere: fromWhere,

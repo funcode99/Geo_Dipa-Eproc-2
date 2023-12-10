@@ -131,7 +131,7 @@ const HargaPekerjaan = () => {
           withSearch={false}
           rows={contract_items?.map((el, id) => ({
             no: id + 1,
-            desc: el?.product_name,
+            desc: el?.product_title,
             qty: el?.qty,
             satuan: el?.uom,
             harga_satuan: printMoney(el?.unit_price),

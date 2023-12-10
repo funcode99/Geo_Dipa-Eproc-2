@@ -4,7 +4,12 @@ import { Formik, Field, Form } from "formik";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
-const MetodePembayaran = ({ dataNewClause, contract_id, jsonData }) => {
+const MetodePembayaran = ({
+  dataNewClause,
+  contract_id,
+  jsonData,
+  paymentMethodCurrent,
+}) => {
   const openCloseAddPayment = useRef();
   const showAddPayment = () => {
     openCloseAddPayment.current.open();
@@ -17,7 +22,8 @@ const MetodePembayaran = ({ dataNewClause, contract_id, jsonData }) => {
     payment: JSON.parse(localStorage.getItem("payment_method")),
   };
   const [stagePayment, setStagePayment] = useState({
-    payment: jsonData?.payment_method_data,
+    // payment: jsonData?.payment_method_data,
+    payment: paymentMethodCurrent?.payment_method_data,
   });
   const changePaymentMethodField = (index, value, type) => {
     setStagePayment((state) => {
@@ -58,7 +64,7 @@ const MetodePembayaran = ({ dataNewClause, contract_id, jsonData }) => {
         enableReinitialize={true}
         initialValues={{
           payment_method: addendumPaymentMethod,
-          payment_data: stagePayment.payment,
+          payment_data: stagePayment?.payment,
           body_data: dataNewClause.payment_method.bodyClauseData,
           attachment_data: dataNewClause.payment_method.attachmentClauseData,
         }}
@@ -308,7 +314,7 @@ const MetodePembayaran = ({ dataNewClause, contract_id, jsonData }) => {
                                 }}
                                 type="text"
                                 placeholder="Persentase"
-                                value={item.percentage}
+                                value={item.percentage_value}
                                 onChange={(e) =>
                                   changePaymentMethodField(
                                     index,
@@ -333,7 +339,7 @@ const MetodePembayaran = ({ dataNewClause, contract_id, jsonData }) => {
                                   borderRadius: 4,
                                 }}
                                 placeholder="Deskripsi"
-                                value={item.value}
+                                value={item.description}
                                 onChange={(e) =>
                                   changePaymentMethodField(
                                     index,
@@ -375,9 +381,10 @@ const MetodePembayaran = ({ dataNewClause, contract_id, jsonData }) => {
               fromWhere={"payment_method"}
               showAddClause={showAddClause}
               values={values}
+              isDrafting={true}
             />
 
-            <UpdateButton fromWhere={"payment_method"} />
+            <UpdateButton fromWhere={"payment_method"} isDrafting={true} />
           </Form>
         )}
       </Formik>

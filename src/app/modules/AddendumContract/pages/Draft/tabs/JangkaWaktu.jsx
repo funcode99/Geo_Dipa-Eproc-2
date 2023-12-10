@@ -582,9 +582,15 @@ const JangkaWaktu = ({
               fromWhere={"time_period"}
               showAddClause={showAddClause}
               values={values}
+              isMandatory={true}
+              isDrafting={true}
             />
 
-            <UpdateButton fromWhere={"time_period"} />
+            <UpdateButton
+              fromWhere={"time_period"}
+              isDrafting={true}
+              isMandatory={true}
+            />
           </Form>
         )}
       </Formik>
