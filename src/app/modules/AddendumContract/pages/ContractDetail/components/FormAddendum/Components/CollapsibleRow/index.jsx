@@ -157,14 +157,14 @@ const CollapsibleRow = ({
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
                 <Input
-                  value={data.product_title}
-                  name={"product_title"}
+                  value={data.item_name}
+                  name={"item_name"}
                   onChange={(e) => onChangeChild(e, data, index, childIndex)}
                   onKeyUp={(e) => onChangeChild(e, data, index, childIndex)}
                   className={classes.input}
                 />
               ) : (
-                data.product_title
+                data.item_name
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
@@ -207,7 +207,7 @@ const CollapsibleRow = ({
               )}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
-              {data.subtotal}
+              {data.total}
             </TableCell>
             <TableCell align="left" className={classes.tableCell}>
               {data.isEditMode ? (
