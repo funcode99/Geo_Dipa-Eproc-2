@@ -82,8 +82,7 @@ const UpdateButton = ({
                 dataNewClause[fromWhere].bodyClauseData[0]
                   .before_clause_note === "" ||
                 dataNewClause[fromWhere].bodyClauseData[0].clause_number === ""
-                ? // "#8c8a8a"
-                  "green"
+                ? "#8c8a8a"
                 : "#3699ff"
               : fromWhere !== "other" && isDrafting === false
               ? dataNewClause[fromWhere].attachmentClauseData[0]

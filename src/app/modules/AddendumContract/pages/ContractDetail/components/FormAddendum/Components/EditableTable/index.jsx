@@ -47,20 +47,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const createChildData = (
-  product_title,
+const createChildData = (item_name, qty, uom, unit_price, total, note) => ({
+  id: item_name.replace(" ", "_"),
+  item_name,
   qty,
   uom,
   unit_price,
-  subtotal,
-  note
-) => ({
-  id: product_title.replace(" ", "_"),
-  product_title,
-  qty,
-  uom,
-  unit_price,
-  subtotal,
+  total,
   note,
   isEditMode: false,
 });
@@ -199,7 +192,7 @@ const EditableTable = ({
       let changedParentQuantity = "";
       if (newState[index].item_detail) {
         function sum(total, data) {
-          return total + Math.round(data.subtotal);
+          return total + Math.round(data.total);
         }
         function sumQuantity(total, data) {
           return total + Math.round(data.qty);
@@ -211,7 +204,7 @@ const EditableTable = ({
         );
       }
       newState[index].subtotal = changedParentSubtotal;
-      newState[index].qty = changedParentQuantity;
+      newState[index].qty_total = changedParentQuantity;
       return [...newState];
     });
   };
@@ -230,7 +223,7 @@ const EditableTable = ({
       let changedParentQuantity = "";
       if (newState[index].item_detail) {
         function sum(total, data) {
-          return total + Math.round(data.subtotal);
+          return total + Math.round(data.total);
         }
         function sumQuantity(total, data) {
           return total + Math.round(data.qty);
@@ -242,7 +235,7 @@ const EditableTable = ({
         );
       }
       newState[index].subtotal = changedParentSubtotal;
-      newState[index].qty = changedParentQuantity;
+      newState[index].qty_total = changedParentQuantity;
       return [...newState];
     });
   };
@@ -262,7 +255,7 @@ const EditableTable = ({
           let newSubtotal = parseInt(row.qty) * parseInt(row.unit_price);
           return {
             ...row,
-            subtotal: newSubtotal,
+            total: newSubtotal,
             [name]: parseInt(value),
           };
         } else {
@@ -700,7 +693,7 @@ const EditableTable = ({
                   <TableRow key={row.id}>
                     <TableCell>{index + 1}</TableCell>
                     <CustomTableCell
-                      {...{ row, name: "product_title", onChange }}
+                      {...{ row, name: "product_name", onChange }}
                     />
                     <CustomTableCell
                       {...{ row, name: "qty_total", onChange }}
