@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { compose } from "redux";
 import { Field, FieldArray } from "formik";
 import { withRouter } from "react-router-dom";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
 import { useDispatch, connect } from "react-redux";
+import React, { useState, useEffect } from "react";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const PerubahanKlausulKontrak = ({
