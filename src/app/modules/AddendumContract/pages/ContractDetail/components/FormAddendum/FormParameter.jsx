@@ -993,7 +993,7 @@ const FormParameter = ({
           {currentActiveTab === 1 && (
             <>
               <JobPriceFormParameter
-                isDisable={!isDisabledHargaPekerjaan}
+                isDisable={isDisabledHargaPekerjaan}
                 currencies={currencies}
                 headerData={headerData}
                 jsonData={jsonData}

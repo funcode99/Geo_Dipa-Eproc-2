@@ -427,6 +427,7 @@ const JobPriceFormParameter = ({
               </div>
 
               <PerubahanKlausulKontrak
+                isDisable={isDisable}
                 subTitle={"C"}
                 title={"Harga Pekerjaan"}
                 showAddClause={showAddClause}

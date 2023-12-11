@@ -129,10 +129,9 @@ export const AddContractAddendum = ({
     fetch: "get-data-contracts-header",
   };
 
-  // gak ada isi nya
-  // console.log('isi data contract by id di delivery monitoring', dataContractById)
   const classes = useStyles();
   const location = useLocation();
+
   const { contract_id, tab: forceTabActive } = useParams();
   const [Toast, setToast] = useToast();
   const dispatch = useDispatch();
@@ -308,8 +307,6 @@ export const AddContractAddendum = ({
 
   // sengaja dikasih event biar yang diambil value nya
   function handleChangeTab(event, newTabActive) {
-    // isi nya urutan angka array sesuai dengan yang di klik
-    console.log("isi newTabActive", newTabActive);
     setTabActive(newTabActive);
   }
 
@@ -322,7 +319,6 @@ export const AddContractAddendum = ({
       // url: `/adendum/contract-final-draft/${contract_id}/show`,
       url: `/adendum/contract-final-draft/d086f59c-838a-440f-a262-d8f21f8fc4e1/show`,
       onSuccess: (res) => {
-        console.log("isi respon 2.23", res.data);
         setFinalDraftData(res.data);
       },
     });
@@ -334,7 +330,6 @@ export const AddContractAddendum = ({
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
-        console.log("apakah menarik data", res?.data);
         setJsonData(res?.data);
         localStorage.setItem(
           "payment_method",
@@ -406,7 +401,6 @@ export const AddContractAddendum = ({
       type: "get",
       url: `/adendum/job-directors`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setauthorizedOfficial(res.data);
       },
     });
@@ -418,7 +412,6 @@ export const AddContractAddendum = ({
       type: "get",
       url: `/adendum/refference/get-vendor/${id}`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setSecondAuthorizedOfficial(res.data.officer_data);
         setPICData(res.data.pic_data);
         setAccountNumberBankData(res.data.bank_data);
@@ -432,7 +425,6 @@ export const AddContractAddendum = ({
       type: "get",
       url: `/adendum/direksi-pekerjaan`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setJobDirector(res.data);
       },
     });
@@ -495,8 +487,6 @@ export const AddContractAddendum = ({
   };
 
   const assignTabLists = (values) => {
-    console.log("isi values", values);
-
     TabLists.map((Tabitem) => {
       Tabitem.addendum = false;
     });
@@ -513,9 +503,6 @@ export const AddContractAddendum = ({
   };
 
   const [supportDocumentFetch, setSupportDocumentFetch] = useState();
-  useEffect(() => {
-    console.log("data sekarang", supportDocumentFetch);
-  }, [supportDocumentFetch]);
 
   const getAddContractDocument = async () => {
     fetch_api_sg({
@@ -528,8 +515,6 @@ export const AddContractAddendum = ({
       },
     });
   };
-
-  console.log("isi tablists", TabLists);
 
   const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
 
@@ -558,6 +543,7 @@ export const AddContractAddendum = ({
     },
   ];
 
+  console.log("isi location", location);
   return (
     <React.Fragment>
       <Toast />
@@ -741,7 +727,9 @@ export const AddContractAddendum = ({
             onChange={(e) => setFinalDraftSelectValue(e.target.value)}
           >
             <option value="Kontrak">Final Draft Kontrak</option>
-            <option value="Addendum">Final Draft Addendum</option>
+            {finalDraftData?.add_contracts.length > 0 && (
+              <option value="Addendum">Final Draft Addendum</option>
+            )}
           </select>
 
           {finalDraftSelectValue === "Kontrak" && (
@@ -845,7 +833,7 @@ export const AddContractAddendum = ({
                 marginTop: 14,
               }}
             >
-              <p>Perihal: {finalDraftData.add_contracts[0].perihal}</p>
+              <p>Perihal: {finalDraftData?.add_contracts[0]?.perihal}</p>
               <div
                 style={{
                   display: "flex",
@@ -872,12 +860,12 @@ export const AddContractAddendum = ({
                   }
                 >
                   {
-                    finalDraftData.add_contracts[0].final_draft[0]
-                      .body_file_name
+                    finalDraftData?.add_contracts[0]?.final_draft[0]
+                      ?.body_file_name
                   }
                 </a>
               </div>
-              {finalDraftData.add_contracts[0].final_draft[0].lampiran_data.map(
+              {finalDraftData?.add_contracts[0]?.final_draft[0]?.lampiran_data?.map(
                 (item) => {
                   return (
                     <div
@@ -905,7 +893,7 @@ export const AddContractAddendum = ({
                           )
                         }
                       >
-                        {item.lampiran_file_name}
+                        {item?.lampiran_file_name}
                       </a>
                     </div>
                   );
@@ -920,23 +908,25 @@ export const AddContractAddendum = ({
         </div>
       )}
 
-      <Link to={"/client/addendum-contract/draft/" + contract_id}>
-        <button
-          style={{
-            color: "white",
-            fontSize: 14,
-            fontWeight: "400",
-            padding: "8px 14px",
-            borderRadius: "8px",
-            backgroundColor: "#8c8a8a",
-            outline: "none",
-            border: "none",
-            marginBottom: 28,
-          }}
-        >
-          Lihat Detail Addendum
-        </button>
-      </Link>
+      {!location.pathname.includes("add-addendum") && (
+        <Link to={"/client/addendum-contract/draft/" + contract_id}>
+          <button
+            style={{
+              color: "white",
+              fontSize: 14,
+              fontWeight: "400",
+              padding: "8px 14px",
+              borderRadius: "8px",
+              backgroundColor: "#8c8a8a",
+              outline: "none",
+              border: "none",
+              marginBottom: 28,
+            }}
+          >
+            Lihat Detail Addendum
+          </button>
+        </Link>
+      )}
 
       <div
         style={{
