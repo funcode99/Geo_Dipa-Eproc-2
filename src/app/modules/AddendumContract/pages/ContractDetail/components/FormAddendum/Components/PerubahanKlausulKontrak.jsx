@@ -143,11 +143,19 @@ const PerubahanKlausulKontrak = ({
             <button
               type="button"
               disabled={
-                dataNewClause[fromWhere].bodyClauseData[0].after_clause_note ===
-                  "" ||
-                dataNewClause[fromWhere].bodyClauseData[0]
-                  .before_clause_note === "" ||
-                dataNewClause[fromWhere].bodyClauseData[0].clause_number === ""
+                !isDrafting
+                  ? dataNewClause[fromWhere].bodyClauseData[0]
+                      .after_clause_note === "" ||
+                    dataNewClause[fromWhere].bodyClauseData[0]
+                      .before_clause_note === "" ||
+                    dataNewClause[fromWhere].bodyClauseData[0].clause_number ===
+                      ""
+                  : dataNewClauseDrafting[fromWhere].bodyClauseData[0]
+                      .after_clause_note === "" ||
+                    dataNewClauseDrafting[fromWhere].bodyClauseData[0]
+                      .before_clause_note === "" ||
+                    dataNewClauseDrafting[fromWhere].bodyClauseData[0]
+                      .clause_number === ""
               }
               className="btn btn-primary text-white add-new-clause"
               onClick={showAddContract}
@@ -181,12 +189,21 @@ const PerubahanKlausulKontrak = ({
                     minWidth: 400,
                   }}
                 />
-                {dataNewClause[fromWhere].bodyClauseData.clause_number === "" &&
-                  isMandatory && (
-                    <p>
-                      <span style={{ color: "red" }}>*</span>Wajib Diisi
-                    </p>
-                  )}
+                {isDrafting
+                  ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                      .clause_number === "" &&
+                    isMandatory && (
+                      <p>
+                        <span style={{ color: "red" }}>*</span>Wajib Diisi
+                      </p>
+                    )
+                  : dataNewClause[fromWhere].bodyClauseData.clause_number ===
+                      "" &&
+                    isMandatory && (
+                      <p>
+                        <span style={{ color: "red" }}>*</span>Wajib Diisi
+                      </p>
+                    )}
               </div>
 
               {/* Pasal */}
@@ -230,13 +247,21 @@ const PerubahanKlausulKontrak = ({
                     }}
                     rows="4"
                   />
-                  {dataNewClause[fromWhere].bodyClauseData
-                    .before_clause_note === "" &&
-                    isMandatory && (
-                      <p>
-                        <span style={{ color: "red" }}>*</span>Wajib Diisi
-                      </p>
-                    )}
+                  {isDrafting
+                    ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                        .before_clause_note === "" &&
+                      isMandatory && (
+                        <p>
+                          <span style={{ color: "red" }}>*</span>Wajib Diisi
+                        </p>
+                      )
+                    : dataNewClause[fromWhere].bodyClauseData
+                        .before_clause_note === "" &&
+                      isMandatory && (
+                        <p>
+                          <span style={{ color: "red" }}>*</span>Wajib Diisi
+                        </p>
+                      )}
                 </div>
 
                 {/* pasal setelah addendum */}
@@ -271,13 +296,21 @@ const PerubahanKlausulKontrak = ({
                     }}
                     rows="4"
                   />
-                  {dataNewClause[fromWhere].bodyClauseData.after_clause_note ===
-                    "" &&
-                    isMandatory && (
-                      <p>
-                        <span style={{ color: "red" }}>*</span>Wajib Diisi
-                      </p>
-                    )}
+                  {isDrafting
+                    ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                        .after_clause_note === "" &&
+                      isMandatory && (
+                        <p>
+                          <span style={{ color: "red" }}>*</span>Wajib Diisi
+                        </p>
+                      )
+                    : dataNewClause[fromWhere].bodyClauseData
+                        .after_clause_note === "" &&
+                      isMandatory && (
+                        <p>
+                          <span style={{ color: "red" }}>*</span>Wajib Diisi
+                        </p>
+                      )}
                 </div>
               </div>
             </>
@@ -292,8 +325,8 @@ const PerubahanKlausulKontrak = ({
                   <div>
                     <Field
                       type="text"
-                      // name={`body_data[${index}].clause_number`}
-                      value={item.clause_number}
+                      name={`body_data[${index}].clause_number`}
+                      value={item?.clause_number}
                       onChange={(e) =>
                         changeOtherBodyClauseData(
                           index,
@@ -337,8 +370,8 @@ const PerubahanKlausulKontrak = ({
                       <Field
                         className="form-control"
                         as="textarea"
-                        // name={`body_data[${index}].before_clause_note`}
-                        value={item.before_clause_note}
+                        name={`body_data[${index}].before_clause_note`}
+                        value={item?.before_clause_note}
                         onChange={(e) =>
                           changeOtherBodyClauseData(
                             index,
@@ -354,7 +387,7 @@ const PerubahanKlausulKontrak = ({
                         }}
                         rows="4"
                       />
-                      {item.before_clause_note === "" &&
+                      {item?.before_clause_note === "" &&
                         index === 0 &&
                         isMandatory && (
                           <p>
@@ -376,7 +409,7 @@ const PerubahanKlausulKontrak = ({
                       <Field
                         className="form-control"
                         as="textarea"
-                        // name={`body_data[${index}].after_clause_note`}
+                        name={`body_data[${index}].after_clause_note`}
                         value={item.after_clause_note}
                         onChange={(e) =>
                           changeOtherBodyClauseData(
@@ -427,10 +460,15 @@ const PerubahanKlausulKontrak = ({
           <button
             type="button"
             disabled={
-              dataNewClause[fromWhere].attachmentClauseData[0]
-                .attachment_number === "" ||
-              dataNewClause[fromWhere].attachmentClauseData[0].clause_note ===
-                ""
+              isDrafting
+                ? dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
+                    .attachment_number === "" ||
+                  dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
+                    .clause_note === ""
+                : dataNewClause[fromWhere].attachmentClauseData[0]
+                    .attachment_number === "" ||
+                  dataNewClause[fromWhere].attachmentClauseData[0]
+                    .clause_note === ""
             }
             className="btn btn-primary text-white add-new-clause"
             onClick={showAddClause}
@@ -447,7 +485,7 @@ const PerubahanKlausulKontrak = ({
                   onChange={(e) =>
                     changeFieldData(index, e.target.value, "attachment_number")
                   }
-                  value={item.attachment_number}
+                  value={item?.attachment_number}
                   type="text"
                   placeholder="Masukkan Nomor Lampiran"
                   style={{
@@ -457,13 +495,11 @@ const PerubahanKlausulKontrak = ({
                   }}
                 />
 
-                {dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
-                  .attachment_number === "" &&
-                  isMandatory && (
-                    <p>
-                      <span style={{ color: "red" }}>*</span>Wajib Diisi
-                    </p>
-                  )}
+                {item?.attachment_number === "" && isMandatory && index === 0 && (
+                  <p>
+                    <span style={{ color: "red" }}>*</span>Wajib Diisi
+                  </p>
+                )}
 
                 <Field
                   className="form-control"
@@ -471,7 +507,7 @@ const PerubahanKlausulKontrak = ({
                   onChange={(e) =>
                     changeFieldData(index, e.target.value, "clause_note")
                   }
-                  value={item.clause_note}
+                  value={item?.clause_note}
                   type="text"
                   placeholder="Masukkan Lampiran Klausul"
                   style={{
@@ -480,13 +516,11 @@ const PerubahanKlausulKontrak = ({
                     minWidth: 400,
                   }}
                 />
-                {dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
-                  .clause_note === "" &&
-                  isMandatory && (
-                    <p>
-                      <span style={{ color: "red" }}>*</span>Wajib Diisi
-                    </p>
-                  )}
+                {item?.clause_note === "" && isMandatory && index === 0 && (
+                  <p>
+                    <span style={{ color: "red" }}>*</span>Wajib Diisi
+                  </p>
+                )}
               </>
             )
           )}
