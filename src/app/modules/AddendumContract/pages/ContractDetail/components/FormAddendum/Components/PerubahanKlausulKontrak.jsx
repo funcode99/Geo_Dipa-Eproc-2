@@ -15,6 +15,7 @@ const PerubahanKlausulKontrak = ({
   fromWhere,
   isMandatory = false,
   isDrafting = false,
+  isDisable,
 }) => {
   const [isFilled, setIsFilled] = useState(false);
 
