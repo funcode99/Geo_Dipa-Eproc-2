@@ -705,7 +705,7 @@ const EditableTable = ({
                     <CustomTableCell {...{ row, name: "subtotal", onChange }} />
                     <CustomTableCell {...{ row, name: "note", onChange }} />
                     <TableCell className={classes.selectTableCell}>
-                      {row.isEditMode ? (
+                      {row.isEditMode || isDisable ? (
                         <>
                           <IconButton
                             aria-label="done"

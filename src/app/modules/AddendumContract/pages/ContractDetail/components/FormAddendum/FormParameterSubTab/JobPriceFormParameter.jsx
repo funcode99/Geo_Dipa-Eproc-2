@@ -33,8 +33,8 @@ const JobPriceFormParameter = ({
   jsonData,
   dataNewClause,
   contract_id,
+  isDisable,
 }) => {
-  console.log("isi currencies", currencies.count);
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
@@ -401,6 +401,7 @@ const JobPriceFormParameter = ({
                       <button
                         type="button"
                         className="btn btn-success text-white"
+                        disabled={isDisable}
                       >
                         + Harga Pekerjaan By Excel
                       </button>
@@ -408,6 +409,7 @@ const JobPriceFormParameter = ({
                         type="button"
                         className="btn btn-primary text-white"
                         onClick={showAddDetail}
+                        disabled={isDisable}
                       >
                         + Tambah Rincian
                       </button>
@@ -415,6 +417,7 @@ const JobPriceFormParameter = ({
                   </div>
 
                   <EditableTable
+                    isDisable={isDisable}
                     openCloseAddDetail={openCloseAddDetail}
                     previousData={jsonData?.contract_items}
                     func={setItem}

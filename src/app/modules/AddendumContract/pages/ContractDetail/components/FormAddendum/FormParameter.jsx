@@ -89,12 +89,16 @@ const FormParameter = ({
   PICData,
   accountNumberBankData,
   dataNewClause,
+  tabLists,
 }) => {
-  // console.log("isi pihak kedua", secondAuthorizedOfficial);
-  // console.log("isi auth official", authorizedOfficial);
-  // console.log("isi direksi pekerjaan", jobDirector);
-  // console.log("isi pengawas pekerjaan", jobSupervisor);
-  // console.log("isi jsonData", jsonData);
+  const isDisabledParaPihak = tabLists[0]?.addendum;
+  const isDisabledHargaPekerjaan = tabLists[1]?.addendum;
+  const isDisabledJangkaWaktu = tabLists[2]?.addendum;
+  const isDisabledMetodePembayaran = tabLists[3]?.addendum;
+  const isDisabledDenda = tabLists[4]?.addendum;
+  const isDisabledJaminan = tabLists[5]?.addendum;
+  const isDisabledNoRek = tabLists[6]?.addendum;
+  const isDisabledLainnya = tabLists[7]?.addendum;
 
   const tableHeaderFine = [
     {
@@ -972,6 +976,7 @@ const FormParameter = ({
           {currentActiveTab === 0 && (
             <>
               <PartiesFormParameter
+                isDisable={isDisabledParaPihak}
                 jsonData={jsonData}
                 authorizedOfficialData={authorizedOfficial}
                 secondAuthorizedOfficial={secondAuthorizedOfficial}
@@ -988,6 +993,7 @@ const FormParameter = ({
           {currentActiveTab === 1 && (
             <>
               <JobPriceFormParameter
+                isDisable={!isDisabledHargaPekerjaan}
                 currencies={currencies}
                 headerData={headerData}
                 jsonData={jsonData}
@@ -1201,6 +1207,7 @@ const FormParameter = ({
                                         name={`${index}_down_payment_guarantee`}
                                         value={"SKPP"}
                                         checked={data.radio === "SKPP"}
+                                        disabled={!isDisabledJangkaWaktu}
                                       />
                                       <span>SKPP</span>
                                     </label>
@@ -1219,6 +1226,7 @@ const FormParameter = ({
                                         name={`${data.title}_down_payment_guarantee`}
                                         value={"SPMK"}
                                         checked={data.radio === "SPMK"}
+                                        disabled={!isDisabledJangkaWaktu}
                                       />
                                       <span>SPMK</span>
                                     </label>
@@ -1313,7 +1321,8 @@ const FormParameter = ({
                                             data.selectableStart) ||
                                           (data.title ===
                                             "Jangka Waktu Pelaksanaan Pekerjaan" &&
-                                            data.selectableStart)
+                                            data.selectableStart) ||
+                                          !isDisabledJangkaWaktu
                                         }
                                         onChange={(e) =>
                                           setTimePeriodAddendum((prev) => {
@@ -1372,6 +1381,7 @@ const FormParameter = ({
                                             }
                                           });
                                         }}
+                                        disabled={!isDisabledJangkaWaktu}
                                       />
                                     </div>
                                   </div>
@@ -1428,6 +1438,7 @@ const FormParameter = ({
                                             return newArr;
                                           })
                                         }
+                                        disabled={!isDisabledJangkaWaktu}
                                       />
                                       <span>SKPP</span>
                                     </div>
@@ -1453,6 +1464,7 @@ const FormParameter = ({
                                             return newArr;
                                           })
                                         }
+                                        disabled={!isDisabledJangkaWaktu}
                                       />
                                       <span>SPMK</span>
                                     </div>
@@ -1465,6 +1477,7 @@ const FormParameter = ({
                     </div>
 
                     <PerubahanKlausulKontrak
+                      isDisable={isDisabledJangkaWaktu}
                       subTitle={"B"}
                       title={"Jangka Waktu"}
                       fromWhere={"time_period"}
@@ -1665,6 +1678,7 @@ const FormParameter = ({
                             name="payment_addendum"
                             onClick={() => setAddendumPaymentMethod("full")}
                             checked={addendumPaymentMethod === "full"}
+                            disabled={!isDisabledMetodePembayaran}
                           />
                           Full Pembayaran
                         </label>
@@ -1682,6 +1696,7 @@ const FormParameter = ({
                               setAddendumPaymentMethod("gradually")
                             }
                             checked={addendumPaymentMethod === "gradually"}
+                            disabled={!isDisabledMetodePembayaran}
                           />
                           Pembayaran Bertahap
                         </label>
@@ -1717,6 +1732,7 @@ const FormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisabledMetodePembayaran}
                                   >
                                     Hapus
                                   </button>
@@ -1748,7 +1764,8 @@ const FormParameter = ({
                                         )
                                       }
                                       disabled={
-                                        addendumPaymentMethod !== "gradually"
+                                        addendumPaymentMethod !== "gradually" ||
+                                        !isDisabledMetodePembayaran
                                       }
                                     />
                                   </div>
@@ -1775,7 +1792,8 @@ const FormParameter = ({
                                         )
                                       }
                                       disabled={
-                                        addendumPaymentMethod !== "gradually"
+                                        addendumPaymentMethod !== "gradually" ||
+                                        !isDisabledMetodePembayaran
                                       }
                                     ></textarea>
                                   </div>
@@ -1796,6 +1814,7 @@ const FormParameter = ({
                             type="button"
                             className="btn btn-primary mx-1"
                             onClick={showAddPayment}
+                            disabled={!isDisabledMetodePembayaran}
                           >
                             Tambah
                           </button>
@@ -1805,6 +1824,7 @@ const FormParameter = ({
                   </div>
 
                   <PerubahanKlausulKontrak
+                    isDisable={isDisabledMetodePembayaran}
                     subTitle={"B"}
                     title={"Metode Pembayaran"}
                     fromWhere={"payment_method"}
@@ -2022,6 +2042,7 @@ const FormParameter = ({
                     </div>
 
                     <PerubahanKlausulKontrak
+                      isDisable={isDisabledDenda}
                       subTitle={"B"}
                       title={"Denda"}
                       fromWhere={"fine"}
@@ -2147,6 +2168,7 @@ const FormParameter = ({
                                         type="radio"
                                         name={`${index}_down_payment_guarantee`}
                                         checked={data.radio == "1"}
+                                        disabled={!isDisabledJaminan}
                                       />
                                       <span>Ya</span>
                                     </label>
@@ -2164,6 +2186,7 @@ const FormParameter = ({
                                         type="radio"
                                         name={`${index}_down_payment_guarantee`}
                                         checked={data.radio == "0"}
+                                        disabled={!isDisabledJaminan}
                                       />
                                       <span>Tidak</span>
                                     </label>
@@ -2363,6 +2386,7 @@ const FormParameter = ({
                                             return a;
                                           });
                                         }}
+                                        disabled={!isDisabledJaminan}
                                       />
                                       <span>Ya</span>
                                     </label>
@@ -2391,6 +2415,7 @@ const FormParameter = ({
                                             return a;
                                           });
                                         }}
+                                        disabled={!isDisabledJaminan}
                                       />
                                       <span>Tidak</span>
                                     </label>
@@ -2430,7 +2455,7 @@ const FormParameter = ({
                                           inputDataGuarantee[data.nameTitle] ===
                                           "0"
                                             ? true
-                                            : false
+                                            : false || !isDisabledJaminan
                                         }
                                         name={data.nameStart}
                                         onChange={(e) => {
@@ -2475,7 +2500,7 @@ const FormParameter = ({
                                           inputDataGuarantee[data.nameTitle] ===
                                           "0"
                                             ? true
-                                            : false
+                                            : false || !isDisabledJaminan
                                         }
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
@@ -2587,6 +2612,7 @@ const FormParameter = ({
                       </div>
 
                       <PerubahanKlausulKontrak
+                        isDisable={isDisabledJaminan}
                         subTitle={"B"}
                         title={"Jaminan"}
                         fromWhere={"guarantee"}
@@ -2810,6 +2836,7 @@ const FormParameter = ({
                               >
                                 <span>Nomor rekening</span>
                                 <ReactSelect
+                                  disabled={!isDisabledNoRek}
                                   data={jsonData?.data_bank}
                                   func={changeDataBankIndex}
                                   labelName={`account_number`}
@@ -2970,6 +2997,7 @@ const FormParameter = ({
                                     padding: 8,
                                     width: "100%",
                                   }}
+                                  disabled={!isDisabledNoRek}
                                   onChange={(event) => {
                                     console.log(
                                       "isi currentTarget",
@@ -2989,6 +3017,7 @@ const FormParameter = ({
                       </div>
 
                       <PerubahanKlausulKontrak
+                        isDisable={isDisabledNoRek}
                         subTitle={"B"}
                         title={"Nomor Rekening"}
                         fromWhere={"account_number"}
@@ -3021,6 +3050,7 @@ const FormParameter = ({
                 {({ values }) => (
                   <Form>
                     <PerubahanKlausulKontrak
+                      isDisable={isDisabledLainnya}
                       subTitle={"A"}
                       title={"Lainnya"}
                       fromWhere={"other"}

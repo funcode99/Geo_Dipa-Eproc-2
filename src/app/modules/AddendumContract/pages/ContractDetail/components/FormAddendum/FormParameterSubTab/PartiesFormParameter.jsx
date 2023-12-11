@@ -22,6 +22,7 @@ const PartiesFormParameter = ({
   jobSupervisor2,
   contract_id,
   dataNewClause,
+  isDisable,
 }) => {
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
@@ -49,7 +50,6 @@ const PartiesFormParameter = ({
   };
 
   const submitFormParameterContractParties = (values) => {
-    console.log("isi submit values parties", values);
     submitParties(
       {
         add_contract_id: localStorage.getItem("add_contract_id"),
@@ -198,7 +198,6 @@ const PartiesFormParameter = ({
   };
   const changeDataJobDirectorDynamic = (num, arrIndex, data, type) => {
     // berjalan sebanyak banyak nya fungsi yang dipanggil dari react select
-    // console.log("fungsi berjalan di awal");
 
     if (!isSubmit) {
       setPlaceman((placeman) => {
@@ -239,13 +238,11 @@ const PartiesFormParameter = ({
   };
 
   // di option data nya sudah di hapus, tapi di select nya masih belum
-  useEffect(() => {
-    console.log("job Director sekarang", jobDirector);
-  }, [jobDirector]);
+  // useEffect(() => {
+  //   console.log("job Director sekarang", jobDirector);
+  // }, [jobDirector]);
 
   const changeDataSecondAuthorizedOfficial = (num, unused, data) => {
-    console.log("isi data data", data);
-
     setPlaceman((placeman) => {
       let newArr = [...placeman?.secondAuthorizedOfficial];
       newArr[0]["currentSelectIndex"] = num;
@@ -539,7 +536,6 @@ const PartiesFormParameter = ({
           attachment_data: dataNewClause.parties.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("isi values parties", values);
           submitFormParameterContractParties(values);
         }}
       >
@@ -1125,6 +1121,7 @@ const PartiesFormParameter = ({
                           data={authorizedOfficial}
                           func={changeDataauthorizedOfficial}
                           labelName={`authorized_official_username`}
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -1471,6 +1468,7 @@ const PartiesFormParameter = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddWorkDirector}
+                        disabled={!isDisable}
                       >
                         Tambah
                       </button>
@@ -1512,6 +1510,7 @@ const PartiesFormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisable}
                                   >
                                     Hapus
                                   </button>
@@ -1525,6 +1524,7 @@ const PartiesFormParameter = ({
                                   currentSelect={data.usernameSelectIndex}
                                   type={"username"}
                                   component={ReactSelect}
+                                  disabled={!isDisable}
                                 />
                               </div>
 
@@ -1609,6 +1609,7 @@ const PartiesFormParameter = ({
                                     currentSelect={data.facilityNameSelectIndex}
                                     type={"facilityName"}
                                     component={ReactSelect}
+                                    disabled={!isDisable}
                                   />
                                 </label>
                               </div>
@@ -1700,6 +1701,7 @@ const PartiesFormParameter = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddWorkSupervisor}
+                        disabled={!isDisable}
                       >
                         Tambah
                       </button>
@@ -1736,6 +1738,7 @@ const PartiesFormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisable}
                                   >
                                     Hapus
                                   </button>
@@ -1747,6 +1750,7 @@ const PartiesFormParameter = ({
                                   onChange={(e) =>
                                     changeDataPosition(index, e.target.value)
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -1770,6 +1774,7 @@ const PartiesFormParameter = ({
                                   currentSelect={data.currentIndex}
                                   // type={"jobSupervisor"}
                                   component={ReactSelect}
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2397,6 +2402,7 @@ const PartiesFormParameter = ({
                           func={changeDataSecondAuthorizedOfficial}
                           labelName={"full_name"}
                           component={ReactSelect}
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2439,6 +2445,7 @@ const PartiesFormParameter = ({
                               "Address"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2481,6 +2488,7 @@ const PartiesFormParameter = ({
                               "FAX"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2511,6 +2519,7 @@ const PartiesFormParameter = ({
                                 "SK ASSIGN NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2523,6 +2532,7 @@ const PartiesFormParameter = ({
                                 "SK ASSIGN DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2547,6 +2557,7 @@ const PartiesFormParameter = ({
                               "NOTARY NAME"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2577,6 +2588,7 @@ const PartiesFormParameter = ({
                                 "ACT NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2589,6 +2601,7 @@ const PartiesFormParameter = ({
                                 "ACT DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2620,6 +2633,7 @@ const PartiesFormParameter = ({
                                 "SK KEMENKUMHAM NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2632,6 +2646,7 @@ const PartiesFormParameter = ({
                                 "SK KEMENKUMHAM DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2653,6 +2668,7 @@ const PartiesFormParameter = ({
                           labelName={"email"}
                           // currentSelect={data.usernameSelectIndex}
                           component={ReactSelect}
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2684,6 +2700,7 @@ const PartiesFormParameter = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddSecondWorkDirector}
+                        disabled={!isDisable}
                       >
                         Tambah
                       </button>
@@ -2720,6 +2737,7 @@ const PartiesFormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisable}
                                   >
                                     Hapus
                                   </button>
@@ -2736,6 +2754,7 @@ const PartiesFormParameter = ({
                                       "Position"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2760,6 +2779,7 @@ const PartiesFormParameter = ({
                                       "Address"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2784,6 +2804,7 @@ const PartiesFormParameter = ({
                                       "Phone"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2808,6 +2829,7 @@ const PartiesFormParameter = ({
                                       "Fax"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2842,6 +2864,7 @@ const PartiesFormParameter = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddSecondWorkSupervisor}
+                        disabled={!isDisable}
                       >
                         Tambah
                       </button>
@@ -2878,6 +2901,7 @@ const PartiesFormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisable}
                                   >
                                     Hapus
                                   </button>
@@ -2893,6 +2917,7 @@ const PartiesFormParameter = ({
                                       "Position"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2917,6 +2942,7 @@ const PartiesFormParameter = ({
                                       "Address"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2941,6 +2967,7 @@ const PartiesFormParameter = ({
                                       "Phone"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2965,6 +2992,7 @@ const PartiesFormParameter = ({
                                       "Fax"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2977,6 +3005,7 @@ const PartiesFormParameter = ({
             </div>
 
             <PerubahanKlausulKontrak
+              isDisable={isDisable}
               subTitle={"C"}
               title={"Para Pihak"}
               showAddClause={showAddClause}
