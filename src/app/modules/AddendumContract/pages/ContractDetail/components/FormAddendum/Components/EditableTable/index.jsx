@@ -83,6 +83,7 @@ const EditableTable = ({
   func,
   grandTotal,
   jobPriceCurrent,
+  isDisable,
 }) => {
   let jobPriceData = jobPriceCurrent;
   console.log("isi jobPriceData", jobPriceData);
