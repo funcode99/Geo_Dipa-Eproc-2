@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
-import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
-// FieldArray, ErrorMessage
+import { connect } from "react-redux";
 import { Formik, Field, Form } from "formik";
+import React, { useState, useEffect } from "react";
 import { ReactSelect } from "percobaan/ReactSelect";
-import { submitParties } from "app/modules/AddendumContract/service/AddendumContractCrudService";
-import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
+import NewClause from "../Components/Modal/NewClause";
 import NewWorkDirector from "../Components/Modal/Parties/NewWorkDirector";
 import NewWorkSupervisor from "../Components/Modal/Parties/NewWorkSupervisor";
+import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import NewSecondWorkDirector from "../Components/Modal/Parties/NewSecondWorkDirector";
 import NewSecondWorkSupervisor from "../Components/Modal/Parties/NewSecondWorkSupervisor";
-import NewClause from "../Components/Modal/NewClause";
-import { connect } from "react-redux";
+import { submitParties } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const PartiesFormParameter = ({
   jsonData,
@@ -111,7 +110,6 @@ const PartiesFormParameter = ({
         phone_number: "",
         fax: "",
         sk_assign_number: "",
-        // value input gaboleh null
         sk_assign_date: "",
         notary_name: "",
         act_number: "",
@@ -119,7 +117,6 @@ const PartiesFormParameter = ({
         sk_kemenkumham_number: "",
         sk_kemenkumham_date: "",
         PICEmail: "",
-        // party_2_pic_email: "",
       },
     ],
     workDirector: [
@@ -211,8 +208,6 @@ const PartiesFormParameter = ({
           newArr[arrIndex]["party_1_job_director_position"] =
             data[num]?.position_name;
 
-          // jobDirector.splice(num, 1);
-
           return {
             ...placeman,
             workDirector: newArr,
@@ -236,11 +231,6 @@ const PartiesFormParameter = ({
       setIsSubmit(false);
     }
   };
-
-  // di option data nya sudah di hapus, tapi di select nya masih belum
-  // useEffect(() => {
-  //   console.log("job Director sekarang", jobDirector);
-  // }, [jobDirector]);
 
   const changeDataSecondAuthorizedOfficial = (num, unused, data) => {
     setPlaceman((placeman) => {
@@ -543,7 +533,7 @@ const PartiesFormParameter = ({
           <Form>
             {/* Pihak 1 + 2 */}
             <div
-              className="parties-wrapper"
+              className="parties-wrapper bg-white"
               style={{
                 border: 1,
                 borderStyle: "solid",
@@ -794,7 +784,7 @@ const PartiesFormParameter = ({
                           -
                           <input
                             type="date"
-                            value={`${jsonData?.contract_party?.party_1_notary_act_autorized_no}`}
+                            value={`${jsonData?.contract_party?.party_1_notary_act_autorized_date}`}
                             className="form-control"
                             style={{
                               backgroundColor: "#e8f4fb",
@@ -832,7 +822,7 @@ const PartiesFormParameter = ({
                           -
                           <input
                             type="date"
-                            value={`${jsonData?.contract_party?.party_1_autorized_kemenkumham_no}`}
+                            value={`${jsonData?.contract_party?.party_1_autorized_kemenkumham_date}`}
                             className="form-control"
                             style={{
                               backgroundColor: "#e8f4fb",
@@ -1143,14 +1133,6 @@ const PartiesFormParameter = ({
                           value={
                             authorizedOfficial[authorizedOfficialIndex]
                               ?.authorized_official_name
-                            // :
-                            // setAuthorizedOfficial((previous) => {
-                            //     let newArr = [...previous];
-                            //     newArr[
-                            //       authorizedOfficialIndex
-                            //     ].authorized_official_name = "kosong";
-                            //     return newArr;
-                            //   })
                           }
                           disabled
                         />
@@ -1271,17 +1253,8 @@ const PartiesFormParameter = ({
                           <input
                             type="text"
                             value={
-                              // authorizedOfficial
-                              //   ?
                               authorizedOfficial[authorizedOfficialIndex]
                                 ?.assignment_deed_no
-                              // : setAuthorizedOfficial((previous) => {
-                              //     let newArr = [...previous];
-                              //     newArr[
-                              //       authorizedOfficialIndex
-                              //     ].assignment_deed_no = "kosong";
-                              //     return newArr;
-                              //   })
                             }
                             className="form-control"
                             style={{
@@ -1293,18 +1266,8 @@ const PartiesFormParameter = ({
                           <input
                             type="date"
                             value={
-                              // authorizedOfficial[authorizedOfficialIndex]
-                              //       ?.assignment_deed_date
-                              //   ?
                               authorizedOfficial[authorizedOfficialIndex]
                                 ?.assignment_deed_date
-                              // : setAuthorizedOfficial((previous) => {
-                              //     let newArr = [...previous];
-                              //     newArr[
-                              //       authorizedOfficialIndex
-                              //     ].assignment_deed_date = "kosong";
-                              //     return newArr;
-                              //   })
                             }
                             className="form-control"
                             style={{
@@ -1708,8 +1671,6 @@ const PartiesFormParameter = ({
                     </div>
 
                     {/* Pengawas Pekerjaan Pihak Pertama */}
-
-                    {/* Pengawas Pekerjaan Pihak Pertama */}
                     {placeman.workSupervisor &&
                       placeman.workSupervisor.map((data, index) => {
                         return (
@@ -1884,26 +1845,6 @@ const PartiesFormParameter = ({
                         Pejabat berwenang
                       </h1>
                     </div>
-
-                    {/* <div>
-                              <label
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  rowGap: 4,
-                                  height: 65.5,
-                                }}
-                              >
-                                <span>Username</span>
-                                <input
-                                  type="text"
-                                  value={`${jsonData?.contract_party?.party_2_contract_signature_username}`}
-                                  className="form-control"
-                                  style={{ backgroundColor: "#e8f4fb" }}
-                                />
-                              </label>
-                            </div> */}
-
                     <div>
                       <label
                         style={{
@@ -3021,8 +2962,6 @@ const PartiesFormParameter = ({
     </>
   );
 };
-
-// export default PartiesFormParameter;
 
 const mapState = (state) => ({
   dataNewClause: state.addendumContract.dataNewClause,

@@ -76,7 +76,7 @@ const PerubahanKlausulKontrak = ({
     <>
       {/* Klausul Perubahan */}
       <div
-        className="clause-change-wrapper"
+        className="clause-change-wrapper bg-white"
         style={{
           display: "flex",
           flexDirection: "column",
