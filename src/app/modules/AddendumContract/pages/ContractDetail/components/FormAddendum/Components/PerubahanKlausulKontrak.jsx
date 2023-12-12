@@ -16,16 +16,6 @@ const PerubahanKlausulKontrak = ({
   isMandatory = false,
   isDrafting = false,
 }) => {
-  const [isFilled, setIsFilled] = useState(false);
-
-  useEffect(() => {
-    setIsFilled(() => {
-      return dataNewClause[fromWhere].attachmentClauseData.some((item) => {
-        return item.attachment_number !== "" && item.clause_note !== "";
-      });
-    });
-  }, [dataNewClause]);
-
   const dispatch = useDispatch();
   console.log("current fromWhere", fromWhere);
 

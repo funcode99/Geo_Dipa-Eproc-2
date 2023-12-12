@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import {
   getSorting,
@@ -19,8 +19,36 @@ import {
 } from "@material-ui/core";
 import { submitFine } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import ButtonAction from "app/components/buttonAction/ButtonAction";
+import { useDispatch, connect } from "react-redux";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
-const Denda = ({ fineCurrent, jsonData, contract_id, dataNewClause }) => {
+const Denda = ({
+  fineCurrent,
+  jsonData,
+  contract_id,
+  dataNewClause,
+  fromWhere,
+}) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (fineCurrent !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: fineCurrent.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: fromWhere,
+      });
+    }
+    if (fineCurrent !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: fineCurrent.body_clause_data[0] || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: fromWhere,
+      });
+    }
+  }, []);
+
   function handleChangePage(newPage) {
     setPage(newPage);
   }

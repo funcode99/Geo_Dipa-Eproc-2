@@ -506,6 +506,16 @@ const DraftAddendumPage = ({
     // kalo dipanggil bisa
     // getContractById(draft_id);
     getDataContractHeader();
+    const refresh = () => {
+      let isRefresh = localStorage.getItem("isRefresh");
+      console.log("isi refresh", isRefresh);
+
+      if (isRefresh === "false") {
+        localStorage.setItem("isRefresh", true);
+        window.location.reload();
+      }
+    };
+    refresh();
     // getauthorizedOfficial();
     // getJobDirector();
     // getJobSupervisor();
@@ -1794,6 +1804,7 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              fromWhere={"fine"}
             />
           )}
           {tabActive === 6 && (

@@ -18,16 +18,16 @@ import { useDispatch, connect } from "react-redux";
 export const Dashboard = ({}) => {
   // const dispatch = useDispatch();
 
-  let isRefresh = localStorage.getItem("isRefresh");
-  console.log("isi refresh", isRefresh);
+  // let isRefresh = localStorage.getItem("isRefresh");
+  // console.log("isi refresh", isRefresh);
 
-  if (isRefresh === "false") {
-    // dispatch({
-    //   type: actionTypes.SetRefresh,
-    // });
-    localStorage.setItem("isRefresh", true);
-    window.location.reload();
-  }
+  // if (isRefresh === "false") {
+  // dispatch({
+  //   type: actionTypes.SetRefresh,
+  // });
+  // localStorage.setItem("isRefresh", true);
+  // window.location.reload();
+  // }
 
   const uiService = useHtmlClassService();
   const layoutProps = useMemo(() => {
