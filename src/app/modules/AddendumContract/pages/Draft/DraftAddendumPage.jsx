@@ -293,6 +293,15 @@ const DraftAddendumPage = ({
     getJobSupervisor();
     // setInitialSubmitItems();
     // getAddContractDocument();
+    const refresh = () => {
+      let isRefresh = localStorage.getItem("isRefresh");
+      console.log("isi refresh", isRefresh);
+      if (isRefresh === "false") {
+        localStorage.setItem("isRefresh", true);
+        window.location.reload();
+      }
+    };
+    refresh();
   }, []);
 
   const actionButton = (
@@ -406,7 +415,6 @@ const DraftAddendumPage = ({
       id: "harga-pekerjaan",
       label: "Denda",
     },
-
     {
       id: "jangka-waktu",
       label: "Jaminan",
@@ -1761,6 +1769,7 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              fromWhere={"fine"}
             />
           )}
           {tabActive === 6 && (

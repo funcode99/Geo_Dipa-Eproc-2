@@ -828,696 +828,115 @@ export const reducer = persistReducer(
       }
 
       case actionTypes.SetDraftingClause: {
-        if (action.fromWhere === "parties") {
-          // menambah lampiran baru
-          if (action.fieldType === "clause_attachment") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                parties: {
-                  ...state.dataNewClauseDrafting.parties,
-                  attachmentClauseData: [
-                    ...state.dataNewClauseDrafting.parties.attachmentClauseData,
-                    action.payload,
-                  ],
-                },
+        if (action.fieldType === "refill_body_clause_data") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                bodyClauseData: action.payload,
               },
-            };
-          }
-          if (action.fieldType === "attachment_number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                parties: {
-                  ...state.dataNewClauseDrafting.parties,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause_note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                parties: {
-                  ...state.dataNewClauseDrafting.parties,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                parties: {
-                  ...state.dataNewClauseDrafting.parties,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.parties.bodyClauseData,
-                    clause_number: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "before clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                parties: {
-                  ...state.dataNewClauseDrafting.parties,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.parties.bodyClauseData,
-                    before_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "after clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                parties: {
-                  ...state.dataNewClauseDrafting.parties,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.parties.bodyClauseData,
-                    after_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          }
+            },
+          };
         }
-        if (action.fromWhere === "job_price") {
-          if (action.fieldType === "clause_attachment") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                job_price: {
-                  ...state.dataNewClauseDrafting.job_price,
-                  attachmentClauseData: [
-                    ...state.dataNewClauseDrafting.job_price
-                      .attachmentClauseData,
-                    action.payload,
-                  ],
-                },
+        if (action.fieldType === "refill_attachment_clause_data") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                attachmentClauseData: action.payload,
               },
-            };
-          }
-          if (action.fieldType === "attachment_number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                job_price: {
-                  ...state.dataNewClauseDrafting.job_price,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause_note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                job_price: {
-                  ...state.dataNewClauseDrafting.job_price,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                job_price: {
-                  ...state.dataNewClauseDrafting.job_price,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.job_price.bodyClauseData,
-                    clause_number: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "before clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                job_price: {
-                  ...state.dataNewClauseDrafting.job_price,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.job_price.bodyClauseData,
-                    before_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "after clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                job_price: {
-                  ...state.dataNewClauseDrafting.job_price,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.job_price.bodyClauseData,
-                    after_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          }
+            },
+          };
         }
-        if (action.fromWhere === "time_period") {
-          if (action.fieldType === "clause_attachment") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                time_period: {
-                  ...state.dataNewClauseDrafting.time_period,
-                  attachmentClauseData: [
-                    ...state.dataNewClauseDrafting.time_period
-                      .attachmentClauseData,
-                    action.payload,
-                  ],
-                },
+        if (action.fieldType === "attachment_number") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                attachmentClauseData: action.payload,
               },
-            };
-          }
-          if (action.fieldType === "attachment_number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                time_period: {
-                  ...state.dataNewClauseDrafting.time_period,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause_note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                time_period: {
-                  ...state.dataNewClauseDrafting.time_period,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-
-          if (action.fieldType === "clause number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                time_period: {
-                  ...state.dataNewClauseDrafting.time_period,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.time_period.bodyClauseData,
-                    clause_number: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "before clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                time_period: {
-                  ...state.dataNewClauseDrafting.time_period,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.time_period.bodyClauseData,
-                    before_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "after clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                time_period: {
-                  ...state.dataNewClauseDrafting.time_period,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.time_period.bodyClauseData,
-                    after_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          }
+            },
+          };
         }
-        if (action.fromWhere === "payment_method") {
-          if (action.fieldType === "clause_attachment") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                payment_method: {
-                  ...state.dataNewClauseDrafting.payment_method,
-                  attachmentClauseData: [
-                    ...state.dataNewClauseDrafting.payment_method
-                      .attachmentClauseData,
-                    action.payload,
-                  ],
-                },
+        if (action.fieldType === "clause_attachment") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                attachmentClauseData: [
+                  ...state.dataNewClauseDrafting[action.fromWhere]
+                    .attachmentClauseData,
+                  action.payload,
+                ],
               },
-            };
-          }
-          if (action.fieldType === "attachment_number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                payment_method: {
-                  ...state.dataNewClauseDrafting.payment_method,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause_note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                payment_method: {
-                  ...state.dataNewClauseDrafting.payment_method,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                payment_method: {
-                  ...state.dataNewClauseDrafting.payment_method,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.payment_method
-                      .bodyClauseData,
-                    clause_number: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "before clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                payment_method: {
-                  ...state.dataNewClauseDrafting.payment_method,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.payment_method
-                      .bodyClauseData,
-                    before_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "after clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                payment_method: {
-                  ...state.dataNewClauseDrafting.payment_method,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.payment_method
-                      .bodyClauseData,
-                    after_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          }
+            },
+          };
         }
-        if (action.fromWhere === "fine") {
-          if (action.fieldType === "clause_attachment") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                fine: {
-                  ...state.dataNewClauseDrafting.fine,
-                  attachmentClauseData: [
-                    ...state.dataNewClauseDrafting.fine.attachmentClauseData,
-                    action.payload,
-                  ],
-                },
+        if (action.fieldType === "clause_note") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                attachmentClauseData: action.payload,
               },
-            };
-          }
-          if (action.fieldType === "attachment_number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                fine: {
-                  ...state.dataNewClauseDrafting.fine,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause_note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                fine: {
-                  ...state.dataNewClauseDrafting.fine,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                fine: {
-                  ...state.dataNewClauseDrafting.fine,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.fine.bodyClauseData,
-                    clause_number: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "before clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                fine: {
-                  ...state.dataNewClauseDrafting.fine,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.fine.bodyClauseData,
-                    before_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "after clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                fine: {
-                  ...state.dataNewClauseDrafting.fine,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.fine.bodyClauseData,
-                    after_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          }
+            },
+          };
         }
-        if (action.fromWhere === "guarantee") {
-          if (action.fieldType === "clause_attachment") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                guarantee: {
-                  ...state.dataNewClauseDrafting.guarantee,
-                  attachmentClauseData: [
-                    ...state.dataNewClauseDrafting.guarantee
-                      .attachmentClauseData,
-                    action.payload,
-                  ],
+        if (action.fieldType === "clause number") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                bodyClauseData: {
+                  ...state.dataNewClauseDrafting[action.fromWhere]
+                    .bodyClauseData,
+                  clause_number: action.payload,
                 },
               },
-            };
-          }
-          if (action.fieldType === "attachment_number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                guarantee: {
-                  ...state.dataNewClauseDrafting.guarantee,
-                  attachmentClauseData: action.payload,
+            },
+          };
+        } else if (action.fieldType === "before clause note") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                bodyClauseData: {
+                  ...state.dataNewClauseDrafting[action.fromWhere]
+                    .bodyClauseData,
+                  before_clause_note: action.payload,
                 },
               },
-            };
-          }
-          if (action.fieldType === "clause_note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                guarantee: {
-                  ...state.dataNewClauseDrafting.guarantee,
-                  attachmentClauseData: action.payload,
+            },
+          };
+        } else if (action.fieldType === "after clause note") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                bodyClauseData: {
+                  ...state.dataNewClauseDrafting[action.fromWhere]
+                    .bodyClauseData,
+                  after_clause_note: action.payload,
                 },
               },
-            };
-          }
-          if (action.fieldType === "clause number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                guarantee: {
-                  ...state.dataNewClauseDrafting.guarantee,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.guarantee.bodyClauseData,
-                    clause_number: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "before clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                guarantee: {
-                  ...state.dataNewClauseDrafting.guarantee,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.guarantee.bodyClauseData,
-                    before_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "after clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                guarantee: {
-                  ...state.dataNewClauseDrafting.guarantee,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.guarantee.bodyClauseData,
-                    after_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          }
-        }
-        if (action.fromWhere === "account_number") {
-          if (action.fieldType === "clause_attachment") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                account_number: {
-                  ...state.dataNewClauseDrafting.account_number,
-                  attachmentClauseData: [
-                    ...state.dataNewClauseDrafting.account_number
-                      .attachmentClauseData,
-                    action.payload,
-                  ],
-                },
-              },
-            };
-          }
-          if (action.fieldType === "attachment_number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                account_number: {
-                  ...state.dataNewClauseDrafting.account_number,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause_note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                account_number: {
-                  ...state.dataNewClauseDrafting.account_number,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                account_number: {
-                  ...state.dataNewClauseDrafting.account_number,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.account_number
-                      .bodyClauseData,
-                    clause_number: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "before clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                account_number: {
-                  ...state.dataNewClauseDrafting.account_number,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.account_number
-                      .bodyClauseData,
-                    before_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          } else if (action.fieldType === "after clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                account_number: {
-                  ...state.dataNewClauseDrafting.account_number,
-                  bodyClauseData: {
-                    ...state.dataNewClauseDrafting.account_number
-                      .bodyClauseData,
-                    after_clause_note: action.payload,
-                  },
-                },
-              },
-            };
-          }
-        }
-        if (action.fromWhere === "other") {
-          if (action.fieldType === "contract_body") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                other: {
-                  ...state.dataNewClauseDrafting.other,
-                  bodyClauseData: [
-                    ...state.dataNewClauseDrafting.other.bodyClauseData,
-                    action.payload,
-                  ],
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause_attachment") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                other: {
-                  ...state.dataNewClauseDrafting.other,
-                  attachmentClauseData: [
-                    ...state.dataNewClauseDrafting.other.attachmentClauseData,
-                    action.payload,
-                  ],
-                },
-              },
-            };
-          }
-          if (action.fieldType === "attachment_number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                other: {
-                  ...state.dataNewClauseDrafting.other,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause_note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                other: {
-                  ...state.dataNewClauseDrafting.other,
-                  attachmentClauseData: action.payload,
-                },
-              },
-            };
-          }
-          if (action.fieldType === "clause number") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                other: {
-                  ...state.dataNewClauseDrafting.other,
-                  bodyClauseData: action.payload,
-                },
-              },
-            };
-          } else if (action.fieldType === "before clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                other: {
-                  ...state.dataNewClauseDrafting.other,
-                  bodyClauseData: action.payload,
-                },
-              },
-            };
-          } else if (action.fieldType === "after clause note") {
-            return {
-              ...state,
-              dataNewClauseDrafting: {
-                ...state.dataNewClauseDrafting,
-                other: {
-                  ...state.dataNewClauseDrafting.other,
-                  bodyClauseData: action.payload,
-                },
-              },
-            };
-          }
+            },
+          };
         }
       }
 

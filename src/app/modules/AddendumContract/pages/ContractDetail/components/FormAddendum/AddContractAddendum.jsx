@@ -302,6 +302,17 @@ export const AddContractAddendum = ({
     setInitialSubmitItems();
     getFinalDraftData();
     getAddContractDocument();
+    // setTimeout(, 1);
+    const refresh = () => {
+      let isRefresh = localStorage.getItem("isRefresh");
+      console.log("isi refresh", isRefresh);
+
+      if (isRefresh === "false") {
+        localStorage.setItem("isRefresh", true);
+        window.location.reload();
+      }
+    };
+    refresh();
     // eslint-disable-next-line
   }, []);
 
