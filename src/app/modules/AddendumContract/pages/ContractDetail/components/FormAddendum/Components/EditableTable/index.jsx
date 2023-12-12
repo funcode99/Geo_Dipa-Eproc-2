@@ -6,10 +6,11 @@ import CollapsibleRow from "../CollapsibleRow";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import { Formik, Field, Form } from "formik";
 import ButtonAction from "app/components/buttonAction/ButtonAction";
-import CurrencyInput from "react-currency-input-field";
 
 import IconButton from "@material-ui/core/IconButton";
 import DoneIcon from "@material-ui/icons/DoneAllTwoTone";
+
+import CurrencyInput from "react-currency-input-field";
 import RevertIcon from "@material-ui/icons/NotInterestedOutlined";
 
 import {
@@ -694,7 +695,11 @@ const EditableTable = ({
                   <TableRow key={row.id}>
                     <TableCell>{index + 1}</TableCell>
                     <CustomTableCell
-                      {...{ row, name: "product_name", onChange }}
+                      {...{
+                        row,
+                        name: "product_title",
+                        onChange,
+                      }}
                     />
                     <CustomTableCell
                       {...{ row, name: "qty_total", onChange }}

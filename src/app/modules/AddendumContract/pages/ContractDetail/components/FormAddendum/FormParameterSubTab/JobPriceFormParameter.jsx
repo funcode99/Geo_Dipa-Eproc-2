@@ -296,12 +296,11 @@ const JobPriceFormParameter = ({
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
+                      // product name nya ada disini, cukup disini aja
                       .map((row, index) => (
                         <TableRow key={index.toString()}>
                           <TableCell align="l">{index + 1}</TableCell>
-                          <TableCell align="left">
-                            {row.product_title}
-                          </TableCell>
+                          <TableCell align="left">{row.product_name}</TableCell>
                           <TableCell align="left">{row.qty}</TableCell>
                           <TableCell align="left">{row.uom}</TableCell>
                           <TableCell align="left">{row.unit_price}</TableCell>
