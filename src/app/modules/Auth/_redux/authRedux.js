@@ -10,6 +10,7 @@ import { PERSIST_REDUCER } from "../../../../redux/BaseHost";
 export const actionTypes = {
   Login: "[Login] Action",
   Logout: "[Logout] Action",
+  SetRefresh: "[Set Refresh] Action",
   Register: "[Register] Action",
   UserRequested: "[Request User] Action",
   UserLoaded: "[Load User] Auth API",
@@ -20,6 +21,7 @@ export const actionTypes = {
 const initialAuthState = {
   user: undefined,
   authToken: undefined,
+  isRefresh: false,
 };
 
 // Author: Jeffry Azhari Rosman
@@ -38,8 +40,8 @@ export const reducer = persistReducer(
     switch (action.type) {
       case actionTypes.Login: {
         const { authToken } = action.payload;
-
-        return { authToken, user: undefined };
+        localStorage.setItem("isRefresh", false);
+        return { authToken, user: undefined, isRefresh: false };
       }
 
       case actionTypes.Register: {
@@ -48,7 +50,12 @@ export const reducer = persistReducer(
         return { authToken, user: undefined };
       }
 
+      case actionTypes.SetRefresh: {
+        return { ...state, isRefresh: true };
+      }
+
       case actionTypes.Logout: {
+        localStorage.setItem("isRefresh", false);
         // TODO: Change this code. Actions in reducer aren't allowed.
         return initialAuthState;
       }
@@ -87,7 +94,10 @@ export const actions = {
   }),
   fulfillUser: (user) => ({ type: actionTypes.UserLoaded, payload: { user } }),
   setUser: (user) => ({ type: actionTypes.SetUser, payload: { user } }),
-  updateProfile: (user) => ({ type: actionTypes.UpdateProfile, payload: { user } }),
+  updateProfile: (user) => ({
+    type: actionTypes.UpdateProfile,
+    payload: { user },
+  }),
 };
 
 export function* saga() {
