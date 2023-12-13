@@ -1,32 +1,49 @@
-import React, { useState, useEffect } from "react";
 import { DEV_NODE } from "redux/BaseHost";
 import { Formik, Field, Form } from "formik";
-import { submitGuarantee } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import React, { useState, useEffect } from "react";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
+import { submitGuarantee } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
-const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
+const Jaminan = ({
+  dataNewClause,
+  jsonData,
+  contract_id,
+  add_contract_guarantee,
+}) => {
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
     openCloseAddClause.current.open();
   };
   const [inputDataGuarantee, setInputDataGuarantee] = useState({
-    dp_guarantee: "0",
-    dp_guarantee_start_date: "",
-    dp_guarantee_end_date: "",
-    dp_guarantee_evidence_file: "",
-    implementation_guarantee: "0",
-    implementation_guarantee_start_date: "",
-    implementation_guarantee_end_date: "",
-    implementation_guarantee_evidence_file: "",
-    maintenance_guarantee: "0",
-    maintenance_guarantee_start_date: "",
-    maintenance_guarantee_end_date: "",
-    maintenance_guarantee_evidence_file: "",
+    down_payment_guarantee: add_contract_guarantee?.down_payment_guarantee,
+    down_payment_guarantee_evidence_file_name:
+      add_contract_guarantee?.down_payment_guarantee_evidence_file_name,
+    down_payment_guarantee_start_date:
+      add_contract_guarantee?.down_payment_guarantee_start_date,
+    down_payment_guarantee_end_date:
+      add_contract_guarantee?.down_payment_guarantee_end_date,
+    implementation_guarantee: add_contract_guarantee?.implementation_guarantee,
+    implementation_guarantee_evidence_file_name:
+      add_contract_guarantee?.implementation_guarantee_evidence_file_name,
+    implementation_guarantee_start_date:
+      add_contract_guarantee?.implementation_guarantee_start_date,
+    implementation_guarantee_end_date:
+      add_contract_guarantee?.implementation_guarantee_end_date,
+    maintenance_guarantee: add_contract_guarantee?.maintenance_guarantee,
+    maintenance_guarantee_evidence_file_name:
+      add_contract_guarantee?.maintenance_guarantee_evidence_file_name,
+    maintenance_guarantee_start_date:
+      add_contract_guarantee?.maintenance_guarantee_start_date,
+    maintenance_guarantee_end_date:
+      add_contract_guarantee?.maintenance_guarantee_end_date,
+    body_clause_data: "",
+    attachment_clause_data: "",
   });
+
   const [data, setData] = useState({});
   useEffect(() => {
-    let mapResult = jsonData?.contract_guarantees.map((item) => {
+    let mapResult = jsonData?.contract_guarantees?.map((item) => {
       if (item.name === "implementation_guarantee") {
         setData((previous) => {
           return {
@@ -72,60 +89,103 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
       nameEvidence: "maintenance_guarantee_evidence_file",
     },
   ];
-  const submitFormParameterGuarantee = (values) => {
-    submitGuarantee(
-      {
-        add_contract_id: localStorage.getItem("add_contract_id"),
-        down_payment_guarantee: values.dp_guarantee,
-        down_payment_guarantee_start_date: values.dp_guarantee_start_date,
-        down_payment_guarantee_end_date: values.dp_guarantee_end_date,
-        down_payment_guarantee_evidence_file_name:
-          values.dp_guarantee_evidence_file,
-        implementation_guarantee: values.implementation_guarantee,
-        implementation_guarantee_start_date:
-          values.implementation_guarantee_start_date,
-        implementation_guarantee_end_date:
-          values.implementation_guarantee_end_date,
-        implementation_guarantee_evidence_file_name:
-          values.implementation_guarantee_evidence_file,
-        maintenance_guarantee: values.maintenance_guarantee,
-        maintenance_guarantee_start_date:
-          values.maintenance_guarantee_start_date,
-        maintenance_guarantee_end_date: values.maintenance_guarantee_end_date,
-        maintenance_guarantee_evidence_file_name:
-          values.maintenance_guarantee_evidence_file,
-        body_clause_data: values.body_data,
-        attachment_clause_data: values.attachment_data,
-      },
-      contract_id
-    );
+
+  const addendumJaminan = [
+    {
+      judul: "Jaminan Uang Muka",
+      nama_radio: "down_payment_guarantee",
+      nominal: inputDataGuarantee?.down_payment_guarantee,
+      tanggal_mulai: inputDataGuarantee?.down_payment_guarantee_start_date,
+      tanggal_selesai: inputDataGuarantee?.down_payment_guarantee_end_date,
+      bukti: inputDataGuarantee?.down_payment_guarantee_evidence_file_name,
+    },
+    {
+      judul: "Jaminan Pelaksanaan",
+      nama_radio: "implementation_guarantee",
+      nominal: inputDataGuarantee?.implementation_guarantee,
+      tanggal_mulai: inputDataGuarantee?.implementation_guarantee_start_date,
+      tanggal_selesai: inputDataGuarantee?.implementation_guarantee_end_date,
+      bukti: inputDataGuarantee?.implementation_guarantee_evidence_file_name,
+    },
+    {
+      judul: "Jaminan Pemeliharaan",
+      nama_radio: "maintenance_guarantee",
+      nominal: inputDataGuarantee?.maintenance_guarantee,
+      tanggal_mulai: inputDataGuarantee?.maintenance_guarantee_start_date,
+      tanggal_selesai: inputDataGuarantee?.maintenance_guarantee_end_date,
+      bukti: inputDataGuarantee?.maintenance_guarantee_evidence_file_name,
+    },
+  ];
+
+  const submitFormParameterGuarantee = async (values) => {
+    try {
+      await submitGuarantee(
+        {
+          add_contract_id: contract_id,
+          down_payment_guarantee: values.down_payment_guarantee,
+          down_payment_guarantee_evidence_file_name:
+            values.down_payment_guarantee_evidence_file_name,
+          down_payment_guarantee_start_date:
+            values.down_payment_guarantee_start_date,
+          down_payment_guarantee_end_date:
+            values.down_payment_guarantee_end_date,
+          implementation_guarantee: values.implementation_guarantee,
+          implementation_guarantee_evidence_file_name:
+            values.implementation_guarantee_evidence_file_name,
+          implementation_guarantee_start_date:
+            values.implementation_guarantee_start_date,
+          implementation_guarantee_end_date:
+            values.implementation_guarantee_end_date,
+          maintenance_guarantee: values.maintenance_guarantee,
+          maintenance_guarantee_evidence_file_name:
+            values.maintenance_guarantee_evidence_file_name,
+          maintenance_guarantee_start_date:
+            values.maintenance_guarantee_start_date,
+          maintenance_guarantee_end_date: values.maintenance_guarantee_end_date,
+          body_clause_data: values.body_data,
+          attachment_clause_data: values.attachment_data,
+        },
+        contract_id
+      );
+      alert("Berhasil Update Data");
+      window.location.reload();
+    } catch (error) {
+      console.error("Submission error:", error);
+
+      if (error.response) {
+        console.error("Server response data:", error.response.data);
+      }
+    }
   };
+
   return (
     <div className="bg-white p-10">
       <Formik
         enableReinitialize={true}
         initialValues={{
-          dp_guarantee: inputDataGuarantee.dp_guarantee,
-          dp_guarantee_start_date: inputDataGuarantee.dp_guarantee_start_date,
-          dp_guarantee_end_date: inputDataGuarantee.dp_guarantee_end_date,
-          dp_guarantee_evidence_file:
-            inputDataGuarantee.dp_guarantee_evidence_file,
+          down_payment_guarantee: inputDataGuarantee.down_payment_guarantee,
+          down_payment_guarantee_evidence_file_name:
+            inputDataGuarantee.down_payment_guarantee_evidence_file_name,
+          down_payment_guarantee_start_date:
+            inputDataGuarantee.down_payment_guarantee_start_date,
+          down_payment_guarantee_end_date:
+            inputDataGuarantee.down_payment_guarantee_end_date,
           implementation_guarantee: inputDataGuarantee.implementation_guarantee,
+          implementation_guarantee_evidence_file_name:
+            inputDataGuarantee.implementation_guarantee_evidence_file_name,
           implementation_guarantee_start_date:
             inputDataGuarantee.implementation_guarantee_start_date,
           implementation_guarantee_end_date:
             inputDataGuarantee.implementation_guarantee_end_date,
-          implementation_guarantee_evidence_file:
-            inputDataGuarantee.implementation_guarantee_evidence_file,
           maintenance_guarantee: inputDataGuarantee.maintenance_guarantee,
+          maintenance_guarantee_evidence_file_name:
+            inputDataGuarantee.maintenance_guarantee_evidence_file_name,
           maintenance_guarantee_start_date:
             inputDataGuarantee.maintenance_guarantee_start_date,
           maintenance_guarantee_end_date:
             inputDataGuarantee.maintenance_guarantee_end_date,
-          maintenance_guarantee_evidence_file:
-            inputDataGuarantee.maintenance_guarantee_evidence_file,
-          body_data: dataNewClause.guarantee.bodyClauseData,
-          attachment_data: dataNewClause.guarantee.attachmentClauseData,
+          body_data: inputDataGuarantee.body_clause_data,
+          attachment_data: inputDataGuarantee.attachment_clause_data,
         }}
         onSubmit={(values) => {
           submitFormParameterGuarantee(values);
@@ -162,7 +222,7 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
 
                 {/* jaminan uang muka */}
                 {guaranteeBeforeAddendum &&
-                  guaranteeBeforeAddendum.map((data, index) => (
+                  guaranteeBeforeAddendum?.map((data, index) => (
                     <>
                       <div>
                         <div
@@ -319,7 +379,7 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                                     }}
                                     onClick={() =>
                                       window.open(
-                                        `${DEV_NODE}/guarantee/${data.filename}`,
+                                        `${DEV_NODE}/${data.filename}`,
                                         "_blank"
                                       )
                                     }
@@ -365,262 +425,138 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                     A. Addendum Jaminan
                   </span>
                 </div>
-
-                {guaranteeBeforeAddendum &&
-                  guaranteeBeforeAddendum.map((data, index) => (
-                    <>
-                      <div>
-                        <div
+                {addendumJaminan?.map((item, index) => (
+                  <>
+                    <div className="container" index={index}>
+                      <div className="d-flex">
+                        <p className="mr-2 font-medium">{item.judul}</p>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 14,
+                          alignItems: "center",
+                        }}
+                      >
+                        <label
                           style={{
+                            margin: 0,
                             display: "flex",
                             flexWrap: "wrap",
-                            gap: 30,
                             alignItems: "center",
+                            columnGap: 8,
                           }}
                         >
-                          {/* jaminan uang muka */}
-                          <p
-                            style={{
-                              width: 150,
-                              margin: 0,
-                            }}
-                          >
-                            {data.title}
-                          </p>
-
-                          {/* ya / tidak */}
-                          <div
-                            style={{
-                              display: "flex",
-                              gap: 14,
-                              alignItems: "center",
-                            }}
-                          >
-                            <label
-                              style={{
-                                margin: 0,
-                                display: "flex",
-                                flexWrap: "wrap",
-                                alignItems: "center",
-                                columnGap: 8,
-                              }}
-                            >
-                              <Field
-                                type="radio"
-                                value="1"
-                                name={data.nameTitle}
-                                onChange={(e) => {
-                                  setInputDataGuarantee((state) => {
-                                    let fieldName = data.nameTitle;
-                                    let a = { ...state };
-                                    a[fieldName] = e.target.value;
-                                    return a;
-                                  });
-                                }}
-                              />
-                              <span>Ya</span>
-                            </label>
-
-                            <label
-                              style={{
-                                margin: 0,
-                                display: "flex",
-                                flexWrap: "wrap",
-                                alignItems: "center",
-                                columnGap: 8,
-                              }}
-                            >
-                              <Field
-                                type="radio"
-                                value="0"
-                                name={data.nameTitle}
-                                onChange={(e) => {
-                                  setInputDataGuarantee((state) => {
-                                    let fieldName = data.nameTitle;
-                                    let a = { ...state };
-                                    a[fieldName] = e.target.value;
-                                    return a;
-                                  });
-                                }}
-                              />
-                              <span>Tidak</span>
-                            </label>
-                          </div>
-                        </div>
-
-                        {/* tanggal mulai, selesai, evidence */}
-                        <div
-                          style={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: 20,
-                            marginTop: 15,
-                          }}
-                        >
-                          {/* tanggal mulai */}
-                          <div className="col-sm-3">
-                            <label
-                              style={{
-                                margin: 0,
-                                display: "flex",
-                                flexDirection: "column",
-                              }}
-                            >
-                              <span>Tanggal Mulai</span>
-                              <Field
-                                type="date"
-                                style={{
-                                  borderRadius: 4,
-                                  padding: "10px 12px",
-                                  border: "none",
-                                  display: "flex",
-                                  flexDirection: "row-reverse",
-                                  columnGap: 10,
-                                }}
-                                disabled={
-                                  inputDataGuarantee[data.nameTitle] === "0"
-                                    ? true
-                                    : false
-                                }
-                                name={data.nameStart}
-                                onChange={(e) => {
-                                  setInputDataGuarantee((state) => {
-                                    let fieldName = data.nameStart;
-                                    let a = { ...state };
-                                    a[fieldName] = e.target.value;
-                                    return a;
-                                  });
-                                }}
-                              />
-                            </label>
-                          </div>
-
-                          {/* tanggal selesai */}
-                          <div className="col-sm-3">
-                            <label
-                              style={{
-                                margin: 0,
-                                display: "flex",
-                                flexDirection: "column",
-                              }}
-                            >
-                              <span>Tanggal Selesai</span>
-                              <Field
-                                type="date"
-                                style={{
-                                  borderRadius: 4,
-                                  padding: "10px 12px",
-                                  border: "none",
-                                  display: "flex",
-                                  flexDirection: "row-reverse",
-                                  columnGap: 10,
-                                }}
-                                name={data.nameEnd}
-                                // disabled={data.nameTitle}
-                                disabled={
-                                  inputDataGuarantee[data.nameTitle] === "0"
-                                    ? true
-                                    : false
-                                }
-                                onChange={(e) => {
-                                  setInputDataGuarantee((state) => {
-                                    let fieldName = data.nameEnd;
-                                    let a = { ...state };
-                                    a[fieldName] = e.target.value;
-                                    return a;
-                                  });
-                                }}
-                              />
-                            </label>
-                          </div>
-
-                          {/* evidence */}
-                          {/* <div
-                            className="col-md-5"
-                            style={{
-                              padding: 0,
-                            }}
-                          >
-                            <label
-                              style={{
-                                margin: 0,
-                                display: "flex",
-                                flexDirection: "column",
-                              }}
-                            >
-                              <span>Evidence</span>
-                              <div>
-                                <label
-                                  htmlFor="upload"
-                                  className={`input-group mb-3 col-sm-12 pointer`}
-                                  style={{
-                                    padding: 0,
-                                  }}
-                                >
-                                  <span
-                                    className={`form-control text-truncate`}
-                                    style={{
-                                      backgroundColor: "#e8f4fb",
-                                    }}
-                                  >
-                                    {data.filename}
-                                  </span>
-                                  <div className="input-group-prepend">
-                                    <span
-                                      className="input-group-text"
-                                      style={{
-                                        backgroundColor: "#e8f4fb",
-                                      }}
-                                    >
-                                      <i className="fas fa-file-upload"></i>
-                                    </span>
-                                  </div>
-                                </label>
-                                <input
-                                  type="file"
-                                  className="d-none"
-                                  name={data.nameEvidence}
-                                  // value={data.filename}
-                                  filename={data.filename}
-                                  id="upload"
-                                  style={{
-                                    backgroundColor: "#E8F4FB",
-                                  }}
-                                />
-                              </div>
-                            </label>
-                          </div> */}
-                          {/* <input
-                            type="file"
-                            style={{
-                              border: 1,
-                              borderColor: "black",
-                              borderStyle: "solid",
-                              borderRadius: 4,
-                              padding: 8,
-                              width: "100%",
-                            }}
-                            // DILARANG KERAS PAKAI NAME!
-                            name={data.nameEvidence}
-                            onChange={(event) => {
-                              const formData = new FormData();
-                              formData.append(
-                                event.target.value,
-                                event.target.files[0]
-                              );
-                              setInputDataGuarantee((state) => {
-                                let fieldName = data.nameEvidence;
-                                let a = { ...state };
-                                // a[fieldName] = event.target.files[0];
-                                a[fieldName] = formData;
-                                return a;
+                          <Field
+                            type="radio"
+                            value="1"
+                            name={item.nama_radio}
+                            onChange={(e) => {
+                              setInputDataGuarantee({
+                                ...inputDataGuarantee,
+                                [item.nama_radio]: e.target.value,
                               });
                             }}
-                          /> */}
+                          />
+                          <span>Ya</span>
+                        </label>
+
+                        <label
+                          style={{
+                            margin: 0,
+                            display: "flex",
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                            columnGap: 8,
+                          }}
+                        >
+                          <Field
+                            type="radio"
+                            value="0"
+                            name={item.nama_radio}
+                            onChange={(e) => {
+                              setInputDataGuarantee({
+                                ...inputDataGuarantee,
+                                [item.nama_radio]: e.target.value,
+                              });
+                            }}
+                          />
+                          <span>Tidak</span>
+                        </label>
+                      </div>
+                      <div className="d-flex mt-6">
+                        <div className="tanggal-mulai mr-8">
+                          <label
+                            style={{
+                              margin: 0,
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <span>Tanggal Mulai</span>
+                            <Field
+                              type="date"
+                              style={{
+                                borderRadius: 4,
+                                padding: "10px 12px",
+                                border: "1px solid black",
+                                display: "flex",
+                                flexDirection: "row-reverse",
+                                columnGap: 10,
+                              }}
+                              value={
+                                inputDataGuarantee[
+                                  item.nama_radio + "_start_date"
+                                ] || ""
+                              }
+                              onChange={(e) => {
+                                setInputDataGuarantee({
+                                  ...inputDataGuarantee,
+                                  [`${item.nama_radio}_start_date`]: e.target
+                                    .value,
+                                });
+                              }}
+                            />
+                          </label>
+                        </div>
+                        <div className="tanggal-selesai mr-8">
+                          <label
+                            style={{
+                              margin: 0,
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <span>Tanggal Selesai</span>
+                            <Field
+                              type="date"
+                              style={{
+                                borderRadius: 4,
+                                padding: "10px 12px",
+                                border: "1px solid black",
+                                display: "flex",
+                                flexDirection: "row-reverse",
+                                columnGap: 10,
+                              }}
+                              value={
+                                inputDataGuarantee[
+                                  item.nama_radio + "_end_date"
+                                ] || ""
+                              }
+                              onChange={(e) => {
+                                setInputDataGuarantee({
+                                  ...inputDataGuarantee,
+                                  [`${item.nama_radio}_end_date`]: e.target
+                                    .value,
+                                });
+                              }}
+                            />
+                          </label>
                         </div>
                       </div>
-                    </>
-                  ))}
+                    </div>
+                  </>
+                ))}
               </div>
 
               <PerubahanKlausulKontrak
@@ -630,6 +566,7 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                 showAddClause={showAddClause}
                 isDrafting={true}
                 values={values}
+                isDisable={true}
               />
 
               <UpdateButton fromWhere={"guarantee"} isDrafting={true} />

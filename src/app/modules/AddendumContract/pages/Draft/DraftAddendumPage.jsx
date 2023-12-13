@@ -1775,6 +1775,7 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              add_contract_guarantee={data?.add_contract_guarantee}
             />
           )}
           {tabActive === 7 && (
