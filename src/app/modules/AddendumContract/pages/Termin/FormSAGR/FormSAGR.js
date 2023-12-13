@@ -26,7 +26,6 @@ const FormSAGR = (props) => {
       type: "get",
       url: `delivery/task-sa-gr/${task_id}`,
       onSuccess: (res) => {
-        console.log(`res sagr`, res);
         setDataSAGR(res.data);
       },
     });
@@ -69,7 +68,7 @@ const mapState = (state) => {
   const { auth } = state;
   return {
     status: auth.user.data.status,
-	dataContractById: state.deliveryMonitoring.dataContractById,
+    dataContractById: state.deliveryMonitoring.dataContractById,
     loadings_sg: {
       [keys.upload_sa]: getLoading(state, keys.upload_sa),
       [keys.upload_gr]: getLoading(state, keys.upload_gr),

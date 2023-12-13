@@ -24,7 +24,6 @@ export default function setupAxios(axios, store) {
 
   axios.interceptors.response.use(
     function(response) {
-      // console.log("respons:", response );
       return response;
     },
     function(error) {
@@ -50,7 +49,6 @@ export default function setupAxios(axios, store) {
         }
         MODAL.showSession(title, message, button);
       }
-      console.log("Error interceptors.response => ", error);
       return Promise.reject(error);
     }
   );

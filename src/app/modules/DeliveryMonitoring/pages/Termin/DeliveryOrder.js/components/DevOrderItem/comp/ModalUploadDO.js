@@ -11,7 +11,6 @@ import { openLinkTab } from "../../../../../../../../service/helper/urlHelper";
 const ModalUploadDO = ({ innerRef, loading, file, handleSubmit }) => {
   const [dataForm, setDataForm] = React.useState({});
   const _onChange = (file) => {
-    // console.log(`file`, file);
     setDataForm(file);
   };
   const _handleSubmit = () => {

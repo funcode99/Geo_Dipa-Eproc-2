@@ -81,7 +81,6 @@ const ToDoDM = (props) => {
       url: DEV_NODE2 + "/todo",
       params: { limit, offset },
       onSuccess: (res) => {
-        console.log("restodo", res);
         if (isEmpty(res.result.data)) return;
         const { data, total_data } = res.result;
         setDataTodo({
@@ -115,7 +114,6 @@ const ToDoDM = (props) => {
   React.useEffect(() => {
     callApiTodo({ refresh: true });
     SOCKET_DM.on("deliveryMonitoring", function(node_payload) {
-      console.log("ini_web_socket dari todo", node_payload);
       // callApiTodo({ refresh: true });
       reFetchTodo();
     });
@@ -133,7 +131,6 @@ const ToDoDM = (props) => {
         type: "get",
         url: `/delivery/contract/${contractId}`,
         onSuccess: (res) => {
-          console.log(`res`, res?.data);
           saveContractById(res?.data);
           history.push(link);
         },
@@ -142,7 +139,6 @@ const ToDoDM = (props) => {
     [saveContractById, fetchApiSg, history]
   );
 
-  console.log(`dataTodo`, dataTodo);
   return (
     <>
       <div className={`card card-custom ${className}`}>

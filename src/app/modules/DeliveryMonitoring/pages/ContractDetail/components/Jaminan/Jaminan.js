@@ -68,11 +68,9 @@ export class Jaminan extends PureComponent {
   };
 
   handleAction = (type, params) => {
-    console.log(`type`, type, params);
     switch (type) {
       case "preview": //okay
         // setType(params?.id);
-        // console.log(`addbase`, urlHelper.addBaseURL(params?.item?.file));
         openLinkTab(params?.item?.file);
 
         // window.open(urlHelper.addBaseURL(params?.item?.file), "_blank");
@@ -95,7 +93,6 @@ export class Jaminan extends PureComponent {
     }
   };
   handleSubmit = () => {
-    console.log(`dataForm`, this.state.dataForm);
     const { dataForm } = this.state;
     const { contractById } = this.props;
     let newParams = {
@@ -115,7 +112,6 @@ export class Jaminan extends PureComponent {
         dataForm.maintenance_guarantee.data
       ),
     };
-    console.log(`newParams`, newParams);
     this.props.fetch_api_sg({
       key: keys.upload,
       type: "postForm",
@@ -123,7 +119,6 @@ export class Jaminan extends PureComponent {
       params: newParams,
       url: `delivery/contract/${contractById.id}/upload-guarantee`,
       onSuccess: (res) => {
-        // console.log(`res`, res);
         this.handleRefresh();
       },
     });
@@ -143,7 +138,6 @@ export class Jaminan extends PureComponent {
   handleApi = (type, params) => {
     const { contractById } = this.props;
     const { open } = this.state;
-    // console.log(`type`, type, params);
     // return;
     switch (type) {
       case "approve":
@@ -156,7 +150,6 @@ export class Jaminan extends PureComponent {
             approve_status_id: "5d28463c-a435-4ec3-b0dc-e8dcb85aa800",
           },
           onSuccess: (res) => {
-            console.log(`res`, res);
             this.handleRefresh();
             this.handleVisible(type);
           },
@@ -173,7 +166,6 @@ export class Jaminan extends PureComponent {
             reject_text: params?.remarks,
           },
           onSuccess: (res) => {
-            console.log(`res`, res);
             this.handleVisible(type);
             this.handleRefresh();
           },
@@ -191,7 +183,6 @@ export class Jaminan extends PureComponent {
       type: "get",
       url: `/delivery/contract/${this.props.contractById.id}`,
       onSuccess: (res) => {
-        console.log(`res`, res);
         this.props.set_contract_id(res.data);
       },
     });

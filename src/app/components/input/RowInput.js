@@ -51,7 +51,6 @@ const RowInput = ({
   //   setFieldValue(name, val, true)
   //   onChangeCustom()
   // }
-  console.log(`rowinput`, name, values[name], values);
   const passedProps = {
     ...otherProps,
     onChange: (val) => setFieldValue(name, val, true),

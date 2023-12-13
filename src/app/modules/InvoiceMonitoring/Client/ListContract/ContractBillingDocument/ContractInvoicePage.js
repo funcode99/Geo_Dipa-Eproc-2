@@ -324,25 +324,6 @@ function ContractInvoicePage(props) {
     return total;
   };
 
-  // console.log(
-  //   "coba apa ini",
-  //   isSubmit,
-  //   invoiceData?.state === "REJECTED",
-  //   invoiceData?.state === "APPROVED",
-  //   invoiceData === null,
-  //   !props.billingStaffStatus,
-  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY",
-  //   progressTermin
-  // );
-
-  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
-  // console.log(isSubmit,
-  //   invoiceData?.state === "REJECTED",
-  //   invoiceData?.state === "APPROVED",
-  //   invoiceData === null,
-  //   !props.billingStaffStatus,
-  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY", "<<<<<");
-
   return (
     <React.Fragment>
       <Toast />
@@ -774,7 +755,6 @@ function ContractInvoicePage(props) {
                           // onClick={() => {
                           //   let addtionalPayments = cloneDeep(addtionalPayment);
                           //   addtionalPayments.splice(index, 1);
-                          //   console.log("addtionalPayments", addtionalPayments);
                           //   setAddtionalPayment(addtionalPayments);
                           // }}
                           // disabled={
@@ -1228,9 +1208,11 @@ function ContractInvoicePage(props) {
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.invoice_no}</TableCell>
-                  <TableCell>{item?.from_time
+                  <TableCell>
+                    {item?.from_time
                       ? moment(item?.from_time).format("DD MMMM YYYY")
-                      : ""}</TableCell>
+                      : ""}
+                  </TableCell>
                   <TableCell>
                     <a
                       onClick={() => {

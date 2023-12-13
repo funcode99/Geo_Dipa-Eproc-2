@@ -334,10 +334,6 @@ const PartiesFormParameter = ({
   const [jobDirectorIndex, setJobDirectorIndex] = useState(0);
   const [jobSupervisorIndex, setJobSupervisorIndex] = useState(0);
 
-  useEffect(() => {
-    console.log("placeman sekarang", placeman);
-  }, [placeman]);
-
   const [authorizedOfficial, setAuthorizedOfficial] = useState(
     authorizedOfficialData
   );

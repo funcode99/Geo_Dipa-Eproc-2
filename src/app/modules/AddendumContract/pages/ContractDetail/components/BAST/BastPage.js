@@ -150,7 +150,6 @@ const BastPage = ({
         url: `/delivery/task/${task_id}/news`,
         onSuccess: (res) => {
           // handleLoading("get", false);
-          console.log(`res`, res);
           saveTask({ task_gr, task_sa, ...res.data });
           generateTableContent(res?.data?.news_bast?.news_histories);
           // updateExclude();
@@ -177,7 +176,6 @@ const BastPage = ({
         err.response?.code !== 400 &&
         err.response?.data.message !== "TokenExpiredError"
       ) {
-        console.log("handle error");
         setToast(err.response?.data.message, 5000);
       }
     },
@@ -185,8 +183,6 @@ const BastPage = ({
   );
 
   const generateTableContent = (data) => {
-    console.log(`data`, data);
-
     let dataArr = data?.map((item, id) => ({
       no: (id += 1),
       user: item?.vendor?.username || item?.user?.username,
@@ -210,7 +206,6 @@ const BastPage = ({
   );
 
   const _handleSubmit = (data) => {
-    // console.log(`data`, data);
     let params = {};
     let url = "";
     // switch (status) {
@@ -313,19 +308,15 @@ const BastPage = ({
         // window.open(urlHelper.addBaseURL(params?.file), "_blank");
         break;
       case "uploadSign":
-        // console.log(`type`, type);
         // handleVisible(type);
         uploadRef.current.open();
         break;
       case "upload":
-        // console.log(`type`, type);
         break;
       case "approve":
-        // console.log(`type`, type);
         approveRef.current.open();
         break;
       case "reject":
-        // console.log(`type`, type);
         rejectRef.current.open();
         break;
       default:
@@ -334,7 +325,6 @@ const BastPage = ({
   };
 
   const handleApi = (type, params) => {
-    console.log(`type`, type, params);
     switch (type) {
       case "upload_s":
         fetchApi({
@@ -389,8 +379,6 @@ const BastPage = ({
         break;
     }
   };
-
-  console.log("taskNews", taskNews);
 
   return (
     <React.Fragment>

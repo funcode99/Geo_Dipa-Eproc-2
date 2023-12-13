@@ -55,7 +55,6 @@ function SummaryTermin({ loadings, fetch_api_sg, status }) {
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
       const tempSubmitJasa = [];
-      // console.log(data);
 
       data.forEach((item) => {
         item.item_services.forEach((service) => {
@@ -74,7 +73,6 @@ function SummaryTermin({ loadings, fetch_api_sg, status }) {
 
     if (type === "barang") {
       const tempSubmitBarang = [];
-      // console.log(data);
 
       data.forEach((items) => {
         if (items.item) {
@@ -221,9 +219,6 @@ function SummaryTermin({ loadings, fetch_api_sg, status }) {
 
   const handleChecklistBarang = (qtyValue, qtyAvailable, itemId, desc) => {
     // addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
-
-    console.log(`qtyValue`, qtyValue);
-    console.log(`qtyAvailable`, qtyAvailable);
 
     let tempBarang = dataBarang;
 

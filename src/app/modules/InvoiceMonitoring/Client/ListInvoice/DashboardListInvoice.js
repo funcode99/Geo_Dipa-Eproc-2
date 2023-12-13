@@ -352,7 +352,6 @@ function DashboardListInvoice(props) {
   const callApi = () => {
     getAllProgressTypeFilter()
       .then((result) => {
-        console.log("result.data", result.data.data);
         var data = Object.assign([], headerTable);
         result.data.data.forEach((element) => {
           var item = {

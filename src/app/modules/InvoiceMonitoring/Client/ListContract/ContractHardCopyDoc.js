@@ -7,18 +7,18 @@ import {
   CardFooter,
 } from "../../../../../_metronic/_partials/controls";
 import {
-  createBkb,
-  getFileEproc,
+  // createBkb,
+  // getFileEproc,
   getListDocSoftCopy,
   approveHardCopy,
   rejectHardCopyStatus,
   rejectHardCopyHistory,
   getDeliverableInInvoive,
   getHardcopyBillingDocument,
-  getFileSpp,
-  getFileInvoice,
-  getFileReceipt,
-  getFileTax,
+  // getFileSpp,
+  // getFileInvoice,
+  // getFileReceipt,
+  // getFileTax,
   sendNotifHardCopy,
   checkBkbExist,
   getInvoice,
@@ -42,11 +42,14 @@ import {
   DialogContent,
   DialogTitle,
   Slide,
-  IconButton,
+  // IconButton,
   TableRow,
   TableCell,
 } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  // , withStyles
+} from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import RowAccordion from "../../../DeliveryMonitoring/pages/Termin/Documents/components/RowAccordion";
 import { formatDate } from "../../../../libs/date";
@@ -79,13 +82,13 @@ const data_ops = [
   },
 ];
 
-const data_ops_user = [
-  {
-    label: "TITLE.UPLOAD",
-    icon: "fas fa-cloud-upload-alt text-success",
-    type: "upload",
-  },
-];
+// const data_ops_user = [
+//   {
+//     label: "TITLE.UPLOAD",
+//     icon: "fas fa-cloud-upload-alt text-success",
+//     type: "upload",
+//   },
+// ];
 
 const data_opsDeliverable = [
   {
@@ -142,14 +145,14 @@ const useStyles = makeStyles((theme) => ({
 function ContractHardCopyDoc(props) {
   const {
     intl,
-    progressTermin,
-    setProgressTermin,
+    // progressTermin,
+    // setProgressTermin,
     setDataProgress,
     dataProgress,
   } = props;
   const classes = useStyles();
   const [Toast, setToast] = useToast();
-  const [dataReject, setDataReject] = useState({});
+  // const [dataReject, setDataReject] = useState({});
   const [invoiceData, setInvoiceData] = useState({});
   const [invoiceBkbExist, setInvoiceBkbExist] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -345,7 +348,6 @@ function ContractHardCopyDoc(props) {
     } else if (type === "accept") {
       setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
-    console.log("handleAction type: ", type, " - ", "data: ", data);
   };
 
   const handleActionDeliverable = (type, data) => {
@@ -354,7 +356,6 @@ function ContractHardCopyDoc(props) {
     } else if (type === "approved") {
       setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
-    console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
 
   const checkBkb = () => {
@@ -1053,13 +1054,15 @@ function ContractHardCopyDoc(props) {
                           content?.task_gr_new &&
                           content?.task_gr_new.length > 0
                             ? `(${
-                              (content?.task_gr_new.filter(
-                                (value) =>
-                                  value.material_document === item.doc_no
-                              ) ? content?.task_gr_new.filter(
+                                content?.task_gr_new.filter(
                                   (value) =>
                                     value.material_document === item.doc_no
-                                )[0].type : "")
+                                )
+                                  ? content?.task_gr_new.filter(
+                                      (value) =>
+                                        value.material_document === item.doc_no
+                                    )[0].type
+                                  : ""
                               })`
                             : ""}
                         </TableCell>

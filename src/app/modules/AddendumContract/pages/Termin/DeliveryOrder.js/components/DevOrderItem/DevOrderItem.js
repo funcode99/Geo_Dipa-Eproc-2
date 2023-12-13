@@ -57,7 +57,6 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
     [data]
   );
   const openModal = (type) => {
-    console.log(`data`, data);
     switch (type) {
       case "review":
         previewRef.current.open();
@@ -71,7 +70,6 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
   };
 
   const handleSubmit = (params) => {
-    console.log(`params get`, params);
     func.handleApi({
       key: KEYS_TERMIN.p_t_upload_do,
       params: { file: params.data },
@@ -102,8 +100,6 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
       header_txt: dataEvent?.header_tx,
       posting_date: dataEvent?.post_date,
     };
-
-    console.log(`params`, params, { ...params, ...dataEvent });
     func.handleApi({
       key: KEYS_TERMIN.p_t_approve_do_doc,
       // params: { ...params, ...dataEvent },
@@ -165,8 +161,6 @@ const DevOrderItem = ({ data, isVendor, onRefresh, ...other }) => {
   };
 
   const isFileApproved = data?.file_approve_status?.code === "approved";
-
-  console.log(`data devorderitem`, data);
 
   return (
     <React.Fragment>

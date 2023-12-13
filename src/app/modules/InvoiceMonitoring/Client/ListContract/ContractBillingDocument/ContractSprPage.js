@@ -407,14 +407,6 @@ function ContractSprPage(props) {
     return total;
   };
 
-  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
-  // console.log(isSubmit,
-  //   sppData?.state === "REJECTED",
-  //   sppData?.state === "APPROVED",
-  //   sppData === null,
-  //   !props.billingStaffStatus,
-  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY", "<<<<<");
-
   return (
     <React.Fragment>
       <Toast />

@@ -81,7 +81,6 @@ const HargaPekerjaan = ({
           attachment_data: dataNewClause.job_price.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("submit di harga pekerjaan", values);
           submitFormParameterJobPrice(values);
         }}
       >

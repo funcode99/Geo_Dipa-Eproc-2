@@ -7,8 +7,8 @@ import {
   makeStyles,
   Icon,
   Button,
-  Container,
-  CircularProgress,
+  // Container,
+  // CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -32,7 +32,7 @@ import {
   SelectStyled,
   FormContent,
 } from "./style";
-import { StyledModal } from "../../../components/modals";
+// import { StyledModal } from "../../../components/modals";
 import useToast from "../../../components/toast";
 import CustomTable from "../../../components/tables";
 import Subheader from "../../../components/subheader";
@@ -75,6 +75,7 @@ export const Documents = ({ typeId }) => {
   const [options, setOptions] = React.useState();
   const [tableContent, setTableContent] = React.useState([]);
   const [newContent, setnewContent] = React.useState([]);
+  console.log(modals, loading, tableContent);
 
   const FormSchema = Yup.object().shape({
     document_name: Yup.string()
@@ -190,7 +191,6 @@ export const Documents = ({ typeId }) => {
   };
 
   React.useEffect(() => {
-    // console.log(typeId);
     getListID();
     getOptions();
 
@@ -203,7 +203,6 @@ export const Documents = ({ typeId }) => {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       try {
         enableLoading();
-        // console.log(values);
         const requestData = periodic
           ? {
               name: values.document_name,
@@ -236,17 +235,16 @@ export const Documents = ({ typeId }) => {
     },
   });
 
-  const handleClose = () => {
-    setModals(false);
-    updateCreateRef.current.close();
-  };
+  // const handleClose = () => {
+  //   setModals(false);
+  //   updateCreateRef.current.close();
+  // };
 
   const handleModal = async (type, id) => {
     if (type === "update") {
       const {
         data: { data },
       } = await master.getDocumentID(id);
-      // console.log(data[0].is_periodic);
       setUpdate({ id, update: true });
       // formik.setFieldValue('document_name', data[0].name);
       formik.setValues({
@@ -271,14 +269,12 @@ export const Documents = ({ typeId }) => {
       getListID();
     } catch (error) {
       setToast("Error with API, please contact Developer!");
-      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleAction = (type, params) => {
-    console.log(`type`, type, params);
     switch (type) {
       // case "find":
       //   setType(params?.id);

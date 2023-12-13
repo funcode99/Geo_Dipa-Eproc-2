@@ -37,7 +37,6 @@ const DetailGRPage = ({ fetch_api_sg, loading, authStatus }) => {
   React.useEffect(() => {
     handleRefresh();
   }, []);
-  console.log(`contensst`, content);
   return (
     <Card>
       <CardBody>

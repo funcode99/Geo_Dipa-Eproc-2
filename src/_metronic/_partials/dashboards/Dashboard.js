@@ -19,7 +19,6 @@ export const Dashboard = ({}) => {
   // const dispatch = useDispatch();
 
   // let isRefresh = localStorage.getItem("isRefresh");
-  // console.log("isi refresh", isRefresh);
 
   // if (isRefresh === "false") {
   // dispatch({

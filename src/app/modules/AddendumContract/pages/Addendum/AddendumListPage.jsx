@@ -142,7 +142,6 @@ export const AddendumListPage = ({ fetch_api_sg, loadings, status }) => {
     setOrder(sort.order ? "asc" : "desc");
     setOrderBy(sort.name);
     setFilterBy(filter);
-    console.log(`datazzz`, filter, data2);
   };
 
   function handleChangePage(newPage) {
@@ -192,7 +191,6 @@ export const AddendumListPage = ({ fetch_api_sg, loadings, status }) => {
               <ButtonAction
                 hoverLabel="More"
                 data={"1"}
-                // handleAction={console.log(null)}
                 ops={[
                   {
                     // contract details ada disini

@@ -191,7 +191,6 @@ const DetailPage = ({
             },
         alertAppear: "both",
         onSuccess: (res) => {
-          // console.log(`res`, res);
           getContractById(contractId);
           setTimeout(() => {
             setInitialSubmitItems();
@@ -200,7 +199,6 @@ const DetailPage = ({
           submitRef.current.close();
         },
         onFail: (err) => {
-          // console.log(`err`, err);
           setSubmitting(false);
           setStatus("Failed Submit Data");
         },
@@ -211,10 +209,6 @@ const DetailPage = ({
   const handleModal = React.useCallback(
     async (type, items) => {
       if (type === "update") {
-        // console.log(`type: ${type}`);
-        // console.log(items);
-        // console.log(items.due_date);
-
         setUpdate({ id: items.id, update: true });
 
         formik.setValues({
@@ -229,16 +223,13 @@ const DetailPage = ({
         });
       } else if (type === "create") {
         const tempSubmitItems = dataSubmitItems;
-        // console.log(tempSubmitItems);
         let totalPrice = 0;
 
         tempSubmitItems.task_services.forEach((item) => {
-          console.log("item task_services", item);
           totalPrice += parseFloat(item?.price * item.qty);
         });
 
         tempSubmitItems.task_items.forEach((item) => {
-          console.log("item task_items", item);
           totalPrice += parseFloat(item?.price * item.qty);
         });
 
@@ -263,8 +254,6 @@ const DetailPage = ({
     (type, data) => {
       switch (type) {
         case "update":
-          // console.log("masuk sini", data);
-
           handleModal("update", data);
           break;
         case "delete":
@@ -272,11 +261,9 @@ const DetailPage = ({
           deleteRef.current.open();
           break;
         case "approve":
-          console.log(`type`, type, data);
           approveRef.current.open(data);
           break;
         case "reject":
-          console.log(`type`, type, data);
           // MODAL.showSnackbar("FUNGSI INI BELUM TERSEDIA", "warning", 5000);
           rejectRef.current.open(data);
           break;
@@ -303,7 +290,6 @@ const DetailPage = ({
             type: "revision",
           },
         ];
-        // console.log(`item`, item);
 
         if (item?.approve_status?.name !== "APPROVED") {
           optionsAction = [
@@ -333,8 +319,6 @@ const DetailPage = ({
             },
           ];
         }
-
-        console.log(`item`, item);
 
         // <Button
         //   variant="link"
@@ -456,7 +440,6 @@ const DetailPage = ({
         type: "get",
         url: `/delivery/contract/${contractId}`,
         onSuccess: (res) => {
-          // console.log(`res`, res.data);
           addCheckedField(res?.data?.services, "jasa");
           addCheckedField(res?.data?.items, "barang");
           saveContractById(res?.data);
@@ -479,7 +462,6 @@ const DetailPage = ({
       url: `/delivery/task/${confirm.id}`,
       alertAppear: "both",
       onSuccess: (res) => {
-        //console.log(`res`, res);
         getContractById(contractId);
         setConfirm({ ...confirm, show: false, id: "" });
         deleteRef.current.close();
@@ -493,7 +475,6 @@ const DetailPage = ({
       type: "get",
       url: `/delivery/options`,
       onSuccess: (res) => {
-        // console.log(`res.data`, res.data);
         const taskStatusOptions = res?.data?.task_status;
         setOptions(taskStatusOptions);
       },
@@ -558,7 +539,6 @@ const DetailPage = ({
           approve_status_id: apiHelper.revisionId,
           reject_text: params?.remarks_fill,
         };
-        console.log(`coba`, paramsUsed);
         fetch_api_sg({
           key: keys.revision,
           type: "post",

@@ -95,7 +95,6 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
         <ButtonAction
           hoverLabel="More"
           data={"1"}
-          // handleAction={console.log(null)}
           ops={[
             {
               label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
@@ -120,7 +119,6 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
       type: "get",
       url: `/delivery/contract`,
       onSuccess: (res) => {
-        // console.log(`res.data`, res.data);
         generateTableContent(res.data);
       },
     });

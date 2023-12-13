@@ -1,5 +1,4 @@
 import React from "react";
-import { Form } from "react-bootstrap";
 import Select from "react-select";
 
 const colourOptions = [
@@ -58,7 +57,6 @@ const SelectInputCustom = ({
   name,
   ...other
 }) => {
-  // console.log(`listOptions`, listOptions);
   return (
     <div {...contProps}>
       <Select

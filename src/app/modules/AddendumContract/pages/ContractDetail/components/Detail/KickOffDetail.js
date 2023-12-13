@@ -93,7 +93,6 @@ const KickOffDetail = ({
       type: "get",
       url: `/delivery/contract/${contractId}`,
       onSuccess: (res) => {
-        // console.log(`res`, res);
         set_contract_id(res.data);
       },
     });
@@ -105,7 +104,6 @@ const KickOffDetail = ({
       type: "get",
       url: `/delivery/contract/${contractId}`,
       onSuccess: (res) => {
-        // console.log(`res`, res?.data);
         saveContractById(res?.data);
       },
     });

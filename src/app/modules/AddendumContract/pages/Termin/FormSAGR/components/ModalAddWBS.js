@@ -8,7 +8,6 @@ import { FormSAContext } from "./FormSA";
 import _ from "lodash";
 
 const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
-
   const formRef = React.useRef();
   const { listWBS } = React.useContext(FormSAContext);
   const [dataForm, setDataForm] = useState([
@@ -27,14 +26,14 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
         step: "0.1",
       },
     ],
-  ])
+  ]);
 
   const [validateScheme, setValidateScheme] = useState(
     object().shape({
       wbs1: validation.require("WBS 1"),
       value1: validation.require("Value 1"),
     })
-  )
+  );
 
   const addField = () => {
     setDataForm((e) =>
@@ -82,18 +81,16 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
     setDataForm((e) => {
       var arr = [...e];
       var poped = [];
-      if (arr.length > 1) poped = arr.pop()
-      // console.log(`poped`, poped, arr);
-      return arr
-    })
-  }
+      if (arr.length > 1) poped = arr.pop();
+      return arr;
+    });
+  };
 
   const _handleSubmit = (data) => {
-    console.log('ini isi data di _handleSubmit', data)
     if (typeof onSelected == "function")
-      onSelected({ ...data, length: dataForm.length })
-      _cleanSubmit();
-  }
+      onSelected({ ...data, length: dataForm.length });
+    _cleanSubmit();
+  };
 
   const _cleanSubmit = () => {
     // onBlur();
@@ -114,13 +111,13 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
           step: "0.1",
         },
       ],
-    ])
-  }
+    ]);
+  };
   const listWBSMapped = listWBS.map(({ id, work_breakdown_ap, name }) => ({
     value: id,
     label: `${work_breakdown_ap} - ${name}`,
     wbs_id: work_breakdown_ap,
-  }))
+  }));
 
   return (
     <DialogGlobal
@@ -159,18 +156,16 @@ const ModalAddWBS = ({ innerRef, onSelected, dist_value, data }) => {
       />
       {/* untuk menambah dan mengurangi row */}
       <div className="d-flex justify-content-end">
-        {dataForm.length > 1 && 
-          (
-            <ButtonContained
-              className="mr-2"
-              baseColor="danger"
-              disabled={dataForm.length === 1}
-              onClick={subField}
-            >
-              Minus a row
-            </ButtonContained>
-          )
-        }
+        {dataForm.length > 1 && (
+          <ButtonContained
+            className="mr-2"
+            baseColor="danger"
+            disabled={dataForm.length === 1}
+            onClick={subField}
+          >
+            Minus a row
+          </ButtonContained>
+        )}
         {!(dataForm.length == 10 || dist_value?.value === "") && (
           <ButtonContained
             disabled={dataForm.length == 10 || dist_value?.value === ""}

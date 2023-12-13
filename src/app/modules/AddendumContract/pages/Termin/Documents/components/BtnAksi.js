@@ -108,7 +108,6 @@ export default function BtnAksi({ item, isPeriodic, handleAction }) {
     [item]
   );
 
-  // console.log(`isPeriodic`, isPeriodic);
   const listUsed = status === "client" ? adminMenu : vendorMenu;
   React.useEffect(() => {
     if (item?.url === null)

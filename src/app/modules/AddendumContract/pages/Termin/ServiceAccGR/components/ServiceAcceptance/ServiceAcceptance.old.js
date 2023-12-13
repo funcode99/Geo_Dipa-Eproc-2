@@ -20,7 +20,6 @@ const ServiceAcceptance = ({ data, isClient, loading }) => {
     }),
     [data, isClient]
   );
-  console.log(`task_sa`, data, qr_params);
 
   if (task_sa == null) {
     return <NoDataBox text={"Service Acceptance not Available"} />;

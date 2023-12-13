@@ -130,10 +130,6 @@ export const Periode = () => {
 
   React.useEffect(() => {
     getList();
-    console.log(t("update"));
-    // console.log(messages);
-    // console.log(lang);
-    // console.log(messages['TITLE.MASTER_DATA.PERIODE.HEADER.NAME']);
     // eslint-disable-next-line
   }, []);
 
@@ -177,7 +173,6 @@ export const Periode = () => {
       const {
         data: { data },
       } = await master.getPeriodeID(id);
-      // console.log(data[0]);
       setUpdate({ id, update: true });
       // formik.setFieldValue('document_name', data[0].name);
       formik.setValues({
@@ -206,7 +201,6 @@ export const Periode = () => {
   };
 
   const handleAction = (type, params) => {
-    console.log(`type`, type, params);
     switch (type) {
       // case "find":
       //   setType(params?.id);

@@ -305,7 +305,6 @@ export const AddContractAddendum = ({
     // setTimeout(, 1);
     const refresh = () => {
       let isRefresh = localStorage.getItem("isRefresh");
-      console.log("isi refresh", isRefresh);
 
       if (isRefresh === "false") {
         localStorage.setItem("isRefresh", true);
@@ -553,8 +552,6 @@ export const AddContractAddendum = ({
           : "COMPLETE",
     },
   ];
-
-  console.log("isi location", location);
   return (
     <React.Fragment>
       <Toast />

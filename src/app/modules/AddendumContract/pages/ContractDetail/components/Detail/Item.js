@@ -171,8 +171,6 @@ const Item = ({ handleClick, status }) => {
         }
       });
     }
-
-    // console.log(submitItems);
     dispatch({
       type: actionTypes.SetContractById,
       payload: tempContract,
@@ -181,14 +179,11 @@ const Item = ({ handleClick, status }) => {
 
   const removeFromSubmitItem = (items, type) => {
     const tempSubmitItems = dataSubmitItems;
-    // console.log(items);
-    // console.log(tempSubmitItems);
 
     if (type === "barang") {
       tempSubmitItems.task_items = tempSubmitItems.task_items.filter(
         (item) => item.item_id !== items.id
       );
-      // console.log(tempSubmitItems.task_items);
     }
 
     if (type === "jasa") {
@@ -210,7 +205,6 @@ const Item = ({ handleClick, status }) => {
     // const floatQtyAvailable = parseFloat(items.qty_available).toFixed(1);
     const floatQtyAvailable = parseFloat(items.qty_available);
     let minValue = 0.1;
-    // console.log(items);
 
     // if (type === "jasa") {
     //   minValue = 0.1;
@@ -223,7 +217,6 @@ const Item = ({ handleClick, status }) => {
       floatQtyValue < minValue ||
       floatQtyValue > floatQtyAvailable
     ) {
-      // console.log('salah');
       removeFromSubmitItem(items, type);
       let temp = [...qtyErrors];
       const find = temp.find((item) => item === items.id);
@@ -245,10 +238,6 @@ const Item = ({ handleClick, status }) => {
   };
 
   const handleInputQty = (qtyValue, items, type) => {
-    // console.log(qtyValue);
-    // console.log(items);
-    // console.log(type);
-
     if (type === "jasa") {
       addSubmitItems(
         {
@@ -485,32 +474,18 @@ const Item = ({ handleClick, status }) => {
             >
               {(item) => {
                 return item?.map((item2) => {
-                  console.log("iterm", item, item2);
                   return (
-                    <TableRow
-                      hover
-                      // onClick={
-                      //   (e) =>
-                      //     handleChecklist(e, item2, {
-                      //       id: el.id,
-                      //       type: "jasa",
-                      //     })
-                      //   // console.log(e)
-                      // }
-                      key={item2?.id}
-                    >
+                    <TableRow hover key={item2?.id}>
                       <TableCell>
                         <Checkbox
                           name={`checkbox-${item2.id}`}
                           id={`checkbox-${item2.id}`}
                           color="secondary"
-                          onChange={
-                            (e) =>
-                              handleChecklist(e, item2, {
-                                id: el.id,
-                                type: "jasa",
-                              })
-                            // console.log(e)
+                          onChange={(e) =>
+                            handleChecklist(e, item2, {
+                              id: el.id,
+                              type: "jasa",
+                            })
                           }
                           size="small"
                           checked={item2.checked}

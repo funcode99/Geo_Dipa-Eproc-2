@@ -36,7 +36,6 @@ const ModalPreviewDODoc = ({
   isFileApproved,
   data,
 }) => {
-  console.log(`otem`, loading);
   const [dataForm, setDataForm] = React.useState({});
   const [action, setAction] = React.useState(null);
   const [checked, setChecked] = React.useState(false);
@@ -54,7 +53,6 @@ const ModalPreviewDODoc = ({
   };
 
   const _onSubmit = (dataEvent) => {
-    console.log(`dataEvent`, remarks, action, dataEvent, grFormRef.current);
     if (typeof handleSubmit === "function")
       handleSubmit({
         remarks,

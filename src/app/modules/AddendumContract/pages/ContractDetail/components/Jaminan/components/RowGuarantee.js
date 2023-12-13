@@ -20,7 +20,6 @@ const RowGuarantee = ({ item, index }) => {
   const statusItem = contractById?.contract_guarantees?.filter(
     (el) => el.name === item.type
   );
-  // console.log(`item`, item, statusItem, contractById?.contract_guarantees);
   const isRejected =
     statusItem?.length && statusItem[0]?.approve_status?.name === "REJECTED";
   const isApproved =

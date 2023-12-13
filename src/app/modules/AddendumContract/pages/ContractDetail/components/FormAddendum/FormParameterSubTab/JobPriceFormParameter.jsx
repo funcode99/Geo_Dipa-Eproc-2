@@ -155,7 +155,6 @@ const JobPriceFormParameter = ({
       return total + Math.round(data.subtotal);
     }
     setGrandTotal(item?.reduce(sum, 0));
-    console.log("grandTotal", grandTotal);
   }, [item]);
 
   return (
@@ -173,7 +172,6 @@ const JobPriceFormParameter = ({
           attachment_data: dataNewClause.job_price.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("submit di harga pekerjaan", values);
           submitFormParameterJobPrice(values);
         }}
       >

@@ -239,8 +239,6 @@ export const ContractDetailPage = ({ dataContractById, authStatus }) => {
     }
   }, [location]);
 
-  console.log("dataContractById", dataContractById);
-
   return (
     <React.Fragment>
       <Toast />

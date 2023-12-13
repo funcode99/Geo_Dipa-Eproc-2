@@ -34,14 +34,12 @@ const FormSA = ({
       type: "get",
       url: `delivery/wbs/${dataContractById?.id}`,
       onSuccess: (res) => {
-        console.log("reswbs", res);
         setlistWBS(res.data);
       },
     });
     func.handleApi({
       key: KEYS_TERMIN.f_termin,
       onSuccess: (res) => {
-        console.log(`resss`, res);
         const tempDataJasa = res.data.task_item_services;
         // let tempSubmitJasa = [];
         // tempDataJasa.forEach((item) => {
@@ -71,7 +69,6 @@ const FormSA = ({
           wbs: item.wbsdata,
         })),
       };
-      console.log(`data`, params, data, arrService);
       fetch_api_sg({
         key: keys.upload_sa,
         type: "post",
@@ -79,7 +76,6 @@ const FormSA = ({
         alertAppear: "both",
         params,
         onSuccess: (res) => {
-          console.log("post sa", res);
           onRefresh();
           // setlistWBS(res.data);
         },
@@ -93,7 +89,6 @@ const FormSA = ({
       type: "get",
       url: `delivery/gl_account`,
       onSuccess: (res) => {
-        // console.log("resp gl_account", res);
         setOptGL(
           res.data.map((el) => ({ ...el, label: el.code, value: el.code }))
         );
@@ -104,7 +99,6 @@ const FormSA = ({
       type: "get",
       url: `delivery/cost_center`,
       onSuccess: (res) => {
-        // console.log("resp cost_center", res);
         setOptCost(
           res.data.map((el) => ({ ...el, label: el.code, value: el.code }))
         );
@@ -154,8 +148,6 @@ const FormSA = ({
     }),
     [dataSAGR]
   );
-
-  console.log(`dataSA`, dataSAGR, dataSA);
 
   const options = { optCost, optGL };
 

@@ -128,7 +128,6 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
           type: "get",
           url: DEV_NODE2 + `/notification/${id}`,
           onSuccess: (res) => {
-            // console.log("resnotif", res);
             fetchNotif({ refresh: true });
           },
         })
@@ -145,7 +144,6 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
           type: "get",
           url: `/delivery/contract/${contractId}`,
           onSuccess: (res) => {
-            console.log(`res`, res?.data);
             saveContractById(res?.data);
             history.push(link);
           },
@@ -161,7 +159,6 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
   React.useEffect(() => {
     fetchNotif({ refresh: true });
     SOCKET_DM.on("deliveryMonitoring", function(node_payload) {
-      console.log("ini_web_socket dari notif", node_payload);
       reFetchNotif();
       // fetchNotif({ refresh: true });
     });
@@ -252,7 +249,6 @@ function UserNotificationDeliveryDropdown({ saveContractById, fetchApiSg }) {
                       )?.[0];
                       const linkContract = `/${status}/delivery-monitoring/contract/${item?.data?.contract_id}/${contract_pages[isContractPage]}`;
                       const linkTermin = `/${status}/delivery-monitoring/contract/task/${item?.data?.task_id}/${termin_pages[isTerminPage]}`;
-                      // console.log("notif", item, isContractPage, isTerminPage);
                       return (
                         <Link
                           //   to={!!isContractPage ? linkContract : linkTermin}

@@ -354,14 +354,6 @@ function ContractReceiptPage(props) {
     return total;
   };
 
-  // console.log({"progressTermin?.ident_name" : progressTermin?.ident_name});
-  // console.log(isSubmit,
-  //   receiptData?.state === "REJECTED",
-  //   receiptData?.state === "APPROVED",
-  //   receiptData === null,
-  //   !props.billingStaffStatus,
-  //   progressTermin?.ident_name !== "BILLING_SOFTCOPY", "<<<<<");
-
   return (
     <React.Fragment>
       <Toast />
@@ -799,7 +791,9 @@ function ContractReceiptPage(props) {
                     disabled
                     defaultValue={
                       receiptData?.receipt_date
-                        ? moment(receiptData?.receipt_date).format("DD MMMM YYYY")
+                        ? moment(receiptData?.receipt_date).format(
+                            "DD MMMM YYYY"
+                          )
                         : ""
                     }
                   />
@@ -963,7 +957,9 @@ function ContractReceiptPage(props) {
                         })}
                       </tbody>
                     </table>
-                  ) : <FormattedMessage id="TITLE.TABLE.NO_DATA_AVAILABLE" />}
+                  ) : (
+                    <FormattedMessage id="TITLE.TABLE.NO_DATA_AVAILABLE" />
+                  )}
                   {/* <button
                     type="button"
                     className="btn btn-sm btn-primary w-100"
@@ -1047,9 +1043,11 @@ function ContractReceiptPage(props) {
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.receipt_no}</TableCell>
-                  <TableCell>{item?.receipt_date
+                  <TableCell>
+                    {item?.receipt_date
                       ? moment(item?.receipt_date).format("DD MMMM YYYY")
-                      : ""}</TableCell>
+                      : ""}
+                  </TableCell>
                   <TableCell>
                     <a
                       onClick={() => {

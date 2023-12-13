@@ -8,8 +8,6 @@ import CardOrderItem from "../Termin/DeliveryOrder.js/components/DevOrderItem/co
 
 const DeliveryOrderStatusPg = () => {
   const { approveOption } = useStatusOption();
-
-  console.log(`approveOption`, approveOption);
   return (
     <TempMobile withLogo title={"Delivery Order Status Approval"}>
       <div>DOSPg</div>

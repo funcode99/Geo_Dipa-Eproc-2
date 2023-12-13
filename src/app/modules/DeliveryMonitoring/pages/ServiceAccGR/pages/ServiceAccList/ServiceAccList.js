@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Table,
   TableBody,
@@ -9,11 +9,11 @@ import {
   Button,
   Container,
   CircularProgress,
-} from '@material-ui/core';
-import SVG from 'react-inlinesvg';
-import { useFormik } from 'formik';
-import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
-import * as Yup from 'yup';
+} from "@material-ui/core";
+import SVG from "react-inlinesvg";
+import { useFormik } from "formik";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import * as Yup from "yup";
 
 import {
   Flex,
@@ -24,17 +24,17 @@ import {
   StyledTableRow,
   WaitingSA,
   PendingTerbit,
-} from './style';
-import { StyledModal } from '../../../../components/modals';
-import useToast from '../../../../components/toast';
-import { SubWrap } from '../../../Master/pages/style';
+} from "./style";
+import { StyledModal } from "../../../../components/modals";
+import useToast from "../../../../components/toast";
+import { SubWrap } from "../../../Master/pages/style";
 // import DocumentsTable from './Document';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(3),
-    overflowX: 'auto',
+    overflowX: "auto",
   },
   table: {
     minWidth: 650,
@@ -46,15 +46,15 @@ export const ServiceAcceptance = () => {
   const [Toast, setToast] = useToast();
   // const [data, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
-  const [confirm, setConfirm] = React.useState({ show: false, id: '' });
-  const [update, setUpdate] = React.useState({ id: '', update: false });
+  const [confirm, setConfirm] = React.useState({ show: false, id: "" });
+  const [update, setUpdate] = React.useState({ id: "", update: false });
   const [loading, setLoading] = React.useState(false);
 
   const FormSchema = Yup.object().shape({
     periode_name: Yup.string()
-      .min(3, 'Input minimal 3 karakter')
-      .required('Field ini wajib diisi'),
-    periode_value: Yup.string().required('Field ini wajib diisi'),
+      .min(3, "Input minimal 3 karakter")
+      .required("Field ini wajib diisi"),
+    periode_value: Yup.string().required("Field ini wajib diisi"),
   });
 
   const enableLoading = () => {
@@ -65,7 +65,7 @@ export const ServiceAcceptance = () => {
     setLoading(false);
   };
   const initialValues = {
-    periode_name: '',
+    periode_name: "",
     periode_value: 0,
   };
 
@@ -77,7 +77,7 @@ export const ServiceAcceptance = () => {
       // } = await master.getPeriodeList();
       // setData(data);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -111,9 +111,9 @@ export const ServiceAcceptance = () => {
         //   setModals(false);
         // }
       } catch (error) {
-        setToast('Error API, Please contact developer!');
+        setToast("Error API, Please contact developer!");
         setSubmitting(false);
-        setStatus('Failed Submit Data');
+        setStatus("Failed Submit Data");
       } finally {
         disableLoading();
       }
@@ -124,11 +124,10 @@ export const ServiceAcceptance = () => {
     setModals(false);
   };
   const handleModal = async (type, id) => {
-    if (type === 'update') {
+    if (type === "update") {
       // const {
       //   data: { data },
       // } = await master.getPeriodeID(id);
-      // // console.log(data[0]);
       // setUpdate({ id, update: true });
       // // formik.setFieldValue('document_name', data[0].name);
       // formik.setValues({
@@ -148,8 +147,7 @@ export const ServiceAcceptance = () => {
       // setConfirm({ ...confirm, show: false });
       getList();
     } catch (error) {
-      setToast('Error with API, please contact Developer!');
-      // console.error(error);
+      setToast("Error with API, please contact Developer!");
     } finally {
       setLoading(false);
     }
@@ -163,17 +161,17 @@ export const ServiceAcceptance = () => {
         hideCloseIcon={false}
         disableBackdrop
       >
-        <Flex style={{ justifyContent: 'center' }}>
+        <Flex style={{ justifyContent: "center" }}>
           <form
             noValidate
             autoComplete="off"
             // onSubmit={handleSubmit(formSubmit)}
           >
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
               <h3>Input Form</h3>
             </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
-              <div style={{ width: '50%', alignSelf: 'center' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
+              <div style={{ width: "50%", alignSelf: "center" }}>
                 <Input
                   label="Nama Periode"
                   variant="outlined"
@@ -187,7 +185,7 @@ export const ServiceAcceptance = () => {
                   {errors.document_name?.message}
                 </p> */}
               </div>
-              <div style={{ width: '50%', alignSelf: 'center' }}>
+              <div style={{ width: "50%", alignSelf: "center" }}>
                 <Input
                   type="number"
                   label="Durasi Periode (dalam hari)"
@@ -205,15 +203,15 @@ export const ServiceAcceptance = () => {
                 </p> */}
               </div>
             </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
               <Button
                 type="submit"
                 color="secondary"
                 variant="contained"
-                style={{ width: '50%' }}
+                style={{ width: "50%" }}
               >
                 {loading ? <CircularProgress /> : null}&nbsp;
-                {update.update ? 'Update' : 'Create'}
+                {update.update ? "Update" : "Create"}
               </Button>
             </div>
           </form>
@@ -235,9 +233,9 @@ export const ServiceAcceptance = () => {
             <Button
               variant="contained"
               style={{
-                width: '40%',
-                background: 'red',
-                color: 'white',
+                width: "40%",
+                background: "red",
+                color: "white",
                 marginInline: 10,
               }}
               onClick={() => handleDelete()}
@@ -246,7 +244,7 @@ export const ServiceAcceptance = () => {
             </Button>
             <Button
               variant="contained"
-              style={{ width: '40%', marginInline: 10 }}
+              style={{ width: "40%", marginInline: 10 }}
               onClick={() => setConfirm({ ...confirm, show: false })}
             >
               Cancel
@@ -259,7 +257,7 @@ export const ServiceAcceptance = () => {
         <div className="d-flex align-items-center flex-wrap mr-1">
           <SubWrap className="mr-2 iconWrap">
             <span className="svg-icon menu-icon">
-              <SVG src={toAbsoluteUrl('/media/svg/icons/Home/Book-open.svg')} />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Home/Book-open.svg")} />
             </span>
           </SubWrap>
           <div className="d-flex align-items-baseline mr-5">
