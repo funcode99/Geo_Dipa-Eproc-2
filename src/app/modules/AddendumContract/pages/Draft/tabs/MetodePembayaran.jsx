@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
-import { submitPaymentMethod } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import { Formik, Field, Form } from "formik";
+import React, { useState, useRef } from "react";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
+import { submitPaymentMethod } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const MetodePembayaran = ({
@@ -18,11 +18,12 @@ const MetodePembayaran = ({
   const showAddClause = () => {
     openCloseAddClause.current.open();
   };
-  const earlyStagePayment = {
-    payment: JSON.parse(localStorage.getItem("payment_method")),
-  };
+  const earlyStagePayment = null;
+  // const payment_method = localStorage.getItem("payment_method");
+  // const earlyStagePayment = {
+  //   payment: JSON.parse(payment_method),
+  // };
   const [stagePayment, setStagePayment] = useState({
-    // payment: jsonData?.payment_method_data,
     payment: paymentMethodCurrent?.payment_method_data,
   });
   const changePaymentMethodField = (index, value, type) => {
