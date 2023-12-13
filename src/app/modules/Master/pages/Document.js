@@ -7,8 +7,8 @@ import {
   makeStyles,
   Icon,
   Button,
-  Container,
-  CircularProgress,
+  // Container,
+  // CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -32,7 +32,7 @@ import {
   SelectStyled,
   FormContent,
 } from "./style";
-import { StyledModal } from "../../../components/modals";
+// import { StyledModal } from "../../../components/modals";
 import useToast from "../../../components/toast";
 import CustomTable from "../../../components/tables";
 import Subheader from "../../../components/subheader";
@@ -75,6 +75,7 @@ export const Documents = ({ typeId }) => {
   const [options, setOptions] = React.useState();
   const [tableContent, setTableContent] = React.useState([]);
   const [newContent, setnewContent] = React.useState([]);
+  console.log(modals, loading, tableContent);
 
   const FormSchema = Yup.object().shape({
     document_name: Yup.string()
@@ -234,10 +235,10 @@ export const Documents = ({ typeId }) => {
     },
   });
 
-  const handleClose = () => {
-    setModals(false);
-    updateCreateRef.current.close();
-  };
+  // const handleClose = () => {
+  //   setModals(false);
+  //   updateCreateRef.current.close();
+  // };
 
   const handleModal = async (type, id) => {
     if (type === "update") {
