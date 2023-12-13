@@ -293,15 +293,15 @@ const DraftAddendumPage = ({
     getJobSupervisor();
     // setInitialSubmitItems();
     // getAddContractDocument();
-    const refresh = () => {
-      let isRefresh = localStorage.getItem("isRefresh");
-      console.log("isi refresh", isRefresh);
-      if (isRefresh === "false") {
-        localStorage.setItem("isRefresh", true);
-        window.location.reload();
-      }
-    };
-    refresh();
+    // const refresh = () => {
+    //   let isRefresh = localStorage.getItem("isRefresh");
+    //   console.log("isi refresh", isRefresh);
+    //   if (isRefresh === "false") {
+    //     localStorage.setItem("isRefresh", true);
+    //     window.location.reload();
+    //   }
+    // };
+    // refresh();
   }, []);
 
   const actionButton = (
