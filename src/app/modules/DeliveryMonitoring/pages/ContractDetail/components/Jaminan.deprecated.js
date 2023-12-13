@@ -24,8 +24,6 @@ const ItemSwitch = React.memo(({ label, value, onChange }) => {
     [onChange]
   );
 
-  // console.log(`type`, value);
-
   const valueUsed = active;
 
   return (
@@ -83,7 +81,6 @@ const Jaminan = () => {
     [dataContractById]
   );
   const handleChange = React.useCallback((state, type) => {
-    // console.log(`state`, state, type);
     setDataForm((prev) => ({ ...prev, [type]: state }));
   }, []);
 
@@ -99,10 +96,8 @@ const Jaminan = () => {
       ),
       ...apiHelper.checkIsEmpty("maintenance_guarantee", dataForm.maintenance),
     };
-    console.log(`dataForm`, dataForm, newParams);
     uploadGuarantee(dataContractById.id, newParams)
       .then((res) => {
-        console.log(`res`, res);
         if (res?.data?.status === true) {
           setToast(res?.data?.message);
         }

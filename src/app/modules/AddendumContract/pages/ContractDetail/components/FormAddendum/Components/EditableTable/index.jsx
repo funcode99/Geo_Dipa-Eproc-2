@@ -87,7 +87,6 @@ const EditableTable = ({
   isDisable,
 }) => {
   let jobPriceData = jobPriceCurrent;
-  console.log("isi jobPriceData", jobPriceData);
   const [init, setInit] = useState(0);
   let parsedJobPrice = null;
   if (init === 0) {
@@ -102,7 +101,6 @@ const EditableTable = ({
     setInit(1);
   }
   let result = parsedJobPrice;
-  console.log("parsedJobPrice", parsedJobPrice);
   const [rows, setRows] = useState(result);
   const [previous, setPrevious] = React.useState({});
   const classes = useStyles();
@@ -114,7 +112,6 @@ const EditableTable = ({
   const onToggleEditMode = (id) => {
     setRows((state) => {
       // isi state nya semua baris objek di dalam array tsb
-      console.log("isi state onToggleEditMode", state);
       return rows.map((row) => {
         if (row.id === id) {
           return { ...row, isEditMode: !row.isEditMode };
@@ -125,7 +122,6 @@ const EditableTable = ({
   };
 
   const onDeleteMode = (index) => {
-    console.log("masuk ke delete mode");
     setRows((prev) => {
       const newState = [...prev];
       newState.splice(index, 1);
@@ -152,15 +148,11 @@ const EditableTable = ({
   // const onRevert = (id) => {
   // const newRows = rows.map((row) => {
 
-  //   console.log('isi previous', previous)
-
   //   if (row.id === id) {
   //     return previous[id] ? previous[id] : row;
   //   }
   //   return row;
   // });
-  // console.log('isi previous', previous[id])
-  // console.log('isi new rows', newRows)
   // setRows(newRows);
   // setPrevious((state) => {
   //   delete state[id];
@@ -176,7 +168,6 @@ const EditableTable = ({
       } else {
         return [...state, createNewData(a, b, c, d, e, f, g)];
       }
-      console.log(state);
     });
   };
 
@@ -219,7 +210,6 @@ const EditableTable = ({
       // const items = rows[index].item_detail.filter(
       //   (variant) => variant.id !== childId
       // );
-      // console.log("setelah filter", items);
       // newState[index].item_detail = items;
       let changedParentSubtotal = "";
       let changedParentQuantity = "";
@@ -243,7 +233,6 @@ const EditableTable = ({
   };
 
   const onChangeChild = (e, row, parentIndex, childIndex) => {
-    // console.log("isi row di onchangechild", row);
     // OALAH TERNYATA DISINI CARA PAKAI OBJEK SEBAGAI NAMA PROPERTI
     if (!previous[row.id]) {
       setPrevious((state) => ({ ...state, [row.id]: row }));
@@ -281,11 +270,9 @@ const EditableTable = ({
   };
 
   const onAddChildMode = (parentId, index) => {
-    console.log("masuk ke fungsi onaddchildmode", parentId);
     let result = rows.map((row) => {
       if (row.id === parentId) {
         if (row.item_detail) {
-          console.log("masuk ke kondisi 1 (kedua)");
           return {
             ...row,
             item_detail: [
@@ -294,7 +281,6 @@ const EditableTable = ({
             ],
           };
         } else {
-          console.log("masuk ke kondisi 2 (pertama)");
           return {
             ...row,
             item_detail: [
@@ -341,7 +327,6 @@ const EditableTable = ({
   //   }
   //   // grandTotal = rows.reduce(sum, 0);
   //   setGrandTotal(rows?.reduce(sum, 0));
-  //   console.log("grandTotal", grandTotal);
   // }, [rows]);
 
   return (
@@ -476,7 +461,6 @@ const EditableTable = ({
                         }}
                         defaultValue={0}
                         decimalsLimit={0}
-                        onValueChange={(value) => console.log(value)}
                         component={CurrencyInput}
                       />
                     </div>
@@ -510,7 +494,6 @@ const EditableTable = ({
                         }}
                         defaultValue={0}
                         decimalsLimit={0}
-                        onValueChange={(value) => console.log(value)}
                         component={CurrencyInput}
                       />
                     </div> */}
@@ -555,7 +538,6 @@ const EditableTable = ({
                         decimalsLimit={2}
                         decimalSeparator=","
                         groupSeparator="."
-                        onValueChange={(value) => console.log(value)}
                         component={CurrencyInput}
                       />
                     </div>
@@ -590,7 +572,6 @@ const EditableTable = ({
                         decimalsLimit={2}
                         decimalSeparator=","
                         groupSeparator="."
-                        onValueChange={(value) => console.log(value)}
                         component={CurrencyInput}
                       />
                     </div> */}
@@ -729,7 +710,6 @@ const EditableTable = ({
                       ) : (
                         <ButtonAction
                           handleAction={(type, data, label) => {
-                            console.log("masuk ke handleAction", label);
                             if (label === "Delete") {
                               onDeleteMode(index);
                             } else if (label === "Edit") {

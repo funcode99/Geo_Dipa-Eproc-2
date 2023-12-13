@@ -67,30 +67,21 @@ const RenderInputAddendum = ({
   const [checked, setChecked] = useState([]);
 
   const _handleChange = (val) => {
-    console.log("isi val checkbox", val);
-
     if (typeInput !== "CheckboxInput") {
       setIsi(val);
       setFieldValue(name, val, true);
     } else {
       // setFieldValue('checked_list', val, true)
     }
-    // console.log('isi checked_list', checked_list)
     // if (typeof onChange === "function") onChange(val)
   };
 
   const _handleKeyDown = (e) => {
-    // console.log('isi event', e)
-    // console.log(e.target.value)
-    // console.log('ini namanya apa', name)
     // if(e.key === 'Enter' && name === 'input_other' && isi !== '') {
     //   // alert('enter telah ditekan')
-    //   // console.log('isi val', isi)
     //   formDataCheckbox.map((item, index) => {
-    //     console.log('index ke-', index)
     //     if(Array.isArray(item) && item.length < 4) {
     //       let a = item.pop()
-    //       console.log('masuk ke a')
     //       item.push({
     //         name: isi,
     //         label: isi,
@@ -102,7 +93,6 @@ const RenderInputAddendum = ({
     //     }
     //     else if (index === formDataCheckbox.length-1 && item.length == 4) {
     //       let a = item.pop()
-    //         console.log('masuk ke b')
     //           item.push({
     //             name: isi,
     //             label: isi,
@@ -124,9 +114,6 @@ const RenderInputAddendum = ({
   //   setFieldValue(name, val, true)
   //   onChangeCustom()
   // }
-
-  console.log("isi values name nya broh", values[name]);
-
   return (
     <div>
       {name && typeInput === "CheckboxInput" ? (

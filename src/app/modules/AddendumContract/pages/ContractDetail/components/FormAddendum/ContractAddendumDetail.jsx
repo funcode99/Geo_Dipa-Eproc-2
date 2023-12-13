@@ -122,13 +122,9 @@ export const ContractAddendumDetail = ({
   authStatus,
   data,
 }) => {
-  console.log(dataContractById, "dataContractById");
-  // ada isinya
-  // console.log('isi data contract by id di delivery monitoring', dataContractById)
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, tab: forceTabActive } = useParams();
-  console.log(contract_id, "contract_id");
   const [Toast, setToast] = useToast();
   // const { dataContractById } = useSelector((state) => state.deliveryMonitoring);
   const dispatch = useDispatch();
@@ -182,7 +178,6 @@ export const ContractAddendumDetail = ({
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
-        console.log(res, "res get addendum detail");
         setDataAddContracts(res?.data);
         // getSecondAuthorizedOfficial(res?.data?.vendor_id);
       },
@@ -198,7 +193,6 @@ export const ContractAddendumDetail = ({
         type: "get",
         url: `/adendum/contract-released/${contract_id}/show`,
         onSuccess: (res) => {
-          console.log(res, "res get addendum detail");
           setDataAddContracts(res?.data);
           // getSecondAuthorizedOfficial(res?.data?.vendor_id);
         },
@@ -206,7 +200,6 @@ export const ContractAddendumDetail = ({
       const {
         data: { data },
       } = await addendumContractCRUD.getContractById(contract_id);
-      console.log(data, "data nyaaa");
       addCheckedField(data?.services, "jasa");
       addCheckedField(data?.items, "barang");
       dispatch({
@@ -263,9 +256,6 @@ export const ContractAddendumDetail = ({
     getDataAddContract(contract_id);
   }, [dataContractById, contract_id, forceTabActive]);
 
-  console.log(dataAddContracts, "dataAddContracts");
-  console.log(contract_id, "contract_id");
-
   React.useEffect(() => {
     if (location.pathname !== old.path) {
       setOld({
@@ -280,8 +270,6 @@ export const ContractAddendumDetail = ({
       }, 500);
     }
   }, [location]);
-
-  console.log("dataContractById", dataContractById);
 
   return (
     <React.Fragment>

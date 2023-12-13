@@ -32,7 +32,6 @@ const ContractPriceTable = ({
     },
     [onFetch, setSelected]
   );
-  console.log("data ContractPriceTable", data);
   return (
     <>
       {/* begin::Advance Table Widget 9 */}

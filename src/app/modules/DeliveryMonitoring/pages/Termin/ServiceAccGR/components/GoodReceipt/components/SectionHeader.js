@@ -38,7 +38,6 @@ const SectionHeader = ({ news, header, fullData, hideLogo }) => {
     ],
     [header]
   );
-  console.log("fullData", fullData);
   return (
     <div className={"row"}>
       <div className="col-sm-4 d-flex align-items-center">

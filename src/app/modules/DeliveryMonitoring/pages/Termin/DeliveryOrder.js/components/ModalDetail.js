@@ -206,7 +206,6 @@ const ModalDetail = ({
               select
               variant="outlined"
               disabled={isVendor}
-              // onChange={(e) => console.log(e.target.value)}
               defaultValue={4}
               {...formik.getFieldProps("status")}
             >

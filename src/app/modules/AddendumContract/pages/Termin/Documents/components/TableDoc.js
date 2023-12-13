@@ -47,7 +47,6 @@ const theadDocuments = [
 
 // const BtnAksi = ({ item }) => {
 //   const { handleAction } = React.useContext(DocumentsContext);
-//   //   console.log(`item`, item);
 
 //   return (
 //     <div className="d-flex flex-row">
@@ -100,7 +99,6 @@ const TableDoc = ({ loading }) => {
   } = React.useContext(DocumentsContext);
   const warehouseText = isWarehouse ? "WAREHOUSE" : "USER";
   const hasBarang = !!dataBarang.length;
-  console.log(`content hasBarang`, content, dataBarang, hasBarang);
 
   return (
     <TablePaginationCustom
@@ -115,7 +113,6 @@ const TableDoc = ({ loading }) => {
       renderRows={({ item, index }) => {
         let el = item;
         let id = index;
-        // console.log("otem", item);
         return (
           <RowAccordion
             key={id}

@@ -94,14 +94,12 @@ export const GRPage = ({ fetch_api_sg, loadings, status }) => {
       type: "get",
       url: `/delivery/gr`,
       onSuccess: (res) => {
-        // console.log(`res.data`, res.data);
         generateTableContent(res.data);
       },
     });
   };
 
   const handleAction = React.useCallback((type, data) => {
-    console.log(`type`, type, data);
     history.push(
       `/${status}/delivery-monitoring/gr/${data?.task_id}/${data?.id}`
     );

@@ -25,11 +25,9 @@ const ModalUploadDoc = ({
     else setToast("Mohon lengkapi isian !");
   }, [onSubmit, file, remarks, percent]);
   const handleSelectChange = (e) => {
-    // console.log(`e`, e.target.value);
     setFile(e.target.files[0]);
   };
   const handleRemarksChange = (e) => {
-    // console.log(`e`, e.target.value);
     setRemarks(e.target.value);
   };
   const handlePercent = (e) => {

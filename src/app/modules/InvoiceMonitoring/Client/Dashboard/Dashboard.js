@@ -138,7 +138,6 @@ function Dashboard(props) {
   };
 
   const callApidataInvoice = () => {
-    console.log("unit", unit);
     getAllDataInvoiceDashboard(
       range.ident_name,
       unit.plant_id || null,

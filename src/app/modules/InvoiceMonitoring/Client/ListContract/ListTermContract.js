@@ -86,7 +86,7 @@ const ListTermContract = (props) => {
           );
         }
         setData(data);
-        if(result?.data?.data?.code) setCurrencyCode(result?.data?.data?.code);
+        if (result?.data?.data?.code) setCurrencyCode(result?.data?.data?.code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -289,7 +289,6 @@ const ListTermContract = (props) => {
           {data &&
             data?.data_termin &&
             data?.data_termin.map((value, index) => {
-              console.log(`value`, value);
               return (
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
@@ -319,7 +318,9 @@ const ListTermContract = (props) => {
                       .format("DD MMM YYYY")}
                   </TableCell>
                   <TableCell>{value?.bobot + "%"}</TableCell>
-                  <TableCell>{formatCurrency(currencyCode, value["prices"])}</TableCell>
+                  <TableCell>
+                    {formatCurrency(currencyCode, value["prices"])}
+                  </TableCell>
                   <TableCell>{value?.progress}</TableCell>
                   {/* <TableCell>Doc Progress</TableCell> */}
                   <TableCell>{`${value?.name} ${

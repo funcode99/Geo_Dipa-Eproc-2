@@ -44,7 +44,6 @@ class DashboardDM extends Component {
       params,
       url: "/delivery/dashboard/contract-price",
       onSuccess: (res) => {
-        console.log("res" + keys.cont_price, res);
         this.setState({ contract_prices: res?.data });
       },
     });
@@ -56,7 +55,6 @@ class DashboardDM extends Component {
       type: "get",
       url: "/delivery/dashboard/summary-stats",
       onSuccess: (res) => {
-        // console.log("res" + keys.sum_stats, res);
         this.setState({ summary_stat: res?.data });
       },
     });
@@ -69,7 +67,6 @@ class DashboardDM extends Component {
       type: "get",
       url: "/delivery/dashboard/finished-contract",
       onSuccess: (res) => {
-        console.log("res" + keys.cont_finished, res);
         this.setState({ finished_list: res?.data });
       },
     });
@@ -80,7 +77,6 @@ class DashboardDM extends Component {
       type: "get",
       url: "/delivery/dashboard/finished-contract-late",
       onSuccess: (res) => {
-        console.log("res" + keys.cont_finished_late, res);
         this.setState({ finished_late_list: res?.data });
       },
     });
@@ -91,7 +87,6 @@ class DashboardDM extends Component {
       type: "get",
       url: "/delivery/dashboard/contract-on-progress",
       onSuccess: (res) => {
-        console.log("res" + keys.cont_on_progress, res);
         this.setState({ on_progress_list: res?.data });
       },
     });
@@ -102,7 +97,6 @@ class DashboardDM extends Component {
       type: "get",
       url: "/delivery/dashboard/contract-on-progress-late",
       onSuccess: (res) => {
-        console.log("res" + keys.cont_overdue, res);
         this.setState({ overdue_list: res?.data });
       },
     });
@@ -115,7 +109,6 @@ class DashboardDM extends Component {
       type: "get",
       url: "/invoice/get_dashboard_plant",
       onSuccess: (res) => {
-        // console.log("res" + keys.get_plants, res);
         this.setState({
           plant_datas: res?.data,
         });
@@ -128,7 +121,6 @@ class DashboardDM extends Component {
       type: "get",
       url: "/delivery/dashboard/pie-chart-price",
       onSuccess: (res) => {
-        console.log("res" + keys.get_pie_charts, res);
         this.setState({
           pie_chart_datas: res?.data,
         });

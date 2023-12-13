@@ -13,9 +13,9 @@ import * as Yup from "yup";
 import { ModalProgressBar } from "../../../../_metronic/_partials/controls";
 // import { toAbsoluteUrl } from "../../../_metronic/_helpers";
 import * as auth from "../../Auth";
-import { updatePassword } from "app/modules/UserProfile/Client/_redux/authCrud"
-import { FormattedMessage, injectIntl } from "react-intl"
-import { Alert } from "react-bootstrap"
+import { updatePassword } from "app/modules/UserProfile/Client/_redux/authCrud";
+import { FormattedMessage, injectIntl } from "react-intl";
+import { Alert } from "react-bootstrap";
 
 function ChangePassword(props) {
   // Fields
@@ -31,10 +31,9 @@ function ChangePassword(props) {
   useEffect(() => {}, [user]);
   // Methods
   const saveUser = (values, setStatus, setSubmitting) => {
-    
     setloading(true);
     const updatedUser = Object.assign(user);
-    var params = `?authn_token=${updatedUser.authn_token}&username=${updatedUser.username}`
+    var params = `?authn_token=${updatedUser.authn_token}&username=${updatedUser.username}`;
 
     setTimeout(() => {
       // Do request to your server for user update, we just imitate user update there, For example:
@@ -66,9 +65,8 @@ function ChangePassword(props) {
             });
           }, 3000);
         });
-    }, 1000)
-
-  }
+    }, 1000);
+  };
   // UI Helpers
   const initialValues = {
     current_password: "",
@@ -129,7 +127,6 @@ function ChangePassword(props) {
         }),
         (val) => {
           let regExp = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$");
-          // console.log(regExp.test(val), regExp, val);
           return regExp.test(val);
         }
       ),
@@ -183,7 +180,6 @@ function ChangePassword(props) {
         <FormattedMessage id={alert.message} />
       </Alert>
       {loading && <ModalProgressBar />}
-
       {/* begin::Header */}
       <div className="card-header py-3">
         <div className="card-title align-items-start flex-column">

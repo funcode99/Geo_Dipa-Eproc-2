@@ -104,7 +104,6 @@ const DraftAddendumPage = ({
       type: "get",
       url: `/adendum/currencies`,
       onSuccess: (res) => {
-        console.log("response currencies", res);
         setDataCurrencies(res);
       },
     });
@@ -183,7 +182,6 @@ const DraftAddendumPage = ({
   //     type: "get",
   //     url: `/adendum/add-contracts/${draft_id}`,
   //     onSuccess: (res) => {
-  //       console.log("apakah menarik data", res?.data.contract.id);
   //       getFinalDraftData(res?.data?.contract?.id);
   //     },
   //   });
@@ -295,7 +293,6 @@ const DraftAddendumPage = ({
     // getAddContractDocument();
     // const refresh = () => {
     //   let isRefresh = localStorage.getItem("isRefresh");
-    //   console.log("isi refresh", isRefresh);
     //   if (isRefresh === "false") {
     //     localStorage.setItem("isRefresh", true);
     //     window.location.reload();

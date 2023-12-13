@@ -29,7 +29,6 @@ const SAGRPage = () => {
     func.handleApi({
       key: KEYS_TERMIN.f_sa_gr,
       onSuccess: (res) => {
-        // console.log(`res sa gr`, res);
         setContent((prev) => ({
           ...prev,
           ...res.data,
@@ -41,7 +40,6 @@ const SAGRPage = () => {
   React.useEffect(() => {
     handleRefresh();
   }, []);
-  // console.log(`content sa gr`, content);
 
   return (
     <React.Fragment>

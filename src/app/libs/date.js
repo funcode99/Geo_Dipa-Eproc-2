@@ -15,7 +15,6 @@ const formatInitialDate = () => {
 };
 
 const formatUpdateDate = (date) => {
-  // console.log("date", date);
   if (isEmpty(date)) return "-";
   return format(new Date(date), "yyy-MM-dd");
 };

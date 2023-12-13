@@ -372,7 +372,6 @@ function ItemContractInvoice(props) {
         data: data,
       });
     }
-    console.log("handleAction type: ", type, " - ", "data: ", data);
   };
 
   const handleActionDeliverable = (type, data) => {
@@ -381,7 +380,6 @@ function ItemContractInvoice(props) {
     } else if (type === "approved") {
       setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
-    console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
 
   const handleActionDeliverableEmail = (data) => {
@@ -391,8 +389,6 @@ function ItemContractInvoice(props) {
     };
     handleSendNotifRequest(new_data);
   };
-
-  // console.log(dataProgress)
 
   const handleAcceptSoftcopy = () => {
     setLoading(true);
@@ -457,7 +453,6 @@ function ItemContractInvoice(props) {
     setLoadingDeliverables(true);
     getDeliverableInInvoive(termin)
       .then((result) => {
-        console.log("resultdatadeliv", result);
         setLoadingDeliverables(false);
         setDataDeliverables(result.data.data.task_documents);
         setHasBarang(result.data.data.has_item);
@@ -543,7 +538,6 @@ function ItemContractInvoice(props) {
           );
           getRolesAcceptanceTax(response["data"]["data"]["authority"]).then(
             (responseRoles) => {
-              // console.log(responseRoles, "responseRoles");
               responseRoles["data"]["data"].map((item, index) => {
                 if (
                   monitoring_role.findIndex(
@@ -1073,7 +1067,6 @@ function ItemContractInvoice(props) {
 
   const handleError = React.useCallback(
     (err) => {
-      console.log(`err`, err);
       setToast(err?.message ?? "Error API, please contact developer!");
     },
     [setToast]
@@ -1089,14 +1082,12 @@ function ItemContractInvoice(props) {
   );
 
   const onAddDeliverable = (params) => {
-    // console.log(`params`, params);
     // handle multi create document
     if (Array.isArray(params)) {
       let mappedParams = params?.map((el) => {
         let val = JSON.parse(el.value);
         return { document_id: val.id };
       });
-      // console.log(params, mappedParams);
       deliveryMonitoring
         .postCreateDocArr(termin, mappedParams)
         .then(handleSuccess)
@@ -1131,7 +1122,6 @@ function ItemContractInvoice(props) {
     // window.$("#root").removeAttr("style");
     // window.$("#print-content").removeClass("p-5");
     // window.$("#print-content").html("");
-    // console.log("history", window.location.origin, id);
     window
       .open(
         `${window.location.origin}/client/invoice_monitoring/contract/${contract}/${termin}/${id}`,
@@ -1141,7 +1131,6 @@ function ItemContractInvoice(props) {
   };
 
   return (
-    
     <React.Fragment>
       <div id="GOODS" className="d-none">
         <GoodReceipt data={content} loading={false} />
@@ -1729,7 +1718,6 @@ function ItemContractInvoice(props) {
                 <button
                   className="btn btn-outline-success btn-sm"
                   onClick={() => {
-                    console.log("nengsss");
                     setModalAddDeliv(!modalAddDeliv);
                   }}
                 >

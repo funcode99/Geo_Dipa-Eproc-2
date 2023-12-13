@@ -150,7 +150,6 @@ const JangkaWaktu = ({
           add_work_period_type: timePeriodAddendum[1]?.radio,
         }}
         onSubmit={(values) => {
-          console.log("isi jangka waktu", values);
           submitFormParameterTimePeriod(values);
         }}
       >

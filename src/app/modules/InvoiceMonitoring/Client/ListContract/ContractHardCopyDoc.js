@@ -345,7 +345,6 @@ function ContractHardCopyDoc(props) {
     } else if (type === "accept") {
       setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
-    console.log("handleAction type: ", type, " - ", "data: ", data);
   };
 
   const handleActionDeliverable = (type, data) => {
@@ -354,7 +353,6 @@ function ContractHardCopyDoc(props) {
     } else if (type === "approved") {
       setModalApproved({ ...modalApproved, statusDialog: true, data: data });
     }
-    console.log("handleActionDeliverable type: ", type, " - ", "data: ", data);
   };
 
   const checkBkb = () => {
@@ -1053,13 +1051,15 @@ function ContractHardCopyDoc(props) {
                           content?.task_gr_new &&
                           content?.task_gr_new.length > 0
                             ? `(${
-                              (content?.task_gr_new.filter(
-                                (value) =>
-                                  value.material_document === item.doc_no
-                              ) ? content?.task_gr_new.filter(
+                                content?.task_gr_new.filter(
                                   (value) =>
                                     value.material_document === item.doc_no
-                                )[0].type : "")
+                                )
+                                  ? content?.task_gr_new.filter(
+                                      (value) =>
+                                        value.material_document === item.doc_no
+                                    )[0].type
+                                  : ""
                               })`
                             : ""}
                         </TableCell>

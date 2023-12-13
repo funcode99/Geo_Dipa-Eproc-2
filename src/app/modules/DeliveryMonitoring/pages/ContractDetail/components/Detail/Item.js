@@ -9,10 +9,17 @@ import useToast from "../../../../../../components/toast";
 // import TableItem from "./TableItem";
 import TableItemNew from "./TableItemNew";
 // import { StyledTableRow } from "../../../../../../components/tables/style";
-import { TableCell, TableRow, Checkbox, Button, 
-        Dialog, DialogActions,
+import {
+  TableCell,
+  TableRow,
+  Checkbox,
+  Button,
+  Dialog,
+  DialogActions,
   DialogContent,
-        DialogTitle, Slide } from "@material-ui/core";
+  DialogTitle,
+  Slide,
+} from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import RowAccordion from "./RowAccordion";
 import ExpansionBox from "../../../../../../components/boxes/ExpansionBox";
@@ -23,7 +30,7 @@ import {
   asyncHistory,
   asyncItem,
   asyncSchedule,
-  asyncPo
+  asyncPo,
 } from "../../../../../Master/service/MasterCrud";
 
 const navLists = [
@@ -164,8 +171,6 @@ const Item = ({ handleClick, status }) => {
         }
       });
     }
-
-    // console.log(submitItems);
     dispatch({
       type: actionTypes.SetContractById,
       payload: tempContract,
@@ -174,14 +179,11 @@ const Item = ({ handleClick, status }) => {
 
   const removeFromSubmitItem = (items, type) => {
     const tempSubmitItems = dataSubmitItems;
-    // console.log(items);
-    // console.log(tempSubmitItems);
 
     if (type === "barang") {
       tempSubmitItems.task_items = tempSubmitItems.task_items.filter(
         (item) => item.item_id !== items.id
       );
-      // console.log(tempSubmitItems.task_items);
     }
 
     if (type === "jasa") {
@@ -203,7 +205,6 @@ const Item = ({ handleClick, status }) => {
     // const floatQtyAvailable = parseFloat(items.qty_available).toFixed(1);
     const floatQtyAvailable = parseFloat(items.qty_available);
     let minValue = 0.1;
-    // console.log(items);
 
     // if (type === "jasa") {
     //   minValue = 0.1;
@@ -216,7 +217,6 @@ const Item = ({ handleClick, status }) => {
       floatQtyValue < minValue ||
       floatQtyValue > floatQtyAvailable
     ) {
-      // console.log('salah');
       removeFromSubmitItem(items, type);
       let temp = [...qtyErrors];
       const find = temp.find((item) => item === items.id);
@@ -238,10 +238,6 @@ const Item = ({ handleClick, status }) => {
   };
 
   const handleInputQty = (qtyValue, items, type) => {
-    // console.log(qtyValue);
-    // console.log(items);
-    // console.log(type);
-
     if (type === "jasa") {
       addSubmitItems(
         {
@@ -428,18 +424,20 @@ const Item = ({ handleClick, status }) => {
 
       {/* <Container>
         <ExpansionBox title={"TITLE.ITEM_TABLE"}> */}
-      <div className="mb-5" style={{display:'flex'  }}>
+      <div className="mb-5" style={{ display: "flex" }}>
         <Navs
           navLists={navLists}
           handleSelect={(selectedKey) => setNavActive(selectedKey)}
         />
-        <div style={{ 'marginLeft' : 'auto' }}>
+        <div style={{ marginLeft: "auto" }}>
           <span
             className="mr-1 btn btn-success btn-sm"
             onClick={() => {
               stateErrSync("service");
               setPoAsync(true);
-              setTitleSync(<FormattedMessage id="TITLE.SYNCHRONIZE_SERVICES" />);
+              setTitleSync(
+                <FormattedMessage id="TITLE.SYNCHRONIZE_SERVICES" />
+              );
             }}
           >
             <i className="fas fa-sync "></i>
@@ -476,7 +474,6 @@ const Item = ({ handleClick, status }) => {
             >
               {(item) => {
                 return item?.map((item2) => {
-                  console.log("iterm", item, item2);
                   return (
                     <TableRow
                       hover
@@ -486,7 +483,6 @@ const Item = ({ handleClick, status }) => {
                       //       id: el.id,
                       //       type: "jasa",
                       //     })
-                      //   // console.log(e)
                       // }
                       key={item2?.id}
                     >
@@ -495,13 +491,11 @@ const Item = ({ handleClick, status }) => {
                           name={`checkbox-${item2.id}`}
                           id={`checkbox-${item2.id}`}
                           color="secondary"
-                          onChange={
-                            (e) =>
-                              handleChecklist(e, item2, {
-                                id: el.id,
-                                type: "jasa",
-                              })
-                            // console.log(e)
+                          onChange={(e) =>
+                            handleChecklist(e, item2, {
+                              id: el.id,
+                              type: "jasa",
+                            })
                           }
                           size="small"
                           checked={item2.checked}
@@ -641,9 +635,7 @@ const Item = ({ handleClick, status }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {titleSync}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{titleSync}</DialogTitle>
         <Form id="asyncData" onSubmit={handleAsync}>
           <DialogContent>
             <Row>

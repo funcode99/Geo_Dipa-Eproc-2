@@ -39,7 +39,6 @@ export class TerminPageNew extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(`thispprops`, this.props, prevProps);
     if (this.props.location.pathname !== prevProps.location.pathname) {
       this.handleRefresh();
       return;
@@ -96,7 +95,6 @@ export class TerminPageNew extends PureComponent {
           type: "get",
           url: `/delivery/task/${task_id}/item-service`,
           onSuccess: (res) => {
-            console.log(`res item-service`, res);
             save_data_task(res.data);
             const mappedStepper = res.data.task_steppers.map((el) => ({
               label: el.label,

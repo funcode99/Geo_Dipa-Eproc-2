@@ -223,7 +223,6 @@ function ContractSprPage(props) {
     onSubmit: async (values) => {
       // gak kepake
       // { setStatus, setSubmitting }
-      // console.log('masuk ke onsubmit formik')
       setLoading(true);
       setSppStatus(true);
       var data = new FormData();
@@ -318,7 +317,6 @@ function ContractSprPage(props) {
     getSpp(contract_id, termin)
       .then((response) => {
         if (!response["data"]["data"]) {
-          console.log(response, "response data");
           formik.setFieldValue(
             "spr_no",
             dataFormSprVendor.spr_no ? dataFormSprVendor.spr_no : ""
@@ -593,11 +591,8 @@ function ContractSprPage(props) {
 
   return (
     <React.Fragment>
-      
       <Toast />
-
       ini apa toh
-      
       <Dialog
         open={dialogState}
         // keepMounted
@@ -668,7 +663,6 @@ function ContractSprPage(props) {
           </DialogContent>
         </PerfectScrollbar>
       </Dialog>
-      
       <Dialog
         open={dialogStateBank}
         // keepMounted
@@ -741,7 +735,6 @@ function ContractSprPage(props) {
           </DialogContent>
         </PerfectScrollbar>
       </Dialog>
-      
       <Dialog
         open={modalHistory}
         // keepMounted
@@ -941,12 +934,9 @@ function ContractSprPage(props) {
           </button>
         </DialogActions>
       </Dialog>
-      
       <Card>
-
         <form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
           <CardBody>
-            
             {loadingSpp && (
               <span>
                 <i className="fas fa-spinner fa-pulse text-dark mr-1"></i>
@@ -955,7 +945,6 @@ function ContractSprPage(props) {
             )}
 
             <div className="row">
-              
               <div className="col-md-6">
                 <div className="form-group row">
                   <label
@@ -978,9 +967,9 @@ function ContractSprPage(props) {
                       {...formik.getFieldProps("spr_no")}
                       // keren sih ini, disimpan ke localStorage lewat redux persist
                       onChange={(e) => {
-                        dataFormSprVendor.spr_no = e.target.value
-                        props.set_data_spr_vendor(dataFormSprVendor)
-                        formik.setFieldValue("spr_no", e.target.value)
+                        dataFormSprVendor.spr_no = e.target.value;
+                        props.set_data_spr_vendor(dataFormSprVendor);
+                        formik.setFieldValue("spr_no", e.target.value);
                       }}
                     />
                   </div>
@@ -997,9 +986,13 @@ function ContractSprPage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type={loading ||
+                      type={
+                        loading ||
                         sppStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate) ? "text" : "date"}
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
+                          ? "text"
+                          : "date"
+                      }
                       className="form-control"
                       id="dateSpp"
                       disabled={
@@ -1066,7 +1059,8 @@ function ContractSprPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
+                      sppStatus ||
+                      (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                         ? ""
                         : "pointer"
                     }`}
@@ -1080,7 +1074,8 @@ function ContractSprPage(props) {
                     )}
                     <span
                       className={`form-control text-truncate ${
-                        sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
+                        sppStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -1346,7 +1341,8 @@ function ContractSprPage(props) {
                     <label
                       htmlFor="upload_bank"
                       className={`input-group mb-3 col-sm-8 ${
-                        sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
+                        sppStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                           ? ""
                           : "pointer"
                       }`}
@@ -1360,7 +1356,8 @@ function ContractSprPage(props) {
                       )}
                       <span
                         className={`form-control text-truncate h-100 ${
-                          sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
+                          sppStatus ||
+                          (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
                             ? classes.textDisabled
                             : ""
                         }`}
@@ -1406,11 +1403,9 @@ function ContractSprPage(props) {
                     />
                   </div>
                 )}
-              
               </div>
 
               <div className="col-md-6">
-                      
                 <div className="form-group row">
                   <label
                     htmlFor="priceContract"
@@ -1489,20 +1484,18 @@ function ContractSprPage(props) {
                     />
                   </div>
                 </div> */}
-
               </div>
-
             </div>
-
           </CardBody>
           <CardFooter className="text-right">
-            
             <button
               type="submit"
               className="btn btn-primary mx-1"
               disabled={
                 (formik.touched && !formik.isValid) ||
-                loading || sppStatus || (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
+                loading ||
+                sppStatus ||
+                (!invoicePeriodsStatus && !isOnMismatch && !sppUpdate)
               }
             >
               {/* benar */}
@@ -1533,11 +1526,11 @@ function ContractSprPage(props) {
                   <TableRow key={index.toString()}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.spr_no}</TableCell>
-                    <TableCell>{
-                      item.spr_date
+                    <TableCell>
+                      {item.spr_date
                         ? moment(item.spr_date).format("DD MMMM YYYY")
-                        : ""
-                    }</TableCell>
+                        : ""}
+                    </TableCell>
                     <TableCell>
                       <a href={getFileSpp + item.file_name}>{item.file_name}</a>
                     </TableCell>
@@ -1570,9 +1563,7 @@ function ContractSprPage(props) {
             </TableOnly>
           </CardFooter>
         </form>
-
       </Card>
-
     </React.Fragment>
   );
 }

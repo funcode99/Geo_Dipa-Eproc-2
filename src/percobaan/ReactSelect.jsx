@@ -18,22 +18,17 @@ export const ReactSelect = ({
   type,
   disabled,
 }) => {
-  console.log(disabled, "disabled nya");
   const [isClearable, setIsClearable] = useState(true);
   const [isSearchable, setIsSearchable] = useState(true);
   const [userChoice, setUserChoice] = useState(0);
 
   useEffect(() => {
     // saat awal muncul, sudah langsung jalan.
-    // console.log("userchoice berubah");
     if (func) {
       func(userChoice, arrayIndex, data, type);
     }
     // data.splice(userChoice, 1);
   }, [userChoice]);
-
-  console.log("isi data di react select", data);
-  console.log(data !== "undefined");
 
   if (data) {
     data.map((item, index) => {

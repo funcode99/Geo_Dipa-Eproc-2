@@ -25,12 +25,7 @@ const RowTableSA = ({ wbs, item, index }) => {
   const { setArrService, listWBS, readOnly, options } = useContext(
     FormSAContext
   );
-
-  // const _handleSubmit = (data) => {
-  //   console.log(`data`, data);
-  // };
   const _handleBlur = () => {
-    console.log("formikRef.current", formikRef.current);
     setArrService((prev) => ({
       ...prev,
       [`service_${item?.id}`]: {
@@ -42,17 +37,13 @@ const RowTableSA = ({ wbs, item, index }) => {
   const _open = () => {
     wbsRef.current.open();
   };
-  // console.log(`readOnly`, readOnly, item);
-  // console.log(`data row`, formikRef.current);
   const _handleSelected = (data) => {
-    // console.log(`data_handleSelected`, data);
     const dataArr = Array(data.length)
       .fill()
       .map((_, i) => ({
         name: data[`wbs${i + 1}`].wbs_id,
         value: data[`value${i + 1}`],
       }));
-    // console.log(`wbs add datasss`, dataArr);
     formikRef.current.setFieldValue("wbsdata", dataArr, true);
     setTimeout(() => {
       _handleBlur();

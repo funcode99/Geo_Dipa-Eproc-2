@@ -30,7 +30,12 @@ import {
   approveInvPosting,
 } from "../../_redux/InvoiceMonitoringCrud";
 import useToast from "../../../../components/toast";
-import { rupiah,currencySign, extractAmount, formatCurrency } from "../../../../libs/currency";
+import {
+  rupiah,
+  currencySign,
+  extractAmount,
+  formatCurrency,
+} from "../../../../libs/currency";
 import {
   ExpansionPanel,
   ExpansionPanelDetails,
@@ -115,7 +120,6 @@ function ItemContractBKB(props) {
   const getBkbData = useCallback(() => {
     getBkb(termin)
       .then((response) => {
-        console.log(`bkbData`, response);
         if (response?.["data"]?.["data"]) {
           setBkbData(response["data"]["data"]);
           setParkApInput(response["data"]["data"]["doc_park_ap_no"]);
@@ -503,8 +507,6 @@ function ItemContractBKB(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
-
-  console.log("bkbData", bkbData);
 
   return (
     <React.Fragment>
@@ -951,7 +953,11 @@ function ItemContractBKB(props) {
                         <td>
                           <div className="d-flex justify-content-between">
                             <span>{currencySign(bkbData?.symbol)}</span>
-                            <span>{extractAmount(formatCurrency(bkbData?.symbol, row.price))}</span>
+                            <span>
+                              {extractAmount(
+                                formatCurrency(bkbData?.symbol, row.price)
+                              )}
+                            </span>
                           </div>
                         </td>
                       </tr>
@@ -973,7 +979,11 @@ function ItemContractBKB(props) {
                         <td>
                           <div className="d-flex justify-content-between">
                             <span>{currencySign(bkbData?.symbol)}</span>
-                            <span>{extractAmount(formatCurrency(bkbData?.symbol, row.value))}</span>
+                            <span>
+                              {extractAmount(
+                                formatCurrency(bkbData?.symbol, row.value)
+                              )}
+                            </span>
                           </div>
                         </td>
                       </tr>
@@ -994,7 +1004,12 @@ function ItemContractBKB(props) {
                         <div className="d-flex justify-content-between">
                           <span>{currencySign(bkbData?.symbol)}</span>
                           <span>
-                          {extractAmount(formatCurrency(bkbData?.symbol, bkbData?.ppn?.tax_amount))}
+                            {extractAmount(
+                              formatCurrency(
+                                bkbData?.symbol,
+                                bkbData?.ppn?.tax_amount
+                              )
+                            )}
                           </span>
                         </div>
                       </td>
@@ -1013,7 +1028,13 @@ function ItemContractBKB(props) {
                               <div className="d-flex justify-content-between">
                                 <span>{currencySign(bkbData?.symbol)}</span>
                                 <span>
-                                  {extractAmount(formatCurrency(bkbData?.symbol, item.wi_tax_base * (parseFloat(item.qsatz) / 100)))}
+                                  {extractAmount(
+                                    formatCurrency(
+                                      bkbData?.symbol,
+                                      item.wi_tax_base *
+                                        (parseFloat(item.qsatz) / 100)
+                                    )
+                                  )}
                                 </span>
                               </div>
                             </td>
@@ -1046,7 +1067,10 @@ function ItemContractBKB(props) {
                       <div className="d-flex justify-content-between">
                         <span>{bkbData && currencySign(bkbData?.symbol)}</span>
                         <span>
-                        {bkbData &&  extractAmount(formatCurrency(bkbData?.symbol, bkbData?.penalty))}
+                          {bkbData &&
+                            extractAmount(
+                              formatCurrency(bkbData?.symbol, bkbData?.penalty)
+                            )}
                         </span>
                       </div>
                     </td>
@@ -1060,7 +1084,12 @@ function ItemContractBKB(props) {
                         <span>{bkbData && currencySign(bkbData?.symbol)}</span>
                         <span>
                           {bkbData
-                            ?  extractAmount(formatCurrency(bkbData?.symbol, bkbData?.total_amount))
+                            ? extractAmount(
+                                formatCurrency(
+                                  bkbData?.symbol,
+                                  bkbData?.total_amount
+                                )
+                              )
                             : "-"}
                         </span>
                       </div>

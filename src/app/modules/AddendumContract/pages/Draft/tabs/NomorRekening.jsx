@@ -47,7 +47,6 @@ const NomorRekening = ({
       }}
       onSubmit={(values) => {
         submitFormParameterAccountNumber(values);
-        console.log("values account number", values);
       }}
     >
       {(props) => {
@@ -396,7 +395,6 @@ const NomorRekening = ({
                           width: "100%",
                         }}
                         onChange={(event) => {
-                          console.log("isi currentTarget", event.target.files);
                           setFieldValue(
                             "bank_statement_file",
                             event.target.files[0]

@@ -43,8 +43,6 @@ const AreaChart = ({ baseColor, chart_data }) => {
       return;
     }
 
-    // console.log(`layoutProps`, layoutProps);
-
     const options = getChartOption(layoutProps);
 
     const objData = chart_data.reduce(
@@ -56,7 +54,6 @@ const AreaChart = ({ baseColor, chart_data }) => {
       },
       { data: [], categories: [] }
     );
-    // console.log(`objData`, objData);
 
     options.series[0].data = objData.data;
     options.xaxis.categories = objData.categories;

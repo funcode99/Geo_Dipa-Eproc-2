@@ -58,8 +58,6 @@ export default function BeritaAcara(props) {
   const [tableContent, setTableContent] = React.useState([]);
   const [dataBAPP, setDataBAPP] = React.useState(tempDataBAPP);
 
-  console.log(`berita acara`);
-
   // const generateTableContent = (data) => {
   //   data.forEach((item) => {
   //     const rows = [
@@ -72,13 +70,11 @@ export default function BeritaAcara(props) {
   //           <div className="d-flex flex-row justify-content-center">
   //             <button
   //               className="btn btn-sm p-1"
-  //               onClick={(e) => console.log(e)}
   //             >
   //               <i className="fas fa-edit text-primary"></i>
   //             </button>
   //             <button
   //               className="btn btn-sm p-1 mr-2"
-  //               onClick={(e) => console.log(e)}
   //             >
   //               <i className="fas fa-trash text-danger"></i>
   //             </button>
@@ -236,7 +232,6 @@ export default function BeritaAcara(props) {
                 color="secondary"
                 className={classes.button}
                 size="small"
-                onClick={(e) => console.log("tableContent: ", tableContent)}
               >
                 <i
                   className={`fas fa-eye text-white ${classes.iconButton}`}

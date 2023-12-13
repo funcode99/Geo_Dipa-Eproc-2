@@ -207,7 +207,6 @@ const DetailGR = ({ data, type, fullData, item }) => {
     ],
     [client]
   );
-  //   console.log(`fullData`, fullData, item);
 
   const tab2 = useMemo(
     () => [

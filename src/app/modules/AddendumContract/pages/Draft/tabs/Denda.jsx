@@ -171,7 +171,6 @@ const Denda = ({
         }}
         onSubmit={(values) => {
           submitFormParameterFine(values);
-          console.log("isi submit", values);
         }}
       >
         {({ values }) => (

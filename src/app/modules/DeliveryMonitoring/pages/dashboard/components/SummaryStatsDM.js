@@ -197,7 +197,6 @@ function getChartOptions(layoutProps, height, series) {
         },
         title: {
           formatter: function(seriesName, index) {
-            console.log(`index`, index);
             return series_labels[index.seriesIndex] || seriesName;
           },
         },

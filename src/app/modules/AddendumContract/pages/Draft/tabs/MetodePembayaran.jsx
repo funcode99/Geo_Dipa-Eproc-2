@@ -70,7 +70,6 @@ const MetodePembayaran = ({
           attachment_data: dataNewClause.payment_method.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("submit di metode pembayaran", values);
           submitFormParameterPaymentMethod(values);
         }}
       >

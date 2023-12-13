@@ -411,10 +411,6 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                                 name={data.nameTitle}
                                 onChange={(e) => {
                                   setInputDataGuarantee((state) => {
-                                    console.log(
-                                      "masuk update guarantee",
-                                      data.nameTitle
-                                    );
                                     let fieldName = data.nameTitle;
                                     let a = { ...state };
                                     a[fieldName] = e.target.value;
@@ -440,7 +436,6 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                                 name={data.nameTitle}
                                 onChange={(e) => {
                                   setInputDataGuarantee((state) => {
-                                    console.log("masuk update guarantee");
                                     let fieldName = data.nameTitle;
                                     let a = { ...state };
                                     a[fieldName] = e.target.value;
@@ -490,10 +485,6 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                                 name={data.nameStart}
                                 onChange={(e) => {
                                   setInputDataGuarantee((state) => {
-                                    console.log(
-                                      "masuk update guarantee",
-                                      data.nameTitle
-                                    );
                                     let fieldName = data.nameStart;
                                     let a = { ...state };
                                     a[fieldName] = e.target.value;
@@ -533,7 +524,6 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                                 }
                                 onChange={(e) => {
                                   setInputDataGuarantee((state) => {
-                                    console.log("masuk update guarantee");
                                     let fieldName = data.nameEnd;
                                     let a = { ...state };
                                     a[fieldName] = e.target.value;
@@ -619,14 +609,9 @@ const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
                                 event.target.files[0]
                               );
                               setInputDataGuarantee((state) => {
-                                console.log("state sekarang", state);
                                 let fieldName = data.nameEvidence;
                                 let a = { ...state };
                                 // a[fieldName] = event.target.files[0];
-                                // console.log(
-                                //   "isi file",
-                                //   event.target.files[0]
-                                // );
                                 a[fieldName] = formData;
                                 return a;
                               });

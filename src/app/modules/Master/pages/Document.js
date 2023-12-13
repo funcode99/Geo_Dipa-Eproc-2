@@ -190,7 +190,6 @@ export const Documents = ({ typeId }) => {
   };
 
   React.useEffect(() => {
-    // console.log(typeId);
     getListID();
     getOptions();
 
@@ -203,7 +202,6 @@ export const Documents = ({ typeId }) => {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       try {
         enableLoading();
-        // console.log(values);
         const requestData = periodic
           ? {
               name: values.document_name,
@@ -246,7 +244,6 @@ export const Documents = ({ typeId }) => {
       const {
         data: { data },
       } = await master.getDocumentID(id);
-      // console.log(data[0].is_periodic);
       setUpdate({ id, update: true });
       // formik.setFieldValue('document_name', data[0].name);
       formik.setValues({
@@ -271,14 +268,12 @@ export const Documents = ({ typeId }) => {
       getListID();
     } catch (error) {
       setToast("Error with API, please contact Developer!");
-      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleAction = (type, params) => {
-    console.log(`type`, type, params);
     switch (type) {
       // case "find":
       //   setType(params?.id);

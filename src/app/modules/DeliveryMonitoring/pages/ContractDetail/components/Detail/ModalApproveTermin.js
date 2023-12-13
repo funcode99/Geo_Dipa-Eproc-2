@@ -19,7 +19,6 @@ const ModalApproveTermin = React.forwardRef(
     const _handleSubmit = () => {
       if (typeof onSubmit === "function")
         onSubmit({ ...dataProps, remarks_fill: remarks });
-      console.log(`submitted ====> NO FUNCTION`, dataProps);
     };
 
     const handleRemarksChange = (e) => {

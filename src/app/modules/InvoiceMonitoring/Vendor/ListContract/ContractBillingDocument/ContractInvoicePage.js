@@ -129,8 +129,6 @@ function ContractInvoicePage(props) {
     tax_date_yesterday: new Date(Date.now() - 86400000),
   };
 
-  console.log(progressTermin, "progressTermin");
-
   const headerTable = [
     {
       title: intl.formatMessage({
@@ -350,7 +348,6 @@ function ContractInvoicePage(props) {
 
     getInvoice(contract_id, termin)
       .then((response) => {
-        console.log(response["data"]);
         if (!response["data"]["data"]) {
           formik.setFieldValue(
             "invoice_no",
@@ -547,7 +544,6 @@ function ContractInvoicePage(props) {
   useEffect(getTaxData, []);
   useEffect(getInvoicePeriodsData, []);
 
-  console.log({ loading, invoiceStatus, invoicePeriodsStatus, isOnMismatch });
   return (
     <React.Fragment>
       <Toast />
@@ -793,7 +789,9 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !invoiceUpdate)
                       }
                     >
                       <FormattedMessage id="TITLE.ADD" />
@@ -819,7 +817,9 @@ function ContractInvoicePage(props) {
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                            (!invoicePeriodsStatus &&
+                              !isOnMismatch &&
+                              !invoiceUpdate)
                           }
                           required={true}
                         />
@@ -829,7 +829,9 @@ function ContractInvoicePage(props) {
                           id={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                            (!invoicePeriodsStatus &&
+                              !isOnMismatch &&
+                              !invoiceUpdate)
                               ? "NumberFormat-text"
                               : "NumberFormat-input"
                           }
@@ -837,7 +839,9 @@ function ContractInvoicePage(props) {
                           displayType={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                            (!invoicePeriodsStatus &&
+                              !isOnMismatch &&
+                              !invoiceUpdate)
                               ? "text"
                               : "input"
                           }
@@ -875,13 +879,14 @@ function ContractInvoicePage(props) {
                           onClick={() => {
                             let addtionalPayments = cloneDeep(addtionalPayment);
                             addtionalPayments.splice(index, 1);
-                            console.log("addtionalPayments", addtionalPayments);
                             setAddtionalPayment(addtionalPayments);
                           }}
                           disabled={
                             loading ||
                             invoiceStatus ||
-                            (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                            (!invoicePeriodsStatus &&
+                              !isOnMismatch &&
+                              !invoiceUpdate)
                           }
                         >
                           <FormattedMessage id="BUTTON.DELETE" />
@@ -966,7 +971,9 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !invoiceUpdate)
                       }
                       defaultValue={
                         invoiceData ? invoiceData["invoice_no"] : null
@@ -995,15 +1002,23 @@ function ContractInvoicePage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type={loading ||
+                      type={
+                        loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate) ? "text": "date"}
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !invoiceUpdate)
+                          ? "text"
+                          : "date"
+                      }
                       className="form-control"
                       id="dateInvoice"
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !invoiceUpdate)
                       }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("from_time")}
@@ -1041,7 +1056,9 @@ function ContractInvoicePage(props) {
                       disabled={
                         loading ||
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !invoiceUpdate)
                       }
                       defaultValue={
                         invoiceData ? invoiceData["description"] : null
@@ -1068,7 +1085,8 @@ function ContractInvoicePage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      invoiceStatus || (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                      invoiceStatus ||
+                      (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
                         ? ""
                         : "pointer"
                     }`}
@@ -1083,7 +1101,9 @@ function ContractInvoicePage(props) {
                     <span
                       className={`form-control text-truncate ${
                         invoiceStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !invoiceUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !invoiceUpdate)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -1382,11 +1402,11 @@ function ContractInvoicePage(props) {
                   <TableRow key={index.toString()}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.invoice_no}</TableCell>
-                    <TableCell>{
-                      item.from_time
+                    <TableCell>
+                      {item.from_time
                         ? moment(item.from_time).format("DD MMMM YYYY")
-                        : ""
-                    }</TableCell>
+                        : ""}
+                    </TableCell>
                     <TableCell>
                       <a href={getFileInvoice + item.file_name}>
                         {item.file_name}

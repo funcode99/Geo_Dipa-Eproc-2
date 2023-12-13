@@ -74,12 +74,6 @@ const CollapsibleRow = ({
           <TableCell>
             <ButtonAction
               handleAction={(type, data, label) => {
-                console.log(
-                  "masuk ke handleAction collapsible row",
-                  type,
-                  data,
-                  label
-                );
                 if (label === "JOB_PRICE.TABLE_ACTION.DELETE") {
                   onDeleteMode(index);
                 } else if (label === "JOB_PRICE.TABLE_ACTION.EDIT") {

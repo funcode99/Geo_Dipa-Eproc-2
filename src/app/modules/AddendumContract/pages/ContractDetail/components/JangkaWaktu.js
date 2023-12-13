@@ -122,7 +122,6 @@ const formData1 = [
 ];
 
 const Item = ({ title, data }) => {
-  // console.log(`dataContraacct`, dataContractById);
   return (
     <React.Fragment>
       <TitleField title={title} />
