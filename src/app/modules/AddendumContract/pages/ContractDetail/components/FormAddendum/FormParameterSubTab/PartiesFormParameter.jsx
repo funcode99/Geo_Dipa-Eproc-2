@@ -23,8 +23,6 @@ const PartiesFormParameter = ({
   dataNewClause,
   isDisable,
 }) => {
-  console.log(jobDirector, "jobDirector");
-  console.log(jobSupervisor, "jobSupervisor");
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
     openCloseWorkSupervisor.current.open();

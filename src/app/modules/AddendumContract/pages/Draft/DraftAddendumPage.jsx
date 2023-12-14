@@ -92,7 +92,6 @@ const DraftAddendumPage = ({
       type: "get",
       url: `/adendum/contract-released/${id}/show`,
       onSuccess: (res) => {
-        // console.log(res, "respon data vendor_id");
         setDataContractById(res?.data);
         getSecondAuthorizedOfficial(res.data.vendor.id);
       },
@@ -196,9 +195,7 @@ const DraftAddendumPage = ({
       // url: `/adendum/contract-released/${draft_id}/show`,
       url: `/adendum/add-contracts/${draft_id}`,
       onSuccess: (res) => {
-        // console.log(res, "respon 2.3");
         setJsonData(res?.data);
-        // setauthorizedOfficial(...authorizedOfficial, )
         localStorage.setItem(
           "payment_method",
           JSON.stringify(res?.data?.payment_method_data)
@@ -382,12 +379,6 @@ const DraftAddendumPage = ({
       jobSupervisor2.unshift(itemToMove);
     }
   }
-
-  console.log(jobSupervisor2, "jobSupervisor2 alamat");
-  // console.log(
-  //   jsonData?.add_contract_party?.party_1_job_director[0],
-  //   "          .party_1_job_director_username"
-  // );
 
   React.useEffect(() => {
     // getContractById(draft_id);
