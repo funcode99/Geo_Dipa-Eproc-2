@@ -1,11 +1,11 @@
-import { connect } from "react-redux";
 import { DEV_NODE } from "redux/BaseHost";
 import { Formik, Field, Form } from "formik";
+import { connect, useDispatch } from "react-redux";
 import React, { useState, useEffect } from "react";
-import NewClause from "../../../pages/ContractDetail/components/FormAddendum/Components/Modal/NewClause";
-import NewContract from "../../../pages/ContractDetail/components/FormAddendum/Components/Modal/NewContract";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { submitGuarantee } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import NewClause from "../../../pages/ContractDetail/components/FormAddendum/Components/Modal/NewClause";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const Jaminan = ({
@@ -13,7 +13,11 @@ const Jaminan = ({
   jsonData,
   contract_id,
   add_contract_guarantee,
+  dataNewClause,
+  newJson,
 }) => {
+  const dispatch = useDispatch();
+
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
     openCloseAddClause.current.open();
@@ -40,10 +44,8 @@ const Jaminan = ({
       add_contract_guarantee?.maintenance_guarantee_start_date,
     maintenance_guarantee_end_date:
       add_contract_guarantee?.maintenance_guarantee_end_date,
-    // body_clause_data: "",
-    body_data: dataNewClauseDrafting.guarantee.bodyClauseData,
-    // attachment_clause_data: "",
-    attachment_data: dataNewClauseDrafting.guarantee.attachmentClauseData,
+    body_data: add_contract_guarantee.body_clause_data,
+    attachment_data: add_contract_guarantee.attachment_clause_data,
   });
 
   const [data, setData] = useState({});
@@ -59,6 +61,25 @@ const Jaminan = ({
       }
     });
   }, [guaranteeBeforeAddendum]);
+
+  useEffect(() => {
+    if (add_contract_guarantee.attachment_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_guarantee.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "guarantee",
+      });
+    }
+    if (add_contract_guarantee.body_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_guarantee.body_clause_data || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "guarantee",
+      });
+    }
+  }, []);
   const guaranteeBeforeAddendum = [
     {
       title: "Jaminan Uang Muka",
@@ -153,10 +174,8 @@ const Jaminan = ({
         contract_id
       );
       alert("Berhasil Update Data");
-      // window.location.reload();
     } catch (error) {
       console.error("Submission error:", error);
-
       if (error.response) {
         console.error("Server response data:", error.response.data);
       }
@@ -194,8 +213,6 @@ const Jaminan = ({
             inputDataGuarantee.maintenance_guarantee_start_date,
           maintenance_guarantee_end_date:
             inputDataGuarantee.maintenance_guarantee_end_date,
-          // body_data: inputDataGuarantee.body_clause_data,
-          // attachment_data: inputDataGuarantee.attachment_clause_data,
           body_data: dataNewClauseDrafting.guarantee.bodyClauseData,
           attachment_data: dataNewClauseDrafting.guarantee.attachmentClauseData,
         }}
