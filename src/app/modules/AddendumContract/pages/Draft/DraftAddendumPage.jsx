@@ -44,7 +44,7 @@ const DraftAddendumPage = ({
   const { draft_id } = useParams();
   const [data, setData] = useState({});
   const [PICData, setPICData] = useState();
-  // const [jsonData, setJsonData] = useState();
+  const [jsonData, setJsonData] = useState();
   const [contract, setContract] = useState({});
   const [jobDirector, setJobDirector] = useState();
   const [sequence, setSequence] = React.useState(0);
@@ -92,6 +92,7 @@ const DraftAddendumPage = ({
       type: "get",
       url: `/adendum/contract-released/${id}/show`,
       onSuccess: (res) => {
+        console.log(res, "respon data");
         setDataContractById(res?.data);
         getSecondAuthorizedOfficial(res?.data?.vendor_id);
       },
@@ -187,6 +188,7 @@ const DraftAddendumPage = ({
   //   });
   // };
 
+  // api 2.3
   const getDataContractHeader = async () => {
     fetch_api_sg({
       key: keys.fetch,
@@ -194,7 +196,9 @@ const DraftAddendumPage = ({
       // url: `/adendum/contract-released/${draft_id}/show`,
       url: `/adendum/add-contracts/${draft_id}`,
       onSuccess: (res) => {
-        // setJsonData(res?.data);
+        console.log(res, "respon 2.3");
+        setJsonData(res?.data);
+        // setauthorizedOfficial(...authorizedOfficial, )
         localStorage.setItem(
           "payment_method",
           JSON.stringify(res?.data?.payment_method_data)
@@ -280,6 +284,48 @@ const DraftAddendumPage = ({
       },
     });
   };
+
+  if (!Array.isArray(authorizedOfficial)) {
+    console.error("Data is not an array.");
+  } else {
+    const indexToMove = authorizedOfficial.findIndex(
+      (item) =>
+        item.authorized_official_username ===
+        jsonData?.add_contract_party?.party_1_autorized_username
+    );
+
+    if (indexToMove !== -1) {
+      const itemToMove = authorizedOfficial[indexToMove];
+
+      // Remove the item from its current position
+      authorizedOfficial.splice(indexToMove, 1);
+
+      // Add the item at the beginning of the array
+      authorizedOfficial.unshift(itemToMove);
+    }
+  }
+  if (!Array.isArray(secondAuthorizedOfficial)) {
+    console.error("Data is not an array.");
+  } else {
+    const indexToMove = secondAuthorizedOfficial.findIndex(
+      (item) =>
+        item.authorized_official_username ===
+        jsonData?.add_contract_party?.party_2_autorized_username
+    );
+
+    if (indexToMove !== -1) {
+      const itemToMove = secondAuthorizedOfficial[indexToMove];
+
+      // Remove the item from its current position
+      secondAuthorizedOfficial.splice(indexToMove, 1);
+
+      // Add the item at the beginning of the array
+      secondAuthorizedOfficial.unshift(itemToMove);
+    }
+  }
+
+  console.log(authorizedOfficial, "authorizedOfficial");
+  console.log(secondAuthorizedOfficial, "secondAuthorizedOfficial");
 
   React.useEffect(() => {
     // getContractById(draft_id);
