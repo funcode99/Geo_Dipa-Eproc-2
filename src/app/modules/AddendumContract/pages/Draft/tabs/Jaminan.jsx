@@ -1,12 +1,15 @@
+import { connect } from "react-redux";
 import { DEV_NODE } from "redux/BaseHost";
 import { Formik, Field, Form } from "formik";
 import React, { useState, useEffect } from "react";
+import NewClause from "../../../pages/ContractDetail/components/FormAddendum/Components/Modal/NewClause";
+import NewContract from "../../../pages/ContractDetail/components/FormAddendum/Components/Modal/NewContract";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import { submitGuarantee } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const Jaminan = ({
-  dataNewClause,
+  dataNewClauseDrafting,
   jsonData,
   contract_id,
   add_contract_guarantee,
@@ -37,8 +40,10 @@ const Jaminan = ({
       add_contract_guarantee?.maintenance_guarantee_start_date,
     maintenance_guarantee_end_date:
       add_contract_guarantee?.maintenance_guarantee_end_date,
-    body_clause_data: "",
-    attachment_clause_data: "",
+    // body_clause_data: "",
+    body_data: dataNewClauseDrafting.guarantee.bodyClauseData,
+    // attachment_clause_data: "",
+    attachment_data: dataNewClauseDrafting.guarantee.attachmentClauseData,
   });
 
   const [data, setData] = useState({});
@@ -148,7 +153,7 @@ const Jaminan = ({
         contract_id
       );
       alert("Berhasil Update Data");
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error("Submission error:", error);
 
@@ -160,6 +165,11 @@ const Jaminan = ({
 
   return (
     <div className="bg-white p-10">
+      <NewClause
+        openCloseAddClause={openCloseAddClause}
+        fromWhere={"guarantee"}
+        fieldType={"clause_attachment"}
+      />
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -184,8 +194,10 @@ const Jaminan = ({
             inputDataGuarantee.maintenance_guarantee_start_date,
           maintenance_guarantee_end_date:
             inputDataGuarantee.maintenance_guarantee_end_date,
-          body_data: inputDataGuarantee.body_clause_data,
-          attachment_data: inputDataGuarantee.attachment_clause_data,
+          // body_data: inputDataGuarantee.body_clause_data,
+          // attachment_data: inputDataGuarantee.attachment_clause_data,
+          body_data: dataNewClauseDrafting.guarantee.bodyClauseData,
+          attachment_data: dataNewClauseDrafting.guarantee.attachmentClauseData,
         }}
         onSubmit={(values) => {
           submitFormParameterGuarantee(values);
@@ -578,4 +590,10 @@ const Jaminan = ({
   );
 };
 
-export default Jaminan;
+// export default Jaminan;
+
+const mapState = (state) => ({
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
+});
+
+export default connect(mapState, null)(Jaminan);
