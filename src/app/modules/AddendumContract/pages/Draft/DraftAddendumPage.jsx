@@ -92,9 +92,9 @@ const DraftAddendumPage = ({
       type: "get",
       url: `/adendum/contract-released/${id}/show`,
       onSuccess: (res) => {
-        console.log(res, "respon data");
+        // console.log(res, "respon data vendor_id");
         setDataContractById(res?.data);
-        getSecondAuthorizedOfficial(res?.data?.vendor_id);
+        getSecondAuthorizedOfficial(res.data.vendor.id);
       },
     });
   };
@@ -196,7 +196,7 @@ const DraftAddendumPage = ({
       // url: `/adendum/contract-released/${draft_id}/show`,
       url: `/adendum/add-contracts/${draft_id}`,
       onSuccess: (res) => {
-        console.log(res, "respon 2.3");
+        // console.log(res, "respon 2.3");
         setJsonData(res?.data);
         // setauthorizedOfficial(...authorizedOfficial, )
         localStorage.setItem(
@@ -232,7 +232,7 @@ const DraftAddendumPage = ({
         );
         // let timePeriodData = JSON.parse(localStorage.getItem("time_period"));
         // setTimePeriodData(timePeriodData);
-        getSecondAuthorizedOfficial(res?.data?.vendor_id);
+        // getSecondAuthorizedOfficial(res?.data?.vendor_id);
       },
     });
   };
@@ -323,9 +323,71 @@ const DraftAddendumPage = ({
       secondAuthorizedOfficial.unshift(itemToMove);
     }
   }
+  if (!Array.isArray(jobDirector)) {
+    console.error("Data is not an array.");
+  } else {
+    const indexToMove = jobDirector.findIndex(
+      (item) =>
+        item.username ===
+        jsonData?.add_contract_party?.party_1_job_director[0]
+          .party_1_job_director_username
+    );
 
-  console.log(authorizedOfficial, "authorizedOfficial");
-  console.log(secondAuthorizedOfficial, "secondAuthorizedOfficial");
+    if (indexToMove !== -1) {
+      const itemToMove = jobDirector[indexToMove];
+
+      // Remove the item from its current position
+      jobDirector.splice(indexToMove, 1);
+
+      // Add the item at the beginning of the array
+      jobDirector.unshift(itemToMove);
+    }
+  }
+  if (!Array.isArray(jobSupervisor)) {
+    console.error("Data is not an array.");
+  } else {
+    const indexToMove = jobSupervisor.findIndex(
+      (item) =>
+        item.facility_name ===
+        jsonData?.add_contract_party?.party_1_job_director[0]?.facility_name
+    );
+
+    if (indexToMove !== -1) {
+      const itemToMove = jobSupervisor[indexToMove];
+
+      // Remove the item from its current position
+      jobSupervisor.splice(indexToMove, 1);
+
+      // Add the item at the beginning of the array
+      jobSupervisor.unshift(itemToMove);
+    }
+  }
+  if (!Array.isArray(jobSupervisor2)) {
+    console.error("Data is not an array.");
+  } else {
+    const indexToMove = jobSupervisor2.findIndex(
+      (item) =>
+        item.address ===
+        jsonData?.add_contract_party?.party_1_job_supervisor[0]
+          ?.party_1_job_supervisor_address
+    );
+
+    if (indexToMove !== -1) {
+      const itemToMove = jobSupervisor2[indexToMove];
+
+      // Remove the item from its current position
+      jobSupervisor2.splice(indexToMove, 1);
+
+      // Add the item at the beginning of the array
+      jobSupervisor2.unshift(itemToMove);
+    }
+  }
+
+  console.log(jobSupervisor2, "jobSupervisor2 alamat");
+  // console.log(
+  //   jsonData?.add_contract_party?.party_1_job_director[0],
+  //   "          .party_1_job_director_username"
+  // );
 
   React.useEffect(() => {
     // getContractById(draft_id);
@@ -1779,6 +1841,7 @@ const DraftAddendumPage = ({
               jobPriceCurrent={data?.add_contract_job_price}
               contract_id={draft_id}
               currencies={currencies}
+              isDisable={true}
             />
             // lo buat disini buat perbandingan yak?
             // <JobPriceFormParameter
