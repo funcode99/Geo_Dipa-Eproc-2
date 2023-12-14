@@ -9,12 +9,12 @@ import NewClause from "../../../pages/ContractDetail/components/FormAddendum/Com
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const Jaminan = ({
-  dataNewClauseDrafting,
+  newJson,
   jsonData,
   contract_id,
-  add_contract_guarantee,
   dataNewClause,
-  newJson,
+  dataNewClauseDrafting,
+  add_contract_guarantee,
 }) => {
   const dispatch = useDispatch();
 
@@ -185,9 +185,9 @@ const Jaminan = ({
   return (
     <div className="bg-white p-10">
       <NewClause
-        openCloseAddClause={openCloseAddClause}
         fromWhere={"guarantee"}
         fieldType={"clause_attachment"}
+        openCloseAddClause={openCloseAddClause}
       />
       <Formik
         enableReinitialize={true}
@@ -590,12 +590,12 @@ const Jaminan = ({
 
               <PerubahanKlausulKontrak
                 subTitle={"B"}
+                values={values}
+                isDisable={true}
+                isDrafting={true}
                 title={"Jaminan"}
                 fromWhere={"guarantee"}
                 showAddClause={showAddClause}
-                isDrafting={true}
-                values={values}
-                isDisable={true}
               />
 
               <UpdateButton fromWhere={"guarantee"} isDrafting={true} />

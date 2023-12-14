@@ -87,6 +87,8 @@ const DraftAddendumPage = ({
     });
   };
 
+  console.log(data, "data");
+
   const getContractById = async (id) => {
     fetch_api_sg({
       key: keys.getAddendumDetail,
@@ -1815,25 +1817,27 @@ const DraftAddendumPage = ({
             //   secondAuthorizedOfficial={secondAuthorizedOfficial}
             // />
             <ParaPihakTab
-              isDisable={isAdmin}
-              jsonData={dataContractById}
-              authorizedOfficialData={authorizedOfficial}
-              secondAuthorizedOfficial={secondAuthorizedOfficial}
+              isDrafting={true}
               PICData={PICData}
+              isDisable={isAdmin}
+              contract_id={draft_id}
               jobDirector={jobDirector}
+              jsonData={dataContractById}
               jobSupervisor={jobSupervisor}
               jobSupervisor2={jobSupervisor2}
-              contract_id={draft_id}
+              authorizedOfficialData={authorizedOfficial}
+              add_contract_party={data?.add_contract_party}
+              secondAuthorizedOfficial={secondAuthorizedOfficial}
             />
           )}
           {tabActive === 2 && (
             <HargaPekerjaanTab
+              isDisable={true}
               data={dataContractById}
               dataAfterAdendum={data}
-              jobPriceCurrent={data?.add_contract_job_price}
               contract_id={draft_id}
               currencies={currencies}
-              isDisable={true}
+              jobPriceCurrent={data?.add_contract_job_price}
             />
             // lo buat disini buat perbandingan yak?
             // <JobPriceFormParameter
@@ -1846,55 +1850,60 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 3 && (
             <JangkaWaktuTab
-              timePeriodAddendumCurrent={data?.add_contract_time_period}
-              timePeriodData={dataContractById}
+              isAdmin={isAdmin}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
-              isAdmin={isAdmin}
+              timePeriodData={dataContractById}
+              timePeriodAddendumCurrent={data?.add_contract_time_period}
+              add_contract_time_period={data?.add_contract_time_period}
             />
           )}
           {tabActive === 4 && (
             <MetodePembayaranTab
-              paymentMethodCurrent={data?.add_contract_payment_method}
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              paymentMethodCurrent={data?.add_contract_payment_method}
+              add_contract_payment_method={data?.add_contract_payment_method}
             />
           )}
           {tabActive === 5 && (
             <DendaTab
-              fineCurrent={data?.add_contract_fine}
-              jsonData={dataContractById}
-              contract_id={draft_id}
-              dataNewClause={dataNewClause}
               fromWhere={"fine"}
+              contract_id={draft_id}
+              jsonData={dataContractById}
+              dataNewClause={dataNewClause}
+              fineCurrent={data?.add_contract_fine}
             />
           )}
           {tabActive === 6 && (
             <JaminanTab
               newJson={jsonData}
-              guaranteeCurrent={data?.add_contract_guarantee}
-              jsonData={dataContractById}
               contract_id={draft_id}
+              jsonData={dataContractById}
               dataNewClause={dataNewClause}
               dataNewClauseDrafting={dataNewClauseDrafting}
+              guaranteeCurrent={data?.add_contract_guarantee}
               add_contract_guarantee={data?.add_contract_guarantee}
             />
           )}
           {tabActive === 7 && (
             <NomorRekeningTab
-              accountNumberCurrent={data?.add_contract_account_number}
-              jsonData={dataContractById}
               contract_id={draft_id}
+              jsonData={dataContractById}
               dataNewClause={dataNewClause}
               accountNumberBankData={accountNumberBankData}
+              accountNumberCurrent={data?.add_contract_account_number}
+              add_contract_account_number={data?.add_contract_account_number}
             />
           )}
           {tabActive === 8 && (
             <LainnyaTab
-              otherCurrent={data?.add_contract_others}
+              contract_id={draft_id}
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
+              otherCurrent={data?.add_contract_others}
+              add_contract_others={data?.add_contract_others}
             />
           )}
         </>
@@ -3970,7 +3979,6 @@ const mapState = (state) => ({
   dataNewClause: state.addendumContract.dataNewClause,
   dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
-// const mapState = (state) => console.log(state, "state nya");
 
 const mapDispatch = {
   fetch_api_sg,

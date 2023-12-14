@@ -1,5 +1,5 @@
-import { connect } from "react-redux";
 import { Formik, Field, Form } from "formik";
+import { connect, useDispatch } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { ReactSelect } from "percobaan/ReactSelect";
 import NewClause from "../Components/Modal/NewClause";
@@ -7,22 +7,27 @@ import NewWorkDirector from "../Components/Modal/Parties/NewWorkDirector";
 import NewWorkSupervisor from "../Components/Modal/Parties/NewWorkSupervisor";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import NewSecondWorkDirector from "../Components/Modal/Parties/NewSecondWorkDirector";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import NewSecondWorkSupervisor from "../Components/Modal/Parties/NewSecondWorkSupervisor";
 import { submitParties } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const PartiesFormParameter = ({
-  jsonData,
-  authorizedOfficialData,
-  secondAuthorizedOfficial,
   PICData,
+  jsonData,
+  isDisable,
+  isDrafting,
+  contract_id,
   jobDirector,
+  dataNewClause,
   jobSupervisor,
   jobSupervisor2,
-  contract_id,
-  dataNewClause,
-  isDisable,
+  add_contract_party,
+  dataNewClauseDrafting,
+  authorizedOfficialData,
+  secondAuthorizedOfficial,
 }) => {
+  const dispatch = useDispatch();
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
     openCloseWorkSupervisor.current.open();
@@ -98,6 +103,7 @@ const PartiesFormParameter = ({
       },
       contract_id
     );
+    alert("Berhasil Update Data!");
   };
 
   // silahkan taro pejabat berwenang pihak pertama disini kalo mau di persist
@@ -340,6 +346,25 @@ const PartiesFormParameter = ({
     authorizedOfficialData
   );
 
+  useEffect(() => {
+    if (add_contract_party.attachment_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_party.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "parties",
+      });
+    }
+    if (add_contract_party.body_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_party.body_clause_data || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "parties",
+      });
+    }
+  }, []);
+
   return (
     <>
       <NewWorkDirector
@@ -520,8 +545,12 @@ const PartiesFormParameter = ({
           secondAuthorizedOfficial: placeman?.secondAuthorizedOfficial,
           secondJobDirector: placeman.secondWorkDirector,
           secondJobSupervisor: placeman.secondWorkSupervisor,
-          body_data: dataNewClause.parties.bodyClauseData,
-          attachment_data: dataNewClause.parties.attachmentClauseData,
+          body_data: isDrafting
+            ? dataNewClauseDrafting.parties.bodyClauseData
+            : dataNewClause.parties.bodyClauseData,
+          attachment_data: isDrafting
+            ? dataNewClauseDrafting.parties.attachmentClauseData
+            : dataNewClause.parties.attachmentClauseData,
         }}
         onSubmit={(values) => {
           submitFormParameterContractParties(values);
@@ -2944,16 +2973,17 @@ const PartiesFormParameter = ({
             </div>
 
             <PerubahanKlausulKontrak
-              isDisable={isDisable}
               subTitle={"C"}
-              title={"Para Pihak"}
-              showAddClause={showAddClause}
-              fromWhere={"parties"}
               values={values}
               isMandatory={false}
+              title={"Para Pihak"}
+              fromWhere={"parties"}
+              isDisable={isDisable}
+              isDrafting={isDrafting}
+              showAddClause={showAddClause}
             />
 
-            <UpdateButton fromWhere={"parties"} />
+            <UpdateButton fromWhere={"parties"} isDrafting={isDrafting} />
           </Form>
         )}
       </Formik>
@@ -2963,6 +2993,7 @@ const PartiesFormParameter = ({
 
 const mapState = (state) => ({
   dataNewClause: state.addendumContract.dataNewClause,
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
 
 export default connect(mapState, null)(PartiesFormParameter);

@@ -6,16 +6,16 @@ import React, { useState, useEffect } from "react";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const PerubahanKlausulKontrak = ({
-  showAddClause,
-  showAddContract,
   title,
   subTitle,
-  dataNewClause,
-  dataNewClauseDrafting,
-  fromWhere,
-  isMandatory = false,
-  isDrafting = false,
   isDisable,
+  fromWhere,
+  dataNewClause,
+  showAddClause,
+  showAddContract,
+  isDrafting = false,
+  isMandatory = false,
+  dataNewClauseDrafting,
 }) => {
   const dispatch = useDispatch();
 
