@@ -23,6 +23,7 @@ const PartiesFormParameter = ({
   dataNewClause,
   isDisable,
 }) => {
+  console.log(authorizedOfficialData, "authorizedOfficialData");
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
     openCloseWorkSupervisor.current.open();
@@ -51,7 +52,8 @@ const PartiesFormParameter = ({
   const submitFormParameterContractParties = (values) => {
     submitParties(
       {
-        add_contract_id: localStorage.getItem("add_contract_id"),
+        add_contract_id: contract_id,
+        // add_contract_id: localStorage.getItem("add_contract_id"),
         party_1_autorized_username: values?.official_username,
         party_1_autorized_name: values?.official_name,
         party_1_autorized_position: values?.official_position,
@@ -2948,7 +2950,7 @@ const PartiesFormParameter = ({
               showAddClause={showAddClause}
               fromWhere={"parties"}
               values={values}
-              isMandatory={true}
+              isMandatory={false}
             />
 
             <UpdateButton fromWhere={"parties"} />

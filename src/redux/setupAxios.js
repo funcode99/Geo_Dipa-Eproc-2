@@ -12,8 +12,8 @@ export default function setupAxios(axios, store) {
         config.headers.Authorization = `Bearer ${authToken}`;
       }
 
-      config.headers.post["Access-Control-Allow-Origin"] = "*";
-      config.headers.post["Content-Type"] = "application/json";
+      // config.headers.post["Access-Control-Allow-Origin"] = "*";
+      // config.headers.post["Content-Type"] = "application/json";
       // config.headers["Connection"] = "close";
       // config.headers.post["Content-Type"] = "multipart/form-data";
 
