@@ -24,6 +24,7 @@ const HargaPekerjaan = ({
   contract_id,
   currencies,
   jobPriceCurrent,
+  isDisable,
 }) => {
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
@@ -201,6 +202,7 @@ const HargaPekerjaan = ({
                 isMandatory={true}
                 isDrafting={true}
                 values={values}
+                isDisable={isDisable}
               />
               <UpdateButton
                 fromWhere={"job_price"}

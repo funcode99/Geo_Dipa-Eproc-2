@@ -23,7 +23,6 @@ const PartiesFormParameter = ({
   dataNewClause,
   isDisable,
 }) => {
-  console.log(authorizedOfficialData, "authorizedOfficialData");
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
     openCloseWorkSupervisor.current.open();
@@ -185,6 +184,7 @@ const PartiesFormParameter = ({
           jobSupervisor2[num]?.phone;
         newArr[arrIndex]["party_1_job_supervisor_fax"] =
           jobSupervisor2[num]?.fax;
+        newArr[arrIndex]["facility_name"] = jobSupervisor2[num]?.facility_name;
         return {
           ...placeman,
           workSupervisor: newArr,
@@ -1560,7 +1560,7 @@ const PartiesFormParameter = ({
                                     rowGap: 4,
                                   }}
                                 >
-                                  <span>Alamat</span>
+                                  <span>Alamat direktur</span>
                                   <Field
                                     name={`jobDirector[${index}].facility_name`}
                                     data={jobSupervisor}
