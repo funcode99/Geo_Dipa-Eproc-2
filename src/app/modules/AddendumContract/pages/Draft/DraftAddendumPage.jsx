@@ -40,6 +40,7 @@ const DraftAddendumPage = ({
   headerData,
   purch_group,
   dataNewClause,
+  dataNewClauseDrafting,
 }) => {
   const { draft_id } = useParams();
   const [data, setData] = useState({});
@@ -1871,10 +1872,12 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 6 && (
             <JaminanTab
+              newJson={jsonData}
               guaranteeCurrent={data?.add_contract_guarantee}
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              dataNewClauseDrafting={dataNewClauseDrafting}
               add_contract_guarantee={data?.add_contract_guarantee}
             />
           )}
@@ -3965,7 +3968,9 @@ const mapState = (state) => ({
   rolesEproc: state.auth.user.data.roles_eproc,
   purch_group: state.auth.user.data.purch_group,
   dataNewClause: state.addendumContract.dataNewClause,
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
+// const mapState = (state) => console.log(state, "state nya");
 
 const mapDispatch = {
   fetch_api_sg,
