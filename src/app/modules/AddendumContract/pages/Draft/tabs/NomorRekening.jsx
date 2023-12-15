@@ -44,18 +44,27 @@ const NomorRekening = ({
   };
 
   useEffect(() => {
-    if (add_contract_account_number.attachment_clause_data !== null) {
+    if (add_contract_account_number?.attachment_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_account_number.attachment_clause_data || null,
+        payload: add_contract_account_number?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "account_number",
       });
     }
-    if (add_contract_account_number.body_clause_data !== null) {
+    if (add_contract_account_number?.body_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_account_number.body_clause_data || null,
+        payload: add_contract_account_number?.body_clause_data || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
         fieldType: "refill_body_clause_data",
         fromWhere: "account_number",
       });
@@ -73,9 +82,9 @@ const NomorRekening = ({
         initialValues={{
           data_bank: accountNumber,
           bank_statement_file: "",
-          body_data: dataNewClauseDrafting.account_number.bodyClauseData,
+          body_data: dataNewClauseDrafting?.account_number?.bodyClauseData,
           attachment_data:
-            dataNewClauseDrafting.account_number.attachmentClauseData,
+            dataNewClauseDrafting?.account_number?.attachmentClauseData,
         }}
         onSubmit={(values) => {
           submitFormParameterAccountNumber(values);

@@ -130,18 +130,27 @@ const JangkaWaktu = ({
   };
 
   useEffect(() => {
-    if (add_contract_time_period.attachment_clause_data !== null) {
+    if (add_contract_time_period?.attachment_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_time_period.attachment_clause_data || null,
+        payload: add_contract_time_period?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "time_period",
       });
     }
-    if (add_contract_time_period.body_clause_data !== null) {
+    if (add_contract_time_period?.body_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_time_period.body_clause_data || null,
+        payload: add_contract_time_period?.body_clause_data || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
         fieldType: "refill_body_clause_data",
         fromWhere: "time_period",
       });
@@ -171,9 +180,9 @@ const JangkaWaktu = ({
           maintenance_end_date: timePeriodAddendum[3]?.endDate,
           add_contract_period_type: timePeriodAddendum[0]?.radio,
           add_work_period_type: timePeriodAddendum[1]?.radio,
-          body_data: dataNewClauseDrafting.time_period.bodyClauseData,
+          body_data: dataNewClauseDrafting?.time_period?.bodyClauseData,
           attachment_data:
-            dataNewClauseDrafting.time_period.attachmentClauseData,
+            dataNewClauseDrafting?.time_period?.attachmentClauseData,
         }}
         onSubmit={(values) => {
           submitFormParameterTimePeriod(values);

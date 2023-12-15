@@ -44,8 +44,8 @@ const Jaminan = ({
       add_contract_guarantee?.maintenance_guarantee_start_date,
     maintenance_guarantee_end_date:
       add_contract_guarantee?.maintenance_guarantee_end_date,
-    body_data: add_contract_guarantee.body_clause_data,
-    attachment_data: add_contract_guarantee.attachment_clause_data,
+    body_data: add_contract_guarantee?.body_clause_data,
+    attachment_data: add_contract_guarantee?.attachment_clause_data,
   });
 
   const [data, setData] = useState({});
@@ -63,18 +63,27 @@ const Jaminan = ({
   }, [guaranteeBeforeAddendum]);
 
   useEffect(() => {
-    if (add_contract_guarantee.attachment_clause_data !== null) {
+    if (add_contract_guarantee?.attachment_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_guarantee.attachment_clause_data || null,
+        payload: add_contract_guarantee?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "guarantee",
       });
     }
-    if (add_contract_guarantee.body_clause_data !== null) {
+    if (add_contract_guarantee?.body_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_guarantee.body_clause_data || null,
+        payload: add_contract_guarantee?.body_clause_data || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
         fieldType: "refill_body_clause_data",
         fromWhere: "guarantee",
       });

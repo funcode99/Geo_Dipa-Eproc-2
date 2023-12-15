@@ -87,8 +87,6 @@ const DraftAddendumPage = ({
     });
   };
 
-  console.log(data, "data");
-
   const getContractById = async (id) => {
     fetch_api_sg({
       key: keys.getAddendumDetail,
