@@ -34,7 +34,12 @@ const Denda = ({
     if (fineCurrent !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: fineCurrent.attachment_clause_data || null,
+        payload: fineCurrent?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
         fieldType: "refill_attachment_clause_data",
         fromWhere: fromWhere,
       });
@@ -42,7 +47,11 @@ const Denda = ({
     if (fineCurrent !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: fineCurrent.body_clause_data[0] || null,
+        payload: fineCurrent?.body_clause_data[0] || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
         fieldType: "refill_body_clause_data",
         fromWhere: fromWhere,
       });

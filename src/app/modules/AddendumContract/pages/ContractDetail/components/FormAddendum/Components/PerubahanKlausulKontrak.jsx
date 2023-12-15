@@ -71,6 +71,20 @@ const PerubahanKlausulKontrak = ({
     });
   };
 
+  const bodyClauseData = !isDrafting
+    ? dataNewClause[fromWhere]?.bodyClauseData?.[0]
+    : dataNewClauseDrafting[fromWhere]?.bodyClauseData?.[0];
+
+  const isDisabled = !isDrafting
+    ? !bodyClauseData ||
+      bodyClauseData.after_clause_note === "" ||
+      bodyClauseData.before_clause_note === "" ||
+      bodyClauseData.clause_number === ""
+    : !bodyClauseData ||
+      bodyClauseData.after_clause_note === "" ||
+      bodyClauseData.before_clause_note === "" ||
+      bodyClauseData.clause_number === "";
+
   return (
     <>
       {/* Klausul Perubahan */}
@@ -128,7 +142,7 @@ const PerubahanKlausulKontrak = ({
             >
               {subTitle}.1 Body Kontrak
             </h1>
-            <button
+            {/* <button
               type="button"
               disabled={
                 !isDrafting
@@ -138,13 +152,21 @@ const PerubahanKlausulKontrak = ({
                       .before_clause_note === "" ||
                     dataNewClause[fromWhere].bodyClauseData[0].clause_number ===
                       ""
-                  : dataNewClauseDrafting[fromWhere].bodyClauseData[0]
-                      .after_clause_note === "" ||
+                  : dataNewClauseDrafting[fromWhere]?.bodyClauseData[0]
+                      ?.after_clause_note === "" ||
+                    dataNewClauseDrafting[fromWhere]?.bodyClauseData[0]
+                      ?.before_clause_note === "" ||
                     dataNewClauseDrafting[fromWhere].bodyClauseData[0]
-                      .before_clause_note === "" ||
-                    dataNewClauseDrafting[fromWhere].bodyClauseData[0]
-                      .clause_number === ""
+                      ?.clause_number === ""
               }
+              className="btn btn-primary text-white add-new-clause"
+              onClick={showAddContract}
+            >
+              Tambah Body Kontrak
+            </button> */}
+            <button
+              type="button"
+              disabled={isDisabled}
               className="btn btn-primary text-white add-new-clause"
               onClick={showAddContract}
             >
@@ -163,8 +185,8 @@ const PerubahanKlausulKontrak = ({
                   name={`body_data.clause_number`}
                   value={
                     isDrafting
-                      ? dataNewClauseDrafting[fromWhere].bodyClauseData
-                          .clause_number
+                      ? dataNewClauseDrafting[fromWhere]?.bodyClauseData
+                          ?.clause_number
                       : dataNewClause[fromWhere].bodyClauseData.clause_number
                   }
                   onChange={(e) =>
@@ -179,8 +201,8 @@ const PerubahanKlausulKontrak = ({
                   disabled={!isDisable}
                 />
                 {isDrafting
-                  ? dataNewClauseDrafting[fromWhere].bodyClauseData
-                      .clause_number === "" &&
+                  ? dataNewClauseDrafting[fromWhere]?.bodyClauseData
+                      ?.clause_number === "" &&
                     isMandatory && (
                       <p>
                         <span style={{ color: "red" }}>*</span>Wajib Diisi
@@ -309,7 +331,7 @@ const PerubahanKlausulKontrak = ({
           {/* body kontrak di other */}
           {fromWhere === "other" &&
             isDrafting &&
-            dataNewClauseDrafting[fromWhere].bodyClauseData.map(
+            dataNewClauseDrafting[fromWhere]?.bodyClauseData?.map(
               (item, index) => {
                 return (
                   <>
