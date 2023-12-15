@@ -8,12 +8,17 @@ import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/Contract
 
 const MetodePembayaran = ({
   jsonData,
+  isDisable,
   contract_id,
   dataNewClause,
   paymentMethodCurrent,
   dataNewClauseDrafting,
+  is_add_payment_method,
   add_contract_payment_method,
 }) => {
+  if (is_add_payment_method) {
+    isDisable = is_add_payment_method;
+  }
   const dispatch = useDispatch();
   const openCloseAddPayment = useRef();
   const showAddPayment = () => {
@@ -276,6 +281,7 @@ const MetodePembayaran = ({
                     >
                       <input
                         type="radio"
+                        disabled={isDisable}
                         name="payment_addendum"
                         onClick={() => setAddendumPaymentMethod("full")}
                         checked={addendumPaymentMethod === "full"}
@@ -291,6 +297,7 @@ const MetodePembayaran = ({
                     >
                       <input
                         type="radio"
+                        disabled={isDisable}
                         name="payment_addendum"
                         onClick={() => setAddendumPaymentMethod("gradually")}
                         checked={addendumPaymentMethod === "gradually"}
@@ -408,6 +415,7 @@ const MetodePembayaran = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddPayment}
+                        disabled={isDisable}
                       >
                         Tambah
                       </button>
@@ -419,8 +427,8 @@ const MetodePembayaran = ({
               <PerubahanKlausulKontrak
                 subTitle={"B"}
                 values={values}
-                isDisable={true}
                 isDrafting={true}
+                isDisable={!isDisable}
                 title={"Metode Pembayaran"}
                 fromWhere={"payment_method"}
                 showAddClause={showAddClause}

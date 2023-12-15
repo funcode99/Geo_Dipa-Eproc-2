@@ -36,18 +36,29 @@ const Lainnya = ({
   };
 
   useEffect(() => {
-    if (add_contract_others.attachment_clause_data !== null) {
+    if (add_contract_others?.attachment_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_others.attachment_clause_data || null,
+        payload: add_contract_others?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "other",
       });
     }
-    if (add_contract_others.body_clause_data !== null) {
+    if (add_contract_others?.body_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_others.body_clause_data || null,
+        payload: add_contract_others?.body_clause_data || [
+          {
+            clause_number: "",
+            before_clause_note: "",
+            after_clause_note: "",
+          },
+        ],
         fieldType: "refill_body_clause_data",
         fromWhere: "other",
       });
@@ -58,8 +69,8 @@ const Lainnya = ({
     <Formik
       enableReinitialize={true}
       initialValues={{
-        body_data: dataNewClauseDrafting?.other.bodyClauseData,
-        attachment_data: dataNewClauseDrafting?.other.attachmentClauseData,
+        body_data: dataNewClauseDrafting?.other?.bodyClauseData,
+        attachment_data: dataNewClauseDrafting?.other?.attachmentClauseData,
       }}
       onSubmit={(values) => {
         submitFormParameterOther(values);
