@@ -19,13 +19,17 @@ import PerubahanKlausulKontrak from "../../../ContractDetail/components/FormAdde
 
 const HargaPekerjaan = ({
   data,
-  dataAfterAdendum,
-  dataNewClause,
-  contract_id,
-  currencies,
-  jobPriceCurrent,
   isDisable,
+  currencies,
+  contract_id,
+  dataNewClause,
+  dataAfterAdendum,
+  jobPriceCurrent,
+  is_add_job_price,
 }) => {
+  if (is_add_job_price) {
+    isDisable = is_add_job_price;
+  }
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {

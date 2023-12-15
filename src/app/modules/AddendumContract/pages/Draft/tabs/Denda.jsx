@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
+import React, { useState, useEffect } from "react";
 import {
   getSorting,
   searchFindMulti,
@@ -23,12 +23,17 @@ import { useDispatch, connect } from "react-redux";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const Denda = ({
-  fineCurrent,
   jsonData,
+  isDisable,
+  fromWhere,
+  fineCurrent,
   contract_id,
   dataNewClause,
-  fromWhere,
+  is_add_fine,
 }) => {
+  if (is_add_fine) {
+    isDisable = is_add_fine;
+  }
   const dispatch = useDispatch();
   useEffect(() => {
     if (fineCurrent !== null) {
@@ -355,11 +360,12 @@ const Denda = ({
 
             <PerubahanKlausulKontrak
               subTitle={"B"}
-              title={"Denda"}
-              fromWhere={"fine"}
-              showAddClause={showAddClause}
               values={values}
+              title={"Denda"}
               isDrafting={true}
+              fromWhere={"fine"}
+              isDisable={isDisable}
+              showAddClause={showAddClause}
             />
 
             <UpdateButton fromWhere={"fine"} isDrafting={true} />

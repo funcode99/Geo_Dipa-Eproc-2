@@ -11,11 +11,16 @@ import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/Contract
 const Jaminan = ({
   newJson,
   jsonData,
+  isDisable,
   contract_id,
   dataNewClause,
+  is_add_guarantee,
   dataNewClauseDrafting,
   add_contract_guarantee,
 }) => {
+  if (is_add_guarantee) {
+    isDisable = is_add_guarantee;
+  }
   const dispatch = useDispatch();
 
   const openCloseAddClause = React.useRef();
@@ -280,9 +285,6 @@ const Jaminan = ({
                           >
                             {data.title}
                           </p>
-
-                          {/* ya / tidak */}
-                          {data.radio}
                           <div
                             style={{
                               display: "flex",
@@ -415,14 +417,16 @@ const Jaminan = ({
                                     style={{
                                       backgroundColor: "#e8f4fb",
                                     }}
-                                    onClick={() =>
-                                      window.open(
-                                        `${DEV_NODE}/${data.filename}`,
-                                        "_blank"
-                                      )
-                                    }
+                                    onClick={() => {
+                                      if (data.filename) {
+                                        window.open(
+                                          `${DEV_NODE}/${data.filename}`,
+                                          "_blank"
+                                        );
+                                      }
+                                    }}
                                   >
-                                    {data.filename}
+                                    {data.filename ? data.filename : "Kosong"}
                                   </span>
                                   <div className="input-group-prepend">
                                     <span
@@ -453,7 +457,7 @@ const Jaminan = ({
                   ))}
 
                 {/* Addendum jaminan */}
-                <div>
+                {/* <div>
                   <span
                     style={{
                       fontSize: 16,
@@ -594,15 +598,166 @@ const Jaminan = ({
                       </div>
                     </div>
                   </>
+                ))} */}
+                {addendumJaminan?.map((item, index) => (
+                  <div className="container" key={index}>
+                    <div className="d-flex">
+                      <p className="mr-2 font-medium">{item.judul}</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 14,
+                        alignItems: "center",
+                      }}
+                    >
+                      <label
+                        style={{
+                          margin: 0,
+                          display: "flex",
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                          columnGap: 8,
+                        }}
+                      >
+                        <Field
+                          type="radio"
+                          value="1"
+                          name={item.nama_radio}
+                          onChange={(e) => {
+                            setInputDataGuarantee({
+                              ...inputDataGuarantee,
+                              [item.nama_radio]: e.target.value,
+                            });
+                          }}
+                          disabled={isDisable}
+                        />
+                        <span>Ya</span>
+                      </label>
+
+                      <label
+                        style={{
+                          margin: 0,
+                          display: "flex",
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                          columnGap: 8,
+                        }}
+                      >
+                        <Field
+                          type="radio"
+                          value="0"
+                          name={item.nama_radio}
+                          onChange={(e) => {
+                            setInputDataGuarantee((prevInputData) => ({
+                              ...prevInputData,
+                              [item.nama_radio]: e.target.value,
+                              [`${item.nama_radio}_start_date`]:
+                                e.target.value === "0"
+                                  ? ""
+                                  : prevInputData[
+                                      `${item.nama_radio}_start_date`
+                                    ],
+                              [`${item.nama_radio}_end_date`]:
+                                e.target.value === "0"
+                                  ? ""
+                                  : prevInputData[
+                                      `${item.nama_radio}_end_date`
+                                    ],
+                            }));
+                          }}
+                          disabled={isDisable}
+                        />
+                        <span>Tidak</span>
+                      </label>
+                    </div>
+                    <div className="d-flex mt-6">
+                      <div className="tanggal-mulai mr-8">
+                        <label
+                          style={{
+                            margin: 0,
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <span>Tanggal Mulai</span>
+                          <Field
+                            type="date"
+                            style={{
+                              borderRadius: 4,
+                              padding: "10px 12px",
+                              border: "1px solid black",
+                              display: "flex",
+                              flexDirection: "row-reverse",
+                              columnGap: 10,
+                            }}
+                            value={
+                              inputDataGuarantee[
+                                item.nama_radio + "_start_date"
+                              ] || ""
+                            }
+                            onChange={(e) => {
+                              setInputDataGuarantee({
+                                ...inputDataGuarantee,
+                                [`${item.nama_radio}_start_date`]: e.target
+                                  .value,
+                              });
+                            }}
+                            disabled={
+                              inputDataGuarantee[item.nama_radio] === "0" ||
+                              isDisable
+                            }
+                          />
+                        </label>
+                      </div>
+                      <div className="tanggal-selesai mr-8">
+                        <label
+                          style={{
+                            margin: 0,
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <span>Tanggal Selesai</span>
+                          <Field
+                            type="date"
+                            style={{
+                              borderRadius: 4,
+                              padding: "10px 12px",
+                              border: "1px solid black",
+                              display: "flex",
+                              flexDirection: "row-reverse",
+                              columnGap: 10,
+                            }}
+                            value={
+                              inputDataGuarantee[
+                                item.nama_radio + "_end_date"
+                              ] || ""
+                            }
+                            onChange={(e) => {
+                              setInputDataGuarantee({
+                                ...inputDataGuarantee,
+                                [`${item.nama_radio}_end_date`]: e.target.value,
+                              });
+                            }}
+                            disabled={
+                              inputDataGuarantee[item.nama_radio] === "0" ||
+                              isDisable
+                            }
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
 
               <PerubahanKlausulKontrak
                 subTitle={"B"}
                 values={values}
-                isDisable={true}
                 isDrafting={true}
                 title={"Jaminan"}
+                isDisable={!isDisable}
                 fromWhere={"guarantee"}
                 showAddClause={showAddClause}
               />

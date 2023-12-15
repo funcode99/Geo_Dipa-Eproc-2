@@ -10,12 +10,17 @@ import { submitAccountNumber } from "app/modules/AddendumContract/service/Addend
 
 const NomorRekening = ({
   jsonData,
+  isDisable,
   contract_id,
   dataNewClause,
   dataNewClauseDrafting,
   accountNumberBankData,
+  is_add_account_number,
   add_contract_account_number,
 }) => {
+  if (is_add_account_number) {
+    isDisable = is_add_account_number;
+  }
   const dispatch = useDispatch();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -423,8 +428,8 @@ const NomorRekening = ({
               <PerubahanKlausulKontrak
                 subTitle={"B"}
                 values={values}
-                isDisable={true}
                 isDrafting={true}
+                isDisable={isDisable}
                 title={"Nomor Rekening"}
                 fromWhere={"account_number"}
                 showAddClause={showAddClause}

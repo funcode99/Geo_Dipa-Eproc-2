@@ -22,11 +22,15 @@ const PartiesFormParameter = ({
   dataNewClause,
   jobSupervisor,
   jobSupervisor2,
+  is_add_parties,
   add_contract_party,
   dataNewClauseDrafting,
   authorizedOfficialData,
   secondAuthorizedOfficial,
 }) => {
+  if (is_add_parties == true) {
+    isDisable = is_add_parties;
+  }
   const dispatch = useDispatch();
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
@@ -347,18 +351,27 @@ const PartiesFormParameter = ({
   );
 
   useEffect(() => {
-    if (add_contract_party.attachment_clause_data !== null) {
+    if (add_contract_party?.attachment_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_party.attachment_clause_data || null,
+        payload: add_contract_party?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "parties",
       });
     }
-    if (add_contract_party.body_clause_data !== null) {
+    if (add_contract_party?.body_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_party.body_clause_data || null,
+        payload: add_contract_party?.body_clause_data || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
         fieldType: "refill_body_clause_data",
         fromWhere: "parties",
       });

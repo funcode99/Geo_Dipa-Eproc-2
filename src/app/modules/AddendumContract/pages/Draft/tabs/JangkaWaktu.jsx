@@ -10,13 +10,18 @@ import { submitTimePeriod } from "app/modules/AddendumContract/service/AddendumC
 
 const JangkaWaktu = ({
   isAdmin,
+  isDisable,
   contract_id,
   dataNewClause,
   timePeriodData,
+  is_add_time_period,
   dataNewClauseDrafting,
   add_contract_time_period,
   timePeriodAddendumCurrent,
 }) => {
+  if (is_add_time_period) {
+    isDisable = is_add_time_period;
+  }
   const dispatch = useDispatch();
   const openCloseAddClause = useRef();
   const showAddClause = () => {
@@ -613,9 +618,9 @@ const JangkaWaktu = ({
             <PerubahanKlausulKontrak
               subTitle={"B"}
               values={values}
-              isDisable={true}
               isDrafting={true}
               isMandatory={true}
+              isDisable={isDisable}
               title={"Jangka Waktu"}
               fromWhere={"time_period"}
               showAddClause={showAddClause}
