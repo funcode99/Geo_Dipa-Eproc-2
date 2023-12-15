@@ -25,6 +25,8 @@ const HargaPekerjaan = ({
   currencies,
   jobPriceCurrent,
 }) => {
+  console.log("isi awal data drafting", data);
+
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -124,7 +126,7 @@ const HargaPekerjaan = ({
                     id={"title.termtable"}
                     label={<FormattedMessage id="TITLE.ITEM_TABLE" />}
                   >
-                    <Item />
+                    <Item isData={true} data={data} />
                   </GRAccord>
                 </div>
 

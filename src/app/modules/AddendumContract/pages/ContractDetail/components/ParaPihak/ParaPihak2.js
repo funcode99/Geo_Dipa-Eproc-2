@@ -7,7 +7,6 @@ import {
 } from "../../../../../../../_metronic/_partials/controls";
 import FieldBuilder from "../../../../../../components/builder/FieldBuilder";
 import FormBuilder from "../../../../../../components/builder/FormBuilder";
-import Navs from "../../../../../../components/navs";
 import { formData4, formData3 } from "./fieldData";
 
 const ParaPihak2 = () => {

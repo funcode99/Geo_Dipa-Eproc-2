@@ -15,7 +15,6 @@ const PerubahanKlausulKontrak = ({
   fromWhere,
   isMandatory = false,
   isDrafting = false,
-  isDisable,
 }) => {
   const dispatch = useDispatch();
   console.log("current fromWhere", fromWhere);
@@ -178,7 +177,6 @@ const PerubahanKlausulKontrak = ({
                     borderRadius: 4,
                     minWidth: 400,
                   }}
-                  disabled={!isDisable}
                 />
                 {isDrafting
                   ? dataNewClauseDrafting[fromWhere].bodyClauseData
@@ -237,7 +235,6 @@ const PerubahanKlausulKontrak = ({
                       minWidth: 400,
                     }}
                     rows="4"
-                    disabled={!isDisable}
                   />
                   {isDrafting
                     ? dataNewClauseDrafting[fromWhere].bodyClauseData
@@ -287,7 +284,6 @@ const PerubahanKlausulKontrak = ({
                       minWidth: 400,
                     }}
                     rows="4"
-                    disabled={!isDisable}
                   />
                   {isDrafting
                     ? dataNewClauseDrafting[fromWhere].bodyClauseData
@@ -335,7 +331,6 @@ const PerubahanKlausulKontrak = ({
                           borderRadius: 4,
                           minWidth: 400,
                         }}
-                        disabled={!isDisable}
                       />
                       {item.clause_number === "" && index === 0 && isMandatory && (
                         <p>
@@ -382,7 +377,6 @@ const PerubahanKlausulKontrak = ({
                             minWidth: 400,
                           }}
                           rows="4"
-                          disabled={!isDisable}
                         />
                         {item?.before_clause_note === "" &&
                           index === 0 &&
@@ -422,7 +416,6 @@ const PerubahanKlausulKontrak = ({
                             minWidth: 400,
                           }}
                           rows="4"
-                          disabled={!isDisable}
                         />
                         {item.after_clause_note === "" &&
                           index === 0 &&
@@ -462,7 +455,6 @@ const PerubahanKlausulKontrak = ({
                         borderRadius: 4,
                         minWidth: 400,
                       }}
-                      disabled={!isDisable}
                     />
                     {item.clause_number === "" && index === 0 && isMandatory && (
                       <p>
@@ -509,7 +501,6 @@ const PerubahanKlausulKontrak = ({
                           minWidth: 400,
                         }}
                         rows="4"
-                        disabled={!isDisable}
                       />
                       {item?.before_clause_note === "" &&
                         index === 0 &&

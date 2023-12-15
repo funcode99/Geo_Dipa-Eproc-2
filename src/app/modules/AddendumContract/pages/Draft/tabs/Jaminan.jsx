@@ -4,8 +4,35 @@ import { Formik, Field, Form } from "formik";
 import { submitGuarantee } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
+import { useDispatch, connect } from "react-redux";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
-const Jaminan = ({ dataNewClause, jsonData, contract_id }) => {
+const Jaminan = ({
+  dataNewClause,
+  jsonData,
+  contract_id,
+  guaranteeCurrent,
+  fromWhere,
+}) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (guaranteeCurrent !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: guaranteeCurrent.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: fromWhere,
+      });
+    }
+    if (guaranteeCurrent !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: guaranteeCurrent.body_clause_data[0] || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: fromWhere,
+      });
+    }
+  }, []);
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
     openCloseAddClause.current.open();

@@ -3,16 +3,19 @@ import { useParams } from "react-router-dom";
 import Tabs from "app/components/tabs";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import { Col, Row, Container } from "react-bootstrap";
-import { DEV_NODE } from "redux/BaseHost";
-import { API_EPROC } from "redux/BaseHost";
-import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
-import { Card, CardBody } from "_metronic/_partials/controls";
+// import { DEV_NODE } from "redux/BaseHost";
+// import { API_EPROC } from "redux/BaseHost";
+// import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
+import {
+  Card,
+  // CardBody
+} from "_metronic/_partials/controls";
 import Steppers from "app/components/steppersCustom/Steppers";
 import {
   DUMMY_STEPPER,
   DUMMY_STEPPER_CONTRACT,
   STATE_STEPPER,
-} from "../Termin/TerminPageNew/STATIC_DATA";
+} from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
 import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
@@ -21,37 +24,30 @@ import ButtonAction from "app/components/buttonAction/ButtonAction";
 import { Formik, Field, FieldArray } from "formik";
 // import { Button } from "react-bootstrap"
 import { Grid, Button } from "@material-ui/core";
-import UploadInput from "app/components/input/UploadInput";
 import { connect } from "react-redux";
+import UploadInput from "app/components/input/UploadInput";
 import TextAreaInput from "app/components/input/TextAreaInput";
-import SelectDateInput from "app/components/input/SelectDateInput";
-import RenderInput from "app/components/input/RenderInput";
-import SummaryTab from "./tabs/Summary";
-import ParaPihakTab from "./tabs/ParaPihak";
-import HargaPekerjaanTab from "./tabs/HargaPekerjaan/HargaPekerjaan";
-import JangkaWaktuTab from "./tabs/JangkaWaktu";
-import MetodePembayaranTab from "./tabs/MetodePembayaran";
-import DendaTab from "./tabs/Denda";
-import JaminanTab from "./tabs/Jaminan";
-import NomorRekeningTab from "./tabs/NomorRekening";
-import TemplateKlausul from "./TemplateKlausul";
-import LainnyaTab from "./tabs/Lainnya";
-// import JobPriceFormParameter from "../ContractDetail/components/FormAddendum/FormParameterSubTab/JobPriceFormParameter";
+import SummaryTab from "app/modules/AddendumContract/pages/Draft/tabs/Summary";
+import ParaPihakTab from "app/modules/AddendumContract/pages/Draft/tabs/ParaPihak";
+import HargaPekerjaanTab from "app/modules/AddendumContract/pages/Draft/tabs/HargaPekerjaan/HargaPekerjaan";
+import JangkaWaktuTab from "app/modules/AddendumContract/pages/Draft/tabs/JangkaWaktu";
+import MetodePembayaranTab from "app/modules/AddendumContract/pages/Draft/tabs/MetodePembayaran";
+import DendaTab from "app/modules/AddendumContract/pages/Draft/tabs/Denda";
+import JaminanTab from "app/modules/AddendumContract/pages/Draft/tabs/Jaminan";
+import NomorRekeningTab from "app/modules/AddendumContract/pages/Draft/tabs/NomorRekening";
+import TemplateKlausul from "app/modules/AddendumContract/pages/Draft/TemplateKlausul";
+import LainnyaTab from "app/modules/AddendumContract/pages/Draft/tabs/Lainnya";
 
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
-import { FormattedMessage } from "react-intl";
-import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
-import Jaminan from "./tabs/Jaminan";
-// import DraftingFormParameter from "./FormParameter/DraftingFormParameter";
 
 // bentrok antara button mui & bootstrap
 
 const DraftAddendumPage = ({
   loadings,
+  headerData,
   fetch_api_sg,
   loginStatus,
   rolesEproc,
-  headerData,
   purch_group,
   dataNewClause,
 }) => {
@@ -65,12 +61,12 @@ const DraftAddendumPage = ({
   const [distributionSequence, setDistributionSequence] = React.useState(0);
   const [data, setData] = useState({});
   const [contract, setContract] = useState({});
-  const [finalDraftData, setFinalDraftData] = useState();
-  const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
   const [dataContractById, setDataContractById] = useState({});
   const [currencies, setDataCurrencies] = useState([]);
-  const [jsonData, setJsonData] = useState();
   const [accountNumberBankData, setAccountNumberBankData] = useState();
+  const [jsonData, setJsonData] = useState();
+  const [finalDraftData, setFinalDraftData] = useState();
+  const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
 
   const getClientStatus = (val) => {
     const filteredData = rolesEproc?.filter(
@@ -1771,6 +1767,7 @@ const DraftAddendumPage = ({
               jobPriceCurrent={data?.add_contract_job_price}
               contract_id={draft_id}
               currencies={currencies}
+              fromWhere={"job_price"}
             />
             // lo buat disini buat perbandingan yak?
             // <JobPriceFormParameter
@@ -1788,6 +1785,7 @@ const DraftAddendumPage = ({
               contract_id={draft_id}
               dataNewClause={dataNewClause}
               isAdmin={isAdmin}
+              fromWhere={"time_period"}
             />
           )}
           {tabActive === 4 && (
@@ -1796,6 +1794,7 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              fromWhere={"payment_method"}
             />
           )}
           {tabActive === 5 && (
@@ -1813,6 +1812,7 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              fromWhere={"guarantee"}
             />
           )}
           {tabActive === 7 && (

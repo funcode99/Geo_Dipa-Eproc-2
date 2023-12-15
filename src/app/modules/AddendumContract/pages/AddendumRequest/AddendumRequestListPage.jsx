@@ -179,34 +179,53 @@ export const AddendumRequestListPage = ({
                 data={"1"}
                 exclude={["another"]}
                 ops={[
-                  item?.admin_purch_group_id === purch_group_id
-                    ? {
-                        label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
-                        to: {
-                          url: `/${status}/addendum-contract/approval/${item.id}`,
-                          style: {
-                            color: "black",
-                          },
-                        },
-                      }
-                    : {
-                        label: "CONTRACT.TABLE_ACTION.DRAFTING",
-                        type: "another",
+                  // item?.admin_purch_group_id === purch_group_id
+                  //   ? {
+                  //       label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
+                  //       to: {
+                  //         url: `/${status}/addendum-contract/approval/${item.id}`,
+                  //         style: {
+                  //           color: "black",
+                  //         },
+                  //       },
+                  //     }
+                  //   : {
+                  //       label: "CONTRACT.TABLE_ACTION.DRAFTING",
+                  //       type: "another",
+                  //     },
+                  // item?.user_purch_group_id === purch_group_id
+                  //   ? {
+                  //       label: "CONTRACT.TABLE_ACTION.SEE_DETAILS",
+                  //       to: {
+                  //         url: `/${status}/addendum-contract/approval/${item.id}`,
+                  //         style: {
+                  //           color: "black",
+                  //         },
+                  //       },
+                  //     }
+                  //   : {
+                  //       label: "CONTRACT_DETAIL.LABEL.PO_DATE",
+                  //       type: "another",
+                  //     },
+                  {
+                    label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
+                    to: {
+                      url: `/${status}/addendum-contract/draft-request/${item.contract_id}/${item.id}`,
+                      style: {
+                        color: "black",
                       },
-                  item?.user_purch_group_id === purch_group_id
-                    ? {
-                        label: "CONTRACT.TABLE_ACTION.SEE_DETAILS",
-                        to: {
-                          url: `/${status}/addendum-contract/approval/${item.id}`,
-                          style: {
-                            color: "black",
-                          },
-                        },
-                      }
-                    : {
-                        label: "CONTRACT_DETAIL.LABEL.PO_DATE",
-                        type: "another",
+                    },
+                  },
+                  ,
+                  {
+                    label: "CONTRACT.TABLE_ACTION.APPROVAL_REQUEST",
+                    to: {
+                      url: `/${status}/addendum-contract/approval/${item.contract_id}`,
+                      style: {
+                        color: "black",
                       },
+                    },
+                  },
                 ]}
               />
             ),
@@ -239,12 +258,12 @@ export const AddendumRequestListPage = ({
           handleParams={handleFilter}
           err={false}
           loading={false}
-          // countData={
-          //   searchFindMulti(
-          //     stableSort(dataArr, getSorting(order, orderBy)),
-          //     filterBy
-          //   ).length
-          // }
+          countData={
+            searchFindMulti(
+              stableSort(dataArr, getSorting(order, orderBy)),
+              filterBy
+            ).length
+          }
           hecto={20}
           onChangePage={handleChangePage}
           onChangePerPage={handleChangeRowsPerPage}

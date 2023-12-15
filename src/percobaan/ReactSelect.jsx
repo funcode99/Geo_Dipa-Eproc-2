@@ -15,6 +15,7 @@ export const ReactSelect = ({
   labelName,
   arrayIndex,
   currentSelect,
+  nowSelect,
   type,
 }) => {
   const [isClearable, setIsClearable] = useState(true);
@@ -48,6 +49,8 @@ export const ReactSelect = ({
         defaultValue={
           currentSelect
             ? data[currentSelect]
+            : nowSelect
+            ? data[nowSelect]
             : typeof data !== "undefined"
             ? data[0]
             : colourOptions[0]

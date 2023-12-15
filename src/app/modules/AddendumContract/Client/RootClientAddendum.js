@@ -12,10 +12,9 @@ import {
   AddendumListPage,
   AddendumRequestListPage,
   DraftAddendumPage,
+  DraftRequestPage,
   UserApprovalAddendumPage,
 } from "app/modules/AddendumContract/pages/index";
-
-// import ParaPihak from "../pages/ContractDetail/components/ParaPihak"
 
 function RootClientAddendum() {
   const subheader = useSubheader();
@@ -32,6 +31,8 @@ function RootClientAddendum() {
         component={AddContractAddendum}
         exact={true}
       />
+
+      {/* isi kontrak sebelum addendum */}
       <Route
         path="/client/addendum-contract/contract/:contract_id"
         component={ContractAddendumDetail}
@@ -45,6 +46,11 @@ function RootClientAddendum() {
       <Route
         path="/client/addendum-contract/draft/:draft_id"
         component={DraftAddendumPage}
+        exact={true}
+      />
+      <Route
+        path="/client/addendum-contract/draft-request/:contract_id/:addendum_id"
+        component={DraftRequestPage}
         exact={true}
       />
       <Route

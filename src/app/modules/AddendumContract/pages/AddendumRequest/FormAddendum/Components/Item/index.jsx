@@ -65,10 +65,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Item = ({ handleClick, status, data, isData = false }) => {
-  console.log("isi data item", data.items);
-  console.log("isi data service", data.services);
-
+const Item = ({ handleClick, status }) => {
   const { dataContractById, dataSubmitItems } = useSelector(
     (state) => state.addendumContract
   );
@@ -500,7 +497,7 @@ const Item = ({ handleClick, status, data, isData = false }) => {
         classContainer={navActive !== "link-jasa" ? "d-none" : ""}
         withPagination={false}
         tableHeader={theadService}
-        dataRows={isData ? data.services : dataContractById.services}
+        dataRows={dataContractById.services}
         loading={loading}
         renderRows={({ item, index }) => {
           let el = item;
@@ -592,7 +589,7 @@ const Item = ({ handleClick, status, data, isData = false }) => {
         classContainer={navActive !== "link-barang" ? "d-none" : ""}
         withPagination={true}
         tableHeader={theadItem}
-        dataRows={isData ? data.items : dataContractById.items}
+        dataRows={dataContractById.items}
         loading={loading}
         renderRows={({ item, index }) => {
           return (

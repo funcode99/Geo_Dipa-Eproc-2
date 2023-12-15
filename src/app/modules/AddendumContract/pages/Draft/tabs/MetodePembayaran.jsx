@@ -19,7 +19,9 @@ const MetodePembayaran = ({
     openCloseAddClause.current.open();
   };
   const earlyStagePayment = {
-    payment: JSON.parse(localStorage.getItem("payment_method")),
+    payment: paymentMethodCurrent
+      ? paymentMethodCurrent.payment_method_data
+      : JSON.parse(localStorage.getItem("payment_method")),
   };
   const [stagePayment, setStagePayment] = useState({
     // payment: jsonData?.payment_method_data,

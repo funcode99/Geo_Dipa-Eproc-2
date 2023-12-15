@@ -5,6 +5,7 @@ import AddendumListPage from "./Addendum/AddendumListPage";
 import AddendumRequestListPage from "./AddendumRequest/AddendumRequestListPage";
 import DraftAddendumPage from "./Draft/DraftAddendumPage";
 import UserApprovalAddendumPage from "./Approval/UserApprovalAddendumPage";
+import DraftRequestPage from "./AddendumRequest/FormAddendum/DraftRequestPage";
 
 export {
   ContractsAddendumPage,
@@ -13,5 +14,6 @@ export {
   AddendumListPage,
   AddendumRequestListPage,
   DraftAddendumPage,
+  DraftRequestPage,
   UserApprovalAddendumPage,
 };
