@@ -71,7 +71,6 @@ const PartiesFormParameter = ({
   };
 
   const submitFormParameterContractParties = (values) => {
-    console.log("isi submit values parties", values);
     submitParties(
       {
         add_contract_id: localStorage.getItem("add_contract_id"),
