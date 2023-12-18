@@ -1000,6 +1000,7 @@ export const DraftRequestPage = ({
             checkedLength={checkLength}
             assignTabLists={assignTabLists}
             checkedValues={checkedInitialValues}
+            getDataList={tabDisableLists}
           />
         </Paper>
       )}

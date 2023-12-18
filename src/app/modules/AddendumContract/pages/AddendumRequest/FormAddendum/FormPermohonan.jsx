@@ -512,7 +512,7 @@ const FormPermohonan = (props) => {
                     >
                       <Field
                         type="date"
-                        name="request_date"
+                        value={props?.getDataList?.add_request_date}
                         style={{
                           borderRadius: 4,
                           padding: "10px 12px",
@@ -521,10 +521,7 @@ const FormPermohonan = (props) => {
                           columnGap: 10,
                           minWidth: 270,
                         }}
-                        // value={dateDisplay}
-                        onChange={(e) => {
-                          setDateDisplay(e.target.value);
-                        }}
+                        disabled
                       />
                     </div>
                   </div>
@@ -564,12 +561,12 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="checked"
-                          value="parties"
                           style={{
                             height: 20,
                             width: 20,
                           }}
+                          disabled
+                          checked={props?.getDataList?.is_add_parties === true}
                         />
                         Data Para Pihak
                       </label>
@@ -582,12 +579,14 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="checked"
-                          value="payment_method"
                           style={{
                             height: 20,
                             width: 20,
                           }}
+                          disabled
+                          checked={
+                            props?.getDataList?.is_add_payment_method === true
+                          }
                         />
                         Metode Pembayaran
                       </label>
@@ -600,12 +599,12 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="checked"
-                          value="fine"
                           style={{
                             height: 20,
                             width: 20,
                           }}
+                          disabled
+                          checked={props?.getDataList?.is_add_fine === true}
                         />
                         Denda
                       </label>
@@ -618,12 +617,14 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="checked"
-                          value="account_number"
                           style={{
                             height: 20,
                             width: 20,
                           }}
+                          disabled
+                          checked={
+                            props?.getDataList?.is_add_account_number === true
+                          }
                         />
                         Nomor Rekening
                       </label>
@@ -646,12 +647,14 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="checked"
-                          value="job_price"
                           style={{
                             height: 20,
                             width: 20,
                           }}
+                          disabled
+                          checked={
+                            props?.getDataList?.is_add_job_price === true
+                          }
                         />
                         Harga Pekerjaan
                       </label>
@@ -664,12 +667,14 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="checked"
-                          value="time_period"
                           style={{
                             height: 20,
                             width: 20,
                           }}
+                          disabled
+                          checked={
+                            props?.getDataList?.is_add_time_period === true
+                          }
                         />
                         Jangka Waktu
                       </label>
@@ -682,12 +687,14 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="checked"
-                          value="guarantee"
                           style={{
                             height: 20,
                             width: 20,
                           }}
+                          disabled
+                          checked={
+                            props?.getDataList?.is_add_guarantee === true
+                          }
                         />
                         Jaminan
                       </label>
@@ -710,12 +717,12 @@ const FormPermohonan = (props) => {
                       >
                         <Field
                           type="checkbox"
-                          name="checked"
-                          value="others"
                           style={{
                             height: 20,
                             width: 20,
                           }}
+                          disabled
+                          checked={props?.getDataList?.other_note !== null}
                         />
                         Lainnya
                       </label>
@@ -727,16 +734,9 @@ const FormPermohonan = (props) => {
                         }}
                         type="text"
                         name="note"
-                        value={note}
+                        value={props?.getDataList?.other_note}
                         placeholder="Masukkan perihal addendum lainnya"
-                        onChange={(e) => {
-                          setNote(e.target.value);
-                        }}
-                        disabled={
-                          values.checked.some((item) => item === "others")
-                            ? false
-                            : true
-                        }
+                        disabled
                       />
                     </div>
                   </div>
@@ -801,7 +801,7 @@ const FormPermohonan = (props) => {
                       </Row>
                     </Col>
                   </Row>
-                  {values.checked.includes("job_price") && (
+                  {props?.getDataList?.is_add_job_price === true && (
                     <>
                       <Row>
                         <Col md={12}>
@@ -810,29 +810,17 @@ const FormPermohonan = (props) => {
                               Penambahan Harga Pekerjaan
                             </label>
                             <div className="col-sm-8">
-                              {/* <Field
-                                className="form-control"
-                                type="text"
-                                name="additional_price"
-                                disabled={disabledInput === "add"}
-                              /> */}
                               <Field
                                 name="additional_price"
                                 className="form-control"
-                                defaultValue={0}
+                                defaultValue={parseInt(
+                                  props?.getDataList?.increase_job_price
+                                )}
                                 decimalsLimit={0}
                                 decimalSeparator=","
                                 groupSeparator="."
-                                disabled={disabledInput === "add"}
+                                disabled
                                 component={CurrencyInput}
-                                onValueChange={(value) => {
-                                  setPrice((previous) => {
-                                    return {
-                                      ...previous,
-                                      additional_price: value,
-                                    };
-                                  });
-                                }}
                               />
                             </div>
                           </div>
@@ -841,7 +829,8 @@ const FormPermohonan = (props) => {
                       <Row>
                         <Col md={12}>
                           <div
-                            className={`form-group row ${
+                            className={`form-group row 
+                            ${
                               values.additional_price !== "0" &&
                               values.additional_price !== ""
                                 ? ""
@@ -890,20 +879,14 @@ const FormPermohonan = (props) => {
                               <Field
                                 name="substraction_price"
                                 className="form-control"
-                                defaultValue={0}
+                                defaultValue={parseInt(
+                                  props?.getDataList?.decrease_job_price || 0
+                                )}
                                 decimalsLimit={0}
-                                disabled={disabledInput === "sub"}
+                                disabled
                                 decimalSeparator=","
                                 groupSeparator="."
                                 component={CurrencyInput}
-                                onValueChange={(value) => {
-                                  setPrice((previous) => {
-                                    return {
-                                      ...previous,
-                                      substraction_price: value,
-                                    };
-                                  });
-                                }}
                               />
                             </div>
                           </div>
