@@ -688,8 +688,8 @@ export const DraftRequestPage = ({
             to: `/${authStatus}/addendum-contract/list-contract-po`,
           },
           {
-            label: "List of Contract & SPK",
-            to: `/${authStatus}/addendum-contract/list-contract-po`,
+            label: "List of Addendum Request",
+            to: `/${authStatus}/addendum-contract/list-addendum-request`,
           },
           {
             label: `${dataArr ? dataArr?.agreement_number : "x"}`,

@@ -18,7 +18,6 @@ import {
 } from "@material-ui/core";
 import { ReactSelect } from "percobaan/ReactSelect";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
-import { connect } from "react-redux";
 import {
   submitTimePeriod,
   submitPaymentMethod,
@@ -44,10 +43,12 @@ import {
   stableSort,
 } from "app/components/tables/TablePagination/TablePaginationCustom";
 import Tables from "app/components/tableCustomV1/table";
+import { useDispatch, connect } from "react-redux";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
-const createNewPaymentStage = (value, percentage, payment) => ({
-  value,
-  percentage,
+const createNewPaymentStage = (description, percentage_value, payment) => ({
+  description,
+  percentage_value,
   payment,
 });
 
@@ -96,6 +97,160 @@ const FormParameter = ({
   // console.log("isi direksi pekerjaan", jobDirector);
   // console.log("isi pengawas pekerjaan", jobSupervisor);
   // console.log("isi jsonData", jsonData);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (tabDisableLists?.add_contract_party !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_party?.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "parties",
+      });
+    }
+    if (tabDisableLists?.add_contract_party !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_party?.body_clause_data[0] || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "parties",
+      });
+    }
+    if (tabDisableLists?.add_contract_job_price !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_job_price?.attachment_clause_data ||
+          null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "job_price",
+      });
+    }
+    if (tabDisableLists?.add_contract_job_price !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_job_price?.body_clause_data[0] || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "job_price",
+      });
+    }
+    if (tabDisableLists?.add_contract_time_period !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_time_period?.attachment_clause_data ||
+          null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "time_period",
+      });
+    }
+    if (tabDisableLists?.add_contract_time_period !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_time_period?.body_clause_data[0] ||
+          null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "time_period",
+      });
+    }
+    if (tabDisableLists?.add_payment_method !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_payment_method?.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "payment_method",
+      });
+    }
+    if (tabDisableLists?.add_payment_method !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_payment_method?.body_clause_data[0] || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "payment_method",
+      });
+    }
+    if (tabDisableLists?.add_contract_fine !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_fine?.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "fine",
+      });
+    }
+    if (tabDisableLists?.add_contract_fine !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_fine?.body_clause_data[0] || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "fine",
+      });
+    }
+    if (tabDisableLists?.add_contract_guarantee !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_guarantee?.attachment_clause_data ||
+          null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "guarantee",
+      });
+    }
+    if (tabDisableLists?.add_contract_guarantee !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_guarantee?.body_clause_data[0] || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "guarantee",
+      });
+    }
+    if (tabDisableLists?.add_contract_account_number !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_account_number
+            ?.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "account_number",
+      });
+    }
+    if (tabDisableLists?.add_contract_account_number !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_account_number?.body_clause_data[0] ||
+          null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "account_number",
+      });
+    }
+    if (tabDisableLists?.add_contract_others !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_others?.attachment_clause_data || null,
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "other",
+      });
+    }
+    if (tabDisableLists?.add_contract_others !== null) {
+      dispatch({
+        type: actionTypes.SetRequestClause,
+        payload:
+          tabDisableLists?.add_contract_others?.body_clause_data[0] || null,
+        fieldType: "refill_body_clause_data",
+        fromWhere: "other",
+      });
+    }
+  }, []);
 
   const tableHeaderFine = [
     {
@@ -179,8 +334,8 @@ const FormParameter = ({
   const guaranteeBeforeAddendum = [
     {
       title: "Jaminan Uang Muka",
-      startDate: "",
-      endDate: "",
+      startDate: `${jsonData?.guarantee_start_date}`,
+      endDate: `${jsonData?.guarantee_end_date}`,
       filename: ``,
       radio: `${jsonData?.down_payment_guarantee}`,
       nameTitle: "dp_guarantee",
@@ -190,8 +345,8 @@ const FormParameter = ({
     },
     {
       title: "Jaminan Pelaksanaan",
-      startDate: "",
-      endDate: "",
+      startDate: `${jsonData?.implementation_start_date}`,
+      endDate: `${jsonData?.implementation__end_date}`,
       filename: data?.implementation_guarantee_evidence,
       radio: `${jsonData?.implementation_guarantee}`,
       nameTitle: "implementation_guarantee",
@@ -201,8 +356,8 @@ const FormParameter = ({
     },
     {
       title: "Jaminan Pemeliharaan",
-      startDate: "",
-      endDate: "",
+      startDate: `${jsonData?.maintenance_start_date}`,
+      endDate: `${jsonData?.maintenance_end_date}`,
       filename: ``,
       radio: `${jsonData?.maintenance_guarantee}`,
       nameTitle: "maintenance_guarantee",
@@ -304,18 +459,36 @@ const FormParameter = ({
   // ] = useState([attachmentClauseDataTemplate]);
 
   const [inputDataGuarantee, setInputDataGuarantee] = useState({
-    dp_guarantee: "0",
-    dp_guarantee_start_date: "",
-    dp_guarantee_end_date: "",
-    dp_guarantee_evidence_file: "",
-    implementation_guarantee: "0",
-    implementation_guarantee_start_date: "",
-    implementation_guarantee_end_date: "",
-    implementation_guarantee_evidence_file: "",
-    maintenance_guarantee: "0",
-    maintenance_guarantee_start_date: "",
-    maintenance_guarantee_end_date: "",
-    maintenance_guarantee_evidence_file: "",
+    dp_guarantee:
+      tabDisableLists?.add_contract_guarantee?.down_payment_guarantee,
+    dp_guarantee_start_date:
+      tabDisableLists?.add_contract_guarantee
+        ?.down_payment_guarantee_start_date,
+    dp_guarantee_end_date:
+      tabDisableLists?.add_contract_guarantee?.down_payment_guarantee_end_date,
+    dp_guarantee_evidence_file:
+      tabDisableLists?.add_contract_guarantee
+        ?.down_payment_guarantee_evidence_file_name,
+    implementation_guarantee:
+      tabDisableLists?.add_contract_guarantee?.implementation_guarantee,
+    implementation_guarantee_start_date:
+      tabDisableLists?.add_contract_guarantee
+        ?.implementation_guarantee_start_date,
+    implementation_guarantee_end_date:
+      tabDisableLists?.add_contract_guarantee
+        ?.implementation_guarantee_end_date,
+    implementation_guarantee_evidence_file:
+      tabDisableLists?.add_contract_guarantee
+        ?.implementation_guarantee_evidence_file,
+    maintenance_guarantee:
+      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee,
+    maintenance_guarantee_start_date:
+      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee_start_date,
+    maintenance_guarantee_end_date:
+      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee_end_date,
+    maintenance_guarantee_evidence_file:
+      tabDisableLists?.add_contract_guarantee
+        ?.maintenance_guarantee_evidence_file,
   });
 
   // bikin converter tanggal ke x hari & y bulan + skpp/spmk
@@ -458,7 +631,8 @@ const FormParameter = ({
   };
 
   const [stagePayment, setStagePayment] = useState({
-    payment: jsonData?.payment_method_data,
+    // payment: jsonData?.payment_method_data,
+    payment: tabDisableLists?.add_contract_payment_method?.payment_method_data,
   });
   const [accountNumber, setAccountNumber] = useState(
     jsonData?.data_bank[bankIndex]
@@ -523,7 +697,8 @@ const FormParameter = ({
   }, [dataArr, currencies]);
 
   const [addendumPaymentMethod, setAddendumPaymentMethod] = useState(
-    jsonData?.payment_method
+    // jsonData?.payment_method
+    tabDisableLists?.add_contract_payment_method?.payment_method_name
   );
 
   const openCloseAddFine = React.useRef();
@@ -549,8 +724,8 @@ const FormParameter = ({
   const changePaymentMethodField = (index, value, type) => {
     setStagePayment((state) => {
       let newArr = [...state.payment];
-      if (type === "Percentage") newArr[index]["percentage"] = value;
-      if (type === "Description") newArr[index]["value"] = value;
+      if (type === "Percentage") newArr[index]["percentage_value"] = value;
+      if (type === "Description") newArr[index]["description"] = value;
       return {
         ...state,
         payment: newArr,
@@ -1493,6 +1668,7 @@ const FormParameter = ({
                       showAddClause={showAddClause}
                       values={values}
                       isMandatory={true}
+                      isDrafting={true}
                     />
 
                     <UpdateButton fromWhere={"time_period"} />
@@ -1766,7 +1942,7 @@ const FormParameter = ({
                                       }}
                                       type="text"
                                       placeholder="Persentase"
-                                      value={item.percentage}
+                                      value={item.percentage_value}
                                       onChange={(e) =>
                                         changePaymentMethodField(
                                           index,
@@ -1794,7 +1970,7 @@ const FormParameter = ({
                                         borderRadius: 4,
                                       }}
                                       placeholder="Deskripsi"
-                                      value={item.value}
+                                      value={item.description}
                                       onChange={(e) =>
                                         changePaymentMethodField(
                                           index,
@@ -1843,6 +2019,7 @@ const FormParameter = ({
                     values={values}
                     isMandatory={true}
                     isDisable={!tabDisableLists?.is_add_payment_method}
+                    isDrafting={true}
                   />
 
                   <UpdateButton fromWhere={"payment_method"} />
@@ -2061,6 +2238,7 @@ const FormParameter = ({
                       values={values}
                       isMandatory={true}
                       isDisable={!tabDisableLists?.is_add_fine}
+                      isDrafting={true}
                     />
 
                     <UpdateButton fromWhere={"fine"} />
@@ -2627,6 +2805,7 @@ const FormParameter = ({
                         values={values}
                         isMandatory={true}
                         isDisable={!tabDisableLists?.is_add_guarantee}
+                        isDrafting={true}
                       />
 
                       <UpdateButton fromWhere={"guarantee"} />
@@ -3030,6 +3209,7 @@ const FormParameter = ({
                         values={values}
                         isMandatory={true}
                         isDisable={!tabDisableLists?.is_add_account_number}
+                        isDrafting={true}
                       />
 
                       <UpdateButton fromWhere={"account_number"} />
@@ -3063,6 +3243,7 @@ const FormParameter = ({
                       showAddContract={showAddContract}
                       values={values}
                       isMandatory={true}
+                      isDrafting={true}
                       // isDisable={!tabDisableLists?.is_add_other}
                     />
 

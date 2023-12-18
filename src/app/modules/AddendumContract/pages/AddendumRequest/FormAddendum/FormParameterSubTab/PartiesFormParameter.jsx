@@ -10,11 +10,14 @@ import NewWorkSupervisor from "../Components/Modal/Parties/NewWorkSupervisor";
 import NewSecondWorkDirector from "../Components/Modal/Parties/NewSecondWorkDirector";
 import NewSecondWorkSupervisor from "../Components/Modal/Parties/NewSecondWorkSupervisor";
 import NewClause from "../Components/Modal/NewClause";
-import { connect } from "react-redux";
+import { compose } from "redux";
+import { useDispatch, connect } from "react-redux";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const PartiesFormParameter = ({
   jsonData,
   authorizedOfficialData,
+  authorizedOfficialIndex,
   secondAuthorizedOfficial,
   PICData,
   jobDirector,
@@ -24,18 +27,23 @@ const PartiesFormParameter = ({
   dataNewClause,
   partiesData,
 }) => {
-  const [authorizedOfficialIndex, setauthorizedOfficialIndex] = useState(0);
+  // const [authorizedOfficialIndex, setauthorizedOfficialIndex] = useState(0);
+  const dispatch = useDispatch();
+  useEffect(() => {}, []);
 
-  useEffect(() => {
-    const isi = authorizedOfficialData?.map((item, index) => {
-      if (
-        item.authorized_official_username ===
-        partiesData.add_contract_party.party_1_autorized_username
-      ) {
-        setauthorizedOfficialIndex(index);
-      }
-    });
-  }, []);
+  const [triggerNumber, setTriggerNumber] = useState(0);
+
+  const changeDataAuthorizedOfficial = (num) => {
+    if (triggerNumber === 0) {
+      setTriggerNumber(1);
+    } else {
+      // setauthorizedOfficialIndex(num);
+      dispatch({
+        type: actionTypes.SetReactSelectAuthorizedOfficial,
+        payload: num,
+      });
+    }
+  };
 
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
@@ -351,9 +359,6 @@ const PartiesFormParameter = ({
       };
     });
   };
-  const changeDataauthorizedOfficial = (num) => {
-    setauthorizedOfficialIndex(num);
-  };
 
   const [jobDirectorIndex, setJobDirectorIndex] = useState(0);
   const [jobSupervisorIndex, setJobSupervisorIndex] = useState(0);
@@ -405,10 +410,11 @@ const PartiesFormParameter = ({
         enableReinitialize={true}
         initialValues={{
           official_username:
-            partiesData?.add_contract_party !== null
-              ? partiesData?.add_contract_party?.party_1_autorized_username
-              : authorizedOfficial[authorizedOfficialIndex]
-                  ?.authorized_official_username !== null
+            // partiesData?.add_contract_party !== null
+            //   ? partiesData?.add_contract_party?.party_1_autorized_username
+            //   :
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_username !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_username
               : setAuthorizedOfficial((previous) => {
@@ -418,10 +424,11 @@ const PartiesFormParameter = ({
                   return newArr;
                 }),
           official_name:
-            partiesData?.add_contract_party !== null
-              ? partiesData?.add_contract_party?.party_1_autorized_name
-              : authorizedOfficial[authorizedOfficialIndex]
-                  ?.authorized_official_name !== null
+            // partiesData?.add_contract_party !== null
+            //   ? partiesData?.add_contract_party?.party_1_autorized_name
+            //   :
+            authorizedOfficial[authorizedOfficialIndex]
+              ?.authorized_official_name !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_name
               : setAuthorizedOfficial((previous) => {
@@ -1138,9 +1145,10 @@ const PartiesFormParameter = ({
                         <span>Username</span>
                         <ReactSelect
                           data={authorizedOfficial}
-                          func={changeDataauthorizedOfficial}
+                          func={changeDataAuthorizedOfficial}
                           // labelName wajib ada
                           labelName={`authorized_official_username`}
+                          // kalo diganti jadi jalan? kok bisa?
                           nowSelect={authorizedOfficialIndex}
                         />
                       </label>
@@ -1163,14 +1171,6 @@ const PartiesFormParameter = ({
                           value={
                             authorizedOfficial[authorizedOfficialIndex]
                               ?.authorized_official_name
-                            // :
-                            // setAuthorizedOfficial((previous) => {
-                            //     let newArr = [...previous];
-                            //     newArr[
-                            //       authorizedOfficialIndex
-                            //     ].authorized_official_name = "kosong";
-                            //     return newArr;
-                            //   })
                           }
                           disabled
                         />
@@ -3013,6 +3013,7 @@ const PartiesFormParameter = ({
 // export default PartiesFormParameter;
 
 const mapState = (state) => ({
+  authorizedOfficialIndex: state.addendumContract.authorizedOfficialIndex,
   dataNewClause: state.addendumContract.dataNewClause,
 });
 
