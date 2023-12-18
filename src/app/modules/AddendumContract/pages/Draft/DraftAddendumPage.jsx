@@ -32,6 +32,8 @@ import TemplateKlausul from "./TemplateKlausul";
 import ParaPihakTab from "../../../../../app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameterSubTab/PartiesFormParameter";
 import LainnyaTab from "./tabs/Lainnya";
 
+//
+
 const DraftAddendumPage = ({
   loadings,
   headerData,
