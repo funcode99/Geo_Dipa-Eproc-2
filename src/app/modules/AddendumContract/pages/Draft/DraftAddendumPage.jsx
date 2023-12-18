@@ -1870,6 +1870,7 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 6 && (
             <JaminanTab
+              newData={data}
               newJson={jsonData}
               contract_id={draft_id}
               jsonData={dataContractById}
