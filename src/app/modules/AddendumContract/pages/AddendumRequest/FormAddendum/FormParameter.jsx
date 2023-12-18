@@ -90,6 +90,7 @@ const FormParameter = ({
   PICData,
   accountNumberBankData,
   dataNewClause,
+  dataNewClauseDrafting,
   tabDisableLists,
 }) => {
   // console.log("isi pihak kedua", secondAuthorizedOfficial);
@@ -98,13 +99,24 @@ const FormParameter = ({
   // console.log("isi pengawas pekerjaan", jobSupervisor);
   // console.log("isi jsonData", jsonData);
 
+  const bodyClauseDataTemplate = {
+    clause_number: "",
+    before_clause_note: "",
+    after_clause_note: "",
+  };
+
+  const attachmentClauseDataTemplate = {
+    attachment_number: "",
+    clause_note: "",
+  };
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (tabDisableLists?.add_contract_party !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_contract_party?.attachment_clause_data || null,
+        payload: tabDisableLists?.add_contract_party
+          ?.attachment_clause_data || [attachmentClauseDataTemplate],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "parties",
       });
@@ -113,7 +125,8 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_party?.body_clause_data[0] || null,
+          tabDisableLists?.add_contract_party?.body_clause_data[0] ||
+          bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "parties",
       });
@@ -121,9 +134,8 @@ const FormParameter = ({
     if (tabDisableLists?.add_contract_job_price !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_contract_job_price?.attachment_clause_data ||
-          null,
+        payload: tabDisableLists?.add_contract_job_price
+          ?.attachment_clause_data || [attachmentClauseDataTemplate],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "job_price",
       });
@@ -132,7 +144,8 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_job_price?.body_clause_data[0] || null,
+          tabDisableLists?.add_contract_job_price?.body_clause_data[0] ||
+          bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "job_price",
       });
@@ -140,9 +153,8 @@ const FormParameter = ({
     if (tabDisableLists?.add_contract_time_period !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_contract_time_period?.attachment_clause_data ||
-          null,
+        payload: tabDisableLists?.add_contract_time_period
+          ?.attachment_clause_data || [attachmentClauseDataTemplate],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "time_period",
       });
@@ -152,7 +164,7 @@ const FormParameter = ({
         type: actionTypes.SetRequestClause,
         payload:
           tabDisableLists?.add_contract_time_period?.body_clause_data[0] ||
-          null,
+          bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "time_period",
       });
@@ -160,8 +172,8 @@ const FormParameter = ({
     if (tabDisableLists?.add_payment_method !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_payment_method?.attachment_clause_data || null,
+        payload: tabDisableLists?.add_payment_method
+          ?.attachment_clause_data || [attachmentClauseDataTemplate],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "payment_method",
       });
@@ -170,7 +182,8 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_payment_method?.body_clause_data[0] || null,
+          tabDisableLists?.add_payment_method?.body_clause_data[0] ||
+          bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "payment_method",
       });
@@ -178,8 +191,9 @@ const FormParameter = ({
     if (tabDisableLists?.add_contract_fine !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_contract_fine?.attachment_clause_data || null,
+        payload: tabDisableLists?.add_contract_fine?.attachment_clause_data || [
+          attachmentClauseDataTemplate,
+        ],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "fine",
       });
@@ -188,7 +202,8 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_fine?.body_clause_data[0] || null,
+          tabDisableLists?.add_contract_fine?.body_clause_data[0] ||
+          bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "fine",
       });
@@ -196,9 +211,8 @@ const FormParameter = ({
     if (tabDisableLists?.add_contract_guarantee !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_contract_guarantee?.attachment_clause_data ||
-          null,
+        payload: tabDisableLists?.add_contract_guarantee
+          ?.attachment_clause_data || [attachmentClauseDataTemplate],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "guarantee",
       });
@@ -207,7 +221,8 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_guarantee?.body_clause_data[0] || null,
+          tabDisableLists?.add_contract_guarantee?.body_clause_data[0] ||
+          bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "guarantee",
       });
@@ -215,9 +230,8 @@ const FormParameter = ({
     if (tabDisableLists?.add_contract_account_number !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_contract_account_number
-            ?.attachment_clause_data || null,
+        payload: tabDisableLists?.add_contract_account_number
+          ?.attachment_clause_data || [attachmentClauseDataTemplate],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "account_number",
       });
@@ -227,7 +241,7 @@ const FormParameter = ({
         type: actionTypes.SetRequestClause,
         payload:
           tabDisableLists?.add_contract_account_number?.body_clause_data[0] ||
-          null,
+          bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "account_number",
       });
@@ -235,8 +249,8 @@ const FormParameter = ({
     if (tabDisableLists?.add_contract_others !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_contract_others?.attachment_clause_data || null,
+        payload: tabDisableLists?.add_contract_others
+          ?.attachment_clause_data || [attachmentClauseDataTemplate],
         fieldType: "refill_attachment_clause_data",
         fromWhere: "other",
       });
@@ -245,7 +259,9 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_others?.body_clause_data[0] || null,
+          tabDisableLists?.add_contract_others?.body_clause_data ||
+          bodyClauseDataTemplate,
+
         fieldType: "refill_body_clause_data",
         fromWhere: "other",
       });
@@ -1198,9 +1214,9 @@ const FormParameter = ({
                   guarantee_end_date: timePeriodAddendum[2]?.endDate,
                   maintenance_start_date: timePeriodAddendum[3]?.startDate,
                   maintenance_end_date: timePeriodAddendum[3]?.endDate,
-                  body_data: dataNewClause.time_period.bodyClauseData,
+                  body_data: dataNewClauseDrafting.time_period.bodyClauseData,
                   attachment_data:
-                    dataNewClause.time_period.attachmentClauseData,
+                    dataNewClauseDrafting.time_period.attachmentClauseData,
                   add_contract_period_type: timePeriodAddendum[0]?.radio,
                   add_work_period_type: timePeriodAddendum[1]?.radio,
                 }}
@@ -1685,9 +1701,9 @@ const FormParameter = ({
               initialValues={{
                 payment_method: addendumPaymentMethod,
                 payment_data: stagePayment.payment,
-                body_data: dataNewClause.payment_method.bodyClauseData,
+                body_data: dataNewClauseDrafting.payment_method.bodyClauseData,
                 attachment_data:
-                  dataNewClause.payment_method.attachmentClauseData,
+                  dataNewClauseDrafting.payment_method.attachmentClauseData,
               }}
               onSubmit={(values) => {
                 console.log("submit di metode pembayaran", values);
@@ -2012,13 +2028,13 @@ const FormParameter = ({
 
                   {/* 17:50 13 Desember 2023 */}
                   <PerubahanKlausulKontrak
+                    isDisable={!tabDisableLists?.is_add_payment_method}
                     subTitle={"B"}
                     title={"Metode Pembayaran"}
                     fromWhere={"payment_method"}
                     showAddClause={showAddClause}
                     values={values}
                     isMandatory={true}
-                    isDisable={!tabDisableLists?.is_add_payment_method}
                     isDrafting={true}
                   />
 
@@ -2035,8 +2051,9 @@ const FormParameter = ({
                 enableReinitialize={true}
                 initialValues={{
                   fine_data: fine,
-                  body_data: dataNewClause.fine.bodyClauseData,
-                  attachment_data: dataNewClause.fine.attachmentClauseData,
+                  body_data: dataNewClauseDrafting.fine.bodyClauseData,
+                  attachment_data:
+                    dataNewClauseDrafting.fine.attachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   submitFormParameterFine(values);
@@ -2277,8 +2294,9 @@ const FormParameter = ({
                     inputDataGuarantee.maintenance_guarantee_end_date,
                   maintenance_guarantee_evidence_file:
                     inputDataGuarantee.maintenance_guarantee_evidence_file,
-                  body_data: dataNewClause.guarantee.bodyClauseData,
-                  attachment_data: dataNewClause.guarantee.attachmentClauseData,
+                  body_data: dataNewClauseDrafting.guarantee.bodyClauseData,
+                  attachment_data:
+                    dataNewClauseDrafting.guarantee.attachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   submitFormParameterGuarantee(values);
@@ -2825,9 +2843,10 @@ const FormParameter = ({
                   data_bank: accountNumber,
                   // wajib dipasang state
                   bank_statement_file: "",
-                  body_data: dataNewClause.account_number.bodyClauseData,
+                  body_data:
+                    dataNewClauseDrafting.account_number.bodyClauseData,
                   attachment_data:
-                    dataNewClause.account_number.attachmentClauseData,
+                    dataNewClauseDrafting.account_number.attachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   submitFormParameterAccountNumber(values);
@@ -3226,8 +3245,9 @@ const FormParameter = ({
               <Formik
                 enableReinitialize={true}
                 initialValues={{
-                  body_data: dataNewClause.other.bodyClauseData,
-                  attachment_data: dataNewClause.other.attachmentClauseData,
+                  body_data: dataNewClauseDrafting.other.bodyClauseData,
+                  attachment_data:
+                    dataNewClauseDrafting.other.attachmentClauseData,
                 }}
                 onSubmit={(values) => {
                   submitFormParameterOther(values);
@@ -3269,6 +3289,7 @@ const mapState = (state) => ({
   },
   status: state.auth.user.data.status,
   dataNewClause: state.addendumContract.dataNewClause,
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
 
 const mapDispatch = {
