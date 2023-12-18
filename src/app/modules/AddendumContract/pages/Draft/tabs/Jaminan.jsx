@@ -135,7 +135,8 @@ const Jaminan = ({
       nominal: inputDataGuarantee?.down_payment_guarantee,
       tanggal_mulai: inputDataGuarantee?.down_payment_guarantee_start_date,
       tanggal_selesai: inputDataGuarantee?.down_payment_guarantee_end_date,
-      bukti: inputDataGuarantee?.down_payment_guarantee_evidence_file_name,
+      // bukti: inputDataGuarantee?.down_payment_guarantee_evidence_file_name,
+      bukti: inputDataGuarantee?.down_payment_guarantee_evidence_file_nam,
     },
     {
       judul: "Jaminan Pelaksanaan",
@@ -143,7 +144,8 @@ const Jaminan = ({
       nominal: inputDataGuarantee?.implementation_guarantee,
       tanggal_mulai: inputDataGuarantee?.implementation_guarantee_start_date,
       tanggal_selesai: inputDataGuarantee?.implementation_guarantee_end_date,
-      bukti: inputDataGuarantee?.implementation_guarantee_evidence_file_name,
+      // bukti: inputDataGuarantee?.implementation_guarantee_evidence_file_name,
+      bukti: inputDataGuarantee?.implementation_guarantee_evidence_file_n,
     },
     {
       judul: "Jaminan Pemeliharaan",
