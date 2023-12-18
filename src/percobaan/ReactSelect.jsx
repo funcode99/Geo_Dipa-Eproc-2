@@ -17,6 +17,7 @@ export const ReactSelect = ({
   currentSelect,
   nowSelect,
   type,
+  disabled,
 }) => {
   const [isClearable, setIsClearable] = useState(true);
   const [isSearchable, setIsSearchable] = useState(true);
@@ -24,15 +25,11 @@ export const ReactSelect = ({
 
   useEffect(() => {
     // saat awal muncul, sudah langsung jalan.
-    // console.log("userchoice berubah");
     if (func) {
       func(userChoice, arrayIndex, data, type);
     }
     // data.splice(userChoice, 1);
   }, [userChoice]);
-
-  console.log("isi data di react select", data);
-  console.log(data !== "undefined");
 
   if (data) {
     data.map((item, index) => {
@@ -44,6 +41,7 @@ export const ReactSelect = ({
   return (
     <>
       <Select
+        isDisabled={disabled}
         className="basic-single"
         classNamePrefix="select"
         defaultValue={

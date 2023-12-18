@@ -76,7 +76,6 @@ export function AsideMenuList({ layoutProps }) {
           isClient ? DataAsideMenuListClient : DataAsideMenuListVendor
         );
       }
-      // console.log(`newList`, newList, userNonFinance, isClient, isFinance);
       let found = false;
       responseRoles["data"]["data"].map((item, index) => {
         if (

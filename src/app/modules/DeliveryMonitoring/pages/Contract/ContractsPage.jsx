@@ -105,7 +105,6 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
     setOrder(sort.order ? "asc" : "desc");
     setOrderBy(sort.name);
     setFilterBy(filter);
-    console.log(`datazzz`, filter, data2);
   };
 
   function handleChangePage(newPage) {
@@ -122,7 +121,6 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
       type: "get",
       url: `/delivery/contract`,
       onSuccess: (res) => {
-        // console.log(`res.data`, res.data);
         // generateTableContent(res.data);
         setDataArr(
           res.data.map((item, index) => ({
@@ -145,7 +143,6 @@ export const ContractsPage = ({ fetch_api_sg, loadings, status }) => {
               <ButtonAction
                 hoverLabel="More"
                 data={"1"}
-                // handleAction={console.log(null)}
                 ops={[
                   {
                     label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",

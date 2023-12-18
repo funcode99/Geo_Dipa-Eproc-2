@@ -151,19 +151,6 @@ const TerminPage = ({
     // serviceFetch(() => deliveryMonitoring.getTaskById(taskId))
     fetchDataStepper();
     fetchDataTask();
-    // deliveryMonitoring
-    //   .getTaskById(task_id)
-    //   .then((res) => {
-    //     // console.log(`resold`, res);
-    //     // handleLoading("get", false);
-    //     if (res.data.status === true) {
-    //       dispatch({
-    //         type: actionTypes.SetDataTask,
-    //         payload: res?.data?.data,
-    //       });
-    //     }
-    //   })
-    //   .catch((err) => console.log("err", err));
   }, [fetchDataStepper]);
 
   React.useEffect(() => {

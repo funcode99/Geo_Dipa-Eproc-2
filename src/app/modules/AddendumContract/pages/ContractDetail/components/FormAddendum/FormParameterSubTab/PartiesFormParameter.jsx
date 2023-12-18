@@ -1,28 +1,37 @@
-import React, { useState, useEffect } from "react";
-import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
-// FieldArray, ErrorMessage
 import { Formik, Field, Form } from "formik";
+import { connect, useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
 import { ReactSelect } from "percobaan/ReactSelect";
-import { submitParties } from "app/modules/AddendumContract/service/AddendumContractCrudService";
-import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
+import NewClause from "../Components/Modal/NewClause";
 import NewWorkDirector from "../Components/Modal/Parties/NewWorkDirector";
 import NewWorkSupervisor from "../Components/Modal/Parties/NewWorkSupervisor";
+import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import NewSecondWorkDirector from "../Components/Modal/Parties/NewSecondWorkDirector";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import NewSecondWorkSupervisor from "../Components/Modal/Parties/NewSecondWorkSupervisor";
-import NewClause from "../Components/Modal/NewClause";
-import { connect } from "react-redux";
+import { submitParties } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const PartiesFormParameter = ({
-  jsonData,
-  authorizedOfficialData,
-  secondAuthorizedOfficial,
   PICData,
+  jsonData,
+  isDisable,
+  isDrafting,
+  contract_id,
   jobDirector,
+  dataNewClause,
   jobSupervisor,
   jobSupervisor2,
-  contract_id,
-  dataNewClause,
+  is_add_parties,
+  add_contract_party,
+  dataNewClauseDrafting,
+  authorizedOfficialData,
+  secondAuthorizedOfficial,
 }) => {
+  if (is_add_parties == true) {
+    isDisable = is_add_parties;
+  }
+  const dispatch = useDispatch();
   const openCloseWorkSupervisor = React.useRef();
   const showAddWorkSupervisor = () => {
     openCloseWorkSupervisor.current.open();
@@ -49,10 +58,10 @@ const PartiesFormParameter = ({
   };
 
   const submitFormParameterContractParties = (values) => {
-    console.log("isi submit values parties", values);
     submitParties(
       {
-        add_contract_id: localStorage.getItem("add_contract_id"),
+        add_contract_id: contract_id,
+        // add_contract_id: localStorage.getItem("add_contract_id"),
         party_1_autorized_username: values?.official_username,
         party_1_autorized_name: values?.official_name,
         party_1_autorized_position: values?.official_position,
@@ -98,6 +107,7 @@ const PartiesFormParameter = ({
       },
       contract_id
     );
+    alert("Berhasil Update Data!");
   };
 
   // silahkan taro pejabat berwenang pihak pertama disini kalo mau di persist
@@ -111,7 +121,6 @@ const PartiesFormParameter = ({
         phone_number: "",
         fax: "",
         sk_assign_number: "",
-        // value input gaboleh null
         sk_assign_date: "",
         notary_name: "",
         act_number: "",
@@ -119,7 +128,6 @@ const PartiesFormParameter = ({
         sk_kemenkumham_number: "",
         sk_kemenkumham_date: "",
         PICEmail: "",
-        // party_2_pic_email: "",
       },
     ],
     workDirector: [
@@ -186,6 +194,7 @@ const PartiesFormParameter = ({
           jobSupervisor2[num]?.phone;
         newArr[arrIndex]["party_1_job_supervisor_fax"] =
           jobSupervisor2[num]?.fax;
+        newArr[arrIndex]["facility_name"] = jobSupervisor2[num]?.facility_name;
         return {
           ...placeman,
           workSupervisor: newArr,
@@ -198,7 +207,6 @@ const PartiesFormParameter = ({
   };
   const changeDataJobDirectorDynamic = (num, arrIndex, data, type) => {
     // berjalan sebanyak banyak nya fungsi yang dipanggil dari react select
-    // console.log("fungsi berjalan di awal");
 
     if (!isSubmit) {
       setPlaceman((placeman) => {
@@ -211,8 +219,6 @@ const PartiesFormParameter = ({
             data[num]?.full_name;
           newArr[arrIndex]["party_1_job_director_position"] =
             data[num]?.position_name;
-
-          // jobDirector.splice(num, 1);
 
           return {
             ...placeman,
@@ -238,14 +244,7 @@ const PartiesFormParameter = ({
     }
   };
 
-  // di option data nya sudah di hapus, tapi di select nya masih belum
-  useEffect(() => {
-    console.log("job Director sekarang", jobDirector);
-  }, [jobDirector]);
-
   const changeDataSecondAuthorizedOfficial = (num, unused, data) => {
-    console.log("isi data data", data);
-
     setPlaceman((placeman) => {
       let newArr = [...placeman?.secondAuthorizedOfficial];
       newArr[0]["currentSelectIndex"] = num;
@@ -347,13 +346,37 @@ const PartiesFormParameter = ({
   const [jobDirectorIndex, setJobDirectorIndex] = useState(0);
   const [jobSupervisorIndex, setJobSupervisorIndex] = useState(0);
 
-  useEffect(() => {
-    console.log("placeman sekarang", placeman);
-  }, [placeman]);
-
   const [authorizedOfficial, setAuthorizedOfficial] = useState(
     authorizedOfficialData
   );
+
+  useEffect(() => {
+    if (add_contract_party?.attachment_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_party?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "parties",
+      });
+    }
+    if (add_contract_party?.body_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_party?.body_clause_data || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
+        fieldType: "refill_body_clause_data",
+        fromWhere: "parties",
+      });
+    }
+  }, []);
 
   return (
     <>
@@ -535,11 +558,14 @@ const PartiesFormParameter = ({
           secondAuthorizedOfficial: placeman?.secondAuthorizedOfficial,
           secondJobDirector: placeman.secondWorkDirector,
           secondJobSupervisor: placeman.secondWorkSupervisor,
-          body_data: dataNewClause.parties.bodyClauseData,
-          attachment_data: dataNewClause.parties.attachmentClauseData,
+          body_data: isDrafting
+            ? dataNewClauseDrafting.parties.bodyClauseData
+            : dataNewClause.parties.bodyClauseData,
+          attachment_data: isDrafting
+            ? dataNewClauseDrafting.parties.attachmentClauseData
+            : dataNewClause.parties.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("isi values parties", values);
           submitFormParameterContractParties(values);
         }}
       >
@@ -547,7 +573,7 @@ const PartiesFormParameter = ({
           <Form>
             {/* Pihak 1 + 2 */}
             <div
-              className="parties-wrapper"
+              className="parties-wrapper bg-white"
               style={{
                 border: 1,
                 borderStyle: "solid",
@@ -798,7 +824,7 @@ const PartiesFormParameter = ({
                           -
                           <input
                             type="date"
-                            value={`${jsonData?.contract_party?.party_1_notary_act_autorized_no}`}
+                            value={`${jsonData?.contract_party?.party_1_notary_act_autorized_date}`}
                             className="form-control"
                             style={{
                               backgroundColor: "#e8f4fb",
@@ -836,7 +862,7 @@ const PartiesFormParameter = ({
                           -
                           <input
                             type="date"
-                            value={`${jsonData?.contract_party?.party_1_autorized_kemenkumham_no}`}
+                            value={`${jsonData?.contract_party?.party_1_autorized_kemenkumham_date}`}
                             className="form-control"
                             style={{
                               backgroundColor: "#e8f4fb",
@@ -1125,6 +1151,7 @@ const PartiesFormParameter = ({
                           data={authorizedOfficial}
                           func={changeDataauthorizedOfficial}
                           labelName={`authorized_official_username`}
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -1146,14 +1173,6 @@ const PartiesFormParameter = ({
                           value={
                             authorizedOfficial[authorizedOfficialIndex]
                               ?.authorized_official_name
-                            // :
-                            // setAuthorizedOfficial((previous) => {
-                            //     let newArr = [...previous];
-                            //     newArr[
-                            //       authorizedOfficialIndex
-                            //     ].authorized_official_name = "kosong";
-                            //     return newArr;
-                            //   })
                           }
                           disabled
                         />
@@ -1274,17 +1293,8 @@ const PartiesFormParameter = ({
                           <input
                             type="text"
                             value={
-                              // authorizedOfficial
-                              //   ?
                               authorizedOfficial[authorizedOfficialIndex]
                                 ?.assignment_deed_no
-                              // : setAuthorizedOfficial((previous) => {
-                              //     let newArr = [...previous];
-                              //     newArr[
-                              //       authorizedOfficialIndex
-                              //     ].assignment_deed_no = "kosong";
-                              //     return newArr;
-                              //   })
                             }
                             className="form-control"
                             style={{
@@ -1296,18 +1306,8 @@ const PartiesFormParameter = ({
                           <input
                             type="date"
                             value={
-                              // authorizedOfficial[authorizedOfficialIndex]
-                              //       ?.assignment_deed_date
-                              //   ?
                               authorizedOfficial[authorizedOfficialIndex]
                                 ?.assignment_deed_date
-                              // : setAuthorizedOfficial((previous) => {
-                              //     let newArr = [...previous];
-                              //     newArr[
-                              //       authorizedOfficialIndex
-                              //     ].assignment_deed_date = "kosong";
-                              //     return newArr;
-                              //   })
                             }
                             className="form-control"
                             style={{
@@ -1471,6 +1471,7 @@ const PartiesFormParameter = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddWorkDirector}
+                        disabled={!isDisable}
                       >
                         Tambah
                       </button>
@@ -1512,6 +1513,7 @@ const PartiesFormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisable}
                                   >
                                     Hapus
                                   </button>
@@ -1525,6 +1527,7 @@ const PartiesFormParameter = ({
                                   currentSelect={data.usernameSelectIndex}
                                   type={"username"}
                                   component={ReactSelect}
+                                  disabled={!isDisable}
                                 />
                               </div>
 
@@ -1599,7 +1602,7 @@ const PartiesFormParameter = ({
                                     rowGap: 4,
                                   }}
                                 >
-                                  <span>Alamat</span>
+                                  <span>Alamat direktur</span>
                                   <Field
                                     name={`jobDirector[${index}].facility_name`}
                                     data={jobSupervisor}
@@ -1609,6 +1612,7 @@ const PartiesFormParameter = ({
                                     currentSelect={data.facilityNameSelectIndex}
                                     type={"facilityName"}
                                     component={ReactSelect}
+                                    disabled={!isDisable}
                                   />
                                 </label>
                               </div>
@@ -1700,12 +1704,11 @@ const PartiesFormParameter = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddWorkSupervisor}
+                        disabled={!isDisable}
                       >
                         Tambah
                       </button>
                     </div>
-
-                    {/* Pengawas Pekerjaan Pihak Pertama */}
 
                     {/* Pengawas Pekerjaan Pihak Pertama */}
                     {placeman.workSupervisor &&
@@ -1736,6 +1739,7 @@ const PartiesFormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisable}
                                   >
                                     Hapus
                                   </button>
@@ -1747,6 +1751,7 @@ const PartiesFormParameter = ({
                                   onChange={(e) =>
                                     changeDataPosition(index, e.target.value)
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -1770,6 +1775,7 @@ const PartiesFormParameter = ({
                                   currentSelect={data.currentIndex}
                                   // type={"jobSupervisor"}
                                   component={ReactSelect}
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -1879,26 +1885,6 @@ const PartiesFormParameter = ({
                         Pejabat berwenang
                       </h1>
                     </div>
-
-                    {/* <div>
-                              <label
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  rowGap: 4,
-                                  height: 65.5,
-                                }}
-                              >
-                                <span>Username</span>
-                                <input
-                                  type="text"
-                                  value={`${jsonData?.contract_party?.party_2_contract_signature_username}`}
-                                  className="form-control"
-                                  style={{ backgroundColor: "#e8f4fb" }}
-                                />
-                              </label>
-                            </div> */}
-
                     <div>
                       <label
                         style={{
@@ -2397,6 +2383,7 @@ const PartiesFormParameter = ({
                           func={changeDataSecondAuthorizedOfficial}
                           labelName={"full_name"}
                           component={ReactSelect}
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2439,6 +2426,7 @@ const PartiesFormParameter = ({
                               "Address"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2481,6 +2469,7 @@ const PartiesFormParameter = ({
                               "FAX"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2511,6 +2500,7 @@ const PartiesFormParameter = ({
                                 "SK ASSIGN NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2523,6 +2513,7 @@ const PartiesFormParameter = ({
                                 "SK ASSIGN DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2547,6 +2538,7 @@ const PartiesFormParameter = ({
                               "NOTARY NAME"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2577,6 +2569,7 @@ const PartiesFormParameter = ({
                                 "ACT NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2589,6 +2582,7 @@ const PartiesFormParameter = ({
                                 "ACT DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2620,6 +2614,7 @@ const PartiesFormParameter = ({
                                 "SK KEMENKUMHAM NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2632,6 +2627,7 @@ const PartiesFormParameter = ({
                                 "SK KEMENKUMHAM DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2653,6 +2649,7 @@ const PartiesFormParameter = ({
                           labelName={"email"}
                           // currentSelect={data.usernameSelectIndex}
                           component={ReactSelect}
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2684,6 +2681,7 @@ const PartiesFormParameter = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddSecondWorkDirector}
+                        disabled={!isDisable}
                       >
                         Tambah
                       </button>
@@ -2720,6 +2718,7 @@ const PartiesFormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisable}
                                   >
                                     Hapus
                                   </button>
@@ -2736,6 +2735,7 @@ const PartiesFormParameter = ({
                                       "Position"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2760,6 +2760,7 @@ const PartiesFormParameter = ({
                                       "Address"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2784,6 +2785,7 @@ const PartiesFormParameter = ({
                                       "Phone"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2808,6 +2810,7 @@ const PartiesFormParameter = ({
                                       "Fax"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2842,6 +2845,7 @@ const PartiesFormParameter = ({
                         type="button"
                         className="btn btn-primary mx-1"
                         onClick={showAddSecondWorkSupervisor}
+                        disabled={!isDisable}
                       >
                         Tambah
                       </button>
@@ -2878,6 +2882,7 @@ const PartiesFormParameter = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={!isDisable}
                                   >
                                     Hapus
                                   </button>
@@ -2893,6 +2898,7 @@ const PartiesFormParameter = ({
                                       "Position"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2917,6 +2923,7 @@ const PartiesFormParameter = ({
                                       "Address"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2941,6 +2948,7 @@ const PartiesFormParameter = ({
                                       "Phone"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2965,6 +2973,7 @@ const PartiesFormParameter = ({
                                       "Fax"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2978,14 +2987,16 @@ const PartiesFormParameter = ({
 
             <PerubahanKlausulKontrak
               subTitle={"C"}
-              title={"Para Pihak"}
-              showAddClause={showAddClause}
-              fromWhere={"parties"}
               values={values}
-              isMandatory={true}
+              isMandatory={false}
+              title={"Para Pihak"}
+              fromWhere={"parties"}
+              isDisable={isDisable}
+              isDrafting={isDrafting}
+              showAddClause={showAddClause}
             />
 
-            <UpdateButton fromWhere={"parties"} />
+            <UpdateButton fromWhere={"parties"} isDrafting={isDrafting} />
           </Form>
         )}
       </Formik>
@@ -2993,10 +3004,9 @@ const PartiesFormParameter = ({
   );
 };
 
-// export default PartiesFormParameter;
-
 const mapState = (state) => ({
   dataNewClause: state.addendumContract.dataNewClause,
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
 
 export default connect(mapState, null)(PartiesFormParameter);

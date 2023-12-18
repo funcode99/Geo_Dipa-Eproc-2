@@ -77,7 +77,6 @@ const ModalSubmit = ({
     setTempOrderItems(dataArr);
   };
 
-  console.log(`tempOrderItems`, tempOrderItems, hasMaterial);
   return (
     <React.Fragment>
       <DialogGlobal

@@ -30,15 +30,6 @@ const TableSA = ({ itemJasa, itemSA }) => {
       )?.[0],
     [baseSA, itemSA]
   );
-  // console.log(
-  //   `dataUsed`,
-  //   itemSA,
-  //   dataUsed,
-  //   baseSA,
-  //   baseSA?.po_account_assignment,
-  //   poUsed
-  // );
-
   return (
     <TablePaginationCustom
       headerRows={headerTableSA}

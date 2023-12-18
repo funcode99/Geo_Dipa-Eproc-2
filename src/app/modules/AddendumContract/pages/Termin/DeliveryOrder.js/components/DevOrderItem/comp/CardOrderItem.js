@@ -88,7 +88,6 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
   );
 
   const getValue = debounce(() => {
-    // console.log(`formRef`, formRef?.current?.values);
     if (setItem)
       setItem((prev) => ({
         ...prev,
@@ -149,7 +148,6 @@ const CardOrderItem = ({ data, options, setItem, isVendor }) => {
         initial={initValues}
         fieldProps={{
           onBlur: () => {
-            // console.log("blur");
             getValue();
           },
           onChange: () => {

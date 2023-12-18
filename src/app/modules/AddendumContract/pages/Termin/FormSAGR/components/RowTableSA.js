@@ -13,47 +13,33 @@ import InputWBS from "./InputWBS";
 // value: validation.require("Value"),
 // name_service: validation.require("Header Text"),
 
-const validationSchema = object().shape
-(
-  {
-    bus_area: validation.require("Bus Area"),
-    gl_account: validation.require("GL Account"),
-    cost_center: validation.require("Cost Center"),
-    dist_type: validation.require("Distribution Type"),
-  }
-)
+const validationSchema = object().shape({
+  bus_area: validation.require("Bus Area"),
+  gl_account: validation.require("GL Account"),
+  cost_center: validation.require("Cost Center"),
+  dist_type: validation.require("Distribution Type"),
+});
 
 const RowTableSA = ({ item, index }) => {
-
-  const formikRef = React.useRef()
-  const wbsRef = React.useRef()
+  const formikRef = React.useRef();
+  const wbsRef = React.useRef();
   const { setArrService, listWBS, readOnly, options } = useContext(
     FormSAContext
-  )
-
-  // const _handleSubmit = (data) => {
-  //   console.log(`data`, data);
-  // };
+  );
 
   const _handleBlur = () => {
-    console.log("formikRef.current", formikRef.current);
     setArrService((prev) => ({
       ...prev,
       [`service_${item?.id}`]: {
         ...formikRef.current.values,
         isValid: formikRef.current.isValid,
       },
-    }))
-  }
-  
+    }));
+  };
+
   const _open = () => {
-    wbsRef.current.open()
-  }
-  
-  // console.log(`readOnly`, readOnly, item);
-  // console.log(`data row`, formikRef.current);
-  // console.log(`data_handleSelected`, data);
-  // console.log(`datasss`, dataArr);
+    wbsRef.current.open();
+  };
 
   const _handleSelected = (data) => {
     const dataArr = Array(data.length)
@@ -72,8 +58,8 @@ const RowTableSA = ({ item, index }) => {
     setArrService((prev) => ({
       ...prev,
       [`service_${item?.id}`]: { item, isValid: false },
-    }))
-  }, [])
+    }));
+  }, []);
 
   // _handleBlur();
   // formikRef.current.validateForm();
@@ -83,23 +69,23 @@ const RowTableSA = ({ item, index }) => {
       ...item,
       dist_type: item?.dist_type,
       // wbsdata:
-      gl_account: { 
-        value: item?.gl_account, 
-        label: item?.gl_account 
+      gl_account: {
+        value: item?.gl_account,
+        label: item?.gl_account,
       },
-      cost_center: { 
-        value: item?.cost_center, 
-        label: item?.cost_center 
+      cost_center: {
+        value: item?.cost_center,
+        label: item?.cost_center,
       },
     }),
     [item]
-  )
-  {/* // onSubmit={_handleSubmit}
-  // validateOnMount */}
+  );
+  {
+    /* // onSubmit={_handleSubmit}
+  // validateOnMount */
+  }
   return (
-    
     <React.Fragment key={item?.id}>
-
       <ModalAddWBS
         innerRef={wbsRef}
         onSelected={_handleSelected}
@@ -114,9 +100,7 @@ const RowTableSA = ({ item, index }) => {
         validateOnChange={false}
         validationSchema={validationSchema}
       >
-        
         <TableRow hover>
-
           {/* ini kolom paling kiri */}
           <TableCell
             width={250}
@@ -138,9 +122,8 @@ const RowTableSA = ({ item, index }) => {
           {rowTableSA_field.map((item, id) => (
             <>
               <TableCell width={220} key={id}>
-
                 {/* Bus Area */}
-                
+
                 {/* // readOnly={readOnly}
                 // dropdown di modal */}
 
@@ -169,18 +152,13 @@ const RowTableSA = ({ item, index }) => {
                       {item.label}
                   </li>
                 </ul> */}
-              
               </TableCell>
             </>
           ))}
-
         </TableRow>
-
       </Formik>
-
     </React.Fragment>
+  );
+};
 
-  )
-}
-
-export default RowTableSA
+export default RowTableSA;

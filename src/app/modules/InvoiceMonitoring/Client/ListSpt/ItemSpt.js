@@ -106,7 +106,6 @@ const ItemSpt = (props) => {
   };
 
   const getDataSpt = () => {
-    console.log("result", data);
     getItemSpt(match.params.id)
       .then((result) => {
         setLoading(false);

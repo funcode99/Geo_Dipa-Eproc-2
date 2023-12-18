@@ -21,7 +21,6 @@ const ModalConfirmation = ({
   const _handleSubmit = React.useCallbackm(() => visible && onSubmit(), [
     onSubmit,
   ]);
-  // console.log(`other`, other);
   return (
     <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
       <div className="d-flex align-items-center flex-column">

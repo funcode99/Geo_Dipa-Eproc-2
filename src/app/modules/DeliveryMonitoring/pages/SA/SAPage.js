@@ -94,14 +94,12 @@ export const SAPage = ({ fetch_api_sg, loadings, status }) => {
       type: "get",
       url: `/delivery/sa`,
       onSuccess: (res) => {
-        console.log(`res.data`, res.data);
         generateTableContent(res.data);
       },
     });
   };
 
   const handleAction = React.useCallback((type, data) => {
-    console.log(`type`, type, data);
     history.push(
       `/${status}/delivery-monitoring/sa/${data?.task_id}/${data?.id}`
     );

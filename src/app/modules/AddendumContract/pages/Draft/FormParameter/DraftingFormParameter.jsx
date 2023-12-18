@@ -93,12 +93,6 @@ const DraftingFormParameter = ({
   accountNumberBankData,
   dataNewClause,
 }) => {
-  // console.log("isi pihak kedua", secondAuthorizedOfficial);
-  // console.log("isi auth official", authorizedOfficial);
-  // console.log("isi direksi pekerjaan", jobDirector);
-  // console.log("isi pengawas pekerjaan", jobSupervisor);
-  // console.log("isi jsonData", jsonData);
-
   const tableHeaderFine = [
     {
       name: "number",
@@ -175,8 +169,6 @@ const DraftingFormParameter = ({
       }
     });
   }, [guaranteeBeforeAddendum]);
-
-  // console.log("data hasil looping", data);
 
   const guaranteeBeforeAddendum = [
     {
@@ -499,7 +491,6 @@ const DraftingFormParameter = ({
       type: "get",
       url: `/adendum/currencies`,
       onSuccess: (res) => {
-        console.log("response currencies", res);
         setDataCurrencies(res);
       },
     });
@@ -510,11 +501,6 @@ const DraftingFormParameter = ({
     // getDataBankAccounts();
     getCurrencies();
   }, []);
-
-  React.useEffect(() => {
-    console.log("isi dataArr", dataArr);
-    console.log("isi currencies", currencies);
-  }, [dataArr, currencies]);
 
   const [addendumPaymentMethod, setAddendumPaymentMethod] = useState(
     jsonData?.payment_method
@@ -789,7 +775,6 @@ const DraftingFormParameter = ({
           }}
           onSubmit={(values) => {
             setStagePayment((data) => {
-              console.log("isi submit data", data);
               return {
                 ...data,
                 payment: [
@@ -1027,7 +1012,6 @@ const DraftingFormParameter = ({
                   add_work_period_type: timePeriodAddendum[1]?.radio,
                 }}
                 onSubmit={(values) => {
-                  console.log("isi jangka waktu", values);
                   submitFormParameterTimePeriod(values);
                 }}
               >
@@ -1493,7 +1477,6 @@ const DraftingFormParameter = ({
                   dataNewClause.payment_method.attachmentClauseData,
               }}
               onSubmit={(values) => {
-                console.log("submit di metode pembayaran", values);
                 submitFormParameterPaymentMethod(values);
               }}
             >
@@ -1834,7 +1817,6 @@ const DraftingFormParameter = ({
                 }}
                 onSubmit={(values) => {
                   submitFormParameterFine(values);
-                  console.log("isi submit", values);
                 }}
               >
                 {({ values }) => (
@@ -2355,10 +2337,6 @@ const DraftingFormParameter = ({
                                         name={data.nameTitle}
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee",
-                                              data.nameTitle
-                                            );
                                             let fieldName = data.nameTitle;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2384,9 +2362,6 @@ const DraftingFormParameter = ({
                                         name={data.nameTitle}
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee"
-                                            );
                                             let fieldName = data.nameTitle;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2437,10 +2412,6 @@ const DraftingFormParameter = ({
                                         name={data.nameStart}
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee",
-                                              data.nameTitle
-                                            );
                                             let fieldName = data.nameStart;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2481,9 +2452,6 @@ const DraftingFormParameter = ({
                                         }
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee"
-                                            );
                                             let fieldName = data.nameEnd;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2569,14 +2537,9 @@ const DraftingFormParameter = ({
                                         event.target.files[0]
                                       );
                                       setInputDataGuarantee((state) => {
-                                        console.log("state sekarang", state);
                                         let fieldName = data.nameEvidence;
                                         let a = { ...state };
                                         // a[fieldName] = event.target.files[0];
-                                        // console.log(
-                                        //   "isi file",
-                                        //   event.target.files[0]
-                                        // );
                                         a[fieldName] = formData;
                                         return a;
                                       });
@@ -2619,7 +2582,6 @@ const DraftingFormParameter = ({
                 }}
                 onSubmit={(values) => {
                   submitFormParameterAccountNumber(values);
-                  console.log("values account number", values);
                 }}
               >
                 {(props) => {
@@ -2943,10 +2905,6 @@ const DraftingFormParameter = ({
                                     width: "100%",
                                   }}
                                   onChange={(event) => {
-                                    console.log(
-                                      "isi currentTarget",
-                                      event.target.files
-                                    );
                                     setFieldValue(
                                       "bank_statement_file",
                                       event.target.files[0]

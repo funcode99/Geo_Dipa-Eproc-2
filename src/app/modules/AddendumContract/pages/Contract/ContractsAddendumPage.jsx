@@ -202,7 +202,6 @@ export const ContractsAddendumPage = ({ fetch_api_sg, loadings, status }) => {
     setOrder(sort.order ? "asc" : "desc");
     setOrderBy(sort.name);
     setFilterBy(filter);
-    // console.log(`datazzz`, filter, data2)
   };
 
   function handleChangePage(newPage) {
@@ -214,9 +213,6 @@ export const ContractsAddendumPage = ({ fetch_api_sg, loadings, status }) => {
   }
 
   const getDataContracts = async (page, limit) => {
-    console.log("isi page", page);
-    console.log("isi limit", limit);
-
     let urlName = "";
 
     if (typeof page === "undefined" || typeof limit === "undefined") {

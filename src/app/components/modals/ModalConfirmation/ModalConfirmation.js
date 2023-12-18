@@ -43,7 +43,6 @@ const ModalConfirmation = ({
       setRemarks(false);
     }
   }, [visible]);
-  // console.log(`other`, other);
   return (
     // <StyledModal visible={visible} onClose={onClose} minWidth="30vw">
     <DialogGlobal

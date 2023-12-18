@@ -34,17 +34,6 @@ const TableSA = ({ itemJasa, itemSA }) => {
     () => listWBS.find((el) => el.po_item === itemSA.po_item)?.wbs_value,
     [listWBS, itemSA]
   );
-  // console.log(
-  //   `dataUsed`,
-  //   itemSA,
-  //   dataUsed,
-  //   baseSA,
-  //   baseSA?.po_account_assignment,
-  //   poUsed
-  // );;
-
-  console.log({ baseSA }, "<><<");
-
   return (
     <TablePaginationCustom
       headerRows={headerTableSA}

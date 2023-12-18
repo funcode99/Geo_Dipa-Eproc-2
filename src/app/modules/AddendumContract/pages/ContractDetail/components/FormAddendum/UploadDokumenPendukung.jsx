@@ -13,13 +13,10 @@ const UploadDokumenPendukung = ({
   isAddJobPrice,
   conclusion,
 }) => {
-  // AARRGHGH PASS BY REFERENCE\
-  console.log("isi supportDocumentFetch", supportDocumentFetch);
   supportDocumentFetch.map((item) => {
     if (
       item.document_name ===
         "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor" ||
-      // && isAddJobPrice
       item.document_name === "Berita Acara Kesepakatan Addendum" ||
       (item.document_name === "Justifikasi " &&
         conclusion ===
@@ -105,7 +102,6 @@ const UploadDokumenPendukung = ({
   }, []);
 
   const submitData = (values) => {
-    console.log("isi values saat submit upload", supportingDocument?.data);
     let formDataNew = new FormData();
     formDataNew.append("drafter_code", values.drafterCode);
     formDataNew.append("add_drafter", values.addDrafter);
@@ -121,43 +117,32 @@ const UploadDokumenPendukung = ({
     ) {
       alert("Silahkan isi form mandatory yang masih kosong");
     } else {
-      let a = supportingDocument?.data?.map((item, index) => {
-        if (
-          typeof item.noDokumen === "undefined" ||
-          typeof item.tglDokumen === "undefined" ||
-          typeof item.fileDokumenKirim === "undefined" ||
-          typeof item.perihal === "undefined"
-        ) {
-          console.log("kosong");
-        } else {
-          formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
-          formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
-          formDataNew.append(`fileDokumen[${index}]`, item.fileDokumenKirim);
-          formDataNew.append(`perihal[${index}]`, item.perihal);
-          formDataNew.append(
-            `idDokumen[${index}]`,
-            typeof item.id === "0" ? null : item.id
-          );
-          formDataNew.append(`seq[${index}]`, item.seq);
-          formDataNew.append(
-            `tipeDokumen[${index}]`,
-            typeof item.document_type === "undefined"
-              ? null
-              : item.document_type
-          );
-          formDataNew.append(`namaDokumen[${index}]`, item.document_name);
-          formDataNew.append(
-            `namaDokumenEng[${index}]`,
-            typeof item.document_name_eng === "undefined"
-              ? null
-              : item.document_name_eng
-          );
-        }
+      const a = supportingDocument?.data?.map((item, index) => {
+        formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
+        formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
+        formDataNew.append(`fileDokumen[${index}]`, item.fileDokumenKirim);
+        formDataNew.append(`perihal[${index}]`, item.perihal);
+        formDataNew.append(
+          `idDokumen[${index}]`,
+          typeof item.id === "0" ? null : item.id
+        );
+        formDataNew.append(`seq[${index}]`, item.seq);
+        formDataNew.append(
+          `tipeDokumen[${index}]`,
+          typeof item.document_type === "undefined" ? null : item.document_type
+        );
+        formDataNew.append(`namaDokumen[${index}]`, item.document_name);
+        formDataNew.append(
+          `namaDokumenEng[${index}]`,
+          typeof item.document_name_eng === "undefined"
+            ? null
+            : item.document_name_eng
+        );
       });
     }
-
     uploadSuppDoc(formDataNew, localStorage.getItem("add_contract_id"));
   };
+
   function resizeTextArea(textarea) {
     const { style } = textarea;
 
@@ -182,7 +167,6 @@ const UploadDokumenPendukung = ({
   const setNewDocumentValue = (index, event, name) => {
     setSupportingDocument((previous) => {
       let newState = [...previous.data];
-      console.log("newState", newState);
       newState[index][name] = event;
       return {
         data: newState,
@@ -487,12 +471,6 @@ const UploadDokumenPendukung = ({
                       value={values.drafterSelectValue.drafterCode}
                     >
                       <option
-                        // style={{
-                        //   padding: '10px 12px',
-                        //   fontSize: 12,
-                        //   backgroundColor: '#e8f4fb',
-                        //   borderRadius: 4
-                        // }}
                         value={{
                           drafterCode: "Supply Chain Management (SCM) Division",
                           addDrafter: 1,

@@ -24,7 +24,6 @@ const FormBuilder = (
     (data) => typeof onSubmit === "function" && onSubmit(data),
     [onSubmit]
   );
-  // console.log(`formProps`, fieldProps);
 
   React.useImperativeHandle(ref, () => formikRef.current);
   return (

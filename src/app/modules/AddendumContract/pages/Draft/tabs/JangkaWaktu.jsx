@@ -1,20 +1,29 @@
-import React, { useState, useRef } from "react";
-import { Formik, Field, FieldArray, Form, ErrorMessage } from "formik";
+import { connect, useDispatch } from "react-redux";
 import { countdownMonths } from "app/libs/timeperioddate";
+import React, { useState, useRef, useEffect } from "react";
 import { countdownConverter } from "app/libs/timedateconverter";
-import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
+import { Formik, Field, FieldArray, Form, ErrorMessage } from "formik";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
+import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import { submitTimePeriod } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const JangkaWaktu = ({
-  contract_id,
-  timePeriodAddendumCurrent,
-  timePeriodData,
-  dataNewClause,
   isAdmin,
-  fromWhere,
+  isDisable,
+  contract_id,
+  dataNewClause,
+  timePeriodData,
+  is_add_time_period,
+  dataNewClauseDrafting,
+  add_contract_time_period,
+  timePeriodAddendumCurrent,
 }) => {
-  const openCloseAddClause = React.useRef();
+  if (is_add_time_period) {
+    isDisable = is_add_time_period;
+  }
+  const dispatch = useDispatch();
+  const openCloseAddClause = useRef();
   const showAddClause = () => {
     openCloseAddClause.current.open();
   };
@@ -98,7 +107,7 @@ const JangkaWaktu = ({
   const submitFormParameterTimePeriod = (values) => {
     submitTimePeriod(
       {
-        add_contract_id: localStorage.getItem("add_contract_id"),
+        add_contract_id: contract_id,
         from_time: values?.contract_start_date,
         thru_time: values?.contract_end_date,
         worked_start_date: values?.worked_start_date,
@@ -122,7 +131,36 @@ const JangkaWaktu = ({
       },
       contract_id
     );
+    alert("Berhasil Update Data!");
   };
+
+  useEffect(() => {
+    if (add_contract_time_period?.attachment_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_time_period?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "time_period",
+      });
+    }
+    if (add_contract_time_period?.body_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_time_period?.body_clause_data || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
+        fieldType: "refill_body_clause_data",
+        fromWhere: "time_period",
+      });
+    }
+  }, []);
 
   return (
     <div className="bg-white p-10">
@@ -145,13 +183,13 @@ const JangkaWaktu = ({
           guarantee_end_date: timePeriodAddendum[2]?.endDate,
           maintenance_start_date: timePeriodAddendum[3]?.startDate,
           maintenance_end_date: timePeriodAddendum[3]?.endDate,
-          body_data: dataNewClause.time_period.bodyClauseData,
-          attachment_data: dataNewClause.time_period.attachmentClauseData,
           add_contract_period_type: timePeriodAddendum[0]?.radio,
           add_work_period_type: timePeriodAddendum[1]?.radio,
+          body_data: dataNewClauseDrafting?.time_period?.bodyClauseData,
+          attachment_data:
+            dataNewClauseDrafting?.time_period?.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("isi jangka waktu", values);
           submitFormParameterTimePeriod(values);
         }}
       >
@@ -579,18 +617,19 @@ const JangkaWaktu = ({
 
             <PerubahanKlausulKontrak
               subTitle={"B"}
+              values={values}
+              isDrafting={true}
+              isMandatory={true}
+              isDisable={isDisable}
               title={"Jangka Waktu"}
               fromWhere={"time_period"}
               showAddClause={showAddClause}
-              values={values}
-              isMandatory={true}
-              isDrafting={true}
             />
 
             <UpdateButton
-              fromWhere={"time_period"}
               isDrafting={true}
               isMandatory={true}
+              fromWhere={"time_period"}
             />
           </Form>
         )}
@@ -599,4 +638,9 @@ const JangkaWaktu = ({
   );
 };
 
-export default JangkaWaktu;
+// export default JangkaWaktu;
+const mapState = (state) => ({
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
+});
+
+export default connect(mapState, null)(JangkaWaktu);

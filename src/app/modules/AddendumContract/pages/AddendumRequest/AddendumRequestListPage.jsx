@@ -70,6 +70,18 @@ const tableHeaderAddendumRequest = [
     filter: { active: true, type: "text" },
   },
   {
+    name: "po_date",
+    title: "PO Date",
+    order: { active: true, status: true, type: true },
+    filter: { active: true, type: "text" },
+  },
+  {
+    name: "start_date",
+    title: "Contract Start Date",
+    order: { active: true, status: true, type: true },
+    filter: { active: true, type: "text" },
+  },
+  {
     name: "end_date",
     title: "Contract End Date",
     order: { active: true, status: true, type: true },
@@ -130,7 +142,6 @@ export const AddendumRequestListPage = ({
     setOrder(sort.order ? "asc" : "desc");
     setOrderBy(sort.name);
     setFilterBy(filter);
-    console.log(`datazzz`, filter, data2);
   };
 
   function handleChangePage(newPage) {
@@ -147,7 +158,6 @@ export const AddendumRequestListPage = ({
       type: "get",
       url: `/adendum/add-contracts-request`,
       onSuccess: (res) => {
-        console.log("hasil respon di add contracts request", res.data);
         setDataArr(
           res.data.map((item) => ({
             id: item.id,
@@ -156,7 +166,9 @@ export const AddendumRequestListPage = ({
             contract_no: item?.contract?.contract_no,
             po_no: item?.contract?.purch_order_no,
             proc_contract_title: item?.contract?.contract_name,
-            // contract_end_date: item?,
+            po_date: item?.contract?.purch_order_no,
+            start_date: item?.contract?.from_time,
+            end_date: item?.contract?.thru_time,
             group: item?.contract?.user_group?.party?.full_name,
             vendor: item?.contract?.vendor?.party?.full_name,
             addnm_req_status: item?.add_status.status,
@@ -282,10 +294,22 @@ export const AddendumRequestListPage = ({
                 <TableCell>{item?.contract_no}</TableCell>
                 <TableCell>{item.po_no}</TableCell>
                 <TableCell>{item.proc_contract_title}</TableCell>
-                <TableCell></TableCell>
+                <TableCell>{item.po_date}</TableCell>
+                <TableCell>{item.start_date}</TableCell>
+                <TableCell>{item.end_date}</TableCell>
                 <TableCell>{item?.group}</TableCell>
                 <TableCell>{item?.vendor}</TableCell>
-                <TableCell>{item?.addnm_req_status}</TableCell>
+                <TableCell
+                  style={{
+                    position: "sticky",
+                    right: 60,
+                    background: "white",
+                    justifyContent: "center",
+                    minHeight: 65,
+                  }}
+                >
+                  {item?.addnm_req_status}
+                </TableCell>
                 <TableCell
                   style={{
                     position: "sticky",

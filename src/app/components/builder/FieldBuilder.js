@@ -19,7 +19,6 @@ const FieldBuilder = ({
     ...other,
   };
 
-  // console.log(`formProps`, formProps);
   return (
     <Row className={"mt-9"}>
       {formData &&

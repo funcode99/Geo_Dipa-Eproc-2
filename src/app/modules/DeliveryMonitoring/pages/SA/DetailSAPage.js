@@ -30,7 +30,6 @@ const DetailSAPage = ({ fetch_api_sg, loading, status }) => {
   // const is_finished = content?.task?.news_bast?.is_finished;
   // sa_signed : is_finished ? content?.task?.news_bast?.bapp_authorize_officer : content?.task?.news?.bapp_authorize_officer;
 
-
   const [content, setContent] = React.useState();
 
   const qr_params = React.useMemo(
@@ -47,7 +46,6 @@ const DetailSAPage = ({ fetch_api_sg, loading, status }) => {
       url: `/delivery/sa/${sa_id}`,
       type: "get",
       onSuccess: (res) => {
-        console.log(`pejabat`, res);
         setContent(res.data);
       },
     });
@@ -69,7 +67,6 @@ const DetailSAPage = ({ fetch_api_sg, loading, status }) => {
           items={content?.sa_items}
           dataSA={content}
           signProps={{
-                                    
             name:
               content?.task?.contract?.contract_party
                 ?.party_1_director_position_full_name,

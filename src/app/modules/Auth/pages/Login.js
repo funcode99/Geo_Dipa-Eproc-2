@@ -99,7 +99,6 @@ function Login(props) {
             props.login(data.token);
           })
           .catch((e) => {
-            // console.log(e.response);
             disableLoading();
             setSubmitting(false);
             setStatus(

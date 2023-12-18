@@ -33,8 +33,8 @@ const JobPriceFormParameter = ({
   jsonData,
   dataNewClause,
   contract_id,
+  isDisable,
 }) => {
-  console.log("isi currencies", currencies.count);
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
@@ -155,7 +155,6 @@ const JobPriceFormParameter = ({
       return total + Math.round(data.subtotal);
     }
     setGrandTotal(item?.reduce(sum, 0));
-    console.log("grandTotal", grandTotal);
   }, [item]);
 
   return (
@@ -173,7 +172,6 @@ const JobPriceFormParameter = ({
           attachment_data: dataNewClause.job_price.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("submit di harga pekerjaan", values);
           submitFormParameterJobPrice(values);
         }}
       >
@@ -400,6 +398,7 @@ const JobPriceFormParameter = ({
                       <button
                         type="button"
                         className="btn btn-success text-white"
+                        disabled={isDisable}
                       >
                         + Harga Pekerjaan By Excel
                       </button>
@@ -407,6 +406,7 @@ const JobPriceFormParameter = ({
                         type="button"
                         className="btn btn-primary text-white"
                         onClick={showAddDetail}
+                        disabled={isDisable}
                       >
                         + Tambah Rincian
                       </button>
@@ -414,6 +414,7 @@ const JobPriceFormParameter = ({
                   </div>
 
                   <EditableTable
+                    isDisable={isDisable}
                     openCloseAddDetail={openCloseAddDetail}
                     previousData={jsonData?.contract_items}
                     func={setItem}
@@ -423,6 +424,7 @@ const JobPriceFormParameter = ({
               </div>
 
               <PerubahanKlausulKontrak
+                isDisable={isDisable}
                 subTitle={"C"}
                 title={"Harga Pekerjaan"}
                 showAddClause={showAddClause}

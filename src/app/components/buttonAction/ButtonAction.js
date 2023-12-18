@@ -37,7 +37,6 @@ export default function ButtonAction({
   }
   const handleChange = React.useCallback(
     (type, data, label) => {
-      console.log("isi handle change", type, data, label);
       if (typeof handleAction === "function") handleAction(type, data, label);
       handleClose();
     },

@@ -13,7 +13,6 @@ import { FormattedMessage } from "react-intl";
 
 const RowCollapse = ({ row, childData }) => {
   const [open, setOpen] = React.useState(false);
-  // console.log(`row`, row);
 
   return (
     <React.Fragment>

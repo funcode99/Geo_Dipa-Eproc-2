@@ -447,8 +447,6 @@ function ContractTaxPage(props) {
         const identName = "TAX";
         const data = response?.data?.data;
 
-        console.log(data, "mismatch data");
-
         if (data && data.length > 0) {
           const target = data.filter(
             (item) => item.mismatch_data[0].value.ident_name === identName
@@ -461,7 +459,7 @@ function ContractTaxPage(props) {
       });
   }, [contract_id, termin, intl, setToast]);
 
-  // const disabled = useMemo(() => 
+  // const disabled = useMemo(() =>
   //   loading ||
   //   taxStatus ||
   //   (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
@@ -472,17 +470,6 @@ function ContractTaxPage(props) {
   useEffect(getTaxData, []);
   useEffect(getInvoiceData, []);
   useEffect(getInvoicePeriodsData, []);
-
-  // console.log(formik.touched);
-
-  // console.log(
-  //   loading,
-  //   taxStatus,
-  //   progressTermin?.ident_name,
-  //   historyTaxData,
-  //   !invoicePeriodsStatus, //problem with invoice periods (add history)
-  //   "<<<<<"
-  // )
 
   return (
     <React.Fragment>
@@ -741,14 +728,20 @@ function ContractTaxPage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type={loading ||
+                      type={
+                        loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate) ? "text" : "date"}
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
+                          ? "text"
+                          : "date"
+                      }
                       className="form-control"
                       id="dateTax"
-                      disabled={loading ||
+                      disabled={
+                        loading ||
                         taxStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)}
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
+                      }
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("tax_date")}
                       onChange={(e) => {
@@ -849,7 +842,8 @@ function ContractTaxPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      taxStatus || (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
+                      taxStatus ||
+                      (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                         ? ""
                         : "pointer"
                     }`}
@@ -863,7 +857,8 @@ function ContractTaxPage(props) {
                     )}
                     <span
                       className={`form-control text-truncate ${
-                        taxStatus || (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
+                        taxStatus ||
+                        (!invoicePeriodsStatus && !isOnMismatch && !taxUpdate)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -1029,11 +1024,11 @@ function ContractTaxPage(props) {
                   <TableRow key={index.toString()}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.tax_no}</TableCell>
-                    <TableCell>{
-                      item.tax_date
+                    <TableCell>
+                      {item.tax_date
                         ? moment(item.tax_date).format("DD MMMM YYYY")
-                        : ""
-                    }</TableCell>
+                        : ""}
+                    </TableCell>
                     <TableCell>
                       <a href={getFileTax + item.file_name}>{item.file_name}</a>
                     </TableCell>

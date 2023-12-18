@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
+import React, { useState, useEffect } from "react";
 import {
   getSorting,
   searchFindMulti,
@@ -23,18 +23,28 @@ import { useDispatch, connect } from "react-redux";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const Denda = ({
-  fineCurrent,
   jsonData,
+  isDisable,
+  fromWhere,
+  fineCurrent,
   contract_id,
   dataNewClause,
-  fromWhere,
+  is_add_fine,
 }) => {
+  if (is_add_fine) {
+    isDisable = is_add_fine;
+  }
   const dispatch = useDispatch();
   useEffect(() => {
     if (fineCurrent !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: fineCurrent.attachment_clause_data || null,
+        payload: fineCurrent?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
         fieldType: "refill_attachment_clause_data",
         fromWhere: fromWhere,
       });
@@ -42,7 +52,11 @@ const Denda = ({
     if (fineCurrent !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: fineCurrent.body_clause_data[0] || null,
+        payload: fineCurrent?.body_clause_data[0] || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
         fieldType: "refill_body_clause_data",
         fromWhere: fromWhere,
       });
@@ -171,7 +185,6 @@ const Denda = ({
         }}
         onSubmit={(values) => {
           submitFormParameterFine(values);
-          console.log("isi submit", values);
         }}
       >
         {({ values }) => (
@@ -347,11 +360,12 @@ const Denda = ({
 
             <PerubahanKlausulKontrak
               subTitle={"B"}
-              title={"Denda"}
-              fromWhere={"fine"}
-              showAddClause={showAddClause}
               values={values}
+              title={"Denda"}
               isDrafting={true}
+              fromWhere={"fine"}
+              isDisable={isDisable}
+              showAddClause={showAddClause}
             />
 
             <UpdateButton fromWhere={"fine"} isDrafting={true} />

@@ -64,8 +64,6 @@ const ModalSubmitItem = ({
     setChecked((prev) => !prev);
   };
 
-  console.log("itemsss", data);
-
   return (
     <DialogGlobal
       ref={innerRef}

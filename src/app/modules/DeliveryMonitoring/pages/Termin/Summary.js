@@ -121,7 +121,6 @@ function Summary({}) {
   const setInitialSubmitItems = (data, type) => {
     if (type === "jasa") {
       const tempSubmitJasa = [];
-      // console.log(data);
 
       data.forEach((item) => {
         item.item_services.forEach((service) => {
@@ -140,7 +139,6 @@ function Summary({}) {
 
     if (type === "barang") {
       const tempSubmitBarang = [];
-      // console.log(data);
 
       data.forEach((items) => {
         if (items.item) {
@@ -220,7 +218,6 @@ function Summary({}) {
     func.handleApi({
       key: KEYS_TERMIN.f_termin,
       onSuccess: (res) => {
-        // console.log(`fetch_baru`, res);
         const tempDataJasa = res.data.task_item_services;
         const tempDataBarang = res.data.task_items;
         addShowField(tempDataJasa);
@@ -239,7 +236,6 @@ function Summary({}) {
     //   type: "get",
     //   url: `/delivery/task/${taskId}/item-service`,
     //   onSuccess: (res) => {
-    //     console.log(`fetch_lama`, res);
 
     //   },
     // });
@@ -295,9 +291,6 @@ function Summary({}) {
 
   const handleChecklistBarang = (qtyValue, qtyAvailable, itemId, desc) => {
     // addSubmitBarang(qtyValue, qtyAvailable, itemId, desc);
-
-    // console.log(`qtyValue`, qtyValue);
-    // console.log(`qtyAvailable`, qtyAvailable);
 
     let tempBarang = dataBarang;
 
@@ -532,7 +525,6 @@ function Summary({}) {
   };
 
   const handleSubmit = async (data) => {
-    console.log(`data`, data);
     func.handleApi({
       key: KEYS_TERMIN.p_t_edit_termin,
       params: {
@@ -727,8 +719,6 @@ function Summary({}) {
               withSearch={false}
               withPagination={false}
               renderRows={({ item, index }) => {
-                console.log("otem", item);
-
                 return (
                   <React.Fragment key={item.id}>
                     <TableRow hover onClick={() => handleExpand("e", item.id)}>
@@ -758,7 +748,6 @@ function Summary({}) {
 
                     {item.item_services.length !== 0 && item.show
                       ? item.item_services.map((service) => {
-                          console.log("service", service);
                           // Check if already submit
                           if (service.service === undefined) {
                             return (
@@ -979,7 +968,6 @@ function Summary({}) {
               withPagination={true}
               renderRows={({ item, index }) => {
                 // Check if already submit
-                // console.log("otem", item);
                 if (item.item === undefined) {
                   return (
                     <TableRow

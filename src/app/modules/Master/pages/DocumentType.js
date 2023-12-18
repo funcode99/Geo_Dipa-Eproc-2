@@ -169,7 +169,6 @@ export const DocumentTypes = () => {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       try {
         enableLoading();
-        console.log(values);
         const requestData = {
           name: values.document_name,
           is_periodic: values.check_periodic,
@@ -207,8 +206,6 @@ export const DocumentTypes = () => {
       } = await master.getByID(id);
       setModals(true);
       updateCreateRef.current.open();
-
-      // console.log(data[0].is_periodic);
       setUpdate({ id, update: true });
       // formik.setFieldValue('document_name', data[0].name);
       formik.setValues({
@@ -232,14 +229,12 @@ export const DocumentTypes = () => {
       getList();
     } catch (error) {
       setToast("Error with API, please contact Developer!");
-      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleAction = (type, params) => {
-    console.log(`type`, type, params);
     switch (type) {
       case "find":
         setType(params?.id);

@@ -201,7 +201,6 @@ function ItemContractInvoice(props) {
         data: data,
       });
     }
-    console.log("handleAction type: ", type, " - ", "data: ", data);
   };
   const handleActionUploadContract = (type, data) => {
     if (type === "upload") {
@@ -211,7 +210,6 @@ function ItemContractInvoice(props) {
         data: data,
       }));
     }
-    console.log("handleAction type: ", type, " - ", "data: ", data);
   };
 
   const handleUpload = (e) => {
@@ -361,23 +359,23 @@ function ItemContractInvoice(props) {
   useEffect(getInvoicePeriodsData, []);
 
   const seq = progressTermin?.seq * 1;
-  
-  if(seq < 2) {
+
+  if (seq < 2) {
     navLists[0].invalid = true;
     navLists[1].invalid = true;
     navLists[2].invalid = true;
     navLists[3].invalid = true;
-  } 
+  }
 
-  if(seq < 3) {
+  if (seq < 3) {
     navLists[3].invalid = true;
-  } 
+  }
 
   return (
     <React.Fragment>
       <Toast />
       {loading && <LinearProgress color="secondary" className="rounded" />}
-      
+
       {/* Modal Upload NPWP */}
       <Dialog
         open={modalUpload.statusDialog}
@@ -510,7 +508,7 @@ function ItemContractInvoice(props) {
           </DialogActions>
         </form>
       </Dialog>
-      
+
       {/* Modal Upload Contract */}
       <Dialog
         open={modalUploadContract.statusDialog}
@@ -639,7 +637,6 @@ function ItemContractInvoice(props) {
         defaultExpanded={true}
         className={classes.ExpansionPanelCard}
       >
-        
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           className={classes.ExpansionPanelHeader}
@@ -651,7 +648,6 @@ function ItemContractInvoice(props) {
           </div>
         </ExpansionPanelSummary>
 
- 
         <ExpansionPanelDetails className={classes.details}>
           <div style={{ width: "100%" }}>
             <TableOnly
@@ -739,7 +735,6 @@ function ItemContractInvoice(props) {
             </TableOnly>
           </div>
         </ExpansionPanelDetails>
-
       </ExpansionPanel>
 
       {/* SPP, Invoice, Kwitansi, Faktur Pajak */}
@@ -750,18 +745,17 @@ function ItemContractInvoice(props) {
               <span className="alert-icon">
                 <i class="fas fa-exclamation-triangle"></i>
               </span>
-            <FormattedMessage
-              id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE"
-              values={{
-                start_day: invoicePeriodsData?.accepted_from_day,
-                end_day: invoicePeriodsData?.accepted_thru_day,
-              }}
-            />
+              <FormattedMessage
+                id="TITLE.INVOICE_MONITORING.BILLING_DOCUMENT.HEADER_NOTE"
+                values={{
+                  start_day: invoicePeriodsData?.accepted_from_day,
+                  end_day: invoicePeriodsData?.accepted_thru_day,
+                }}
+              />
             </div>
           </CardHeaderToolbar>
         </CardHeader>
         <CardBody>
-
           <Navs
             navLists={navLists}
             handleSelect={(selectedKey) => setNavActive(selectedKey)}
@@ -818,10 +812,8 @@ function ItemContractInvoice(props) {
               />
             </div>
           )}
-
         </CardBody>
       </Card>
-
     </React.Fragment>
   );
 }

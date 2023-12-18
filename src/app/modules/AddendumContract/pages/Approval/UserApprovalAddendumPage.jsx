@@ -59,7 +59,6 @@ const UserApprovalAddendumPage = ({}) => {
   const openCloseAddDocument = React.useRef();
   const openCloseAreYouSure = React.useRef();
   const openCloseModalDownload = React.useRef();
-  // console.log(openCloseModalRef)
 
   let [linksGroup, setLinksGroup] = useState({
     documentname: "nama dokumen",
@@ -100,8 +99,6 @@ const UserApprovalAddendumPage = ({}) => {
     openCloseAddDocument.current.open();
   };
 
-  // console.log(`dataContractById`, contract_party);
-
   const values = React.useMemo(
     () => ({
       start_price: "Rp 7.422.000.000",
@@ -117,9 +114,7 @@ const UserApprovalAddendumPage = ({}) => {
   );
 
   const _handleChange = (val) => {
-    console.log(val);
     // setIsi(val)
-    // console.log('isi setelah val', isi)
     // setFieldValue(name, val, true)
     // if (typeof onChange === "function") onChange(val)
   };
@@ -201,7 +196,6 @@ const UserApprovalAddendumPage = ({}) => {
                         documentfileupload: { path: e.path },
                       })
                     }
-                    // onChange={(e) => console.log('isi event', e.path)}
                   />
                 </Col>
               </Row>

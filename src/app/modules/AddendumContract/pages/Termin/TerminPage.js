@@ -154,8 +154,6 @@ const TerminPage = ({
     // deliveryMonitoring
     //   .getTaskById(task_id)
     //   .then((res) => {
-    //     // console.log(`resold`, res);
-    //     // handleLoading("get", false);
     //     if (res.data.status === true) {
     //       dispatch({
     //         type: actionTypes.SetDataTask,
@@ -163,7 +161,6 @@ const TerminPage = ({
     //       });
     //     }
     //   })
-    //   .catch((err) => console.log("err", err));
   }, [fetchDataStepper]);
 
   React.useEffect(() => {

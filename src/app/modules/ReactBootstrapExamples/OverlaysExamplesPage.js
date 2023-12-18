@@ -6,17 +6,17 @@ import {
   Popover,
   OverlayTrigger,
   ButtonToolbar,
-  Tooltip
+  Tooltip,
 } from "react-bootstrap";
-import {Notice, KTCodeExample} from "../../../_metronic/_partials/controls";
+import { Notice, KTCodeExample } from "../../../_metronic/_partials/controls";
 
 class Example extends React.Component {
   constructor(...args) {
     super(...args);
 
-    this.attachRef = target => this.setState({ target });
+    this.attachRef = (target) => this.setState({ target });
     this.state = {
-      show: false
+      show: false,
     };
   }
 
@@ -47,7 +47,7 @@ class Example extends React.Component {
                 padding: "2px 10px",
                 color: "white",
                 borderRadius: 3,
-                ...props.style
+                ...props.style,
               }}
             >
               Simple tooltip
@@ -59,7 +59,7 @@ class Example extends React.Component {
   }
 }
 
-const renderTooltip = props => (
+const renderTooltip = (props) => (
   <div
     {...props}
     style={{
@@ -67,7 +67,7 @@ const renderTooltip = props => (
       padding: "2px 10px",
       color: "white",
       borderRadius: 3,
-      ...props.style
+      ...props.style,
     }}
   >
     Simple tooltip
@@ -89,11 +89,11 @@ class Example4 extends React.Component {
     super(props, context);
 
     this.handleClick = ({ target }) => {
-      this.setState(s => ({ target, show: !s.show }));
+      this.setState((s) => ({ target, show: !s.show }));
     };
 
     this.state = {
-      show: false
+      show: false,
     };
   }
 
@@ -121,7 +121,6 @@ class Example4 extends React.Component {
 class UpdatingPopover extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.children !== this.props.children) {
-      console.log("updating!");
       this.props.scheduleUpdate();
     }
   }
@@ -146,8 +145,8 @@ class Example5 extends React.Component {
 
   componentDidMount() {
     this.timer = setInterval(() => {
-      this.setState(state => ({
-        content: state.content === shortContent ? longContent : shortContent
+      this.setState((state) => ({
+        content: state.content === shortContent ? longContent : shortContent,
       }));
     }, 3000);
   }
@@ -448,7 +447,6 @@ const jsCode7 = `
 class UpdatingPopover extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.children !== this.props.children) {
-      console.log('updating!');
       this.props.scheduleUpdate();
     }
   }

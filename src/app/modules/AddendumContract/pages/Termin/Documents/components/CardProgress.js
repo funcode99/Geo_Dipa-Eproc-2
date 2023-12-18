@@ -26,7 +26,6 @@ const CardProgress = ({
       // })),
     });
   };
-  // console.log(`dataggg`, data);
 
   return (
     <React.Fragment>

@@ -67,7 +67,6 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit, loading }) => {
       let resTemp2 = e.filter(
         ({ value }) => !value.includes(`\"is_custom\":true`)
       );
-      console.log(`e`, e, resTemp);
       if (resTemp.length > 0) {
         if (isCustom === true) {
           setOptionSelected(resTemp2);
@@ -84,7 +83,6 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit, loading }) => {
   };
 
   const handleRemarksChange = (e) => {
-    // console.log(`e`, e.target.value);
     setRemarks(e.target.value);
   };
 
@@ -93,7 +91,6 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit, loading }) => {
   }, []);
 
   const handleSubmit = React.useCallback(() => {
-    // console.log(`optionSelected`, optionSelected);
     if (optionSelected !== false) {
       let firstObj = optionSelected[0];
       if (isCustom === true) onSubmit({ ...optionSelected, remarks });
@@ -114,7 +111,6 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit, loading }) => {
     onClose();
     setOptionSelected(false);
   }, [setOptionSelected]);
-  //   console.log(`content`, content);
 
   // useEffect(() => {
   //   if (optionSelected?.length > 0) {
@@ -128,7 +124,6 @@ const ModalAddDeliverables = ({ visible, onClose, onSubmit, loading }) => {
   //         ) {
   //           setOptionSelected([el]);
   //         }
-  //         console.log(`optionSelected`, JSON.parse(el.value));
   //       }
   //     });
   //   }

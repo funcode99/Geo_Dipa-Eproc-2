@@ -88,8 +88,6 @@ const DokContract = () => {
   const {
     data: { file },
   } = useSelector((state) => state.deliveryMonitoring.dataContractById);
-  // console.log(`data`, file);
-  // console.log(`initRows`, initRows);
   return (
     <Card>
       <CardBody>

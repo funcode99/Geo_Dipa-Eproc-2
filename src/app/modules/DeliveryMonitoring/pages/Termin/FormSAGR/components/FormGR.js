@@ -78,7 +78,6 @@ const FormGR = ({
   };
 
   const _fetchToSAP = (type) => {
-    console.log(`submitt`, type);
     fetch_api_sg({
       key: keys.post_to_sap,
       type: "post",
@@ -108,7 +107,9 @@ const FormGR = ({
         ],
         []
       ),
-      doc_date: dataGR?.doc_date ? formatUpdateDate(dataGR?.doc_date) : formatUpdateDate(docDate),
+      doc_date: dataGR?.doc_date
+        ? formatUpdateDate(dataGR?.doc_date)
+        : formatUpdateDate(docDate),
       ...dataGR,
     }),
     [dataGR, docDate, dataSAGR]
