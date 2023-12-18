@@ -16,9 +16,6 @@ const MetodePembayaran = ({
   is_add_payment_method,
   add_contract_payment_method,
 }) => {
-  if (is_add_payment_method) {
-    isDisable = is_add_payment_method;
-  }
   const dispatch = useDispatch();
   const openCloseAddPayment = useRef();
   const showAddPayment = () => {

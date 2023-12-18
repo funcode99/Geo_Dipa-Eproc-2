@@ -1886,8 +1886,9 @@ const DraftAddendumPage = ({
               contract_id={draft_id}
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
+              isDisable={!data?.is_add_account_number}
               accountNumberBankData={accountNumberBankData}
-              is_add_account_number={data?.is_add_account_number}
+              is_add_account_number={!data?.is_add_account_number}
               accountNumberCurrent={data?.add_contract_account_number}
               add_contract_account_number={data?.add_contract_account_number}
             />
