@@ -53,7 +53,6 @@ const BoxSignSA = ({ title, noQR, params, fetch_api_sg, name, date }) => {
         type: "post",
         url: `/delivery/task/${params.id}/${params.type}/${params.user}`,
         onSuccess: (res) => {
-          console.log(`res`, res);
           var string = value;
           if (string.indexOf("http") === 0) {
             window.open(value, "_blank");

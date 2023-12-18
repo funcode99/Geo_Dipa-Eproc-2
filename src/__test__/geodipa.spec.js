@@ -4,8 +4,4 @@ import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/com
 
 it("test", () => {
   const component = renderer.create(<FormParameter />);
-  //   selama test nya gak lolos, gak bisa lanjut baris dibawah nya
-  //   console.log("isi component", component);
-  //   let tree = component.toJSON();
-  //   expect(tree).toMatchSnapshot();
 });

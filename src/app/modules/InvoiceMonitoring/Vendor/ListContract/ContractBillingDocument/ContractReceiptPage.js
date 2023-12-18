@@ -172,7 +172,6 @@ function ContractReceiptPage(props) {
           // setHistoryReceiptData(response['data']['data'])
         })
         .catch((error) => {
-          console.error(error, "getAllRejectedReceipt");
           setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
         });
     },
@@ -256,7 +255,6 @@ function ContractReceiptPage(props) {
         setLoadingRcpt(false);
       })
       .catch((error) => {
-        console.error(error, "getReceipt");
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
         setLoadingRcpt(false);
       });
@@ -335,7 +333,6 @@ function ContractReceiptPage(props) {
           setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
-        console.error(error, "getContractSummary");
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [contract_id, formik, intl, setToast, user_id]);
@@ -392,7 +389,6 @@ function ContractReceiptPage(props) {
         }
       })
       .catch((error) => {
-        console.error(error, "getInvoicePeriods");
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [intl, setToast]);
@@ -411,17 +407,9 @@ function ContractReceiptPage(props) {
         }
       })
       .catch((error) => {
-        console.error(error);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   }, [contract_id, termin, intl, setToast]);
-
-  console.log({
-    loading,
-    receiptStatus,
-    invoicePeriodsStatus,
-    isOnMismatch,
-  });
 
   useEffect(getMismatchNotCompletedData, []);
   useEffect(getContractData, []);
@@ -651,7 +639,9 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !receiptUpdate)
                       }
                       {...formik.getFieldProps("receipt_no")}
                       onChange={(e) => {
@@ -677,15 +667,23 @@ function ContractReceiptPage(props) {
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type={loading ||
+                      type={
+                        loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate) ? "text" : "date"}
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !receiptUpdate)
+                          ? "text"
+                          : "date"
+                      }
                       className="form-control"
                       id="dateReceipt"
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !receiptUpdate)
                       }
                       {...formik.getFieldProps("receipt_date")}
                       onChange={(e) => {
@@ -722,7 +720,9 @@ function ContractReceiptPage(props) {
                       disabled={
                         loading ||
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !receiptUpdate)
                       }
                       {...formik.getFieldProps("description")}
                       onChange={(e) => {
@@ -746,7 +746,8 @@ function ContractReceiptPage(props) {
                   <label
                     htmlFor="upload"
                     className={`input-group mb-3 col-sm-8 ${
-                      receiptStatus || (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
+                      receiptStatus ||
+                      (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
                         ? ""
                         : "pointer"
                     }`}
@@ -761,7 +762,9 @@ function ContractReceiptPage(props) {
                     <span
                       className={`form-control text-truncate ${
                         receiptStatus ||
-                        (!invoicePeriodsStatus && !isOnMismatch && !receiptUpdate)
+                        (!invoicePeriodsStatus &&
+                          !isOnMismatch &&
+                          !receiptUpdate)
                           ? classes.textDisabled
                           : ""
                       }`}
@@ -931,11 +934,11 @@ function ContractReceiptPage(props) {
                   <TableRow key={index.toString()}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.receipt_no}</TableCell>
-                    <TableCell>{
-                      item.receipt_date
+                    <TableCell>
+                      {item.receipt_date
                         ? moment(item.receipt_date).format("DD MMMM YYYY")
-                        : ""
-                    }</TableCell>
+                        : ""}
+                    </TableCell>
                     <TableCell>
                       <a href={getFileReceipt + item.file_name}>
                         {item.file_name}

@@ -186,7 +186,6 @@ const BappPage = ({
       type: "get",
       url: `delivery/task-sa-gr/${task_id}`,
       onSuccess: (res) => {
-        // console.log(`res`, res);
         setDataSAGR(res.data);
       },
     });
@@ -194,12 +193,10 @@ const BappPage = ({
 
   const handleError = React.useCallback(
     (err) => {
-      console.log(`err lama`, err);
       if (
         err.response?.code !== 400 &&
         err.response?.data.message !== "TokenExpiredError"
       ) {
-        console.log("handle error");
         setToast(err.response?.data.message, 5000);
       }
     },
@@ -213,16 +210,13 @@ const BappPage = ({
 
   const updateExclude = () => {
     if (taskNews && taskNews?.review_text !== null) {
-      // console.log(`review ada isinya`);
       setExclude([""]);
     } else if (taskNews && taskNews?.review_text === null) {
-      // console.log(`review kosong`);
       setExclude(["approve"]);
     }
   };
 
   const generateTableContent = (data) => {
-    // console.log(`data`, data);
     let dataArr = data?.map((item, id) => ({
       no: (id += 1),
       user: item?.user ? item?.user?.party?.full_name : item?.vendor?.full_name,
@@ -287,7 +281,6 @@ const BappPage = ({
       bak: _.isEmpty(BAK) ? undefined : BAK.data,
       addendum_no: dataAdendum,
     };
-    // console.log(`onTimeRef`, adendumRef.current, data, "params", params);
 
     fetchApi({
       key: keys.submit,
@@ -297,7 +290,6 @@ const BappPage = ({
       alertAppear: "both",
       onSuccess: (res) => {
         // handleLoading("get", false);
-        console.log(`res`, res);
         fetchData({ visible: true, message: res?.data?.message });
       },
       onFail: (err) => console.log("err baru", err),
@@ -307,7 +299,6 @@ const BappPage = ({
   React.useEffect(() => {
     if (_.isEmpty(dataSAGR)) getDataSAGRForm();
     if (taskId !== "") {
-      // console.log(`masuk sini`);
       fetchData();
       handleApi("late_deliverable");
     }
@@ -328,7 +319,6 @@ const BappPage = ({
       }
     }
   }, [taskNews, isApproved]);
-  // console.log(`taskNews`, taskNews, loadings);
 
   let disabledInput = Object.keys(initialValues);
   let allowedClient = [
@@ -353,9 +343,6 @@ const BappPage = ({
   // };
 
   const handleAction = (type, params) => {
-    // console.log(`type`, type);
-    // console.log(`params`, params);
-
     switch (type) {
       case "preview":
         openLinkTab(params?.file);
@@ -369,19 +356,15 @@ const BappPage = ({
         // window.open(urlHelper.addBaseURL(params?.file), "_blank");
         break;
       case "uploadSign":
-        // console.log(`type`, type);
         // handleVisible(type);
         uploadRef.current.open();
         break;
       case "upload":
-        // console.log(`type`, type);
         break;
       case "approve":
-        // console.log(`type`, type);
         approveRef.current.open();
         break;
       case "reject":
-        // console.log(`type`, type);
         rejectRef.current.open();
         break;
       default:
@@ -390,7 +373,6 @@ const BappPage = ({
   };
 
   const handleApi = (type, params) => {
-    console.log(`type`, type, params);
     switch (type) {
       case "upload_s":
         fetchApi({
@@ -446,7 +428,6 @@ const BappPage = ({
           type: "get",
           url: `delivery/task/${taskId}/document-late`,
           onSuccess: (res) => {
-            console.log(`res`, res);
             const mappedData = res.data.map(
               (el) =>
                 `${el?.document?.name} (${formatDate(new Date(el?.due_date))})`
@@ -462,7 +443,6 @@ const BappPage = ({
   };
 
   const _fetchToSAP = (type) => {
-    console.log(`submitt`, type);
     fetchApi({
       key: keys.post_to_sap,
       type: "post",

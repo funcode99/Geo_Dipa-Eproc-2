@@ -79,7 +79,6 @@ const TerminPaper = () => {
     const lastTabIndex = tabUsed.length - 1;
     let thisTask = states?.termin?.summary;
     // let thisTask = getTask(task_id);
-    console.log(`states newTabActive`, newTabActive);
     if (newTabActive > 0 && thisTask?.approve_status?.name !== "APPROVED") {
       MODAL.showSnackbar("Mohon Approve termin ini terlebih dahulu", "warning");
       // } else if (newTabActive === lastTabIndex) {

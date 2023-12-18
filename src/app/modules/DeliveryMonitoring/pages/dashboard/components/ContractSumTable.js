@@ -46,7 +46,6 @@ const tableHeaderContractsNew = [
 ];
 const ContractSumTable = ({ data, loading, status }) => {
   const [newContent, setNewContent] = React.useState([]);
-  console.log(`data`, data);
 
   const generateTableContent = React.useCallback(() => {
     let dataArr = data.map((item, id) => ({
@@ -71,7 +70,6 @@ const ContractSumTable = ({ data, loading, status }) => {
       //     <ButtonAction
       //       hoverLabel="More"
       //       data={"1"}
-      //       // handleAction={console.log(null)}
       //       ops={[
       //         {
       //           label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",

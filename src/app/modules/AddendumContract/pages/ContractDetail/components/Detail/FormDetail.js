@@ -37,8 +37,6 @@ const FormDetail = (props) => {
   const { user_id, dataLama, status } = props;
   const dataContractById = React.useMemo(() => ({ ...dataLama }), [dataLama]);
 
-  // console.log(`dataContractById`, dataContractById)
-
   const contract_id = props.contractId;
   const monitoring_type = "DELIVERY";
   const vendor_id = dataContractById?.vendor?.id;

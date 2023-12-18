@@ -12,12 +12,6 @@ async function run() {
   VERSION = VERSION.stdout.split("=")[1];
 
   output.on("close", async function() {
-    console.log(archive.pointer() + " total bytes");
-    console.log(
-      "archiver has been finalized and the output file descriptor has closed.",
-      VERSION
-    );
-
     await execRes("rm build.zip");
   });
 

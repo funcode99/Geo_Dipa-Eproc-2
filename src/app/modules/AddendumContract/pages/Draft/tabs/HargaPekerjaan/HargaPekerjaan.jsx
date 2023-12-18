@@ -19,14 +19,17 @@ import PerubahanKlausulKontrak from "../../../ContractDetail/components/FormAdde
 
 const HargaPekerjaan = ({
   data,
-  dataAfterAdendum,
-  dataNewClause,
-  contract_id,
+  isDisable,
   currencies,
+  contract_id,
+  dataNewClause,
+  dataAfterAdendum,
   jobPriceCurrent,
+  is_add_job_price,
 }) => {
-  console.log("isi awal data drafting", data);
-
+  if (is_add_job_price) {
+    isDisable = is_add_job_price;
+  }
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -83,7 +86,6 @@ const HargaPekerjaan = ({
           attachment_data: dataNewClause.job_price.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("submit di harga pekerjaan", values);
           submitFormParameterJobPrice(values);
         }}
       >
@@ -204,6 +206,7 @@ const HargaPekerjaan = ({
                 isMandatory={true}
                 isDrafting={true}
                 values={values}
+                isDisable={isDisable}
               />
               <UpdateButton
                 fromWhere={"job_price"}

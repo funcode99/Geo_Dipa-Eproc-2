@@ -72,8 +72,6 @@ export default function TabsAddendum({
 
   const classes = useStyles();
 
-  // console.log('isi grid', grid)
-
   return (
     <MuiTabs
       value={tabActive}

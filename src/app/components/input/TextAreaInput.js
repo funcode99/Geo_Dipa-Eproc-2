@@ -3,7 +3,6 @@ import React from "react";
 const TextAreaInput = ({ placeholder, onChange, value, ...other }) => {
   const _handleChange = React.useCallback(
     (e) => {
-      // console.log(`e`, e.target.value);
       onChange(e.target.value);
     },
     [onChange]

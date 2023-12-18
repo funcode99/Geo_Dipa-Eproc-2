@@ -89,7 +89,6 @@ const HargaPekerjaan = () => {
   React.useEffect(() => {
     if (payment_method === "gradually") setNavActive(navLists[1].id);
   }, [payment_method]);
-  console.log(`payment_method`, payment_method);
   return (
     <Card>
       <CardBody>

@@ -151,7 +151,6 @@ const DeliveryOrder = ({
   ]);
 
   const handleVisible = (key, tempParams = {}, tempItems = [], state) => {
-    // console.log(`tempParams`, tempParams);
     // if (key === "change_status") {
     //   setOpen((prev) => ({
     //     ...prev,
@@ -182,7 +181,6 @@ const DeliveryOrder = ({
       type: "get",
       url: `/delivery/task/${taskId}/delivery-order`,
       onSuccess: (res) => {
-        // console.log(`res`, res.data);
         saveDataTask(res?.data);
         generateTableContent(res?.data.task_deliveries);
         setInitAvailItems(items);
@@ -206,12 +204,8 @@ const DeliveryOrder = ({
     initialValues,
     validationSchema: hasMaterial ? FormSchemaMaterial : FormSchema,
     onSubmit: async (values, { setStatus, setSubmitting, resetForm }) => {
-      console.log(`masuk sini`);
-      console.log(`open`, open);
-
       // untuk update approval status
       if (open.detail) {
-        console.log(`masuk sini`, values);
         if (values.status === 4) {
           MODAL.showSnackbar("Mohon isikan delivery order status.", "error");
           return;
@@ -226,13 +220,11 @@ const DeliveryOrder = ({
           },
           alertAppear: "both",
           onSuccess: (res) => {
-            // console.log(`res`, res);
             getTask();
             // handleVisible("detail", {});
             detailRef.current.close();
           },
           onFail: (error) => {
-            console.log(`error`, error);
             setSubmitting(false);
             setStatus("Failed Submit Data");
           },
@@ -250,7 +242,6 @@ const DeliveryOrder = ({
         if (open.submit && submitItem.length < 1) {
           handleErrorSubmit("item", true);
         } else {
-          // console.log(`isUpdate`, isUpdate);
           const params = {
             name: values.name,
             date: values.date,
@@ -261,7 +252,6 @@ const DeliveryOrder = ({
             })),
             dest_plant_id: values.destination,
           };
-          console.log(`params`, params);
 
           fetchApi({
             key: keys.submit,
@@ -272,8 +262,6 @@ const DeliveryOrder = ({
             params,
             alertAppear: "both",
             onSuccess: (res) => {
-              // console.log(`res`, res);
-              console.log(`open`, open);
               getTask();
               func.onRefresh();
 
@@ -281,7 +269,6 @@ const DeliveryOrder = ({
               submitRef.current.close();
             },
             onFail: (error) => {
-              // console.log(`error`, error);
               setSubmitting(false);
               setStatus("Failed Submit Data");
             },
@@ -298,7 +285,6 @@ const DeliveryOrder = ({
       url: `/delivery/task-delivery/${open?.tempParams?.id}`,
       alertAppear: "both",
       onSuccess: (res) => {
-        // console.log(`res`, res);
         func.onRefresh();
         getTask();
         handleVisible("delete", {});
@@ -309,7 +295,6 @@ const DeliveryOrder = ({
 
   const handleApproveAPI = React.useCallback(
     (amIWarehouse, callback) => {
-      console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
       fetchApi({
         key: keys.submit_item,
         type: "post",
@@ -342,7 +327,6 @@ const DeliveryOrder = ({
   );
 
   const handleConfirmItem = React.useCallback(() => {
-    // console.log(`itemForm`, itemForm, dataOrderItem, Object.values(itemForm));
     if (isWarehouse) {
       handleApproveAPI(true);
       // handleApproveAPI(true, () => {
@@ -356,8 +340,6 @@ const DeliveryOrder = ({
   const handleModal = (type, data) => {
     const option = ["update", "detail"];
     if (option.includes(type)) {
-      // console.log(`type`, type);
-      // console.log(`datea`, data);
       const displayedStatus = ["approved", "rejected"];
 
       formik.setValues({
@@ -384,7 +366,6 @@ const DeliveryOrder = ({
     olds.forEach((item1, index1) => {
       news.forEach((item2, index2) => {
         if (item1?.id === item2?.id) {
-          console.log(`item2`, item2);
           let objData = {};
           objData = {
             name: item1?.item?.desc,
@@ -405,7 +386,6 @@ const DeliveryOrder = ({
     let temp = [...arrItems];
     let result = [];
     temp.forEach((el) => {
-      console.log(`el`, el);
       let objData = {};
       if (el?.approve_status?.code !== "waiting") {
         objData = {
@@ -423,8 +403,6 @@ const DeliveryOrder = ({
   };
 
   const handleAction = async (type, data) => {
-    // console.log(`type`, type);
-    // console.log(`data`, data);
     switch (type) {
       case "create":
         setIsUpdate(false);
@@ -486,10 +464,8 @@ const DeliveryOrder = ({
 
   const generateTableContent = (data) => {
     let dataArr = [];
-    // console.log(`data`, data);
     data
       ? data.forEach((item, index) => {
-          console.log(`item`, item);
           const isApproved = item?.approve_status?.code === "approved";
           let objData = {
             no: (index += 1),
@@ -598,7 +574,6 @@ const DeliveryOrder = ({
           ? "warehouse"
           : "user";
         setIsWarehouse(userType === "warehouse" ? true : false);
-        // console.log(`res token data`, res, userType);
       },
     });
   };
@@ -609,7 +584,6 @@ const DeliveryOrder = ({
       type: "get",
       url: `/delivery/options`,
       onSuccess: (res) => {
-        console.log(`res`, res);
         setAllPlants(res.data?.plants);
       },
     });
@@ -632,8 +606,6 @@ const DeliveryOrder = ({
     // setDataOrderItem({});
     // setTimeout(() => setDataOrderItem(tempData), 350);
   };
-
-  console.log(`formik`, formik);
 
   return (
     <React.Fragment>

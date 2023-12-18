@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 const InputWBS = ({ onOpen, value, ...other }) => {
   const classes = useStyles();
-  // console.log(`other`, other);
   return (
     <div className="form-group mb-0">
       <div className="input-group">

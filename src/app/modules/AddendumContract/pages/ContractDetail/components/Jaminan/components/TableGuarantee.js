@@ -37,7 +37,6 @@ const tableHeadersVendor = [
 
 const TableGuarantee = () => {
   const { contractById, status } = React.useContext(JaminanContext);
-  //   console.log(`dariContext`, dariContext);
   const dataRows = [
     {
       type: "down_payment_guarantee",

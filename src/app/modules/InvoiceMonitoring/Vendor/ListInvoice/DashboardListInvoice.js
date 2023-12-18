@@ -339,7 +339,6 @@ function DashboardListInvoice(props) {
   const callApi = () => {
     getAllProgressTypeFilter()
       .then((result) => {
-        console.log("result.data", result.data.data);
         var data = Object.assign([], headerTable);
         result.data.data.forEach((element) => {
           var item = {
@@ -376,7 +375,6 @@ function DashboardListInvoice(props) {
             hecto={25}
           >
             {data.data.map((item, index) => {
-              console.log("itemsss", item);
               return (
                 <TableRow key={index.toString()}>
                   <TableCell>

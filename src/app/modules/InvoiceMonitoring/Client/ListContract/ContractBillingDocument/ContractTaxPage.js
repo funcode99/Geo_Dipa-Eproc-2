@@ -319,7 +319,6 @@ function ContractTaxPage(props) {
         }
       })
       .catch((error) => {
-        console.log("error", error);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 10000);
       });
   };
@@ -548,7 +547,6 @@ function ContractTaxPage(props) {
       })
       .catch((error) => {
         setLoadingSync(false);
-        console.log(error);
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   }, [intl, setToast]);
@@ -602,16 +600,6 @@ function ContractTaxPage(props) {
   };
 
   const isApprovedDisabled = invoiceBkbExist && taxData?.state === "APPROVED";
-
-  // console.log(
-  //   isSubmit,
-  //   taxData?.state === "REJECTED",
-  //   isApprovedDisabled,
-  //   taxData === null,
-  //   !props.setTaxStaffStatus
-  // );
-
-  // console.log({ invoiceBkbExist, "taxData?.state": taxData?.state });
 
   return (
     <React.Fragment>
@@ -1555,7 +1543,13 @@ function ContractTaxPage(props) {
                     type="text"
                     className="form-control"
                     id="createdAt"
-                    defaultValue={taxData?.created_at ? moment(taxData?.created_at).format('DD MMMM YYYY hh:mm:ss') : ""}
+                    defaultValue={
+                      taxData?.created_at
+                        ? moment(taxData?.created_at).format(
+                            "DD MMMM YYYY hh:mm:ss"
+                          )
+                        : ""
+                    }
                     disabled
                   />
                 </div>
@@ -1621,7 +1615,7 @@ function ContractTaxPage(props) {
                   <FormattedMessage id="TITLE.ADDTIONAL_PAYMENT" />
                 </label>
                 <div className="col-sm-8">
-                {addtionalPayment.length > 0 && (
+                  {addtionalPayment.length > 0 && (
                     <table className="table table-sm mb-4">
                       <thead>
                         <tr>
@@ -1869,9 +1863,11 @@ function ContractTaxPage(props) {
                 <TableRow key={index.toString()}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.tax_no}</TableCell>
-                  <TableCell>{item?.tax_date
+                  <TableCell>
+                    {item?.tax_date
                       ? moment(item?.tax_date).format("DD MMMM YYYY")
-                      : ""}</TableCell>
+                      : ""}
+                  </TableCell>
                   <TableCell>
                     <a
                       onClick={() => {

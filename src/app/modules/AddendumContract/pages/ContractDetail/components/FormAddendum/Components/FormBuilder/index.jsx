@@ -29,8 +29,6 @@ const FormBuilderAddendum = (
     [onSubmit]
   );
 
-  console.log("isi children", children);
-
   React.useImperativeHandle(ref, () => formikRef.current);
   return (
     <Formik

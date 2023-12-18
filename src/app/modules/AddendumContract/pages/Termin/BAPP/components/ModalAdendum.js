@@ -56,13 +56,11 @@ const ModalAdendum = ({ innerRef, onSubmit, initData }) => {
       var arr = [...e];
       var poped = [];
       if (arr.length > 1) poped = arr.pop();
-      // console.log(`poped`, poped, arr);
       return arr;
     });
   };
 
   const _handleSubmit = (data) => {
-    // console.log("datanya", Object.values(data));
     onSubmit(Object.values(data));
   };
 

@@ -168,7 +168,6 @@ function ItemContractSummary(props) {
   const getContractData = useCallback(() => {
     getContractSummary(contract_id, termin)
       .then((response) => {
-
         // response["data"]["data"]["contract_value"] = rupiah(
         //   response["data"]["data"]["contract_value"]
         // );
@@ -176,7 +175,6 @@ function ItemContractSummary(props) {
         //   response["data"]["data"]["termin_value"]
         // );
 
-        
         response["data"]["data"]["authorize"] = response["data"]["data"][
           "party_1_contract_signature_name"
         ].concat(
@@ -234,7 +232,8 @@ function ItemContractSummary(props) {
         getPicContractData(response.data.data.vendor_id);
         getPicVendorData(response.data.data.vendor_id);
 
-        if(response?.data?.data?.currency_code) setCurrencyCode(response?.data?.data?.currency_code);
+        if (response?.data?.data?.currency_code)
+          setCurrencyCode(response?.data?.data?.currency_code);
       })
       .catch((error) => {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
@@ -328,7 +327,6 @@ function ItemContractSummary(props) {
   const getDatas = () => {
     getTermContract(contract)
       .then((result) => {
-        console.log({result});
         var data = result.data.data;
         if (data && data.data_termin) {
           data.data_termin = data.data_termin.sort((a, b) =>
@@ -415,7 +413,10 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceContract"
-                    defaultValue={formatCurrency(currencyCode, contractData?.contract_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.contract_value
+                    )}
                     disabled
                   />
                 </div>
@@ -457,7 +458,10 @@ function ItemContractSummary(props) {
                     type="text"
                     className="form-control"
                     id="priceStep1"
-                    defaultValue={formatCurrency(currencyCode, contractData?.termin_value)}
+                    defaultValue={formatCurrency(
+                      currencyCode,
+                      contractData?.termin_value
+                    )}
                     disabled
                   />
                 </div>

@@ -235,9 +235,6 @@ function DashboardListMismatch(props) {
         setToast(intl.formatMessage({ id: "REQ.REQUEST_FAILED" }), 5000);
       });
   };
-
-  console.log("dataxxx", data.data);
-
   return (
     <React.Fragment>
       <Toast />

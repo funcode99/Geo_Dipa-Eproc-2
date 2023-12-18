@@ -11,6 +11,5 @@ export const getDuration = (date) => {
   var duration = window.moment.duration(date, "milliseconds");
   var days = parseFloat(duration.asDays()).toFixed(0);
   //   var hour = parseFloat(duration.asHours()).toFixed(0) - days * 24;
-  //   console.log("days", days, hour);
   return `${days} hari`;
 };

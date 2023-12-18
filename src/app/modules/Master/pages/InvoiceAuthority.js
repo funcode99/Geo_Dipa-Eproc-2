@@ -15,7 +15,10 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers/AssetsHelpers";
 import SVG from "react-inlinesvg";
 import { SubWrap } from "./style";
-import { getInvoiceAuthority, updateInvoiceAuthority } from "../service/MasterCrud";
+import {
+  getInvoiceAuthority,
+  updateInvoiceAuthority,
+} from "../service/MasterCrud";
 import useToast from "../../../components/toast";
 import ButtonAction from "../../../components/buttonAction/ButtonAction";
 import Tables from "../../../components/tableCustomV1/table";
@@ -87,7 +90,9 @@ const InvoiceAuthority = (props) => {
       },
     },
     {
-      title: intl.formatMessage({ id: "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MIN" }),
+      title: intl.formatMessage({
+        id: "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MIN",
+      }),
       name: "min_value",
       order: {
         active: true,
@@ -99,7 +104,9 @@ const InvoiceAuthority = (props) => {
       },
     },
     {
-      title: intl.formatMessage({ id: "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX" }),
+      title: intl.formatMessage({
+        id: "TITLE.MASTER_DATA.ROLES.TABLE_HEADER.MAX",
+      }),
       name: "max_value",
       order: {
         active: true,
@@ -125,7 +132,6 @@ const InvoiceAuthority = (props) => {
   ];
 
   const requestApi = (params) => {
-    console.log(params)
     setLoading(true);
     setData({
       ...data,

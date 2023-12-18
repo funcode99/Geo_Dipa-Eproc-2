@@ -1,42 +1,31 @@
 import React from "react";
 import useCollapse from "react-collapsed";
-import { TableCell, TableRow } from "@material-ui/core";
-
-import ButtonAction from "app/components/buttonAction/ButtonAction";
 import Input from "@material-ui/core/Input";
+import CustomTableCell from "../CustomTableCell";
 import IconButton from "@material-ui/core/IconButton";
+import { TableCell, TableRow } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/DoneAllTwoTone";
-import RevertIcon from "@material-ui/icons/NotInterestedOutlined";
+import ButtonAction from "app/components/buttonAction/ButtonAction";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-
-import CustomTableCell from "../CustomTableCell";
-
-// const { useCollapse } = require("react-collapsed");
 
 const CollapsibleRow = ({
   classes,
   index,
-  onAddMode,
   onAddChildMode,
   onChange,
   onChangeChild,
   onDeleteMode,
   onDeleteChildMode,
-  // onRevert,
-  // onRevertChild,
   onToggleEditMode,
   onToggleEditChildMode,
   row,
   parentIndex,
 }) => {
-  // console.log("isi row", row);
-
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
     <>
-      {/* parent table */}
       <TableRow>
         <TableCell
           sx={{
@@ -51,7 +40,6 @@ const CollapsibleRow = ({
             }}
           >
             {`${index + 1}`}
-            {/* it work like a charm! */}
             {row.item_detail.length > 0 && (
               <button {...getToggleProps()}>
                 {isExpanded ? (
@@ -81,43 +69,11 @@ const CollapsibleRow = ({
             >
               <DoneIcon />
             </IconButton>
-            {/* <IconButton aria-label="revert" onClick={() => onRevert(row.id)}>
-              <RevertIcon />
-            </IconButton> */}
           </TableCell>
         ) : (
           <TableCell>
             <ButtonAction
-              // handleAction={(a, b, c) => {
-              //   if (c === "Hapus") {
-              //     onDeleteMode(index);
-              //   } else if (c === "Edit") {
-              //     onToggleEditMode(row.id);
-              //   } else if (c === "Tambah") {
-              //     onAddMode();
-              //   } else if (c === "Tambah Sub Item") {
-              //     onAddChildMode(row.id, index);
-              //   }
-              // }}
-              // ops={[
-              //   {
-              //     label: "Edit",
-              //   },
-              //   {
-              //     label: "Hapus",
-              //   },
-              //   {
-              //     label: "Tambah Sub Item",
-              //   },
-              // ]}
-
               handleAction={(type, data, label) => {
-                console.log(
-                  "masuk ke handleAction collapsible row",
-                  type,
-                  data,
-                  label
-                );
                 if (label === "JOB_PRICE.TABLE_ACTION.DELETE") {
                   onDeleteMode(index);
                 } else if (label === "JOB_PRICE.TABLE_ACTION.EDIT") {
@@ -141,8 +97,6 @@ const CollapsibleRow = ({
           </TableCell>
         )}
       </TableRow>
-
-      {/* children table */}
       {row?.item_detail &&
         row.item_detail.map((data, childIndex) => (
           <TableRow key={index} {...getCollapseProps()}>
@@ -222,9 +176,6 @@ const CollapsibleRow = ({
                 data.note
               )}
             </TableCell>
-
-            {/* error karena data nya gak sampai kesini dulu */}
-
             {data.isEditMode ? (
               <TableCell>
                 <IconButton
@@ -233,12 +184,6 @@ const CollapsibleRow = ({
                 >
                   <DoneIcon />
                 </IconButton>
-                {/* <IconButton
-                  aria-label="revert-child"
-                  onClick={() => onRevertChild(data.id, index)}
-                >
-                  <RevertIcon />
-                </IconButton> */}
               </TableCell>
             ) : (
               <TableCell>

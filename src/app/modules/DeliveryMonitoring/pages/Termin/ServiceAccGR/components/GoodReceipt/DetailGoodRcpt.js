@@ -80,7 +80,6 @@ const DetailGoodRcpt = (props) => {
       })
     );
   }, [dispatch, dataGR]);
-  // console.log(`props`, props);
   return (
     <Card className={"d-flex"} style={{ flex: 1 }}>
       {/* <Card> */}

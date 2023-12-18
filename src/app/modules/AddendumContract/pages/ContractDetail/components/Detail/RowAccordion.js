@@ -9,8 +9,6 @@ const RowAccordion = ({ id, data, dataAll, classBtn, children }) => {
     setVisible,
   ]);
   const isChildExist = typeof children === "function";
-  // console.log(isChildExist);
-  // console.log(visible);
 
   return (
     <React.Fragment>

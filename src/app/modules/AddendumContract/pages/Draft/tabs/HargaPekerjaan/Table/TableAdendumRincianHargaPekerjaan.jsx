@@ -213,7 +213,6 @@ const TableAdendumRincianHargaPekerjaanAwal = ({
     let result = rows.map((row) => {
       if (row.id === parentId) {
         if (row.item_detail) {
-          console.log("masuk ke kondisi 1 (kedua)");
           return {
             ...row,
             item_detail: [

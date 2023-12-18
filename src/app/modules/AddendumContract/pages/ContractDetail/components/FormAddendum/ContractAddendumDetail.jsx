@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import {
   Assignment,
@@ -15,7 +15,7 @@ import { Container } from "react-bootstrap";
 import SVG from "react-inlinesvg";
 import { useLocation, useParams, withRouter } from "react-router-dom";
 import { useSelector, useDispatch, shallowEqual, connect } from "react-redux";
-
+import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import Tabs from "../../../../../../components/tabs";
 import useToast from "../../../../../../components/toast";
@@ -34,6 +34,7 @@ import JangkaWaktu from "../JangkaWaktu";
 import Jaminan from "../Jaminan";
 import Denda from "../Denda";
 import BAST from "../BAST";
+import ListAddendum from "../ListAddendum";
 import Steppers from "app/components/steppersCustom/Steppers";
 import DetailPage from "../Detail/DetailPage";
 import KickOffDetail from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/Detail/KickOffDetail";
@@ -99,6 +100,11 @@ const TabLists = [
     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.FINE" />,
     icon: <Error className="mb-0 mr-2" />,
   },
+  {
+    id: "list-addendum",
+    label: <FormattedMessage id="CONTRACT_DETAIL.TAB.LIST_ADDENDUM" />,
+    icon: <Description className="mb-0 mr-2" />,
+  },
   //   {
   //     id: "para-pihak2",
   //     label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
@@ -111,9 +117,11 @@ const TabLists = [
   // },
 ];
 
-export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
-  // ada isinya
-  // console.log('isi data contract by id di delivery monitoring', dataContractById)
+export const ContractAddendumDetail = ({
+  dataContractById,
+  authStatus,
+  data,
+}) => {
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, tab: forceTabActive } = useParams();
@@ -163,10 +171,32 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
     });
   };
 
+  const [dataAddContracts, setDataAddContracts] = useState({});
+  const getDataAddContract = async (contract_id) => {
+    fetch_api_sg({
+      key: keys.getAddendumDetail,
+      type: "get",
+      url: `/adendum/contract-released/${contract_id}/show`,
+      onSuccess: (res) => {
+        setDataAddContracts(res?.data);
+        // getSecondAuthorizedOfficial(res?.data?.vendor_id);
+      },
+    });
+  };
+
   // get data contract detail from api
   const getContractById = async (contract_id) => {
     try {
       setLoading(true);
+      fetch_api_sg({
+        key: keys.getAddendumDetail,
+        type: "get",
+        url: `/adendum/contract-released/${contract_id}/show`,
+        onSuccess: (res) => {
+          setDataAddContracts(res?.data);
+          // getSecondAuthorizedOfficial(res?.data?.vendor_id);
+        },
+      });
       const {
         data: { data },
       } = await addendumContractCRUD.getContractById(contract_id);
@@ -222,6 +252,8 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
         });
       }
     }
+
+    getDataAddContract(contract_id);
   }, [dataContractById, contract_id, forceTabActive]);
 
   React.useEffect(() => {
@@ -238,8 +270,6 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
       }, 500);
     }
   }, [location]);
-
-  console.log("dataContractById", dataContractById);
 
   return (
     <React.Fragment>
@@ -322,12 +352,22 @@ export const ContractAddendumDetail = ({ dataContractById, authStatus }) => {
   );
 };
 
+const keys = {
+  getAddendumDetail: "get-addendum-contract-by-id ",
+};
+
+const mapDispatch = {
+  fetch_api_sg,
+};
 const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
+  data: auth.user.data,
   dataContractById: deliveryMonitoring.dataContractById,
 });
 
-export default compose(withRouter, connect(mapState))(ContractAddendumDetail);
+// export default compose(withRouter, connect(mapState))(ContractAddendumDetail);
+
+export default connect(mapState, mapDispatch)(ContractAddendumDetail);
 
 // export const ContractAddendumDetail = () => {
 //     return (

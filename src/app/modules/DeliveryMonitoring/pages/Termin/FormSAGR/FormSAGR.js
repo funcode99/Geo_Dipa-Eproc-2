@@ -27,7 +27,6 @@ const FormSAGR = (props) => {
       type: "get",
       url: `delivery/task-sa-gr/${task_id}`,
       onSuccess: (res) => {
-        console.log(`res sagr`, res);
         setDataSAGR(res.data);
       },
     });
@@ -40,12 +39,11 @@ const FormSAGR = (props) => {
       url: `/delivery/task/${task_id}/news`,
       onSuccess: (res) => {
         const data = res?.data;
-        
-        if(data) {
-          if(data?.news_bast?.date) {
+
+        if (data) {
+          if (data?.news_bast?.date) {
             setDocDate(res?.data?.news_bast?.date);
-          }
-          else if(data?.news?.date) {
+          } else if (data?.news?.date) {
             setDocDate(res?.data?.news?.date);
           }
         }
@@ -92,7 +90,7 @@ const mapState = (state) => {
   const { auth } = state;
   return {
     status: auth.user.data.status,
-	dataContractById: state.deliveryMonitoring.dataContractById,
+    dataContractById: state.deliveryMonitoring.dataContractById,
     loadings_sg: {
       [keys.upload_sa]: getLoading(state, keys.upload_sa),
       [keys.upload_gr]: getLoading(state, keys.upload_gr),

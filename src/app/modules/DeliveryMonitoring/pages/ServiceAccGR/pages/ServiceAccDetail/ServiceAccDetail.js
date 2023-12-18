@@ -56,7 +56,6 @@ export const ServiceAccDetail = () => {
   const getList = async () => {
     try {
       setLoading(true);
-      console.log("tes");
       // const {
       //   data: { data },
       // } = await master.getPeriodeList();
@@ -84,7 +83,6 @@ export const ServiceAccDetail = () => {
           name: values.periode_name,
           value: values.periode_value,
         };
-        console.log(requestData);
         // const {
         //   data: { status },
         // } = update.update
@@ -113,7 +111,6 @@ export const ServiceAccDetail = () => {
   //     // const {
   //     //   data: { data },
   //     // } = await master.getPeriodeID(id);
-  //     // // console.log(data[0]);
   //     // setUpdate({ id, update: true });
   //     // // formik.setFieldValue('document_name', data[0].name);
   //     // formik.setValues({
@@ -134,7 +131,6 @@ export const ServiceAccDetail = () => {
       getList();
     } catch (error) {
       setToast("Error with API, please contact Developer!");
-      // console.error(error);
     } finally {
       setLoading(false);
     }

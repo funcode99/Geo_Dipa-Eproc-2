@@ -79,7 +79,6 @@ const getTotal = (subTotal = 0) => {
   // if (_.isEmpty(subTotal)) return 0;
   let ppn = parseFloat(11 / 100);
   let extra = parseFloat(subTotal * ppn);
-  // console.log(`subTotal`, subTotal, ppn, extra);
   return parseFloat(subTotal + extra);
 };
 

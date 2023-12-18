@@ -26,8 +26,6 @@ const CardProgress = ({
       // })),
     });
   };
-  // console.log(`dataggg`, data);
-
   return (
     <React.Fragment>
       <div className="kt-widget24">

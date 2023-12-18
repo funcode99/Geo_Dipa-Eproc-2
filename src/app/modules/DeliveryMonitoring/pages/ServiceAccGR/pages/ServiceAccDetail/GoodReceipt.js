@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 import {
   Input as Files,
   InputLabel,
   Button,
   Container,
   CircularProgress,
-} from '@material-ui/core';
-import { useFormik } from 'formik';
+} from "@material-ui/core";
+import { useFormik } from "formik";
 // import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 // import { Link } from 'react-router-dom';
-import * as Yup from 'yup';
+import * as Yup from "yup";
 // import * as master from '../service/MasterCrud';
 // import http from '../../libs/http';
 import {
@@ -20,25 +20,25 @@ import {
   InputSeparator,
   FlexCol,
   ErrorText,
-} from './style';
+} from "./style";
 
-import { StyledModal } from '../../../../../../components/modals';
-import useToast from '../../../../../../components/toast';
-import CustomTable from '../../../../../../components/tables';
+import { StyledModal } from "../../../../../../components/modals";
+import useToast from "../../../../../../components/toast";
+import CustomTable from "../../../../../../components/tables";
 
 export const GoodReceipt = () => {
   const [Toast, setToast] = useToast();
   // const [data, setData] = React.useState();
   const [modals, setModals] = React.useState(false);
-  const [confirm, setConfirm] = React.useState({ show: false, id: '' });
-  const [update, setUpdate] = React.useState({ id: '', update: false });
+  const [confirm, setConfirm] = React.useState({ show: false, id: "" });
+  const [update, setUpdate] = React.useState({ id: "", update: false });
   const [loading, setLoading] = React.useState(false);
 
   const FormSchema = Yup.object().shape({
     periode_name: Yup.string()
-      .min(3, 'Input minimal 3 karakter')
-      .required('Field ini wajib diisi'),
-    periode_value: Yup.string().required('Field ini wajib diisi'),
+      .min(3, "Input minimal 3 karakter")
+      .required("Field ini wajib diisi"),
+    periode_value: Yup.string().required("Field ini wajib diisi"),
   });
 
   const enableLoading = () => {
@@ -49,20 +49,19 @@ export const GoodReceipt = () => {
     setLoading(false);
   };
   const initialValues = {
-    periode_name: '',
+    periode_name: "",
     periode_value: 0,
   };
 
   const getList = async () => {
     try {
       setLoading(true);
-      console.log('tes');
       // const {
       //   data: { data },
       // } = await master.getPeriodeList();
       // setData(data);
     } catch (error) {
-      setToast('Error API, please contact developer!');
+      setToast("Error API, please contact developer!");
     } finally {
       setLoading(false);
     }
@@ -84,7 +83,6 @@ export const GoodReceipt = () => {
           name: values.periode_name,
           value: values.periode_value,
         };
-        console.log(requestData);
         // const {
         //   data: { status },
         // } = update.update
@@ -96,9 +94,9 @@ export const GoodReceipt = () => {
         //   setModals(false);
         // }
       } catch (error) {
-        setToast('Error API, Please contact developer!');
+        setToast("Error API, Please contact developer!");
         setSubmitting(false);
-        setStatus('Failed Submit Data');
+        setStatus("Failed Submit Data");
       } finally {
         disableLoading();
       }
@@ -113,7 +111,6 @@ export const GoodReceipt = () => {
   //     // const {
   //     //   data: { data },
   //     // } = await master.getPeriodeID(id);
-  //     // // console.log(data[0]);
   //     // setUpdate({ id, update: true });
   //     // // formik.setFieldValue('document_name', data[0].name);
   //     // formik.setValues({
@@ -133,8 +130,7 @@ export const GoodReceipt = () => {
       // setConfirm({ ...confirm, show: false });
       getList();
     } catch (error) {
-      setToast('Error with API, please contact Developer!');
-      // console.error(error);
+      setToast("Error with API, please contact Developer!");
     } finally {
       setLoading(false);
     }
@@ -149,55 +145,55 @@ export const GoodReceipt = () => {
         hideCloseIcon={false}
         disableBackdrop
       >
-        <FlexCol style={{ justifyContent: 'center' }}>
+        <FlexCol style={{ justifyContent: "center" }}>
           <form
             noValidate
             autoComplete="off"
             // onSubmit={handleSubmit(formSubmit)}
             onSubmit={formik.handleSubmit}
           >
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
               <h3>Input Form</h3>
             </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
-              <div style={{ width: '70%', alignSelf: 'center' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
+              <div style={{ width: "70%", alignSelf: "center" }}>
                 <Input
                   label="Nama Periode"
                   variant="outlined"
                   name="periode_name"
-                  {...formik.getFieldProps('periode_name')}
+                  {...formik.getFieldProps("periode_name")}
                 />
-                <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
+                <p style={{ textAlign: "center", color: "red", margin: 5 }}>
                   {formik.touched.periode_name && formik.errors.periode_name
                     ? formik.errors.periode_name
                     : null}
                 </p>
               </div>
-              <div style={{ width: '70%', alignSelf: 'center' }}>
+              <div style={{ width: "70%", alignSelf: "center" }}>
                 <Input
                   label="Durasi (dalam hari)"
                   type="number"
                   variant="outlined"
                   name="periode_value"
-                  {...formik.getFieldProps('periode_value')}
+                  {...formik.getFieldProps("periode_value")}
                 />
-                <p style={{ textAlign: 'center', color: 'red', margin: 5 }}>
+                <p style={{ textAlign: "center", color: "red", margin: 5 }}>
                   {formik.touched.periode_value && formik.errors.periode_value
                     ? formik.errors.periode_value
                     : null}
                 </p>
               </div>
             </div>
-            <div style={{ justifyContent: 'center', display: 'flex' }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
               <Button
                 disabled={loading}
                 type="submit"
                 color="secondary"
                 variant="contained"
-                style={{ width: '50%' }}
+                style={{ width: "50%" }}
               >
                 {loading ? <CircularProgress /> : null}&nbsp;
-                {update.update ? 'Update' : 'Create'}
+                {update.update ? "Update" : "Create"}
               </Button>
             </div>
           </form>
@@ -219,9 +215,9 @@ export const GoodReceipt = () => {
               variant="contained"
               disabled={loading}
               style={{
-                width: '40%',
-                background: 'red',
-                color: 'white',
+                width: "40%",
+                background: "red",
+                color: "white",
                 marginInline: 10,
               }}
               onClick={() => handleDelete()}
@@ -231,7 +227,7 @@ export const GoodReceipt = () => {
             <Button
               variant="contained"
               disabled={loading}
-              style={{ width: '40%', marginInline: 10 }}
+              style={{ width: "40%", marginInline: 10 }}
               onClick={() => setConfirm({ ...confirm, show: false })}
             >
               Cancel
@@ -475,46 +471,46 @@ export const GoodReceipt = () => {
 
         <CustomTable
           tableHeader={[
-            { label: 'Line' },
-            { label: 'Material Number' },
-            { label: 'Description' },
-            { label: 'Order Qty' },
-            { label: 'Received Qty' },
-            { label: 'UoM' },
-            { label: 'Sloc' },
-            { label: 'Stor Bin' },
+            { label: "Line" },
+            { label: "Material Number" },
+            { label: "Description" },
+            { label: "Order Qty" },
+            { label: "Received Qty" },
+            { label: "UoM" },
+            { label: "Sloc" },
+            { label: "Stor Bin" },
           ]}
           tableContent={[
             [
-              { content: '0001' },
-              { content: '2101021' },
-              { content: 'Leapfrog Geothermal', width: '20%' },
-              { content: '1' },
-              { content: '1' },
-              { content: 'AU' },
-              { content: '' },
-              { content: '' },
+              { content: "0001" },
+              { content: "2101021" },
+              { content: "Leapfrog Geothermal", width: "20%" },
+              { content: "1" },
+              { content: "1" },
+              { content: "AU" },
+              { content: "" },
+              { content: "" },
             ],
           ]}
         />
 
         <CustomTable
           tableHeader={[
-            'Nama',
-            'Posisi',
-            'Aktifitas',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
-            'Komentar',
+            "Nama",
+            "Posisi",
+            "Aktifitas",
+            "Tanggal Mulai",
+            "Tanggal Selesai",
+            "Komentar",
           ]}
           tableContent={[
             [
-              { content: 'Dian PS' },
-              { content: 'IT Asman' },
-              { content: 'Create GR', props: { width: '20%' } },
-              { content: '30 Jan 2021' },
-              { content: '29 Feb 2021' },
-              { content: 'Sesuai ketentuan' },
+              { content: "Dian PS" },
+              { content: "IT Asman" },
+              { content: "Create GR", props: { width: "20%" } },
+              { content: "30 Jan 2021" },
+              { content: "29 Feb 2021" },
+              { content: "Sesuai ketentuan" },
             ],
           ]}
         />

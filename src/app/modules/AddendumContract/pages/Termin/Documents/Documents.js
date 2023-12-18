@@ -76,7 +76,6 @@ const Documents = ({
   const [Toast, setToast] = useToast();
   const handleError = React.useCallback(
     (err) => {
-      console.log(`err`, err);
       setToast(err?.message ?? "Error API, please contact developer!");
     },
     [setToast]
@@ -103,7 +102,6 @@ const Documents = ({
 
   // buat buka modal + simpan param sementara dari list
   const handleAction = (type, params) => {
-    console.log(`type`, type, params);
     handleVisible(type, params);
   };
 
@@ -134,7 +132,6 @@ const Documents = ({
           ? "warehouse"
           : "user";
         setIsWarehouse(userType === "warehouse" ? true : false);
-        // console.log(`res token data`, res, userType);
       },
     });
   }, [taskId]);
@@ -206,14 +203,12 @@ const Documents = ({
             });
           break;
         case "create":
-          console.log(`params`, params);
           // handle multi create document
           if (Array.isArray(params)) {
             let mappedParams = params?.map((el) => {
               let val = JSON.parse(el.value);
               return { document_id: val.id };
             });
-            console.log(`type`, type, params, mappedParams);
             deliveryMonitoring
               .postCreateDocArr(taskId, mappedParams)
               .then(handleSuccess)
@@ -285,7 +280,6 @@ const Documents = ({
           }
           break;
         case "reject":
-          // console.log(`reject`, type, open?.tempParams?.reject_id, params);
           if (isWarehouse) {
             rejectDoc({
               amIWarehouse: true,
@@ -319,7 +313,6 @@ const Documents = ({
           // });
           break;
         case "submit":
-          // console.log(`submit`, type, open?.tempParams?.submit_id);
           deliveryMonitoring
             .submitDocId(open?.tempParams?.submit_id)
             .then(handleSuccess)

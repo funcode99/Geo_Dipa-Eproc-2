@@ -59,7 +59,6 @@ function VerificationQrCodeDM({ fetch_api_sg }) {
         type: "get",
         url: `/delivery/task/${params.doc_id}/${params.type}/${params.user}`,
         onSuccess: (res) => {
-          console.log(`res`, res);
           setData(res.data);
           setLoading(false);
           setTokenStatus(true);

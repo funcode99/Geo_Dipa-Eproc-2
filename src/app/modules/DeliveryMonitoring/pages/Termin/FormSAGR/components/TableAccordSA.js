@@ -40,8 +40,6 @@ const TableAccordSA = () => {
         const itemSAUsed = itemJasa?.filter(
           (el) => el?.pckg_no === item?.services?.[0]?.service?.start_pckg_no
         )?.[0];
-        console.log(`itemJasa`, itemJasa, dataSA, itemSAUsed);
-        // console.log("item", item);
         const itemUsed = saExist ? item.services : item.item_services;
 
         let dataItemJasa = itemUsed.filter((service) => service.service);

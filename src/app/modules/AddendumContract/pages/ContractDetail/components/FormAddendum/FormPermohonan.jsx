@@ -10,7 +10,6 @@ import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContrac
 import CurrencyInput from "react-currency-input-field";
 
 const FormPermohonan = (props) => {
-  console.log("isi props", props);
   const dispatch = useDispatch();
 
   const [conclusion, setConclusion] = useState("");
@@ -25,7 +24,6 @@ const FormPermohonan = (props) => {
   });
 
   useEffect(() => {
-    console.log("isi additional price", price.additional_price);
     if (price.additional_price === undefined) {
       setPrice((previous) => {
         return {
@@ -64,7 +62,6 @@ const FormPermohonan = (props) => {
   }, [price.additional_price, price.substraction_price]);
 
   const submitAddendumRequestForm = (values) => {
-    console.log("isi values saat submit", values);
     let afterValue = values.checked.includes("job_price")
       ? values.additional_price === "0" || values.additional_price === ""
         ? parseInt(props?.headerData?.initial_contract_value) -
@@ -124,7 +121,6 @@ const FormPermohonan = (props) => {
       addendum_percentage: adnm_percentage,
       add_request_date: formatDate(new Date(dateDisplay)),
     }).then((value) => {
-      console.log("isi values saat submit", value);
       localStorage.setItem("add_contract_id", value.data.data.id);
       dispatch({
         type: actionTypes.SetConclusion,
@@ -141,8 +137,6 @@ const FormPermohonan = (props) => {
     const { values } = useFormikContext();
 
     useEffect(() => {
-      console.log("FormObserver::values", values.checked);
-      console.log("isi values formobserver", values);
       props.assignTabLists(values.checked);
       if (
         (values.additional_price === "0" || values.additional_price === "") &&
@@ -453,7 +447,6 @@ const FormPermohonan = (props) => {
             }}
             // JANGAN PERNAH KASIH KURUNG KURAWAL DI VALUES
             onSubmit={(values) => {
-              console.log("isi submit values", values);
               if (dateDisplay === "") {
                 alert("Silahkan isi Tanggal Dokumen Permohonan");
               } else if (
