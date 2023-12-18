@@ -18,9 +18,6 @@ const NomorRekening = ({
   is_add_account_number,
   add_contract_account_number,
 }) => {
-  if (is_add_account_number) {
-    isDisable = is_add_account_number;
-  }
   const dispatch = useDispatch();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -287,6 +284,7 @@ const NomorRekening = ({
                           data={jsonData?.data_bank}
                           func={changeDataBankIndex}
                           labelName={`account_number`}
+                          disabled={isDisable}
                         />
                       </div>
                       <div
@@ -417,6 +415,7 @@ const NomorRekening = ({
                               event.target.files[0]
                             );
                           }}
+                          disabled={isDisable}
                         />
                       </div>
                     </div>
@@ -429,7 +428,7 @@ const NomorRekening = ({
                 subTitle={"B"}
                 values={values}
                 isDrafting={true}
-                isDisable={isDisable}
+                isDisable={!isDisable}
                 title={"Nomor Rekening"}
                 fromWhere={"account_number"}
                 showAddClause={showAddClause}

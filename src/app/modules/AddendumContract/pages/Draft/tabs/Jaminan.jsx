@@ -18,9 +18,6 @@ const Jaminan = ({
   dataNewClauseDrafting,
   add_contract_guarantee,
 }) => {
-  if (is_add_guarantee) {
-    isDisable = is_add_guarantee;
-  }
   const dispatch = useDispatch();
 
   const openCloseAddClause = React.useRef();
